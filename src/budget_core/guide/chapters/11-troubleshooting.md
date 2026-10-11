@@ -28,6 +28,9 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `PEAK_POWER_EXCEEDED`, `BATTERY_DEPLETED`, `BATTERY_DOD_EXCEEDED`, `ORBIT_BALANCE_NEGATIVE` | The time-domain power budget found a violation. Its time stamp and the input to change are listed. |
 | `LINK_ATTENUATION_FREQUENCY`, `LINK_SITE_NOT_IN_SCENARIO`, `LINK_NO_STATIC_POINTS` | An attenuation entry was defined at another frequency, the link's station is not in the scenario, or the link has no static points. |
 | `LINK_NOT_CLOSED` | No listed data rate meets the required margin at any static point, or at any active sample of the passes. Lower the data rates, raise the transmit power or gain, or check the losses and the required margin. |
+| `IMPORT_FILE_UNREADABLE`, `IMPORT_FILE_TOO_LARGE`, `IMPORT_COLUMN_MISSING` | The unit table is not a .csv (UTF-8) or .xlsx file, is too large, or lacks the `unit_id` or `power_mode` column. Start from the template written by `budget units-export`. |
+| `IMPORT_COLUMN_IGNORED` | (Warning) A column of the unit table is not part of the template and is skipped. |
+| `IMPORT_UNKNOWN_UNIT`, `IMPORT_DUPLICATE_ROW`, `IMPORT_FIELD_MISSING`, `IMPORT_VALUE_INVALID` | A row names a unit the project does not have, repeats a power mode, lacks average or peak power for a new mode, or has a value the file format does not accept. The message gives the row and column. |
 | `INTERNAL_ERROR` | An unexpected error; the message names only its kind. Run `budget validate` on the folder to see the details, then report it. |
 
 ## The report says INCOMPLETE

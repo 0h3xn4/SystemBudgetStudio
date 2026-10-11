@@ -29,6 +29,7 @@ from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.timeline_view import PowerTimelineView
 from budget_gui.unit_editor import UnitEditor
+from budget_gui.unit_table import export_unit_table, import_unit_table
 from budget_gui.widgets import PowerView, ProblemsPanel, ProjectTree
 from budget_gui.worker import ExportWorker
 
@@ -121,6 +122,9 @@ class MainWindow(QMainWindow):
         add("&Export reports…", QKeySequence("Ctrl+E"), self._choose_export)
         add("Export power &timeline…", QKeySequence("Ctrl+Shift+E"), self._choose_timeline_export)
         add("Export &scenario results…", QKeySequence(), self._choose_scenario_export)
+        file_menu.addSeparator()
+        add("Export &unit table…", QKeySequence(), lambda: export_unit_table(self))
+        add("&Import unit table…", QKeySequence(), lambda: import_unit_table(self))
         file_menu.addSeparator()
         add("&Quit", QKeySequence.StandardKey.Quit, self.close)
         help_menu = self.menuBar().addMenu("&Help")

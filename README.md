@@ -60,7 +60,9 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 - **Guided mode**: a wizard from an orbit to a first budget with a sample spacecraft; an offline user guide (HTML and PDF) with a generated *Equations and sources* chapter.
 - **Plain-language problems**: every message names the file and field, says what is wrong and what to change; a double-click jumps to it.
 
-Not in version 1: data-storage budgets, transient thermal simulation, interference analysis, importing unit tables from CSV or XLSX, a separate expert mode. See [decision D-099](docs/DECISIONS.md).
+Unit power modes can be exported to a CSV or XLSX table, filled in a spreadsheet and imported back with a preview ([unit tables](docs/user-manual/unit-tables.md)).
+
+Not in version 1: data-storage budgets, transient thermal simulation, interference analysis, a separate expert mode. See [decision D-099](docs/DECISIONS.md).
 
 ## Requirements
 

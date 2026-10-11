@@ -9,6 +9,7 @@ Shortcuts, working habits and ways to connect System Budget Studio to your other
 - **Shortcuts in the window**: Ctrl+N new project, Ctrl+O open, Ctrl+S save, F5 reload, Ctrl+M edit a unit's power modes, Ctrl+E export reports, Ctrl+Shift+E export the power timeline, F1 guide ([all of them](user-manual/use-the-window.md#shortcuts)).
 - **Pin a second cursor** on a plot with a click to read the difference between two times; Escape removes it.
 - **Explore with a coarse time step.** While you are trying ideas, set `step_s: 60` in the scenario; the results do not depend on the step in a way that hides a violation, so the numbers stay honest. Set it back for the final run.
+- **Get supplier data in without typing**: export the unit power modes with `budget units-export`, let the supplier fill the table, and import it with `budget units-import` (a preview first; `--apply` writes) ([unit tables](user-manual/unit-tables.md)).
 - **Run only what you need**: `--budget power`, `--report csv`, `--no-plots` make a run much faster.
 - **Start from an example**, not from an empty folder: copy the closest one from [`examples/`](../examples/README.md) and replace the numbers.
 - **Use the guided wizard** (Ctrl+N) to get a working orbit and scenario in a minute, then replace its sample spacecraft with yours.

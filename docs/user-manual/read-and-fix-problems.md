@@ -43,6 +43,7 @@ In the window, double-click a row of the **Problems** panel at the bottom: the f
 | `THERMAL_LIMIT_EXCEEDED`, `THERMAL_MARGIN_INSUFFICIENT`, `THERMAL_SOLVE_FAILED` | A unit is outside, or too close to, its limits; or a node has no path to space | [Thermal budget](thermal-budget.md#how-do-i-check-unit-temperature-limits) |
 | `LINK_NOT_CLOSED`, `LINK_SITE_NOT_IN_SCENARIO` | No data rate closes; or the link's station is not in the scenario's `sites` | [Link budget](link-budget.md) |
 | `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED`, `SCENARIO_UNKNOWN` | An imported file is invalid; the orbit cannot be propagated; or no such scenario | [Scenarios](scenarios.md) |
+| `IMPORT_*` | A unit table could not be imported (row and column are named) | [Unit tables](unit-tables.md#what-if-the-import-reports-a-problem) |
 | `INTERNAL_ERROR` | An unexpected error (a bug). The message names only the kind of error | Run `budget validate` on the folder to see the details, then report it |
 
 ## Where are all the codes?
