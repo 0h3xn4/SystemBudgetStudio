@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
 
 from budget_core import APP_NAME, __version__
 from budget_core.problems import sort_problems
+from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui.compare_view import CompareView
 from budget_gui.editor import EditorTabs
@@ -119,6 +120,7 @@ class MainWindow(QMainWindow):
         add("Edit unit &power modes\u2026", QKeySequence("Ctrl+M"), self._edit_selected_unit)
         add("&Export reports…", QKeySequence("Ctrl+E"), self._choose_export)
         add("Export power &timeline…", QKeySequence("Ctrl+Shift+E"), self._choose_timeline_export)
+        add("Export &scenario results…", QKeySequence(), self._choose_scenario_export)
         file_menu.addSeparator()
         add("&Quit", QKeySequence.StandardKey.Quit, self.close)
         help_menu = self.menuBar().addMenu("&Help")
@@ -157,11 +159,23 @@ class MainWindow(QMainWindow):
 
     def _choose_scenario_export(self) -> None:
         if self.scenario_view.last_run is None:
-            QMessageBox.information(self, APP_NAME, "Compute a scenario first (Ctrl+R).")
+            QMessageBox.information(
+                self, APP_NAME, "Compute the scenario first (Scenario tab, button Compute)."
+            )
             return
         folder = QFileDialog.getExistingDirectory(self, "Export scenario results to folder")
-        if folder:
+        if not folder:
+            return
+        try:
             self.scenario_view.export_to(Path(folder))
+        except (OutputError, OSError) as exc:
+            # OutputError texts are plain by construction; an OSError is described, not echoed
+            text = (
+                str(exc)
+                if isinstance(exc, OutputError)
+                else "The files could not be written. Check that you may write to the folder."
+            )
+            QMessageBox.warning(self, APP_NAME, text)
 
     def _choose_timeline_export(self) -> None:
         if self.timeline_view.result is None:

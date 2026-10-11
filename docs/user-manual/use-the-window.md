@@ -32,6 +32,7 @@ If you edit a file and change the project, a timeline or link result computed fr
 | Ctrl+M | Edit the selected unit's power modes in a table |
 | Ctrl+E | Export reports of the static budgets |
 | Ctrl+Shift+E | Export the power timeline |
+| (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
 | F1 | Open the user guide |
 
 (On macOS the Ctrl key shortcuts are not tested.)
