@@ -88,7 +88,7 @@ budget scenario my_satellite --out out
 Scenario one_day (elements): 15 eclipse(s); passes: gs_north 11, tgt_plains 1; 54 timeline segment(s).
 ```
 
-It writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>_timeline.csv` and a provenance file. Pass and eclipse edges are refined to about 1 ms, so they do not depend on `step_s`. The window's **Scenario** tab shows the same tables after **Compute**; to write the files use this command (the window has no menu entry for it).
+It writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>_timeline.csv` and a provenance file. Pass and eclipse edges are refined to about 1 ms, so they do not depend on `step_s`. The window's **Scenario** tab shows the same tables after **Compute**; to write the same files from the window use **File → Export scenario results**.
 
 ## How do I use orbit data from SpaceMissionStudio?
 

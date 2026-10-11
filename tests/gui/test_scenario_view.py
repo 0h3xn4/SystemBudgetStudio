@@ -193,3 +193,65 @@ def test_unsaved_scenario_edits_block_closing(
     assert window.close() is False
     window.editors.discard_all_changes()
     assert not window.editors.has_unsaved_changes()
+
+
+# ---- File menu: export the scenario results ----------------------------------------------------
+
+
+def _menu_action(window: MainWindow, text: str):  # type: ignore[no-untyped-def]
+    for menu in window.menuBar().findChildren(type(window.menuBar().actions()[0].menu())):
+        for action in menu.actions():
+            if action.text().replace("&", "") == text:
+                return action
+    raise AssertionError(f"no menu entry {text!r}")
+
+
+def test_the_file_menu_exports_the_scenario_results(
+    window: MainWindow, qtbot, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:  # type: ignore[no-untyped-def]
+    from PySide6.QtWidgets import QFileDialog
+
+    compute(window, qtbot)
+    out = tmp_path / "chosen"
+    out.mkdir()
+    monkeypatch.setattr(QFileDialog, "getExistingDirectory", lambda *a, **k: str(out))
+    _menu_action(window, "Export scenario results…").trigger()
+    assert sorted(p.name for p in out.iterdir()) == [
+        "one_day_eclipses.csv",
+        "one_day_environment.json",
+        "one_day_passes.csv",
+        "one_day_provenance.csv",
+        "one_day_timeline.csv",
+    ]
+
+
+def test_exporting_before_computing_explains_what_to_do(
+    window: MainWindow, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from PySide6.QtWidgets import QFileDialog, QMessageBox
+
+    shown: list[str] = []
+    monkeypatch.setattr(QMessageBox, "information", lambda parent, title, text: shown.append(text))
+    monkeypatch.setattr(
+        QFileDialog, "getExistingDirectory", lambda *a, **k: pytest.fail("no folder prompt")
+    )
+    _menu_action(window, "Export scenario results…").trigger()
+    assert len(shown) == 1
+    assert "Scenario tab" in shown[0] and "Compute" in shown[0]
+    assert "Ctrl+R" not in shown[0]  # there is no such shortcut
+
+
+def test_a_folder_that_cannot_be_written_gives_a_plain_message(
+    window: MainWindow, qtbot, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:  # type: ignore[no-untyped-def]
+    from PySide6.QtWidgets import QFileDialog, QMessageBox
+
+    compute(window, qtbot)
+    not_a_folder = tmp_path / "file.txt"
+    not_a_folder.write_text("x", encoding="utf-8")
+    warned: list[str] = []
+    monkeypatch.setattr(QFileDialog, "getExistingDirectory", lambda *a, **k: str(not_a_folder))
+    monkeypatch.setattr(QMessageBox, "warning", lambda parent, title, text: warned.append(text))
+    _menu_action(window, "Export scenario results…").trigger()
+    assert len(warned) == 1 and "Traceback" not in warned[0]
+    assert "folder" in warned[0]

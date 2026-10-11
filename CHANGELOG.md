@@ -7,6 +7,9 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 ### Added
 - Documentation restructure: [README](README.md), [docs index](docs/README.md), [getting started](docs/getting-started.md), [user manual](docs/user-manual/README.md), [examples guide](examples/README.md), [FAQ](docs/faq.md), [troubleshooting](docs/troubleshooting.md), [glossary](docs/glossary.md), [tips](docs/tips.md), [CONTRIBUTING](CONTRIBUTING.md), [developer docs](docs/developer/README.md) and the [documentation audit](docs/DOCS_AUDIT.md).
 
+### Fixed
+- **File → Export scenario results** existed in the code but was not connected to any menu; it is now, and an unwritable folder gives a plain message. The "Compute a scenario first (Ctrl+R)" message named a shortcut that does not exist; it now says to press Compute in the Scenario tab.
+
 ### Changed
 - `docs/ARCHITECTURE.md`, `PLAN.md`, `BRANCH_PROTECTION.md`, `ENVIRONMENT_FORMAT.md`, `FILE_FORMAT.md` and the user guide chapters corrected where they described features that do not exist.
 
