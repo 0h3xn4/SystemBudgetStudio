@@ -14,6 +14,8 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget power-timeline PROJECT [--scenario ID] [--case bol\|eol\|both] [--load-basis nominal\|margined] [--phase NAME] [--series-every N] [--no-plots] [--report …] [--out DIR]` | Time-domain power budget of a scenario |
 | `budget link-passes PROJECT [--scenario ID] [--no-plots] [--report …] [--out DIR]` | Link margin, selected data rate and data volume over every pass |
 | `budget compare PROJECT [OTHER] [--scenario ID] [--scenario-a ID] [--scenario-b ID] [--budget …] [--report …] [--max-rows N] [--out DIR]` | Compare two revisions or two scenarios |
+| `budget units-export PROJECT [--out FILE.csv\|.xlsx]` | Write the unit power modes as a table to fill in outside the tool ([unit tables](unit-tables.md)) |
+| `budget units-import PROJECT TABLE [--apply]` | Show the changes a filled-in table would make; with `--apply` write them into the unit files |
 | `budget guide --out DIR [--format html\|pdf\|all] [--project PROJECT]` | Write the user guide (offline HTML and PDF) |
 | `budget self-test` | Check that this installation can compute and render a budget |
 | `budget export-schemas DIR` | Write the JSON Schema of every file kind |

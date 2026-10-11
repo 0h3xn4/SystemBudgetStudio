@@ -19,6 +19,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [user-manual/](user-manual/README.md) | The task-by-task manual: one page per workflow |
 | [user-manual/create-a-project.md](user-manual/create-a-project.md) | Start a project; what is in the folder; revisions |
 | [user-manual/describe-the-spacecraft.md](user-manual/describe-the-spacecraft.md) | Units, power modes, spacecraft modes, buses, phases |
+| [user-manual/unit-tables.md](user-manual/unit-tables.md) | Export unit power modes to CSV/XLSX, fill them in, import them back |
 | [user-manual/placeholders-and-sources.md](user-manual/placeholders-and-sources.md) | *n/a*, INCOMPLETE, how to enter a sourced number |
 | [user-manual/power-budget.md](user-manual/power-budget.md) | Static and time-domain power budgets |
 | [user-manual/mass-budget.md](user-manual/mass-budget.md) | Mass, centre of gravity, inertia, phases, limits |

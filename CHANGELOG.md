@@ -5,6 +5,7 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 ## [Unreleased]
 
 ### Added
+- Unit power data as a table: `budget units-export` (CSV or XLSX), `budget units-import` (preview, then `--apply`), and *File → Export/Import unit table* in the window. Empty cell means unchanged; no unit is created or deleted; formulas are never evaluated; one problem stops the whole import; the unit files are edited in place so comments and key order stay (D-102).
 - Documentation restructure: [README](README.md), [docs index](docs/README.md), [getting started](docs/getting-started.md), [user manual](docs/user-manual/README.md), [examples guide](examples/README.md), [FAQ](docs/faq.md), [troubleshooting](docs/troubleshooting.md), [glossary](docs/glossary.md), [tips](docs/tips.md), [CONTRIBUTING](CONTRIBUTING.md), [developer docs](docs/developer/README.md) and the [documentation audit](docs/DOCS_AUDIT.md).
 
 ### Fixed

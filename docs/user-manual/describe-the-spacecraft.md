@@ -87,6 +87,10 @@ assignments:
 
 Keys are unit ids, values are power-mode names of that unit. Every unit must appear in every spacecraft mode, otherwise you get `UNIT_NOT_MAPPED` naming the unit. A scenario then says [which spacecraft mode is active when](scenarios.md).
 
+## How do I get supplier data in from a spreadsheet?
+
+Export the power modes as a table, let the supplier fill it in, and import it with a preview: [Unit power data in a spreadsheet](unit-tables.md).
+
 ## How do I edit power modes in a table?
 
 In the window, select a unit in the project tree and choose **File → Edit unit power modes** (Ctrl+M), or double-click the unit. You get a table with one row per power mode; typing a value with a unit works there too. **Ctrl+S** saves.

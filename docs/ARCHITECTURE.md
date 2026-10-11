@@ -25,7 +25,7 @@ Runtime deps (`[project.dependencies]`): PySide6-Essentials, pydantic, ruamel.ya
 src/budget_core/      no GUI, no network imports (kept by convention and review; the offline test checks that no networking module is imported)
   model/              pydantic models: Project, Spacecraft, Unit, PowerMode, SpacecraftMode,
                       Scenario, Array, Battery, Link, Transmitter, Receiver, GroundStation
-  io/                 YAML load/save, schema versioning + migrations, (unit import from CSV/XLSX is deferred, D-099)
+  io/                 YAML load/save, schema versioning + migrations, unit table import and export (`unit_table.py`, D-102)
   units/              suffix conventions, pint parse/format, dB helpers
   config/             schemas (*.schema.json) and loaders; every number carries `source`
   environment/        Environment interface; SpaceMissionStudioImport; ElementsPropagator (sgp4)

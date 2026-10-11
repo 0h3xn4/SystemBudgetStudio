@@ -24,4 +24,11 @@ Every set of CSV files comes with a `<name>_provenance.csv` (tool and library ve
 
 ## Entering power data
 
-Unit power data is typed in the unit editor or written in the unit's YAML file (`units/<id>.yaml`). Importing unit tables from CSV or XLSX is not part of version 1; a supplier's figures are entered by hand, with their source.
+Unit power data is typed in the unit editor or written in the unit's YAML file (`units/<id>.yaml`). It can also be filled in a spreadsheet: `budget units-export project --out units.csv` (or `.xlsx`) writes one row per power mode, you fill in or change the values, and `budget units-import project units.csv` shows what would change. Add `--apply` to write the changes into the unit files. In the window use *File > Export unit table* and *File > Import unit table*.
+
+- An **empty cell means unchanged**, never zero.
+- Only power modes of units that exist are changed; a row with a new power mode name adds that mode (average and peak power are required). Nothing is deleted.
+- Values may carry a unit (`800 mW`, `40 %`); a plain number is in the unit named by the column.
+- A spreadsheet formula is never calculated; type the value.
+- One problem in the table stops the whole import and nothing is written.
+- The unit files are edited in place, so comments and the order of keys stay and only the changed lines differ.

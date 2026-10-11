@@ -13,13 +13,21 @@ from budget_core import APP_NAME, __version__
 from budget_core.compare_run import ALL_KINDS, Side, compare_sides, default_kinds
 from budget_core.examples import export_examples
 from budget_core.io.project_loader import load_project
+from budget_core.io.unit_table import (
+    apply_plan,
+    plan_import,
+    read_table,
+    table_csv,
+    table_xlsx,
+)
 from budget_core.link.evaluate import link_pass_series, link_static_budget
 from budget_core.mass.static_mass import static_mass_budget
+from budget_core.model import Project
 from budget_core.power.static_budget import static_power_budget
 from budget_core.power.time_domain import time_domain_budget, violation_problems
 from budget_core.problems import Problem, Severity, sort_problems
 from budget_core.provenance import make_provenance
-from budget_core.reports.files import OutputError
+from budget_core.reports.files import OutputError, write_file
 from budget_core.reports.run import (
     REPORT_KINDS,
     BudgetOutput,
@@ -208,6 +216,29 @@ def build_parser() -> argparse.ArgumentParser:
     sch = sub.add_parser("export-schemas", help="Write the JSON Schema of every file kind.")
     sch.add_argument("out_dir", type=Path)
 
+    ue = sub.add_parser(
+        "units-export",
+        help="Write the unit power modes as a CSV or XLSX table to fill in outside the tool.",
+    )
+    ue.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    ue.add_argument(
+        "--out",
+        type=Path,
+        help="Output file, .csv or .xlsx (default: <project>/results/unit_power_modes.csv).",
+    )
+
+    ui = sub.add_parser(
+        "units-import",
+        help="Read a unit table (.csv or .xlsx) and show, or with --apply write, the changes.",
+    )
+    ui.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    ui.add_argument("table", type=Path, help="The filled-in table, .csv or .xlsx.")
+    ui.add_argument(
+        "--apply",
+        action="store_true",
+        help="Write the changes into the unit files (without it nothing is written).",
+    )
+
     exa = sub.add_parser(
         "export-examples", help="Write the synthetic example projects (invented data)."
     )
@@ -242,6 +273,75 @@ def _validate(args: argparse.Namespace) -> int:
             print(problem.format())
         print(f"{_plural(errors, 'error')}, {_plural(warnings, 'warning')}.")
     return 1 if errors or (args.strict and warnings) else 0
+
+
+def _valid_project(path: Path) -> tuple[Project | None, int]:
+    """The project, or None after printing why it cannot be used (exit code 1)."""
+    loaded = load_project(path)
+    errors = _count(loaded.problems, Severity.ERROR)
+    if loaded.project is None or errors:
+        for problem in loaded.problems:
+            print(problem.format())
+        print(f"{_plural(errors, 'error')}; nothing was written.")
+        return None, 1
+    return loaded.project, 0
+
+
+def _units_export(args: argparse.Namespace) -> int:
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    out = args.out or (args.project / "results" / "unit_power_modes.csv")
+    kind = out.suffix.lower()
+    if kind not in (".csv", ".xlsx"):
+        print("The output file must end in .csv or .xlsx.")
+        return 2
+    data = (
+        # a byte order mark makes Excel read the UTF-8 text correctly
+        b"\xef\xbb\xbf" + table_csv(project).encode("utf-8")
+        if kind == ".csv"
+        else table_xlsx(project)
+    )
+    path = write_file(out.parent, out.name, data, sanitise=False)
+    print(f"Wrote {path}")
+    return 0
+
+
+def _format_number(value: float | None) -> str:
+    return "(new)" if value is None else f"{value:g}"
+
+
+def _units_import(args: argparse.Namespace) -> int:
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    table = read_table(args.table)
+    plan = plan_import(project, table, args.table.name)
+    for problem in plan.problems:
+        print(problem.format())
+    if not plan.ok:
+        errors = sum(1 for p in plan.problems if p.severity is Severity.ERROR)
+        print(f"{_plural(errors, 'error')}; nothing was written.")
+        return 1
+    if not plan.changes:
+        print(f"No change: {_plural(plan.unchanged, 'power mode')} already as in the table.")
+        return 0
+    for change in plan.changes:
+        print(
+            f"{change.unit_id} / {change.power_mode}: {change.field} "
+            f"{_format_number(change.old)} -> {change.new:g} (row {change.line})"
+        )
+    modes = {(c.unit_id, c.power_mode) for c in plan.changes}
+    print(
+        f"{_plural(len(plan.changes), 'value')} in {_plural(len(modes), 'power mode')} "
+        f"{'changed' if args.apply else 'would change'}; {plan.unchanged} already as in the table."
+    )
+    if not args.apply:
+        print("Nothing was written. Add --apply to write the changes.")
+        return 0
+    for path in apply_plan(args.project, plan):
+        print(f"Wrote units/{path.name}")
+    return 0
 
 
 def _run(args: argparse.Namespace) -> int:
@@ -554,6 +654,10 @@ def _dispatch(
         return 1 if failures else 0
     if args.command == "run":
         return _run(args)
+    if args.command == "units-export":
+        return _units_export(args)
+    if args.command == "units-import":
+        return _units_import(args)
     if args.command == "export-schemas":
         for path in export_schemas(args.out_dir):
             print(path.name)
