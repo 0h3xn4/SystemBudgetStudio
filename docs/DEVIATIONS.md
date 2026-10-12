@@ -28,7 +28,6 @@ _None yet. Planned (to be confirmed when implemented):_
 - **DV-G1 (M6):** the user guide PDF has no italic face (IBM Plex Italic is not bundled), so italics print upright; the HTML shows italics.
 - **DV-W1 (M6):** the wizard builds near-circular orbits only (eccentricity 0.001) from altitude, inclination and RAAN; argument of perigee 90 deg and mean anomaly 0 as in the samples; the orbit is not checked for sun-synchronism or decay.
 - **DV-R1 (audit round):** the XLSX keeps the exact number in each cell and a number format; a tiny negative number that rounds to zero (`-0.0004` with three decimals) is shown by Excel as `-0.000` although the PDF, DOCX and comparison show `0.000`. The cell is not changed because the exact value is the point of a spreadsheet.
-- **DV-R2 (audit round):** `in_pass_s` in the link series CSV is the overlap of the step with the pass; it does not know the link's `active_modes`, so for a link limited to some modes the sum of `selected_rate_bps` x `in_pass_s` is an upper bound of the volume in the summary.
 - **DV-R3 (audit round):** pass tables of the comparison are keyed by the AOS time as displayed (to the second). A pass whose AOS moves by a second or more between two revisions is one removed and one added row.
 - **DV-R4 (audit round):** a PDF shortens table cells above 400 characters and shows characters its font lacks as `?`; a plot does the same for labels. The other formats keep the full text.
 

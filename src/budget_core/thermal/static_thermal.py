@@ -577,10 +577,10 @@ def _checks(
                 Problem(
                     Severity.ERROR,
                     "THERMAL_LIMIT_EXCEEDED",
-                    f"Unit '{uid}' is outside its {limit_set} temperature limits in case "
-                    f"'{case_name}'.",
+                    f"Unit '{uid}' is outside its {limit_set} temperature limits in a thermal "
+                    "case.",
                     file=f"units/{uid}.yaml",
-                    path="temperature_limits",
+                    path=f"temperature_limits (case {case_name})",
                     hint="Change the design (conduction, radiator area, dissipation) or the limit.",
                 )
             )
@@ -592,10 +592,10 @@ def _checks(
                 Problem(
                     Severity.ERROR,
                     "THERMAL_MARGIN_INSUFFICIENT",
-                    f"Unit '{uid}' is within its {limit_set} limits in case '{case_name}' but "
+                    f"Unit '{uid}' is within its {limit_set} limits in a thermal case but "
                     "closer than the required temperature margin.",
                     file=f"units/{uid}.yaml",
-                    path="temperature_limits",
+                    path=f"temperature_limits (case {case_name})",
                     hint="The margin is set in config/thermal_environment.yaml.",
                 )
             )

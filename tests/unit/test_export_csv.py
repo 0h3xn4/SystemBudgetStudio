@@ -60,7 +60,6 @@ def test_link_series_rows_sum_to_the_summary_volume() -> None:
     rows = list(csv.DictReader(io.StringIO(link_series_csv(passes, series))))
     total = sum(float(r["selected_rate_bps"]) * float(r["in_pass_s"]) for r in rows)
     assert total == pytest.approx(series.volume_bits)
-    first, last = rows[0], rows[-1]
-    assert first["before_aos"] == "true" and float(first["in_pass_s"]) == pytest.approx(5.0)
-    assert last["before_aos"] == "false" and float(last["in_pass_s"]) == pytest.approx(5.0)
-    assert all(r["before_aos"] == "false" for r in rows[1:])
+    assert "before_aos" not in rows[0]  # every sample lies inside its pass
+    first = float(rows[0]["time_s"])
+    assert first >= 105.0  # the first sample is the middle of the first piece of the pass

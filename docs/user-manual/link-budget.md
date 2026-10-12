@@ -58,7 +58,7 @@ This needs a [scenario](scenarios.md) that lists the link's ground station under
 sband_down: 11 pass(es) over gs_north, 4438.17 MByte in the scenario (4438.17 MByte per day).
 ```
 
-A sample counts for the part of its step that lies inside the pass and, if you set `active_modes`, for the time its part of the pass overlaps those spacecraft modes. The series CSV of a link has the columns `in_pass_s` (seconds of the step inside the pass) and `before_aos`; `selected_rate_bps` x `in_pass_s` summed over the rows gives the pass volume. A report whose pass results are n/a because a table entry (Eb/N0, attenuation) is missing carries the INCOMPLETE banner, as one with placeholders does. Not modelled: hysteresis, protocol overhead, acquisition time. In the window: the **Link passes** tab (select a pass to zoom the plot to it).
+A sample counts for the part of its step that lies inside the pass and, if you set `active_modes`, for the time its part of the pass overlaps those spacecraft modes. The series CSV of a link has the column `in_pass_s` (seconds of the pass each row stands for); `selected_rate_bps` x `in_pass_s` summed over the rows gives the pass volume. A report whose pass results are n/a because a table entry (Eb/N0, attenuation) is missing carries the INCOMPLETE banner, as one with placeholders does. Not modelled: hysteresis, protocol overhead, acquisition time. In the window: the **Link passes** tab (select a pass to zoom the plot to it).
 
 ## How do I give an antenna gain?
 

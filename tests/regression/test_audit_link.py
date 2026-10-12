@@ -183,7 +183,8 @@ def test_per_day_volume_is_given_only_for_a_scenario_of_a_day_or_more() -> None:
 
 def with_entries(link_attenuation: list[str], entries: list[AttenuationEntry]):  # type: ignore[no-untyped-def]
     project = link_project(links={"dl": downlink(attenuation=link_attenuation)})
-    table = AttenuationTable(entries=entries)
+    # model_construct: the model refuses duplicates; the solver still defends against them
+    table = AttenuationTable.model_construct(entries=entries)
     return replace(project, config=replace(project.config, attenuation_table=table))
 
 

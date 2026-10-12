@@ -1096,10 +1096,10 @@ error
 THERMAL_MARGIN_INS
 UFFICIENT
 units/radio.yaml
-temperature_limits
-Unit 'radio' is within its operating limits in case
-'hot' but closer than the required temperature
-margin.
+temperature_limits (case hot)
+Unit 'radio' is within its operating limits in a
+thermal case but closer than the required
+temperature margin.
 The margin is set in
 config/thermal_environment.yaml.
 Provenance

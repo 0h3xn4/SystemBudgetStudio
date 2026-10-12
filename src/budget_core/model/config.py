@@ -83,9 +83,9 @@ class AttenuationTable(BudgetModel):
     @field_validator("entries")
     @classmethod
     def _unique(cls, entries: list[AttenuationEntry]) -> list[AttenuationEntry]:
-        keys = [(e.name, e.elevation_deg) for e in entries]
+        keys = [(e.name, e.elevation_deg, e.freq_hz) for e in entries]
         if len(set(keys)) != len(keys):
             raise PydanticCustomError(
-                "duplicate_name", "attenuation names and elevations must be unique"
+                "duplicate_name", "attenuation names, elevations and frequencies must be unique"
             )
         return entries

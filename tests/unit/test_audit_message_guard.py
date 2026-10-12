@@ -15,6 +15,10 @@ SRC = Path(__file__).resolve().parents[2] / "src" / "budget_core"
 
 SAFE = {
     "uid",  # a unit id: the file name in units/
+    "eid",  # an expendable id: the file name in expendables/
+    "MAX_TLE_AGE_DAYS",  # a constant of the code
+    "i + 1",  # the position of an item in a list of the link (a number)
+    "tableau",  # a constant path of the code (config/attenuation_table.yaml)
     "row.item_id",  # a unit or expendable id: the file name
     "sid",  # a site id (file name)
     "oid",  # an orbit id (file name)

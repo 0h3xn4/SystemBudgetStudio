@@ -1296,8 +1296,8 @@
       "file": "units/radio.yaml",
       "hint": "The margin is set in config/thermal_environment.yaml.",
       "line": null,
-      "message": "Unit 'radio' is within its operating limits in case 'hot' but closer than the required temperature margin.",
-      "path": "temperature_limits",
+      "message": "Unit 'radio' is within its operating limits in a thermal case but closer than the required temperature margin.",
+      "path": "temperature_limits (case hot)",
       "severity": "error"
     }
   ],

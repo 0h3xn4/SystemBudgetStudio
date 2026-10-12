@@ -116,10 +116,9 @@ def test_limit_findings_name_the_case_and_are_not_merged() -> None:
     result = hot_and_cold_exceeded()
     found = [p for p in result.problems if p.code == "THERMAL_LIMIT_EXCEEDED"]
     assert len(found) == 2
-    assert {("'hot'" in p.message, "'cold'" in p.message) for p in found} == {
-        (True, False),
-        (False, True),
-    }
+    # the case is a key the user typed: it is named in the path, not in the message
+    assert {("hot" in p.path, "cold" in p.path) for p in found} == {(True, False), (False, True)}
+    assert not [p for p in found if "hot" in p.message or "cold" in p.message]
 
 
 def test_margin_findings_name_the_case() -> None:
@@ -129,7 +128,7 @@ def test_margin_findings_name_the_case() -> None:
     limits = TemperatureLimits(operating_min_k=temp - 2.0, operating_max_k=400.0)
     result = static_thermal_budget(thermal_project(margin=5.0, limits_u2=limits))
     found = [p for p in result.problems if p.code == "THERMAL_MARGIN_INSUFFICIENT"]
-    assert found and all("'cold'" in p.message for p in found)
+    assert found and all("cold" in p.path and "cold" not in p.message for p in found)
 
 
 def test_messages_do_not_repeat_surface_names() -> None:

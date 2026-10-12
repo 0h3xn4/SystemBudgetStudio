@@ -43,7 +43,7 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 - Comparison pairs link tables by link, point, rate and AOS time, so inserting a point does not shift the rows; changes come from exact values; one-sided columns, tables and repeated titles are listed; CSV and JSON hold every difference; the summary separates values from rows (D-113).
 - Provenance lists numpy, Pillow, python-docx and sgp4 as well and the packaged build ships their metadata; PDF dates, DOCX application name and XLSX creator are consistent; scenario JSON carries Python and library versions; CSV defusing leaves plain words alone (D-114).
 - PDF: very long cells are shortened with a note instead of failing the run, missing glyphs are `?`, header words are not split, the footer wraps; XLSX: valid unique sheet names, long cells shortened; DOCX properties are cut at 255 characters; plots: gaps, single samples, tick labels, legend overflow (D-115).
-- Series CSV files: the mode id is quoted and defused; the link series has `in_pass_s` and `before_aos` (D-116).
+- Series CSV files: the mode id is quoted and defused; the link series has `in_pass_s`, the time each row stands for (D-116).
 
 ### Fixed
 - **File → Export scenario results** existed in the code but was not connected to any menu; it is now, and an unwritable folder gives a plain message. The "Compute a scenario first (Ctrl+R)" message named a shortcut that does not exist; it now says to press Compute in the Scenario tab.
