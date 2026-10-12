@@ -56,7 +56,7 @@
 4: 'Mode A' | 40 | 44 | 46.2 | 40 | 46.2 | 50 | 57.75000000000001
 5: 'Mode B' | 100 | 110 | 115.5 | 100 | 115.5 | 120 | 138.6
 6: 'Average = sum of unit power x duty cycle. Peak = sum of unit peak powers. Source = after converter and distribution losses.' |  |  |  |  |  |  | 
-## sheet Assumptions rows=39 cols=5
+## sheet Assumptions rows=46 cols=5
 1: 'Configuration numbers used' |  |  |  | 
 2: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
 3: 'Margin, maturity class m1' | 0.1 | 'ratio' | 'test fixture' | 'sourced'
@@ -83,24 +83,31 @@
 24: 'Peak power limit' | 110 | 'W' | 'test fixture' | 'sourced'
 26: 'Equations' |  |  |  | 
 27: 'ID' | 'Name' | 'Formula' | 'Source' | 
-28: 'TDP-ARRAY' | 'Array output power per step' | 'P_gen = E * (sum_faces N_cells * max(0, cos theta)) * A_cell * eta_ref * k_T * (1 - l_pack) * (1 - l_harness) * k_age * f_lit' | 'SOURCE_MISSING' | 
-29: 'TDP-TEMP' | 'Cell efficiency at the operating temperature' | 'k_T = max(0, 1 + alpha * (T_cell - T_ref))' | 'SOURCE_MISSING' | 
-30: 'TDP-AGE' | 'Array degradation over life' | 'k_age = (1 - annual_degradation_ratio) ^ years' | 'SOURCE_MISSING' | 
-31: 'TDP-COS' | 'Sun incidence on a face' | 'cos theta = n_face . s_body (unit vectors), zero on the back side' | 'SOURCE_MISSING' | 
-32: 'TDP-LIT' | 'Sunlit share of a step' | 'f_lit = 1 - (eclipse time inside the step) / step; trapezoid of the shadow ratio for a soft shadow' | 'SOURCE_MISSING' | 
-33: 'TDP-DEMAND' | 'Demand per step' | 'P_dem = sum over modes of overlap(mode segment, step) * P_source(mode) / step' | 'SOURCE_MISSING' | 
-34: 'TDP-CAP' | 'Battery capacity' | 'E_cap = C_cell * V_cell * N_series * N_parallel * (1 - annual_capacity_fade_ratio) ^ years' | 'SOURCE_MISSING' | 
-35: 'TDP-SOC' | 'Battery state of charge' | 'surplus: E += eta_c * min(P*dt, (E_cap - E) / eta_c); deficit: E -= min(P*dt, E * eta_d) / eta_d (P = generation - demand)' | 'SOURCE_MISSING' | 
-36: 'TDP-DOD' | 'Depth of discharge' | 'DoD = 1 - E / E_cap; violation when DoD > allowed depth of discharge of the phase' | 'SOURCE_MISSING' | 
-37: 'TDP-BALANCE' | 'Orbit energy balance' | 'balance = integral(P_gen - P_dem) dt over one revolution; negative is a violation' | 'SOURCE_MISSING' | 
-38: 'TDP-PEAK' | 'Peak power at the source' | 'P_peak,source = sum of unit peaks through converter and distribution losses; violation when above the power limit during the mode' | 'SOURCE_MISSING' | 
-39: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
-## sheet Problems rows=5 cols=4
-1: 'Problems and open items' |  |  | 
-2: 'Severity' | 'Code' | 'Location' | 'Message'
-3: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first at T+00:59:00.'
-4: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first at T+00:58:33.'
-5: 'error' | 'PEAK_POWER_EXCEEDED' | 'config/power_system.yaml' | 'The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00.'
+28: 'PWR-EFF' | 'Effective unit power' | 'P_eff = P_avg * duty_cycle_ratio' | 'SOURCE_MISSING' | 
+29: 'PWR-MARGIN' | 'Unit power with maturity margin' | 'P_m = P_eff * (1 + margin_ratio(maturity))' | 'SOURCE_MISSING' | 
+30: 'PWR-SYSMARGIN' | 'System margin on the sum of margined loads' | 'P_sys = (sum P_m) * (1 + system_margin_ratio)' | 'SOURCE_MISSING' | 
+31: 'PWR-SOURCE' | 'Source power through converter and distribution' | 'P_source = P_load / (eta_converter(bus) * (1 - distribution_loss_ratio))' | 'SOURCE_MISSING' | 
+32: 'PWR-PEAK' | 'Peak power' | 'P_peak = sum of unit peak_power_w (all units at peak at once, conservative)' | 'SOURCE_MISSING' | 
+33: 'ENV-SUN' | 'Sun direction and distance (low precision)' | 'lambda = L + 1.915 sin g + 0.020 sin 2g; unit vector (cos lambda, cos eps sin lambda, sin eps sin lambda); R = 1.00014 - 0.01671 cos g - 0.00014 cos 2g (AU)' | 'SOURCE_MISSING' | 
+34: 'ENV-SHADOW-CYL' | 'Cylindrical Earth shadow' | 'in shadow when r.s < 0 and |r - (r.s) s| < R_Earth (s: unit vector to the Sun)' | 'SOURCE_MISSING' | 
+35: 'TDP-ARRAY' | 'Array output power per step' | 'P_gen = E * (sum_faces N_cells * max(0, cos theta)) * A_cell * eta_ref * k_T * (1 - l_pack) * (1 - l_harness) * k_age * f_lit' | 'SOURCE_MISSING' | 
+36: 'TDP-TEMP' | 'Cell efficiency at the operating temperature' | 'k_T = max(0, 1 + alpha * (T_cell - T_ref))' | 'SOURCE_MISSING' | 
+37: 'TDP-AGE' | 'Array degradation over life' | 'k_age = (1 - annual_degradation_ratio) ^ years' | 'SOURCE_MISSING' | 
+38: 'TDP-COS' | 'Sun incidence on a face' | 'cos theta = n_face . s_body (unit vectors), zero on the back side' | 'SOURCE_MISSING' | 
+39: 'TDP-LIT' | 'Sunlit share of a step' | 'f_lit = 1 - (eclipse time inside the step) / step; trapezoid of the shadow ratio for a soft shadow' | 'SOURCE_MISSING' | 
+40: 'TDP-DEMAND' | 'Demand per step' | 'P_dem = sum over modes of overlap(mode segment, step) * P_source(mode) / step' | 'SOURCE_MISSING' | 
+41: 'TDP-CAP' | 'Battery capacity' | 'E_cap = C_cell * V_cell * N_series * N_parallel * (1 - annual_capacity_fade_ratio) ^ years' | 'SOURCE_MISSING' | 
+42: 'TDP-SOC' | 'Battery state of charge' | 'surplus: E += eta_c * min(P*dt, (E_cap - E) / eta_c); deficit: E -= min(P*dt, E * eta_d) / eta_d (P = generation - demand)' | 'SOURCE_MISSING' | 
+43: 'TDP-DOD' | 'Depth of discharge' | 'DoD = 1 - E / E_cap; violation when DoD > allowed depth of discharge of the phase' | 'SOURCE_MISSING' | 
+44: 'TDP-BALANCE' | 'Orbit energy balance' | 'balance = integral(P_gen - P_dem) dt over one revolution; negative is a violation' | 'SOURCE_MISSING' | 
+45: 'TDP-PEAK' | 'Peak power at the source' | 'P_peak,source = sum of unit peaks through converter and distribution losses; violation when above the power limit during the mode' | 'SOURCE_MISSING' | 
+46: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
+## sheet Problems rows=5 cols=6
+1: 'Problems and open items' |  |  |  |  | 
+2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+3: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'battery.max_dod_ratio.eol' | 'The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first at T+00:59:00.' | 'Open the violations table for every interval; change the input named here or the scenario.'
+4: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'battery.max_dod_ratio.eol' | 'The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first at T+00:58:33.' | 'Open the violations table for every interval; change the input named here or the scenario.'
+5: 'error' | 'PEAK_POWER_EXCEEDED' | 'config/power_system.yaml' | 'limits.peak_power_w' | 'The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00.' | 'Open the violations table for every interval; change the input named here or the scenario.'
 ## sheet Provenance rows=10 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'

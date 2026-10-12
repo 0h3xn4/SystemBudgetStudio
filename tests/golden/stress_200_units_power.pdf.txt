@@ -1,5 +1,6 @@
-pages=41
+pages=43
 ## page 1
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example stress case (200 units) rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Power budget (static): Example stress case (200 units)
@@ -22,7 +23,7 @@ Peak load
 (W)
 Peak at source, with margins (W)
 Charging
- 277.262
+ 277.263
  n/a
  n/a
  n/a
@@ -38,7 +39,7 @@ Downlink
  497.455
  n/a
 Imaging
- 275.812
+ 275.813
  n/a
  n/a
  n/a
@@ -54,7 +55,7 @@ Nominal
  496.598
  n/a
 Safe
- 275.957
+ 275.958
  n/a
  n/a
  n/a
@@ -253,6 +254,7 @@ charging
  n/a
  5.145
 ## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example stress case (200 units) rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Unit
@@ -450,7 +452,7 @@ aux
 charging
  2.695
  0.50
- 1.347
+ 1.348
  n/a
  n/a
  4.042

@@ -67,31 +67,38 @@ Assumptions
 Configuration numbers used
 ## table
 Name | Value | Unit | Source | Status
-Margin, maturity class m1 | 0.1000 | ratio | test fixture | sourced
-System margin | 0.0500 | ratio | test fixture | sourced
-Distribution loss | 0.0000 | ratio | test fixture | sourced
-Converter efficiency, bus main | 1.0000 | ratio | test fixture | sourced
-Solar irradiance | 1000.0000 | W/m2 | test fixture | sourced
+Margin, maturity class m1 | 0.1 | ratio | test fixture | sourced
+System margin | 0.05 | ratio | test fixture | sourced
+Distribution loss | 0 | ratio | test fixture | sourced
+Converter efficiency, bus main | 1 | ratio | test fixture | sourced
+Solar irradiance | 1000 | W/m2 | test fixture | sourced
 Cell area | 0.0005 | m2 | test fixture | sourced
-Cell efficiency | 0.5000 | ratio | test fixture | sourced
-Reference temperature | 300.0000 | K | test fixture | sourced
-Cell temperature | 300.0000 | K | test fixture | sourced
-Efficiency temperature coefficient | -0.0020 | 1/K | test fixture | sourced
-Packing loss | 0.0000 | ratio | test fixture | sourced
-Harness loss | 0.0000 | ratio | test fixture | sourced
-Design life | 5.0000 | yr | test fixture | sourced
-Battery cell capacity | 5.0000 | Ah | test fixture | sourced
-Battery cell voltage | 4.0000 | V | test fixture | sourced
-Battery charge efficiency | 1.0000 | ratio | test fixture | sourced
-Battery discharge efficiency | 1.0000 | ratio | test fixture | sourced
-Battery annual capacity fade | 0.0100 | ratio | test fixture | sourced
-Battery initial state of charge | 1.0000 | ratio | test fixture | sourced
-Allowed depth of discharge, phase eol | 0.1500 | ratio | test fixture | sourced
-Array annual degradation | 0.0200 | ratio | test fixture | sourced
-Peak power limit | 110.0000 | W | test fixture | sourced
+Cell efficiency | 0.5 | ratio | test fixture | sourced
+Reference temperature | 300 | K | test fixture | sourced
+Cell temperature | 300 | K | test fixture | sourced
+Efficiency temperature coefficient | -0.002 | 1/K | test fixture | sourced
+Packing loss | 0 | ratio | test fixture | sourced
+Harness loss | 0 | ratio | test fixture | sourced
+Design life | 5 | yr | test fixture | sourced
+Battery cell capacity | 5 | Ah | test fixture | sourced
+Battery cell voltage | 4 | V | test fixture | sourced
+Battery charge efficiency | 1 | ratio | test fixture | sourced
+Battery discharge efficiency | 1 | ratio | test fixture | sourced
+Battery annual capacity fade | 0.01 | ratio | test fixture | sourced
+Battery initial state of charge | 1 | ratio | test fixture | sourced
+Allowed depth of discharge, phase eol | 0.15 | ratio | test fixture | sourced
+Array annual degradation | 0.02 | ratio | test fixture | sourced
+Peak power limit | 110 | W | test fixture | sourced
 Equations
 ## table
 ID | Name | Formula | Source
+PWR-EFF | Effective unit power | P_eff = P_avg * duty_cycle_ratio | SOURCE_MISSING
+PWR-MARGIN | Unit power with maturity margin | P_m = P_eff * (1 + margin_ratio(maturity)) | SOURCE_MISSING
+PWR-SYSMARGIN | System margin on the sum of margined loads | P_sys = (sum P_m) * (1 + system_margin_ratio) | SOURCE_MISSING
+PWR-SOURCE | Source power through converter and distribution | P_source = P_load / (eta_converter(bus) * (1 - distribution_loss_ratio)) | SOURCE_MISSING
+PWR-PEAK | Peak power | P_peak = sum of unit peak_power_w (all units at peak at once, conservative) | SOURCE_MISSING
+ENV-SUN | Sun direction and distance (low precision) | lambda = L + 1.915 sin g + 0.020 sin 2g; unit vector (cos lambda, cos eps sin lambda, sin eps sin lambda); R = 1.00014 - 0.01671 cos g - 0.00014 cos 2g (AU) | SOURCE_MISSING
+ENV-SHADOW-CYL | Cylindrical Earth shadow | in shadow when r.s < 0 and |r - (r.s) s| < R_Earth (s: unit vector to the Sun) | SOURCE_MISSING
 TDP-ARRAY | Array output power per step | P_gen = E * (sum_faces N_cells * max(0, cos theta)) * A_cell * eta_ref * k_T * (1 - l_pack) * (1 - l_harness) * k_age * f_lit | SOURCE_MISSING
 TDP-TEMP | Cell efficiency at the operating temperature | k_T = max(0, 1 + alpha * (T_cell - T_ref)) | SOURCE_MISSING
 TDP-AGE | Array degradation over life | k_age = (1 - annual_degradation_ratio) ^ years | SOURCE_MISSING
@@ -107,10 +114,10 @@ SOURCE_MISSING: the formula is a project convention or textbook definition whose
 Problems
 Problems and open items
 ## table
-Severity | Code | Location | Message
-error | BATTERY_DOD_EXCEEDED | config/power_system.yaml | The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first at T+00:59:00.
-error | BATTERY_DOD_EXCEEDED | config/power_system.yaml | The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first at T+00:58:33.
-error | PEAK_POWER_EXCEEDED | config/power_system.yaml | The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00.
+Severity | Code | Location | Path | Message | Hint
+error | BATTERY_DOD_EXCEEDED | config/power_system.yaml | battery.max_dod_ratio.eol | The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first at T+00:59:00. | Open the violations table for every interval; change the input named here or the scenario.
+error | BATTERY_DOD_EXCEEDED | config/power_system.yaml | battery.max_dod_ratio.eol | The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first at T+00:58:33. | Open the violations table for every interval; change the input named here or the scenario.
+error | PEAK_POWER_EXCEEDED | config/power_system.yaml | limits.peak_power_w | The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00. | Open the violations table for every interval; change the input named here or the scenario.
 Provenance
 Provenance
 ## table

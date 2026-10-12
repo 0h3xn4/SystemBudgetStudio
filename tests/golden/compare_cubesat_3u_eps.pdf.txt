@@ -1,5 +1,6 @@
 pages=3
 ## page 1
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Comparison: Example 3U CubeSat, complete power and thermal inputs rev 1 and Example 3U CubeSat,
@@ -8,7 +9,7 @@ INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked
 placeholders are replaced with sourced values.
 Summary
 rev 1 compared with rev 2.
-24 values differ out of 1545 compared.
+24 value(s) differ out of 1527 compared.
 Values that look equal at the displayed precision are not reported as differences.
 Compared sides
 Item
@@ -41,10 +42,10 @@ Average load (W)
 changed
 Nominal
 Average, unit margins (W)
-2.167
+2.168
 2.608
-+0.441 W
-+20.4 %
++0.440 W
++20.3 %
 changed
 Nominal
 Average, system margin (W)
@@ -64,7 +65,7 @@ Nominal
 Average at source, with margins (W)
 2.731
 3.286
-+0.555 W
++0.554 W
 +20.3 %
 changed
 Mode: Nominal — Units in mode Nominal
@@ -119,6 +120,7 @@ With margin (W)
 +34.8 %
 changed
 ## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Mode: Nominal — By supply bus
@@ -154,7 +156,7 @@ main
 Average at source, with margins (W)
 2.731
 3.286
-+0.555 W
++0.554 W
 +20.3 %
 changed
 Mode: Nominal — Totals
@@ -174,10 +176,10 @@ Average (W)
 changed
 Load, with unit margins
 Average (W)
-2.167
+2.168
 2.608
-+0.441 W
-+20.4 %
++0.440 W
++20.3 %
 changed
 Load, with system margin
 Average (W)
@@ -197,7 +199,7 @@ Source, with margins
 Average (W)
 2.731
 3.286
-+0.555 W
++0.554 W
 +20.3 %
 changed
 Differences: Mass budget
@@ -271,6 +273,7 @@ Dissipation (W)
 +34.8 %
 changed
 ## page 3
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Differences: Link budget
@@ -284,7 +287,8 @@ System Budget Studio 0.1.0
 Python
 3.x
 Libraries
-openpyxl for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests
+numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests,
+reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
 Project
 Example 3U CubeSat, complete power and thermal inputs
 Project revision

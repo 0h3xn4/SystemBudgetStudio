@@ -82,14 +82,681 @@
       "value": null
     }
   ],
+  "incomplete": true,
   "problems": [
     {
+      "code": "CONFIG_EMPTY_TABLE",
+      "file": "config/attenuation_table.yaml",
+      "hint": "Add entries from a cited source, or import them from a file.",
+      "line": 3,
+      "message": "The table has no entries.",
+      "path": "entries",
+      "severity": "warning"
+    },
+    {
       "code": "RESULT_INCOMPLETE",
-      "file": "links/uhf_down.yaml",
+      "file": "config/ebn0_table.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The transmit power is a placeholder.",
-      "path": "transmitter.power_w",
+      "message": "The required Eb/N0 is a placeholder.",
+      "path": "entries[0].required_ebn0_db",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/ebn0_table.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 7,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "entries[0].required_ebn0_db",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 6,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "classes.class_a.power_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 10,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "classes.class_a.mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 15,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "classes.class_b.power_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 19,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "classes.class_b.mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 24,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "classes.class_c.power_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 28,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "classes.class_c.mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 32,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "system_power_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 36,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "system_mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/mass_limits.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 7,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "limits[0].limit_kg",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_config.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 4,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "distribution_loss_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_config.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 9,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "converter_efficiency_ratio.main",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 4,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "design_life_yr",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 45,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.solar_irradiance_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 49,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.cell_area_m2",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 53,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.cell_efficiency_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 57,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.reference_temperature_k",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 61,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.cell_temperature_k",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 65,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.efficiency_temp_coeff_perk",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 69,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.packing_loss_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 73,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.harness_loss_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 77,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "solar_array.annual_degradation_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 82,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.cell_capacity_ah",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 86,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.cell_nominal_voltage_v",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 92,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.charge_efficiency_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 96,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.discharge_efficiency_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 100,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.annual_capacity_fade_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 104,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.initial_soc_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 109,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.max_dod_ratio.eol",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 113,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "battery.max_dod_ratio.launch",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/power_system.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 128,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "limits.peak_power_w",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 4,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "space_temperature_k",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 8,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "temperature_margin_k",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 17,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "cases.cold.solar_flux_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 21,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "cases.cold.albedo_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 25,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "cases.cold.earth_ir_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 33,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "cases.hot.solar_flux_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 37,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "cases.hot.albedo_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 41,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "cases.hot.earth_ir_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 18,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "conductances[0].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 24,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "conductances[1].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 30,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "conductances[2].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 36,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "conductances[3].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 44,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[0].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 48,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[0].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 54,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[0].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 58,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[0].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 63,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[0].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 67,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[0].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 74,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[1].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 78,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[1].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 84,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[1].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 88,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[1].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 93,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[1].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 97,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[1].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 104,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[2].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 108,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[2].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 114,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[2].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 118,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[2].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 123,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[2].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 127,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[2].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 134,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[3].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 138,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[3].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 144,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[3].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 148,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[3].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 153,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[3].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 157,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[3].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 164,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[4].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 168,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[4].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 174,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[4].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 178,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[4].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 183,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[4].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace it with a value from your margin policy, standard or data sheet and cite the source.",
+      "line": 187,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "surfaces[4].exposure.hot.earth_view_ratio",
       "severity": "warning"
     },
     {
@@ -97,35 +764,8 @@
       "file": "links/uhf_down.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The line loss is a placeholder.",
-      "path": "transmitter.line_loss_db",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "links/uhf_down.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The transmitter antenna gain is a placeholder.",
-      "path": "transmitter.antenna.gain_dbi",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "links/uhf_down.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The receiver G/T is a placeholder.",
-      "path": "receiver.g_over_t_dbk",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "links/uhf_down.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The required margin is a placeholder.",
-      "path": "required_margin_db",
+      "message": "The implementation loss is a placeholder.",
+      "path": "implementation_loss_db",
       "severity": "warning"
     },
     {
@@ -151,17 +791,116 @@
       "file": "links/uhf_down.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The implementation loss is a placeholder.",
-      "path": "implementation_loss_db",
+      "message": "The receiver G/T is a placeholder.",
+      "path": "receiver.g_over_t_dbk",
       "severity": "warning"
     },
     {
       "code": "RESULT_INCOMPLETE",
-      "file": "config/ebn0_table.yaml",
+      "file": "links/uhf_down.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The required Eb/N0 is a placeholder.",
-      "path": "entries[0].required_ebn0_db",
+      "message": "The required margin is a placeholder.",
+      "path": "required_margin_db",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The transmitter antenna gain is a placeholder.",
+      "path": "transmitter.antenna.gain_dbi",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The line loss is a placeholder.",
+      "path": "transmitter.line_loss_db",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The transmit power is a placeholder.",
+      "path": "transmitter.power_w",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 9,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "transmitter.power_w",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 13,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "transmitter.line_loss_db",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 18,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "transmitter.antenna.gain_dbi",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 24,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "receiver.g_over_t_dbk",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 36,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "required_margin_db",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 40,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "pointing_loss_db",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 44,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "polarisation_loss_db",
+      "severity": "warning"
+    },
+    {
+      "code": "CONFIG_PLACEHOLDER",
+      "file": "links/uhf_down.yaml",
+      "hint": "Replace it with a value from the data sheet or requirement and cite the source.",
+      "line": 48,
+      "message": "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.",
+      "path": "implementation_loss_db",
       "severity": "warning"
     }
   ],
