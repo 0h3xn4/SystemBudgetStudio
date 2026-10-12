@@ -16,24 +16,76 @@ class BudgetModel(BaseModel):
     @field_validator("*", mode="before")
     @classmethod
     def _parse_units(cls, value: Any, info: ValidationInfo) -> Any:
-        """Accept "2.2 GHz" for fields whose name carries a unit suffix; reject booleans."""
+        """Accept "2.2 GHz" for fields whose name carries a unit suffix. Refuse what only looks
+        like a number: yes/no values anywhere in a numeric field, and text in a numeric field
+        that has no unit to read ("3" would otherwise be coerced to 3)."""
         name = info.field_name or ""
-        numeric = has_unit_suffix(name) or name == "value"
-        if numeric and isinstance(value, bool):
+        _check_not_blank(value)
+        field = cls.model_fields.get(name)
+        annotation = field.annotation if field is not None else None
+        suffixed = has_unit_suffix(name)
+        numeric = suffixed or name == "value" or _is_numeric(annotation)
+        if numeric and _contains_bool(value):
             raise PydanticCustomError("unit_invalid", "expected a number, not a yes/no value")
         if numeric:
             _check_magnitude(value)
-        if not has_unit_suffix(name):
+        if not suffixed:
+            if numeric and _contains_text(value):
+                raise PydanticCustomError(
+                    "number_text", "expected a number, not text (write it without quotes)"
+                )
             return value
         if isinstance(value, str):
             return _parse(value, name)
-        if not _holds_numbers(cls.model_fields[name].annotation):
+        if not _holds_numbers(annotation):
             return value  # e.g. a nested model such as Sourced: its own fields parse themselves
         if isinstance(value, list):
             return [_parse(v, name) if isinstance(v, str) else v for v in value]
         if isinstance(value, dict):
             return {k: _parse(v, name) if isinstance(v, str) else v for k, v in value.items()}
         return value
+
+
+def _items(value: Any) -> list[Any]:
+    if isinstance(value, list):
+        return value
+    if isinstance(value, dict):
+        return list(value.values())
+    return [value]
+
+
+def _contains_bool(value: Any) -> bool:
+    return any(isinstance(item, bool) for item in _items(value))
+
+
+def _contains_text(value: Any) -> bool:
+    return any(isinstance(item, str) for item in _items(value))
+
+
+def _check_not_blank(value: Any) -> None:
+    """Text that is only spaces is never a name, a phase or a note: it is a slip."""
+    texts = [value] if isinstance(value, str) else []
+    if isinstance(value, list):
+        texts = [v for v in value if isinstance(v, str)]
+    elif isinstance(value, dict):
+        texts = [k for k in value if isinstance(k, str)] + [
+            v for v in value.values() if isinstance(v, str)
+        ]
+    if any(t and not t.strip() for t in texts):
+        raise PydanticCustomError("blank_text", "text must not consist of spaces only")
+
+
+def _is_numeric(annotation: Any) -> bool:
+    """True for int, float, their optional forms and lists/dicts of them."""
+    origin = get_origin(annotation)
+    args = [a for a in get_args(annotation) if a is not type(None)]
+    if annotation in (int, float):
+        return True
+    if origin in (list, dict):
+        return bool(args) and _is_numeric(args[-1])
+    if origin is not None and args:  # Optional[...] / unions: numeric when every member is
+        return all(_is_numeric(a) for a in args)
+    return False
 
 
 def _check_magnitude(value: Any) -> None:

@@ -101,6 +101,15 @@ def explain(
             hint = "Cite the standard or data sheet, or write 'TBD' to mark a placeholder."
         elif kind in ("peak_below_average", "duration_order"):
             message = f"Field '{name}': {err['msg']}."
+        elif kind in ("value_error", "assertion_error"):
+            # raised by a plain ValueError or assert inside a validator: its text may quote the
+            # offending value (int('x') says so), and that value comes from the file
+            message = (
+                f"Field '{name}' has a value that cannot be used."
+                if name
+                else "A value cannot be used."
+            )
+            hint = hint or "Check the value, its unit and its format against the documentation."
 
         problems.append(
             Problem(

@@ -367,7 +367,7 @@ def _solve_case(
         "W/m2",
         efile,
         f"{base}.solar_flux_wm2",
-        f"The solar flux of case '{name}'",
+        "The solar flux of the case",
     )
     albedo = notes.get(
         f"Albedo, case {name}",
@@ -375,7 +375,7 @@ def _solve_case(
         "ratio",
         efile,
         f"{base}.albedo_ratio",
-        f"The albedo of case '{name}'",
+        "The albedo of the case",
     )
     earth_ir = notes.get(
         f"Earth infrared, case {name}",
@@ -383,7 +383,7 @@ def _solve_case(
         "W/m2",
         efile,
         f"{base}.earth_ir_wm2",
-        f"The Earth infrared flux of case '{name}'",
+        "The Earth infrared flux of the case",
     )
     heat = heat_by_mode.get(case.spacecraft_mode)
     dissipation = np.zeros(len(node_names))
@@ -405,7 +405,7 @@ def _solve_case(
             "ratio",
             mfile,
             f"{path}.emissivity_ratio",
-            f"The emissivity of surface '{s.name}'",
+            "The emissivity of the surface",
         )
         alpha = notes.get(
             f"Absorptivity, {s.name}",
@@ -413,13 +413,13 @@ def _solve_case(
             "ratio",
             mfile,
             f"{path}.absorptivity_ratio",
-            f"The absorptivity of surface '{s.name}'",
+            "The absorptivity of the surface",
         )
         exposure = s.exposure.get(name)
         if exposure is None:
             notes.problems.append(
                 incomplete(
-                    f"Surface '{s.name}' has no exposure for case '{name}'.",
+                    "A surface has no exposure entry for this thermal case.",
                     mfile,
                     f"{path}.exposure",
                 )
@@ -432,7 +432,7 @@ def _solve_case(
             "ratio",
             mfile,
             f"{path}.exposure.{name}.solar_view_ratio",
-            f"The solar view ratio of surface '{s.name}'",
+            "The solar view ratio of the surface",
         )
         earth_view = notes.get(
             f"Earth view, {s.name}, case {name}",
@@ -440,7 +440,7 @@ def _solve_case(
             "ratio",
             mfile,
             f"{path}.exposure.{name}.earth_view_ratio",
-            f"The Earth view ratio of surface '{s.name}'",
+            "The Earth view ratio of the surface",
         )
         if None in (eps, alpha, sun_view, earth_view, flux, albedo, earth_ir):
             complete = False
@@ -470,12 +470,10 @@ def _solve_case(
     try:
         temps = solve_steady_state(conductance, radiation, heat_in, space)
     except ThermalSolveError as exc:
-        stranded = ", ".join(node_names[i] for i in exc.nodes)
         message = (
-            f"No equilibrium temperature for case '{name}': nodes without a path to space "
-            f"({stranded})."
+            "No equilibrium temperature for a thermal case: some nodes have no path to space."
             if exc.nodes
-            else f"The temperature solution for case '{name}' failed: {exc}."
+            else "The temperature solution of a thermal case failed."
         )
         notes.problems.append(
             Problem(
@@ -483,6 +481,7 @@ def _solve_case(
                 "THERMAL_SOLVE_FAILED",
                 message,
                 file=mfile,
+                path=f"cases.{name}",
                 hint="Give every group of connected nodes a surface that radiates to space.",
             )
         )

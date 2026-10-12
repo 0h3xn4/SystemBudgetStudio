@@ -294,7 +294,7 @@ def test_case16_missing_inputs_become_problems_not_zero() -> None:
     )
     codes = [(x.code, x.severity.value) for x in static_power_budget(p).problems]
     assert codes and {c for c, _ in codes} == {"RESULT_INCOMPLETE"}
-    text = " ".join(x.message for x in static_power_budget(p).problems)
+    text = " ".join(f"{x.message} {x.path}" for x in static_power_budget(p).problems)
     for needle in ("m1", "system margin", "distribution", "main"):
         assert needle in text
     assert "m2" not in text and "aux" not in text  # only what is actually missing

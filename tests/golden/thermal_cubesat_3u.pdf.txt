@@ -1133,27 +1133,27 @@ trustworthy.
 warning
 RESULT_INCOMPLETE
 config/thermal_environment.yaml
-The albedo of case 'cold' is a placeholder.
+The albedo of the case is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_environment.yaml
-The Earth infrared flux of case 'cold' is a placeholder.
+The Earth infrared flux of the case is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_environment.yaml
-The solar flux of case 'cold' is a placeholder.
+The solar flux of the case is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_environment.yaml
-The albedo of case 'hot' is a placeholder.
+The albedo of the case is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_environment.yaml
-The Earth infrared flux of case 'hot' is a placeholder.
+The Earth infrared flux of the case is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_environment.yaml
-The solar flux of case 'hot' is a placeholder.
+The solar flux of the case is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_environment.yaml
@@ -1228,103 +1228,103 @@ A conductance is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The absorptivity of surface 'ADCS panel' is a placeholder.
+The absorptivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The emissivity of surface 'ADCS panel' is a placeholder.
+The emissivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'ADCS panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'ADCS panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'ADCS panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'ADCS panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The absorptivity of surface 'DH panel' is a placeholder.
+The absorptivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The emissivity of surface 'DH panel' is a placeholder.
+The emissivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'DH panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'DH panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'DH panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'DH panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The absorptivity of surface 'EPS panel' is a placeholder.
+The absorptivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The emissivity of surface 'EPS panel' is a placeholder.
+The emissivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'EPS panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'EPS panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'EPS panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'EPS panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The absorptivity of surface 'PL panel' is a placeholder.
+The absorptivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The emissivity of surface 'PL panel' is a placeholder.
+The emissivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'PL panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'PL panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'PL panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'PL panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The absorptivity of surface 'TTC panel' is a placeholder.
+The absorptivity of the surface is a placeholder.
 ## page 11
 System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 11
@@ -1335,23 +1335,23 @@ Message
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The emissivity of surface 'TTC panel' is a placeholder.
+The emissivity of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'TTC panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'TTC panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The Earth view ratio of surface 'TTC panel' is a placeholder.
+The Earth view ratio of the surface is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/thermal_model.yaml
-The solar view ratio of surface 'TTC panel' is a placeholder.
+The solar view ratio of the surface is a placeholder.
 warning
 CONFIG_PLACEHOLDER
 config/thermal_model.yaml:18

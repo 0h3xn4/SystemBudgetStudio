@@ -56,13 +56,14 @@ _SUFFIXES: dict[str, _Suffix] = {
     "dbk": _Suffix("dB/K", "receiver figure of merit (G/T)", None),
 }
 
-# Logarithmic suffix -> accepted unit tokens (lower case) and their offset to the canonical unit.
+# Logarithmic suffix -> accepted unit tokens and their offset to the canonical unit. Capitals
+# matter, as they do for every other unit ("mW" is not "MW"); a wrong capital gets its own message.
 _LOG_TOKENS: dict[str, dict[str, float]] = {
-    "db": {"db": 0.0},
-    "dbi": {"dbi": 0.0},
-    "dbw": {"dbw": 0.0, "dbm": -30.0},
-    "dbm": {"dbm": 0.0, "dbw": 30.0},
-    "dbk": {"dbk": 0.0, "db/k": 0.0},
+    "db": {"dB": 0.0},
+    "dbi": {"dBi": 0.0},
+    "dbw": {"dBW": 0.0, "dBm": -30.0},
+    "dbm": {"dBm": 0.0, "dBW": 30.0},
+    "dbk": {"dB/K": 0.0, "dBK": 0.0},
 }
 _ALL_LOG_TOKENS = {"db", "dbi", "dbw", "dbm", "dbhz", "dbk", "db/k", "dbc"}
 
@@ -73,8 +74,10 @@ MAX_MAGNITUDE = 1.0e20
 # A unit token is handed to pint's expression parser, which evaluates arithmetic: "(9**9**9)" would
 # never finish. Only plain unit names with simple exponents are passed on.
 _TOKEN_CHARS = re.compile(r"^[A-Za-z0-9_\u00b0\u00b5\u03bc\u03a9%/ ^*.\u00b7\-]{1,32}$")
-_EXPONENT = re.compile(r"(?:\*\*|\^)\s*-?\d{1,2}(?!\d)")
-_CHAINED = re.compile(r"(?:\*\*|\^)\s*-?\d+\s*(?:\*\*|\^)")
+_EXPONENT = re.compile(r"(?:\*\*|\^)\s*-?[0-9]{1,2}(?![0-9])")
+_CHAINED = re.compile(r"(?:\*\*|\^)\s*-?[0-9]+\s*(?:\*\*|\^)")
+# "m2", "W/m2" and "kg m2" are the labels shown to users; pint wants "m^2".
+_SQUARED = re.compile(r"(?<=[A-Za-z])([23])(?![0-9A-Za-z_.])")
 
 
 def _token_ok(token: str) -> bool:
@@ -85,8 +88,9 @@ def _token_ok(token: str) -> bool:
 
 
 _NUMBER = re.compile(
-    r"^\s*([+-]?(?:nan|inf(?:inity)?|\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?))\s*(.*?)\s*$",
-    re.IGNORECASE,
+    r"^\s*([+-]?(?:nan|inf(?:inity)?|[0-9]+\.?[0-9]*(?:[eE][+-]?[0-9]+)?"
+    r"|\.[0-9]+(?:[eE][+-]?[0-9]+)?))\s*(.*?)\s*$",
+    re.IGNORECASE | re.ASCII,  # ASCII digits only: Arabic-Indic and full-width digits are refused
 )
 
 
@@ -130,7 +134,7 @@ def parse_quantity(text: str, field: str) -> float:
     number = float(match.group(1))
     if not math.isfinite(number):
         raise UnitError("the value must be a finite number")
-    token = match.group(2)
+    token = _SQUARED.sub(r"^\1", match.group(2))
     if token and not _token_ok(token):
         raise UnitError("the unit is not recognised; write a plain unit name such as 'kW' or 'm^2'")
 
@@ -139,7 +143,7 @@ def parse_quantity(text: str, field: str) -> float:
     elif key == "ratio":
         result = _ratio(number, token)
     else:
-        result = _linear(number, token, key, info)
+        result = _linear(number, token, key, info, difference="margin" in field)
     if abs(result) > MAX_MAGNITUDE:
         raise UnitError("the value is far outside any physical range")
     return result
@@ -152,10 +156,12 @@ def _example(key: str) -> str:
 
 
 def _log_offset(key: str, info: _Suffix, token: str) -> float:
-    lowered = token.lower()
     accepted = _LOG_TOKENS[key]
-    if lowered in accepted:
-        return accepted[lowered]
+    if token in accepted:
+        return accepted[token]
+    lowered = token.lower()
+    if lowered in {t.lower() for t in accepted}:
+        raise UnitError(f"write the unit with its capitals, for example {info.label}")
     if lowered in _ALL_LOG_TOKENS:
         raise UnitError(f"this field expects {info.label}, but the value is given in {token}")
     raise UnitError(
@@ -172,7 +178,7 @@ def _ratio(number: float, token: str) -> float:
     raise UnitError("this field is a dimensionless ratio; use a plain number or a percentage")
 
 
-def _linear(number: float, token: str, key: str, info: _Suffix) -> float:
+def _linear(number: float, token: str, key: str, info: _Suffix, difference: bool = False) -> float:
     if token == "":
         raise UnitError(
             f"a unit is missing; this field is a {info.dimension}, e.g. '{_example(key)}'"
@@ -192,22 +198,25 @@ def _linear(number: float, token: str, key: str, info: _Suffix) -> float:
     except Exception as exc:  # pint can raise AttributeError/TypeError for odd tokens
         raise UnitError("the unit is not recognised") from exc
     try:
-        _check_physical(quantity, key)
+        _check_physical(quantity, key, difference)
         value = float(quantity.to(info.pint_unit).magnitude)
-    except pint.errors.PintError as exc:
+    except UnitError:
+        raise
+    except Exception as exc:  # PintError, and the AssertionError pint raises for odd log units
         raise UnitError(
             f"the unit is not a {info.dimension} unit; this field is a {info.dimension} "
             f"in {info.label}"
         ) from exc
     if not math.isfinite(value):
         raise UnitError("the converted value is not finite")
-    return value
+    return float(f"{value:.15g}")  # -40 degC is 233.15, not 233.14999999999998
 
 
 _OFFSET_UNITS = {"degree_Celsius", "degree_Fahrenheit"}
+_DELTA_UNITS = {"delta_degree_Celsius", "delta_degree_Fahrenheit"}
 
 
-def _check_physical(quantity: Any, key: str) -> None:
+def _check_physical(quantity: Any, key: str, difference: bool = False) -> None:
     """Refuse readings that pint converts but that mean something else here: an angle read as a
     frequency (pint takes 60 rpm as 2 pi rad/s, not 1 Hz) and a temperature below absolute zero."""
     if key != "deg":
@@ -217,8 +226,22 @@ def _check_physical(quantity: Any, key: str) -> None:
                 "the unit contains an angle (revolutions, radians or degrees), which this field "
                 "does not take; convert it to the field's unit first"
             )
-    offset = {name for name, _ in quantity.unit_items()} & _OFFSET_UNITS
-    if key == "k" and offset and float(quantity.to("kelvin").magnitude) < -1e-9:
+    names = {name for name, _ in quantity.unit_items()}
+    offset, delta = names & _OFFSET_UNITS, names & _DELTA_UNITS
+    if key != "k":
+        return
+    if difference:  # a margin is a temperature difference: "5 degC" would mean 278.15 K
+        if offset:
+            raise UnitError(
+                "this field is a temperature difference; write it in K or delta_degC, "
+                "not in degC or degF (those name a point on the scale)"
+            )
+        return
+    if delta:
+        raise UnitError(
+            "this field is an absolute temperature; a difference (delta_degC) does not fit"
+        )
+    if offset and float(quantity.to("kelvin").magnitude) < -1e-9:
         raise UnitError("the temperature is below absolute zero")
 
 

@@ -8,7 +8,7 @@ from typing import Any
 
 from budget_core.io.paths import resolve_inside
 from budget_core.io.yamlio import LineMap, Path, format_path
-from budget_core.model import Antenna, BudgetModel, Link, Project, Sourced
+from budget_core.model import Antenna, BudgetModel, Link, Project, Scenario, Sourced
 from budget_core.problems import Problem, Severity
 
 
@@ -500,6 +500,7 @@ def _value_ranges(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
             )
     out.extend(_thermal_ranges(project, check))
     out.extend(_link_ranges(project, check))
+    out.extend(_table_ranges(project, check))
     return out
 
 
@@ -610,6 +611,42 @@ def _link_ranges(project: Project, check: Callable[..., None]) -> list[Problem]:
             )
         if rx.feed_loss_db is not None:
             check(f, ("receiver", "feed_loss_db"), rx.feed_loss_db, "The feed loss", 0.0, 100.0)
+        if rx.g_over_t_dbk is not None:
+            check(f, ("receiver", "g_over_t_dbk"), rx.g_over_t_dbk, "The G/T", -100.0, 100.0)
+        for side, antenna in _antennas(link):
+            if antenna.gain_dbi is not None:
+                check(
+                    f,
+                    (side, "antenna", "gain_dbi"),
+                    antenna.gain_dbi,
+                    "The antenna gain",
+                    -50.0,
+                    100.0,
+                )
+    return []
+
+
+def _table_ranges(project: Project, check: Callable[..., None]) -> list[Problem]:
+    """Range checks of the Eb/N0 and attenuation tables."""
+    ebn0, table = project.config.ebn0_table, project.config.attenuation_table
+    for index, entry in enumerate(ebn0.entries if ebn0 else []):
+        check(
+            "config/ebn0_table.yaml",
+            ("entries", index, "required_ebn0_db"),
+            entry.required_ebn0_db,
+            "The required Eb/N0",
+            -20.0,
+            60.0,
+        )
+    for index, att in enumerate(table.entries if table else []):
+        check(
+            "config/attenuation_table.yaml",
+            ("entries", index, "loss_db"),
+            att.loss_db,
+            "An atmospheric loss",
+            0.0,
+            100.0,
+        )
     return []
 
 
@@ -711,6 +748,32 @@ def _link_references(
                     )
                 )
     return out
+
+
+def _ignored_scenario_options(sc: Scenario, file: str, lines: dict[str, LineMap]) -> list[Problem]:
+    """Options that the chosen environment source never reads: a warning, since the user
+    probably expects them to matter."""
+    ignored: list[str] = []
+    if sc.environment_source == "elements":
+        if sc.import_dir is not None:
+            ignored.append("import_dir")
+    else:
+        if sc.orbit is not None:
+            ignored.append("orbit")
+        if sc.shadow_model != "cylindrical":
+            ignored.append("shadow_model")  # imported eclipse intervals are used as they are
+    return [
+        _p(
+            Severity.WARNING,
+            "SCENARIO_OPTION_IGNORED",
+            "This option is not used with the scenario's environment source.",
+            file,
+            (name,),
+            lines,
+            "Remove it, or change 'environment_source'.",
+        )
+        for name in ignored
+    ]
 
 
 def _inside_dir(root: FsPath, rel: str) -> bool:
@@ -1013,6 +1076,7 @@ def _environment_references(
                     "Defined orbits: " + ", ".join(sorted(project.orbits)) + ".",
                 )
             )
+        out.extend(_ignored_scenario_options(sc, file, lines))
         missing_import = (
             sc.environment_source == "spacemissionstudio"
             and sc.import_dir is not None

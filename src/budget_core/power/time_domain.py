@@ -510,7 +510,7 @@ def _battery_inputs(
             item,
             "ratio",
             f"battery.max_dod_ratio.{phase}",
-            f"The allowed depth of discharge of phase '{phase}'",
+            "The allowed depth of discharge of the phase",
         )
     if b is None or None in (cap, volt, eta_c, eta_d, fade, soc0):
         return None

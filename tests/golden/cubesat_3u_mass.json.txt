@@ -454,7 +454,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass margin of maturity class 'class_a' is a placeholder.",
+      "message": "The mass margin of the maturity class is a placeholder.",
       "path": "classes.class_a.mass_margin_ratio",
       "severity": "warning"
     },
@@ -463,7 +463,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass margin of maturity class 'class_b' is a placeholder.",
+      "message": "The mass margin of the maturity class is a placeholder.",
       "path": "classes.class_b.mass_margin_ratio",
       "severity": "warning"
     },
@@ -472,7 +472,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass margin of maturity class 'class_c' is a placeholder.",
+      "message": "The mass margin of the maturity class is a placeholder.",
       "path": "classes.class_c.mass_margin_ratio",
       "severity": "warning"
     },
@@ -490,7 +490,7 @@
       "file": "config/mass_limits.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass limit 'Launch mass' is a placeholder.",
+      "message": "The mass limit is a placeholder.",
       "path": "limits[0].limit_kg",
       "severity": "warning"
     },

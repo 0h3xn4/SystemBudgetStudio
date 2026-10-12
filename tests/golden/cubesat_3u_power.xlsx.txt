@@ -161,9 +161,9 @@
 2: 'Severity' | 'Code' | 'Location' | 'Message'
 3: 'warning' | 'CONFIG_EMPTY_TABLE' | 'config/attenuation_table.yaml:3' | 'The table has no entries.'
 4: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/ebn0_table.yaml:7' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-5: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | "The margin of maturity class 'class_a' is a placeholder."
-6: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | "The margin of maturity class 'class_b' is a placeholder."
-7: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | "The margin of maturity class 'class_c' is a placeholder."
+5: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'The margin of the maturity class is a placeholder.'
+6: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'The margin of the maturity class is a placeholder.'
+7: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'The margin of the maturity class is a placeholder.'
 8: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'The system margin is a placeholder.'
 9: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:6' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 10: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:10' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
@@ -174,7 +174,7 @@
 15: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 16: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:36' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 17: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-18: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_config.yaml' | "The converter efficiency of bus 'main' is a placeholder."
+18: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_config.yaml' | 'The converter efficiency of the bus is a placeholder.'
 19: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_config.yaml' | 'The distribution loss is a placeholder.'
 20: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:4' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 21: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:9' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."

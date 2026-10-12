@@ -7,8 +7,10 @@ Problems panel and the INCOMPLETE banner keep showing what must still be replace
 
 from __future__ import annotations
 
+import functools
 import math
 import re
+import shutil
 import unicodedata
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
@@ -16,8 +18,9 @@ from pathlib import Path
 
 from budget_core.environment.constants import EARTH_RADIUS
 from budget_core.examples import EXAMPLES
-from budget_core.io.project_loader import write_project
-from budget_core.model import Elements, Orbit, ProjectMeta
+from budget_core.io.project_loader import model_to_data, write_project
+from budget_core.model import Elements, Orbit, Project, ProjectMeta, Scenario
+from budget_core.timeutil import MAX_YEAR, MIN_YEAR, end_in_range
 
 SAMPLES = {
     "cubesat_3u_eps": "3U CubeSat with complete example inputs (all results computed)",
@@ -28,6 +31,10 @@ ECCENTRICITY_RATIO = 0.001  # near circular, as in the sample orbits
 MAX_STEPS = 8640  # a longer scenario gets a coarser step so the first run stays quick
 ALTITUDE_RANGE_KM = (160.0, 2000.0)
 MAX_DAYS = 30.0
+MAX_SLUG = 60  # characters of the folder name
+_WINDOWS_DEVICES = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(1, 10))} | {
+    f"lpt{i}" for i in range(1, 10)
+}
 
 
 class WizardError(Exception):
@@ -54,9 +61,18 @@ class WizardAnswers:
 def _start(text: str) -> datetime | None:
     try:
         parsed = datetime.fromisoformat(text.strip().replace("Z", "+00:00"))
-    except ValueError:
+        return parsed.astimezone(UTC) if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+    except (ValueError, OverflowError):  # not a date, or an offset that pushes it out of range
         return None
-    return parsed.astimezone(UTC) if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+
+
+@functools.cache
+def _minimum_duration_s(sample: str) -> float:
+    """The shortest scenario the sample can have: one step, and room for its manual segments."""
+    project = EXAMPLES[sample]()
+    scenario = project.scenarios[sorted(project.scenarios)[0]]
+    ends = [seg.start_s + seg.duration_s for seg in scenario.segments]
+    return max([scenario.step_s, *ends])
 
 
 def check_answers(answers: WizardAnswers) -> list[Issue]:
@@ -76,6 +92,7 @@ def check_answers(answers: WizardAnswers) -> list[Issue]:
         )
     if not 0.0 <= answers.raan_deg < 360.0:
         issues.append(Issue("raan_deg", "The RAAN must be at least 0 and less than 360 degrees."))
+    start = _start(answers.start_utc)
     if not 0.0 < answers.duration_days <= MAX_DAYS:
         issues.append(
             Issue(
@@ -83,9 +100,27 @@ def check_answers(answers: WizardAnswers) -> list[Issue]:
                 f"The scenario length must be above 0 and at most {MAX_DAYS:g} days.",
             )
         )
-    if _start(answers.start_utc) is None:
+    elif answers.sample in SAMPLES:
+        shortest = _minimum_duration_s(answers.sample)
+        if answers.duration_days * 86400.0 < shortest:
+            issues.append(
+                Issue(
+                    "duration_days",
+                    f"This sample needs a scenario of at least {shortest / 86400.0:.4f} days "
+                    f"({shortest:g} s): one time step, and room for its manual mode segments.",
+                )
+            )
+    if start is None:
         issues.append(
             Issue("start_utc", "The start must be a date and time such as 2026-06-01T00:00:00Z.")
+        )
+    elif not MIN_YEAR <= start.year <= MAX_YEAR:
+        issues.append(Issue("start_utc", f"The start year must be {MIN_YEAR} to {MAX_YEAR}."))
+    elif 0.0 < answers.duration_days <= MAX_DAYS and not end_in_range(
+        start, answers.duration_days * 86400.0
+    ):
+        issues.append(
+            Issue("duration_days", f"The scenario must end before the year {MAX_YEAR + 1}.")
         )
     return issues
 
@@ -94,20 +129,48 @@ def folder_name(project_name: str) -> str:
     """A safe folder name: ASCII letters and digits separated by single hyphens."""
     folded = unicodedata.normalize("NFKD", project_name).encode("ascii", "ignore").decode()
     slug = re.sub(r"[^a-z0-9]+", "-", folded.lower()).strip("-")
+    if len(slug) > MAX_SLUG:  # a file system refuses names beyond 255 bytes; keep it readable
+        cut = slug[:MAX_SLUG]
+        slug = (cut.rsplit("-", 1)[0] if "-" in cut and slug[MAX_SLUG] != "-" else cut).strip("-")
+    if slug in _WINDOWS_DEVICES:  # "con" is a device, not a folder, on Windows
+        slug = f"project-{slug}"
     return slug or "project"
 
 
 def create_project(answers: WizardAnswers, parent: Path) -> Path:
     """Write the project into `parent/<folder name>` and return that folder. An existing folder
-    is never touched."""
+    is never touched. Whatever goes wrong becomes a WizardError, and a folder that could not be
+    written completely is removed again."""
     issues = check_answers(answers)
     if issues:
         raise WizardError(issues[0].message)
     folder = Path(parent) / folder_name(answers.project_name)
-    if folder.exists():
+    try:
+        exists = folder.exists()
+    except OSError:
+        exists = False
+    if exists:
         raise WizardError(
             f"The folder '{folder.name}' already exists. Choose another project name or folder."
         )
+    try:
+        project = _build(answers, folder)
+    except (ValueError, OverflowError) as exc:  # includes pydantic's ValidationError
+        raise WizardError(
+            "The answers do not make a valid project (check the dates, the length and the orbit)."
+        ) from exc
+    try:
+        write_project(project, folder)
+    except (OSError, ValueError, OverflowError) as exc:
+        shutil.rmtree(folder, ignore_errors=True)  # never leave a half-written project behind
+        raise WizardError(
+            "The project could not be written. Check that the folder exists and that you may "
+            "write to it."
+        ) from exc
+    return folder
+
+
+def _build(answers: WizardAnswers, folder: Path) -> Project:
     start = _start(answers.start_utc)
     assert start is not None
     start_text = start.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -129,8 +192,10 @@ def create_project(answers: WizardAnswers, parent: Path) -> Path:
         ),
     )
     duration_s = answers.duration_days * 86400.0
-    scenario = scenario.model_copy(
-        update={
+    # through validation, not model_copy(update=...): a bad combination must fail here
+    scenario = Scenario.model_validate(
+        {
+            **model_to_data(scenario),
             "name": "First scenario (guided mode)",
             "orbit": orbit_id,
             "start_utc": start_text,
@@ -144,18 +209,10 @@ def create_project(answers: WizardAnswers, parent: Path) -> Path:
         description=f"Started in guided mode from the synthetic sample '{answers.sample}'. "
         "All numbers are invented placeholders; replace them with your own sourced values.",
     )
-    project = replace(
+    return replace(
         sample,
         root=folder,
         meta=meta,
         orbits={orbit_id: orbit},
         scenarios={scenario_id: scenario},
     )
-    try:
-        write_project(project, folder)
-    except OSError as exc:
-        raise WizardError(
-            "The project could not be written. Check that the folder exists and that you may "
-            "write to it."
-        ) from exc
-    return folder

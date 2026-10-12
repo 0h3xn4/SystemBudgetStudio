@@ -71,6 +71,19 @@ class TemperatureLimits(BudgetModel):
                     "a minimum temperature must be below the maximum",
                     {"field": field},
                 )
+        low, high = self.survival_min_k, self.survival_max_k
+        too_high = (
+            low is not None and self.operating_min_k is not None and low > self.operating_min_k
+        )
+        too_low = (
+            high is not None and self.operating_max_k is not None and high < self.operating_max_k
+        )
+        if too_high or too_low:
+            raise PydanticCustomError(
+                "limits_enclose",
+                "the survival band must enclose the operating band",
+                {"field": "survival_min_k" if too_high else "survival_max_k"},
+            )
         return self
 
 

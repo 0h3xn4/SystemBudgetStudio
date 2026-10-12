@@ -423,15 +423,15 @@ trustworthy.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
-The mass margin of maturity class 'class_a' is a placeholder.
+The mass margin of the maturity class is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
-The mass margin of maturity class 'class_b' is a placeholder.
+The mass margin of the maturity class is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
-The mass margin of maturity class 'class_c' is a placeholder.
+The mass margin of the maturity class is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
@@ -479,7 +479,7 @@ trustworthy.
 warning
 RESULT_INCOMPLETE
 config/mass_limits.yaml
-The mass limit 'Launch mass' is a placeholder.
+The mass limit is a placeholder.
 warning
 CONFIG_PLACEHOLDER
 config/mass_limits.yaml:7

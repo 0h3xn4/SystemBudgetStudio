@@ -195,9 +195,9 @@ Problems
 Problems and open items
 ## table
 Severity | Code | Location | Message
-warning | RESULT_INCOMPLETE | config/margin_policy.yaml | The mass margin of maturity class 'class_a' is a placeholder.
-warning | RESULT_INCOMPLETE | config/margin_policy.yaml | The mass margin of maturity class 'class_b' is a placeholder.
-warning | RESULT_INCOMPLETE | config/margin_policy.yaml | The mass margin of maturity class 'class_c' is a placeholder.
+warning | RESULT_INCOMPLETE | config/margin_policy.yaml | The mass margin of the maturity class is a placeholder.
+warning | RESULT_INCOMPLETE | config/margin_policy.yaml | The mass margin of the maturity class is a placeholder.
+warning | RESULT_INCOMPLETE | config/margin_policy.yaml | The mass margin of the maturity class is a placeholder.
 warning | RESULT_INCOMPLETE | config/margin_policy.yaml | The system mass margin is a placeholder.
 warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:6 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
 warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:10 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
@@ -207,7 +207,7 @@ warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:24 | This number is a p
 warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:28 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
 warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:32 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
 warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:36 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
-warning | RESULT_INCOMPLETE | config/mass_limits.yaml | The mass limit 'Launch mass' is a placeholder.
+warning | RESULT_INCOMPLETE | config/mass_limits.yaml | The mass limit is a placeholder.
 warning | CONFIG_PLACEHOLDER | config/mass_limits.yaml:7 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
 warning | CONFIG_PLACEHOLDER | config/power_config.yaml:4 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
 warning | CONFIG_PLACEHOLDER | config/power_config.yaml:9 | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy.
