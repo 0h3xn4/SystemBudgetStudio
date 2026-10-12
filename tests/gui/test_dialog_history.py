@@ -67,6 +67,9 @@ def run_dialog(home: Path, mode: str) -> list[str]:
     return sorted(str(p.relative_to(home)) for p in home.rglob("*") if p.name != "somewhere")
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="Qt keeps this history in the registry on Windows, not a file"
+)
 def test_qt_alone_writes_the_dialog_history_into_the_profile(tmp_path: Path) -> None:
     """The control: without our setting Qt does write QtProject.conf (so the next test means
     something)."""
