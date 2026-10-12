@@ -1,6 +1,41 @@
 # Pre-release audit: findings list
 
-Status: **Phase 3 report. Nothing has been fixed.** The code is unchanged since `515196e` (main after PR #16). This file is the only change on the audit branch. Waiting for your approval before Phase 4.
+Status: **Fixed.** The findings below are the report as approved on 2026-10-12. Every critical and high finding and nearly every medium and low finding is fixed, in four pull requests: [#17](https://github.com/0h3xn4/systembudgetstudio/pull/17) (window), [#18](https://github.com/0h3xn4/systembudgetstudio/pull/18) (loader, validation, command line, wizard, units), [#19](https://github.com/0h3xn4/systembudgetstudio/pull/19) (reports and output) and [#20](https://github.com/0h3xn4/systembudgetstudio/pull/20) (solvers and environment). A fifth pull request (release preparation) adds the licence, the owner's confirmations and this status. The sections below keep the original wording of each finding; this section says what became of it.
+
+
+## Resolution
+
+Every fix has a regression test that fails on the old code (about 640 new tests; the suite went from 1151 to 1790+ tests).
+
+| Findings | Status | Where |
+|---|---|---|
+| GUI-1, GUI-2 (critical) | Fixed | #17 |
+| GUI-3 to GUI-7, GUI-9 to GUI-12 (high) | Fixed | #17 |
+| GUI-8, GUI-13, GUI-15 to GUI-27, GUI-30 to GUI-34 | Fixed | #17 |
+| GUI-14 | **Partly.** Building export output runs in the worker thread and a save no longer reloads unchanged editors. Loading and reloading a project still runs on the window thread: the 200-unit project freezes for about 7 s on open and reload. | #17 |
+| GUI-28, mouse-only plot (GUI-29), GUI-35 (layout) | **Not done / partly.** Hover repaint speed of a 600,000-point plot, keyboard access to the plot, and three small layout items. | |
+| PWR-1 (high) | Fixed | #20 |
+| PWR-2 to PWR-12 | Fixed (PWR-10 in #20 for the wording and in the release-preparation PR for the validation warning `SCENARIO_PHASE_NO_DOD`) | #20 |
+| RC-1, RC-3, RC-16, RC-22, RC-23, LD-1, LD-2 | Fixed | #18 |
+| RC-15 | **Partly.** A non-UTF-8 console no longer turns a finished run into "Internal error"; error text still goes to standard output, not standard error (many tests and documents rely on it). | #18 |
+| RC-2, RC-4 to RC-6, RC-8 to RC-14, RC-17 to RC-21, RC-24, RC-25 | Fixed | #19 |
+| RC-7 | Fixed | #20 |
+| TL-2, TL-3, TL-16 | Fixed | #19 |
+| TL-1, TL-4 to TL-9, TL-11 to TL-14, TL-17 | Fixed | #20 |
+| TL-10, TL-15 | Fixed | #18, #20 |
+| MI-1 to MI-4 (high) | Fixed | #18 |
+| MI-10 | Fixed | #17 |
+| MI-11 to MI-15, MI-19, MI-20 | Fixed | #18 |
+| MI-17 | **Partly.** Ranges, duplicate entries, whitespace names, survival-band and ignored-option warnings are done. Not done: `all` as a phase name, plausibility limits for power-model numbers. | #18 |
+| MI-5 to MI-9, MI-16 | Fixed | #20 (MI-8 also #18) |
+| MI-18 | **Deferred.** Frozen models are shallow (a list inside can be changed in code). No user path reaches it; nothing in the tool relies on it. | |
+| PK-1 (package description) | Fixed | release preparation |
+| Eclipses shorter than 20 s | **Known limit** (DV-E4). Passes of any length are found; a very short eclipse could still be missed. | |
+
+### Your decisions of 2026-10-12
+
+1. Step independence of passes and link samples: **fixed** (D-130). 2. Problem messages: **strict**, names are never in the text (D-121). 3. Rounding: **half up** in every format (D-110). 4. Qt dialog history: **suppressed** (D-105). 5. Partial link results: **independent terms** (D-134). 6. Ids: **warnings** for unusual ids, an error only for ids that cannot work (D-120). 7. TLE age: **30 days** (D-133). 8. Dates: **1950 to 2100** (D-124, D-133). 9. Licence: **MIT, public repository** (D-140); the eight "owner to confirm" decisions **confirmed** (D-141); tagging stays with you.
+
 
 ## How this was done
 
@@ -10,7 +45,7 @@ Status: **Phase 3 report. Nothing has been fixed.** The code is unchanged since 
 - **Verified** means I re-ran the reproduction myself. **Agent-reproduced** means the area auditor ran it and quoted the result, and I have not re-run it. **By code reading** means no run.
 - Limits of this audit: I ran as root, so read-only-directory failures are checked by reading code only. No Windows run, no Excel, no real display (GUI checks use the offscreen platform). The Windows installer and the Rocky 8 build are not exercised here (CI covers them).
 
-## Verdict in one paragraph
+## Verdict at the time of the report (superseded by Phase 5 below)
 
 The numerical core is sound where checked by hand (link equations, orbit balance, battery integration, mass properties, thermal energy balance, pass bookkeeping, determinism). **I do not consider the tools releasable yet.** Two GUI bugs silently corrupt or misdirect saved project files (GUI-1, GUI-2), several GUI paths lose edits or export stale results, `link-passes` can hide a failed link, and the loader can hang or raise on hostile or odd YAML. All of those are small, local fixes. Details and counts are below.
 
@@ -21,7 +56,7 @@ The numerical core is sound where checked by hand (link equations, orbit balance
 | Medium | about 50 |
 | Low | about 70 |
 
-## Decisions I need from you (behaviour changes)
+## Decisions asked of you (answered, see the Resolution)
 
 These fixes change results, message wording or accepted input, so I will not decide them silently:
 
@@ -253,15 +288,36 @@ Proposed fix order: critical, then high, then medium. I would do it in four PRs 
 - **Outputs.** Report tables match the document model cell for cell on all six budgets for three example projects; XLSX formula injection is neutralised; sheet names; atomic writes; no project values in load errors; determinism across hash seed, time zone, locale, working directory and project path (63 files identical); guide HTML/PDF byte-identical, no broken links; every CLI option documented and in `--help`.
 - **Tests.** 1151 pass with warnings as errors. Mutation spot-check: a wrong path-loss exponent, a wrong Eb/N0 offset, a battery boundary comparison and the power ratio tolerance are all caught; the mass-limit boundary is not (PWR-6).
 
-# Phase 5 preview (will be completed after fixes)
+# Phase 5: release checklist and verdict
 
-| Item | Now |
+Checked on 2026-10-12 on the tree of the release-preparation pull request (all four fix pull requests merged).
+
+| Item | Result |
 |---|---|
-| All tests passing | Yes (1151, warnings as errors) |
-| Help text matches behaviour | Mostly; mismatches in RC-22 |
-| Docs accurate | Mostly; mismatches in RC-22, MI-2 (`<<` claim) |
-| Version / changelog | 0.1.0 "not yet released"; to be updated with the fixes |
-| Dependencies pinned | Yes (hashed lock; `pip-audit` still to run) |
-| No debug output / TODO hacks | Yes (scan clean) |
-| Clean install from scratch | Yes on Linux (hashed lock); Windows run not done by me |
-| **Releasable now** | **No.** Blocked by GUI-1, GUI-2 and the high items above |
+| All tests passing | **Yes.** 1793 tests pass with warnings treated as errors on Linux (Python 3.13); `ruff check`, `ruff format --check` and `mypy` are clean. CI (Ubuntu and Windows, Python 3.11 and 3.13) was green on #17, #18, #19 and #20; the Installers workflow (Rocky 8 bundle, Windows installer, install, self-test, uninstall) was green on #19. |
+| Help text and docs accurate | **Yes.** Every command and option in `--help` is documented and the reverse; the manual, FAQ, troubleshooting, guide chapters, file format and decisions were updated with each fix. All 538 documentation links and anchors resolve (checked with lychee, offline). Two broken anchors left over from the renumbering of decisions were fixed in the release-preparation PR. |
+| Version and changelog | **Yes.** `pyproject.toml` and `budget_core.__version__` are both 0.1.0 (a test checks this); the changelog holds everything under `[0.1.0] - 2026-10-12`. Change the date if you tag on another day. |
+| Dependencies pinned | **Yes.** `requirements.lock` and `requirements-dev.lock` pin every package with hashes; every direct dependency in `pyproject.toml` lies inside its range. `pip-audit` on the runtime lock file: **no known vulnerabilities** (2026-10-12). `pip check` is clean. |
+| No debug output or TODO hacks | **Yes.** No `TODO`, `FIXME`, `XXX`, `HACK`, `breakpoint()` or `pdb` in `src`, `packaging` or `tests`; output of the tool is only what the commands document. |
+| Clean install from scratch | **Yes, on Linux.** A new virtual environment from the hashed lock file plus the wheel of this tree: `pip check` clean, `budget self-test` passes, the window starts (`system-budget-studio --smoke`, offscreen), an example project runs. The wheel carries `LICENSE` and MIT metadata. The Windows installer is built, installed, self-tested and uninstalled by CI on every packaging change; a person has not run it on a clean Windows machine. |
+| Licence | **MIT**, `LICENSE` in the repository, the wheel and every bundle (D-140). Third-party licences: all permissive or LGPL (`docs/LICENCES.md`). |
+| Owner decisions | D-043, D-048, D-054, D-059, D-064, D-072, D-078 and DV-L2 confirmed (D-141). D-061, D-071 and D-077 (equations from textbooks, registered `SOURCE_MISSING`) still say "owner to confirm"; they do not affect any number. |
+
+## Verdict
+
+**I consider version 0.1.0 releasable as an internal-quality engineering tool, with the limits below stated plainly in its documentation.** Every critical and high finding of the audit is fixed and has a test that fails without the fix; the numerical core agrees with hand calculations; outputs are reproducible byte for byte; nothing needs the network.
+
+What I am **not certain** about:
+
+1. **Excel and Windows by hand.** I could not open the XLSX files in Excel (sheet-name and cell-length rules follow the documented limits), and nobody has done the [clean-machine checklist](docs/INSTALL_CHECKLIST.md) on a real Windows or Rocky 8 machine. CI builds, installs, self-tests and uninstalls both installers; it cannot look at the window.
+2. **The window on a real display.** The window tests run offscreen. Loading or reloading a project of 200 units freezes the window for about 7 seconds (GUI-14), and a plot of a week at 1 s resolution repaints slowly on hover (GUI-28).
+3. **Real data.** The example projects hold invented data and the tool ships no standards values, as the spec requires. The numerical results are only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
+4. **Short eclipses** (under about 20 s) can still be missed (DV-E4); passes of any length are found.
+5. **Error text on standard output** (RC-15): scripts that separate the two streams will see errors on standard output.
+
+## Steps that stay with you
+
+1. Merge the release-preparation pull request.
+2. Optionally run the clean-machine checklist on Windows and Rocky 8.
+3. Tag: `git tag v0.1.0 && git push origin v0.1.0` (from the merged `main`; the Installers workflow builds the installers, `SHA256SUMS.txt`, the SBOM and the licence report as artefacts).
+4. Create the GitHub Release for the tag and attach the artefacts (the workflow does not publish).

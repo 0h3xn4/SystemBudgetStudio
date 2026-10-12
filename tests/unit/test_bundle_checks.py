@@ -56,6 +56,7 @@ def fake_bundle(tmp_path: Path, extra: tuple[str, ...] = (), skip: tuple[str, ..
     for name in ("PySide6", "numpy", "budget_core", *extra):
         (internal / name).mkdir(parents=True)
     for rel in (
+        "LICENSE",
         "licences/INDEX.md",
         "licences/pyside6-essentials/LGPL-3.0.txt",
         "licences.md",
@@ -81,7 +82,8 @@ def test_development_code_in_the_bundle_is_reported(tmp_path: Path, module: str)
 
 
 @pytest.mark.parametrize(
-    "missing", ["licences.md", "sbom.cdx.json", "licences/pyside6-essentials/LGPL-3.0.txt"]
+    "missing",
+    ["LICENSE", "licences.md", "sbom.cdx.json", "licences/pyside6-essentials/LGPL-3.0.txt"],
 )
 def test_missing_licence_material_is_reported(tmp_path: Path, missing: str) -> None:
     problems = check_bundle.check(fake_bundle(tmp_path, skip=(missing,)))

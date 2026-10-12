@@ -16,6 +16,7 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `CONFIG_VALUE_INVALID`, `CONFIG_MISSING`, `CONFIG_PLACEHOLDER`, `CONFIG_EMPTY_TABLE` | A configuration number is invalid, a file is absent, a number is still a placeholder, or a table is empty. |
 | `THERMAL_NODE_UNKNOWN`, `REF_UNKNOWN_CASE` | A thermal node or case name is not defined. |
 | `SCENARIO_OPTION_IGNORED` | (Warning) A scenario option does not apply to its environment source (an `import_dir` with orbit elements, an `orbit` with an imported environment). |
+| `SCENARIO_PHASE_NO_DOD` | (Warning) The scenario's mission phase has no allowed depth of discharge under `battery.max_dod_ratio`, so that check is not evaluated. |
 | `REF_UNKNOWN_STATION`, `REF_UNKNOWN_ATTENUATION`, `REF_UNKNOWN_MODULATION`, `LINK_ANTENNA_PATTERN_GROUND`, `LINK_PATTERN_FILE_MISSING`, `LINK_INPUT_INVALID` | A link points to something missing, or a ground antenna has a pattern, or a pattern file cannot be read. |
 | `REF_UNKNOWN_ORBIT`, `REF_UNKNOWN_SITE`, `REF_UNKNOWN_MODE`, `IMPORT_DIR_MISSING`, `ORBIT_INVALID` | A scenario points to an orbit, site or mode that does not exist, or the imported environment folder is missing. |
 | `FILE_MIGRATED` | Information only: an older file was upgraded in memory. |

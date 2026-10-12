@@ -915,6 +915,23 @@ def _power_system_references(
                     "Use a name listed under 'mission_phases' in spacecraft.yaml.",
                 )
             )
+        elif (
+            sc.mission_phase is not None
+            and system is not None
+            and sc.mission_phase not in system.battery.max_dod_ratio
+        ):
+            out.append(
+                _p(
+                    Severity.WARNING,
+                    "SCENARIO_PHASE_NO_DOD",
+                    "The battery has no allowed depth of discharge for the mission phase of "
+                    "this scenario, so the depth-of-discharge check is not evaluated.",
+                    f"scenarios/{scid}.yaml",
+                    ("mission_phase",),
+                    lines,
+                    "Add the phase under battery.max_dod_ratio in config/power_system.yaml.",
+                )
+            )
     return out
 
 

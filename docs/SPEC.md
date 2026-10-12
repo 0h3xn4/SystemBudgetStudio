@@ -33,12 +33,12 @@ There is no mature open-source tool to build on; the existing GitHub projects (P
 The GitHub repository already exists and is empty. Setting it up is your first task and the start of M0; do it after `docs/ARCHITECTURE.md` and `docs/PLAN.md` are approved, before any feature code.
 
 1. **Branch and remote:** the GitHub repository is `origin`, the default branch is `main`. Do all setup work on a branch (assigned: `claude/blissful-maxwell-46xhwj`, see D-002) and open a pull request; never push directly to `main`.
-2. **Visibility:** confirm the repository is private. If it is public, stop and ask; project data may be export-controlled.
+2. **Visibility:** the owner decided on a public repository under the MIT licence (D-140, supersedes "confirm the repository is private"). The tool ships no standards values; project data of users stays in their own project folders.
 3. **Layout:** `src/budget_core`, `src/budget_cli`, `src/budget_gui`, `tests/` (unit, regression, golden, gui, offline), `docs/`, `examples/` (the three reference projects, synthetic data only), `packaging/` (PyInstaller specs, installer scripts), `assets/` (bundled IBM Plex fonts and Carbon assets).
 4. **Docs:** commit `docs/SPEC.md` as given, plus `docs/ARCHITECTURE.md`, `docs/PLAN.md`, `docs/DECISIONS.md` and `docs/DEVIATIONS.md`.
 5. **pyproject.toml:** src layout, `requires-python = ">=3.11,<3.14"`, runtime dependencies only in `[project.dependencies]`, all tooling in the `dev` extra (constraint 8), and a `budget` console script for the CLI. Configure ruff, mypy (strict) and pytest in the same file.
 6. **Lock file:** pin every runtime and dev dependency with hashes (e.g. `pip-tools` or `uv`), so builds are reproducible from a mirrored package set.
-7. **Root files:** `README.md` (purpose, install, offline use), `CLAUDE.md` (build, test, lint and package commands, conventions, pointer to `docs/SPEC.md`), `.gitignore` (Python, Qt, PyInstaller `build/` and `dist/`, IDE files, local project folders), `.editorconfig`, `.gitattributes` (LF line endings for YAML so project files diff cleanly). Add no `LICENSE` until the licence decision below is answered.
+7. **Root files:** `README.md` (purpose, install, offline use), `CLAUDE.md` (build, test, lint and package commands, conventions, pointer to `docs/SPEC.md`), `.gitignore` (Python, Qt, PyInstaller `build/` and `dist/`, IDE files, local project folders), `.editorconfig`, `.gitattributes` (LF line endings for YAML so project files diff cleanly). `LICENSE` (MIT, D-140).
 8. **CI (GitHub Actions):** on every pull request, run ruff, mypy, pytest and the offline test on Windows and Linux with Python 3.11 and 3.13. On tags, also build the installers, the SBOM and the licence report as release artefacts. Pin each action to a commit SHA.
 9. **Repository settings:** protect `main` (pull request required, CI must pass). Apply this if your token allows it; otherwise list the exact settings for me to apply.
 10. **No secrets or real data:** nothing from real projects goes into the repository, issues or CI logs; examples use invented units and values.
@@ -193,6 +193,6 @@ Answered: "defaults for all" (see DECISIONS.md D-003 to D-017 for the concrete d
 - [x] **Frequency bands:** band-agnostic model; UHF, S, X, Ka as data; no optical in v1.
 - [x] **Operating systems:** Windows 10/11 and Linux; macOS untested.
 - [x] **Catalogue:** per-project in v1; `catalogue_ref` reserved.
-- [x] **Licence and ownership:** internal only; no LICENSE file.
+- [x] **Licence and ownership:** MIT, public repository (D-140; first decided as internal only).
 - [x] **Security accreditation:** CycloneDX JSON, unsigned, signing hooks reserved.
 - [x] **GitHub access:** pull requests only; settings listed for the owner to apply.

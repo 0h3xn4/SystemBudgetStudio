@@ -274,3 +274,24 @@ def test_unit_strings_still_work_in_unit_suffixed_fields() -> None:
     assert unit.mass_kg == pytest.approx(1.5)
     assert unit.mass_properties is not None
     assert unit.mass_properties.position_m == pytest.approx([0.1, 0.2, 1.0])
+
+
+# ---- a phase without an allowed depth of discharge (audit PWR-10) -----------------------------
+def test_a_scenario_phase_without_a_depth_of_discharge_entry_is_warned(tmp_path: Path) -> None:
+    import shutil
+
+    examples = Path(__file__).resolve().parents[2] / "examples"
+    dest = tmp_path / "p"
+    shutil.copytree(examples / "cubesat_3u_eps", dest)
+    assert not of(load_project(dest).problems, "SCENARIO_PHASE_NO_DOD")  # eol has an entry
+    edit(
+        dest,
+        "config/power_system.yaml",
+        "    eol:\n      value: 0.3\n      source: Synthetic example value; "
+        "not from a data sheet or a standard.\n",
+        "",
+    )
+    warnings = of(load_project(dest).problems, "SCENARIO_PHASE_NO_DOD")
+    assert [w.path for w in warnings] == ["mission_phase"]
+    assert warnings[0].severity is Severity.WARNING and warnings[0].file == "scenarios/one_day.yaml"
+    assert "eol" not in warnings[0].message + warnings[0].hint  # names stay out of the text

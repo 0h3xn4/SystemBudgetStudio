@@ -20,5 +20,5 @@ pip-licenses --python "$RTPY" --format=markdown --output-file dist/licences.md
 
 # The licence material travels with the program: texts, the licence report and the SBOM.
 "$PY" packaging/licence_check.py --collect "$BUNDLE/licences"
-cp dist/licences.md dist/sbom.cdx.json "$BUNDLE/"
+cp LICENSE dist/licences.md dist/sbom.cdx.json "$BUNDLE/"
 "$PY" packaging/check_bundle.py "$BUNDLE"

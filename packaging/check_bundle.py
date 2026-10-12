@@ -27,6 +27,7 @@ FORBIDDEN = (
     "chardet",  # not a dependency of the tool; pulled in only because it was installed
 )
 REQUIRED_FILES = (
+    "LICENSE",
     "licences.md",
     "sbom.cdx.json",
     "licences/INDEX.md",
