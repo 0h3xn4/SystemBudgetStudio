@@ -49,7 +49,10 @@ Each difference has the row, the quantity, both values, the change, the change i
 Things to know:
 
 - Values are compared **as displayed** in the reports: a change below the shown precision is not a difference. Two folders that differ only in `revision` show 0 differences.
-- Rows are matched by their first column, so renaming a unit shows up as one removed and one added row.
+- Rows are matched by the key columns of their table: the first column for most tables (so renaming a unit shows up as one removed and one added row), the link and the point for the static link table, link, point and data rate for the rate table, and the AOS time for the pass tables. Inserting a static point, a data rate or a pass therefore adds one row and does not shift the pairing of the others.
+- The change and the percentage are computed from the exact values, not from the displayed ones, and a value that shows as `0.00` on both sides (also `-0.00` against `0.00`) is not a difference.
+- Sections, tables, columns and rows that exist on one side only are listed (a table that appears twice under one title is compared as `Title` and `Title #2`). The summary line says `N value(s) differ out of M compared, and R row(s) exist on one side only`.
+- `--max-rows` limits the rows listed in the report and the window for each budget; the CSV and JSON files list every difference.
 - A percentage point change is shown for percent columns (`+10.0 pp`).
 - The Problems, Provenance and Equations tables are not compared.
 

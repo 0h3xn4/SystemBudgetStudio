@@ -7,6 +7,7 @@ the same bytes. No files are read except the bundled fonts.
 from __future__ import annotations
 
 import io
+from dataclasses import replace
 from typing import Any
 
 import numpy as np
@@ -47,7 +48,39 @@ def _mix(color: str, weight: float) -> str:
     return "#{:02x}{:02x}{:02x}".format(*(int(255 - (255 - c) * weight) for c in (r, g, b)))
 
 
+def _printable(spec: PlotSpec, font: ImageFont.FreeTypeFont) -> PlotSpec:
+    """The spec with every character the bundled font lacks (CJK, emoji) replaced by '?', so a
+    label shows that something is there instead of an empty box or nothing."""
+    missing = font.getmask("\ue000")  # what the font draws for a character it does not have
+    blank = (missing.size, bytes(missing))
+    known: dict[str, str] = {}
+
+    def fix(text: str) -> str:
+        out = []
+        for ch in text:
+            if ch not in known:
+                mask = font.getmask(ch)
+                lacking = not ch.isspace() and (mask.size, bytes(mask)) == blank
+                known[ch] = "?" if lacking else ch
+            out.append(known[ch])
+        return "".join(out)
+
+    panels = tuple(
+        replace(
+            p,
+            title=fix(p.title),
+            y_label=fix(p.y_label),
+            series=tuple(replace(s, label=fix(s.label)) for s in p.series),
+            hlines=tuple(replace(h, label=fix(h.label)) for h in p.hlines),
+        )
+        for p in spec.panels
+    )
+    bands = tuple(replace(b, label=fix(b.label)) for b in spec.bands)
+    return replace(spec, title=fix(spec.title), panels=panels, bands=bands)
+
+
 def render_png(spec: PlotSpec, width_px: int = WIDTH_PX) -> bytes:
+    spec = _printable(spec, _font("IBMPlexSans-Regular.ttf", 13))
     panels = max(len(spec.panels), 1)
     height = TOP + panels * PANEL_HEIGHT_PX + (panels - 1) * GAP + BOTTOM
     image = Image.new("RGB", (width_px * SCALE, height * SCALE), "white")

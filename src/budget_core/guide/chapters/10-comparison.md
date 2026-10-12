@@ -29,4 +29,4 @@ With two folders the static power, mass, thermal and link budgets are compared; 
 
 ## What counts as a difference
 
-Values are compared as displayed in the reports. A change below the displayed precision is not reported. Rows are matched by their first column, so renaming a unit shows up as one removed and one added row. Differences beyond the list limit are counted and stated, never dropped silently.
+Values are compared as displayed in the reports. A change below the displayed precision is not reported. Rows are matched by the key columns of their table (the first column for most tables; link and point, or AOS time, for the link tables, so inserting a point or a pass does not shift the pairing), so renaming a unit shows up as one removed and one added row. Differences beyond the list limit are counted and stated, never dropped silently.

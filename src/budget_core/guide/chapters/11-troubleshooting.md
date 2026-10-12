@@ -36,6 +36,10 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `IMPORT_UNKNOWN_UNIT`, `IMPORT_DUPLICATE_ROW`, `IMPORT_FIELD_MISSING`, `IMPORT_VALUE_INVALID` | A row names a unit the project does not have, repeats a power mode, lacks average or peak power for a new mode, or has a value the file format does not accept. The message gives the row and column. |
 | `INTERNAL_ERROR` | An unexpected error; the message names only its kind. Run `budget validate` on the folder to see the details, then report it. |
 
+## The files of a run are missing or a name is refused
+
+The files are written under temporary names first and moved into place together, so a failing write leaves the folder as it was; the message names the file. Two ids that differ only by case, or an id that equals a generated name (a mode called `provenance`), are refused with the file name in the message. Rename one id.
+
 ## The report says INCOMPLETE
 
 At least one number it needs is a placeholder. The **Configuration numbers used** table lists every number with its source and its status. Replace each `PLACEHOLDER` with a sourced value; the banner disappears when none remain.

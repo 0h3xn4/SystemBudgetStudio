@@ -94,3 +94,10 @@ def test_rate_colours_do_not_repeat_for_ten_rates() -> None:
     from budget_core.plots.link import RATE_COLORS
 
     assert len(set(RATE_COLORS)) >= 10
+
+
+def test_characters_the_font_lacks_are_drawn_as_question_marks() -> None:
+    x = np.array([0.0, 100.0])
+    shown = render_png(spec_with((Series("日本 ok", x, x, BLUE),)))
+    expected = render_png(spec_with((Series("?? ok", x, x, BLUE),)))
+    assert shown == expected
