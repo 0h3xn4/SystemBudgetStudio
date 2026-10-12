@@ -271,9 +271,18 @@ def test_stiff_network_matches_the_merged_body() -> None:
     assert t[2] == pytest.approx(209.25796, abs=1e-4)
 
 
-def test_unresolvable_stiffness_is_refused_not_answered_wrongly() -> None:
+def test_very_stiff_network_is_refined_to_the_merged_body() -> None:
+    # at 1e12 W/K the plain Newton answer is 0.034 K off; the exact-residual refinement (TL-17)
+    # brings it back to the hand solution of the merged body
     g, r, q = stiff_network(1.0e12)
-    with pytest.raises(ThermalSolveError, match="double precision"):
+    t = solve_steady_state(g, r, q, 3.0)
+    assert t[0] == pytest.approx(204.36669, abs=1e-4)
+    assert t[2] == pytest.approx(209.25796, abs=1e-4)
+
+
+def test_unresolvable_stiffness_is_refused_not_answered_wrongly() -> None:
+    g, r, q = stiff_network(1.0e18)
+    with pytest.raises(ThermalSolveError):
         solve_steady_state(g, r, q, 3.0)
 
 

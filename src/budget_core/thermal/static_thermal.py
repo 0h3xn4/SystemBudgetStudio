@@ -254,6 +254,15 @@ def static_thermal_budget(project: Project) -> StaticThermalResult:
                     )
                 )
     else:
+        if not env.cases:
+            notes.problems.append(
+                incomplete(
+                    "The thermal environment defines no cases, so no node temperatures are "
+                    "computed.",
+                    efile,
+                    "cases",
+                )
+            )
         names = list(model.nodes)
         index = {n: i for i, n in enumerate(names)}
         space = notes.get(
@@ -463,7 +472,7 @@ def _solve_case(
             limit_set,
             False,
             (),
-            _checks(project, limit_set, None, node_names, margin, notes),
+            _checks(project, limit_set, None, node_names, margin, notes, name),
             None,
         )
     heat_in = dissipation + absorbed
@@ -492,7 +501,7 @@ def _solve_case(
             limit_set,
             False,
             (),
-            _checks(project, limit_set, None, node_names, margin, notes),
+            _checks(project, limit_set, None, node_names, margin, notes, name),
             None,
         )
     residual = node_balance_w(conductance, radiation, heat_in, space, temps)
@@ -517,7 +526,7 @@ def _solve_case(
         limit_set,
         True,
         nodes,
-        _checks(project, limit_set, by_node, node_names, margin, notes),
+        _checks(project, limit_set, by_node, node_names, margin, notes, name),
         _clean(float(np.max(np.abs(residual)))),
     )
 
@@ -529,6 +538,7 @@ def _checks(
     node_names: list[str],
     margin: float | None,
     notes: _Notes,
+    case_name: str,
 ) -> tuple[UnitLimitCheck, ...]:
     out: list[UnitLimitCheck] = []
     for uid in sorted(project.units):
@@ -567,7 +577,8 @@ def _checks(
                 Problem(
                     Severity.ERROR,
                     "THERMAL_LIMIT_EXCEEDED",
-                    f"Unit '{uid}' is outside its {limit_set} temperature limits.",
+                    f"Unit '{uid}' is outside its {limit_set} temperature limits in case "
+                    f"'{case_name}'.",
                     file=f"units/{uid}.yaml",
                     path="temperature_limits",
                     hint="Change the design (conduction, radiator area, dissipation) or the limit.",
@@ -581,8 +592,8 @@ def _checks(
                 Problem(
                     Severity.ERROR,
                     "THERMAL_MARGIN_INSUFFICIENT",
-                    f"Unit '{uid}' is within its {limit_set} limits but closer than the "
-                    "required temperature margin.",
+                    f"Unit '{uid}' is within its {limit_set} limits in case '{case_name}' but "
+                    "closer than the required temperature margin.",
                     file=f"units/{uid}.yaml",
                     path="temperature_limits",
                     hint="The margin is set in config/thermal_environment.yaml.",
