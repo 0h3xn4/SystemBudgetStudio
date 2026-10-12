@@ -92,9 +92,9 @@ packaging/linux/build_in_container.sh     # the Linux release, inside rockylinux
 2. If dependencies changed run `packaging/lock.sh` and `python packaging/licence_check.py --markdown docs/LICENCES.md`.
 3. Update [CHANGELOG.md](../../CHANGELOG.md): move *Unreleased* under the new version with the date.
 4. Merge to `main` through a pull request with CI green.
-5. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z`. The **Installers** workflow runs: it refuses a tag that differs from the `pyproject.toml` version, builds the Linux bundle on Rocky 8 and the Windows installer and portable zip, installs and uninstalls each as an ordinary user, and uploads the artefacts: the installers, `SHA256SUMS.txt`, `sbom.cdx.json` and `licences.md`.
+5. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z` (or create the release on GitHub with a new tag `vX.Y.Z` on `main`). The **Installers** workflow runs: it refuses a tag that differs from the `pyproject.toml` version, builds the Linux bundle on Rocky 8 and the Windows installer and portable zip, installs and uninstalls each as an ordinary user, and uploads the artefacts: the installers, `SHA256SUMS.txt`, `sbom.cdx.json` and `licences.md`. Its last job (`publish`, D-144) then checks every file against the checksum lists and attaches the files to the release of the tag with `packaging/attach_release.sh`; a release that does not exist yet is created as a **draft**, so nothing becomes public by itself.
 6. Download the artefacts and carry out the manual steps of the [clean-machine checklist](../INSTALL_CHECKLIST.md) on a clean Windows and a clean Rocky 8 machine.
-7. Publish: the workflow uploads build artefacts but does **not** create the GitHub Release; attach the files to a release for the tag yourself. (Who publishes is an open decision for the owner.)
+7. Publish: write the description of the release and press **Publish** (the files are attached already). To attach the files of an earlier run to a release, start **Actions > Attach release files** with the run id and the tag.
 
 ## Upstream documents
 
