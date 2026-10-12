@@ -1320,7 +1320,7 @@ MPLETE
 config/thermal_environment.ya
 ml
 cases.cold.albedo_ratio
-The albedo of case 'cold' is a placeholder.
+The albedo of the case is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1329,7 +1329,7 @@ MPLETE
 config/thermal_environment.ya
 ml
 cases.cold.earth_ir_wm2
-The Earth infrared flux of case 'cold' is a
+The Earth infrared flux of the case is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1339,7 +1339,7 @@ MPLETE
 config/thermal_environment.ya
 ml
 cases.cold.solar_flux_wm2
-The solar flux of case 'cold' is a placeholder.
+The solar flux of the case is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1348,7 +1348,7 @@ MPLETE
 config/thermal_environment.ya
 ml
 cases.hot.albedo_ratio
-The albedo of case 'hot' is a placeholder.
+The albedo of the case is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1357,7 +1357,7 @@ MPLETE
 config/thermal_environment.ya
 ml
 cases.hot.earth_ir_wm2
-The Earth infrared flux of case 'hot' is a
+The Earth infrared flux of the case is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1367,7 +1367,7 @@ MPLETE
 config/thermal_environment.ya
 ml
 cases.hot.solar_flux_wm2
-The solar flux of case 'hot' is a placeholder.
+The solar flux of the case is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1523,8 +1523,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[0].absorptivity_ratio
-The absorptivity of surface 'ADCS panel' is a
-placeholder.
+The absorptivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1532,8 +1531,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[0].emissivity_ratio
-The emissivity of surface 'ADCS panel' is a
-placeholder.
+The emissivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1542,7 +1540,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[0].exposure.cold.earth_view_ra
 tio
-The Earth view ratio of surface 'ADCS panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1552,7 +1550,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[0].exposure.cold.solar_view_rat
 io
-The solar view ratio of surface 'ADCS panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1562,7 +1560,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[0].exposure.hot.earth_view_rati
 o
-The Earth view ratio of surface 'ADCS panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1572,7 +1570,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[0].exposure.hot.solar_view_rati
 o
-The solar view ratio of surface 'ADCS panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1581,8 +1579,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[1].absorptivity_ratio
-The absorptivity of surface 'DH panel' is a
-placeholder.
+The absorptivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1590,8 +1587,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[1].emissivity_ratio
-The emissivity of surface 'DH panel' is a
-placeholder.
+The emissivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1600,7 +1596,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[1].exposure.cold.earth_view_ra
 tio
-The Earth view ratio of surface 'DH panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1610,7 +1606,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[1].exposure.cold.solar_view_rat
 io
-The solar view ratio of surface 'DH panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1620,7 +1616,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[1].exposure.hot.earth_view_rati
 o
-The Earth view ratio of surface 'DH panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1630,7 +1626,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[1].exposure.hot.solar_view_rati
 o
-The solar view ratio of surface 'DH panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1649,8 +1645,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[2].absorptivity_ratio
-The absorptivity of surface 'EPS panel' is a
-placeholder.
+The absorptivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1658,8 +1653,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[2].emissivity_ratio
-The emissivity of surface 'EPS panel' is a
-placeholder.
+The emissivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1668,7 +1662,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[2].exposure.cold.earth_view_ra
 tio
-The Earth view ratio of surface 'EPS panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1678,7 +1672,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[2].exposure.cold.solar_view_rat
 io
-The solar view ratio of surface 'EPS panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1688,7 +1682,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[2].exposure.hot.earth_view_rati
 o
-The Earth view ratio of surface 'EPS panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1698,7 +1692,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[2].exposure.hot.solar_view_rati
 o
-The solar view ratio of surface 'EPS panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1707,8 +1701,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[3].absorptivity_ratio
-The absorptivity of surface 'PL panel' is a
-placeholder.
+The absorptivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1716,8 +1709,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[3].emissivity_ratio
-The emissivity of surface 'PL panel' is a
-placeholder.
+The emissivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1726,7 +1718,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[3].exposure.cold.earth_view_ra
 tio
-The Earth view ratio of surface 'PL panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1736,7 +1728,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[3].exposure.cold.solar_view_rat
 io
-The solar view ratio of surface 'PL panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1746,7 +1738,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[3].exposure.hot.earth_view_rati
 o
-The Earth view ratio of surface 'PL panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1756,7 +1748,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[3].exposure.hot.solar_view_rati
 o
-The solar view ratio of surface 'PL panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1765,8 +1757,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[4].absorptivity_ratio
-The absorptivity of surface 'TTC panel' is a
-placeholder.
+The absorptivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1774,8 +1765,7 @@ RESULT_INCO
 MPLETE
 config/thermal_model.yaml
 surfaces[4].emissivity_ratio
-The emissivity of surface 'TTC panel' is a
-placeholder.
+The emissivity of the surface is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1784,7 +1774,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[4].exposure.cold.earth_view_ra
 tio
-The Earth view ratio of surface 'TTC panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1794,7 +1784,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[4].exposure.cold.solar_view_rat
 io
-The solar view ratio of surface 'TTC panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1804,7 +1794,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[4].exposure.hot.earth_view_rati
 o
-The Earth view ratio of surface 'TTC panel' is a
+The Earth view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1814,7 +1804,7 @@ MPLETE
 config/thermal_model.yaml
 surfaces[4].exposure.hot.solar_view_rati
 o
-The solar view ratio of surface 'TTC panel' is a
+The solar view ratio of the surface is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.

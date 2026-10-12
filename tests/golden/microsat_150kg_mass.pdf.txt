@@ -1067,8 +1067,8 @@ RESULT_INCOMPLE
 TE
 config/margin_policy.yaml
 classes.class_a.mass_margin_ratio
-The mass margin of maturity class 'class_a' is
-a placeholder.
+The mass margin of the maturity class is a
+placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1076,8 +1076,8 @@ RESULT_INCOMPLE
 TE
 config/margin_policy.yaml
 classes.class_b.mass_margin_ratio
-The mass margin of maturity class 'class_b' is
-a placeholder.
+The mass margin of the maturity class is a
+placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 ## page 7
@@ -1095,8 +1095,8 @@ RESULT_INCOMPLE
 TE
 config/margin_policy.yaml
 classes.class_c.mass_margin_ratio
-The mass margin of maturity class 'class_c' is
-a placeholder.
+The mass margin of the maturity class is a
+placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning
@@ -1200,7 +1200,7 @@ RESULT_INCOMPLE
 TE
 config/mass_limits.yaml
 limits[0].limit_kg
-The mass limit 'Launch mass' is a placeholder.
+The mass limit is a placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
 warning

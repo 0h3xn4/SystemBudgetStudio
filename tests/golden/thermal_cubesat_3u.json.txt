@@ -1214,7 +1214,7 @@
       "file": "config/thermal_environment.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The albedo of case 'cold' is a placeholder.",
+      "message": "The albedo of the case is a placeholder.",
       "path": "cases.cold.albedo_ratio",
       "severity": "warning"
     },
@@ -1223,7 +1223,7 @@
       "file": "config/thermal_environment.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth infrared flux of case 'cold' is a placeholder.",
+      "message": "The Earth infrared flux of the case is a placeholder.",
       "path": "cases.cold.earth_ir_wm2",
       "severity": "warning"
     },
@@ -1232,7 +1232,7 @@
       "file": "config/thermal_environment.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar flux of case 'cold' is a placeholder.",
+      "message": "The solar flux of the case is a placeholder.",
       "path": "cases.cold.solar_flux_wm2",
       "severity": "warning"
     },
@@ -1241,7 +1241,7 @@
       "file": "config/thermal_environment.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The albedo of case 'hot' is a placeholder.",
+      "message": "The albedo of the case is a placeholder.",
       "path": "cases.hot.albedo_ratio",
       "severity": "warning"
     },
@@ -1250,7 +1250,7 @@
       "file": "config/thermal_environment.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth infrared flux of case 'hot' is a placeholder.",
+      "message": "The Earth infrared flux of the case is a placeholder.",
       "path": "cases.hot.earth_ir_wm2",
       "severity": "warning"
     },
@@ -1259,7 +1259,7 @@
       "file": "config/thermal_environment.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar flux of case 'hot' is a placeholder.",
+      "message": "The solar flux of the case is a placeholder.",
       "path": "cases.hot.solar_flux_wm2",
       "severity": "warning"
     },
@@ -1322,7 +1322,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of surface 'ADCS panel' is a placeholder.",
+      "message": "The absorptivity of the surface is a placeholder.",
       "path": "surfaces[0].absorptivity_ratio",
       "severity": "warning"
     },
@@ -1331,7 +1331,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The emissivity of surface 'ADCS panel' is a placeholder.",
+      "message": "The emissivity of the surface is a placeholder.",
       "path": "surfaces[0].emissivity_ratio",
       "severity": "warning"
     },
@@ -1340,7 +1340,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'ADCS panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[0].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
@@ -1349,7 +1349,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'ADCS panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[0].exposure.cold.solar_view_ratio",
       "severity": "warning"
     },
@@ -1358,7 +1358,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'ADCS panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[0].exposure.hot.earth_view_ratio",
       "severity": "warning"
     },
@@ -1367,7 +1367,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'ADCS panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[0].exposure.hot.solar_view_ratio",
       "severity": "warning"
     },
@@ -1376,7 +1376,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of surface 'DH panel' is a placeholder.",
+      "message": "The absorptivity of the surface is a placeholder.",
       "path": "surfaces[1].absorptivity_ratio",
       "severity": "warning"
     },
@@ -1385,7 +1385,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The emissivity of surface 'DH panel' is a placeholder.",
+      "message": "The emissivity of the surface is a placeholder.",
       "path": "surfaces[1].emissivity_ratio",
       "severity": "warning"
     },
@@ -1394,7 +1394,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'DH panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[1].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
@@ -1403,7 +1403,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'DH panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[1].exposure.cold.solar_view_ratio",
       "severity": "warning"
     },
@@ -1412,7 +1412,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'DH panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[1].exposure.hot.earth_view_ratio",
       "severity": "warning"
     },
@@ -1421,7 +1421,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'DH panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[1].exposure.hot.solar_view_ratio",
       "severity": "warning"
     },
@@ -1430,7 +1430,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of surface 'EPS panel' is a placeholder.",
+      "message": "The absorptivity of the surface is a placeholder.",
       "path": "surfaces[2].absorptivity_ratio",
       "severity": "warning"
     },
@@ -1439,7 +1439,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The emissivity of surface 'EPS panel' is a placeholder.",
+      "message": "The emissivity of the surface is a placeholder.",
       "path": "surfaces[2].emissivity_ratio",
       "severity": "warning"
     },
@@ -1448,7 +1448,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'EPS panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[2].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
@@ -1457,7 +1457,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'EPS panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[2].exposure.cold.solar_view_ratio",
       "severity": "warning"
     },
@@ -1466,7 +1466,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'EPS panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[2].exposure.hot.earth_view_ratio",
       "severity": "warning"
     },
@@ -1475,7 +1475,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'EPS panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[2].exposure.hot.solar_view_ratio",
       "severity": "warning"
     },
@@ -1484,7 +1484,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of surface 'PL panel' is a placeholder.",
+      "message": "The absorptivity of the surface is a placeholder.",
       "path": "surfaces[3].absorptivity_ratio",
       "severity": "warning"
     },
@@ -1493,7 +1493,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The emissivity of surface 'PL panel' is a placeholder.",
+      "message": "The emissivity of the surface is a placeholder.",
       "path": "surfaces[3].emissivity_ratio",
       "severity": "warning"
     },
@@ -1502,7 +1502,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'PL panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[3].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
@@ -1511,7 +1511,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'PL panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[3].exposure.cold.solar_view_ratio",
       "severity": "warning"
     },
@@ -1520,7 +1520,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'PL panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[3].exposure.hot.earth_view_ratio",
       "severity": "warning"
     },
@@ -1529,7 +1529,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'PL panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[3].exposure.hot.solar_view_ratio",
       "severity": "warning"
     },
@@ -1538,7 +1538,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of surface 'TTC panel' is a placeholder.",
+      "message": "The absorptivity of the surface is a placeholder.",
       "path": "surfaces[4].absorptivity_ratio",
       "severity": "warning"
     },
@@ -1547,7 +1547,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The emissivity of surface 'TTC panel' is a placeholder.",
+      "message": "The emissivity of the surface is a placeholder.",
       "path": "surfaces[4].emissivity_ratio",
       "severity": "warning"
     },
@@ -1556,7 +1556,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'TTC panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[4].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
@@ -1565,7 +1565,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'TTC panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[4].exposure.cold.solar_view_ratio",
       "severity": "warning"
     },
@@ -1574,7 +1574,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The Earth view ratio of surface 'TTC panel' is a placeholder.",
+      "message": "The Earth view ratio of the surface is a placeholder.",
       "path": "surfaces[4].exposure.hot.earth_view_ratio",
       "severity": "warning"
     },
@@ -1583,7 +1583,7 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar view ratio of surface 'TTC panel' is a placeholder.",
+      "message": "The solar view ratio of the surface is a placeholder.",
       "path": "surfaces[4].exposure.hot.solar_view_ratio",
       "severity": "warning"
     },

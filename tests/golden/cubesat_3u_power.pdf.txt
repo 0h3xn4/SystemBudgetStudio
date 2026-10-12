@@ -928,7 +928,7 @@ RESULT_INCO
 MPLETE
 config/margin_policy.yaml
 classes.class_a.power_margin_ratio
-The margin of maturity class 'class_a' is a
+The margin of the maturity class is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -937,7 +937,7 @@ RESULT_INCO
 MPLETE
 config/margin_policy.yaml
 classes.class_b.power_margin_ratio
-The margin of maturity class 'class_b' is a
+The margin of the maturity class is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -946,7 +946,7 @@ RESULT_INCO
 MPLETE
 config/margin_policy.yaml
 classes.class_c.power_margin_ratio
-The margin of maturity class 'class_c' is a
+The margin of the maturity class is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.
@@ -1063,7 +1063,7 @@ RESULT_INCO
 MPLETE
 config/power_config.yaml
 converter_efficiency_ratio.main
-The converter efficiency of bus 'main' is a
+The converter efficiency of the bus is a
 placeholder.
 Replace the placeholder with a sourced value;
 results that need it show n/a.

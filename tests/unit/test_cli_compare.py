@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -111,3 +112,30 @@ def test_unknown_scenario_is_reported(
     assert code == 1
     out = capsys.readouterr().out
     assert "scenario" in out.lower()
+
+
+def test_compare_never_counts_more_values_than_it_compared(
+    pair: tuple[Path, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Audit TL-16: one-sided rows were counted as values ("61 differ out of 32")."""
+    a, b = pair
+    assert main(["compare", str(a), str(b), "--out", str(tmp_path / "o"), *FIXED]) == 0
+    lines = [ln for ln in capsys.readouterr().out.splitlines() if "value(s) differ out of" in ln]
+    assert lines
+    for line in lines:
+        differ, compared = map(
+            int, re.search(r"(\d+) value\(s\) differ out of (\d+)", line).groups()
+        )  # type: ignore[union-attr]
+        assert differ <= compared
+
+
+@pytest.mark.parametrize("command", ["run", "scenario", "power-timeline", "link-passes", "compare"])
+def test_an_empty_out_folder_is_refused(
+    command: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = tmp_path / "p"
+    shutil.copytree(EXAMPLES / "cubesat_3u_eps", root)
+    with pytest.raises(SystemExit) as exc:
+        main([command, str(root), "--out", ""])
+    assert exc.value.code == 2
+    assert "folder" in capsys.readouterr().err

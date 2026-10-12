@@ -1928,7 +1928,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The margin of maturity class 'class_a' is a placeholder.",
+      "message": "The margin of the maturity class is a placeholder.",
       "path": "classes.class_a.power_margin_ratio",
       "severity": "warning"
     },
@@ -1937,7 +1937,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The margin of maturity class 'class_b' is a placeholder.",
+      "message": "The margin of the maturity class is a placeholder.",
       "path": "classes.class_b.power_margin_ratio",
       "severity": "warning"
     },
@@ -1946,7 +1946,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The margin of maturity class 'class_c' is a placeholder.",
+      "message": "The margin of the maturity class is a placeholder.",
       "path": "classes.class_c.power_margin_ratio",
       "severity": "warning"
     },
@@ -1964,7 +1964,7 @@
       "file": "config/power_config.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The converter efficiency of bus 'main_28v' is a placeholder.",
+      "message": "The converter efficiency of the bus is a placeholder.",
       "path": "converter_efficiency_ratio.main_28v",
       "severity": "warning"
     },
@@ -1973,7 +1973,7 @@
       "file": "config/power_config.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The converter efficiency of bus 'payload_12v' is a placeholder.",
+      "message": "The converter efficiency of the bus is a placeholder.",
       "path": "converter_efficiency_ratio.payload_12v",
       "severity": "warning"
     },
