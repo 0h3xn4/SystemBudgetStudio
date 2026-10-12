@@ -11,7 +11,7 @@ import math
 from dataclasses import dataclass
 from typing import Literal
 
-from budget_core.assumptions import Assumption, incomplete
+from budget_core.assumptions import Assumption, incomplete, missing_from
 from budget_core.mass.mass_properties import (
     MassItem,
     Tensor,
@@ -23,6 +23,7 @@ from budget_core.model import MassLimits, MassProperties, Project, Sourced
 from budget_core.problems import Problem, Severity
 
 LimitStatus = Literal["ok", "exceeded", "n/a"]
+LIMIT_TOLERANCE_RATIO = 1e-9  # a limit met to within rounding noise is met (as in D-097)
 
 
 def margined_mass_kg(mass_kg: float, margin_ratio: float | None) -> float | None:
@@ -203,6 +204,7 @@ def static_mass_budget(project: Project) -> StaticMassResult:
 
     assumptions, problems = _assumptions(project)
     problems += _property_problems(phases)
+    problems += _expendable_inertia_problems(project)
     problems += _limit_problems(project.config.mass_limits, phases)
     return StaticMassResult(tuple(phases), tuple(assumptions), tuple(problems))
 
@@ -237,6 +239,9 @@ def _limit_checks(
             checks.append(LimitCheck(limit.name, value, system_margined_kg, None, "n/a"))
             continue
         margin = value - system_margined_kg
+        # a limit that is met exactly is not exceeded: the sum of the masses carries rounding noise
+        if abs(margin) <= LIMIT_TOLERANCE_RATIO * max(1.0, abs(value)):
+            margin = 0.0
         checks.append(
             LimitCheck(
                 limit.name, value, system_margined_kg, margin, "ok" if margin >= 0 else "exceeded"
@@ -311,19 +316,48 @@ def _property_problems(phases: list[PhaseMass]) -> list[Problem]:
     return out
 
 
+def _expendable_inertia_problems(project: Project) -> list[Problem]:
+    """An expendable's own inertia is a fixed tensor: it does not follow the mass of the phase
+    (DEVIATIONS DV-M4). Say so where the mass changes between phases."""
+    out: list[Problem] = []
+    for eid in sorted(project.expendables):
+        exp = project.expendables[eid]
+        props = exp.mass_properties
+        if props is None or props.inertia is None:
+            continue
+        positive = sorted(m for m in exp.masses_kg.values() if m > 0.0)
+        if positive and positive[-1] - positive[0] > LIMIT_TOLERANCE_RATIO * positive[-1]:
+            out.append(
+                Problem(
+                    Severity.WARNING,
+                    "MASS_INERTIA_NOT_SCALED",
+                    f"'{eid}' has an own inertia and more than one mass; the same inertia is used "
+                    "in every phase (it does not scale with the mass).",
+                    file=f"expendables/{eid}.yaml",
+                    path="mass_properties.inertia",
+                    hint="Remove the own inertia (point mass) or accept the error; per-phase "
+                    "inertia is not modelled.",
+                )
+            )
+    return out
+
+
 def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
     policy = project.config.margin_policy
     out: list[Assumption] = []
     problems: list[Problem] = []
 
-    def add(name: str, item: Sourced | None, file: str, path: str, what: str) -> None:
+    def add(
+        name: str, item: Sourced | None, file: str, path: str, what: str, file_present: bool
+    ) -> None:
         if item is None:
             out.append(
                 Assumption(
                     name, None, "ratio" if "margin" in path else "kg", "missing", file, path, True
                 )
             )
-            problems.append(incomplete(f"{what} is missing ({file} not provided).", file, path))
+            where = missing_from(file, file_present)
+            problems.append(incomplete(f"{what} is missing {where}.", file, path))
             return
         unit = "ratio" if "margin" in path else "kg"
         out.append(Assumption(name, item.value, unit, item.source, file, path, item.is_placeholder))
@@ -343,6 +377,7 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             mfile,
             f"classes.{cls}.mass_margin_ratio",
             "The mass margin of the maturity class",
+            policy is not None,
         )
     add(
         "System mass margin",
@@ -350,6 +385,7 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
         mfile,
         "system_mass_margin_ratio",
         "The system mass margin",
+        policy is not None,
     )
     limits = project.config.mass_limits
     for index, limit in enumerate(limits.limits if limits else []):
@@ -359,5 +395,6 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             "config/mass_limits.yaml",
             f"limits[{index}].limit_kg",
             "The mass limit",
+            True,
         )
     return out, problems

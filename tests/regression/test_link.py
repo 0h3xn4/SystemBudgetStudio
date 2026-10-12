@@ -149,17 +149,19 @@ def test_uplink_uses_the_spacecraft_receive_pattern_and_noise_temperature() -> N
 
 
 def test_placeholder_and_missing_inputs_give_na() -> None:
-    # required Eb/N0 is a placeholder
+    # required Eb/N0 is a placeholder: the terms that do not need it are still computed (TL-4);
+    # the margin, the rates and the highest closing rate need it and are n/a
     result = link_static_budget(link_project(ebn0=None))
     row = result.rows[0]
-    assert row.cn0_dbhz is None and row.rates == () and row.max_rate_bps is None
+    assert row.cn0_dbhz is not None and row.eirp_dbw is not None and row.path_loss_db is not None
+    assert row.rates == () and row.max_rate_bps is None and row.required_ebn0_db is None
     assert any(
         p.code == "RESULT_INCOMPLETE" and p.path == "entries[0].required_ebn0_db"
         for p in result.problems
     )
     # a modulation that has no entry
     result = link_static_budget(link_project(links={"dl": downlink(modulation="OTHER")}))
-    assert result.rows[0].cn0_dbhz is None
+    assert result.rows[0].cn0_dbhz is not None and result.rows[0].rates == ()
     assert any(p.file == "config/ebn0_table.yaml" for p in result.problems)
     # a placeholder transmit power
     tx = downlink().transmitter.model_copy(update={"power_w": sv(None)})
@@ -185,7 +187,7 @@ def test_pass_series_selects_the_rate_and_integrates_the_volume() -> None:
     assert len(s.times_s) == 30
     assert set(s.selected_rate_bps) == {100e3}  # type: ignore[arg-type]
     assert s.volume_bits == pytest.approx(100e3 * 300.0)
-    assert s.volume_per_day_bits == pytest.approx(100e3 * 300.0 * 86.4)
+    assert s.volume_per_day_bits is None  # a 1000 s scenario is not scaled to a day (TL-8)
     assert s.passes[0].usable_s == pytest.approx(300.0)
     assert s.margin_db is not None and s.margin_db.shape == (30, 3)
     assert s.passes[0].minimum_margin_db == pytest.approx(CN0 - 40.0 - 10.0, abs=0.01)

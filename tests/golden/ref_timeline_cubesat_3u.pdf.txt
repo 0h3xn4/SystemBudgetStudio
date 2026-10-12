@@ -76,7 +76,8 @@ Worst value
 Limit
 Unit
 Input to change
-No violations found.
+Not evaluated: Peak power above the limit (the peak power limit is missing); Depth of discharge above the allowed limit in BOL and EOL (an input of the array or battery is missing); Battery empty, demand not
+supplied in BOL and EOL (an input of the array or battery is missing); Negative energy balance over an orbit in BOL and EOL (an input of the array or demand is missing). No violations found by the checks that ran.
 Modes and orbits
 Spacecraft modes in the scenario
 Mode

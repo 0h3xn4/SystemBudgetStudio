@@ -52,13 +52,13 @@ For each **static point** (an [elevation](../glossary.md#elevation) and slant ra
 budget link-passes my_satellite --out out
 ```
 
-This needs a [scenario](scenarios.md) that lists the link's ground station under `sites`. For every pass the tool evaluates the link at each time step (the spacecraft antenna angle follows from the geometry, measured from nadir) and selects the **highest listed rate whose margin meets the required margin**. That gives the margin, the time with a usable rate and the data volume per pass, per scenario and per day:
+This needs a [scenario](scenarios.md) that lists the link's ground station under `sites`. For every pass the tool evaluates the link in pieces of at most 5 s, each at the elevation and range of its middle, and only inside the pass (the spacecraft antenna angle follows from the geometry, measured from nadir); the results do not depend on the scenario's `step_s` ([decision D-130](../DECISIONS.md)). It selects the **highest listed rate whose margin meets the required margin**. That gives the margin, the time with a usable rate and the data volume per pass, per scenario and, for a scenario of at least one day, per day (shorter scenarios show n/a per day):
 
 ```text
 sband_down: 11 pass(es) over gs_north, 4438.17 MByte in the scenario (4438.17 MByte per day).
 ```
 
-A sample counts for the part of its step that lies inside the pass and, if you set `active_modes`, for the time its part of the pass overlaps those spacecraft modes. The series CSV of a link has the columns `in_pass_s` (seconds of the step inside the pass) and `before_aos`; `selected_rate_bps` x `in_pass_s` summed over the rows gives the pass volume. A report whose pass results are n/a because a table entry (Eb/N0, attenuation) is missing carries the INCOMPLETE banner, as one with placeholders does. Not modelled: hysteresis, protocol overhead, acquisition time. In the window: the **Link passes** tab (select a pass to zoom the plot to it).
+A sample counts for the part of its step that lies inside the pass and, if you set `active_modes`, for the time its part of the pass overlaps those spacecraft modes. The series CSV of a link has the column `in_pass_s` (seconds of the pass each row stands for); `selected_rate_bps` x `in_pass_s` summed over the rows gives the pass volume. A report whose pass results are n/a because a table entry (Eb/N0, attenuation) is missing carries the INCOMPLETE banner, as one with placeholders does. Not modelled: hysteresis, protocol overhead, acquisition time. In the window: the **Link passes** tab (select a pass to zoom the plot to it).
 
 ## How do I give an antenna gain?
 

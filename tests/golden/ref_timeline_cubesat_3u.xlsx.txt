@@ -23,7 +23,7 @@
 23: 'n/a: an input the result needs is a placeholder or missing (see Problems).' |  |  |  |  |  |  |  | 
 25: 'Violations' |  |  |  |  |  |  |  | 
 26: 'Case' | 'Finding' | 'From (T+)' | 'To (T+)' | 'Duration (s)' | 'Worst value' | 'Limit' | 'Unit' | 'Input to change'
-27: 'No violations found.' |  |  |  |  |  |  |  | 
+27: 'Not evaluated: Peak power above the limit (the peak power limit is missing); Depth of discharge above the allowed limit in BOL and EOL (an input of the array or battery is missing); Battery empty, demand not supplied in BOL and EOL (an input of the array or battery is missing); Negative energy balance over an orbit in BOL and EOL (an input of the array or demand is missing). No violations found by the checks that ran.' |  |  |  |  |  |  |  | 
 ## sheet Modes and orbits rows=47 cols=8
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  | 
 3: 'Spacecraft modes in the scenario' |  |  |  |  |  |  | 

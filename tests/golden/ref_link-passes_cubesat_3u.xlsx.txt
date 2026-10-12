@@ -3,8 +3,8 @@
 2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  |  |  |  |  |  |  |  |  |  |  |  | 
 4: 'Link budget at the static points' |  |  |  |  |  |  |  |  |  |  |  |  | 
 5: 'Link' | 'Direction' | 'Point' | 'Elevation (deg)' | 'Range (km)' | 'EIRP (dBW)' | 'G/T (dB/K)' | 'Path loss (dB)' | 'Atmospheric (dB)' | 'Other losses (dB)' | 'C/N0 (dBHz)' | 'Required Eb/N0 (dB)' | 'Highest closing rate (kbit/s)' | 'Rate at required margin (kbit/s)'
-6: 'uhf_down' | 'downlink' | '5 deg elevation' | 5 | 2200 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-7: 'uhf_down' | 'downlink' | 'zenith' | 90 | 550 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+6: 'uhf_down' | 'downlink' | '5 deg elevation' | 5 | 2200 | 'n/a' | 'n/a' | 152.066 | 0 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+7: 'uhf_down' | 'downlink' | 'zenith' | 90 | 550 | 'n/a' | 'n/a' | 140.025 | 0 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 8: 'Other losses = pointing, polarisation and implementation. A link closes at a rate when its margin is at least the required margin of the link. n/a: an input is a placeholder or missing. Highest closing rate empty (n/a with a result): no listed rate closes.' |  |  |  |  |  |  |  |  |  |  |  |  | 
 10: 'Margin by data rate' |  |  |  |  |  |  |  |  |  |  |  |  | 
 11: 'Link' | 'Point' | 'Data rate (kbit/s)' | 'Eb/N0 (dB)' | 'Margin (dB)' | 'Required margin (dB)' | 'Closes' |  |  |  |  |  |  | 
@@ -27,7 +27,7 @@
 18: '8' | 'T+10:59:35' | '2026-06-01T10:59:35Z' | 581.669 | 63.7992 | 'n/a' | 'n/a' | 'n/a'
 19: '9' | 'T+12:34:52' | '2026-06-01T12:34:52Z' | 552.388 | 31.9971 | 'n/a' | 'n/a' | 'n/a'
 20: '10' | 'T+14:12:52' | '2026-06-01T14:12:52Z' | 309.598 | 8.56032 | 'n/a' | 'n/a' | 'n/a'
-21: '11' | 'T+23:57:48' | '2026-06-01T23:57:48Z' | 131.001 | 13.7584 | 'n/a' | 'n/a' | 'n/a'
+21: '11' | 'T+23:57:48' | '2026-06-01T23:57:48Z' | 131.001 | 13.7583 | 'n/a' | 'n/a' | 'n/a'
 22: 'Lowest margin is at the lowest listed rate over the active samples.' |  |  |  |  |  |  | 
 ## sheet Assumptions rows=29 cols=5
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  | 
@@ -55,7 +55,7 @@
 25: 'LNK-MARGIN' | 'Link margin' | 'margin = Eb/N0 - Eb/N0_required  (dB); the link closes when margin >= required margin' | 'SOURCE_MISSING' | 
 26: 'LNK-ATT' | 'Atmospheric attenuation' | 'L_atm = sum of the named table entries, linear interpolation by elevation' | 'SOURCE_MISSING' | 
 27: 'LNK-NADIR' | 'Angle from nadir at the spacecraft' | 'sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el)' | 'SOURCE_MISSING' | 
-28: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the step inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
+28: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
 29: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
 ## sheet Problems rows=104 cols=6
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  | 

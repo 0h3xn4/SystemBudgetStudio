@@ -40,7 +40,7 @@ def _time_domain_equations() -> tuple[Equation, ...]:
             "P_gen = E * (sum_faces N_cells * max(0, cos theta)) * A_cell * eta_ref * k_T "
             "* (1 - l_pack) * (1 - l_harness) * k_age * f_lit",
             None,
-            _TD_NOTE + " Constant irradiance E, no albedo (DEVIATIONS DV-P4).",
+            _TD_NOTE + " Constant irradiance E, no albedo (DEVIATIONS DV-P5).",
         ),
         Equation(
             "TDP-TEMP",
@@ -241,10 +241,11 @@ def _link_equations() -> tuple[Equation, ...]:
         Equation(
             "LNK-VOLUME",
             "Data volume",
-            "V = sum over samples of R_selected * (time of the step inside the pass); R_selected "
+            "V = sum over samples of R_selected * (time of the sample inside the pass); R_selected "
             "is the highest listed rate with margin >= required margin while the link is active",
             None,
-            "Per pass and per day (scenario total scaled to 86 400 s).",
+            "Per pass and per day (scenario total scaled to 86 400 s; n/a for a scenario shorter "
+            "than a day). Samples are evaluated in the middle of their part of the pass (D-130).",
         ),
     )
 

@@ -481,3 +481,66 @@ def test_a_limit_name_shared_between_phases_points_at_its_own_position_in_the_fi
     (problem,) = [p for p in result.problems if p.code == "MASS_LIMIT_EXCEEDED"]
     assert problem.path == "limits[2]"
     assert "phase number 2" in problem.message
+
+
+# ---- pre-release audit (PWR-6, PWR-7) ----------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "masses", [(10.1, 14.155), (24.255,), (0.1, 0.2, 0.3), (1.1, 2.2, 3.3, 4.4, 5.5, 7.755)]
+)
+def test_a_mass_limit_met_exactly_is_not_exceeded(masses: tuple[float, ...]) -> None:
+    # the sum of decimal masses carries rounding noise (0.1 + 0.2 + 0.3 is 0.6000000000000001);
+    # a limit equal to the sum is met, with a margin of exactly zero
+    limit = round(sum(masses), 9)
+    units = {f"u{i}": U(m) for i, m in enumerate(masses)}
+    result = static_mass_budget(project(units, limits=[("cap", None, limit)]))
+    (check,) = phase(result).limits
+    assert check.status == "ok" and check.margin_kg == 0.0
+    assert not [p for p in result.problems if p.code == "MASS_LIMIT_EXCEEDED"]
+
+
+def test_a_mass_limit_above_the_rounding_noise_is_still_exceeded() -> None:
+    result = static_mass_budget(project({"u1": U(24.255)}, limits=[("cap", None, 24.255 - 1e-6)]))
+    (check,) = phase(result).limits
+    assert check.status == "exceeded"
+    assert [p.code for p in result.problems if p.severity.value == "error"] == [
+        "MASS_LIMIT_EXCEEDED"
+    ]
+
+
+def test_a_mass_limit_message_does_not_repeat_the_limit_name() -> None:
+    result = static_mass_budget(project({"u1": U(5.0)}, limits=[("secret name", None, 1.0)]))
+    (problem,) = [p for p in result.problems if p.code == "MASS_LIMIT_EXCEEDED"]
+    assert "secret" not in problem.message and problem.path == "limits[0]"
+
+
+def expendable_with_inertia(masses: dict[str, float]) -> Project:
+    base = project({"bus": U(10.0, pos=(0, 0, 0))}, phases=list(masses))
+    base.expendables["tank"] = Expendable(
+        name="Tank",
+        subsystem="PROP",
+        maturity="m1",
+        masses_kg=masses,
+        mass_properties=props((1.0, 0.0, 0.0), (1.0, 1.0, 1.0, 0.0, 0.0, 0.0)),
+    )
+    return base
+
+
+def test_an_expendable_with_inertia_and_changing_mass_is_warned() -> None:
+    result = static_mass_budget(expendable_with_inertia({"launch": 4.0, "eol": 0.4}))
+    (problem,) = [p for p in result.problems if p.code == "MASS_INERTIA_NOT_SCALED"]
+    assert problem.severity.value == "warning"
+    assert problem.file == "expendables/tank.yaml" and problem.path == "mass_properties.inertia"
+
+
+@pytest.mark.parametrize("masses", [{"launch": 4.0, "eol": 4.0}, {"launch": 4.0, "eol": 0.0}])
+def test_no_warning_when_the_mass_is_one_positive_value(masses: dict[str, float]) -> None:
+    result = static_mass_budget(expendable_with_inertia(masses))
+    assert not [p for p in result.problems if p.code == "MASS_INERTIA_NOT_SCALED"]
+
+
+def test_a_missing_key_is_not_reported_as_a_missing_file() -> None:
+    result = static_mass_budget(project({"u1": U(1.0)}, margins={"m2": 0.0}))
+    (problem,) = [p for p in result.problems if p.path == "classes.m1.mass_margin_ratio"]
+    assert "not provided" not in problem.message and "margin_policy.yaml" in problem.message

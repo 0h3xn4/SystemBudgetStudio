@@ -24,12 +24,16 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 
 | Code | What to do |
 |---|---|
-| `SCENARIO_UNKNOWN`, `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED` | The scenario does not exist, or its orbit or time grid cannot be propagated. |
+| `SCENARIO_UNKNOWN`, `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED`, `SCENARIO_TOO_LARGE` | The scenario does not exist, its orbit or time grid cannot be propagated, or it needs more memory than is available (increase `step_s` or shorten `duration_s`). |
+| `ORBIT_EPOCH_FAR` | (Warning) A TLE's epoch is more than 30 days from the scenario start; use a TLE close to the start, or elements. |
 | `RESULT_INCOMPLETE` | A result needs a placeholder number and is shown as n/a. Replace the number with a sourced value. |
 | `MASS_LIMIT_EXCEEDED`, `MASS_PROPS_MISSING`, `MASS_FRAME_UNDEFINED`, `MASS_INERTIA_POINT_MASS` | The mass total is above its limit, or centre of gravity or inertia inputs are missing. |
+| `MASS_INERTIA_NOT_SCALED` | (Warning) An expendable has its own inertia and a mass that changes between phases; the inertia stays the same in every phase. Remove it (point mass) or accept the error. |
 | `THERMAL_LIMIT_EXCEEDED`, `THERMAL_MARGIN_INSUFFICIENT`, `THERMAL_NO_LIMITS`, `THERMAL_SOLVE_FAILED` | A unit is outside or too close to its limits, has no limits, or the network could not be solved. |
 | `PEAK_POWER_EXCEEDED`, `BATTERY_DEPLETED`, `BATTERY_DOD_EXCEEDED`, `ORBIT_BALANCE_NEGATIVE` | The time-domain power budget found a violation. Its time stamp and the input to change are listed. |
-| `LINK_ATTENUATION_FREQUENCY`, `LINK_SITE_NOT_IN_SCENARIO`, `LINK_NO_STATIC_POINTS` | An attenuation entry was defined at another frequency, the link's station is not in the scenario, or the link has no static points. |
+| `ORBIT_BALANCE_NOT_EVALUATED` | (Warning) The step is longer than a quarter of the orbit period, so the orbits cannot be found and the energy balance over an orbit is not checked. Use a smaller step. Checks that could not run are listed as *Not evaluated*, never as passed. |
+| `LINK_ATTENUATION_FREQUENCY`, `LINK_ATTENUATION_DUPLICATE`, `LINK_SITE_NOT_IN_SCENARIO`, `LINK_NO_STATIC_POINTS` | An attenuation entry was defined at another frequency, two entries are for the same elevation (the larger loss is used), the link's station is not in the scenario, or the link has no static points. |
+| `LINK_NEVER_ACTIVE`, `LINK_PER_DAY_NOT_GIVEN` | (Info) No pass falls in an active mode of the link, so its volume is zero; or the scenario is shorter than a day, so no volume per day is given. |
 | `LINK_NOT_CLOSED` | No listed data rate meets the required margin at any static point, or at any active sample of the passes. Lower the data rates, raise the transmit power or gain, or check the losses and the required margin. |
 | `IMPORT_FILE_UNREADABLE`, `IMPORT_FILE_TOO_LARGE`, `IMPORT_COLUMN_MISSING` | The unit table is not a .csv (UTF-8) or .xlsx file, is too large, or lacks the `unit_id` or `power_mode` column. Start from the template written by `budget units-export`. |
 | `IMPORT_COLUMN_IGNORED` | (Warning) A column of the unit table is not part of the template and is skipped. |

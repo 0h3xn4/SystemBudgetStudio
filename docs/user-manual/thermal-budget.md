@@ -82,7 +82,7 @@ Each case picks the `operating` or `survival` set. Every unit gets a status:
 | `no limits` | the unit gives none for this set (`THERMAL_NO_LIMITS`, a warning) |
 | `n/a` | the temperature could not be computed (a placeholder upstream) |
 
-If a group of nodes has no path to space (no radiating surface), there is no equilibrium and you get `THERMAL_SOLVE_FAILED` naming the nodes: give every connected group a surface. A network whose conductances are many orders of magnitude above its radiation cannot be solved accurately in double precision; the tool says so instead of returning a wrong temperature. In the window use the **Thermal budget** tab.
+If a group of nodes has no path to space (no radiating surface), there is no equilibrium and you get `THERMAL_SOLVE_FAILED` naming the nodes: give every connected group a surface. Every node must balance to its own heat, so a tiny isolated node beside a large body sits at the space temperature. A network whose conductances are many orders of magnitude above its radiation is refined with an exact residual; if that does not converge (conductances near 1e14 W/K or more), the tool says so instead of returning a wrong temperature. A limit or margin finding names the case (hot, cold, ...) it belongs to, and an environment file without any case gives `RESULT_INCOMPLETE`. In the window use the **Thermal budget** tab.
 
 ## What the model does not do
 

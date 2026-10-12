@@ -2,7 +2,7 @@
 
 `sun`: the Sun is at a fixed direction in the body frame (perfect pointing).
 `nadir`: the body frame equals the local orbital frame: +Z to the Earth's centre, +X along the
-velocity (for a circular orbit), +Y opposite the orbit normal. Both are idealisations (DV-P4).
+velocity (for a circular orbit), +Y opposite the orbit normal. Both are idealisations (DV-P5).
 """
 
 from __future__ import annotations

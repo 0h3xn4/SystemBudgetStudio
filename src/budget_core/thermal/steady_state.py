@@ -8,6 +8,7 @@ group of connected nodes needs a path to space (some R > 0), otherwise there is 
 
 from __future__ import annotations
 
+from fractions import Fraction
 from typing import Any
 
 import numpy as np
@@ -79,8 +80,8 @@ def solve_steady_state(
     t = np.full(n, (q.sum() / r.sum() + space_k**4) ** 0.25)
     for _ in range(max_iterations):
         flow = -laplacian @ t + r * (space_k**4 - t**4) + q
-        if _balanced(flow, coupling, t, q, r):
-            return _checked(laplacian, coupling, r, t)
+        if _balanced(flow, coupling, t, q, r, g, space_k):
+            return _checked(g, laplacian, coupling, q, r, space_k, t)
         jacobian = laplacian + np.diag(4.0 * r * t**3)
         step = np.linalg.solve(jacobian, flow)
         biggest = float(np.max(np.abs(step) / t))
@@ -88,38 +89,81 @@ def solve_steady_state(
         t = t + scale * step
         if float(np.max(np.abs(step))) * scale < tolerance_k:
             flow = -laplacian @ t + r * (space_k**4 - t**4) + q
-            if _balanced(flow, coupling, t, q, r):
-                return _checked(laplacian, coupling, r, t)
+            if _balanced(flow, coupling, t, q, r, g, space_k):
+                return _checked(g, laplacian, coupling, q, r, space_k, t)
     raise ThermalSolveError("the iteration did not converge")
 
 
 ACCURACY_K = 1e-4
+REFINE_ROUNDS = 8
+REFINED_K = 1e-7  # a correction below this is rounding: the temperatures are as good as they get
 
 
-def _checked(laplacian: NDArray, coupling: NDArray, r: NDArray, t: NDArray) -> NDArray:
+def _checked(
+    g: NDArray,
+    laplacian: NDArray,
+    coupling: NDArray,
+    q: NDArray,
+    r: NDArray,
+    space_k: float,
+    t: NDArray,
+) -> NDArray:
     """The temperatures, if double precision can resolve them. The rounding of the conduction
     terms is an uncertainty in the heat balance; mapped through the Jacobian it bounds the error of
-    each temperature. Conductances many orders above the radiation leave that error large, and a
-    wrong temperature must not be reported as a result."""
+    each temperature. When that bound is too large (conductances many orders above the radiation)
+    the temperatures are refined with the exact residual (iterative refinement: the balance is
+    evaluated in exact rational arithmetic, so its rounding does not count) and accepted only if
+    the corrections die out. A wrong temperature must not be reported as a result."""
     floor = 64.0 * np.finfo(np.float64).eps * (coupling @ t)
     jacobian = laplacian + np.diag(4.0 * r * t**3)
-    uncertainty = float(np.max(np.abs(np.linalg.inv(jacobian)) @ floor))
-    if uncertainty > ACCURACY_K:
-        raise ThermalSolveError(
-            "the conductances are so large compared with the radiation that the temperatures "
-            "cannot be resolved in double precision (check the units of the conductances)"
-        )
-    return t
+    try:
+        uncertainty = float(np.max(np.abs(np.linalg.inv(jacobian)) @ floor))
+        if uncertainty <= ACCURACY_K:
+            return t
+        for _ in range(REFINE_ROUNDS):
+            correction = np.linalg.solve(jacobian, _exact_balance(g, r, q, space_k, t))
+            t = t + correction
+            if float(np.max(np.abs(correction))) <= REFINED_K:
+                return t
+    except np.linalg.LinAlgError:
+        pass
+    raise ThermalSolveError(
+        "the conductances are so large compared with the radiation that the temperatures "
+        "cannot be resolved in double precision (check the units of the conductances)"
+    )
 
 
-def _balanced(flow: NDArray, coupling: NDArray, t: NDArray, q: NDArray, r: NDArray) -> bool:
-    """The heat balance holds at every node: the imbalance is a negligible share of the heat
-    flowing through the body, or no larger than the rounding of the conduction terms. A small
-    step alone is not enough: with very stiff conductances a tiny step can leave a large
-    imbalance."""
-    total = float(q.sum() + np.sum(r * t**4)) + 1e-300
+def _exact_balance(g: NDArray, r: NDArray, q: NDArray, space_k: float, t: NDArray) -> NDArray:
+    """The heat balance of every node in exact arithmetic (the floats are exact fractions), rounded
+    once at the end. Only the connected pairs are summed."""
+    exact = [Fraction(float(x)) for x in t]
+    space4 = Fraction(float(space_k)) ** 4
+    out = np.empty(len(t))
+    for i in range(len(t)):
+        flow = Fraction(float(q[i])) + Fraction(float(r[i])) * (space4 - exact[i] ** 4)
+        for j in np.nonzero(g[i] > 0.0)[0]:
+            flow -= Fraction(float(g[i, j])) * (exact[i] - exact[int(j)])
+        out[i] = float(flow)
+    return out
+
+
+def _balanced(
+    flow: NDArray,
+    coupling: NDArray,
+    t: NDArray,
+    q: NDArray,
+    r: NDArray,
+    g: NDArray,
+    space_k: float,
+) -> bool:
+    """The heat balance holds at every node: its imbalance is a negligible share of the heat
+    flowing through that node (own heat, radiation, conduction), or no larger than the rounding
+    of its conduction terms. The scale is the node's own: a tiny node beside a large body must
+    balance to its own heat, not to the body's. A small step alone is not enough: with very stiff
+    conductances a tiny step can leave a large imbalance."""
+    through = q + r * (t**4 + space_k**4) + np.sum(g * np.abs(t[None, :] - t[:, None]), axis=1)
     floor = 64.0 * np.finfo(np.float64).eps * (coupling @ t)
-    return bool(np.all(np.abs(flow) <= 1e-9 * total + floor))
+    return bool(np.all(np.abs(flow) <= 1e-9 * through + floor))
 
 
 def node_balance_w(

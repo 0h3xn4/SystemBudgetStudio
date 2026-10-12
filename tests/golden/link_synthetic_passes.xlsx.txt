@@ -13,7 +13,7 @@
 1: 'Scenario synthetic: Synthetic. Step 10 s, duration 1000 s.' |  |  |  |  |  |  | 
 2: 'Data volume per link' |  |  |  |  |  |  | 
 3: 'Link' | 'Station' | 'Passes' | 'Scenario total (Mbit)' | 'Per day (Mbit)' | 'Per day (MByte)' |  | 
-4: 'dl' | 'gs' | 1 | 29 | 2505.6 | 313.2 |  | 
+4: 'dl' | 'gs' | 1 | 29 | 'n/a' | 'n/a' |  | 
 5: 'From the highest listed rate that closes at each sample while the link is active (its modes, below its tracking limit). Per day = scenario total scaled to 86 400 s.' |  |  |  |  |  |  | 
 7: 'Passes of link dl over gs' |  |  |  |  |  |  | 
 8: 'Pass' | 'AOS (T+)' | 'AOS (UTC)' | 'Duration (s)' | 'Max elevation (deg)' | 'Usable (s)' | 'Lowest margin (dB)' | 'Volume (Mbit)'
@@ -47,11 +47,12 @@
 23: 'LNK-MARGIN' | 'Link margin' | 'margin = Eb/N0 - Eb/N0_required  (dB); the link closes when margin >= required margin' | 'SOURCE_MISSING' | 
 24: 'LNK-ATT' | 'Atmospheric attenuation' | 'L_atm = sum of the named table entries, linear interpolation by elevation' | 'SOURCE_MISSING' | 
 25: 'LNK-NADIR' | 'Angle from nadir at the spacecraft' | 'sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el)' | 'SOURCE_MISSING' | 
-26: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the step inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
+26: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
 27: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
-## sheet Problems rows=2 cols=6
+## sheet Problems rows=3 cols=6
 1: 'Problems and open items' |  |  |  |  | 
 2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+3: 'info' | 'LINK_PER_DAY_NOT_GIVEN' | 'scenarios/synthetic.yaml' | 'duration_s' | 'The scenario is shorter than one day, so the data volume per day is not given (scaling a short scenario to a day would repeat its passes).' | 'Use a scenario of at least one day for a per-day figure.'
 ## sheet Provenance rows=10 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'

@@ -1,12 +1,14 @@
 """Battery model: capacity and an energy-based state-of-charge integration (TDP-SOC).
 
 The battery is an energy store with constant charge and discharge efficiencies. Within a step the
-net power is constant, so saturation (full or empty) is exact for the step. No voltage, current
+net power is constant, so saturation (full or empty) is exact for the step; the trace says where
+inside a step it happens, so the caller can split the step there. No voltage, current
 limit or temperature effect is modelled (DEVIATIONS DV-P4).
 """
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from typing import Any
 
@@ -36,6 +38,8 @@ class BatteryTrace:
     battery_power_w: NDArray  # bus-side power into the battery (negative: discharging), (N,)
     unmet_w: NDArray  # demand the battery could not supply (average over the step), (N,)
     curtailed_w: NDArray  # generation neither used nor stored (average over the step), (N,)
+    # share of the step after which the battery becomes full or empty inside it (NaN: it does not)
+    saturation_fraction: NDArray
 
 
 def integrate_battery(
@@ -64,6 +68,7 @@ def integrate_battery(
     battery = [0.0] * n
     unmet = [0.0] * n
     curtailed = [0.0] * n
+    saturation = [math.nan] * n
     e = min(initial_energy_wh, capacity_wh)
     energy[0] = e
     eta_c, eta_d = charge_efficiency_ratio, discharge_efficiency_ratio
@@ -76,6 +81,8 @@ def integrate_battery(
             accepted = offered if offered <= room else room
             if accepted < 0.0:
                 accepted = 0.0
+            if 0.0 < room < offered:
+                saturation[i] = room / offered  # becomes full inside the step
             e += eta_c * accepted
             if e > capacity_wh:
                 e = capacity_wh
@@ -85,10 +92,18 @@ def integrate_battery(
             needed = -p * hours
             available = e * eta_d
             supplied = needed if needed <= available else available
+            if 0.0 < available < needed:
+                saturation[i] = available / needed  # becomes empty inside the step
             e -= supplied / eta_d
             if e < 0.0:
                 e = 0.0
             battery[i] = -supplied / hours
             unmet[i] = (needed - supplied) / hours
         energy[i + 1] = e
-    return BatteryTrace(np.array(energy), np.array(battery), np.array(unmet), np.array(curtailed))
+    return BatteryTrace(
+        np.array(energy),
+        np.array(battery),
+        np.array(unmet),
+        np.array(curtailed),
+        np.array(saturation),
+    )

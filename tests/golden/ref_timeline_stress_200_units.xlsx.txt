@@ -23,13 +23,13 @@
 23: 'n/a: an input the result needs is a placeholder or missing (see Problems).' |  |  |  |  |  |  |  | 
 25: 'Violations' |  |  |  |  |  |  |  | 
 26: 'Case' | 'Finding' | 'From (T+)' | 'To (T+)' | 'Duration (s)' | 'Worst value' | 'Limit' | 'Unit' | 'Input to change'
-27: 'No violations found.' |  |  |  |  |  |  |  | 
+27: 'Not evaluated: Peak power above the limit (the peak power limit is missing); Depth of discharge above the allowed limit in BOL and EOL (an input of the array or battery is missing); Battery empty, demand not supplied in BOL and EOL (an input of the array or battery is missing); Negative energy balance over an orbit in BOL and EOL (an input of the array or demand is missing). No violations found by the checks that ran.' |  |  |  |  |  |  |  | 
 ## sheet Modes and orbits rows=226 cols=8
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  | 
 3: 'Spacecraft modes in the scenario' |  |  |  |  |  |  | 
 4: 'Mode' | 'Name' | 'Time (s)' | 'Share' | 'Load (W)' | 'Demand at source (W)' | 'Peak at source (W)' | 
 5: 'charging' | 'Charging' | 386648.0 | 0.639299 | 277.262 | 'n/a' | 'n/a' | 
-6: 'downlink' | 'Downlink' | 5614.63 | 0.00928346 | 275.978 | 'n/a' | 'n/a' | 
+6: 'downlink' | 'Downlink' | 5614.63 | 0.00928345 | 275.978 | 'n/a' | 'n/a' | 
 7: 'safe' | 'Safe' | 212537.0 | 0.351417 | 275.957 | 'n/a' | 'n/a' | 
 8: 'Demand basis: nominal.' |  |  |  |  |  |  | 
 10: 'Orbit energy balance, BOL' |  |  |  |  |  |  | 
@@ -42,7 +42,7 @@
 17: '6' | 'T+07:58:33' | 5742.73 | 2066.58 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 18: '7' | 'T+09:34:16' | 5742.73 | 2066.62 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 19: '8' | 'T+11:09:59' | 5742.73 | 2066.66 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-20: '9' | 'T+12:45:41' | 5742.73 | 2066.71 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+20: '9' | 'T+12:45:41' | 5742.73 | 2066.7 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 21: '10' | 'T+14:21:24' | 5742.73 | 2066.75 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 22: '11' | 'T+15:57:07' | 5742.73 | 2066.79 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 23: '12' | 'T+17:32:50' | 5742.73 | 2066.83 | 'n/a' | 'n/a' | 'n/a' | 'n/a'

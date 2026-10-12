@@ -20,7 +20,8 @@ Deepest depth of discharge | % | 50.000 | 52.577
 Energy not supplied | Wh | 0.000 | 0.000
 Energy curtailed (battery full) | Wh | 70.000 | 50.784
 Stored energy change over the scenario | Wh | -30.000 | -33.203
-Violations | count | 2 | 2
+Violations | count | 4 | 4
+Violations: the findings of the case plus those that do not depend on it (peak power).
 Violations
 ## table
 Case | Finding | From (T+) | To (T+) | Duration (s) | Worst value | Limit | Unit | Input to change

@@ -223,7 +223,7 @@
 6: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:25' | 'classes.class_c.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 7: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | 'system_mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 8: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | 'limits[0].limit_kg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-9: 'error' | 'THERMAL_MARGIN_INSUFFICIENT' | 'units/radio.yaml' | 'temperature_limits' | "Unit 'radio' is within its operating limits but closer than the required temperature margin." | 'The margin is set in config/thermal_environment.yaml.'
+9: 'error' | 'THERMAL_MARGIN_INSUFFICIENT' | 'units/radio.yaml' | 'temperature_limits (case hot)' | "Unit 'radio' is within its operating limits in a thermal case but closer than the required temperature margin." | 'The margin is set in config/thermal_environment.yaml.'
 ## sheet Provenance rows=10 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'

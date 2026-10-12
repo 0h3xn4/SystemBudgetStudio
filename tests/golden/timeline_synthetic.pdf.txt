@@ -60,8 +60,9 @@ Wh
  -33.203
 Violations
 count
- 2
- 2
+ 4
+ 4
+Violations: the findings of the case plus those that do not depend on it (peak power).
 Violations
 Case
 Finding

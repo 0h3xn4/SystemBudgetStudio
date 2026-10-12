@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import io
 import json
+import math
 from collections.abc import Sequence
 from dataclasses import asdict
 from datetime import timedelta
@@ -104,7 +105,6 @@ def series_csv(result: LinkSeriesResult, series: LinkSeries) -> str:
         "range_m",
         "active",
         "in_pass_s",
-        "before_aos",
         "path_loss_db",
         "atmospheric_loss_db",
         "eirp_dbw",
@@ -114,19 +114,10 @@ def series_csv(result: LinkSeriesResult, series: LinkSeries) -> str:
         "selected_rate_bps",
     ]
     n = len(series.times_s)
-    # Seconds of each row's step that lie inside its pass: the data of a row is selected rate x
-    # in_pass_s (the first row of a pass can start before AOS; the geometry is that of the step
-    # start). Where the link is active in only some modes the volume uses the part of it spent in
-    # those modes, so the sum over these seconds is then an upper bound.
-    aos = np.array([series.passes[int(k)].aos_s for k in series.pass_index], dtype=np.float64)
-    los = np.array([series.passes[int(k)].los_s for k in series.pass_index], dtype=np.float64)
-    grid = result.run.env.grid
-    inside = np.clip(
-        np.minimum(np.minimum(series.times_s + grid.step_s, grid.duration_s), los)
-        - np.maximum(series.times_s, aos),
-        0.0,
-        None,
-    )
+    # Seconds of the pass each row stands for (the solver evaluates a pass in pieces, each at its
+    # middle, and keeps the time of the piece in the link's active modes): the data of a row is
+    # selected_rate_bps x in_pass_s, so the rows add up to the pass volume of the summary.
+    weight = np.zeros(n) if series.weight_s is None else np.asarray(series.weight_s)
 
     def col(values: Any) -> list[str]:
         return [""] * n if values is None else [fixed(v, 6) for v in values.tolist()]
@@ -142,8 +133,7 @@ def series_csv(result: LinkSeriesResult, series: LinkSeries) -> str:
         col(series.elevation_deg),
         col(series.range_m),
         [str(bool(a)).lower() for a in series.active.tolist()],
-        [fixed(float(w), 6) for w in inside.tolist()],
-        [str(bool(b)).lower() for b in (series.times_s < aos).tolist()],
+        [fixed(float(w), 6) for w in weight.tolist()],
         col(series.path_loss_db),
         col(series.atmospheric_loss_db),
         col(series.eirp_dbw),
@@ -195,6 +185,17 @@ def passes_csv(result: LinkSeriesResult) -> str:
     )
 
 
+def _finite(value: Any) -> Any:
+    """The same data with every non-finite number replaced by null: JSON has no infinity or NaN."""
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if isinstance(value, dict):
+        return {k: _finite(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_finite(v) for v in value]
+    return value
+
+
 def link_json(
     static: StaticLinkResult,
     passes: LinkSeriesResult | None,
@@ -234,4 +235,13 @@ def link_json(
         data["problems"] = [
             p.to_dict() for p in sort_problems([*load_problems, *static.problems, *passes.problems])
         ]
-    return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    return (
+        json.dumps(
+            _finite(clean_numbers(data)),
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+        + "\n"
+    )

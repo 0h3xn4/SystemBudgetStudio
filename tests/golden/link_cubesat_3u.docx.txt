@@ -5,8 +5,8 @@ Summary
 Link budget at the static points
 ## table
 Link | Direction | Point | Elevation (deg) | Range (km) | EIRP (dBW) | G/T (dB/K) | Path loss (dB) | Atmospheric (dB) | Other losses (dB) | C/N0 (dBHz) | Required Eb/N0 (dB) | Highest closing rate (kbit/s) | Rate at required margin (kbit/s)
-uhf_down | downlink | 5 deg elevation | 5.0 | 2200.0 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a
-uhf_down | downlink | zenith | 90.0 | 550.0 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a
+uhf_down | downlink | 5 deg elevation | 5.0 | 2200.0 | n/a | n/a | 152.07 | 0.00 | n/a | n/a | n/a | n/a | n/a
+uhf_down | downlink | zenith | 90.0 | 550.0 | n/a | n/a | 140.02 | 0.00 | n/a | n/a | n/a | n/a | n/a
 Other losses = pointing, polarisation and implementation. A link closes at a rate when its margin is at least the required margin of the link. n/a: an input is a placeholder or missing. Highest closing rate empty (n/a with a result): no listed rate closes.
 Margin by data rate
 ## table
@@ -35,7 +35,7 @@ LNK-EBN0 | Energy per bit to noise density | Eb/N0 = C/N0 - 10 log10(R_b)  (dB) 
 LNK-MARGIN | Link margin | margin = Eb/N0 - Eb/N0_required  (dB); the link closes when margin >= required margin | SOURCE_MISSING
 LNK-ATT | Atmospheric attenuation | L_atm = sum of the named table entries, linear interpolation by elevation | SOURCE_MISSING
 LNK-NADIR | Angle from nadir at the spacecraft | sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el) | SOURCE_MISSING
-LNK-VOLUME | Data volume | V = sum over samples of R_selected * (time of the step inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active | SOURCE_MISSING
+LNK-VOLUME | Data volume | V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active | SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems
 Problems and open items

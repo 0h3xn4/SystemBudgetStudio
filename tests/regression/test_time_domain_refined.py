@@ -74,7 +74,8 @@ def test_reported_series_stay_on_the_scenario_grid() -> None:
 
 def test_overlapping_eclipses_count_once() -> None:
     env = synthetic_env(PERIOD, 10.0, [(3000.0, 4800.0)])
-    env = replace(env, eclipses=(Interval(3000.0, 4800.0), Interval(4000.0, 5000.0)))
+    overlapping = (Interval(3000.0, 4800.0), Interval(4000.0, 5000.0))
+    env = replace(env, eclipses=overlapping, umbras=overlapping)  # imported: no penumbra
     bol = solve(env).case("bol")
     assert bol.balances[0].eclipse_s == pytest.approx(2000.0)
     assert bol.summary.generated_wh == pytest.approx((PERIOD - 2000.0) * 100.0 / 3600.0)
@@ -94,8 +95,10 @@ def test_soft_shadow_energy_is_the_trapezoid_integral() -> None:
         env,
         sunlight_ratio=np.array([1.0, 1.0, 0.5, 0.0]),
         eclipses=(Interval(100.0, 300.0),),
+        umbras=(Interval(300.0, 300.0),),  # the penumbra lasts to the end of the eclipse
     )
     gen = solve(env).case("bol").summary.generated_wh
+    # the ratio ramps from 1 at 100 s to 0 at 300 s:
     # (1.0 * 100 + 0.75 * 100 + 0.25 * 100) s * 100 W
     assert gen == pytest.approx(200.0 * 100.0 / 3600.0)
 

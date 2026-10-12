@@ -39,7 +39,8 @@
           "type": "number"
         },
         "semi_major_axis_m": {
-          "exclusiveMinimum": 0,
+          "maximum": 100000000.0,
+          "minimum": 6400000.0,
           "title": "Semi Major Axis M",
           "type": "number"
         }

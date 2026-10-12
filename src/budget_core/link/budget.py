@@ -77,7 +77,8 @@ def max_rate_for_margin_bps(
     cn0: Number, required_ebn0_db: float, required_margin_db: float
 ) -> Number:
     """The data rate at which the margin equals the required margin: C/N0 - Eb/N0_req - margin."""
-    return 10.0 ** ((np.asarray(cn0) - required_ebn0_db - required_margin_db) / 10.0)
+    with np.errstate(over="ignore"):  # an absurd C/N0 gives infinity, which callers treat as n/a
+        return 10.0 ** ((np.asarray(cn0) - required_ebn0_db - required_margin_db) / 10.0)
 
 
 def spacecraft_range_for(elevation_deg: Number, range_m: Number) -> Number:

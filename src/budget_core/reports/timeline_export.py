@@ -217,6 +217,7 @@ def timeline_json(
         "modes": [asdict(m) for m in result.modes],
         "cases": {c.case: _case_dict(c) for c in result.cases},
         "violations": [_violation_dict(v) for v in result.violations],
+        "not_evaluated": [asdict(n) for n in result.not_evaluated],
         "assumptions": [asdict(a) for a in result.assumptions],
         "problems": [
             p.to_dict()

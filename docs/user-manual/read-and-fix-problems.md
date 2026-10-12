@@ -44,7 +44,8 @@ In the window, double-click a row of the **Problems** panel at the bottom: the f
 | `MASS_LIMIT_EXCEEDED`, `MASS_PROPS_MISSING` | Mass above a limit; or an item without a position is left out of the centre of gravity | [Mass budget](mass-budget.md) |
 | `THERMAL_LIMIT_EXCEEDED`, `THERMAL_MARGIN_INSUFFICIENT`, `THERMAL_SOLVE_FAILED` | A unit is outside, or too close to, its limits; or a node has no path to space | [Thermal budget](thermal-budget.md#how-do-i-check-unit-temperature-limits) |
 | `LINK_NOT_CLOSED`, `LINK_SITE_NOT_IN_SCENARIO` | No data rate closes; or the link's station is not in the scenario's `sites` | [Link budget](link-budget.md) |
-| `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED`, `SCENARIO_UNKNOWN` | An imported file is invalid; the orbit cannot be propagated; or no such scenario | [Scenarios](scenarios.md) |
+| `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED`, `SCENARIO_TOO_LARGE`, `SCENARIO_UNKNOWN` | An imported file is invalid; the orbit cannot be propagated; the scenario needs too much memory; or no such scenario | [Scenarios](scenarios.md) |
+| `ORBIT_EPOCH_FAR`, `ORBIT_BALANCE_NOT_EVALUATED`, `MASS_INERTIA_NOT_SCALED`, `LINK_NEVER_ACTIVE`, `LINK_PER_DAY_NOT_GIVEN` | A TLE is more than 30 days from the scenario start; the step is too coarse to find the orbits; an expendable's inertia does not follow its mass; a link has no active pass; no per-day volume for a short scenario | [Scenarios](scenarios.md), [Power budget](power-budget.md), [Mass budget](mass-budget.md), [Link budget](link-budget.md) |
 | `IMPORT_*` | A unit table could not be imported (row and column are named) | [Unit tables](unit-tables.md#what-if-the-import-reports-a-problem) |
 | `INTERNAL_ERROR` | An unexpected error (a bug). The message names only the kind of error | Run `budget validate` on the folder to see the details, then report it |
 

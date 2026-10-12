@@ -30,28 +30,28 @@
 2: 'Data volume per link' |  |  |  |  |  |  | 
 3: 'Link' | 'Station' | 'Passes' | 'Scenario total (Mbit)' | 'Per day (Mbit)' | 'Per day (MByte)' |  | 
 4: 'sband_down' | 'gs_north' | 11 | 35505.3 | 35505.3 | 4438.17 |  | 
-5: 'xband_down' | 'gs_south' | 4 | 21751.8 | 21751.8 | 2718.97 |  | 
+5: 'xband_down' | 'gs_south' | 4 | 21716.6 | 21716.6 | 2714.57 |  | 
 6: 'From the highest listed rate that closes at each sample while the link is active (its modes, below its tracking limit). Per day = scenario total scaled to 86 400 s.' |  |  |  |  |  |  | 
 8: 'Passes of link sband_down over gs_north' |  |  |  |  |  |  | 
 9: 'Pass' | 'AOS (T+)' | 'AOS (UTC)' | 'Duration (s)' | 'Max elevation (deg)' | 'Usable (s)' | 'Lowest margin (dB)' | 'Volume (Mbit)'
 10: '1' | 'T+00:02:06' | '2026-06-01T00:02:06Z' | 493.218 | 19.2184 | 0 | 'n/a' | 0
-11: '2' | 'T+01:36:43' | '2026-06-01T01:36:43Z' | 586.597 | 74.8929 | 586.597 | 30.0016 | 4805.4
-12: '3' | 'T+03:11:37' | '2026-06-01T03:11:37Z' | 542.61 | 31.1495 | 542.61 | 29.9043 | 4445.06
-13: '4' | 'T+04:46:25' | '2026-06-01T04:46:25Z' | 424.837 | 14.0572 | 424.837 | 29.981 | 3480.26
-14: '5' | 'T+06:20:35' | '2026-06-01T06:20:35Z' | 329.249 | 9.49406 | 329.249 | 30.0152 | 2697.21
-15: '6' | 'T+07:53:28' | '2026-06-01T07:53:28Z' | 375.853 | 11.3396 | 375.853 | 29.9495 | 3078.99
-16: '7' | 'T+09:26:02' | '2026-06-01T09:26:02Z' | 500.344 | 21.6081 | 500.344 | 30.0621 | 4098.82
-17: '8' | 'T+10:59:35' | '2026-06-01T10:59:35Z' | 581.669 | 63.7992 | 581.669 | 29.9892 | 4765.03
-18: '9' | 'T+12:34:52' | '2026-06-01T12:34:52Z' | 552.388 | 31.9971 | 552.388 | 30.0802 | 4525.16
-19: '10' | 'T+14:12:52' | '2026-06-01T14:12:52Z' | 309.598 | 8.56032 | 309.598 | 30.0882 | 2536.23
-20: '11' | 'T+23:57:48' | '2026-06-01T23:57:48Z' | 131.001 | 13.7584 | 131.001 | 29.9028 | 1073.16
+11: '2' | 'T+01:36:43' | '2026-06-01T01:36:43Z' | 586.597 | 74.8929 | 586.597 | 30.1656 | 4805.4
+12: '3' | 'T+03:11:37' | '2026-06-01T03:11:37Z' | 542.61 | 31.1495 | 542.61 | 30.1609 | 4445.06
+13: '4' | 'T+04:46:25' | '2026-06-01T04:46:25Z' | 424.837 | 14.0572 | 424.837 | 30.1474 | 3480.26
+14: '5' | 'T+06:20:35' | '2026-06-01T06:20:35Z' | 329.249 | 9.49406 | 329.249 | 30.1377 | 2697.21
+15: '6' | 'T+07:53:28' | '2026-06-01T07:53:28Z' | 375.853 | 11.3396 | 375.853 | 30.1413 | 3078.99
+16: '7' | 'T+09:26:02' | '2026-06-01T09:26:02Z' | 500.344 | 21.6081 | 500.344 | 30.1557 | 4098.82
+17: '8' | 'T+10:59:35' | '2026-06-01T10:59:35Z' | 581.669 | 63.7992 | 581.669 | 30.1654 | 4765.03
+18: '9' | 'T+12:34:52' | '2026-06-01T12:34:52Z' | 552.388 | 31.9971 | 552.388 | 30.1614 | 4525.16
+19: '10' | 'T+14:12:52' | '2026-06-01T14:12:52Z' | 309.598 | 8.56032 | 309.598 | 30.1358 | 2536.23
+20: '11' | 'T+23:57:48' | '2026-06-01T23:57:48Z' | 131.001 | 13.7583 | 131.001 | 30.1512 | 1073.16
 21: 'Lowest margin is at the lowest listed rate over the active samples.' |  |  |  |  |  |  | 
 23: 'Passes of link xband_down over gs_south' |  |  |  |  |  |  | 
 24: 'Pass' | 'AOS (T+)' | 'AOS (UTC)' | 'Duration (s)' | 'Max elevation (deg)' | 'Usable (s)' | 'Lowest margin (dB)' | 'Volume (Mbit)'
-25: '1' | 'T+02:32:03' | '2026-06-01T02:32:03Z' | 444.429 | 34.052 | 444.429 | 12.4262 | 10292.1
-26: '2' | 'T+04:07:10' | '2026-06-01T04:07:10Z' | 373.637 | 21.6654 | 373.637 | 12.5116 | 3523.64
-27: '3' | 'T+13:18:57' | '2026-06-01T13:18:57Z' | 406.88 | 26.1526 | 406.88 | 12.3636 | 3916.88
-28: '4' | 'T+14:53:30' | '2026-06-01T14:53:30Z' | 419.214 | 27.5604 | 419.214 | 12.5605 | 4019.21
+25: '1' | 'T+02:32:03' | '2026-06-01T02:32:03Z' | 444.429 | 34.052 | 444.429 | 12.6529 | 10301.8
+26: '2' | 'T+04:07:10' | '2026-06-01T04:07:10Z' | 373.637 | 21.6654 | 373.637 | 12.6302 | 3512.19
+27: '3' | 'T+13:18:57' | '2026-06-01T13:18:57Z' | 406.88 | 26.1526 | 406.88 | 12.6345 | 3890.17
+28: '4' | 'T+14:53:30' | '2026-06-01T14:53:30Z' | 419.214 | 27.5604 | 419.214 | 12.6487 | 4012.48
 29: 'Lowest margin is at the lowest listed rate over the active samples.' |  |  |  |  |  |  | 
 ## sheet Assumptions rows=40 cols=5
 1: 'Configuration numbers used' |  |  |  | 
@@ -91,7 +91,7 @@
 36: 'LNK-MARGIN' | 'Link margin' | 'margin = Eb/N0 - Eb/N0_required  (dB); the link closes when margin >= required margin' | 'SOURCE_MISSING' | 
 37: 'LNK-ATT' | 'Atmospheric attenuation' | 'L_atm = sum of the named table entries, linear interpolation by elevation' | 'SOURCE_MISSING' | 
 38: 'LNK-NADIR' | 'Angle from nadir at the spacecraft' | 'sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el)' | 'SOURCE_MISSING' | 
-39: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the step inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
+39: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
 40: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
 ## sheet Problems rows=97 cols=6
 1: 'Problems and open items' |  |  |  |  | 

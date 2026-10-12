@@ -6,6 +6,7 @@ at arbitrary instants, so their effect on a step is the exact overlap, not a sam
 
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
 from typing import Any
 
@@ -16,7 +17,7 @@ NDArray = np.ndarray[Any, np.dtype[np.float64]]
 
 def step_edges(duration_s: float, step_s: float) -> NDArray:
     """Edges of the solver steps: multiples of `step_s`, closed by the scenario end."""
-    count = int(duration_s // step_s)
+    count = int(math.floor(duration_s / step_s + 1e-9))  # 0.7 / 0.1 is 6.999999999999999
     edges = np.arange(count + 1, dtype=np.float64) * step_s
     if duration_s - edges[-1] > 1e-9:
         edges = np.append(edges, duration_s)

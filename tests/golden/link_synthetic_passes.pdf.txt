@@ -88,8 +88,8 @@ dl
 gs
  1
  29.00
- 2505.60
- 313.20
+ n/a
+ n/a
 From the highest listed rate that closes at each sample while the link is active (its modes, below its tracking limit). Per day = scenario total scaled to 86 400 s.
 Passes of link dl over gs
 Pass
@@ -228,8 +228,8 @@ sin(eta) = R cos(el) / r, r^2 = R^2 + d^2 + 2 R d sin(el)
 SOURCE_MISSING
 LNK-VOLUME
 Data volume
-V = sum over samples of R_selected * (time of the step inside the
-pass); R_selected is the highest listed rate with margin >=
+V = sum over samples of R_selected * (time of the sample inside
+the pass); R_selected is the highest listed rate with margin >=
 required margin while the link is active
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
@@ -244,6 +244,16 @@ Location
 Path
 Message
 Hint
+info
+LINK_PER_DAY_NOT_GI
+VEN
+scenarios/synthetic.yaml
+duration_
+s
+The scenario is shorter than one day, so the data volume per
+day is not given (scaling a short scenario to a day would
+repeat its passes).
+Use a scenario of at least one day for a per-day figure.
 Provenance
 Provenance
 Item

@@ -46,6 +46,8 @@ mass_properties:
     iyz_kgm2: 0.0
 ```
 
+An expendable's own inertia is the same in every phase, whatever its mass in the phase; the tool warns (`MASS_INERTIA_NOT_SCALED`) when an expendable with an inertia has more than one mass (see [deviation DV-M4](../DEVIATIONS.md)). A mass limit that is met exactly is met (rounding noise is ignored).
+
 The tool computes the centre of gravity (mass-weighted mean of positions) and the inertia about it with the parallel-axis theorem, for each phase. Items without a position are left out and reported (`MASS_PROPS_MISSING`, with the share of mass covered); an item without inertia counts as a point mass. Centre of gravity and inertia use the **nominal** mass (margin mass has no position; see [deviation DV-M1](../DEVIATIONS.md)).
 
 ## How do I check a mass limit?

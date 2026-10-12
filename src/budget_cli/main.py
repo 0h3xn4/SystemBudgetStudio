@@ -507,6 +507,8 @@ def _scenario(args: argparse.Namespace) -> int:
     )
     for note in run.notes:
         print(f"Note: {note}")
+    for problem in run.problems:
+        print(problem.format())
     for path in written:
         print(f"Wrote {path}")
     return 0
@@ -546,10 +548,14 @@ def _link_passes(args: argparse.Namespace) -> int:
         if s.volume_bits is None:
             print(f"{s.link_id}: n/a (inputs missing, see the problems below).")
         else:
+            per_day = (
+                "n/a"
+                if s.volume_per_day_bits is None
+                else f"{s.volume_per_day_bits / 8e6:.2f} MByte"
+            )
             print(
                 f"{s.link_id}: {len(s.passes)} pass(es) over {s.site}, "
-                f"{s.volume_bits / 8e6:.2f} MByte in the scenario "
-                f"({(s.volume_per_day_bits or 0.0) / 8e6:.2f} MByte per day)."
+                f"{s.volume_bits / 8e6:.2f} MByte in the scenario ({per_day} per day)."
             )
     return _finish([*loaded.problems, *static.problems, *passes.problems], [output], args.strict)
 
@@ -596,8 +602,10 @@ def _power_timeline(args: argparse.Namespace) -> int:
         soc = "n/a" if s.minimum_soc_ratio is None else f"{s.minimum_soc_ratio * 100:.1f} %"
         print(
             f"{case.case.upper()}: generated {s.generated_wh:.1f} Wh, lowest state of charge "
-            f"{soc}, {len(case.violations)} violation(s)."
+            f"{soc}, {result.violation_count(case.case)} violation(s)."
         )
+    if result.not_evaluated:
+        print(f"Not evaluated: {result.not_evaluated_text()}.")
     problems = [*loaded.problems, *result.problems, *violation_problems(result)]
     return _finish(problems, [output], args.strict)
 

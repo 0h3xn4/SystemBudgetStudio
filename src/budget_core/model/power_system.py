@@ -17,14 +17,29 @@ from budget_core.model.versions import CURRENT_VERSIONS
 
 Pointing = Literal["sun", "nadir"]
 
+# Counts that give an absurd array or pack are refused (a count of 10**400 overflows when the
+# cells are added up). The limits are far above any real spacecraft.
+MAX_STRINGS = 10_000
+MAX_CELLS_PER_STRING = 10_000
+MAX_CELLS_IN_SERIES = 1_000
+MAX_CELLS_IN_PARALLEL = 10_000
+MAX_DIRECTION_COMPONENT = 1.0e6  # a direction is a direction: its length is not a quantity
+MIN_DIRECTION_LENGTH = 1.0e-6
+
 
 def _direction(value: list[float] | None) -> list[float] | None:
     if value is None:
         return None
     if len(value) != 3:
         raise PydanticCustomError("vector_invalid", "a direction has exactly three components")
-    if math.sqrt(sum(c * c for c in value)) <= 1e-12:
-        raise PydanticCustomError("vector_invalid", "a direction must not be the zero vector")
+    if any(abs(c) > MAX_DIRECTION_COMPONENT for c in value):
+        raise PydanticCustomError(
+            "vector_invalid",
+            "a direction component must not exceed {limit}",
+            {"limit": MAX_DIRECTION_COMPONENT},
+        )
+    if math.hypot(*value) < MIN_DIRECTION_LENGTH:
+        raise PydanticCustomError("vector_invalid", "a direction must not be (almost) zero")
     return value
 
 
@@ -33,8 +48,8 @@ class ArrayFace(BudgetModel):
 
     name: str = Field(min_length=1)
     normal_body: list[float]
-    strings: int = Field(ge=1)
-    cells_per_string: int = Field(ge=1)
+    strings: int = Field(ge=1, le=MAX_STRINGS)
+    cells_per_string: int = Field(ge=1, le=MAX_CELLS_PER_STRING)
 
     @field_validator("normal_body")
     @classmethod
@@ -72,8 +87,8 @@ class SolarArray(BudgetModel):
 class Battery(BudgetModel):
     cell_capacity_ah: Sourced
     cell_nominal_voltage_v: Sourced
-    cells_in_series: int = Field(ge=1)
-    cells_in_parallel: int = Field(ge=1)
+    cells_in_series: int = Field(ge=1, le=MAX_CELLS_IN_SERIES)
+    cells_in_parallel: int = Field(ge=1, le=MAX_CELLS_IN_PARALLEL)
     charge_efficiency_ratio: Sourced
     discharge_efficiency_ratio: Sourced
     annual_capacity_fade_ratio: Sourced
