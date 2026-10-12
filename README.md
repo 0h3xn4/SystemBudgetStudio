@@ -69,7 +69,7 @@ Not in version 1: data-storage budgets, transient thermal simulation, interferen
 - Python 3.11, 3.12 or 3.13 (checked in CI on Windows and Ubuntu with 3.11 and 3.13).
 - Windows 10/11 or Linux (RHEL/Rocky 8 or newer, Ubuntu LTS). macOS is not tested.
 - No administrator rights and no internet access are needed after the install. For an air-gapped machine see [offline install](docs/getting-started.md#offline-install).
-- Self-contained installers for Windows and Linux are built by CI but no release has been published yet; until then install from source as above.
+- Self-contained installers for Windows (per user, no administrator rights) and Linux are on the [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest), with checksums; or install from source as above.
 
 ## Licence and status
 

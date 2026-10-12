@@ -218,6 +218,6 @@ The lock file (`requirements.lock`) pins every runtime library with a hash, so w
 
 ## Installers
 
-CI builds a Windows installer (per user, no administrator rights), a Windows portable ZIP and a Linux tarball with `install.sh`. **No release has been published yet**, so for now install from source as above. When a release exists the steps are in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)) and the [clean-machine checklist](INSTALL_CHECKLIST.md).
+The [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest) has a Windows installer (per user, no administrator rights), a Windows portable ZIP and a Linux tarball with `install.sh`, with `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` to check the downloads; or install from source as above. The steps are in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)) and the [clean-machine checklist](INSTALL_CHECKLIST.md).
 
 Next: the [user manual](user-manual/README.md) (task by task), the [examples](../examples/README.md), or [troubleshooting](troubleshooting.md) if something did not work.
