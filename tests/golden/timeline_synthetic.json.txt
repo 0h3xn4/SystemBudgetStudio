@@ -409,7 +409,7 @@
     "python_version": "3.x",
     "scenario": "synthetic",
     "tool": "System Budget Studio",
-    "tool_version": "0.1.0",
+    "tool_version": "1.0.0",
     "user": "Golden User"
   },
   "scenario": "synthetic",

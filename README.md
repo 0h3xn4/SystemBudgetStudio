@@ -24,7 +24,7 @@ git clone https://github.com/0h3xn4/systembudgetstudio.git
 cd systembudgetstudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e .
-budget --version                                       # System Budget Studio 0.1.0
+budget --version                                       # System Budget Studio 1.0.0
 budget export-examples demo                            # four example projects with invented data
 budget validate demo/cubesat_3u_eps                    # check the project: 0 errors, a few warnings
 budget run demo/cubesat_3u_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
@@ -75,7 +75,7 @@ Not in version 1: data-storage budgets, transient thermal simulation, interferen
 
 Released under the [MIT licence](LICENSE) (decision D-140). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/OFL-IBM-Plex.txt)).
 
-Status: version 0.1.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
+Status: version 1.0.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 
 ## Related tools
 

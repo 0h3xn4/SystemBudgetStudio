@@ -274,7 +274,7 @@ Proposed fix order: critical, then high, then medium. I would do it in four PRs 
 
 ## Packaging and release hygiene (my own checks)
 - **PK-1 · `pyproject.toml` description** says "power budgets and RF link budgets"; the tool now also does mass and thermal. Update.
-- **PK-2 · release workflow** (`.github/workflows/release.yml`) uploads artefacts only; it does not publish a GitHub Release. Fine, but someone must publish `v0.1.0` (owner item).
+- **PK-2 · release workflow** (`.github/workflows/release.yml`) uploads artefacts only; it does not publish a GitHub Release. Fine, but someone must publish `v1.0.0` (owner item).
 - **PK-3 · lock file** (`requirements.lock`) is generated for Python 3.11 universal; direct dependencies all fall within the `pyproject.toml` ranges. `pip check` is clean. `pip-audit` was not run (no network access to the advisory database from here); run it before tagging.
 - **PK-4 (note).** Checked-in `dist/` and `build/` directories are ignored by git; the local `dist/` bundle is stale (RC-5 observed it). Not a repository problem.
 
@@ -296,7 +296,7 @@ Checked on 2026-10-12 on the tree of the release-preparation pull request (all f
 |---|---|
 | All tests passing | **Yes.** 1793 tests pass with warnings treated as errors on Linux (Python 3.13); `ruff check`, `ruff format --check` and `mypy` are clean. CI (Ubuntu and Windows, Python 3.11 and 3.13) was green on #17, #18, #19 and #20; the Installers workflow (Rocky 8 bundle, Windows installer, install, self-test, uninstall) was green on #19. |
 | Help text and docs accurate | **Yes.** Every command and option in `--help` is documented and the reverse; the manual, FAQ, troubleshooting, guide chapters, file format and decisions were updated with each fix. All 538 documentation links and anchors resolve (checked with lychee, offline). Two broken anchors left over from the renumbering of decisions were fixed in the release-preparation PR. |
-| Version and changelog | **Yes.** `pyproject.toml` and `budget_core.__version__` are both 0.1.0 (a test checks this); the changelog holds everything under `[0.1.0] - 2026-10-12`. Change the date if you tag on another day. |
+| Version and changelog | **Yes.** `pyproject.toml` and `budget_core.__version__` are both 1.0.0 (a test checks this); the changelog holds everything under `[1.0.0] - 2026-10-12`. Change the date if you tag on another day. |
 | Dependencies pinned | **Yes.** `requirements.lock` and `requirements-dev.lock` pin every package with hashes; every direct dependency in `pyproject.toml` lies inside its range. `pip-audit` on the runtime lock file: **no known vulnerabilities** (2026-10-12). `pip check` is clean. |
 | No debug output or TODO hacks | **Yes.** No `TODO`, `FIXME`, `XXX`, `HACK`, `breakpoint()` or `pdb` in `src`, `packaging` or `tests`; output of the tool is only what the commands document. |
 | Clean install from scratch | **Yes, on Linux.** A new virtual environment from the hashed lock file plus the wheel of this tree: `pip check` clean, `budget self-test` passes, the window starts (`system-budget-studio --smoke`, offscreen), an example project runs. The wheel carries `LICENSE` and MIT metadata. The Windows installer is built, installed, self-tested and uninstalled by CI on every packaging change; a person has not run it on a clean Windows machine. |
@@ -305,7 +305,7 @@ Checked on 2026-10-12 on the tree of the release-preparation pull request (all f
 
 ## Verdict
 
-**I consider version 0.1.0 releasable as an internal-quality engineering tool, with the limits below stated plainly in its documentation.** Every critical and high finding of the audit is fixed and has a test that fails without the fix; the numerical core agrees with hand calculations; outputs are reproducible byte for byte; nothing needs the network.
+**I consider the tool releasable as the first release, numbered 1.0.0 by the owner's decision (D-143), with the limits below stated plainly.** The file formats are at `schema_version` 1 and migrate; the limits below are the reason to treat results as engineering estimates until real, sourced inputs are entered. Every critical and high finding of the audit is fixed and has a test that fails without the fix; the numerical core agrees with hand calculations; outputs are reproducible byte for byte; nothing needs the network.
 
 What I am **not certain** about:
 
@@ -319,5 +319,5 @@ What I am **not certain** about:
 
 1. Merge the release-preparation pull request.
 2. Optionally run the clean-machine checklist on Windows and Rocky 8.
-3. Tag: `git tag v0.1.0 && git push origin v0.1.0` (from the merged `main`; the Installers workflow builds the installers, `SHA256SUMS.txt`, the SBOM and the licence report as artefacts).
+3. Tag: `git tag v1.0.0 && git push origin v1.0.0` (from the merged `main`; the Installers workflow builds the installers, `SHA256SUMS.txt`, the SBOM and the licence report as artefacts).
 4. Create the GitHub Release for the tag and attach the artefacts (the workflow does not publish).

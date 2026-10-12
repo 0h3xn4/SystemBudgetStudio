@@ -1,5 +1,5 @@
 ; Inno Setup script: per-user installer for System Budget Studio, no administrator rights.
-; Build:  iscc /DAppVersion=0.1.0 /DBundleDir=dist\system-budget-studio /DOutputDir=dist packaging\windows\system_budget_studio.iss
+; Build:  iscc /DAppVersion=1.0.0 /DBundleDir=dist\system-budget-studio /DOutputDir=dist packaging\windows\system_budget_studio.iss
 ; Silent install:    setup.exe /VERYSILENT /CURRENTUSER /DIR="C:\Some\Folder"
 ; Silent uninstall:  "<folder>\unins000.exe" /VERYSILENT
 #ifndef AppVersion
