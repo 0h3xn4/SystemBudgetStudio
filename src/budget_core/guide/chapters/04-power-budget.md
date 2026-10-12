@@ -21,7 +21,7 @@ Add `config/power_system.yaml` (solar array faces, battery, attitude per mode, p
 - the battery energy with charge and discharge efficiency and capacity fade;
 - the state of charge, depth of discharge, and the energy balance over each complete orbit.
 
-Findings that fail the command (exit code 1) are `PEAK_POWER_EXCEEDED`, `BATTERY_DEPLETED`, `BATTERY_DOD_EXCEEDED` and `ORBIT_BALANCE_NEGATIVE`. Each comes with its first start time, the duration and the input to change. Select a row of the violations table to zoom the plot to that interval.
+Findings that fail the command (exit code 1) are `PEAK_POWER_EXCEEDED`, `BATTERY_DEPLETED`, `BATTERY_DOD_EXCEEDED` and `ORBIT_BALANCE_NEGATIVE`. Each comes with its first start time, the duration and the input to change. Select a row of the violations table to zoom the plot to that interval. A check that could not run (a placeholder limit, no mission phase, no complete orbit, a step longer than a quarter of the orbit) is listed as *Not evaluated*; an empty list of violations is only "No violations found" when every check ran. Beginning of life needs neither the array degradation nor the battery fade.
 
 ## Choices you make
 

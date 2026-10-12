@@ -8,7 +8,7 @@ For every *static point* (a chosen elevation and slant range) and every listed d
 
 ## Pass series
 
-**Link passes > Compute** evaluates the link over every pass of the scenario for the link's ground station. The spacecraft antenna angle follows from the geometry (angle from nadir). For each time step the highest listed rate whose margin is at least the required margin is selected, which gives the data volume per pass and per day. A pass-by-pass table and a plot of the margin and the selected rate are shown; selecting a pass zooms the plot to it.
+**Link passes > Compute** evaluates the link over every pass of the scenario for the link's ground station. The spacecraft antenna angle follows from the geometry (angle from nadir). Each pass is sampled in pieces of at most 5 s, evaluated in their middle and inside the pass only, so the result does not depend on the scenario step. For each sample the highest listed rate whose margin is at least the required margin is selected, which gives the data volume per pass and, for a scenario of at least a day, per day. A pass-by-pass table and a plot of the margin and the selected rate are shown; selecting a pass zooms the plot to it.
 
 ## Antennas
 

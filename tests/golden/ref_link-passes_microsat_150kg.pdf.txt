@@ -547,7 +547,7 @@ sin(eta) = R cos(el) / r, r^2 = R^2 + d^2 + 2 R d sin(el)
 SOURCE_MISSING
 LNK-VOLUME
 Data volume
-V = sum over samples of R_selected * (time of the step inside the pass); R_selected is the
+V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the
 highest listed rate with margin >= required margin while the link is active
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).

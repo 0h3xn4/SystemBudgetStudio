@@ -46,6 +46,8 @@ BOL: generated 99.7 Wh, lowest state of charge 89.3 %, 0 violation(s).
 EOL: generated 93.8 Wh, lowest state of charge 89.0 %, 0 violation(s).
 ```
 
+A check that could not run is never reported as passed. If the peak power limit, the allowed depth of discharge (a placeholder, or no mission phase) or an array or battery input is missing, or the scenario has no complete orbit, the command adds a line `Not evaluated: ...`, the Violations table says `Not evaluated: ...` instead of "No violations found", and the violation count of a case includes the findings that do not depend on the case (the peak power).
+
 In the window: the top plot shows generation, demand at the source and the peak limit; then state of charge; then the margin (generation minus demand). Shaded bands are eclipses and passes. The tables below give a **Summary** per case, the **Violations**, one row per **Orbit**, and the **Modes** with their loads.
 
 ## What are the violations?
@@ -59,7 +61,7 @@ In the window: the top plot shows generation, demand at the source and the peak 
 
 Each finding has a start time, end time, worst value, limit, and the file and field to change. Findings make the command exit with code 1. Select a row in the Violations table to zoom the plot to that interval. The first minutes of [getting started](../getting-started.md#5-a-first-worked-example-find-and-fix-a-power-violation) walk through one.
 
-The results do not depend on the time step: eclipses and mode changes are overlapped with the steps exactly, and the battery is solved on the steps cut at every eclipse edge and mode change ([decision D-097](../DECISIONS.md)).
+The results do not depend on the time step: eclipses and mode changes are overlapped with the steps exactly, and the battery is solved on the steps cut at every eclipse edge, mode change, orbit boundary and at the instants the battery becomes full or empty ([decisions D-097 and D-104](../DECISIONS.md)). The orbits are found from the positions, so the step must be at most a quarter of the orbit period; with a coarser step the orbit energy balance is not checked (`ORBIT_BALANCE_NOT_EVALUATED`). Beginning of life needs neither the array degradation nor the battery fade; only end of life does.
 
 > The array and battery relations are textbook formulas that the tool flags `SOURCE_MISSING` in the *Equations and sources* chapter until a reference is attached. Perfect pointing, no albedo and one array temperature are simplifications; see the [deviations](../DEVIATIONS.md).
 
