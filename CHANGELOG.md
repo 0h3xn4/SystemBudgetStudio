@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **The release workflow attaches the installers to the release.** After a tag is built, the files are checked against their checksums and uploaded to the GitHub Release (a missing release is created as a draft); *Actions > Attach release files* does the same for an earlier run (D-144).
+
 ## [1.0.0] - 2026-10-12
 
 
