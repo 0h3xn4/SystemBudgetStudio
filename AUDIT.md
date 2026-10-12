@@ -1,6 +1,6 @@
 # Pre-release audit: findings list
 
-Status: **Fixed.** The findings below are the report as approved on 2026-10-12. Every critical and high finding and nearly every medium and low finding is fixed, in four pull requests: [#17](https://github.com/0h3xn4/systembudgetstudio/pull/17) (window), [#18](https://github.com/0h3xn4/systembudgetstudio/pull/18) (loader, validation, command line, wizard, units), [#19](https://github.com/0h3xn4/systembudgetstudio/pull/19) (reports and output) and [#20](https://github.com/0h3xn4/systembudgetstudio/pull/20) (solvers and environment). A fifth pull request (release preparation) adds the licence, the owner's confirmations and this status. The sections below keep the original wording of each finding; this section says what became of it.
+Status: **Fixed.** The findings below are the report as approved on 2026-10-12. Every critical and high finding and nearly every medium and low finding is fixed, in four pull requests: [#17](https://github.com/0h3xn4/systembudgetstudio/pull/17) (window), [#18](https://github.com/0h3xn4/systembudgetstudio/pull/18) (loader, validation, command line, wizard, units), [#19](https://github.com/0h3xn4/systembudgetstudio/pull/19) (reports and output) and [#20](https://github.com/0h3xn4/systembudgetstudio/pull/20) (solvers and environment). Release preparation ([#21](https://github.com/0h3xn4/systembudgetstudio/pull/21): licence, the owner's confirmations, version 1.0.0), the window freeze on opening a project ([#22](https://github.com/0h3xn4/systembudgetstudio/pull/22), D-142) and the release workflow that attaches the installers ([#23](https://github.com/0h3xn4/systembudgetstudio/pull/23), [#24](https://github.com/0h3xn4/systembudgetstudio/pull/24), D-144) followed. **Version 1.0.0 was released on 2026-10-12**; the installers, the checksum lists, the SBOM and the licence report are attached to the [release](https://github.com/0h3xn4/systembudgetstudio/releases/tag/v1.0.0). The sections below keep the original wording of each finding; this section says what became of it.
 
 
 ## Resolution
@@ -294,7 +294,7 @@ Checked on 2026-10-12 on the tree of the release-preparation pull request (all f
 
 | Item | Result |
 |---|---|
-| All tests passing | **Yes.** 1793 tests pass with warnings treated as errors on Linux (Python 3.13); `ruff check`, `ruff format --check` and `mypy` are clean. CI (Ubuntu and Windows, Python 3.11 and 3.13) was green on #17, #18, #19 and #20; the Installers workflow (Rocky 8 bundle, Windows installer, install, self-test, uninstall) was green on #19. |
+| All tests passing | **Yes.** 1810 tests pass with warnings treated as errors on Linux (Python 3.13; 1793 when the audit was closed, the rest came with the later fixes); `ruff check`, `ruff format --check` and `mypy` are clean. CI (Ubuntu and Windows, Python 3.11 and 3.13) was green on #17, #18, #19 and #20; the Installers workflow (Rocky 8 bundle, Windows installer, install, self-test, uninstall) was green on #19. |
 | Help text and docs accurate | **Yes.** Every command and option in `--help` is documented and the reverse; the manual, FAQ, troubleshooting, guide chapters, file format and decisions were updated with each fix. All 538 documentation links and anchors resolve (checked with lychee, offline). Two broken anchors left over from the renumbering of decisions were fixed in the release-preparation PR. |
 | Version and changelog | **Yes.** `pyproject.toml` and `budget_core.__version__` are both 1.0.0 (a test checks this); the changelog holds everything under `[1.0.0] - 2026-10-12`. Change the date if you tag on another day. |
 | Dependencies pinned | **Yes.** `requirements.lock` and `requirements-dev.lock` pin every package with hashes; every direct dependency in `pyproject.toml` lies inside its range. `pip-audit` on the runtime lock file: **no known vulnerabilities** (2026-10-12). `pip check` is clean. |
@@ -310,14 +310,14 @@ Checked on 2026-10-12 on the tree of the release-preparation pull request (all f
 What I am **not certain** about:
 
 1. **Excel and Windows by hand.** I could not open the XLSX files in Excel (sheet-name and cell-length rules follow the documented limits), and nobody has done the [clean-machine checklist](docs/INSTALL_CHECKLIST.md) on a real Windows or Rocky 8 machine. CI builds, installs, self-tests and uninstalls both installers; it cannot look at the window.
-2. **The window on a real display.** The window tests run offscreen. A plot of a week at 1 s resolution repaints slowly on hover (GUI-28); opening a project of 200 units pauses the window for up to about half a second while the tables are built (GUI-14 is otherwise fixed).
+2. **The window on a real display.** The window tests run offscreen. A plot of a week at 1 s resolution repaints slowly on hover (GUI-28); opening a project of 200 units loads in a background thread (GUI-14, D-142) but still pauses the window for up to about half a second while the tables are shown.
 3. **Real data.** The example projects hold invented data and the tool ships no standards values, as the spec requires. The numerical results are only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
 4. **Short eclipses** (under about 20 s) can still be missed (DV-E4); passes of any length are found.
 5. **Error text on standard output** (RC-15): scripts that separate the two streams will see errors on standard output.
 
 ## Steps that stay with you
 
-1. Merge the release-preparation pull request.
-2. Optionally run the clean-machine checklist on Windows and Rocky 8.
-3. Tag: `git tag v1.0.0 && git push origin v1.0.0` (from the merged `main`; the Installers workflow builds the installers, `SHA256SUMS.txt`, the SBOM and the licence report as artefacts).
-4. Create the GitHub Release for the tag and attach the artefacts (the workflow does not publish).
+Done on 2026-10-12: the release-preparation pull request was merged, the owner tagged `v1.0.0` on GitHub (the assistant's session cannot push tags), the Installers workflow built the files, and the files were attached to the release (by hand the first time; since D-144 the workflow does it). What is still open:
+
+1. Run the [clean-machine checklist](docs/INSTALL_CHECKLIST.md) on a real Windows and a real Rocky 8 machine, then delete or reword the placeholder line in the text of the release.
+2. Decide on the open items of the list above (short eclipses, errors on standard output, slow hover repaint, D-061, D-071 and D-077).

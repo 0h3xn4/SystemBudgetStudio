@@ -32,7 +32,7 @@ Projects, reports and exports live in folders you choose. Neither installing, up
 
 ## Licences and checksums
 
-The program folder contains `licences/` (the licence text of every bundled package), `licences.md` and `sbom.cdx.json` (a CycloneDX list of what is shipped). Each release also lists a SHA-256 checksum for every download in `SHA256SUMS.txt`.
+The program folder contains `licences/` (the licence text of every bundled package), `licences.md` and `sbom.cdx.json` (a CycloneDX list of what is shipped). Each release also lists a SHA-256 checksum for every download in `SHA256SUMS-windows.txt` (the Windows files) and `SHA256SUMS-linux.txt` (the Linux file).
 
 ## Checking an installation
 
