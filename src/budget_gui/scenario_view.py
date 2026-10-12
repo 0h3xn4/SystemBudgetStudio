@@ -665,6 +665,8 @@ class ScenarioView(QWidget):
         text = f"{len(env.eclipses)} eclipse(s)" + (f"; passes: {passes}" if passes else "")
         if run.notes:
             text += " — " + "; ".join(run.notes)
+        if run.problems:
+            text += " — " + "; ".join(p.message for p in run.problems)
         self._summary = text
         self.status.setText(CHANGED_WHILE_RUNNING_TEXT if self.is_stale else text)
         self.computed.emit(run)

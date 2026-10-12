@@ -265,6 +265,8 @@ class PowerTimelineView(QWidget):
         text = f"{result.steps} steps; {count} violation(s)"
         if incomplete:
             text += "; some inputs are placeholders, results marked n/a are not computed"
+        if result.not_evaluated:
+            text += f"; not evaluated: {result.not_evaluated_text()}"
         if self.is_stale:
             text = CHANGED_WHILE_RUNNING_TEXT
         self.status.setText(text if self.is_stale else text + ".")
@@ -342,7 +344,7 @@ class PowerTimelineView(QWidget):
                     pct(s.minimum_soc_ratio),
                     pct(s.maximum_dod_ratio),
                     num(s.unmet_wh, 2),
-                    str(len(c.violations)),
+                    str(result.violation_count(c.case)),
                 ]
             )
         fill_table(
