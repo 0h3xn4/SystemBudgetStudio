@@ -40,7 +40,7 @@ def _time_domain_equations() -> tuple[Equation, ...]:
             "P_gen = E * (sum_faces N_cells * max(0, cos theta)) * A_cell * eta_ref * k_T "
             "* (1 - l_pack) * (1 - l_harness) * k_age * f_lit",
             None,
-            _TD_NOTE + " Constant irradiance E, no albedo (DEVIATIONS DV-P4).",
+            _TD_NOTE + " Constant irradiance E, no albedo (DEVIATIONS DV-P5).",
         ),
         Equation(
             "TDP-TEMP",

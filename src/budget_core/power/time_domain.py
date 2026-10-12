@@ -15,14 +15,14 @@ from typing import Any, Literal
 
 import numpy as np
 
-from budget_core.assumptions import Assumption, incomplete
+from budget_core.assumptions import Assumption, incomplete, missing_from
 from budget_core.environment.intervals import Interval, merge_intervals
 from budget_core.model import Project, Sourced
 from budget_core.model.power_system import PowerSystem
 from budget_core.power import array as arr
 from budget_core.power.attitude import sun_in_orbital_frame
-from budget_core.power.battery import integrate_battery, pack_capacity_wh
-from budget_core.power.orbits import orbit_windows
+from budget_core.power.battery import BatteryTrace, integrate_battery, pack_capacity_wh
+from budget_core.power.orbits import orbit_windows_with_reason
 from budget_core.power.signals import integral_of_steps, step_edges, step_means
 from budget_core.power.static_budget import ModePowerResult, static_power_budget
 from budget_core.problems import Problem, Severity
@@ -47,6 +47,8 @@ RATIO_TOL = 1e-9  # state of charge, depth of discharge
 POWER_TOL_W = 1e-9
 ENERGY_TOL_WH = 1e-6
 REFINE_TOL_S = 1e-6  # refinement instants closer than this to an existing edge are the same edge
+PENUMBRA_MIN_S = 0.01  # a ramp from sunlight to umbra shorter than this is a sharp edge
+MAX_REFINE_ROUNDS = 4  # battery saturation instants are found on a grid that already holds them
 
 CODES_TEXT = {
     DOD_EXCEEDED: "Depth of discharge above the allowed limit",
@@ -74,6 +76,16 @@ class Violation:
     unit: str
     file: str  # input to change, for the jump link
     path: str
+
+
+@dataclass(frozen=True)
+class NotEvaluated:
+    """A check that could not run (a placeholder, no phase, no complete orbit): its absence from
+    the violations is not a pass."""
+
+    case: str | None  # None when the check does not depend on the case
+    code: str  # the finding the check would report
+    reason: str
 
 
 @dataclass(frozen=True)
@@ -149,33 +161,48 @@ class TimeDomainResult:
     violations: tuple[Violation, ...] = field(default_factory=tuple)
     peak_limit_w: float | None = None
     dod_limit_ratio: float | None = None
+    not_evaluated: tuple[NotEvaluated, ...] = field(default_factory=tuple)
 
     @property
     def steps(self) -> int:
         return len(self.edges_s) - 1
 
+    def violation_count(self, case: str) -> int:
+        """Findings of a case, including those that do not depend on the case (peak power)."""
+        return len(self.case(case).violations) + sum(1 for v in self.violations if v.case is None)
+
     def case(self, name: str) -> CaseResult:
         return next(c for c in self.cases if c.case == name)
 
+    def not_evaluated_text(self, case: str | None = None) -> str:
+        """The checks that did not run, for one case (and the case-independent ones) or all;
+        checks that share a reason are listed once with their cases."""
+        groups: dict[tuple[str, str], list[str]] = {}
+        for n in self.not_evaluated:
+            if case is None or n.case in (None, case):
+                cases = groups.setdefault((n.code, n.reason), [])
+                if n.case:
+                    cases.append(n.case.upper())
+        return "; ".join(
+            f"{CODES_TEXT[code]}{' in ' + ' and '.join(cases) if cases else ''} ({reason})"
+            for (code, reason), cases in groups.items()
+        )
+
 
 # ---- inputs ---------------------------------------------------------------------------------
-
-
-def _value(item: Sourced | None) -> float | None:
-    return None if item is None or item.is_placeholder else item.value
 
 
 @dataclass
 class _Collector:
     assumptions: list[Assumption] = field(default_factory=list)
     problems: list[Problem] = field(default_factory=list)
+    file_present: bool = True  # False: the whole power system file is missing
 
     def get(self, name: str, item: Sourced | None, unit: str, path: str, what: str) -> float | None:
         if item is None:
             self.assumptions.append(Assumption(name, None, unit, "missing", FILE, path, True))
-            self.problems.append(
-                incomplete(f"{what} is missing ({FILE} not provided).", FILE, path)
-            )
+            where = missing_from(FILE, self.file_present)
+            self.problems.append(incomplete(f"{what} is missing {where}.", FILE, path))
             return None
         self.assumptions.append(
             Assumption(name, item.value, unit, item.source, FILE, path, item.is_placeholder)
@@ -215,19 +242,63 @@ def refined_edges(edges: NDArray, extra_s: list[float]) -> NDArray:
 
 
 def _lit_ratio(run: ScenarioRun, edges: NDArray, shadows: list[Interval]) -> NDArray:
-    """Share of each step in sunlight, independent of the steps: exact for a sharp shadow; for a
-    soft one the ratio is the linear interpolation between the environment samples, so any
-    sub-step of a sample interval gets the exact trapezoid mean."""
-    env = run.env
-    ratio = np.asarray(env.sunlight_ratio, dtype=np.float64)
-    soft = bool(np.any((ratio > 1e-9) & (ratio < 1.0 - 1e-9)))
-    if not soft:
+    """Share of each step in sunlight, independent of the steps. A sharp shadow is exact. A soft
+    one is built from the eclipse and umbra intervals, which do not depend on the step: the
+    ratio ramps linearly from 1 at the start of an eclipse to 0 at the start of its umbra and
+    back to 1 at the end of the eclipse, so any sub-step gets its exact trapezoid mean."""
+    knots = _penumbra_knots(run)
+    if knots is None:
         starts = [e.start_s for e in shadows]
         ends = [e.end_s for e in shadows]
         shadow = step_means(starts, ends, [1.0] * len(starts), edges)
         return np.asarray(1.0 - shadow, dtype=np.float64)
-    at = np.interp(edges, env.grid.times_s, ratio)
-    return np.asarray(0.5 * (at[:-1] + at[1:]), dtype=np.float64)
+    times, dark = knots
+    segment = (dark[:-1] + dark[1:]) * 0.5 * np.diff(times)
+    cumulative = np.concatenate(([0.0], np.cumsum(segment)))
+    at = np.clip(np.searchsorted(times, edges, side="right") - 1, 0, len(times) - 1)
+    inside = np.clip(edges, times[0], times[-1])
+    width = np.diff(times)[np.minimum(at, len(times) - 2)]
+    slope = np.diff(dark)[np.minimum(at, len(times) - 2)] / np.where(width > 0.0, width, 1.0)
+    slope = np.where(width > 0.0, slope, 0.0)
+    level = dark[at] + slope * (inside - times[at])
+    integral = cumulative[at] + (dark[at] + level) * 0.5 * (inside - times[at])
+    return np.asarray(1.0 - np.diff(integral) / np.diff(edges), dtype=np.float64)
+
+
+def _penumbra_knots(run: ScenarioRun) -> tuple[NDArray, NDArray] | None:
+    """(times, dark ratio) of the piecewise linear shadow: 0 in sunlight, 1 in the umbra, a ramp
+    over the penumbra. None when no eclipse has a penumbra (sharp shadow)."""
+    env = run.env
+    umbras = merge_intervals(list(env.umbras))
+    ratio = np.asarray(env.sunlight_ratio, dtype=np.float64)
+    sample_t = np.asarray(env.grid.times_s, dtype=np.float64)
+    tol = PENUMBRA_MIN_S
+    times: list[float] = []
+    dark: list[float] = []
+    soft = False
+    for e in merge_intervals(list(env.eclipses)):
+        inner = [u for u in umbras if u.start_s >= e.start_s - tol and u.end_s <= e.end_s + tol]
+        first = 1.0 - float(ratio[0]) if e.start_s <= tol else 0.0
+        last = 1.0 - float(ratio[-1]) if e.end_s >= env.grid.duration_s - tol else 0.0
+        times.append(e.start_s)
+        dark.append(first)
+        if inner:
+            for u in inner:
+                times += [max(u.start_s, e.start_s), min(u.end_s, e.end_s)]
+                dark += [1.0, 1.0]
+            soft = soft or inner[0].start_s - e.start_s > tol or e.end_s - inner[-1].end_s > tol
+        else:
+            # penumbra only (a grazing orbit): ramp to the deepest sample inside, else halfway
+            inside = ratio[(sample_t >= e.start_s) & (sample_t <= e.end_s)]
+            deepest = 1.0 - float(inside.min()) if len(inside) else 0.5
+            times.append(0.5 * (e.start_s + e.end_s))
+            dark.append(deepest)
+            soft = True
+        times.append(e.end_s)
+        dark.append(last)
+    if not soft:
+        return None
+    return np.asarray(times, dtype=np.float64), np.asarray(dark, dtype=np.float64)
 
 
 # ---- violations -----------------------------------------------------------------------------
@@ -244,8 +315,8 @@ def _runs(mask: BoolArray) -> list[tuple[int, int]]:
 
 def _crossing(t0: float, v0: float, t1: float, v1: float, level: float) -> float:
     if v1 == v0:
-        return t1
-    return t0 + (level - v0) / (v1 - v0) * (t1 - t0)
+        return float(t1)
+    return float(t0 + (level - v0) / (v1 - v0) * (t1 - t0))
 
 
 def _exceeding(edges: NDArray, values: NDArray, limit: float) -> list[tuple[float, float, float]]:
@@ -271,6 +342,15 @@ def _exceeding(edges: NDArray, values: NDArray, limit: float) -> list[tuple[floa
 # ---- main entry -----------------------------------------------------------------------------
 
 
+@dataclass(frozen=True)
+class _Prepared:
+    """The solver inputs on one set of refined edges."""
+
+    grid: _GridMap
+    demand_w: NDArray | None
+    base_generation: NDArray | None
+
+
 def time_domain_budget(
     project: Project,
     run: ScenarioRun,
@@ -280,27 +360,32 @@ def time_domain_budget(
     mission_phase: str | None = None,
 ) -> TimeDomainResult:
     """Solve the scenario. The project must be valid; `run` is its computed scenario."""
+    if any(name not in CASES for name in cases):
+        raise ValueError("a power case must be 'bol' or 'eol'")
     scenario = run.scenario
     env = run.env
     system: PowerSystem | None = project.config.power_system
     static = static_power_budget(project)
-    col = _Collector()
+    col = _Collector(file_present=system is not None)
     for assumption in static.assumptions:
         col.assumptions.append(assumption)
     col.problems.extend(static.problems)
 
     # Reported series live on the scenario grid; the battery is integrated on the grid refined by
-    # every eclipse edge and mode-segment edge, so a coarse step cannot average a discharge away.
+    # every eclipse edge, mode-segment edge, orbit window edge and the instants at which the
+    # battery becomes full or empty, so a coarse step cannot average a discharge away.
     edges = step_edges(env.grid.duration_s, env.grid.step_s)
     dt = np.diff(edges)
     shadows = merge_intervals(list(env.eclipses))
     timeline = run.timeline
+    windows_found, windows_why = orbit_windows_with_reason(
+        env.grid.times_s, env.position_m, env.grid.duration_s
+    )
+    windows = tuple(windows_found)
     cuts = [t for e in shadows for t in (e.start_s, e.end_s)]
     cuts += [t for s in timeline for t in (s.start_s, s.end_s)]
+    cuts += [t for pair in windows for t in pair]
     redges = refined_edges(edges, cuts)
-    rdt = np.diff(redges)
-    grid_edge_at = np.searchsorted(redges, edges)  # index of each grid edge in the refined edges
-    grid_of = np.searchsorted(edges, redges[:-1], side="right") - 1  # grid step of a refined step
 
     # --- modes, demand ------------------------------------------------------------------
     mode_ids = tuple(sorted({s.mode for s in timeline}))
@@ -317,9 +402,7 @@ def time_domain_budget(
 
     load_w = per_step(0, edges)
     demand_w = per_step(1, edges)
-    solve_demand_w = per_step(1, redges)
     step_mode = mode_index_on_grid(timeline, edges[:-1], list(mode_ids))
-    solve_mode = mode_index_on_grid(timeline, redges[:-1], list(mode_ids))
     durations = {m: sum(s.duration_s for s in timeline if s.mode == m) for m in mode_ids}
     mode_rows = tuple(
         ModeRow(
@@ -333,17 +416,31 @@ def time_domain_budget(
         for m in mode_ids
     )
     lit = _lit_ratio(run, edges, shadows)
-    solve_lit = _lit_ratio(run, redges, shadows)
-    windows = tuple(orbit_windows(env.grid.times_s, env.position_m))
 
     phase = mission_phase or scenario.mission_phase
     if phase is None and len(project.phases) == 1:
         phase = project.phases[0]
 
+    def prepare(at: NDArray, collector: _Collector) -> _Prepared:
+        grid_edge_at = np.searchsorted(at, edges)  # index of each grid edge in the refined edges
+        grid_of = np.searchsorted(edges, at[:-1], side="right") - 1  # grid step of a refined step
+        solve_mode = mode_index_on_grid(timeline, at[:-1], list(mode_ids))
+        generation = _base_generation(
+            project,
+            system,
+            run,
+            grid_of,
+            solve_mode,
+            mode_ids,
+            _lit_ratio(run, at, shadows),
+            collector,
+        )
+        return _Prepared(
+            _GridMap(edges, dt, at, np.diff(at), grid_edge_at), per_step(1, at), generation
+        )
+
     # --- array ----------------------------------------------------------------------------
-    base_generation = _base_generation(
-        project, system, run, grid_of, solve_mode, mode_ids, solve_lit, col
-    )
+    prepared = prepare(redges, col)
     life = col.get(
         "Design life",
         system.design_life_yr if system else None,
@@ -370,21 +467,29 @@ def time_domain_budget(
     )
 
     peak_violations = _peak_violations(run, mode_rows, peak_limit)
-    grid = _GridMap(edges, dt, redges, rdt, grid_edge_at)
+
+    # The instants at which the battery becomes full or empty are edges too. They depend on the
+    # state, so they are found by solving and then added; adding an edge inside a step of
+    # constant power leaves the solution before and after it unchanged.
+    setups = tuple(_case_setup(name, battery_inputs, life, annual) for name in cases)
+    traces: list[BatteryTrace | None] = []
+    for _ in range(MAX_REFINE_ROUNDS):
+        traces = [_integrate(setup, battery_inputs, prepared) for setup in setups]
+        g = prepared.grid
+        extra = [
+            float(g.redges[i] + f * g.rdt[i])
+            for trace in traces
+            if trace is not None
+            for i, f in enumerate(trace.saturation_fraction)
+            if not math.isnan(f)
+        ]
+        finer = refined_edges(g.redges, extra)
+        if len(finer) == len(g.redges):
+            break
+        prepared = prepare(finer, _Collector(file_present=system is not None))
     case_results = tuple(
-        _solve_case(
-            name,
-            grid,
-            base_generation,
-            solve_demand_w,
-            battery_inputs,
-            life,
-            annual,
-            phase,
-            windows,
-            run,
-        )
-        for name in cases
+        _solve_case(setup, prepared, battery_inputs, trace, phase, windows, run)
+        for setup, trace in zip(setups, traces, strict=True)
     )
     violations = tuple(
         sorted(
@@ -392,6 +497,12 @@ def time_domain_budget(
             key=lambda v: (v.start_s, v.code, v.case or ""),
         )
     )
+    dod_limit = None if battery_inputs is None else battery_inputs.dod_limit
+    not_evaluated = _not_evaluated(
+        case_results, dod_limit, peak_limit, mode_rows, run, windows, windows_why
+    )
+    if windows_why in ("coarse", "plane"):
+        col.problems.append(_windows_problem(windows_why, run))
     return TimeDomainResult(
         run=run,
         load_basis=load_basis,
@@ -409,8 +520,76 @@ def time_domain_budget(
         problems=tuple(_unique_problems(col.problems)),
         violations=violations,
         peak_limit_w=peak_limit,
-        dod_limit_ratio=None if battery_inputs is None else battery_inputs.dod_limit,
+        dod_limit_ratio=dod_limit,
+        not_evaluated=not_evaluated,
     )
+
+
+def _windows_problem(why: str, run: ScenarioRun) -> Problem:
+    """Orbit windows that could not be found for a reason the user can change."""
+    scenario_file = f"scenarios/{run.scenario_id}.yaml"
+    if why == "coarse":
+        return Problem(
+            Severity.WARNING,
+            "ORBIT_BALANCE_NOT_EVALUATED",
+            "The orbit energy balance is not evaluated: the scenario step is longer than a "
+            "quarter of the orbit period, too coarse to find the orbits.",
+            file=scenario_file,
+            path="step_s",
+            hint="Use a step of at most a quarter of the orbit period (the battery, depletion "
+            "and peak-power checks do not depend on the step).",
+        )
+    return Problem(
+        Severity.WARNING,
+        "ORBIT_BALANCE_NOT_EVALUATED",
+        "The orbit energy balance is not evaluated: the orbit plane cannot be found from the "
+        "scenario's positions.",
+        file=scenario_file,
+        path="duration_s",
+        hint="Use a step of at most a quarter of the orbit period and a scenario of at least "
+        "three steps.",
+    )
+
+
+def _not_evaluated(
+    cases: tuple[CaseResult, ...],
+    dod_limit: float | None,
+    peak_limit: float | None,
+    modes: tuple[ModeRow, ...],
+    run: ScenarioRun,
+    windows: tuple[tuple[float, float], ...],
+    windows_why: str | None,
+) -> tuple[NotEvaluated, ...]:
+    """The checks that did not run, so that an empty violation list is not read as a pass."""
+    out: list[NotEvaluated] = []
+    used = {s.mode for s in run.timeline}
+    missing = "an input of the array or battery is missing"
+    if peak_limit is None:
+        out.append(NotEvaluated(None, PEAK_POWER_EXCEEDED, "the peak power limit is missing"))
+    elif any(m.peak_demand_w is None for m in modes if m.mode_id in used):
+        out.append(NotEvaluated(None, PEAK_POWER_EXCEEDED, "a mode's peak demand is unknown"))
+    for c in cases:
+        if c.dod_ratio is None:
+            out.append(NotEvaluated(c.case, DOD_EXCEEDED, missing))
+        elif dod_limit is None:
+            out.append(
+                NotEvaluated(c.case, DOD_EXCEEDED, "the allowed depth of discharge is unknown")
+            )
+        if c.unmet_w is None:
+            out.append(NotEvaluated(c.case, BATTERY_DEPLETED, missing))
+        if not windows:
+            reason = {
+                "coarse": "the step is too coarse to find the orbits",
+                "plane": "the orbit plane cannot be found",
+            }.get(windows_why or "", "the scenario has no complete orbit")
+            out.append(NotEvaluated(c.case, ORBIT_BALANCE_NEGATIVE, reason))
+        elif any(b.balance_wh is None for b in c.balances):
+            out.append(
+                NotEvaluated(
+                    c.case, ORBIT_BALANCE_NEGATIVE, "an input of the array or demand is missing"
+                )
+            )
+    return tuple(out)
 
 
 def _unique(items: list[Assumption]) -> list[Assumption]:
@@ -441,7 +620,7 @@ class _BatteryInputs:
     cell_voltage_v: float
     series: int
     parallel: int
-    fade: float
+    fade: float | None  # not needed at beginning of life
     eta_c: float
     eta_d: float
     initial_soc: float
@@ -512,10 +691,10 @@ def _battery_inputs(
             f"battery.max_dod_ratio.{phase}",
             "The allowed depth of discharge of the phase",
         )
-    if b is None or None in (cap, volt, eta_c, eta_d, fade, soc0):
+    if b is None or None in (cap, volt, eta_c, eta_d, soc0):
         return None
     assert cap is not None and volt is not None and eta_c is not None
-    assert eta_d is not None and fade is not None and soc0 is not None
+    assert eta_d is not None and soc0 is not None
     return _BatteryInputs(
         cap, volt, b.cells_in_series, b.cells_in_parallel, fade, eta_c, eta_d, soc0, dod
     )
@@ -713,50 +892,82 @@ class _GridMap:
         return np.asarray(values[self.edge_at], dtype=np.float64)
 
 
-def _solve_case(
-    name: str,
-    grid: _GridMap,
-    base_generation: NDArray | None,
-    demand_w: NDArray | None,
-    battery: _BatteryInputs | None,
-    life_yr: float | None,
-    annual: float | None,
-    phase: str | None,
-    windows: tuple[tuple[float, float], ...],
-    run: ScenarioRun,
-) -> CaseResult:
-    """Solve one case on the refined edges; the series are reported on the scenario grid while
-    the extremes, violations and balances come from the refined solution."""
-    edges, dt = grid.redges, grid.rdt
+@dataclass(frozen=True)
+class _CaseSetup:
+    """What a case needs besides the time series: its age, array factor and pack capacity."""
+
+    name: str
+    years: float | None
+    age_factor: float | None
+    capacity_wh: float | None
+
+
+def _case_setup(
+    name: str, battery: _BatteryInputs | None, life_yr: float | None, annual: float | None
+) -> _CaseSetup:
+    """Beginning of life (age 0) needs neither the array degradation nor the battery fade."""
     years = life_yr if name == "eol" else 0.0
     age = None
-    if years is not None and annual is not None:
+    if years == 0.0:
+        age = 1.0
+    elif years is not None and annual is not None:
         age = arr.degradation_factor(annual, years)
-    generation = None if base_generation is None or age is None else base_generation * age
-
     capacity = None
-    if battery is not None and years is not None:
+    if battery is not None and years is not None and (years == 0.0 or battery.fade is not None):
         capacity = pack_capacity_wh(
             battery.cell_capacity_ah,
             battery.cell_voltage_v,
             battery.series,
             battery.parallel,
-            battery.fade,
+            battery.fade or 0.0,
             years,
         )
+    return _CaseSetup(name, years, age, capacity)
+
+
+def _generation(prepared: _Prepared, setup: _CaseSetup) -> NDArray | None:
+    if prepared.base_generation is None or setup.age_factor is None:
+        return None
+    return prepared.base_generation * setup.age_factor
+
+
+def _integrate(
+    setup: _CaseSetup, battery: _BatteryInputs | None, prepared: _Prepared
+) -> BatteryTrace | None:
+    generation = _generation(prepared, setup)
+    capacity = setup.capacity_wh
+    if generation is None or prepared.demand_w is None or battery is None or not capacity:
+        return None
+    return integrate_battery(
+        prepared.grid.rdt,
+        generation,
+        prepared.demand_w,
+        capacity,
+        battery.eta_c,
+        battery.eta_d,
+        battery.initial_soc * capacity,
+    )
+
+
+def _solve_case(
+    setup: _CaseSetup,
+    prepared: _Prepared,
+    battery: _BatteryInputs | None,
+    trace: BatteryTrace | None,
+    phase: str | None,
+    windows: tuple[tuple[float, float], ...],
+    run: ScenarioRun,
+) -> CaseResult:
+    """Describe one case on the refined edges; the series are reported on the scenario grid while
+    the extremes, violations and balances come from the refined solution."""
+    grid, name, years, capacity = prepared.grid, setup.name, setup.years, setup.capacity_wh
+    edges, dt = grid.redges, grid.rdt
+    demand_w = prepared.demand_w
+    generation = _generation(prepared, setup)
 
     margin = None if generation is None or demand_w is None else generation - demand_w
     energy = soc = dod = bat_power = unmet = curtailed = None
-    if generation is not None and demand_w is not None and battery is not None and capacity:
-        trace = integrate_battery(
-            dt,
-            generation,
-            demand_w,
-            capacity,
-            battery.eta_c,
-            battery.eta_d,
-            battery.initial_soc * capacity,
-        )
+    if trace is not None and capacity:
         energy = trace.energy_wh
         soc = energy / capacity
         dod = 1.0 - soc
@@ -779,7 +990,11 @@ def _solve_case(
                 )
             )
     if unmet is not None:
-        for a, b in _runs(unmet > POWER_TOL_W):
+        # a tolerance relative to the power flowing: the step means carry rounding noise that
+        # grows with the length of the run
+        assert demand_w is not None and generation is not None
+        scale = max(1.0, float(np.max(demand_w)), float(np.max(generation)))
+        for a, b in _runs(unmet > POWER_TOL_W * scale):
             violations.append(
                 Violation(
                     name,

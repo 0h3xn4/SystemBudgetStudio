@@ -20,6 +20,12 @@ class Assumption:
     placeholder: bool
 
 
+def missing_from(file: str, file_present: bool) -> str:
+    """`from <file>` when the file exists but lacks the key, `(<file> not provided)` when the
+    whole file is absent."""
+    return f"from {file}" if file_present else f"({file} not provided)"
+
+
 def incomplete(message: str, file: str, path: str) -> Problem:
     return Problem(
         Severity.WARNING,

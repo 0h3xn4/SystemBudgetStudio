@@ -1,4 +1,4 @@
-## sheet Summary rows=30 cols=9
+## sheet Summary rows=31 cols=9
 1: 'Power budget over time: Time-domain test' |  |  |  |  |  |  |  | 
 3: 'Scenario synthetic: Synthetic.' |  |  |  |  |  |  |  | 
 4: 'Environment source: synthetic; shadow model: cylindrical; start 2026-01-01T00:00:00Z; duration 12000 s; step 20 s (600 steps).' |  |  |  |  |  |  |  | 
@@ -16,17 +16,18 @@
 16: 'Lowest state of charge' | '%' | 49.99999999999986 | 47.42321435933234 |  |  |  |  | 
 17: 'Deepest depth of discharge' | '%' | 50.00000000000014 | 52.57678564066766 |  |  |  |  | 
 18: 'Energy not supplied' | 'Wh' | 0 | 0 |  |  |  |  | 
-19: 'Energy curtailed (battery full)' | 'Wh' | 69.99999999999946 | 50.78415935999957 |  |  |  |  | 
+19: 'Energy curtailed (battery full)' | 'Wh' | 69.99999999999946 | 50.78415935999956 |  |  |  |  | 
 20: 'Stored energy change over the scenario' | 'Wh' | -30.00000000000013 | -33.20264010666691 |  |  |  |  | 
-21: 'Violations' | 'count' | '2' | '2' |  |  |  |  | 
-23: 'Violations' |  |  |  |  |  |  |  | 
-24: 'Case' | 'Finding' | 'From (T+)' | 'To (T+)' | 'Duration (s)' | 'Worst value' | 'Limit' | 'Unit' | 'Input to change'
-25: 'both' | 'Peak power above the limit' | 'T+00:50:00' | 'T+01:20:00' | 1800 | 120 | 110 | 'W' | 'limits.peak_power_w'
-26: 'EOL' | 'Depth of discharge above the allowed limit' | 'T+00:58:33' | 'T+02:02:32' | 3839.377221946387 | 0.5257678564066766 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
-27: 'BOL' | 'Depth of discharge above the allowed limit' | 'T+00:59:00' | 'T+01:55:00' | 3360.000000000023 | 0.5000000000000014 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
-28: 'both' | 'Peak power above the limit' | 'T+02:30:00' | 'T+03:00:00' | 1800 | 120 | 110 | 'W' | 'limits.peak_power_w'
-29: 'EOL' | 'Depth of discharge above the allowed limit' | 'T+02:38:33' | 'T+03:20:00' | 2486.465373054001 | 0.5257678564066766 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
-30: 'BOL' | 'Depth of discharge above the allowed limit' | 'T+02:39:00' | 'T+03:20:00' | 2460.000000000002 | 0.5000000000000014 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
+21: 'Violations' | 'count' | '4' | '4' |  |  |  |  | 
+22: 'Violations: the findings of the case plus those that do not depend on it (peak power).' |  |  |  |  |  |  |  | 
+24: 'Violations' |  |  |  |  |  |  |  | 
+25: 'Case' | 'Finding' | 'From (T+)' | 'To (T+)' | 'Duration (s)' | 'Worst value' | 'Limit' | 'Unit' | 'Input to change'
+26: 'both' | 'Peak power above the limit' | 'T+00:50:00' | 'T+01:20:00' | 1800 | 120 | 110 | 'W' | 'limits.peak_power_w'
+27: 'EOL' | 'Depth of discharge above the allowed limit' | 'T+00:58:33' | 'T+02:02:32' | 3839.377221946387 | 0.5257678564066766 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
+28: 'BOL' | 'Depth of discharge above the allowed limit' | 'T+00:59:00' | 'T+01:55:00' | 3360.000000000023 | 0.5000000000000014 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
+29: 'both' | 'Peak power above the limit' | 'T+02:30:00' | 'T+03:00:00' | 1800 | 120 | 110 | 'W' | 'limits.peak_power_w'
+30: 'EOL' | 'Depth of discharge above the allowed limit' | 'T+02:38:33' | 'T+03:20:00' | 2486.465373054001 | 0.5257678564066766 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
+31: 'BOL' | 'Depth of discharge above the allowed limit' | 'T+02:39:00' | 'T+03:20:00' | 2460.000000000002 | 0.5000000000000014 | 0.15 | 'ratio' | 'battery.max_dod_ratio.eol'
 ## sheet Plots BOL rows=42 cols=1
 1: 'Power over time, BOL'
 42: 'Generation, demand, state of charge and margin with eclipses and passes shaded.'

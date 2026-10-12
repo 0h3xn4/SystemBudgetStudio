@@ -596,8 +596,10 @@ def _power_timeline(args: argparse.Namespace) -> int:
         soc = "n/a" if s.minimum_soc_ratio is None else f"{s.minimum_soc_ratio * 100:.1f} %"
         print(
             f"{case.case.upper()}: generated {s.generated_wh:.1f} Wh, lowest state of charge "
-            f"{soc}, {len(case.violations)} violation(s)."
+            f"{soc}, {result.violation_count(case.case)} violation(s)."
         )
+    if result.not_evaluated:
+        print(f"Not evaluated: {result.not_evaluated_text()}.")
     problems = [*loaded.problems, *result.problems, *violation_problems(result)]
     return _finish(problems, [output], args.strict)
 

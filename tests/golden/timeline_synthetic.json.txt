@@ -292,7 +292,7 @@
       "summary": {
         "average_demand_w": 58.0,
         "average_generation_w": 63.274455775999996,
-        "curtailed_wh": 50.78415935999957,
+        "curtailed_wh": 50.78415935999956,
         "demanded_wh": 193.33333333333334,
         "energy_change_wh": -33.202640106666905,
         "generated_wh": 210.91485258666665,

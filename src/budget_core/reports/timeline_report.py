@@ -78,8 +78,17 @@ def _case_table(result: TimeDomainResult) -> Table:
     rows: list[tuple[Cell, ...]] = [
         (label, unit, *(get(c) for c in result.cases)) for label, unit, get in metrics
     ]
-    rows.append(("Violations", "count", *(str(len(c.violations)) for c in result.cases)))
+    rows.append(
+        ("Violations", "count", *(str(result.violation_count(c.case)) for c in result.cases))
+    )
     missing = any(v is None for r in rows for v in r)
+    notes = []
+    if missing:
+        notes.append("n/a: an input the result needs is a placeholder or missing (see Problems).")
+    if any(v.case is None for v in result.violations):
+        notes.append(
+            "Violations: the findings of the case plus those that do not depend on it (peak power)."
+        )
     return Table(
         "Results by case",
         (
@@ -88,9 +97,7 @@ def _case_table(result: TimeDomainResult) -> Table:
             *(Column(c.case.upper(), "number", 3) for c in result.cases),
         ),
         tuple(rows),
-        note="n/a: an input the result needs is a placeholder or missing (see Problems)."
-        if missing
-        else "",
+        note=" ".join(notes),
     )
 
 
@@ -184,8 +191,16 @@ def violations_table(result: TimeDomainResult) -> Table:
             Column("Input to change"),
         ),
         tuple(_violation_row(result, v) for v in result.violations),
-        note="No violations found." if not result.violations else "",
+        note=_violations_note(result),
     )
+
+
+def _violations_note(result: TimeDomainResult) -> str:
+    """An empty list is "No violations found" only when every check ran."""
+    if result.not_evaluated:
+        found = "" if result.violations else " No violations found by the checks that ran."
+        return f"Not evaluated: {result.not_evaluated_text()}.{found}"
+    return "" if result.violations else "No violations found."
 
 
 def build_timeline_report(
