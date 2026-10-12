@@ -226,6 +226,8 @@ class PlotWidget(QWidget):
             None if panel.y_min is None else panel.y_min * panel.y_scale,
             None if panel.y_max is None else panel.y_max * panel.y_scale,
         )
+        if hi - lo <= 0.0:  # equal fixed limits would divide by zero below
+            hi = lo + 1.0
 
         def sy(v: float) -> float:
             return rect.bottom() - (v - lo) / (hi - lo) * rect.height()

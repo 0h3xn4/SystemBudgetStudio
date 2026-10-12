@@ -435,11 +435,11 @@ class PowerTimelineView(QWidget):
         if self.result is None or not 0 <= row < len(self.result.violations):
             return
         v = self.result.violations[row]
+        if v.case in CASE_NAMES:  # first: changing the case redraws the plot and resets its zoom
+            self.case_combo.setCurrentText(v.case.upper())
         pad = max((v.end_s - v.start_s) * 0.5, 300.0)
         self.plot.set_view(v.start_s - pad, v.end_s + pad)
         self.plot.pin_cursor(v.start_s)
-        if v.case in CASE_NAMES:
-            self.case_combo.setCurrentText(v.case.upper())
 
     def jump_to(self, row: int) -> None:
         if self.result is None or not 0 <= row < len(self.result.violations):

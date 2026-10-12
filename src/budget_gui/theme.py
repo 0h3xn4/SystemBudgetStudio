@@ -36,8 +36,11 @@ _FONT_FILES = (
 
 def load_fonts() -> list[str]:
     """Register the bundled IBM Plex fonts; return the family names that loaded."""
-    fonts = assets_dir() / "fonts"
     families: list[str] = []
+    try:
+        fonts = assets_dir() / "fonts"
+    except FileNotFoundError:  # no bundled fonts: the system font is used, the window still opens
+        return families
     for name in _FONT_FILES:
         font_id = QFontDatabase.addApplicationFont(str(fonts / name))
         if font_id >= 0:
@@ -51,7 +54,12 @@ def stylesheet(t: CarbonTokens) -> str:
     QMainWindow, QDialog {{ background: {t.background}; }}
     QStatusBar, QDockWidget::title {{ background: {t.layer}; color: {t.text_secondary}; }}
     QPushButton {{ background: {t.interactive}; color: {t.interactive_text};
-                   border: none; padding: 10px 16px; }}
+                   border: 2px solid {t.interactive}; padding: 8px 14px; }}
+    QPushButton:disabled {{ background: {t.border}; color: {t.text_secondary};
+                            border: 2px solid {t.border}; }}
+    QPushButton:focus {{ border: 2px solid {t.text}; }}
+    QLineEdit:focus, QPlainTextEdit:focus, QTableView:focus, QTreeView:focus, QComboBox:focus,
+    QListWidget:focus {{ border: 2px solid {t.interactive}; }}
     QTableView, QTreeView, QLineEdit {{ background: {t.layer}; border: 1px solid {t.border}; }}
     QHeaderView::section {{ background: {t.layer}; border: none;
                             border-bottom: 1px solid {t.border}; padding: 6px; }}

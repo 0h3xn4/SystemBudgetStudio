@@ -33,6 +33,7 @@ from budget_core.io.yamlio import LineMap
 from budget_core.model import Unit
 from budget_core.reports.files import OutputError
 from budget_core.units.quantity import canonical_unit
+from budget_gui.entry import cell_value, has_decimal_comma
 
 COLUMNS = (
     "name",
@@ -52,13 +53,7 @@ def _header(name: str) -> str:
     return f"{name} [{unit}]" if unit else name
 
 
-def _value(text: str) -> Any:
-    """Plain numbers mean the canonical unit; anything else goes to the unit parser."""
-    stripped = text.strip()
-    try:
-        return float(stripped)
-    except ValueError:
-        return stripped
+_value = cell_value  # plain numbers mean the canonical unit; anything else goes to the unit parser
 
 
 def _show(value: Any) -> str:
@@ -216,7 +211,22 @@ class UnitEditor(QWidget):
         """The unit as currently edited; raises ValidationError when it is not valid."""
         return Unit.model_validate(self._data())
 
+    def _decimal_commas(self) -> list[str]:
+        found = [
+            f"{COLUMNS[c]} (row {r + 1}): use a decimal point, not a comma, for example 1.5."
+            for r in range(self.table.rowCount())
+            for c in range(1, len(COLUMNS))
+            if (item := self.table.item(r, c)) is not None and has_decimal_comma(item.text())
+        ]
+        if has_decimal_comma(self.fields["mass_kg"].text()):
+            found.append("mass_kg: use a decimal point, not a comma, for example 1.5.")
+        return found
+
     def _validate(self) -> Unit | None:
+        commas = self._decimal_commas()
+        if commas:
+            self.error_label.setText("\n".join(commas))
+            return None
         try:
             unit = self.current_unit()
         except ValidationError as exc:

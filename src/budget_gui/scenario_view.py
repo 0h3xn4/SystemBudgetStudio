@@ -17,12 +17,14 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
     QFormLayout,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QListWidget,
     QListWidgetItem,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
@@ -47,6 +49,7 @@ from budget_core.scenario.run import (
     run_scenario,
 )
 from budget_core.timeutil import format_utc
+from budget_gui.entry import cell_value
 from budget_gui.timeline import TimelineWidget
 from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, NOT_COMPUTED_TEXT
 
@@ -54,12 +57,7 @@ RULE_KINDS = ("during_pass", "in_eclipse", "in_sunlight")
 SHADOW_MODELS = ("cylindrical", "conical")
 
 
-def _number(text: str) -> Any:
-    stripped = text.strip()
-    try:
-        return float(stripped)
-    except ValueError:
-        return stripped
+_number = cell_value
 
 
 class ScenarioWorker(QThread):
@@ -101,7 +99,7 @@ class ScenarioEditor(QWidget):
         self.shadow_model = QComboBox()
         self.shadow_model.addItems(SHADOW_MODELS)
         self.sites_list = QListWidget()
-        self.sites_list.setMaximumHeight(90)
+        self.sites_list.setMaximumHeight(72)
         form = QFormLayout()
         form.addRow("Default mode", self.default_mode)
         form.addRow("Shadow model", self.shadow_model)
@@ -140,7 +138,7 @@ class ScenarioEditor(QWidget):
         ]
 
         for table in (self.rules_table, self.segments_table):
-            table.setMinimumHeight(150)
+            table.setMinimumHeight(72)
             table.horizontalHeader().setStretchLastSection(True)
 
         def row_of(*buttons: QPushButton) -> QHBoxLayout:
@@ -273,6 +271,7 @@ class ScenarioEditor(QWidget):
     # ---- rules -------------------------------------------------------------------------------
     def _combo(self, items: list[str], current: str) -> QComboBox:
         box = QComboBox()
+        box.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         box.addItems(items)
         box.setCurrentText(current)
         box.currentTextChanged.connect(lambda _t: self._edited())
@@ -522,7 +521,13 @@ class ScenarioView(QWidget):
         self.passes_table = QTableWidget()
         self.timeline_table = QTableWidget()
         tabs = QTabWidget()
-        tabs.addTab(self.editor, "Rules and segments")
+        scroll = (
+            QScrollArea()
+        )  # the editor scrolls on a small screen instead of forcing a tall window
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setWidget(self.editor)
+        tabs.addTab(scroll, "Rules and segments")
         tabs.addTab(self.eclipse_table, "Eclipses")
         tabs.addTab(self.passes_table, "Passes")
         tabs.addTab(self.timeline_table, "Mode timeline")

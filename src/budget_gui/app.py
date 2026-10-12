@@ -10,6 +10,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 
 from budget_core import APP_NAME
 from budget_gui.main_window import MainWindow
+from budget_gui.privacy import disable_settings_files
 from budget_gui.theme import apply_theme
 
 
@@ -33,6 +34,7 @@ def _excepthook(exc_type: type[BaseException], exc: BaseException, _tb: object) 
 
 def create_app(argv: Sequence[str]) -> QApplication:
     sys.excepthook = _excepthook  # no raw tracebacks in a window or a crash dialog
+    disable_settings_files()  # Qt's file dialogs would write ~/.config/QtProject.conf (D-105)
     app = QApplication.instance() or QApplication(list(argv))
     assert isinstance(app, QApplication)
     app.setApplicationName(APP_NAME)

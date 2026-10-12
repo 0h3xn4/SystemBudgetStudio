@@ -19,7 +19,9 @@ system-budget-studio path/to/project       # open a project at start
 - **Tabs** (centre): **Power budget**, **Mass budget**, **Thermal budget**, **Link budget** (static tables, updated whenever the project changes), **Scenario**, **Power timeline**, **Link passes** (press **Compute**; they run in a background thread so the window stays responsive), and **Compare**.
 - **Problems panel** (bottom): errors, warnings and open items. Double-click a row to jump to the file and line. The counts are also in the status bar.
 
-If you edit a file and change the project, a timeline or link result computed from the older version is marked **stale** and cannot be exported until you compute again.
+Every result remembers what it was computed from. If the project changes (a saved edit, F5, an import), or you switch the scenario or the **Demand** basis, or in **Compare** change the other folder or a scenario, the old result is marked **stale**: the tab says so, **Export** is switched off, and its findings leave the Problems panel until you press **Compute** (or **Compare**) again. The same holds for the **Scenario** tab when an orbit, ground station or target file changed. A result for a scenario you have since deselected is not shown.
+
+Closing the window while a computation or an export is running does not interrupt it: the window closes by itself when the job has finished.
 
 ## Shortcuts
 
@@ -27,7 +29,7 @@ If you edit a file and change the project, a timeline or link result computed fr
 |---|---|
 | Ctrl+N | New project (guided wizard) |
 | Ctrl+O | Open project |
-| Ctrl+S | Save the file you are editing |
+| Ctrl+S | Save the file you are editing (the text tab, the unit table or, in the Scenario tab, the scenario) |
 | F5 | Reload the project from disk |
 | Ctrl+M | Edit the selected unit's power modes in a table |
 | Ctrl+E | Export reports of the static budgets |
@@ -44,6 +46,10 @@ Hover to move a cursor with a readout of every series at that time. The mouse wh
 
 ## How do I edit a file?
 
-Double-click it in the tree. It opens as text in a tab; **Ctrl+S** saves, and the project is checked again (the same checks as `budget validate`). Closing a modified tab, opening another project or quitting asks first, so you cannot lose edits by accident. A file that is not valid UTF-8 is refused instead of being damaged. In the **Scenario** tab, use the rule and segment buttons and **Save scenario**.
+Double-click it in the tree. It opens as text in a tab; **Ctrl+S** saves, and the project is checked again (the same checks as `budget validate`). Closing a modified tab, opening another project or quitting asks first, so you cannot lose edits by accident. A file that is not valid UTF-8 is refused instead of being damaged. A byte-order mark and Windows line ends in the file are kept. If the file changed on disk after you opened it (another program, a git checkout), saving asks before it overwrites that change; an editor without edits shows the new file by itself.
+
+In the **Scenario** tab, use the rule and segment buttons and **Save scenario**; the unit table has its own **Save**. Both change only what you edited: comments, the order of the keys and fields the table does not show (for example the heat dissipation ratio of a power mode) stay in the file, and saving without a change leaves the file untouched. Only if a file is in an older layout that cannot be patched is it rewritten whole, and the editor then says that comments were not kept.
+
+The file dialogs do not remember the last folder you used: the program keeps no settings outside your project folders.
 
 Next: [Command-line reference](command-line.md) · [Tips](../tips.md).

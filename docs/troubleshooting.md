@@ -106,6 +106,18 @@ Reports include the generation time and the user. Pass `--user` and `--date` to 
 
 A week at 1 s with 200 units takes about ten seconds; the orbit computation dominates. While exploring, use a larger `step_s` in the scenario, and with `power-timeline` or `link-passes` add `--no-plots`, `--report csv` or (power-timeline) `--series-every N`.
 
+### The window does not close, or says "The window closes when it is done"
+
+A computation or an export is still running in the background; stopping it half way could damage the output, so the window waits and closes by itself when the job has finished (a long timeline can take a minute). Quitting again does nothing harmful.
+
+### Export is switched off, or says "out of date" / "changed since this result was computed"
+
+The result on screen was computed from different inputs than the ones set now: the project was reloaded or saved, another scenario or demand basis is selected, or the other folder in **Compare** changed. Press **Compute** (or **Compare**) again, then export.
+
+### "The file ... changed on disk after it was opened in this tab"
+
+Another program (or a git checkout) changed the file while you had it open with unsaved edits. Answer **No**, copy your edit elsewhere, press F5 to load the new file, and apply your edit again; answer **Yes** only if your version should win.
+
 ## Still stuck
 
 1. Run `budget self-test`. It checks the installation and says what failed.

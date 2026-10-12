@@ -60,6 +60,12 @@ class CompareWorker(QThread):
         try:
             other_project = project
             if other is not None:
+                if not other.is_dir():
+                    self.failed.emit(
+                        "The other project folder does not exist or is not a folder. "
+                        "Check the path."
+                    )
+                    return
                 loaded = load_project(other)
                 errors = sum(1 for p in loaded.problems if p.severity is Severity.ERROR)
                 if loaded.project is None or errors:
@@ -212,7 +218,7 @@ class CompareView(QWidget):
         worker = CompareWorker(
             self.project,
             self._scenario(self.scenario_a),
-            Path(text) if text else None,
+            Path(text).expanduser() if text else None,
             self._scenario(self.scenario_b),
         )
         worker.finished_ok.connect(self._done)

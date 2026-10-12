@@ -6,6 +6,7 @@ budget needs a name and four clicks. The checks are the same ones the headless b
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from PySide6.QtCore import Signal
@@ -162,13 +163,32 @@ class GuidedWizard(QWizard):
             start_utc=self.start_edit.text(),
         )
 
+    def _parent(self) -> Path:
+        """The parent folder as typed, with '~' expanded to the home folder."""
+        return Path(self.folder_edit.text().strip() or ".").expanduser()
+
     def _target(self) -> Path:
-        return Path(self.folder_edit.text().strip() or ".") / folder_name(self.name_edit.text())
+        return self._parent() / folder_name(self.name_edit.text())
+
+    def _parent_issue(self) -> str | None:
+        text = self.folder_edit.text().strip()
+        if not text:
+            return "Choose the parent folder where the project folder is created."
+        existing = self._parent()
+        while not existing.exists() and existing != existing.parent:
+            existing = existing.parent  # the folder will be created below this one
+        if not existing.is_dir():
+            return "The parent folder is a file, not a folder. Choose another parent folder."
+        if not os.access(existing, os.W_OK | os.X_OK):
+            return "You may not write in the parent folder. Choose another one."
+        return None
 
     def issues_for(self, page: str) -> list[Issue]:
         fields = PAGES.get(page, ())
         issues = [i for i in check_answers(self.answers()) if i.field in fields]
-        if page == "Project" and self._target().exists():
+        if page == "Project" and (problem := self._parent_issue()) is not None:
+            issues.append(Issue("project_name", problem))
+        elif page == "Project" and self._target().exists():
             issues.append(
                 Issue(
                     "project_name",
@@ -217,7 +237,7 @@ class GuidedWizard(QWizard):
     # ---- finish ------------------------------------------------------------------------------
     def accept(self) -> None:
         try:
-            folder = create_project(self.answers(), Path(self.folder_edit.text().strip() or "."))
+            folder = create_project(self.answers(), self._parent())
         except WizardError as exc:
             self.error_label.setText(str(exc))
             return

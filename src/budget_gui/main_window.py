@@ -27,6 +27,7 @@ from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
 from budget_gui.link_view import LinkPassesView
+from budget_gui.privacy import disable_settings_files
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.timeline_view import PowerTimelineView
@@ -56,6 +57,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self) -> None:
         super().__init__()
+        disable_settings_files()  # also when the window is made without create_app
         self.setWindowTitle(APP_NAME)
         self.resize(1400, 860)
         self.session = ProjectSession()
@@ -90,6 +92,7 @@ class MainWindow(QMainWindow):
         bottom = QDockWidget("Problems", self)
         bottom.setWidget(self.problems_panel)
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, bottom)
+        self.resizeDocks([bottom], [170], Qt.Orientation.Vertical)  # room for several rows
         self.setStatusBar(QStatusBar())
         self.statusBar().showMessage(
             f"Version {__version__} — offline. File > New project (guided) starts a first budget."
@@ -159,7 +162,11 @@ class MainWindow(QMainWindow):
 
     def _guided_created(self, folder: Path) -> None:
         if not self.open_project(folder):
-            return  # the new project exists on disk; the user kept their edits in the old one
+            # the new project exists on disk; the user kept their edits in the old one
+            self.statusBar().showMessage(
+                f"The new project was created in {folder}. Open it with File > Open project."
+            )
+            return
         self.editors.setCurrentWidget(self.timeline_view)
         self.timeline_view.compute()
 
@@ -245,7 +252,12 @@ class MainWindow(QMainWindow):
         return True
 
     def open_file(self, rel: str, line: int | None = None) -> None:
-        if self.session.path is None or not (self.session.path / rel).is_file():
+        if self.session.path is None:
+            return
+        if not (self.session.path / rel).is_file():
+            self.statusBar().showMessage(
+                f"{rel} does not exist yet. Create it in the project folder, then press F5."
+            )
             return
         self.editors.open_file(self.session.path, rel, line)
 
