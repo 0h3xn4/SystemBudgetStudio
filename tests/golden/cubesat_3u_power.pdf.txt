@@ -909,15 +909,15 @@ trustworthy.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
-The margin of maturity class 'class_a' is a placeholder.
+The margin of the maturity class is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
-The margin of maturity class 'class_b' is a placeholder.
+The margin of the maturity class is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
-The margin of maturity class 'class_c' is a placeholder.
+The margin of the maturity class is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/margin_policy.yaml
@@ -977,7 +977,7 @@ trustworthy.
 warning
 RESULT_INCOMPLETE
 config/power_config.yaml
-The converter efficiency of bus 'main' is a placeholder.
+The converter efficiency of the bus is a placeholder.
 warning
 RESULT_INCOMPLETE
 config/power_config.yaml

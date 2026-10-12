@@ -4,7 +4,7 @@
 
 | Kind | Content |
 |---|---|
-| XLSX | One sheet per table in the classic review layout, plots as pictures, assumptions and provenance |
+| XLSX | One sheet per section (a section can hold several tables) in the classic review layout, plots as pictures, assumptions and provenance |
 | PDF | The same tables and plots on A4 landscape pages, with a provenance footer |
 | DOCX | The same content for editing in a word processor |
 | CSV | Every table and every time series, one file each, empty cells for values that are n/a |

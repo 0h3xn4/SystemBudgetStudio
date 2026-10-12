@@ -32,7 +32,7 @@ These are enforced by tests and review (the full list is in [CLAUDE.md](CLAUDE.m
 ## Make a change
 
 1. Work on a branch; never push to `main`.
-2. Make the change with tests. If you change the model or an example, regenerate the generated files (`budget export-schemas src/budget_core/schemas`, `budget export-examples examples`): the tests fail when they drift.
+2. Make the change with tests. If you change the model or an example, regenerate the generated files (`budget export-schemas src/budget_core/schemas`, `budget export-examples examples --force`): the tests fail when they drift.
 3. Update the documentation that describes the behaviour ([which pages](docs/developer/README.md#keep-the-documentation-true)) and add an entry to [CHANGELOG.md](CHANGELOG.md).
 4. Open a pull request into `main`. CI must pass on Windows and Linux with Python 3.11 and 3.13. A change that touches `packaging/` also runs the installer workflow.
 

@@ -259,6 +259,7 @@
       "$ref": "#/$defs/PowerLimits"
     },
     "schema_version": {
+      "const": 1,
       "default": 1,
       "title": "Schema Version",
       "type": "integer"

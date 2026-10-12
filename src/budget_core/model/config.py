@@ -8,6 +8,7 @@ from __future__ import annotations
 from typing import Literal
 
 from pydantic import Field, field_validator
+from pydantic_core import PydanticCustomError
 
 from budget_core.model.base import BudgetModel, Sourced
 from budget_core.model.versions import CURRENT_VERSIONS
@@ -55,6 +56,16 @@ class Ebn0Table(BudgetModel):
     kind: Literal["ebn0_table"] = "ebn0_table"
     entries: list[Ebn0Entry] = Field(default_factory=list)
 
+    @field_validator("entries")
+    @classmethod
+    def _unique(cls, entries: list[Ebn0Entry]) -> list[Ebn0Entry]:
+        pairs = [(e.modulation, e.coding) for e in entries]
+        if len(set(pairs)) != len(pairs):
+            raise PydanticCustomError(
+                "duplicate_name", "modulation and coding pairs must be unique"
+            )
+        return entries
+
 
 class AttenuationEntry(BudgetModel):
     name: str = Field(min_length=1)
@@ -68,3 +79,13 @@ class AttenuationTable(BudgetModel):
     schema_version: int = CURRENT_VERSIONS["attenuation_table"]
     kind: Literal["attenuation_table"] = "attenuation_table"
     entries: list[AttenuationEntry] = Field(default_factory=list)
+
+    @field_validator("entries")
+    @classmethod
+    def _unique(cls, entries: list[AttenuationEntry]) -> list[AttenuationEntry]:
+        keys = [(e.name, e.elevation_deg) for e in entries]
+        if len(set(keys)) != len(keys):
+            raise PydanticCustomError(
+                "duplicate_name", "attenuation names and elevations must be unique"
+            )
+        return entries

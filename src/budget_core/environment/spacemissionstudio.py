@@ -10,7 +10,9 @@ Error messages name the file and line but never echo file content.
 from __future__ import annotations
 
 import csv
+import stat
 from collections.abc import Sequence
+from dataclasses import replace
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -26,6 +28,7 @@ from budget_core.environment.data import (
     TimeGrid,
 )
 from budget_core.environment.intervals import Interval, merge_intervals
+from budget_core.io.paths import resolve_inside
 from budget_core.timeutil import format_utc, parse_utc
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
@@ -34,6 +37,11 @@ ORBIT_HEADER = ["time_utc", "x_m", "y_m", "z_m", "vx_mps", "vy_mps", "vz_mps"]
 ECLIPSE_HEADER = ["start_utc", "end_utc"]
 PASS_HEADER = ["aos_utc", "los_utc", "max_elevation_deg"]
 PROFILE_HEADER = ["time_utc", "elevation_deg", "azimuth_deg", "range_m"]
+
+# A file is read whole, so it is bounded: a week at 1 s is 604,801 rows of about 120 bytes.
+MAX_FILE_BYTES = 250_000_000
+MAX_ROWS = 2_000_000  # orbit.csv and profile_<site>.csv
+MAX_PASS_ROWS = 100_000  # eclipse.csv and passes_<site>.csv
 
 
 class EnvironmentInputError(Exception):
@@ -46,21 +54,50 @@ class EnvironmentInputError(Exception):
 
 
 def _rows(
-    folder: Path, name: str, header: list[str], optional: bool = False
+    folder: Path,
+    name: str,
+    header: list[str],
+    optional: bool = False,
+    max_rows: int = MAX_ROWS,
 ) -> list[tuple[int, list[str]]]:
-    path = folder / name
+    path = resolve_inside(folder, name)  # a link that leads out of the folder is not followed
+    if path is None:
+        raise EnvironmentInputError(
+            "the file must be inside the import folder (links that lead out are not followed)",
+            name,
+        )
     if not path.is_file():
-        if optional:
+        if optional and not path.exists():
             return []
         raise EnvironmentInputError("the file is missing", name)
     try:
-        text = path.read_bytes().decode("utf-8")
+        info = path.stat()
+        if not stat.S_ISREG(info.st_mode) or info.st_size > MAX_FILE_BYTES:
+            raise EnvironmentInputError("the file is too large or not a regular file", name)
+        with open(path, "rb") as handle:
+            raw = handle.read(MAX_FILE_BYTES + 1)
+    except OSError:
+        raise EnvironmentInputError("the file cannot be read", name) from None
+    if len(raw) > MAX_FILE_BYTES:
+        raise EnvironmentInputError("the file is too large", name)
+    try:
+        text = raw.decode("utf-8-sig")  # Excel's "CSV UTF-8" starts with a byte order mark
     except UnicodeDecodeError:
         raise EnvironmentInputError("the file is not valid UTF-8 text", name) from None
     lines = list(csv.reader(text.splitlines()))
     if not lines or [c.strip() for c in lines[0]][: len(header)] != header:
+        if lines and len(lines[0]) == 1 and ";" in lines[0][0]:
+            raise EnvironmentInputError(
+                "the file uses ';' as the separator; save it with commas (a comma-separated "
+                "file with a point as the decimal mark)",
+                name,
+                1,
+            )
         raise EnvironmentInputError("the header does not match the documented format", name, 1)
-    return [(i, row) for i, row in enumerate(lines[1:], start=2) if any(c.strip() for c in row)]
+    rows = [(i, row) for i, row in enumerate(lines[1:], start=2) if any(c.strip() for c in row)]
+    if len(rows) > max_rows:
+        raise EnvironmentInputError("the file has too many rows", name)
+    return rows
 
 
 def _time(text: str, start: datetime, file: str, line: int) -> float:
@@ -149,7 +186,7 @@ class SpaceMissionStudioImport:
     def _eclipses(self, grid: TimeGrid) -> list[Interval]:
         file = "eclipse.csv"
         out: list[Interval] = []
-        for line, row in _rows(self.folder, file, ECLIPSE_HEADER):
+        for line, row in _rows(self.folder, file, ECLIPSE_HEADER, max_rows=MAX_PASS_ROWS):
             if len(row) < 2:
                 raise EnvironmentInputError("a row has too few columns", file, line)
             a = _time(row[0], grid.start, file, line)
@@ -163,7 +200,7 @@ class SpaceMissionStudioImport:
     def _site(self, grid: TimeGrid, times: NDArray, site: SiteDef) -> SiteVisibility:
         file = f"passes_{site.site_id}.csv"
         passes: list[Pass] = []
-        for line, row in _rows(self.folder, file, PASS_HEADER):
+        for line, row in _rows(self.folder, file, PASS_HEADER, max_rows=MAX_PASS_ROWS):
             if len(row) < 3:
                 raise EnvironmentInputError("a row has too few columns", file, line)
             aos = _time(row[0], grid.start, file, line)
@@ -171,33 +208,37 @@ class SpaceMissionStudioImport:
             peak = _number(row[2], file, line)
             if los < aos:
                 raise EnvironmentInputError("a pass ends before it starts", file, line)
+            if not 0.0 <= peak <= 90.0:
+                raise EnvironmentInputError(
+                    "the maximum elevation must be between 0 and 90 degrees", file, line
+                )
             if los > 0.0 and aos < grid.duration_s:
                 passes.append(
                     Pass(
                         max(aos, 0.0),
                         min(los, grid.duration_s),
                         peak,
-                        (aos + los) / 2.0,
+                        float("nan"),  # not in the file: set from the profile when there is one
                         aos < 0.0,
                         los > grid.duration_s,
                     )
                 )
         passes.sort(key=lambda p: p.aos_s)
-        el, az, rng = self._profile(grid, times, site, passes)
+        el, az, rng, passes = self._profile(grid, times, site, passes)
         return SiteVisibility(site, tuple(passes), el, az, rng)
 
     def _profile(
         self, grid: TimeGrid, times: NDArray, site: SiteDef, passes: list[Pass]
-    ) -> tuple[NDArray, NDArray, NDArray]:
+    ) -> tuple[NDArray, NDArray, NDArray, list[Pass]]:
         file = f"profile_{site.site_id}.csv"
         rows = _rows(self.folder, file, PROFILE_HEADER, optional=True)
         nan = np.full(len(times), np.nan)
         if not rows:
             self.notes.append(
                 f"{file} not found: elevation, azimuth and range are unavailable (NaN) for "
-                f"'{site.site_id}'"
+                f"'{site.site_id}', and the time of each pass maximum is unknown"
             )
-            return nan.copy(), nan.copy(), nan.copy()
+            return nan.copy(), nan.copy(), nan.copy(), passes
         t, e, a, r = [], [], [], []
         for line, row in rows:
             if len(row) < 4:
@@ -206,6 +247,12 @@ class SpaceMissionStudioImport:
             e.append(_number(row[1], file, line))
             a.append(_number(row[2], file, line))
             r.append(_number(row[3], file, line))
+            if not -90.0 <= e[-1] <= 90.0 or r[-1] < 0.0:
+                raise EnvironmentInputError(
+                    "the elevation must be between -90 and 90 degrees and the range not negative",
+                    file,
+                    line,
+                )
         order = np.argsort(t)
         ta = np.array(t)[order]
         el = np.interp(times, ta, np.array(e)[order])
@@ -215,7 +262,18 @@ class SpaceMissionStudioImport:
         for p in passes:
             inside |= (times >= p.aos_s - 1e-9) & (times <= p.los_s + 1e-9)
         el[~inside], az[~inside], rg[~inside] = np.nan, np.nan, np.nan
-        return el, az, rg
+        # the time of the maximum is the profile sample with the highest elevation inside the pass
+        # (as precise as the profile is dense); a pass without samples stays unknown (NaN)
+        sorted_e = np.array(e)[order]
+        timed: list[Pass] = []
+        for p in passes:
+            here = (ta >= p.aos_s - 1e-9) & (ta <= p.los_s + 1e-9)
+            if here.any():
+                best = int(np.argmax(np.where(here, sorted_e, -np.inf)))
+                timed.append(replace(p, time_of_max_s=float(ta[best])))
+            else:
+                timed.append(p)
+        return el, az, rg, timed
 
 
 def _write(path: Path, header: list[str], rows: list[list[str]]) -> None:

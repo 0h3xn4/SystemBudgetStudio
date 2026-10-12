@@ -19,18 +19,18 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget guide --out DIR [--format html\|pdf\|all] [--project PROJECT]` | Write the user guide (offline HTML and PDF) |
 | `budget self-test` | Check that this installation can compute and render a budget |
 | `budget export-schemas DIR` | Write the JSON Schema of every file kind |
-| `budget export-examples DIR` | Write the four example projects |
+| `budget export-examples DIR [--force]` | Write the four example projects; an example folder that exists is never touched unless you add `--force` |
 | `budget --version` | Print the version |
 
-`--report` can be repeated and takes `xlsx`, `pdf`, `docx`, `json`, `csv` or `all`. `--scenario` is optional when the project has only one.
+`--report` can be repeated and takes `xlsx`, `pdf`, `docx`, `json`, `csv` or `all`. `--scenario` is optional when the project has only one; with none or several the command says so and lists the ids. `--series-every N` takes 1 or more and `--max-rows N` 0 or more. Options cannot be abbreviated (`--str` is an error, not `--strict`). `budget` with no command prints the command list and exits with code 2.
 
 ## Common options
 
 | Option | Meaning |
 |---|---|
 | `--out DIR` | Output folder (default: `<project>/results`) |
-| `--user NAME` | User name for the provenance block (default: `BUDGET_USER`, then your login name) |
-| `--date ISO8601` | Generation time (default: `SOURCE_DATE_EPOCH`, then the clock); with `--user` it makes a report reproducible |
+| `--user NAME` | User name for the provenance block (default: `BUDGET_USER`, then your login name). Accepted by `run`, `scenario`, `power-timeline`, `link-passes` and `compare` |
+| `--date ISO8601` | Generation time, years 1950 to 2100 (default: `SOURCE_DATE_EPOCH`, then the clock); with `--user` it makes a report reproducible. Accepted by the same commands as `--user` |
 | `--strict` | Treat warnings as failures (exit code 1) |
 
 ## Exit codes
@@ -39,7 +39,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 |---|---|
 | 0 | Finished; no error-level problem (and no warning with `--strict`) |
 | 1 | An error-level problem or finding, a file that could not be written, or an unexpected error (one plain line, never a traceback) |
-| 2 | The command was called wrongly (unknown option, a value not allowed, `compare` without a second side) |
+| 2 | The command was called wrongly (no command, unknown or abbreviated option, a value not allowed, several scenarios and no `--scenario`, `compare` without a second side, a `SOURCE_DATE_EPOCH` that is not a whole number of seconds) |
 | 130 | Interrupted with Ctrl+C |
 
 Note that finding a *result* problem (a limit exceeded) is exit code 1 even though every file was written.
@@ -49,7 +49,7 @@ Note that finding a *result* problem (a limit exceeded) is exit code 1 even thou
 | Variable | Used for |
 |---|---|
 | `BUDGET_USER` | The user name in the provenance block |
-| `SOURCE_DATE_EPOCH` | The generation time (seconds since 1970) |
+| `SOURCE_DATE_EPOCH` | The generation time (a whole number of seconds since 1970). A value that is set but not usable (empty, text, negative, out of range) is an error, not ignored |
 | `QT_QPA_PLATFORM=offscreen` | Run the window without a screen (tests, `system-budget-studio --smoke`) |
 
 ## How do I use it in a script or in CI?

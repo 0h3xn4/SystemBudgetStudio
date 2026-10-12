@@ -240,12 +240,12 @@
 32: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:109' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 33: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:113' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 34: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:128' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-35: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | "The albedo of case 'cold' is a placeholder."
-36: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | "The Earth infrared flux of case 'cold' is a placeholder."
-37: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | "The solar flux of case 'cold' is a placeholder."
-38: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | "The albedo of case 'hot' is a placeholder."
-39: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | "The Earth infrared flux of case 'hot' is a placeholder."
-40: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | "The solar flux of case 'hot' is a placeholder."
+35: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The albedo of the case is a placeholder.'
+36: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The Earth infrared flux of the case is a placeholder.'
+37: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The solar flux of the case is a placeholder.'
+38: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The albedo of the case is a placeholder.'
+39: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The Earth infrared flux of the case is a placeholder.'
+40: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The solar flux of the case is a placeholder.'
 41: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The space temperature is a placeholder.'
 42: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'The temperature margin is a placeholder.'
 43: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:4' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
@@ -260,36 +260,36 @@
 52: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'A conductance is a placeholder.'
 53: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'A conductance is a placeholder.'
 54: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'A conductance is a placeholder.'
-55: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The absorptivity of surface 'ADCS panel' is a placeholder."
-56: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The emissivity of surface 'ADCS panel' is a placeholder."
-57: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'ADCS panel' is a placeholder."
-58: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'ADCS panel' is a placeholder."
-59: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'ADCS panel' is a placeholder."
-60: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'ADCS panel' is a placeholder."
-61: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The absorptivity of surface 'DH panel' is a placeholder."
-62: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The emissivity of surface 'DH panel' is a placeholder."
-63: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'DH panel' is a placeholder."
-64: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'DH panel' is a placeholder."
-65: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'DH panel' is a placeholder."
-66: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'DH panel' is a placeholder."
-67: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The absorptivity of surface 'EPS panel' is a placeholder."
-68: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The emissivity of surface 'EPS panel' is a placeholder."
-69: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'EPS panel' is a placeholder."
-70: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'EPS panel' is a placeholder."
-71: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'EPS panel' is a placeholder."
-72: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'EPS panel' is a placeholder."
-73: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The absorptivity of surface 'PL panel' is a placeholder."
-74: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The emissivity of surface 'PL panel' is a placeholder."
-75: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'PL panel' is a placeholder."
-76: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'PL panel' is a placeholder."
-77: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'PL panel' is a placeholder."
-78: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'PL panel' is a placeholder."
-79: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The absorptivity of surface 'TTC panel' is a placeholder."
-80: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The emissivity of surface 'TTC panel' is a placeholder."
-81: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'TTC panel' is a placeholder."
-82: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'TTC panel' is a placeholder."
-83: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The Earth view ratio of surface 'TTC panel' is a placeholder."
-84: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | "The solar view ratio of surface 'TTC panel' is a placeholder."
+55: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The absorptivity of the surface is a placeholder.'
+56: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The emissivity of the surface is a placeholder.'
+57: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+58: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+59: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+60: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+61: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The absorptivity of the surface is a placeholder.'
+62: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The emissivity of the surface is a placeholder.'
+63: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+64: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+65: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+66: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+67: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The absorptivity of the surface is a placeholder.'
+68: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The emissivity of the surface is a placeholder.'
+69: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+70: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+71: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+72: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+73: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The absorptivity of the surface is a placeholder.'
+74: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The emissivity of the surface is a placeholder.'
+75: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+76: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+77: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+78: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+79: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The absorptivity of the surface is a placeholder.'
+80: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The emissivity of the surface is a placeholder.'
+81: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+82: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
+83: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The Earth view ratio of the surface is a placeholder.'
+84: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'The solar view ratio of the surface is a placeholder.'
 85: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:18' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 86: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:24' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
 87: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:30' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."

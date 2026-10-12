@@ -466,15 +466,18 @@ def test_determinism() -> None:
     assert static_mass_budget(p) == static_mass_budget(p)
 
 
-def test_a_repeated_limit_name_points_at_its_own_position_in_the_file() -> None:
-    # two limits named "cap": the first is met, the second is exceeded; the finding must jump to
-    # limits[2] (the third entry), not to the first limit with that name
+def test_a_limit_name_shared_between_phases_points_at_its_own_position_in_the_file() -> None:
+    # a name may repeat for different phases (the same name in one phase is a validation error):
+    # the finding in the second phase must jump to limits[2], the third entry, not to the first
+    # entry with that name
     result = static_mass_budget(
         project(
             {"u1": U(5.0)},
+            phases=["launch", "eol"],
             system=0.0,
-            limits=[("cap", None, 9.0), ("other", None, 9.0), ("cap", None, 1.0)],
+            limits=[("cap", "launch", 9.0), ("other", None, 9.0), ("cap", "eol", 1.0)],
         )
     )
     (problem,) = [p for p in result.problems if p.code == "MASS_LIMIT_EXCEEDED"]
     assert problem.path == "limits[2]"
+    assert "phase number 2" in problem.message

@@ -350,7 +350,7 @@ def _attenuation_fn(project: Project, link: Link, link_file: str, notes: _Notes)
         if not entries:
             notes.problems.append(
                 incomplete(
-                    f"Attenuation '{name}' has no entry in config/attenuation_table.yaml.",
+                    "This attenuation has no entry in config/attenuation_table.yaml.",
                     link_file,
                     f"attenuation[{i}]",
                 )
@@ -366,7 +366,7 @@ def _attenuation_fn(project: Project, link: Link, link_file: str, notes: _Notes)
                 "dB",
                 "config/attenuation_table.yaml",
                 f"entries[{_index(table, e)}].loss_db",
-                f"The attenuation '{name}'",
+                "The attenuation",
             )
             if value is None:
                 ok = False
@@ -377,7 +377,7 @@ def _attenuation_fn(project: Project, link: Link, link_file: str, notes: _Notes)
                     Problem(
                         Severity.WARNING,
                         "LINK_ATTENUATION_FREQUENCY",
-                        f"Attenuation '{name}' is for a frequency that differs from the link's "
+                        "This attenuation entry is for a frequency that differs from the link's "
                         "by more than 1 %.",
                         file="config/attenuation_table.yaml",
                         path=f"entries[{_index(table, e)}].freq_hz",

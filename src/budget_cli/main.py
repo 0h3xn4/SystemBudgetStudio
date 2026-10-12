@@ -3,16 +3,18 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from budget_core import APP_NAME, __version__
 from budget_core.compare_run import ALL_KINDS, Side, compare_sides, default_kinds
-from budget_core.examples import export_examples
-from budget_core.io.project_loader import load_project
+from budget_core.examples import ExportRefusedError, export_examples
+from budget_core.io.project_loader import LoadResult, load_project
 from budget_core.io.unit_table import (
     apply_plan,
     plan_import,
@@ -26,7 +28,7 @@ from budget_core.model import Project
 from budget_core.power.static_budget import static_power_budget
 from budget_core.power.time_domain import time_domain_budget, violation_problems
 from budget_core.problems import Problem, Severity, sort_problems
-from budget_core.provenance import make_provenance
+from budget_core.provenance import ProvenanceError, make_provenance
 from budget_core.reports.files import OutputError, write_file
 from budget_core.reports.run import (
     REPORT_KINDS,
@@ -43,6 +45,7 @@ from budget_core.scenario.run import ScenarioRunError, run_scenario
 from budget_core.schemas import export_schemas
 from budget_core.selftest import run_selftest
 from budget_core.thermal.static_thermal import static_thermal_budget
+from budget_core.timeutil import MAX_YEAR, MIN_YEAR
 
 REPORTS = REPORT_KINDS
 COMPARE_KINDS = ALL_KINDS
@@ -55,13 +58,43 @@ def _iso_datetime(text: str) -> datetime:
         raise argparse.ArgumentTypeError(
             "expected an ISO 8601 date and time, e.g. 2026-01-02T03:04:05Z"
         ) from None
-    return parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+    parsed = parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
+    try:
+        year = parsed.astimezone(UTC).year
+    except (OverflowError, ValueError):
+        year = 0
+    if not MIN_YEAR <= year <= MAX_YEAR:
+        raise argparse.ArgumentTypeError(
+            f"the date must fall in the years {MIN_YEAR} to {MAX_YEAR} (UTC)"
+        )
+    return parsed
+
+
+def _at_least(minimum: int, what: str) -> Callable[[str], int]:
+    def parse(text: str) -> int:
+        try:
+            value = int(text)
+        except ValueError:
+            raise argparse.ArgumentTypeError(f"expected a whole number, {what}") from None
+        if value < minimum:
+            raise argparse.ArgumentTypeError(f"expected a whole number, {what}")
+        return value
+
+    return parse
+
+
+class _Parser(argparse.ArgumentParser):
+    """No abbreviated options: `--str` must not silently mean `--strict`."""
+
+    def __init__(self, **kwargs: Any) -> None:
+        kwargs.setdefault("allow_abbrev", False)
+        super().__init__(**kwargs)
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="budget", description=f"{APP_NAME} command line.")
+    parser = _Parser(prog="budget", description=f"{APP_NAME} command line.")
     parser.add_argument("--version", action="version", version=f"{APP_NAME} {__version__}")
-    sub = parser.add_subparsers(dest="command")
+    sub = parser.add_subparsers(dest="command", parser_class=_Parser)
 
     val = sub.add_parser("validate", help="Check a project folder and list problems.")
     val.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
@@ -134,7 +167,7 @@ def build_parser() -> argparse.ArgumentParser:
     pt.add_argument("--out", type=Path, help="Output folder (default: <project>/results).")
     pt.add_argument(
         "--series-every",
-        type=int,
+        type=_at_least(1, "1 or more"),
         default=1,
         metavar="N",
         help="Keep every N-th step in the series CSV (default 1: all steps).",
@@ -190,7 +223,7 @@ def build_parser() -> argparse.ArgumentParser:
     cmp.add_argument("--out", type=Path, help="Output folder (default: <project>/results).")
     cmp.add_argument(
         "--max-rows",
-        type=int,
+        type=_at_least(0, "0 or more"),
         default=200,
         metavar="N",
         help="Differences listed per budget (default 200; the rest are counted).",
@@ -243,6 +276,11 @@ def build_parser() -> argparse.ArgumentParser:
         "export-examples", help="Write the synthetic example projects (invented data)."
     )
     exa.add_argument("out_dir", type=Path)
+    exa.add_argument(
+        "--force",
+        action="store_true",
+        help="Replace the files of example projects that already exist in the folder.",
+    )
     return parser
 
 
@@ -288,14 +326,14 @@ def _valid_project(path: Path) -> tuple[Project | None, int]:
 
 
 def _units_export(args: argparse.Namespace) -> int:
+    out = args.out or (args.project / "results" / "unit_power_modes.csv")
+    kind = out.suffix.lower()
+    if kind not in (".csv", ".xlsx"):  # checked first: no need to load a project for this
+        print("The output file must end in .csv or .xlsx.")
+        return 2
     project, code = _valid_project(args.project)
     if project is None:
         return code
-    out = args.out or (args.project / "results" / "unit_power_modes.csv")
-    kind = out.suffix.lower()
-    if kind not in (".csv", ".xlsx"):
-        print("The output file must end in .csv or .xlsx.")
-        return 2
     data = (
         # a byte order mark makes Excel read the UTF-8 text correctly
         b"\xef\xbb\xbf" + table_csv(project).encode("utf-8")
@@ -344,16 +382,67 @@ def _units_import(args: argparse.Namespace) -> int:
     return 0
 
 
-def _run(args: argparse.Namespace) -> int:
-    loaded = load_project(args.project)
+# Warnings that every placeholder produces: the INCOMPLETE banner and the reports list them, so
+# the command line only counts them (`budget validate` lists them one by one).
+_COUNTED_ONLY = frozenset({"CONFIG_PLACEHOLDER", "RESULT_INCOMPLETE"})
+
+
+def _load_or_fail(path: Path) -> tuple[LoadResult | None, int]:
+    """The loaded project, or None after printing why it cannot be used (exit code 1)."""
+    loaded = load_project(path)
     errors = _count(loaded.problems, Severity.ERROR)
     if loaded.project is None or errors:
         for problem in loaded.problems:
             print(problem.format())
         print(f"{_plural(errors, 'error')}; nothing was written.")
-        return 1
+        return None, 1
+    return loaded, 0
 
+
+def _finish(problems: Sequence[Problem], outputs: Sequence[BudgetOutput], strict: bool) -> int:
+    """The same ending for every computing command: print the findings (errors) and the warnings
+    that need a person, then the banner of the first incomplete output and one summary line.
+    Load problems count like any other, so `--strict` means the same everywhere."""
+    ordered = sort_problems(dict.fromkeys(problems))
+    errors = [p for p in ordered if p.severity is Severity.ERROR]
+    warnings = [p for p in ordered if p.severity is Severity.WARNING]
+    for problem in ordered:
+        if problem.severity is Severity.ERROR or (
+            problem.severity is Severity.WARNING and problem.code not in _COUNTED_ONLY
+        ):
+            print(problem.format())
+    banner = next((o.document.banner for o in outputs if o.document.banner), "")
+    if banner:
+        print(banner)
+    print(f"{_plural(len(errors), 'error')}, {_plural(len(warnings), 'warning')}.")
+    return 1 if errors or (strict and warnings) else 0
+
+
+def _choose_scenario(project: Project, requested: str | None) -> tuple[str | None, int]:
+    """The scenario id to compute, or None after printing why there is none (exit code)."""
+    if requested is not None:
+        return requested, 0
+    ids = sorted(project.scenarios)
+    if not ids:
+        print("The project has no scenarios (scenarios/*.yaml); nothing to compute.")
+        return None, 1
+    if len(ids) > 1:
+        print(
+            "The project has several scenarios; choose one with --scenario. "
+            "Scenarios: " + ", ".join(ids) + "."
+        )
+        return None, 2
+    return ids[0], 0
+
+
+def _run(args: argparse.Namespace) -> int:
+    loaded, code = _load_or_fail(args.project)
+    if loaded is None or loaded.project is None:
+        return code
     project = loaded.project
+    if args.budget == "link" and not project.links:
+        print("The project has no links (links/*.yaml); no link budget was computed.")
+        return 1
     provenance = make_provenance(project, user=args.user, generated_at=args.date)
     outputs: list[BudgetOutput] = []
     problems: list[Problem] = list(loaded.problems)
@@ -371,47 +460,31 @@ def _run(args: argparse.Namespace) -> int:
         outputs.append(thermal_output(project, thermal, provenance, loaded.problems))
         problems += thermal.problems
 
-    if args.budget in ("link", "all"):
-        if project.links:
-            link = link_static_budget(project)
-            outputs.append(link_output(project, link, provenance, loaded.problems))
-            problems += link.problems
-        elif args.budget == "link":
-            print("The project has no links (links/*.yaml); no link budget was computed.")
+    if args.budget in ("link", "all") and project.links:
+        link = link_static_budget(project)
+        outputs.append(link_output(project, link, provenance, loaded.problems))
+        problems += link.problems
 
     wanted = set(args.report or ["all"])
     if "all" in wanted:
         wanted = set(REPORTS)
     out_dir = args.out or (args.project / "results")
     written = write_outputs(outputs, out_dir, wanted)
-
-    problems = sort_problems(problems)
-    result_errors = [p for p in problems if p.severity is Severity.ERROR]
-    warnings = _count(problems, Severity.WARNING)
     for path in written:
         print(f"Wrote {path}")
-    for problem in result_errors:  # findings such as an exceeded mass limit
-        print(problem.format())
-    if any(o.document.banner for o in outputs):
-        print(outputs[0].document.banner)
-    print(f"{_plural(len(result_errors), 'error')}, {_plural(warnings, 'warning')}.")
-    return 1 if result_errors or (args.strict and warnings) else 0
+    return _finish(problems, outputs, args.strict)
 
 
 def _scenario(args: argparse.Namespace) -> int:
-    loaded = load_project(args.project)
-    errors = _count(loaded.problems, Severity.ERROR)
-    if loaded.project is None or errors:
-        for problem in loaded.problems:
-            print(problem.format())
-        print(f"{_plural(errors, 'error')}; nothing was written.")
-        return 1
+    loaded, code = _load_or_fail(args.project)
+    if loaded is None or loaded.project is None:
+        return code
     project = loaded.project
-    scenario_id = args.scenario
-    if scenario_id is None and len(project.scenarios) == 1:
-        scenario_id = next(iter(project.scenarios))
+    scenario_id, code = _choose_scenario(project, args.scenario)
+    if scenario_id is None:
+        return code
     try:
-        run = run_scenario(project, scenario_id or "")
+        run = run_scenario(project, scenario_id)
     except ScenarioRunError as exc:
         print(exc.problem.format())
         return 1
@@ -434,22 +507,18 @@ def _scenario(args: argparse.Namespace) -> int:
 
 
 def _link_passes(args: argparse.Namespace) -> int:
-    loaded = load_project(args.project)
-    errors = _count(loaded.problems, Severity.ERROR)
-    if loaded.project is None or errors:
-        for problem in loaded.problems:
-            print(problem.format())
-        print(f"{_plural(errors, 'error')}; nothing was written.")
-        return 1
+    loaded, code = _load_or_fail(args.project)
+    if loaded is None or loaded.project is None:
+        return code
     project = loaded.project
     if not project.links:
         print("The project has no links (links/*.yaml); nothing to compute.")
         return 1
-    scenario_id = args.scenario
-    if scenario_id is None and len(project.scenarios) == 1:
-        scenario_id = next(iter(project.scenarios))
+    scenario_id, code = _choose_scenario(project, args.scenario)
+    if scenario_id is None:
+        return code
     try:
-        run = run_scenario(project, scenario_id or "")
+        run = run_scenario(project, scenario_id)
     except ScenarioRunError as exc:
         print(exc.problem.format())
         return 1
@@ -476,31 +545,19 @@ def _link_passes(args: argparse.Namespace) -> int:
                 f"{s.volume_bits / 8e6:.2f} MByte in the scenario "
                 f"({(s.volume_per_day_bits or 0.0) / 8e6:.2f} MByte per day)."
             )
-    problems = sort_problems([*static.problems, *passes.problems])
-    warnings = _count(problems, Severity.WARNING)
-    for problem in problems:
-        if problem.severity is Severity.WARNING and problem.code != "RESULT_INCOMPLETE":
-            print(problem.format())
-    if output.document.banner:
-        print(output.document.banner)
-    print(f"0 errors, {_plural(warnings, 'warning')}.")
-    return 1 if args.strict and warnings else 0
+    return _finish([*loaded.problems, *static.problems, *passes.problems], [output], args.strict)
 
 
 def _power_timeline(args: argparse.Namespace) -> int:
-    loaded = load_project(args.project)
-    errors = _count(loaded.problems, Severity.ERROR)
-    if loaded.project is None or errors:
-        for problem in loaded.problems:
-            print(problem.format())
-        print(f"{_plural(errors, 'error')}; nothing was written.")
-        return 1
+    loaded, code = _load_or_fail(args.project)
+    if loaded is None or loaded.project is None:
+        return code
     project = loaded.project
-    scenario_id = args.scenario
-    if scenario_id is None and len(project.scenarios) == 1:
-        scenario_id = next(iter(project.scenarios))
+    scenario_id, code = _choose_scenario(project, args.scenario)
+    if scenario_id is None:
+        return code
     try:
-        run = run_scenario(project, scenario_id or "")
+        run = run_scenario(project, scenario_id)
     except ScenarioRunError as exc:
         print(exc.problem.format())
         return 1
@@ -535,15 +592,8 @@ def _power_timeline(args: argparse.Namespace) -> int:
             f"{case.case.upper()}: generated {s.generated_wh:.1f} Wh, lowest state of charge "
             f"{soc}, {len(case.violations)} violation(s)."
         )
-    problems = sort_problems([*result.problems, *violation_problems(result)])
-    findings = [p for p in problems if p.severity is Severity.ERROR]
-    warnings = _count(problems, Severity.WARNING)
-    for problem in findings:
-        print(problem.format())
-    if output.document.banner:
-        print(output.document.banner)
-    print(f"{_plural(len(findings), 'error')}, {_plural(warnings, 'warning')}.")
-    return 1 if findings or (args.strict and warnings) else 0
+    problems = [*loaded.problems, *result.problems, *violation_problems(result)]
+    return _finish(problems, [output], args.strict)
 
 
 def _compare(args: argparse.Namespace) -> int:
@@ -614,19 +664,16 @@ def _guide(args: argparse.Namespace) -> int:
             return 1
         project = loaded.project
     guide = build_guide(project)
-    args.out.mkdir(parents=True, exist_ok=True)
     stem = "system-budget-studio-guide"
     if args.format in ("html", "all"):
         from budget_core.guide.html import render_html
 
-        path = args.out / f"{stem}.html"
-        path.write_text(render_html(guide), encoding="utf-8", newline="\n")
+        path = write_file(args.out, f"{stem}.html", render_html(guide), sanitise=False)
         print(f"Wrote {path}")
     if args.format in ("pdf", "all"):
         from budget_core.guide.pdf import render_pdf
 
-        path = args.out / f"{stem}.pdf"
-        path.write_bytes(render_pdf(guide))
+        path = write_file(args.out, f"{stem}.pdf", render_pdf(guide), sanitise=False)
         print(f"Wrote {path}")
     return 0
 
@@ -663,16 +710,28 @@ def _dispatch(
             print(path.name)
         return 0
     if args.command == "export-examples":
-        for name in export_examples(args.out_dir):
+        for name in export_examples(args.out_dir, force=args.force):
             print(name)
         return 0
-    parser.print_help(sys.stderr if argv else sys.stdout)
-    return 0
+    parser.print_help(sys.stderr)  # no command: show what there is, and fail like a bad argument
+    return 2
+
+
+def _encode_safely() -> None:
+    """A terminal or a redirected stream that cannot encode a character (a cp1252 console and a
+    project named in Chinese) must not turn a finished run into an error: the character is
+    written as a backslash escape instead."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if callable(reconfigure):
+            with contextlib.suppress(ValueError, OSError):  # a closed stream, or not text
+                reconfigure(errors="backslashreplace")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     """Run a command. Nothing unexpected reaches the user as a traceback or as project text:
     only the kind of the failure is named (spec constraints 11 and 20)."""
+    _encode_safely()
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
@@ -684,6 +743,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     except OutputError as exc:
         print(str(exc))
         return 1
+    except ExportRefusedError as exc:
+        print(str(exc))
+        return 1
+    except ProvenanceError as exc:
+        print(str(exc))
+        return 2
     except OSError:
         print(
             "A file or folder could not be read or written. Check the paths and that you "
@@ -691,8 +756,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         return 1
     except Exception as exc:
-        print(
-            f"Internal error ({type(exc).__name__}). Run 'budget validate <project folder>' to "
-            "check the project and report the problem."
+        advice = (
+            "Please report the problem."
+            if args.command == "validate"
+            else "Run 'budget validate <project folder>' to check the project and report the "
+            "problem."
         )
+        print(f"Internal error ({type(exc).__name__}). {advice}")
         return 1

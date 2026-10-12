@@ -49,6 +49,14 @@ class MigrationRegistry:
                 path="schema_version",
                 hint="Upgrade System Budget Studio, or open the file with the tool that wrote it.",
             )
+        if version < 1:
+            return data, Problem(
+                Severity.ERROR,
+                "SCHEMA_VERSION_MISSING",
+                "The file has no valid 'schema_version': versions start at 1.",
+                path="schema_version",
+                hint=f"Set 'schema_version: {target}' (or the version the file was written with).",
+            )
         start = version
         current = data
         while version < target:
@@ -62,8 +70,11 @@ class MigrationRegistry:
                     hint="Open the file with an older release of the tool, save it, and retry.",
                 )
             try:
-                current = step(dict(current))
-                version = int(current["schema_version"])
+                nxt = step(dict(current))
+                new_version = int(nxt["schema_version"])
+                if new_version <= version:
+                    raise ValueError("a migration must raise the schema version")
+                current, version = nxt, new_version
             except Exception:  # a broken migration must not crash the loader or leak content
                 return data, Problem(
                     Severity.ERROR,
@@ -90,24 +101,45 @@ def _placeholder(note: str) -> dict[str, Any]:
 
 def margin_policy_v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
     """v1 had one margin per class and one system margin (used for power). v2 separates power and
-    mass margins; the mass values do not exist in v1 and become placeholders (decision D-051)."""
-    out: dict[str, Any] = {"schema_version": 2, "kind": data.get("kind", "margin_policy")}
-    classes: dict[str, Any] = {}
-    for name, cls in (data.get("classes") or {}).items():
-        item: dict[str, Any] = {}
-        if isinstance(cls, dict):
-            item["power_margin_ratio"] = cls.get("margin_ratio")
-            item["mass_margin_ratio"] = _placeholder(
-                "Added by migration to schema 2; supply a value."
-            )
-            if "description" in cls:
-                item["description"] = cls["description"]
-        classes[name] = item
-    out["classes"] = classes
-    out["system_power_margin_ratio"] = data.get("system_margin_ratio")
-    out["system_mass_margin_ratio"] = _placeholder(
-        "Added by migration to schema 2; supply a value."
+    mass margins; the mass values do not exist in v1 and become placeholders (decision D-051).
+    Keys this migration does not know stay where they are, so the model still rejects them."""
+    out: dict[str, Any] = {}
+    for key, value in data.items():
+        if key == "classes":
+            out["classes"] = _classes_v1_to_v2(value)
+        elif key == "system_margin_ratio":
+            out["system_power_margin_ratio"] = value
+        elif key != "schema_version":
+            out[key] = value
+    out["schema_version"] = 2
+    out.setdefault("kind", "margin_policy")
+    out.setdefault(  # v1 files had no mass margin at all
+        "system_mass_margin_ratio", _placeholder("Added by migration to schema 2; supply a value.")
     )
+    return dict(sorted(out.items(), key=lambda kv: _ORDER.get(kv[0], 99)))
+
+
+_ORDER = {"schema_version": 0, "kind": 1}
+
+
+def _classes_v1_to_v2(classes: Any) -> Any:
+    if not isinstance(classes, dict):
+        return classes  # the model reports the wrong type
+    out: dict[str, Any] = {}
+    for name, cls in classes.items():
+        if not isinstance(cls, dict):
+            out[name] = cls
+            continue
+        item: dict[str, Any] = {}
+        for key, value in cls.items():
+            if key == "margin_ratio":
+                item["power_margin_ratio"] = value
+                item["mass_margin_ratio"] = _placeholder(
+                    "Added by migration to schema 2; supply a value."
+                )
+            else:
+                item[key] = value
+        out[name] = item
     return out
 
 

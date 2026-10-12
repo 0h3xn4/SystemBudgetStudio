@@ -249,7 +249,8 @@ def test_a_node_without_a_path_to_space_is_an_error_naming_it() -> None:
     result = static_thermal_budget(project)
     failed = [p for p in result.problems if p.code == "THERMAL_SOLVE_FAILED"]
     assert len(failed) == 2  # hot and cold
-    assert all("(B)" in p.message for p in failed)
+    assert {p.path for p in failed} == {"cases.cold", "cases.hot"}
+    assert all("no path to space" in p.message and "(B)" not in p.message for p in failed)
     assert all(not c.complete for c in result.cases)
 
 

@@ -60,7 +60,7 @@ def test_unknown_node_in_a_conductance_and_a_surface(root: Path) -> None:
         (MODEL, "conductances[0].second_node"),
         (MODEL, "surfaces[0].node"),
     }
-    assert all(p.line is not None and "A, B" in p.hint for p in problems)
+    assert all(p.line is not None and "thermal_model.yaml" in p.hint for p in problems)
 
 
 def test_unit_on_a_node_that_does_not_exist(root: Path) -> None:

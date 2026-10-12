@@ -273,7 +273,7 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             "ratio",
             mfile,
             f"classes.{cls}.power_margin_ratio",
-            f"The margin of maturity class '{cls}'",
+            "The margin of the maturity class",
         )
     add(
         "System margin",
@@ -299,6 +299,6 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             "ratio",
             pfile,
             f"converter_efficiency_ratio.{bus}",
-            f"The converter efficiency of bus '{bus}'",
+            "The converter efficiency of the bus",
         )
     return out, problems

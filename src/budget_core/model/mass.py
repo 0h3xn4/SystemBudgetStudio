@@ -114,3 +114,17 @@ class MassLimits(BudgetModel):
     schema_version: int = CURRENT_VERSIONS["mass_limits"]
     kind: Literal["mass_limits"] = "mass_limits"
     limits: list[MassLimit] = Field(default_factory=list)
+
+    @field_validator("limits")
+    @classmethod
+    def _unique(cls, limits: list[MassLimit]) -> list[MassLimit]:
+        """Two limits with one name that apply to the same phase cannot be told apart in a
+        report (a limit without a phase applies to every phase)."""
+        for i, first in enumerate(limits):
+            for second in limits[i + 1 :]:
+                same_phase = first.phase == second.phase or None in (first.phase, second.phase)
+                if first.name == second.name and same_phase:
+                    raise PydanticCustomError(
+                        "duplicate_name", "mass limit names must be unique within a phase"
+                    )
+        return limits

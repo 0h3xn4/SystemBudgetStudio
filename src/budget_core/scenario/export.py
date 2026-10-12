@@ -20,7 +20,7 @@ def _t(run: ScenarioRun, seconds: float) -> str:
 
 
 def _s(value: float) -> str:
-    return f"{value:.3f}"
+    return "" if value != value else f"{value:.3f}"  # NaN: unknown (an imported pass has no peak)
 
 
 def _csv(header: list[str], rows: list[list[str]]) -> str:
@@ -133,7 +133,9 @@ def environment_json(run: ScenarioRun, provenance: Provenance) -> str:
                         "los_s": round(p.los_s, 3),
                         "duration_s": round(p.duration_s, 3),
                         "max_elevation_deg": round(p.max_elevation_deg, 4),
-                        "time_of_max_s": round(p.time_of_max_s, 3),
+                        "time_of_max_s": None
+                        if p.time_of_max_s != p.time_of_max_s
+                        else round(p.time_of_max_s, 3),
                         "partial_start": p.partial_start,
                         "partial_end": p.partial_end,
                     }

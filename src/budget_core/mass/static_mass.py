@@ -247,7 +247,7 @@ def _limit_checks(
 
 def _limit_problems(limits: MassLimits | None, phases: list[PhaseMass]) -> list[Problem]:
     out: list[Problem] = []
-    for phase in phases:
+    for phase_number, phase in enumerate(phases, start=1):
         # the checks of a phase are the limits that apply to it, in file order: two limits may
         # share a name, so the position in the file comes from the order, not from the name
         applying = [
@@ -261,10 +261,12 @@ def _limit_problems(limits: MassLimits | None, phases: list[PhaseMass]) -> list[
                     Problem(
                         Severity.ERROR,
                         "MASS_LIMIT_EXCEEDED",
-                        f"Mass limit '{check.name}' is exceeded in phase '{phase.phase}'.",
+                        f"A mass limit is exceeded in mission phase number {phase_number}.",
                         file="config/mass_limits.yaml",
                         path=f"limits[{index}]",
-                        hint="Reduce mass, change the limit (cite its source) or review margins.",
+                        hint="Phases are numbered in the order of mission_phases in "
+                        "spacecraft.yaml. Reduce mass, change the limit (cite its source) or "
+                        "review margins.",
                     )
                 )
     return out
@@ -340,7 +342,7 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             entry.mass_margin_ratio if entry else None,
             mfile,
             f"classes.{cls}.mass_margin_ratio",
-            f"The mass margin of maturity class '{cls}'",
+            "The mass margin of the maturity class",
         )
     add(
         "System mass margin",
@@ -356,6 +358,6 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             limit.limit_kg,
             "config/mass_limits.yaml",
             f"limits[{index}].limit_kg",
-            f"The mass limit '{limit.name}'",
+            "The mass limit",
         )
     return out, problems

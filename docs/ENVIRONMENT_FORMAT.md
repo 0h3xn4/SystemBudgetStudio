@@ -46,6 +46,8 @@ No real export was available, so the importer reads these CSV files from `import
 
 Times are UTC (`2026-06-01T00:00:00Z`, fractional seconds allowed). Errors name the file and line and never echo content (`ENV_INPUT_INVALID`).
 
+Rules of the importer (D-124): the files may start with a UTF-8 byte order mark (Excel's *CSV UTF-8*); the separator is the comma and the decimal mark the point (a file that uses `;` is told so); every file must lie inside `import_dir` (a link that leads out is not followed); a file is limited to 250 MB, `orbit.csv` and `profile_<site>.csv` to 2,000,000 rows, `eclipse.csv` and `passes_<site>.csv` to 100,000; `max_elevation_deg` must be between 0 and 90 and a profile elevation between -90 and 90. The pass file does not give the time of the maximum: it is taken from the profile (the sample with the highest elevation inside the pass) and is empty (CSV) or null (JSON) when there is no profile.
+
 ## Commands
 
 ```
