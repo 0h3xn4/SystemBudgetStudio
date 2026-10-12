@@ -1,6 +1,6 @@
 pages=8
 ## page 1
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Thermal budget (static): Example 3U CubeSat, complete power and thermal inputs
 Summary
@@ -131,7 +131,7 @@ Status: ok; margin = within the limits but closer than the required temperature 
 Case: hot
 Sunlight with the highest-power mode.
 ## page 2
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Node temperatures, case hot
 Node
@@ -317,7 +317,7 @@ PL
  0.000
  0.000
 ## page 3
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Subsystem
 Dissipation (W)
@@ -442,7 +442,7 @@ EPS
  0.150
  0.250
 ## page 4
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Node
 Dissipation (W)
@@ -577,7 +577,7 @@ nominal
  0.900
  1.400
 ## page 5
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Unit
 Name
@@ -738,7 +738,7 @@ safe
  0.300
 By subsystem
 ## page 6
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Subsystem
 Dissipation (W)
@@ -870,7 +870,7 @@ ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 ## page 7
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Name
 Value
@@ -1030,7 +1030,7 @@ exceeded when T < T_min or T > T_max; margin check when T - T_min or
 T_max - T < temperature_margin_k
 SOURCE_MISSING
 ## page 8
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems
@@ -1107,7 +1107,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 0.1.0
+System Budget Studio 1.0.0
 Python
 3.x
 Libraries

@@ -65,7 +65,7 @@ budget self-test
 You should see:
 
 ```text
-System Budget Studio 0.1.0
+System Budget Studio 1.0.0
 Self-test passed.
 ```
 

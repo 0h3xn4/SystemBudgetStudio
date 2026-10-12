@@ -1,7 +1,7 @@
 pages=3
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Comparison: Example 3U CubeSat, complete power and thermal inputs rev 1 and Example 3U CubeSat,
 complete power and thermal inputs rev 2
@@ -121,7 +121,7 @@ With margin (W)
 changed
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Mode: Nominal — By supply bus
 Row
@@ -274,7 +274,7 @@ Dissipation (W)
 changed
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Differences: Link budget
 No differences.
@@ -283,7 +283,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 0.1.0
+System Budget Studio 1.0.0
 Python
 3.x
 Libraries

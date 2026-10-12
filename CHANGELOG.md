@@ -1,13 +1,13 @@
 # Changelog
 
-All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Version 0.1.0 is ready to be tagged but has not been released yet ([how to cut a release](docs/developer/README.md#cut-a-release)).
+All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Version 1.0.0 is ready to be tagged but has not been released yet ([how to cut a release](docs/developer/README.md#cut-a-release)).
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-10-12
+## [1.0.0] - 2026-10-12
 
 
-Everything below is in the repository at version 0.1.0.
+The first release. The version is 1.0.0 (D-143); the milestones M0 to M6 below were internal steps that were never released. Everything below is in the repository at this version.
 
 ### Licence
 - **MIT licence** and a `LICENSE` file; the installers and bundles ship it (D-140). The eight earlier decisions marked "owner to confirm" are confirmed (D-141).

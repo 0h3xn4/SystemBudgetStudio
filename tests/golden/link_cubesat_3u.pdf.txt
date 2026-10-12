@@ -1,7 +1,7 @@
 pages=9
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Link budget: Example 3U CubeSat
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
@@ -142,7 +142,7 @@ L_fs = 20 log10(4 pi d f / c) (dB)
 SOURCE_MISSING
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 ID
 Name
@@ -274,7 +274,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Severity
 Code
@@ -424,7 +424,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 4
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Severity
 Code
@@ -578,7 +578,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 5
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Severity
 Code
@@ -736,7 +736,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 6
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Severity
 Code
@@ -894,7 +894,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 7
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Severity
 Code
@@ -1060,7 +1060,7 @@ Replace the placeholder with a sourced value;
 results that need it show n/a.
 ## page 8
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 Severity
 Code
@@ -1169,7 +1169,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 0.1.0
+System Budget Studio 1.0.0
 Python
 3.x
 Libraries
@@ -1184,7 +1184,7 @@ Generated (UTC)
 2026-01-02T03:04:05Z
 ## page 9
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 0.1.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.0.0 | Example 3U CubeSat rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
 Item
 Value
