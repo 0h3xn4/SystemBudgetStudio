@@ -17,6 +17,7 @@ from sgp4.api import WGS84, Satrec, SatrecArray
 from budget_core.environment import geometry as geo
 from budget_core.environment.data import (
     EnvironmentData,
+    GeometryFn,
     Pass,
     PropagationError,
     SiteDef,
@@ -25,10 +26,14 @@ from budget_core.environment.data import (
 )
 from budget_core.environment.intervals import BoolArray, Interval, bisect_edge, mask_to_intervals
 from budget_core.model import Orbit
+from budget_core.model.environment import DETECTION_STEP_S, tle_epoch
+from budget_core.problems import Problem, Severity
 from budget_core.timeutil import parse_utc
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
-DETECTION_STEP_S = 20.0  # passes and eclipses shorter than this could be missed
+# Passes and eclipses are detected on this fixed grid, whatever the scenario step (D-057): a pass
+# that rises above its minimum elevation between two samples is found from the local maximum of
+# the elevation. An eclipse shorter than this could still be missed (DEVIATIONS DV-E4).
 LIT = 1.0 - 1e-12
 UMBRA = 1e-12
 EDGE_TOLERANCE_S = 1e-3
@@ -59,6 +64,31 @@ def build_satrec(orbit: Orbit) -> Satrec:
         math.radians(el.raan_deg),
     )
     return sat
+
+
+MAX_TLE_AGE_DAYS = 30.0
+
+
+def orbit_age_problem(
+    orbit: Orbit, scenario_start: datetime, orbit_id: str, scenario_id: str
+) -> Problem | None:
+    """A warning when a TLE's epoch is more than 30 days from the scenario start (a TLE is a fit
+    to observations around its epoch; without drag it ages quickly). Elements are the user's
+    own reference and have no such age."""
+    if orbit.tle is None:
+        return None
+    epoch = tle_epoch(orbit.tle[0])
+    if epoch is None or abs((scenario_start - epoch).total_seconds()) <= MAX_TLE_AGE_DAYS * 86400:
+        return None
+    return Problem(
+        Severity.WARNING,
+        "ORBIT_EPOCH_FAR",
+        f"The TLE epoch of the orbit used by scenario '{scenario_id}' is more than "
+        f"{MAX_TLE_AGE_DAYS:g} days from the scenario start; the orbit may be inaccurate.",
+        file=f"orbits/{orbit_id}.yaml",
+        path="tle",
+        hint="Use a TLE with an epoch close to the scenario start, or elements.",
+    )
 
 
 def check_orbit(orbit: Orbit) -> str | None:
@@ -141,7 +171,14 @@ class ElementsPropagator:
             el, az, rng = geo.topocentric(
                 geo.eci_to_ecef(pos, gmst), site_ecef, site.latitude_deg, site.longitude_deg
             )
-            visibility[site.site_id] = SiteVisibility(site, tuple(passes), el, az, rng)
+            visibility[site.site_id] = SiteVisibility(
+                site,
+                tuple(passes),
+                el,
+                az,
+                rng,
+                self._geometry_function(grid, site, site_ecef),
+            )
 
         return EnvironmentData(
             grid=grid,
@@ -155,10 +192,20 @@ class ElementsPropagator:
             sites=visibility,
         )
 
+    def _geometry_function(self, grid: TimeGrid, site: SiteDef, site_ecef: NDArray) -> GeometryFn:
+        """Elevation, azimuth and range of the site at any times (the same arithmetic as the
+        grid arrays, so the two agree at the grid times)."""
+
+        def geometry(times_s: NDArray) -> tuple[NDArray, NDArray, NDArray]:
+            pos, jd = self._positions(grid.start, np.asarray(times_s, dtype=np.float64))
+            ecef = geo.eci_to_ecef(pos, geo.gmst_rad(jd))
+            return geo.topocentric(ecef, site_ecef, site.latitude_deg, site.longitude_deg)
+
+        return geometry
+
 
 def _detection_times(grid: TimeGrid) -> NDArray:
-    step = min(grid.step_s, DETECTION_STEP_S)
-    times = np.arange(0.0, grid.duration_s, step)
+    times = np.arange(0.0, grid.duration_s, DETECTION_STEP_S)
     return np.append(times, grid.duration_s)
 
 
@@ -201,6 +248,44 @@ def _passes(
         hi = float(detect[min(k + 1, len(detect) - 1)])
         t_max, el_max = _maximise(elevation_at, max(lo, start), min(hi, end))
         out.append(Pass(start, end, max(el_max, min_elevation), t_max, partial_start, partial_end))
+    out += _short_passes(detect, elevation, mask, min_elevation, elevation_at)
+    return sorted(out, key=lambda p: p.aos_s)
+
+
+def _short_passes(
+    detect: NDArray,
+    elevation: NDArray,
+    mask: BoolArray,
+    min_elevation: float,
+    elevation_at: Callable[[float], float],
+) -> list[Pass]:
+    """Passes that rise above the minimum elevation between two detection samples. Each local
+    maximum of the sampled elevation that could still reach the minimum is refined on its two
+    intervals; a pass found there is as exact as any other (edges to about 1 ms)."""
+    out: list[Pass] = []
+    for k in range(1, len(detect) - 1):
+        if mask[k - 1] or mask[k] or mask[k + 1]:
+            continue
+        if not (elevation[k] >= elevation[k - 1] and elevation[k] > elevation[k + 1]):
+            continue
+        before, after = float(detect[k - 1]), float(detect[k + 1])
+        # the elevation cannot rise much faster than it did over the two intervals
+        rate = max(
+            abs(elevation[k] - elevation[k - 1]) / (detect[k] - detect[k - 1]),
+            abs(elevation[k + 1] - elevation[k]) / (detect[k + 1] - detect[k]),
+        )
+        if elevation[k] + rate * (after - before) < min_elevation:
+            continue
+        t_max, el_max = _maximise(elevation_at, before, after)
+        if el_max < min_elevation:
+            continue
+
+        def above(t: float) -> bool:
+            return elevation_at(t) >= min_elevation
+
+        start = bisect_edge(above, before, t_max, EDGE_TOLERANCE_S)
+        end = bisect_edge(above, t_max, after, EDGE_TOLERANCE_S)
+        out.append(Pass(start, end, el_max, t_max, False, False))
     return out
 
 

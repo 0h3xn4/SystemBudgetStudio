@@ -2,16 +2,19 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+import math
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Literal, Protocol
 
 import numpy as np
 
-from budget_core.environment.intervals import Interval
+from budget_core.environment.intervals import Interval, merge_intervals
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
+# elevation (deg), azimuth (deg) and range (m) of a site at the given times (s from the start)
+GeometryFn = Callable[[NDArray], tuple[NDArray, NDArray, NDArray]]
 
 
 @dataclass(frozen=True)
@@ -24,11 +27,13 @@ class TimeGrid:
 
     @property
     def count(self) -> int:
-        return int(self.duration_s // self.step_s) + 1
+        # the quotient of two decimals is a hair below the integer (0.7 / 0.1 = 6.999999999999999)
+        return int(math.floor(self.duration_s / self.step_s + 1e-9)) + 1
 
     @property
     def times_s(self) -> NDArray:
-        return np.arange(self.count, dtype=np.float64) * self.step_s
+        times = np.arange(self.count, dtype=np.float64) * self.step_s
+        return np.asarray(np.minimum(times, self.duration_s), dtype=np.float64)
 
 
 @dataclass(frozen=True)
@@ -62,6 +67,9 @@ class SiteVisibility:
     elevation_deg: NDArray  # on the scenario grid
     azimuth_deg: NDArray
     range_m: NDArray
+    # exact geometry at any time, when the source can compute it (D-057, DV-L3); None: only the
+    # grid arrays are known
+    geometry_at: GeometryFn | None = None
 
 
 @dataclass(frozen=True, eq=False)
@@ -81,7 +89,15 @@ class EnvironmentData:
     @property
     def eclipse_fraction(self) -> float:
         total = self.grid.duration_s
-        return sum(e.duration_s for e in self.eclipses) / total if total > 0 else 0.0
+        if total <= 0:
+            return 0.0
+        # overlapping intervals (imported data) count once, and nothing counts beyond the scenario
+        clipped = [
+            Interval(max(e.start_s, 0.0), min(e.end_s, total))
+            for e in merge_intervals(list(self.eclipses))
+            if e.end_s > 0.0 and e.start_s < total
+        ]
+        return sum(e.duration_s for e in clipped) / total
 
 
 class PropagationError(Exception):

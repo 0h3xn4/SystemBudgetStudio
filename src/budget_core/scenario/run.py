@@ -13,7 +13,7 @@ from budget_core.environment.data import (
     SiteDef,
     TimeGrid,
 )
-from budget_core.environment.elements import ElementsPropagator
+from budget_core.environment.elements import ElementsPropagator, orbit_age_problem
 from budget_core.environment.spacemissionstudio import (
     EnvironmentInputError,
     SpaceMissionStudioImport,
@@ -41,6 +41,7 @@ class ScenarioRun:
     env: EnvironmentData
     timeline: tuple[TimelineSegment, ...]
     notes: tuple[str, ...]
+    problems: tuple[Problem, ...] = ()  # findings of the run itself (an old TLE)
 
 
 def grid_for(scenario: Scenario) -> TimeGrid:
@@ -125,6 +126,29 @@ def run_scenario(project: Project, scenario_id: str) -> ScenarioRun:
                 hint="See docs/ENVIRONMENT_FORMAT.md for the expected files.",
             )
         ) from None
+    except MemoryError:
+        raise ScenarioRunError(
+            Problem(
+                Severity.ERROR,
+                "SCENARIO_TOO_LARGE",
+                "The scenario needs more memory than is available.",
+                file=f"scenarios/{scenario_id}.yaml",
+                path="step_s",
+                hint="Increase step_s or shorten duration_s.",
+            )
+        ) from None
+    except (OverflowError, ValueError):
+        raise ScenarioRunError(
+            Problem(
+                Severity.ERROR,
+                "ENV_PROPAGATION_FAILED",
+                "The orbit cannot be computed for these dates (a value is out of range).",
+                file=f"scenarios/{scenario_id}.yaml",
+                path="start_utc",
+                hint="Check the scenario start, the duration and the orbit; start times are "
+                "limited to the years 1950 to 2100.",
+            )
+        ) from None
     except PropagationError as exc:
         raise ScenarioRunError(
             Problem(
@@ -136,7 +160,16 @@ def run_scenario(project: Project, scenario_id: str) -> ScenarioRun:
             )
         ) from None
     notes = tuple(getattr(adapter, "notes", ()))
-    return ScenarioRun(scenario_id, scenario, env, build_timeline(scenario, env), notes)
+    problems: list[Problem] = []
+    if scenario.environment_source == "elements" and scenario.orbit in project.orbits:
+        age = orbit_age_problem(
+            project.orbits[scenario.orbit], env.grid.start, scenario.orbit, scenario_id
+        )
+        if age is not None:
+            problems.append(age)
+    return ScenarioRun(
+        scenario_id, scenario, env, build_timeline(scenario, env), notes, tuple(problems)
+    )
 
 
 def environment_key(project: Project, scenario: Scenario) -> str:
@@ -168,5 +201,10 @@ def environment_key(project: Project, scenario: Scenario) -> str:
 def rebuild_timeline(run: ScenarioRun, scenario: Scenario) -> ScenarioRun:
     """The same environment with the timeline of an edited scenario (rules, segments, default)."""
     return ScenarioRun(
-        run.scenario_id, scenario, run.env, build_timeline(scenario, run.env), run.notes
+        run.scenario_id,
+        scenario,
+        run.env,
+        build_timeline(scenario, run.env),
+        run.notes,
+        run.problems,
     )

@@ -370,6 +370,7 @@ def time_domain_budget(
     for assumption in static.assumptions:
         col.assumptions.append(assumption)
     col.problems.extend(static.problems)
+    col.problems.extend(run.problems)
 
     # Reported series live on the scenario grid; the battery is integrated on the grid refined by
     # every eclipse edge, mode-segment edge, orbit window edge and the instants at which the

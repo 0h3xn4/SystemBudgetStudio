@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
 from typing import Literal
 
 from pydantic import Field, field_validator, model_validator
@@ -9,30 +10,61 @@ from pydantic_core import PydanticCustomError
 
 from budget_core.model.base import BudgetModel, duplicate_names
 from budget_core.model.versions import CURRENT_VERSIONS
-from budget_core.timeutil import normalise_utc
+from budget_core.timeutil import format_utc, parse_utc
 
 MAX_SAMPLES = 1_000_000  # about 11 days at 1 s; a week at 1 s (604,801) is the design case
 MAX_RULES = 10_000  # rules and segments per scenario
+DETECTION_STEP_S = 20.0  # grid on which passes and eclipses are detected, whatever the step
+MIN_YEAR, MAX_YEAR = 1950, 2100  # times (scenario start, element epoch) outside are refused
+SEMI_MAJOR_AXIS_RANGE_M = (6.4e6, 1.0e8)  # just above the Earth's surface to beyond geostationary
+_DIGITS = "0123456789"  # str.isdigit() also accepts superscripts and other scripts
 
 
 def _utc(value: str) -> str:
     try:
-        return normalise_utc(value)
+        moment = parse_utc(value)
     except ValueError as exc:
         raise PydanticCustomError("time_invalid", "{reason}", {"reason": str(exc)}) from None
+    if not MIN_YEAR <= moment.year <= MAX_YEAR:
+        raise PydanticCustomError(
+            "time_invalid",
+            "the time must lie between the years {low} and {high}",
+            {"low": MIN_YEAR, "high": MAX_YEAR},
+        )
+    return format_utc(moment)
 
 
 def tle_checksum_ok(line: str) -> bool:
     """TLE checksum: digits summed, each '-' counting 1, modulo 10, over the first 68 characters."""
-    total = sum(int(ch) if ch.isdigit() else (1 if ch == "-" else 0) for ch in line[:68])
-    return line[68].isdigit() and total % 10 == int(line[68])
+    total = sum(int(ch) if ch in _DIGITS else (1 if ch == "-" else 0) for ch in line[:68])
+    return line[68] in _DIGITS and total % 10 == int(line[68])
+
+
+def tle_epoch(line1: str) -> datetime | None:
+    """The epoch of the first TLE line (two-digit year, day of the year with fraction), or None
+    when those columns are not a date."""
+    year_text, day_text = line1[18:20], line1[20:32]
+    if not (len(year_text) == 2 and all(c in _DIGITS for c in year_text)):
+        return None
+    if not day_text.strip() or any(c not in _DIGITS + ". " for c in day_text):
+        return None
+    try:
+        day = float(day_text)
+    except ValueError:
+        return None
+    if not 1.0 <= day < 367.0:
+        return None
+    year = int(year_text)
+    return datetime(2000 + year if year < 57 else 1900 + year, 1, 1, tzinfo=UTC) + timedelta(
+        days=day - 1.0
+    )
 
 
 class Elements(BudgetModel):
     """Mean orbital elements, used as SGP4 mean elements without drag (DEVIATIONS DV-E2)."""
 
     epoch_utc: str
-    semi_major_axis_m: float = Field(gt=0)
+    semi_major_axis_m: float = Field(ge=SEMI_MAJOR_AXIS_RANGE_M[0], le=SEMI_MAJOR_AXIS_RANGE_M[1])
     eccentricity_ratio: float = Field(ge=0, lt=1)
     inclination_deg: float = Field(ge=0, le=180)
     raan_deg: float = Field(ge=0, lt=360)
@@ -66,6 +98,12 @@ class Orbit(BudgetModel):
             )
         if not (tle_checksum_ok(first) and tle_checksum_ok(second)):
             raise PydanticCustomError("tle_invalid", "a TLE line has a wrong checksum")
+        if first[2:7] != second[2:7]:
+            raise PydanticCustomError(
+                "tle_invalid", "the two TLE lines have different satellite numbers"
+            )
+        if tle_epoch(first) is None:
+            raise PydanticCustomError("tle_invalid", "the TLE epoch is not a valid date")
         return lines
 
     @model_validator(mode="after")
@@ -177,7 +215,7 @@ class Scenario(BudgetModel):
             raise PydanticCustomError(
                 "step_too_long", "the step must not exceed the duration", {"field": "step_s"}
             )
-        if self.duration_s / self.step_s + 1 > MAX_SAMPLES:
+        if self.duration_s / min(self.step_s, DETECTION_STEP_S) + 1 > MAX_SAMPLES:
             raise PydanticCustomError(
                 "scenario_too_large", "too many time steps; increase step_s", {"field": "step_s"}
             )
