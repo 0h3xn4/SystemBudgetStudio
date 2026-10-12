@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Version 1.0.0 is ready to be tagged but has not been released yet ([how to cut a release](docs/developer/README.md#cut-a-release)).
+All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Version 1.0.0 is released ([how to cut a release](docs/developer/README.md#cut-a-release)).
 
 ## [Unreleased]
 
