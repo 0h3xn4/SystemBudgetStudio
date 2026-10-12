@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -24,8 +25,19 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from budget_core.reports.files import write_file
+from budget_core.io.roundtrip import (
+    file_stamp,
+    join_text,
+    split_text,
+    stamp_of,
+    write_bytes_atomic,
+)
+from budget_core.model import Unit
 from budget_gui.unit_editor import UnitEditor
+
+
+class FileChangedError(Exception):
+    """The file on disk is not the one the editor loaded (someone else changed it)."""
 
 
 class _Gutter(QWidget):
@@ -45,6 +57,9 @@ class YamlEditor(QPlainTextEdit):
         super().__init__()
         self.path = path
         self.rel_path = rel_path
+        self._stamp: str | None = None  # the file as this editor last read or wrote it
+        self._bom = False  # kept when saving
+        self._crlf = False
         self.setFont(QFont("IBM Plex Mono", 10))
         self.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
         self._gutter = _Gutter(self)
@@ -54,8 +69,10 @@ class YamlEditor(QPlainTextEdit):
         self.load()
 
     def load(self) -> None:
+        raw = self.path.read_bytes()
+        self._stamp = stamp_of(raw)
         try:
-            text = self.path.read_bytes().decode("utf-8")
+            text, self._bom, self._crlf = split_text(raw)
         except UnicodeDecodeError:
             # never show replacement characters: saving them would corrupt the file
             self.setPlainText("# This file is not valid UTF-8 text and cannot be edited here.\n")
@@ -63,17 +80,38 @@ class YamlEditor(QPlainTextEdit):
             self.document().setModified(False)
             return
         self.setReadOnly(False)
-        self.setPlainText(text.replace("\r\n", "\n"))
+        self.setPlainText(text)
         self.document().setModified(False)
 
-    def save(self) -> None:
+    def changed_on_disk(self) -> bool:
+        """True when the file is no longer the one this editor loaded or wrote last."""
+        return file_stamp(self.path) != self._stamp
+
+    def refresh_from_disk(self) -> bool:
+        """Reload a file that changed on disk, unless the editor has unsaved edits; the cursor
+        stays where it was. Returns True when the text was replaced."""
+        if self.document().isModified() or not self.path.is_file() or not self.changed_on_disk():
+            return False
+        position, scroll = self.textCursor().position(), self.verticalScrollBar().value()
+        self.load()
+        cursor = self.textCursor()
+        cursor.setPosition(min(position, max(self.document().characterCount() - 1, 0)))
+        self.setTextCursor(cursor)
+        self.verticalScrollBar().setValue(scroll)
+        return True
+
+    def save(self, overwrite: bool = False) -> None:
+        """Write the text to its file through a temporary file (a crash cannot leave half a
+        file), keeping the file's line ends and byte-order mark. Raises `FileChangedError` when
+        the file changed on disk since it was loaded, unless `overwrite`; `OutputError` when it
+        cannot be written."""
         if self.isReadOnly():
             return
-        # LF only (QPlainTextEdit); written through a temporary file so a crash cannot leave a
-        # half-written project file
-        write_file(
-            self.path.parent, self.path.name, self.toPlainText().encode("utf-8"), sanitise=False
-        )
+        if not overwrite and self.changed_on_disk():
+            raise FileChangedError
+        data = join_text(self.toPlainText(), self._bom, self._crlf)
+        write_bytes_atomic(self.path, data)
+        self._stamp = stamp_of(data)
         self.document().setModified(False)
 
     def current_line(self) -> int:
@@ -259,11 +297,12 @@ class EditorTabs(QTabWidget):
         for unit_id in list(self._unit_editors):
             self._close_tab(self.indexOf(self._unit_editors[unit_id]))
 
-    def reload_clean_files(self) -> None:
-        """After a project reload, refresh editors that have no unsaved edits."""
+    def reload_clean_files(self, units: Mapping[str, Unit] | None = None) -> None:
+        """After a project reload, refresh the editors that have no unsaved edits and whose file
+        changed: text editors from the file, table editors from `units` (the reloaded project).
+        An editor whose file is as it left it is not touched (cursor and undo history stay)."""
         for editor in self._editors.values():
-            if not editor.document().isModified() and editor.path.is_file():
-                line = editor.current_line()
-                editor.load()
-                if editor is self.currentWidget():
-                    editor.goto_line(line)
+            editor.refresh_from_disk()
+        for unit_id, unit_editor in self._unit_editors.items():
+            if units is not None and unit_id in units:
+                unit_editor.reload(units[unit_id])

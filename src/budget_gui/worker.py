@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Collection, Sequence
+from collections.abc import Callable, Collection, Sequence
 from pathlib import Path
 
 from PySide6.QtCore import QThread, Signal
@@ -12,19 +12,26 @@ from budget_core.reports.run import BudgetOutput, write_outputs
 
 
 class ExportWorker(QThread):
+    """Writes report files in a thread. `outputs` may be a function that builds them, so the
+    building (seconds for a week-long timeline) runs in the thread too."""
+
     finished_ok = Signal(list)
     failed = Signal(str)
 
     def __init__(
-        self, outputs: Sequence[BudgetOutput], folder: Path, kinds: Collection[str]
+        self,
+        outputs: Sequence[BudgetOutput] | Callable[[], Sequence[BudgetOutput]],
+        folder: Path,
+        kinds: Collection[str],
     ) -> None:
         super().__init__()
-        self._args = (list(outputs), folder, set(kinds))
+        self._args = (outputs if callable(outputs) else list(outputs), folder, set(kinds))
 
     def run(self) -> None:
         outputs, folder, kinds = self._args
         try:
-            written = write_outputs(outputs, folder, kinds)
+            built = outputs() if callable(outputs) else outputs
+            written = write_outputs(built, folder, kinds)
         except OutputError as exc:  # plain language by construction (no project content)
             self.failed.emit(str(exc))
             return

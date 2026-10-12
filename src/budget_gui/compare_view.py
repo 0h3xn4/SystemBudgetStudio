@@ -31,6 +31,7 @@ from budget_core.model import Project
 from budget_core.problems import Severity
 from budget_core.reports.run import REPORT_KINDS, BudgetOutput
 from budget_core.scenario.run import ScenarioRunError
+from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, STALE_TEXT, ResultKey
 from budget_gui.worker import ExportWorker
 
 NO_SCENARIO = "(none)"
@@ -59,6 +60,12 @@ class CompareWorker(QThread):
         try:
             other_project = project
             if other is not None:
+                if not other.is_dir():
+                    self.failed.emit(
+                        "The other project folder does not exist or is not a folder. "
+                        "Check the path."
+                    )
+                    return
                 loaded = load_project(other)
                 errors = sum(1 for p in loaded.problems if p.severity is Severity.ERROR)
                 if loaded.project is None or errors:
@@ -95,6 +102,9 @@ class CompareView(QWidget):
         super().__init__()
         self.project: Project | None = None
         self.output: BudgetOutput | None = None
+        self._revision = 0  # counts project (re)loads
+        self._output_key: ResultKey | None = None  # what `output` was compared from
+        self._comparing_key: ResultKey | None = None
         self._worker: CompareWorker | None = None
         self._export_worker: ExportWorker | None = None
 
@@ -133,27 +143,56 @@ class CompareView(QWidget):
             layout.addLayout(row)
         layout.addWidget(self.table, 1)
 
+        self.scenario_a.currentTextChanged.connect(lambda _t: self._update_validity())
+        self.scenario_b.currentTextChanged.connect(lambda _t: self._update_validity())
+        self.other_edit.textChanged.connect(lambda _t: self._update_validity())
         self.browse_button.clicked.connect(lambda: self._browse())
         self.compare_button.clicked.connect(lambda: self.compare())
         self.export_button.clicked.connect(lambda: self._choose_export())
         self.set_project(None)
 
     # ---- project -----------------------------------------------------------------------------
+    def current_key(self) -> ResultKey:
+        """What a comparison started now would compare."""
+        return ResultKey(
+            self._revision,
+            f"{self.scenario_a.currentText()}|{self.scenario_b.currentText()}",
+            (self.other_edit.text().strip(),),
+        )
+
+    def is_valid(self) -> bool:
+        """True when the comparison on screen was made from the inputs that are set now."""
+        return self.output is not None and self._output_key == self.current_key()
+
+    @property
+    def is_stale(self) -> bool:
+        return self.output is not None and not self.is_valid()
+
+    def _update_validity(self) -> None:
+        if self.output is None:
+            return
+        self.export_button.setEnabled(self.is_valid())
+        if self.is_stale:
+            self.status.setText(STALE_TEXT.replace("Compute", "Compare"))
+
     def set_project(self, project: Project | None) -> None:
         self.project = project
+        self._revision += 1
         ids = [NO_SCENARIO, *sorted(project.scenarios)] if project else [NO_SCENARIO]
         for combo in (self.scenario_a, self.scenario_b):
             previous = combo.currentText()
+            combo.blockSignals(True)
             combo.clear()
             combo.addItems(ids)
             if previous in ids:
                 combo.setCurrentText(previous)
+            combo.blockSignals(False)
         self.compare_button.setEnabled(project is not None and self._worker is None)
         if project is None:
             self._show(None)
             self.status.setText("Open a project to compare it with another revision.")
         elif self.output is not None:
-            self.status.setText("The project changed since the last comparison. Press Compare.")
+            self._update_validity()
 
     def set_other_folder(self, folder: Path) -> None:
         self.other_edit.setText(str(folder))
@@ -175,10 +214,11 @@ class CompareView(QWidget):
         text = self.other_edit.text().strip()
         self.compare_button.setEnabled(False)
         self.status.setText("Comparing…")
+        self._comparing_key = self.current_key()
         worker = CompareWorker(
             self.project,
             self._scenario(self.scenario_a),
-            Path(text) if text else None,
+            Path(text).expanduser() if text else None,
             self._scenario(self.scenario_b),
         )
         worker.finished_ok.connect(self._done)
@@ -195,6 +235,7 @@ class CompareView(QWidget):
     def _done(self, output: BudgetOutput, notes: list[str]) -> None:
         self._finish_worker()
         self.output = output
+        self._output_key = self._comparing_key
         self._show(output)
         results = output.result
         total = sum(len(r.differences) + r.truncated for r in results)
@@ -208,7 +249,9 @@ class CompareView(QWidget):
         if notes:
             text += " " + " ".join(notes)
         self.status.setText(text)
-        self.export_button.setEnabled(True)
+        self.export_button.setEnabled(self.is_valid())
+        if self.is_stale:
+            self.status.setText(CHANGED_WHILE_RUNNING_TEXT.replace("Compute", "Compare"))
         self.computed.emit(output)
 
     def _failed(self, message: str) -> None:
@@ -259,11 +302,17 @@ class CompareView(QWidget):
             self.export_to(Path(folder), set(REPORT_KINDS))
 
     def export_to(self, folder: Path, kinds: Collection[str]) -> None:
-        if self._export_worker is not None and self._export_worker.isRunning():
+        if self._export_worker is not None:
             self.export_failed.emit("An export is already running; wait for it to finish.")
             return
         if self.output is None:
             self.export_failed.emit("Run a comparison first.")
+            return
+        if not self.is_valid():
+            self.export_failed.emit(
+                "The project or a setting changed since this comparison was made. "
+                "Press Compare again."
+            )
             return
         worker = ExportWorker([self.output], folder, kinds)
         worker.finished_ok.connect(self._export_done)
@@ -272,10 +321,21 @@ class CompareView(QWidget):
         self.status.setText("Exporting…")
         worker.start()
 
+    def _end_export(self) -> None:
+        if self._export_worker is not None:
+            self._export_worker.wait()  # the signal arrives just before the thread ends
+            self._export_worker = None
+
     def _export_done(self, paths: list[str]) -> None:
+        self._end_export()
         self.status.setText(f"Exported {len(paths)} file(s).")
         self.export_finished.emit(paths)
 
     def _export_failed(self, message: str) -> None:
+        self._end_export()
         self.status.setText(message)
         self.export_failed.emit(message)
+
+    def is_busy(self) -> bool:
+        """A comparison or an export is running."""
+        return self._worker is not None or self._export_worker is not None

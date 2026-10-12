@@ -17,12 +17,14 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
     QFormLayout,
+    QFrame,
     QHBoxLayout,
     QLabel,
     QListWidget,
     QListWidgetItem,
     QMessageBox,
     QPushButton,
+    QScrollArea,
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
@@ -32,10 +34,12 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core.io.errors import explain
-from budget_core.io.project_loader import dump_model, model_to_data
+from budget_core.io.project_loader import model_to_data
+from budget_core.io.roundtrip import file_stamp, save_edited_data
 from budget_core.io.yamlio import LineMap
 from budget_core.model import Project, Scenario
 from budget_core.provenance import make_provenance
+from budget_core.reports.files import OutputError
 from budget_core.scenario.export import write_scenario_outputs
 from budget_core.scenario.run import (
     ScenarioRun,
@@ -45,18 +49,15 @@ from budget_core.scenario.run import (
     run_scenario,
 )
 from budget_core.timeutil import format_utc
+from budget_gui.entry import cell_value
 from budget_gui.timeline import TimelineWidget
+from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, NOT_COMPUTED_TEXT
 
 RULE_KINDS = ("during_pass", "in_eclipse", "in_sunlight")
 SHADOW_MODELS = ("cylindrical", "conical")
 
 
-def _number(text: str) -> Any:
-    stripped = text.strip()
-    try:
-        return float(stripped)
-    except ValueError:
-        return stripped
+_number = cell_value
 
 
 class ScenarioWorker(QThread):
@@ -88,6 +89,7 @@ class ScenarioEditor(QWidget):
         self._root: Path | None = None
         self._id = ""
         self._original: Scenario | None = None
+        self._stamp: str | None = None  # the scenario file as the editor last read or wrote it
         self._modes: list[str] = []
         self._sites: list[str] = []
         self._modified = False
@@ -97,7 +99,7 @@ class ScenarioEditor(QWidget):
         self.shadow_model = QComboBox()
         self.shadow_model.addItems(SHADOW_MODELS)
         self.sites_list = QListWidget()
-        self.sites_list.setMaximumHeight(90)
+        self.sites_list.setMaximumHeight(72)
         form = QFormLayout()
         form.addRow("Default mode", self.default_mode)
         form.addRow("Shadow model", self.shadow_model)
@@ -114,6 +116,8 @@ class ScenarioEditor(QWidget):
         self.error_label = QLabel()
         self.error_label.setWordWrap(True)
         self.error_label.setStyleSheet("color: #da1e28;")
+        self.note_label = QLabel()
+        self.note_label.setWordWrap(True)
 
         def button(text: str, slot: Any) -> QPushButton:
             b = QPushButton(text)
@@ -134,7 +138,7 @@ class ScenarioEditor(QWidget):
         ]
 
         for table in (self.rules_table, self.segments_table):
-            table.setMinimumHeight(150)
+            table.setMinimumHeight(72)
             table.horizontalHeader().setStretchLastSection(True)
 
         def row_of(*buttons: QPushButton) -> QHBoxLayout:
@@ -156,6 +160,7 @@ class ScenarioEditor(QWidget):
         right.addWidget(self.segments_table, 1)
         right.addLayout(row_of(*segment_buttons))
         right.addWidget(self.error_label)
+        right.addWidget(self.note_label)
         right.addLayout(row_of(*save_buttons))
         right.addStretch(1)
         layout = QHBoxLayout(self)
@@ -175,6 +180,18 @@ class ScenarioEditor(QWidget):
             self._modified = value
             self.modified_changed.emit(value)
 
+    @property
+    def root(self) -> Path | None:
+        """The project folder this editor saves into: always the one it was last loaded from."""
+        return self._root
+
+    @property
+    def scenario_id(self) -> str:
+        return self._id
+
+    def _path(self) -> Path | None:
+        return None if self._root is None else self._root / "scenarios" / f"{self._id}.yaml"
+
     def clear(self) -> None:
         self._original = None
         self._loading = True
@@ -190,6 +207,7 @@ class ScenarioEditor(QWidget):
         self, root: Path, scenario_id: str, scenario: Scenario, modes: list[str], sites: list[str]
     ) -> None:
         self._root, self._id, self._original = root, scenario_id, scenario
+        self._stamp = file_stamp(root / "scenarios" / f"{scenario_id}.yaml")
         self._modes, self._sites = sorted(modes), sorted(sites)
         self._populate(scenario)
 
@@ -215,22 +233,45 @@ class ScenarioEditor(QWidget):
             self._append_segment(seg.start_s, seg.duration_s, seg.mode)
         self._loading = False
         self.error_label.setText("")
+        self.note_label.setText("")
 
     def discard_changes(self) -> None:
         if self._original is not None:
             self._populate(self._original)
         self._set_modified(False)
 
-    def reload_if_clean(self, scenario: Scenario, modes: list[str], sites: list[str]) -> None:
-        """After the project reloaded: refresh the widgets unless the user has pending edits."""
+    def reload_if_clean(
+        self, root: Path, scenario: Scenario, modes: list[str], sites: list[str]
+    ) -> None:
+        """After the project reloaded: refresh the widgets unless the user has pending edits (the
+        edit then stays based on the scenario it started from, and `save` checks the file). The
+        editor always saves into `root`, the folder of the project that is open now."""
+        self._root = root
+        new_modes, new_sites = sorted(modes), sorted(sites)
+        path = self._path()
+        stamp = file_stamp(path) if path is not None else None
+        if self._modified:
+            self._modes, self._sites = new_modes, new_sites
+            return
+        if (
+            scenario == self._original
+            and stamp == self._stamp
+            and (new_modes, new_sites)
+            == (
+                self._modes,
+                self._sites,
+            )
+        ):
+            return  # nothing changed: keep the selection and scroll position
         self._original = scenario
-        self._modes, self._sites = sorted(modes), sorted(sites)
-        if not self._modified:
-            self._populate(scenario)
+        self._stamp = stamp
+        self._modes, self._sites = new_modes, new_sites
+        self._populate(scenario)
 
     # ---- rules -------------------------------------------------------------------------------
     def _combo(self, items: list[str], current: str) -> QComboBox:
         box = QComboBox()
+        box.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         box.addItems(items)
         box.setCurrentText(current)
         box.currentTextChanged.connect(lambda _t: self._edited())
@@ -395,16 +436,40 @@ class ScenarioEditor(QWidget):
         return scenario
 
     def save(self) -> bool:
-        scenario = self._validate()
-        if scenario is None or self._root is None:
+        path = self._path()
+        if path is None or self._original is None:
             return False
-        path = self._root / "scenarios" / f"{self._id}.yaml"
+        if file_stamp(path) != self._stamp:
+            if self._modified:
+                self.error_label.setText(
+                    "The scenario file changed on disk after it was opened here. Saving would "
+                    "overwrite that change. Press Discard changes, then edit again."
+                )
+                return False
+            return True
+        if not self._modified:
+            return True
+        scenario = self._validate()
+        if scenario is None:
+            return False
         try:
-            path.write_bytes(dump_model(scenario).encode("utf-8"))
-        except OSError:
+            result = save_edited_data(
+                path,
+                model_to_data(self._original),
+                model_to_data(scenario),
+                lambda data: model_to_data(Scenario.model_validate(data)),
+            )
+        except (OSError, OutputError, UnicodeDecodeError):
             self.error_label.setText("The file could not be written. Check the folder permissions.")
             return False
         self._original = scenario
+        self._stamp = file_stamp(path)
+        self.note_label.setText(
+            "Saved. The file could not be edited in place, so it was rewritten in the standard "
+            "layout; its comments were not kept."
+            if result.canonical
+            else ""
+        )
         self._set_modified(False)
         self.saved.emit()
         return True
@@ -432,6 +497,7 @@ class ScenarioView(QWidget):
         self.last_run: ScenarioRun | None = None
         self.is_stale = False
         self._key = ""
+        self._summary = ""  # the status text of the last computation
         self._computing_for: Project | None = None
         self._worker: ScenarioWorker | None = None
 
@@ -455,7 +521,13 @@ class ScenarioView(QWidget):
         self.passes_table = QTableWidget()
         self.timeline_table = QTableWidget()
         tabs = QTabWidget()
-        tabs.addTab(self.editor, "Rules and segments")
+        scroll = (
+            QScrollArea()
+        )  # the editor scrolls on a small screen instead of forcing a tall window
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        scroll.setWidget(self.editor)
+        tabs.addTab(scroll, "Rules and segments")
         tabs.addTab(self.eclipse_table, "Eclipses")
         tabs.addTab(self.passes_table, "Passes")
         tabs.addTab(self.timeline_table, "Mode timeline")
@@ -490,14 +562,21 @@ class ScenarioView(QWidget):
         self.combo.blockSignals(False)
 
         shown = bool(ids)
-        self.empty_label.setVisible(not shown)
-        self.body.setVisible(shown)
+        keep_edits = not shown and self.editor.is_modified()  # never drop edits silently (D-060)
+        self.empty_label.setVisible(not shown and not keep_edits)
+        self.body.setVisible(shown or keep_edits)
         self.compute_button.setEnabled(shown and self._worker is None)
         self.combo.setEnabled(shown)
         if not shown or project is None:
-            self.editor.clear()
+            if keep_edits:
+                self.status.setText(
+                    "The project has no scenario to show right now. Your unsaved edits are kept; "
+                    "save or discard them, or fix the errors in the Problems panel."
+                )
+            else:
+                self.editor.clear()
+                self.status.setText("")
             self._show_run(None)
-            self.status.setText("")
             return
 
         scenario_id = self.selected_id()
@@ -506,8 +585,12 @@ class ScenarioView(QWidget):
             sorted(project.modes),
             sorted(set(project.ground_stations) | set(project.targets)),
         )
-        if self.editor._id == scenario_id and self.editor._original is not None:
-            self.editor.reload_if_clean(scenario, modes, sites)
+        if (
+            self.editor.scenario_id == scenario_id
+            and self.editor.root == project.root
+            and self.editor._original is not None
+        ):
+            self.editor.reload_if_clean(project.root, scenario, modes, sites)
         else:
             self.editor.load(project.root, scenario_id, scenario, modes, sites)
 
@@ -515,22 +598,35 @@ class ScenarioView(QWidget):
         if run is None or run.scenario_id != scenario_id:
             self._show_run(None)
             self.is_stale = False
-            self.status.setText("Not computed yet. Press Compute.")
-        elif run.scenario != scenario:
-            if environment_key(project, scenario) == self._key:
+            self.status.setText(NOT_COMPUTED_TEXT)
+        elif environment_key(project, scenario) != self._key:
+            # orbit, a site, the times or the step changed (also in another file): the environment
+            # of the run is out of date, whatever else changed
+            self.is_stale = True
+            self.status.setText(
+                "The scenario parameters changed since the last computation. Press Compute."
+            )
+        else:
+            was_stale, self.is_stale = self.is_stale, False
+            if run.scenario != scenario:
                 self.last_run = rebuild_timeline(run, scenario)
                 self._show_run(self.last_run)
                 self.status.setText("Timeline updated from the unchanged environment.")
-            else:
-                self.is_stale = True
-                self.status.setText(
-                    "The scenario parameters changed since the last computation. Press Compute."
-                )
+            elif was_stale:
+                self.status.setText(self._summary)
 
-    def _selected(self, _text: str) -> None:
-        if self.project is not None:
-            self.last_run = None
-            self.set_project(self.project)
+    def _selected(self, text: str) -> None:
+        if self.project is None or text == self.editor.scenario_id:
+            return
+        if self.editor.is_modified():
+            if not self.confirm_discard_pending_edit():
+                self.combo.blockSignals(True)  # back to the scenario the edits belong to
+                self.combo.setCurrentText(self.editor.scenario_id)
+                self.combo.blockSignals(False)
+                return
+            self.editor.discard_changes()
+        self.last_run = None
+        self.set_project(self.project)
 
     # ---- compute -----------------------------------------------------------------------------
     def compute(self) -> None:
@@ -556,6 +652,8 @@ class ScenarioView(QWidget):
         computed_for = self._computing_for
         if self.project is None or computed_for is None:
             return
+        if run.scenario_id != self.selected_id():
+            return  # another scenario was selected while it ran: the result is not shown
         self.last_run = run
         # the key describes the project the run was computed for; if it was reloaded meanwhile
         # the run is stale and must not be reused by the other views
@@ -567,7 +665,8 @@ class ScenarioView(QWidget):
         text = f"{len(env.eclipses)} eclipse(s)" + (f"; passes: {passes}" if passes else "")
         if run.notes:
             text += " — " + "; ".join(run.notes)
-        self.status.setText(text)
+        self._summary = text
+        self.status.setText(CHANGED_WHILE_RUNNING_TEXT if self.is_stale else text)
         self.computed.emit(run)
 
     def _failed(self, message: str) -> None:
@@ -580,6 +679,10 @@ class ScenarioView(QWidget):
     def wait_for_worker(self) -> None:
         if self._worker is not None:
             self._worker.wait(30000)
+
+    def is_busy(self) -> bool:
+        """A computation is running."""
+        return self._worker is not None
 
     def reusable_run(self, scenario_id: str) -> ScenarioRun | None:
         """The computed environment of this scenario with its current timeline, or None when the
@@ -644,8 +747,15 @@ class ScenarioView(QWidget):
 
     # ---- export ------------------------------------------------------------------------------
     def export_to(self, folder: Path) -> list[Path]:
+        """Write the computed scenario. Raises `OutputError` (plain message) when there is no
+        result, or it was computed for inputs that have changed since."""
         if self.last_run is None or self.project is None:
             return []
+        if self.is_stale or self.last_run.scenario_id != self.selected_id():
+            raise OutputError(
+                "The scenario results are out of date: the project changed since they were "
+                "computed. Press Compute in the Scenario tab, then export."
+            )
         provenance = make_provenance(self.project, scenario=self.last_run.scenario_id)
         return write_scenario_outputs(self.last_run, provenance, folder)
 

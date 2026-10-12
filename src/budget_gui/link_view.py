@@ -42,6 +42,12 @@ from budget_core.scenario.run import ScenarioRun, ScenarioRunError, run_scenario
 from budget_core.timeutil import format_utc
 from budget_gui.plot_widget import PlotWidget
 from budget_gui.scenario_view import fill_table
+from budget_gui.validity import (
+    CHANGED_WHILE_RUNNING_TEXT,
+    NOT_COMPUTED_TEXT,
+    STALE_TEXT,
+    ResultKey,
+)
 from budget_gui.worker import ExportWorker
 
 
@@ -79,11 +85,12 @@ class LinkPassesView(QWidget):
         self.project: Project | None = None
         self.load_problems: list[Problem] = []
         self.result: LinkSeriesResult | None = None
-        self.is_stale = False
+        self._revision = 0  # counts project (re)loads
+        self._result_key: ResultKey | None = None  # what `result` was computed from
+        self._computing_key: ResultKey | None = None
         self.run_provider: Callable[[str], ScenarioRun | None] | None = None
         self._worker: LinkWorker | None = None
         self._export_worker: ExportWorker | None = None
-        self._computing_for: Project | None = None
 
         self.scenario_combo = QComboBox()
         self.link_combo = QComboBox()
@@ -132,6 +139,25 @@ class LinkPassesView(QWidget):
     def selected_id(self) -> str:
         return self.scenario_combo.currentText()
 
+    def current_key(self) -> ResultKey:
+        """What a result computed now would be computed from."""
+        return ResultKey(self._revision, self.selected_id())
+
+    def is_valid(self) -> bool:
+        """True when the result on screen was computed from the inputs that are set now."""
+        return self.result is not None and self._result_key == self.current_key()
+
+    @property
+    def is_stale(self) -> bool:
+        return self.result is not None and not self.is_valid()
+
+    def _update_validity(self) -> None:
+        if self.result is None:
+            return
+        self.export_button.setEnabled(self.is_valid())
+        if self.is_stale:
+            self.status.setText(STALE_TEXT)
+
     def selected_link(self) -> LinkSeries | None:
         if self.result is None:
             return None
@@ -141,6 +167,7 @@ class LinkPassesView(QWidget):
     def set_project(self, project: Project | None, load_problems: list[Problem]) -> None:
         previous = self.selected_id()
         self.project = project
+        self._revision += 1
         self.load_problems = list(load_problems)
         ids = sorted(project.scenarios) if project and project.links else []
         self.scenario_combo.blockSignals(True)
@@ -161,17 +188,15 @@ class LinkPassesView(QWidget):
             self.status.setText("")
             return
         if self.result is not None:
-            self.is_stale = True
-            self.export_button.setEnabled(False)  # the result belongs to the old project
-            self.status.setText("The project changed since the last computation. Press Compute.")
+            self._update_validity()  # the result belongs to the previous revision
         else:
-            self.status.setText("Not computed yet. Press Compute.")
+            self.status.setText(NOT_COMPUTED_TEXT)
 
     def _scenario_changed(self, _text: str) -> None:
         if self.result is not None and self.result.run.scenario_id != self.selected_id():
             self.result = None
             self._show()
-            self.status.setText("Not computed yet. Press Compute.")
+            self.status.setText(NOT_COMPUTED_TEXT)
 
     # ---- compute -----------------------------------------------------------------------------
     def compute(self) -> None:
@@ -180,7 +205,7 @@ class LinkPassesView(QWidget):
         self.compute_button.setEnabled(False)
         self.status.setText("Computing…")
         reused = self.run_provider(self.selected_id()) if self.run_provider else None
-        self._computing_for = self.project
+        self._computing_key = self.current_key()
         worker = LinkWorker(self.project, self.selected_id(), reused)
         worker.finished_ok.connect(self._done)
         worker.failed.connect(self._failed)
@@ -195,8 +220,15 @@ class LinkPassesView(QWidget):
 
     def _done(self, result: LinkSeriesResult) -> None:
         self._finish_worker()
+        key, self._computing_key = self._computing_key, None
+        if key is not None and key.scenario != self.selected_id():
+            # another scenario was selected while it ran: the result is not shown
+            self.result = None
+            self._show()
+            self.status.setText(NOT_COMPUTED_TEXT)
+            return
         self.result = result
-        self.is_stale = self.project is not self._computing_for  # reloaded while it ran
+        self._result_key = key
         previous = self.link_combo.currentText()
         self.link_combo.blockSignals(True)
         self.link_combo.clear()
@@ -205,15 +237,16 @@ class LinkPassesView(QWidget):
             self.link_combo.setCurrentText(previous)
         self.link_combo.blockSignals(False)
         self._show()
-        self.export_button.setEnabled(not self.is_stale)
+        self.export_button.setEnabled(self.is_valid())
         total = sum((s.volume_bits or 0.0) for s in result.series) / 8e6
         n = sum(len(s.passes) for s in result.series)
         text = f"{len(result.series)} link(s), {n} pass(es), {total:.1f} MByte in the scenario"
         if any(s.margin_db is None for s in result.series):
             text += "; some inputs are placeholders, results marked n/a are not computed"
         if self.is_stale:
-            text = "The project changed while this ran. Press Compute again"
-        self.status.setText(text + ".")
+            self.status.setText(CHANGED_WHILE_RUNNING_TEXT)
+        else:
+            self.status.setText(text + ".")
         self.computed.emit(result)
 
     def _failed(self, message: str) -> None:
@@ -230,7 +263,8 @@ class LinkPassesView(QWidget):
 
     # ---- display -----------------------------------------------------------------------------
     def problems(self) -> list[Problem]:
-        return [] if self.result is None else list(self.result.problems)
+        """Findings of the last result for the Problems panel; none for a stale result."""
+        return [] if self.result is None or not self.is_valid() else list(self.result.problems)
 
     def _info_at(self, t: float) -> str:
         series, result = self.selected_link(), self.result
@@ -306,12 +340,24 @@ class LinkPassesView(QWidget):
         self.plot.pin_cursor(p.aos_s)
 
     # ---- export ------------------------------------------------------------------------------
-    def output(self) -> BudgetOutput | None:
-        if self.result is None or self.project is None or self.is_stale:
+    def _output_builder(self) -> Callable[[], BudgetOutput] | None:
+        """A function that builds the export of the current result (the export thread calls it),
+        or None when there is no valid result."""
+        project, result = self.project, self.result
+        if result is None or project is None or not self.is_valid():
             return None
-        provenance = make_provenance(self.project, scenario=self.result.run.scenario_id)
-        static = link_static_budget(self.project)
-        return link_output(self.project, static, provenance, self.load_problems, self.result)
+        load_problems = list(self.load_problems)
+
+        def build() -> BudgetOutput:
+            provenance = make_provenance(project, scenario=result.run.scenario_id)
+            static = link_static_budget(project)
+            return link_output(project, static, provenance, load_problems, result)
+
+        return build
+
+    def output(self) -> BudgetOutput | None:
+        build = self._output_builder()
+        return None if build is None else build()
 
     def _choose_export(self) -> None:
         folder = QFileDialog.getExistingDirectory(self, "Export link results to folder")
@@ -321,28 +367,40 @@ class LinkPassesView(QWidget):
             self.export_to(Path(folder), set(REPORT_KINDS))
 
     def export_to(self, folder: Path, kinds: Collection[str]) -> None:
-        if self._export_worker is not None and self._export_worker.isRunning():
+        if self._export_worker is not None:
             self.export_failed.emit("An export is already running; wait for it to finish.")
             return
-        output = self.output()
-        if output is None:
+        build = self._output_builder()
+        if build is None:
             self.export_failed.emit(
-                "The project changed since this result was computed. Press Compute again."
+                "The project or a setting changed since this result was computed. "
+                "Press Compute again."
                 if self.is_stale
                 else "Compute the link passes first."
             )
             return
-        worker = ExportWorker([output], folder, kinds)
+        worker = ExportWorker(lambda: [build()], folder, kinds)
         worker.finished_ok.connect(self._export_done)
         worker.failed.connect(self._export_failed)
         self._export_worker = worker
         self.status.setText("Exporting…")
         worker.start()
 
+    def _end_export(self) -> None:
+        if self._export_worker is not None:
+            self._export_worker.wait()  # the signal arrives just before the thread ends
+            self._export_worker = None
+
     def _export_done(self, paths: list[str]) -> None:
+        self._end_export()
         self.status.setText(f"Exported {len(paths)} file(s).")
         self.export_finished.emit(paths)
 
     def _export_failed(self, message: str) -> None:
+        self._end_export()
         self.status.setText(message)
         self.export_failed.emit(message)
+
+    def is_busy(self) -> bool:
+        """A computation or an export is running."""
+        return self._worker is not None or self._export_worker is not None

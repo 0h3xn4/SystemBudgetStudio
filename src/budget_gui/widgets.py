@@ -30,9 +30,10 @@ from budget_core.reports.document import NA, ReportDocument, Table, format_cell
 
 SEVERITY_COLOURS = {
     Severity.ERROR: "#da1e28",
-    Severity.WARNING: "#b28600",
+    Severity.WARNING: "#8a6a00",  # 4.6:1 on the light layer (WCAG AA for text)
     Severity.INFO: "#0043ce",
 }
+SEVERITY_ORDER = {Severity.ERROR: 0, Severity.WARNING: 1, Severity.INFO: 2}
 Index = QModelIndex | QPersistentModelIndex
 _NO_PARENT = QModelIndex()
 UNIT_ROLE = int(Qt.ItemDataRole.UserRole) + 1
@@ -90,6 +91,7 @@ class ProblemsPanel(QWidget):
         self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.table.verticalHeader().setVisible(False)
         self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.setMinimumHeight(48)
         self.table.itemActivated.connect(lambda item: self.activate_row(item.row()))
         layout = QVBoxLayout(self)
         layout.setContentsMargins(8, 4, 8, 4)
@@ -98,6 +100,8 @@ class ProblemsPanel(QWidget):
         self._problems: list[Problem] = []
 
     def set_problems(self, problems: list[Problem]) -> None:
+        # errors first, then warnings, then information; inside a group the given order (file, line)
+        problems = sorted(problems, key=lambda p: SEVERITY_ORDER[p.severity])
         self._problems = list(problems)
         errors = sum(p.severity is Severity.ERROR for p in problems)
         warnings = sum(p.severity is Severity.WARNING for p in problems)
@@ -177,7 +181,13 @@ class ProjectTree(QTreeWidget):
                 stack.append(child)
         return count
 
+    def current_file(self) -> str | None:
+        item = self.currentItem()
+        rel = item.data(0, Qt.ItemDataRole.UserRole) if item else None
+        return str(rel) if rel else None
+
     def set_project(self, root: Path | None, project: Project | None) -> None:
+        selected = self.current_file()
         self.clear()
         if root is None:
             return
@@ -201,6 +211,7 @@ class ProjectTree(QTreeWidget):
             ("orbits", "Orbits"),
             ("ground_stations", "Ground stations"),
             ("targets", "Imaging targets"),
+            ("links", "Links"),
             ("scenarios", "Scenarios"),
             ("config", "Configuration"),
         ):
@@ -223,6 +234,16 @@ class ProjectTree(QTreeWidget):
                 )
             group.setExpanded(folder != "config")
         top.setExpanded(True)
+        if selected is not None:  # keep the selection across a reload
+            stack = [top]
+            while stack:
+                node = stack.pop()
+                for i in range(node.childCount()):
+                    child = node.child(i)
+                    if child.data(0, Qt.ItemDataRole.UserRole) == selected:
+                        self.setCurrentItem(child)
+                        return
+                    stack.append(child)
 
 
 class PowerView(QWidget):
@@ -254,7 +275,11 @@ class PowerView(QWidget):
         return self._models[tab][index]
 
     def set_document(self, document: ReportDocument | None) -> None:
-        self.tabs.clear()
+        while self.tabs.count():  # QTabWidget.clear() keeps the pages alive: delete them
+            page = self.tabs.widget(0)
+            self.tabs.removeTab(0)
+            page.setParent(None)
+            page.deleteLater()
         self._models = {}
         shown = document is not None
         self.empty_label.setVisible(not shown)

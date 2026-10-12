@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import time
 from collections.abc import Collection
 from dataclasses import replace
 from pathlib import Path
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtGui import QAction, QCloseEvent, QKeySequence
 from PySide6.QtWidgets import (
+    QApplication,
     QDockWidget,
     QFileDialog,
     QMainWindow,
@@ -21,10 +23,11 @@ from budget_core.problems import sort_problems
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui.compare_view import CompareView
-from budget_gui.editor import EditorTabs
+from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
 from budget_gui.link_view import LinkPassesView
+from budget_gui.privacy import disable_settings_files
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.timeline_view import PowerTimelineView
@@ -54,6 +57,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self) -> None:
         super().__init__()
+        disable_settings_files()  # also when the window is made without create_app
         self.setWindowTitle(APP_NAME)
         self.resize(1400, 860)
         self.session = ProjectSession()
@@ -88,6 +92,7 @@ class MainWindow(QMainWindow):
         bottom = QDockWidget("Problems", self)
         bottom.setWidget(self.problems_panel)
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, bottom)
+        self.resizeDocks([bottom], [170], Qt.Orientation.Vertical)  # room for several rows
         self.setStatusBar(QStatusBar())
         self.statusBar().showMessage(
             f"Version {__version__} — offline. File > New project (guided) starts a first budget."
@@ -99,9 +104,14 @@ class MainWindow(QMainWindow):
         self.tree.file_requested.connect(lambda rel: self.open_file(rel))
         self.tree.unit_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
+        self._export_folder = Path()
         self.timeline_view.computed.connect(lambda _result: self._update_problems())
         self.link_passes_view.computed.connect(lambda _result: self._update_problems())
         self.timeline_view.jump_requested.connect(self.jump_to_input)
+        for view in (self.timeline_view, self.link_passes_view, self.compare_view):
+            view.export_finished.connect(self._view_export_done)
+            view.export_failed.connect(self._view_export_failed)
+        self._closing = False  # a close was asked for while a job runs
 
     # ---- actions -----------------------------------------------------------------------------
     def _build_menu(self) -> None:
@@ -121,7 +131,7 @@ class MainWindow(QMainWindow):
         add("Edit unit &power modes\u2026", QKeySequence("Ctrl+M"), self._edit_selected_unit)
         add("&Export reports…", QKeySequence("Ctrl+E"), self._choose_export)
         add("Export power &timeline…", QKeySequence("Ctrl+Shift+E"), self._choose_timeline_export)
-        add("Export &scenario results…", QKeySequence(), self._choose_scenario_export)
+        add("Export s&cenario results…", QKeySequence(), self._choose_scenario_export)
         file_menu.addSeparator()
         add("Export &unit table…", QKeySequence(), lambda: export_unit_table(self))
         add("&Import unit table…", QKeySequence(), lambda: import_unit_table(self))
@@ -152,7 +162,11 @@ class MainWindow(QMainWindow):
 
     def _guided_created(self, folder: Path) -> None:
         if not self.open_project(folder):
-            return  # the new project exists on disk; the user kept their edits in the old one
+            # the new project exists on disk; the user kept their edits in the old one
+            self.statusBar().showMessage(
+                f"The new project was created in {folder}. Open it with File > Open project."
+            )
+            return
         self.editors.setCurrentWidget(self.timeline_view)
         self.timeline_view.compute()
 
@@ -167,11 +181,20 @@ class MainWindow(QMainWindow):
                 self, APP_NAME, "Compute the scenario first (Scenario tab, button Compute)."
             )
             return
+        if self.scenario_view.is_stale:
+            QMessageBox.information(
+                self,
+                APP_NAME,
+                "The scenario results are out of date: the project changed since they were "
+                "computed. Press Compute in the Scenario tab, then export.",
+            )
+            return
         folder = QFileDialog.getExistingDirectory(self, "Export scenario results to folder")
         if not folder:
             return
         try:
-            self.scenario_view.export_to(Path(folder))
+            written = self.scenario_view.export_to(Path(folder))
+            self.statusBar().showMessage(f"Exported {len(written)} file(s) to {folder}.")
         except (OutputError, OSError) as exc:
             # OutputError texts are plain by construction; an OSError is described, not echoed
             text = (
@@ -185,6 +208,14 @@ class MainWindow(QMainWindow):
         if self.timeline_view.result is None:
             QMessageBox.information(
                 self, APP_NAME, "Compute the power timeline first (Power timeline tab)."
+            )
+            return
+        if not self.timeline_view.is_valid():
+            QMessageBox.information(
+                self,
+                APP_NAME,
+                "The power timeline is out of date: the project or a setting changed since it "
+                "was computed. Press Compute in the Power timeline tab, then export.",
             )
             return
         folder = QFileDialog.getExistingDirectory(self, "Export power timeline to folder")
@@ -221,7 +252,12 @@ class MainWindow(QMainWindow):
         return True
 
     def open_file(self, rel: str, line: int | None = None) -> None:
-        if self.session.path is None or not (self.session.path / rel).is_file():
+        if self.session.path is None:
+            return
+        if not (self.session.path / rel).is_file():
+            self.statusBar().showMessage(
+                f"{rel} does not exist yet. Create it in the project folder, then press F5."
+            )
             return
         self.editors.open_file(self.session.path, rel, line)
 
@@ -256,22 +292,43 @@ class MainWindow(QMainWindow):
         return editor
 
     def save_current(self) -> bool:
+        if self.editors.currentWidget() is self.scenario_view:
+            return self.scenario_view.editor.save()
         unit_editor = self.editors.current_unit_editor()
         if unit_editor is not None:
             return unit_editor.save()
         editor = self.editors.current_editor()
         if editor is None:
             return False
+        if not self._write(editor):
+            return False
+        self.session.reload()
+        return True
+
+    def _write(self, editor: YamlEditor) -> bool:
+        """Save a text tab; asks before overwriting a file that changed on disk."""
         try:
-            editor.save()
-        except OSError:
+            try:
+                editor.save()
+            except FileChangedError:
+                answer = QMessageBox.question(
+                    self,
+                    APP_NAME,
+                    f"The file {editor.rel_path} changed on disk after it was opened in this "
+                    "tab. Overwrite it with the text in this tab?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                    QMessageBox.StandardButton.No,
+                )
+                if answer != QMessageBox.StandardButton.Yes:
+                    return False
+                editor.save(overwrite=True)
+        except (OSError, OutputError):
             QMessageBox.warning(
                 self,
                 APP_NAME,
                 "The file could not be saved. Check that you may write to the project folder.",
             )
             return False
-        self.session.reload()
         return True
 
     def _refresh(self) -> None:
@@ -288,7 +345,7 @@ class MainWindow(QMainWindow):
         self.link_passes_view.set_project(project, load_problems)
         self.compare_view.set_project(project)
         self._update_problems()
-        self.editors.reload_clean_files()
+        self.editors.reload_clean_files(project.units if project else None)
         name = project.meta.name if project else (session.path.name if session.path else "")
         self.setWindowTitle(f"{name} — {APP_NAME}" if name else APP_NAME)
         self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
@@ -299,7 +356,7 @@ class MainWindow(QMainWindow):
         known = {(p.code, p.file, p.path, p.message) for p in self.session.problems}
         extra = [
             p
-            for p in self.timeline_view.problems()
+            for p in [*self.timeline_view.problems(), *self.link_passes_view.problems()]
             if (p.code, p.file, p.path, p.message) not in known
         ]
         located = [
@@ -316,7 +373,7 @@ class MainWindow(QMainWindow):
     # ---- export ------------------------------------------------------------------------------
     def export_to(self, folder: Path, kinds: Collection[str]) -> None:
         session = self.session
-        if self._worker is not None and self._worker.isRunning():
+        if self._worker is not None:
             self.export_failed.emit("An export is already running; wait for it to finish.")
             return
         if not session.outputs:
@@ -326,16 +383,32 @@ class MainWindow(QMainWindow):
         worker.finished_ok.connect(self._export_done)
         worker.failed.connect(self._export_failed)
         self._worker = worker
+        self._export_folder = folder
         self.statusBar().showMessage("Exporting…")
         worker.start()
 
+    def _end_export(self) -> None:
+        if self._worker is not None:
+            self._worker.wait()  # the signal arrives just before the thread ends
+            self._worker = None
+
     def _export_done(self, paths: list[str]) -> None:
-        self.statusBar().showMessage(f"Exported {len(paths)} file(s).")
+        self._end_export()
+        self.statusBar().showMessage(f"Exported {len(paths)} file(s) to {self._export_folder}.")
         self.export_finished.emit(paths)
 
     def _export_failed(self, message: str) -> None:
+        self._end_export()
         self.statusBar().showMessage(message)
         self.export_failed.emit(message)
+
+    def _view_export_done(self, paths: list[str]) -> None:
+        """An export started from a tab (or from the File menu for a tab) finished."""
+        where = f" to {Path(paths[0]).parent}" if paths else ""
+        self.statusBar().showMessage(f"Exported {len(paths)} file(s){where}.")
+
+    def _view_export_failed(self, message: str) -> None:
+        self.statusBar().showMessage(message)
 
     # ---- closing -----------------------------------------------------------------------------
     def closeEvent(self, event: QCloseEvent) -> None:  # noqa: N802 (Qt naming)
@@ -349,10 +422,36 @@ class MainWindow(QMainWindow):
             if answer != QMessageBox.StandardButton.Discard:
                 event.ignore()
                 return
-        if self._worker is not None and self._worker.isRunning():
-            self._worker.wait(10000)
-        self.scenario_view.wait_for_worker()
-        self.timeline_view.wait_for_worker()
-        self.link_passes_view.wait_for_worker()
-        self.compare_view.wait_for_worker()
+            self.editors.discard_all_changes()  # chosen once; a close that waits does not ask again
+        if self.busy():
+            # a running thread cannot be stopped safely: close when it is done, do not freeze
+            self._closing = True
+            self.statusBar().showMessage(
+                "A computation or an export is still running. The window closes when it is done."
+            )
+            event.ignore()
+            QTimer.singleShot(200, self._close_when_idle)
+            return
         event.accept()
+
+    def busy(self) -> bool:
+        """A computation or an export is running in a background thread."""
+        views = (self.scenario_view, self.timeline_view, self.link_passes_view, self.compare_view)
+        return self._worker is not None or any(v.is_busy() for v in views)
+
+    def wait_for_jobs(self, timeout_s: float = 120.0) -> bool:
+        """Let the running jobs finish (their results are delivered); False on timeout."""
+        deadline = time.monotonic() + timeout_s
+        while self.busy() and time.monotonic() < deadline:
+            QApplication.processEvents()
+            QThread.msleep(10)
+        return not self.busy()
+
+    def _close_when_idle(self) -> None:
+        if not self._closing:
+            return
+        if self.busy():
+            QTimer.singleShot(200, self._close_when_idle)
+            return
+        self._closing = False
+        self.close()
