@@ -42,11 +42,15 @@ class SaveResult:
 
 
 # ---- reading and writing bytes ----------------------------------------------------------------
+def stamp_of(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
 def file_stamp(path: Path) -> str | None:
     """A fingerprint of the file's bytes, or None when it cannot be read (used to notice that a
     file changed on disk after an editor loaded it)."""
     try:
-        return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+        return stamp_of(Path(path).read_bytes())
     except OSError:
         return None
 

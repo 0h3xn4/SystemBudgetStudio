@@ -48,6 +48,7 @@ from budget_core.scenario.run import (
 )
 from budget_core.timeutil import format_utc
 from budget_gui.timeline import TimelineWidget
+from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, NOT_COMPUTED_TEXT
 
 RULE_KINDS = ("during_pass", "in_eclipse", "in_sunlight")
 SHADOW_MODELS = ("cylindrical", "conical")
@@ -497,6 +498,7 @@ class ScenarioView(QWidget):
         self.last_run: ScenarioRun | None = None
         self.is_stale = False
         self._key = ""
+        self._summary = ""  # the status text of the last computation
         self._computing_for: Project | None = None
         self._worker: ScenarioWorker | None = None
 
@@ -555,14 +557,21 @@ class ScenarioView(QWidget):
         self.combo.blockSignals(False)
 
         shown = bool(ids)
-        self.empty_label.setVisible(not shown)
-        self.body.setVisible(shown)
+        keep_edits = not shown and self.editor.is_modified()  # never drop edits silently (D-060)
+        self.empty_label.setVisible(not shown and not keep_edits)
+        self.body.setVisible(shown or keep_edits)
         self.compute_button.setEnabled(shown and self._worker is None)
         self.combo.setEnabled(shown)
         if not shown or project is None:
-            self.editor.clear()
+            if keep_edits:
+                self.status.setText(
+                    "The project has no scenario to show right now. Your unsaved edits are kept; "
+                    "save or discard them, or fix the errors in the Problems panel."
+                )
+            else:
+                self.editor.clear()
+                self.status.setText("")
             self._show_run(None)
-            self.status.setText("")
             return
 
         scenario_id = self.selected_id()
@@ -584,22 +593,35 @@ class ScenarioView(QWidget):
         if run is None or run.scenario_id != scenario_id:
             self._show_run(None)
             self.is_stale = False
-            self.status.setText("Not computed yet. Press Compute.")
-        elif run.scenario != scenario:
-            if environment_key(project, scenario) == self._key:
+            self.status.setText(NOT_COMPUTED_TEXT)
+        elif environment_key(project, scenario) != self._key:
+            # orbit, a site, the times or the step changed (also in another file): the environment
+            # of the run is out of date, whatever else changed
+            self.is_stale = True
+            self.status.setText(
+                "The scenario parameters changed since the last computation. Press Compute."
+            )
+        else:
+            was_stale, self.is_stale = self.is_stale, False
+            if run.scenario != scenario:
                 self.last_run = rebuild_timeline(run, scenario)
                 self._show_run(self.last_run)
                 self.status.setText("Timeline updated from the unchanged environment.")
-            else:
-                self.is_stale = True
-                self.status.setText(
-                    "The scenario parameters changed since the last computation. Press Compute."
-                )
+            elif was_stale:
+                self.status.setText(self._summary)
 
-    def _selected(self, _text: str) -> None:
-        if self.project is not None:
-            self.last_run = None
-            self.set_project(self.project)
+    def _selected(self, text: str) -> None:
+        if self.project is None or text == self.editor.scenario_id:
+            return
+        if self.editor.is_modified():
+            if not self.confirm_discard_pending_edit():
+                self.combo.blockSignals(True)  # back to the scenario the edits belong to
+                self.combo.setCurrentText(self.editor.scenario_id)
+                self.combo.blockSignals(False)
+                return
+            self.editor.discard_changes()
+        self.last_run = None
+        self.set_project(self.project)
 
     # ---- compute -----------------------------------------------------------------------------
     def compute(self) -> None:
@@ -625,6 +647,8 @@ class ScenarioView(QWidget):
         computed_for = self._computing_for
         if self.project is None or computed_for is None:
             return
+        if run.scenario_id != self.selected_id():
+            return  # another scenario was selected while it ran: the result is not shown
         self.last_run = run
         # the key describes the project the run was computed for; if it was reloaded meanwhile
         # the run is stale and must not be reused by the other views
@@ -636,7 +660,8 @@ class ScenarioView(QWidget):
         text = f"{len(env.eclipses)} eclipse(s)" + (f"; passes: {passes}" if passes else "")
         if run.notes:
             text += " — " + "; ".join(run.notes)
-        self.status.setText(text)
+        self._summary = text
+        self.status.setText(CHANGED_WHILE_RUNNING_TEXT if self.is_stale else text)
         self.computed.emit(run)
 
     def _failed(self, message: str) -> None:
@@ -649,6 +674,10 @@ class ScenarioView(QWidget):
     def wait_for_worker(self) -> None:
         if self._worker is not None:
             self._worker.wait(30000)
+
+    def is_busy(self) -> bool:
+        """A computation is running."""
+        return self._worker is not None
 
     def reusable_run(self, scenario_id: str) -> ScenarioRun | None:
         """The computed environment of this scenario with its current timeline, or None when the
@@ -713,8 +742,15 @@ class ScenarioView(QWidget):
 
     # ---- export ------------------------------------------------------------------------------
     def export_to(self, folder: Path) -> list[Path]:
+        """Write the computed scenario. Raises `OutputError` (plain message) when there is no
+        result, or it was computed for inputs that have changed since."""
         if self.last_run is None or self.project is None:
             return []
+        if self.is_stale or self.last_run.scenario_id != self.selected_id():
+            raise OutputError(
+                "The scenario results are out of date: the project changed since they were "
+                "computed. Press Compute in the Scenario tab, then export."
+            )
         provenance = make_provenance(self.project, scenario=self.last_run.scenario_id)
         return write_scenario_outputs(self.last_run, provenance, folder)
 
