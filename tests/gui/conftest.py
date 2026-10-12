@@ -6,7 +6,15 @@ from __future__ import annotations
 import pytest
 from PySide6.QtWidgets import QApplication
 
+from budget_gui import session as session_module
 from budget_gui.main_window import MainWindow
+
+
+@pytest.fixture(autouse=True)
+def _synchronous_loading(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Most window tests check the logic, so a reload they trigger is finished when it returns.
+    `test_background_load.py` replaces this fixture and tests the threaded path itself."""
+    monkeypatch.setattr(session_module, "BACKGROUND_LOADING", False)
 
 
 @pytest.fixture(autouse=True)

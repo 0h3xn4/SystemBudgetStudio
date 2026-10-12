@@ -100,7 +100,8 @@ class MainWindow(QMainWindow):
 
         self._build_menu()
         self.session.changed.connect(self._refresh)
-        self.scenario_view.editor.saved.connect(self.session.reload)
+        self.session.loading_changed.connect(self._loading_changed)
+        self.scenario_view.editor.saved.connect(self.reload_project)
         self.tree.file_requested.connect(lambda rel: self.open_file(rel))
         self.tree.unit_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
@@ -126,7 +127,7 @@ class MainWindow(QMainWindow):
         add("&New project (guided)…", QKeySequence.StandardKey.New, self.open_guided_wizard)
         add("&Open project…", QKeySequence.StandardKey.Open, self._choose_project)
         add("&Save file", QKeySequence.StandardKey.Save, self.save_current)
-        add("&Reload project", QKeySequence(Qt.Key.Key_F5), self.session.reload)
+        add("&Reload project", QKeySequence(Qt.Key.Key_F5), self.reload_project)
         file_menu.addSeparator()
         add("Edit unit &power modes\u2026", QKeySequence("Ctrl+M"), self._edit_selected_unit)
         add("&Export reports…", QKeySequence("Ctrl+E"), self._choose_export)
@@ -173,7 +174,7 @@ class MainWindow(QMainWindow):
     def _choose_project(self) -> None:
         folder = QFileDialog.getExistingDirectory(self, "Open project folder")
         if folder:
-            self.open_project(Path(folder))
+            self.open_project(Path(folder), background=True)
 
     def _choose_scenario_export(self) -> None:
         if self.scenario_view.last_run is None:
@@ -240,16 +241,29 @@ class MainWindow(QMainWindow):
             self.export_to(Path(folder), set(REPORT_KINDS))
 
     # ---- project -----------------------------------------------------------------------------
-    def open_project(self, path: Path) -> bool:
+    def open_project(self, path: Path, *, background: bool = False) -> bool:
         """Open a project folder. Returns False (and changes nothing) when the user keeps
-        unsaved edits instead of discarding them."""
+        unsaved edits instead of discarding them. With `background` the project loads in a
+        thread (the window stays usable) and `session.changed` says when it is in; the
+        interactive entry points use that, programs and tests wait for the result."""
         if self.editors.has_unsaved_changes():
             if not self.editors.confirm_discard("Some files have unsaved changes."):
                 return False
             self.editors.discard_all_changes()
         self.editors.close_all_files()
-        self.session.open(Path(path))
+        if background:
+            self.session.open_async(Path(path))
+        else:
+            self.session.open(Path(path))
         return True
+
+    def reload_project(self) -> None:
+        """Load the open project again without freezing the window (F5, after a save)."""
+        self.session.reload_async()
+
+    def _loading_changed(self, loading: bool) -> None:
+        if loading:
+            self.statusBar().showMessage("Loading the project… the window stays usable.")
 
     def open_file(self, rel: str, line: int | None = None) -> None:
         if self.session.path is None:
@@ -287,7 +301,7 @@ class MainWindow(QMainWindow):
             self.editors.setCurrentWidget(existing)
             return existing
         editor = UnitEditor(self.session.path, unit_id, project.units[unit_id])
-        editor.saved.connect(self.session.reload)
+        editor.saved.connect(self.reload_project)
         self.editors.add_unit_editor(unit_id, editor)
         return editor
 
@@ -302,7 +316,7 @@ class MainWindow(QMainWindow):
             return False
         if not self._write(editor):
             return False
-        self.session.reload()
+        self.reload_project()
         return True
 
     def _write(self, editor: YamlEditor) -> bool:
@@ -437,7 +451,7 @@ class MainWindow(QMainWindow):
     def busy(self) -> bool:
         """A computation or an export is running in a background thread."""
         views = (self.scenario_view, self.timeline_view, self.link_passes_view, self.compare_view)
-        return self._worker is not None or any(v.is_busy() for v in views)
+        return self._worker is not None or self.session.loading or any(v.is_busy() for v in views)
 
     def wait_for_jobs(self, timeout_s: float = 120.0) -> bool:
         """Let the running jobs finish (their results are delivered); False on timeout."""

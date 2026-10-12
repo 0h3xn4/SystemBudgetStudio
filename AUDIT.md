@@ -12,7 +12,7 @@ Every fix has a regression test that fails on the old code (about 640 new tests;
 | GUI-1, GUI-2 (critical) | Fixed | #17 |
 | GUI-3 to GUI-7, GUI-9 to GUI-12 (high) | Fixed | #17 |
 | GUI-8, GUI-13, GUI-15 to GUI-27, GUI-30 to GUI-34 | Fixed | #17 |
-| GUI-14 | **Partly.** Building export output runs in the worker thread and a save no longer reloads unchanged editors. Loading and reloading a project still runs on the window thread: the 200-unit project freezes for about 7 s on open and reload. | #17 |
+| GUI-14 | **Fixed.** Export output is built in the worker thread (#17); loading and reloading a project runs in a background thread and showing the tables is cheaper (D-142): the longest freeze on opening the 200-unit project went from about 3.6 s to about 0.5 s. | #17, then the load-in-background PR |
 | GUI-28, mouse-only plot (GUI-29), GUI-35 (layout) | **Not done / partly.** Hover repaint speed of a 600,000-point plot, keyboard access to the plot, and three small layout items. | |
 | PWR-1 (high) | Fixed | #20 |
 | PWR-2 to PWR-12 | Fixed (PWR-10 in #20 for the wording and in the release-preparation PR for the validation warning `SCENARIO_PHASE_NO_DOD`) | #20 |
@@ -310,7 +310,7 @@ Checked on 2026-10-12 on the tree of the release-preparation pull request (all f
 What I am **not certain** about:
 
 1. **Excel and Windows by hand.** I could not open the XLSX files in Excel (sheet-name and cell-length rules follow the documented limits), and nobody has done the [clean-machine checklist](docs/INSTALL_CHECKLIST.md) on a real Windows or Rocky 8 machine. CI builds, installs, self-tests and uninstalls both installers; it cannot look at the window.
-2. **The window on a real display.** The window tests run offscreen. Loading or reloading a project of 200 units freezes the window for about 7 seconds (GUI-14), and a plot of a week at 1 s resolution repaints slowly on hover (GUI-28).
+2. **The window on a real display.** The window tests run offscreen. A plot of a week at 1 s resolution repaints slowly on hover (GUI-28); opening a project of 200 units pauses the window for up to about half a second while the tables are built (GUI-14 is otherwise fixed).
 3. **Real data.** The example projects hold invented data and the tool ships no standards values, as the spec requires. The numerical results are only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
 4. **Short eclipses** (under about 20 s) can still be missed (DV-E4); passes of any length are found.
 5. **Error text on standard output** (RC-15): scripts that separate the two streams will see errors on standard output.
