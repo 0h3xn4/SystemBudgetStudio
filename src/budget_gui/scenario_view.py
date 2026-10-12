@@ -32,10 +32,12 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core.io.errors import explain
-from budget_core.io.project_loader import dump_model, model_to_data
+from budget_core.io.project_loader import model_to_data
+from budget_core.io.roundtrip import file_stamp, save_edited_data
 from budget_core.io.yamlio import LineMap
 from budget_core.model import Project, Scenario
 from budget_core.provenance import make_provenance
+from budget_core.reports.files import OutputError
 from budget_core.scenario.export import write_scenario_outputs
 from budget_core.scenario.run import (
     ScenarioRun,
@@ -88,6 +90,7 @@ class ScenarioEditor(QWidget):
         self._root: Path | None = None
         self._id = ""
         self._original: Scenario | None = None
+        self._stamp: str | None = None  # the scenario file as the editor last read or wrote it
         self._modes: list[str] = []
         self._sites: list[str] = []
         self._modified = False
@@ -114,6 +117,8 @@ class ScenarioEditor(QWidget):
         self.error_label = QLabel()
         self.error_label.setWordWrap(True)
         self.error_label.setStyleSheet("color: #da1e28;")
+        self.note_label = QLabel()
+        self.note_label.setWordWrap(True)
 
         def button(text: str, slot: Any) -> QPushButton:
             b = QPushButton(text)
@@ -156,6 +161,7 @@ class ScenarioEditor(QWidget):
         right.addWidget(self.segments_table, 1)
         right.addLayout(row_of(*segment_buttons))
         right.addWidget(self.error_label)
+        right.addWidget(self.note_label)
         right.addLayout(row_of(*save_buttons))
         right.addStretch(1)
         layout = QHBoxLayout(self)
@@ -175,6 +181,18 @@ class ScenarioEditor(QWidget):
             self._modified = value
             self.modified_changed.emit(value)
 
+    @property
+    def root(self) -> Path | None:
+        """The project folder this editor saves into: always the one it was last loaded from."""
+        return self._root
+
+    @property
+    def scenario_id(self) -> str:
+        return self._id
+
+    def _path(self) -> Path | None:
+        return None if self._root is None else self._root / "scenarios" / f"{self._id}.yaml"
+
     def clear(self) -> None:
         self._original = None
         self._loading = True
@@ -190,6 +208,7 @@ class ScenarioEditor(QWidget):
         self, root: Path, scenario_id: str, scenario: Scenario, modes: list[str], sites: list[str]
     ) -> None:
         self._root, self._id, self._original = root, scenario_id, scenario
+        self._stamp = file_stamp(root / "scenarios" / f"{scenario_id}.yaml")
         self._modes, self._sites = sorted(modes), sorted(sites)
         self._populate(scenario)
 
@@ -215,18 +234,40 @@ class ScenarioEditor(QWidget):
             self._append_segment(seg.start_s, seg.duration_s, seg.mode)
         self._loading = False
         self.error_label.setText("")
+        self.note_label.setText("")
 
     def discard_changes(self) -> None:
         if self._original is not None:
             self._populate(self._original)
         self._set_modified(False)
 
-    def reload_if_clean(self, scenario: Scenario, modes: list[str], sites: list[str]) -> None:
-        """After the project reloaded: refresh the widgets unless the user has pending edits."""
+    def reload_if_clean(
+        self, root: Path, scenario: Scenario, modes: list[str], sites: list[str]
+    ) -> None:
+        """After the project reloaded: refresh the widgets unless the user has pending edits (the
+        edit then stays based on the scenario it started from, and `save` checks the file). The
+        editor always saves into `root`, the folder of the project that is open now."""
+        self._root = root
+        new_modes, new_sites = sorted(modes), sorted(sites)
+        path = self._path()
+        stamp = file_stamp(path) if path is not None else None
+        if self._modified:
+            self._modes, self._sites = new_modes, new_sites
+            return
+        if (
+            scenario == self._original
+            and stamp == self._stamp
+            and (new_modes, new_sites)
+            == (
+                self._modes,
+                self._sites,
+            )
+        ):
+            return  # nothing changed: keep the selection and scroll position
         self._original = scenario
-        self._modes, self._sites = sorted(modes), sorted(sites)
-        if not self._modified:
-            self._populate(scenario)
+        self._stamp = stamp
+        self._modes, self._sites = new_modes, new_sites
+        self._populate(scenario)
 
     # ---- rules -------------------------------------------------------------------------------
     def _combo(self, items: list[str], current: str) -> QComboBox:
@@ -395,16 +436,40 @@ class ScenarioEditor(QWidget):
         return scenario
 
     def save(self) -> bool:
-        scenario = self._validate()
-        if scenario is None or self._root is None:
+        path = self._path()
+        if path is None or self._original is None:
             return False
-        path = self._root / "scenarios" / f"{self._id}.yaml"
+        if file_stamp(path) != self._stamp:
+            if self._modified:
+                self.error_label.setText(
+                    "The scenario file changed on disk after it was opened here. Saving would "
+                    "overwrite that change. Press Discard changes, then edit again."
+                )
+                return False
+            return True
+        if not self._modified:
+            return True
+        scenario = self._validate()
+        if scenario is None:
+            return False
         try:
-            path.write_bytes(dump_model(scenario).encode("utf-8"))
-        except OSError:
+            result = save_edited_data(
+                path,
+                model_to_data(self._original),
+                model_to_data(scenario),
+                lambda data: model_to_data(Scenario.model_validate(data)),
+            )
+        except (OSError, OutputError, UnicodeDecodeError):
             self.error_label.setText("The file could not be written. Check the folder permissions.")
             return False
         self._original = scenario
+        self._stamp = file_stamp(path)
+        self.note_label.setText(
+            "Saved. The file could not be edited in place, so it was rewritten in the standard "
+            "layout; its comments were not kept."
+            if result.canonical
+            else ""
+        )
         self._set_modified(False)
         self.saved.emit()
         return True
@@ -506,8 +571,12 @@ class ScenarioView(QWidget):
             sorted(project.modes),
             sorted(set(project.ground_stations) | set(project.targets)),
         )
-        if self.editor._id == scenario_id and self.editor._original is not None:
-            self.editor.reload_if_clean(scenario, modes, sites)
+        if (
+            self.editor.scenario_id == scenario_id
+            and self.editor.root == project.root
+            and self.editor._original is not None
+        ):
+            self.editor.reload_if_clean(project.root, scenario, modes, sites)
         else:
             self.editor.load(project.root, scenario_id, scenario, modes, sites)
 
