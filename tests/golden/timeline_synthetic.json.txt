@@ -366,6 +366,7 @@
       "peak_demand_w": 120.0
     }
   ],
+  "not_evaluated": [],
   "problems": [
     {
       "code": "BATTERY_DOD_EXCEEDED",

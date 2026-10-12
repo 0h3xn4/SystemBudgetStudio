@@ -52,7 +52,7 @@ For each **static point** (an [elevation](../glossary.md#elevation) and slant ra
 budget link-passes my_satellite --out out
 ```
 
-This needs a [scenario](scenarios.md) that lists the link's ground station under `sites`. For every pass the tool evaluates the link in pieces of at most 5 s, each at the elevation and range of its middle, and only inside the pass (the spacecraft antenna angle follows from the geometry, measured from nadir); the results do not depend on the scenario's `step_s` ([decision D-103](../DECISIONS.md)). It selects the **highest listed rate whose margin meets the required margin**. That gives the margin, the time with a usable rate and the data volume per pass, per scenario and, for a scenario of at least one day, per day (shorter scenarios show n/a per day):
+This needs a [scenario](scenarios.md) that lists the link's ground station under `sites`. For every pass the tool evaluates the link in pieces of at most 5 s, each at the elevation and range of its middle, and only inside the pass (the spacecraft antenna angle follows from the geometry, measured from nadir); the results do not depend on the scenario's `step_s` ([decision D-130](../DECISIONS.md)). It selects the **highest listed rate whose margin meets the required margin**. That gives the margin, the time with a usable rate and the data volume per pass, per scenario and, for a scenario of at least one day, per day (shorter scenarios show n/a per day):
 
 ```text
 sband_down: 11 pass(es) over gs_north, 4438.17 MByte in the scenario (4438.17 MByte per day).
