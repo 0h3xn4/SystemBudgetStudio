@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import io
 import json
+import math
 from collections.abc import Sequence
 from dataclasses import asdict
 from datetime import timedelta
@@ -195,6 +196,17 @@ def passes_csv(result: LinkSeriesResult) -> str:
     )
 
 
+def _finite(value: Any) -> Any:
+    """The same data with every non-finite number replaced by null: JSON has no infinity or NaN."""
+    if isinstance(value, float):
+        return value if math.isfinite(value) else None
+    if isinstance(value, dict):
+        return {k: _finite(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_finite(v) for v in value]
+    return value
+
+
 def link_json(
     static: StaticLinkResult,
     passes: LinkSeriesResult | None,
@@ -234,4 +246,13 @@ def link_json(
         data["problems"] = [
             p.to_dict() for p in sort_problems([*load_problems, *static.problems, *passes.problems])
         ]
-    return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    return (
+        json.dumps(
+            _finite(clean_numbers(data)),
+            indent=2,
+            sort_keys=True,
+            ensure_ascii=False,
+            allow_nan=False,
+        )
+        + "\n"
+    )

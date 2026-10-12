@@ -5,8 +5,8 @@ Summary
 Link budget at the static points
 ## table
 Link | Direction | Point | Elevation (deg) | Range (km) | EIRP (dBW) | G/T (dB/K) | Path loss (dB) | Atmospheric (dB) | Other losses (dB) | C/N0 (dBHz) | Required Eb/N0 (dB) | Highest closing rate (kbit/s) | Rate at required margin (kbit/s)
-uhf_down | downlink | 5 deg elevation | 5.0 | 2200.0 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a
-uhf_down | downlink | zenith | 90.0 | 550.0 | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a
+uhf_down | downlink | 5 deg elevation | 5.0 | 2200.0 | n/a | n/a | 152.07 | 0.00 | n/a | n/a | n/a | n/a | n/a
+uhf_down | downlink | zenith | 90.0 | 550.0 | n/a | n/a | 140.02 | 0.00 | n/a | n/a | n/a | n/a | n/a
 Other losses = pointing, polarisation and implementation. A link closes at a rate when its margin is at least the required margin of the link. n/a: an input is a placeholder or missing. Highest closing rate empty (n/a with a result): no listed rate closes.
 Margin by data rate
 ## table

@@ -43,8 +43,8 @@ downlink
  0
  n/a
  n/a
- n/a
- n/a
+ 152.07
+ 0.00
  n/a
  n/a
  n/a
@@ -58,8 +58,8 @@ zenith
  550.0
  n/a
  n/a
- n/a
- n/a
+ 140.02
+ 0.00
  n/a
  n/a
  n/a

@@ -7,6 +7,7 @@ Numbers are invented and worked out by hand (see `tests/power_helpers.py`: 100 W
 from __future__ import annotations
 
 import json
+import math
 import shutil
 from dataclasses import replace
 from pathlib import Path
@@ -14,11 +15,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 from openpyxl import load_workbook
+from pydantic import ValidationError
 
 from budget_cli.main import main
 from budget_core.environment.data import EnvironmentData
 from budget_core.environment.intervals import Interval
-from budget_core.model import ScenarioRule
+from budget_core.model import ArrayFace, Attitude, Battery, ScenarioRule
 from budget_core.power.orbits import orbit_windows, orbit_windows_with_reason
 from budget_core.power.time_domain import (
     BATTERY_DEPLETED,
@@ -318,3 +320,43 @@ def test_cli_and_report_say_not_evaluated_instead_of_no_violations(
     sheet = load_workbook(out / "power_time_one_day.xlsx")["Summary"]
     cells = " ".join(str(c.value) for row in sheet.iter_rows() for c in row if c.value)
     assert "Not evaluated:" in cells and "No violations found." not in cells
+
+
+# ---- MI-16: bounded counts and directions ----------------------------------------------------
+
+
+@pytest.mark.parametrize("field", ["strings", "cells_per_string"])
+@pytest.mark.parametrize("count", [0, 10_001, 10**400])
+def test_array_counts_are_bounded(field: str, count: int) -> None:
+    values = {"name": "top", "normal_body": [0.0, 0.0, 1.0], "strings": 2, "cells_per_string": 2}
+    with pytest.raises(ValidationError):
+        ArrayFace(**{**values, field: count})  # type: ignore[arg-type]
+    assert ArrayFace(**{**values, field: 10_000}).cell_count >= 10_000  # type: ignore[arg-type]
+
+
+@pytest.mark.parametrize(
+    ("field", "limit"), [("cells_in_series", 1_000), ("cells_in_parallel", 10_000)]
+)
+def test_battery_counts_are_bounded(field: str, limit: int) -> None:
+    battery = power_system().battery
+    with pytest.raises(ValidationError):
+        Battery(**{**battery.model_dump(), field: limit + 1})
+    assert getattr(Battery(**{**battery.model_dump(), field: limit}), field) == limit
+
+
+@pytest.mark.parametrize(
+    "vector", [[1e300, 0.0, 0.0], [0.0, 0.0, 1e7], [0.0, 0.0, 1e-9], [0, 0, 0]]
+)
+def test_directions_must_have_a_sane_length(vector: list[float]) -> None:
+    with pytest.raises(ValidationError):
+        ArrayFace(name="top", normal_body=vector, strings=1, cells_per_string=1)
+    with pytest.raises(ValidationError):
+        Attitude(default="sun", sun_direction_body=vector)
+
+
+def test_face_cosines_survive_huge_and_tiny_vectors() -> None:
+    from budget_core.power.array import face_cosines
+
+    normals = np.array([[1e300, 0.0, 0.0], [0.0, 1e-300, 0.0]])
+    sun = np.array([[1.0, 1.0, 0.0], [1e200, 1e200, 0.0]])
+    assert face_cosines(normals, sun) == pytest.approx(math.sqrt(0.5))

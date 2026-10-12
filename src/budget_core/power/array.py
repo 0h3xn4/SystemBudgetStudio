@@ -29,16 +29,22 @@ def degradation_factor(annual_degradation_ratio: float, years: float) -> float:
     return float((1.0 - annual_degradation_ratio) ** years)
 
 
+def _unit(vectors: NDArray) -> NDArray:
+    """Unit vectors of the rows; a zero row stays zero. The rows are scaled by their largest
+    component first, so a huge or tiny vector neither overflows nor underflows."""
+    largest = np.max(np.abs(vectors), axis=1, keepdims=True)
+    scaled = vectors / np.where(largest > 0.0, largest, 1.0)
+    norm = np.linalg.norm(scaled, axis=1, keepdims=True)
+    return np.asarray(scaled / np.where(norm > 0.0, norm, 1.0), dtype=np.float64)
+
+
 def face_cosines(normals_body: NDArray, sun_body: NDArray) -> NDArray:
     """TDP-COS: cosine of the sun incidence angle per step and face, zero on the back side.
 
     normals_body: (F, 3) outward normals (need not be unit length); sun_body: (N, 3) directions
     to the Sun in the body frame (need not be unit length). Returns (N, F)."""
-    n = np.asarray(normals_body, dtype=np.float64)
-    s = np.asarray(sun_body, dtype=np.float64)
-    n = n / np.linalg.norm(n, axis=1, keepdims=True)
-    norm = np.linalg.norm(s, axis=1, keepdims=True)
-    s = s / np.where(norm > 0.0, norm, 1.0)
+    n = _unit(np.asarray(normals_body, dtype=np.float64))
+    s = _unit(np.asarray(sun_body, dtype=np.float64))
     return np.asarray(np.maximum(s @ n.T, 0.0), dtype=np.float64)
 
 

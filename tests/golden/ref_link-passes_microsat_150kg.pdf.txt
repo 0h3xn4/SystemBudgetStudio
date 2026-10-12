@@ -1,4 +1,4 @@
-pages=11
+pages=9
 ## page 1
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
@@ -8,27 +8,30 @@ Link budget at the static points
 Link
 Direction
 Point
-Elevation
-(deg)
-Range
+Elevatio
+n (deg)
+Rang
+e
 (km)
 EIRP
-(dBW)
-G/T
-(dB/K)
-Path
-loss (dB)
-Atmospheric
+(dBW
+)
+G/T (
+dB/K)
+Path loss
 (dB)
+Atmosphe
+ric (dB)
 Other
 losses
 (dB)
 C/N0
-(dBHz)
+(dBHz
+)
 Required
 Eb/N0 (dB)
-Highest closing
-rate (kbit/s)
+Highest closing rate
+(kbit/s)
 Rate at required
 margin (kbit/s)
 sband_dow
@@ -236,9 +239,9 @@ gs_north
 xband_down
 gs_south
  4
- 21751.79
- 21751.79
- 2718.97
+ 21716.59
+ 21716.59
+ 2714.57
 From the highest listed rate that closes at each sample while the link is active (its modes, below its tracking limit). Per day = scenario total scaled to 86 400 s.
 Passes of link sband_down over gs_north
 Pass
@@ -263,7 +266,7 @@ T+01:36:43
  586.6
  74.9
  586.6
- 30.00
+ 30.17
  4805.40
 3
 T+03:11:37
@@ -271,7 +274,7 @@ T+03:11:37
  542.6
  31.1
  542.6
- 29.90
+ 30.16
  4445.06
 4
 T+04:46:25
@@ -279,15 +282,15 @@ T+04:46:25
  424.8
  14.1
  424.8
- 29.98
- 3480.27
+ 30.15
+ 3480.26
 5
 T+06:20:35
 2026-06-01T06:20:35Z
  329.2
  9.5
  329.2
- 30.02
+ 30.14
  2697.21
 6
 T+07:53:28
@@ -295,7 +298,7 @@ T+07:53:28
  375.9
  11.3
  375.9
- 29.95
+ 30.14
  3078.99
 7
 T+09:26:02
@@ -303,7 +306,7 @@ T+09:26:02
  500.3
  21.6
  500.3
- 30.06
+ 30.16
  4098.82
 8
 T+10:59:35
@@ -311,7 +314,7 @@ T+10:59:35
  581.7
  63.8
  581.7
- 29.99
+ 30.17
  4765.03
 9
 T+12:34:52
@@ -319,15 +322,15 @@ T+12:34:52
  552.4
  32.0
  552.4
- 30.08
- 4525.17
+ 30.16
+ 4525.16
 10
 T+14:12:52
 2026-06-01T14:12:52Z
  309.6
  8.6
  309.6
- 30.09
+ 30.14
  2536.23
 11
 T+23:57:48
@@ -335,7 +338,7 @@ T+23:57:48
  131.0
  13.8
  131.0
- 29.90
+ 30.15
  1073.16
 Lowest margin is at the lowest listed rate over the active samples.
 Passes of link xband_down over gs_south
@@ -353,32 +356,32 @@ T+02:32:03
  444.4
  34.1
  444.4
- 12.43
- 10292.06
+ 12.65
+ 10301.76
 2
 T+04:07:10
 2026-06-01T04:07:10Z
  373.6
  21.7
  373.6
- 12.51
- 3523.64
+ 12.63
+ 3512.19
 3
 T+13:18:57
 2026-06-01T13:18:57Z
  406.9
  26.2
  406.9
- 12.36
- 3916.88
+ 12.63
+ 3890.17
 4
 T+14:53:30
 2026-06-01T14:53:30Z
  419.2
  27.6
  419.2
- 12.56
- 4019.21
+ 12.65
+ 4012.48
 Lowest margin is at the lowest listed rate over the active samples.
 Assumptions
 Configuration numbers used
@@ -388,7 +391,7 @@ Unit
 Source
 Status
 Transmit power
- 5
+ 5.0000
 W
 Synthetic example value; not from a data sheet or a standard.
 sourced
@@ -401,57 +404,57 @@ Unit
 Source
 Status
 Line loss
- 0.5
+ 0.5000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Antenna gain, transmitter
- 3
+ 3.0000
 dBi
 Synthetic example value; not from a data sheet or a standard.
 sourced
 G/T
- 10
+ 10.0000
 dB/K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Required margin
- 3
+ 3.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Pointing loss
- 1
+ 1.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Polarisation loss
- 0.5
+ 0.5000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Implementation loss
- 1
+ 1.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Required Eb/N0, QPSK rate 1/2
- 4
+ 4.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Attenuation gas_s
- 0.2
+ 0.2000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Transmit power
- 10
+ 10.0000
 W
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Line loss
- 0.5
+ 0.5000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
@@ -461,47 +464,47 @@ dBi
 Synthetic example value; not from a data sheet or a standard.
 sourced
 G/T
- 20
+ 20.0000
 dB/K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Required margin
- 3
+ 3.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Pointing loss
- 1
+ 1.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Polarisation loss
- 0.5
+ 0.5000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Implementation loss
- 1
+ 1.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Attenuation rain_x at 5 deg
- 3
+ 3.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Attenuation rain_x at 20 deg
- 1
+ 1.0000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Attenuation rain_x at 90 deg
- 0.4
+ 0.4000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Attenuation gas_x
- 0.5
+ 0.5000
 dB
 Synthetic example value; not from a data sheet or a standard.
 sourced
@@ -510,22 +513,6 @@ ID
 Name
 Formula
 Source
-ENV-GMST
-Greenwich mean sidereal time (IAU-82)
-theta = 67310.54841 + (876600 h + 8640184.812866) T +
-0.093104 T^2 - 6.2e-6 T^3 s
-sgp4 library, sgp4.propagation.gstime (IAU-82 GMST, Vallado)
-ENV-GEODET
-IC
-WGS-84 geodetic to Earth-fixed coordinates
-N = a / sqrt(1 - e2 sin2 phi); x = (N + h) cos phi cos lam; z = (N (1 -
-e2) + h) sin phi
-WGS 84 (NIMA TR8350.2) ellipsoid definition
-ENV-TOPO
-Elevation, azimuth and range from a site
-local east-north-up basis at the geodetic latitude and longitude of
-the site
-SOURCE_MISSING
 LNK-EIRP
 Effective isotropic radiated power
 EIRP = P_tx - L_line + G_tx (dBW)
@@ -540,11 +527,28 @@ G/T = G_rx - L_feed - 10 log10(T_sys) (dB/K), or given directly
 SOURCE_MISSING
 LNK-CN0
 Carrier to noise density
-C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10
-log10(k) (dBHz)
+C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10 log10(k) (dBHz)
 SOURCE_MISSING
 LNK-EBN0
 Energy per bit to noise density
 Eb/N0 = C/N0 - 10 log10(R_b) (dB)
 SOURCE_MISSING
+LNK-MARGIN
+Link margin
+margin = Eb/N0 - Eb/N0_required (dB); the link closes when margin >= required margin
+SOURCE_MISSING
+LNK-ATT
+Atmospheric attenuation
+L_atm = sum of the named table entries, linear interpolation by elevation
+SOURCE_MISSING
+LNK-NADIR
+Angle from nadir at the spacecraft
+sin(eta) = R cos(el) / r, r^2 = R^2 + d^2 + 2 R d sin(el)
+SOURCE_MISSING
+LNK-VOLUME
+Data volume
+V = sum over samples of R_selected * (time of the step inside the pass); R_selected is the
+highest listed rate with margin >= required margin while the link is active
+SOURCE_MISSING
+SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 ...

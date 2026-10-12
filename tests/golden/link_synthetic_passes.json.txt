@@ -106,10 +106,20 @@
       "required_margin_db": 3.0,
       "station": "gs",
       "volume_bits": 29000000.0,
-      "volume_per_day_bits": 2505600000.0
+      "volume_per_day_bits": null
     }
   ],
-  "problems": [],
+  "problems": [
+    {
+      "code": "LINK_PER_DAY_NOT_GIVEN",
+      "file": "scenarios/synthetic.yaml",
+      "hint": "Use a scenario of at least one day for a per-day figure.",
+      "line": null,
+      "message": "The scenario is shorter than one day, so the data volume per day is not given (scaling a short scenario to a day would repeat its passes).",
+      "path": "duration_s",
+      "severity": "info"
+    }
+  ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
     "libraries": [

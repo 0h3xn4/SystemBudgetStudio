@@ -922,7 +922,7 @@
   },
   "static": [
     {
-      "atmospheric_loss_db": null,
+      "atmospheric_loss_db": 0.0,
       "cn0_dbhz": null,
       "direction": "downlink",
       "eirp_dbw": null,
@@ -934,7 +934,7 @@
       "max_rate_bps": null,
       "max_rate_continuous_bps": null,
       "other_losses_db": null,
-      "path_loss_db": null,
+      "path_loss_db": 152.06602197742023,
       "point": "5 deg elevation",
       "range_m": 2200000.0,
       "rates": [],
@@ -942,7 +942,7 @@
       "required_margin_db": null
     },
     {
-      "atmospheric_loss_db": null,
+      "atmospheric_loss_db": 0.0,
       "cn0_dbhz": null,
       "direction": "downlink",
       "eirp_dbw": null,
@@ -954,7 +954,7 @@
       "max_rate_bps": null,
       "max_rate_continuous_bps": null,
       "other_losses_db": null,
-      "path_loss_db": null,
+      "path_loss_db": 140.02482215086098,
       "point": "zenith",
       "range_m": 550000.0,
       "rates": [],

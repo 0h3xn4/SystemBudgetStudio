@@ -104,7 +104,8 @@ def test_series_csv_rows_are_the_samples_inside_the_pass(parts) -> None:  # type
     lines = series_csv(passes, passes.series[0]).splitlines()
     assert len(lines) == 1 + 30
     first = lines[1].split(",")
-    assert first[0] == "100.000" and first[1] == "2026-01-01T00:01:40.000Z" and first[2] == "1"
+    # the sample stands for 100..110 s and is evaluated, and timed, at 105 s
+    assert first[0] == "105.000" and first[1] == "2026-01-01T00:01:45.000Z" and first[2] == "1"
     assert lines[0].endswith(
         "margin_db_10000bps,margin_db_100000bps,margin_db_1000000bps,selected_rate_bps"
     )
@@ -127,8 +128,9 @@ def test_placeholders_give_na_cells_and_the_banner() -> None:
     out = link_output(project, static, prov)
     assert "INCOMPLETE" in out.document.banner
     row = out.document.sections[0].tables[0].rows[0]
-    assert row[10] is None  # C/N0
-    assert static_csv(static).splitlines()[1].split(",")[11] == ""
+    assert row[10] is not None  # C/N0 does not need the required Eb/N0 (TL-4)
+    cells = static_csv(static).splitlines()[1].split(",")
+    assert cells[11] != "" and cells[12] == ""  # C/N0 given, required Eb/N0 empty
 
 
 def test_write_outputs_names(parts, tmp_path: Path) -> None:  # type: ignore[no-untyped-def]

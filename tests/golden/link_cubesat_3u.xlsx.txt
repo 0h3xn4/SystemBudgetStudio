@@ -3,8 +3,8 @@
 2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  |  |  |  |  |  |  |  |  |  |  |  | 
 4: 'Link budget at the static points' |  |  |  |  |  |  |  |  |  |  |  |  | 
 5: 'Link' | 'Direction' | 'Point' | 'Elevation (deg)' | 'Range (km)' | 'EIRP (dBW)' | 'G/T (dB/K)' | 'Path loss (dB)' | 'Atmospheric (dB)' | 'Other losses (dB)' | 'C/N0 (dBHz)' | 'Required Eb/N0 (dB)' | 'Highest closing rate (kbit/s)' | 'Rate at required margin (kbit/s)'
-6: 'uhf_down' | 'downlink' | '5 deg elevation' | 5 | 2200 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-7: 'uhf_down' | 'downlink' | 'zenith' | 90 | 550 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+6: 'uhf_down' | 'downlink' | '5 deg elevation' | 5 | 2200 | 'n/a' | 'n/a' | 152.0660219774202 | 0 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+7: 'uhf_down' | 'downlink' | 'zenith' | 90 | 550 | 'n/a' | 'n/a' | 140.024822150861 | 0 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 8: 'Other losses = pointing, polarisation and implementation. A link closes at a rate when its margin is at least the required margin of the link. n/a: an input is a placeholder or missing. Highest closing rate empty (n/a with a result): no listed rate closes.' |  |  |  |  |  |  |  |  |  |  |  |  | 
 10: 'Margin by data rate' |  |  |  |  |  |  |  |  |  |  |  |  | 
 11: 'Link' | 'Point' | 'Data rate (kbit/s)' | 'Eb/N0 (dB)' | 'Margin (dB)' | 'Required margin (dB)' | 'Closes' |  |  |  |  |  |  | 

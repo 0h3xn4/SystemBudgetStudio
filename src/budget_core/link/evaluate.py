@@ -29,6 +29,12 @@ BoolArray = np.ndarray[Any, np.dtype[np.bool_]]
 IntArray = np.ndarray[Any, np.dtype[np.int64]]
 GainFn = Callable[[NDArray], NDArray]
 
+# A pass is sampled at this step when the environment can give the exact geometry at any time
+# (D-057, DV-L3), so the results do not depend on the scenario step; each sample is evaluated at
+# the middle of the part of the pass it stands for.
+LINK_SAMPLE_S = 5.0
+DAY_S = 86400.0
+
 # ---- results --------------------------------------------------------------------------------
 
 
@@ -104,7 +110,10 @@ class LinkSeries:
     selected_rate_bps: NDArray | None  # highest listed rate that closes (0: none), 0 if inactive
     passes: tuple[PassSummary, ...]
     volume_bits: float | None
-    volume_per_day_bits: float | None
+    volume_per_day_bits: float | None  # None: n/a, also for a scenario shorter than a day
+    # seconds of the pass each sample stands for while the link is active (the weight of its rate
+    # in the volume); the sample time is the middle of its part of the pass
+    weight_s: NDArray | None = None
 
 
 @dataclass(frozen=True, eq=False)
@@ -213,21 +222,6 @@ class Resolved:
     attenuation: GainFn | None  # by elevation
     spacecraft_transmits: bool
 
-    def complete_for(self) -> bool:
-        gt_ok = self.direct_gt_dbk is not None or (
-            self.rx_gain is not None and self.feed_loss_db is not None and self.tsys_k is not None
-        )
-        return (
-            self.tx_gain is not None
-            and self.tx_power_dbw is not None
-            and self.line_loss_db is not None
-            and gt_ok
-            and self.required_ebn0_db is not None
-            and self.required_margin_db is not None
-            and self.fixed_losses_db is not None
-            and self.attenuation is not None
-        )
-
 
 def _read_pattern(
     project: Project, link_file: str, rel: str, notes: _Notes
@@ -246,7 +240,9 @@ def _read_pattern(
         )
         return None
     try:
-        with path.open(encoding="utf-8", newline="") as handle:
+        if not path.is_file():  # a pipe or a device would block the read
+            raise OSError("not a regular file")
+        with path.open(encoding="utf-8-sig", newline="") as handle:  # Excel writes a BOM
             rows = list(csv.reader(handle))
         header = [c.strip().lower() for c in rows[0]]
         a, g = header.index("angle_deg"), header.index("gain_dbi")
@@ -264,8 +260,9 @@ def _read_pattern(
                 "LINK_INPUT_INVALID",
                 "The antenna pattern file cannot be read as a table of increasing angles.",
                 file=rel,
-                hint="Expected a CSV with the columns angle_deg and gain_dbi (at least two rows, "
-                "angles between 0 and 180 and increasing).",
+                hint="Expected a comma-separated CSV (UTF-8, with or without a byte order mark) "
+                "with the columns angle_deg and gain_dbi: at least two rows, angles between 0 "
+                "and 180 and increasing. A semicolon-separated file is not read.",
             )
         )
         return None
@@ -339,65 +336,83 @@ def _gain_fn(
 
 
 def _attenuation_fn(project: Project, link: Link, link_file: str, notes: _Notes) -> GainFn | None:
-    """Sum of the named attenuation entries, each interpolated by elevation."""
+    """Sum of the named attenuation entries, each interpolated by elevation. Of the entries of a
+    name only those for the link's frequency (within 1 %) count; when none matches, all do and a
+    warning says so. Two entries for the same elevation are ambiguous: the larger loss is used."""
     if not link.attenuation:
         return _constant(0.0)
     table = project.config.attenuation_table
     parts: list[GainFn] = []
     ok = True
+    tableau = "config/attenuation_table.yaml"
     for i, name in enumerate(link.attenuation):
-        entries = [e for e in (table.entries if table else []) if e.name == name]
+        entries = [(k, e) for k, e in enumerate(table.entries if table else []) if e.name == name]
         if not entries:
             notes.problems.append(
                 incomplete(
-                    "This attenuation has no entry in config/attenuation_table.yaml.",
+                    f"Attenuation number {i + 1} of the link has no entry in {tableau}.",
                     link_file,
                     f"attenuation[{i}]",
                 )
             )
             ok = False
             continue
-        losses: list[tuple[float | None, float]] = []
-        for j, e in enumerate(entries):
+        near = [
+            (k, e)
+            for k, e in entries
+            if abs(e.freq_hz - link.frequency_hz) <= 0.01 * link.frequency_hz
+        ]
+        chosen = near or entries
+        if not near:
+            for k, _ in chosen:
+                notes.add_problem(
+                    Problem(
+                        Severity.WARNING,
+                        "LINK_ATTENUATION_FREQUENCY",
+                        "An attenuation entry used by the link is for a frequency that differs "
+                        "from the link's by more than 1 %.",
+                        file=tableau,
+                        path=f"entries[{k}].freq_hz",
+                        hint="Use an entry for the link frequency.",
+                    )
+                )
+        by_elevation: dict[float | None, float] = {}
+        for k, e in chosen:
             value = notes.get(
                 f"Attenuation {name}"
                 + ("" if e.elevation_deg is None else f" at {e.elevation_deg:g} deg"),
                 e.loss_db,
                 "dB",
-                "config/attenuation_table.yaml",
-                f"entries[{_index(table, e)}].loss_db",
-                "The attenuation",
+                tableau,
+                f"entries[{k}].loss_db",
+                f"The attenuation loss of table entry {k + 1}",
             )
             if value is None:
                 ok = False
-            else:
-                losses.append((e.elevation_deg, value))
-            if abs(e.freq_hz - link.frequency_hz) > 0.01 * link.frequency_hz:
+                continue
+            if e.elevation_deg in by_elevation:
                 notes.add_problem(
                     Problem(
                         Severity.WARNING,
-                        "LINK_ATTENUATION_FREQUENCY",
-                        "This attenuation entry is for a frequency that differs from the link's "
-                        "by more than 1 %.",
-                        file="config/attenuation_table.yaml",
-                        path=f"entries[{_index(table, e)}].freq_hz",
-                        hint="Use an entry for the link frequency.",
+                        "LINK_ATTENUATION_DUPLICATE",
+                        f"Attenuation number {i + 1} of the link has two entries for the same "
+                        "elevation; the larger loss is used.",
+                        file=tableau,
+                        path=f"entries[{k}]",
+                        hint="Keep one entry per elevation.",
                     )
                 )
-            del j
-        if not losses:
+                value = max(value, by_elevation[e.elevation_deg])
+            by_elevation[e.elevation_deg] = value
+        if not by_elevation:
             continue
-        by_el = sorted((e, v) for e, v in losses if e is not None)
-        constant = sum(v for e, v in losses if e is None)
+        by_el = sorted((e, v) for e, v in by_elevation.items() if e is not None)
+        constant = by_elevation.get(None, 0.0)
         els, vals = [e for e, _ in by_el], [v for _, v in by_el]
         parts.append(_by_elevation(els, vals, constant) if by_el else _constant(constant))
     if not ok:
         return None
     return _summed(parts)
-
-
-def _index(table: Any, entry: Any) -> int:
-    return next(i for i, e in enumerate(table.entries) if e is entry)
 
 
 def resolve_link(project: Project, link_id: str, notes: _Notes) -> Resolved:
@@ -524,38 +539,46 @@ def _required_ebn0(project: Project, link: Link, file: str, notes: _Notes) -> fl
 
 @dataclass(frozen=True, eq=False)
 class Evaluation:
+    """The terms of the link at the given geometry. Each is computed from its own inputs, so a
+    placeholder only blanks the terms that need it (None); C/N0 needs all of them."""
+
     path_loss_db: NDArray
-    atmospheric_loss_db: NDArray
-    eirp_dbw: NDArray
-    g_over_t_dbk: NDArray
-    cn0_dbhz: NDArray
+    atmospheric_loss_db: NDArray | None
+    eirp_dbw: NDArray | None
+    g_over_t_dbk: NDArray | None
+    cn0_dbhz: NDArray | None
 
 
-def evaluate(res: Resolved, elevation_deg: NDArray, range_m: NDArray) -> Evaluation | None:
-    """C/N0 and its terms at the given geometry; None when an input is missing."""
-    if not res.complete_for():
-        return None
-    assert res.tx_gain and res.tx_power_dbw is not None and res.line_loss_db is not None
-    assert res.attenuation and res.fixed_losses_db is not None
-    nadir = np.asarray(lb.nadir_angle_deg(elevation_deg, range_m), dtype=np.float64)
-    zero = 0.0 * np.asarray(elevation_deg)
-    tx_angle = nadir if res.spacecraft_transmits else zero
-    eirp = res.tx_power_dbw - res.line_loss_db + res.tx_gain(tx_angle)
-    gt: NDArray
+def evaluate(res: Resolved, elevation_deg: NDArray, range_m: NDArray) -> Evaluation:
+    """The path loss, atmospheric loss, EIRP, G/T and C/N0 at the given geometry."""
+    elevation = np.asarray(elevation_deg, dtype=np.float64)
+    zero = 0.0 * elevation
+    nadir = np.asarray(lb.nadir_angle_deg(elevation, range_m), dtype=np.float64)
+    path = np.asarray(lb.free_space_path_loss_db(range_m, res.link.frequency_hz), dtype=np.float64)
+    eirp: NDArray | None = None
+    if res.tx_gain is not None and res.tx_power_dbw is not None and res.line_loss_db is not None:
+        tx_angle = nadir if res.spacecraft_transmits else zero
+        eirp = np.asarray(
+            res.tx_power_dbw - res.line_loss_db + res.tx_gain(tx_angle), dtype=np.float64
+        )
+    gt: NDArray | None = None
     if res.direct_gt_dbk is not None:
-        gt = res.direct_gt_dbk + zero
-    else:
-        assert res.rx_gain and res.feed_loss_db is not None and res.tsys_k is not None
+        gt = np.asarray(res.direct_gt_dbk + zero, dtype=np.float64)
+    elif res.rx_gain is not None and res.feed_loss_db is not None and res.tsys_k is not None:
         rx_angle = zero if res.spacecraft_transmits else nadir
         gt = np.asarray(
             lb.g_over_t_dbk(res.rx_gain(rx_angle), res.feed_loss_db, res.tsys_k), dtype=np.float64
         )
-    path = np.asarray(lb.free_space_path_loss_db(range_m, res.link.frequency_hz), dtype=np.float64)
-    atmos = np.asarray(
-        res.attenuation(np.asarray(elevation_deg, dtype=np.float64)), dtype=np.float64
-    )
-    cn0 = lb.cn0_dbhz(eirp, path, atmos + res.fixed_losses_db, gt)
-    return Evaluation(path, atmos, np.asarray(eirp), np.asarray(gt), np.asarray(cn0))
+    atmos = None if res.attenuation is None else np.asarray(res.attenuation(elevation))
+    cn0: NDArray | None = None
+    if (
+        eirp is not None
+        and gt is not None
+        and atmos is not None
+        and res.fixed_losses_db is not None
+    ):
+        cn0 = np.asarray(lb.cn0_dbhz(eirp, path, atmos + res.fixed_losses_db, gt), dtype=np.float64)
+    return Evaluation(path, atmos, eirp, gt, cn0)
 
 
 def _not_closed(link_id: str, where: str) -> Problem:
@@ -588,19 +611,23 @@ def link_static_budget(project: Project) -> StaticLinkResult:
             ev = evaluate(res, el, d)
             rates: list[RateResult] = []
             max_rate = cont = None
-            if ev is not None:
-                assert res.required_ebn0_db is not None and res.required_margin_db is not None
+            if (
+                ev.cn0_dbhz is not None
+                and res.required_ebn0_db is not None
+                and res.required_margin_db is not None
+            ):
                 for rate in link.data_rates_bps:
                     ebn0 = _scalar(np.asarray(lb.ebn0_db(ev.cn0_dbhz, rate)))
                     m = ebn0 - res.required_ebn0_db
                     rates.append(RateResult(rate, ebn0, m, m >= res.required_margin_db))
                 closing = [r.data_rate_bps for r in rates if r.closes]
                 max_rate = max(closing) if closing else None
-                cont = float(
+                limit = float(
                     lb.max_rate_for_margin_bps(
                         _scalar(ev.cn0_dbhz), res.required_ebn0_db, res.required_margin_db
                     )
                 )
+                cont = limit if math.isfinite(limit) else None
             rows.append(
                 StaticRow(
                     link_id,
@@ -610,12 +637,12 @@ def link_static_budget(project: Project) -> StaticLinkResult:
                     point.elevation_deg,
                     point.range_m,
                     link.frequency_hz,
-                    None if ev is None else _scalar(ev.path_loss_db),
-                    None if ev is None else _scalar(ev.atmospheric_loss_db),
+                    _scalar(ev.path_loss_db),
+                    None if ev.atmospheric_loss_db is None else _scalar(ev.atmospheric_loss_db),
                     res.fixed_losses_db,
-                    None if ev is None else _scalar(ev.eirp_dbw),
-                    None if ev is None else _scalar(ev.g_over_t_dbk),
-                    None if ev is None else _scalar(ev.cn0_dbhz),
+                    None if ev.eirp_dbw is None else _scalar(ev.eirp_dbw),
+                    None if ev.g_over_t_dbk is None else _scalar(ev.g_over_t_dbk),
+                    None if ev.cn0_dbhz is None else _scalar(ev.cn0_dbhz),
                     res.required_ebn0_db,
                     res.required_margin_db,
                     tuple(rates),
@@ -671,48 +698,48 @@ def link_pass_series(project: Project, run: ScenarioRun) -> LinkSeriesResult:
             )
             continue
         res = resolve_link(project, link_id, notes)
-        idx: list[int] = []
-        pass_of: list[int] = []
-        weight: list[float] = []
+        exact = vis.geometry_at is not None
         lows: list[float] = []
         highs: list[float] = []
+        pass_of: list[int] = []
         for k, p in enumerate(vis.passes):
-            first = max(int(np.searchsorted(grid_t, p.aos_s, side="right")) - 1, 0)
-            last = int(np.searchsorted(grid_t, p.los_s, side="left"))
-            for i in range(first, min(last + 1, len(grid_t))):
-                t0, t1 = grid_t[i], min(grid_t[i] + step, duration)
-                lo, hi = max(t0, p.aos_s), min(t1, p.los_s)
-                if hi - lo > 1e-12:
-                    idx.append(i)
-                    pass_of.append(k)
-                    weight.append(hi - lo)
-                    lows.append(lo)
-                    highs.append(hi)
-        index = np.array(idx, dtype=np.int64)
-        times = grid_t[index]
-        el = np.asarray(vis.elevation_deg, dtype=np.float64)[index]
-        rng = np.asarray(vis.range_m, dtype=np.float64)[index]
-        w_arr = np.array(weight, dtype=np.float64)
+            for lo, hi in _pass_pieces(p.aos_s, p.los_s, grid_t, step, duration, exact):
+                lows.append(lo)
+                highs.append(hi)
+                pass_of.append(k)
+        low_arr, high_arr = np.array(lows, dtype=np.float64), np.array(highs, dtype=np.float64)
+        times = 0.5 * (low_arr + high_arr)  # each piece is evaluated at its middle
+        if vis.geometry_at is not None and len(times):
+            el, _, rng = vis.geometry_at(times)
+        else:
+            el = np.interp(times, grid_t, np.asarray(vis.elevation_deg, dtype=np.float64))
+            rng = np.interp(times, grid_t, np.asarray(vis.range_m, dtype=np.float64))
+        el, rng = np.asarray(el, dtype=np.float64), np.asarray(rng, dtype=np.float64)
+        w_arr = high_arr - low_arr
         pass_arr = np.array(pass_of, dtype=np.int64)
         # time of each sample's part of the pass that falls in a mode the link runs in: a mode
-        # change inside a step counts for exactly the time it covers
+        # change inside a sample counts for exactly the time it covers
         if link.active_modes:
             ours = [seg for seg in run.timeline if seg.mode in link.active_modes]
             starts, ends = [seg.start_s for seg in ours], [seg.end_s for seg in ours]
             ones = [1.0] * len(ours)
-            span_hi = integral_of_steps(starts, ends, ones, np.array(highs, dtype=np.float64))
-            span_lo = integral_of_steps(starts, ends, ones, np.array(lows, dtype=np.float64))
+            span_hi = integral_of_steps(starts, ends, ones, high_arr)
+            span_lo = integral_of_steps(starts, ends, ones, low_arr)
             w_arr = np.clip(span_hi - span_lo, 0.0, w_arr)
         active = w_arr > 1e-12
         if link.max_elevation_deg is not None:
             active &= el <= link.max_elevation_deg
+        w_arr = np.where(active, w_arr, 0.0)
         ev = evaluate(res, el, rng)
         margins = selected = None
         volume = per_day = None
         summaries: list[PassSummary] = []
         rates = tuple(link.data_rates_bps)
-        if ev is not None:
-            assert res.required_ebn0_db is not None and res.required_margin_db is not None
+        if (
+            ev.cn0_dbhz is not None
+            and res.required_ebn0_db is not None
+            and res.required_margin_db is not None
+        ):
             margins = np.stack(
                 [lb.ebn0_db(ev.cn0_dbhz, r) - res.required_ebn0_db for r in rates], axis=1
             )
@@ -722,9 +749,23 @@ def link_pass_series(project: Project, run: ScenarioRun) -> LinkSeriesResult:
             selected = np.where(active, chosen, 0.0)
             bits = selected * w_arr
             volume = float(bits.sum())
-            per_day = volume / (duration / 86400.0) if duration > 0 else None
+            per_day = volume / (duration / DAY_S) if duration >= DAY_S * (1.0 - 1e-9) else None
             if active.any() and not bool((selected > 0).any()):
                 notes.add_problem(_not_closed(link_id, "in any pass of this scenario"))
+            if not active.any():
+                notes.add_problem(
+                    Problem(
+                        Severity.INFO,
+                        "LINK_NEVER_ACTIVE",
+                        f"Link '{link_id}' is never active in this scenario: no pass of its "
+                        "station falls in an active mode below the tracking limit, so its data "
+                        "volume is zero.",
+                        file=file,
+                        path="active_modes",
+                        hint="Check the scenario's sites and rules, 'active_modes' and "
+                        "'max_elevation_deg' of the link.",
+                    )
+                )
         for k, p in enumerate(vis.passes):
             mask = pass_arr == k
             usable = float(w_arr[mask & (selected > 0)].sum()) if selected is not None else None
@@ -757,20 +798,60 @@ def link_pass_series(project: Project, run: ScenarioRun) -> LinkSeriesResult:
                 el,
                 rng,
                 active,
-                None if ev is None else ev.path_loss_db,
-                None if ev is None else ev.atmospheric_loss_db,
-                None if ev is None else ev.eirp_dbw,
-                None if ev is None else ev.g_over_t_dbk,
-                None if ev is None else ev.cn0_dbhz,
+                ev.path_loss_db,
+                ev.atmospheric_loss_db,
+                ev.eirp_dbw,
+                ev.g_over_t_dbk,
+                ev.cn0_dbhz,
                 margins,
                 selected,
                 tuple(summaries),
                 volume,
                 per_day,
+                w_arr,
             )
         )
-        del file
+    if duration < DAY_S * (1.0 - 1e-9) and any(s.volume_bits is not None for s in series):
+        notes.add_problem(
+            Problem(
+                Severity.INFO,
+                "LINK_PER_DAY_NOT_GIVEN",
+                "The scenario is shorter than one day, so the data volume per day is not given "
+                "(scaling a short scenario to a day would repeat its passes).",
+                file=f"scenarios/{run.scenario_id}.yaml",
+                path="duration_s",
+                hint="Use a scenario of at least one day for a per-day figure.",
+            )
+        )
+    notes.problems.extend(run.problems)
     return LinkSeriesResult(run, tuple(series), tuple(notes.assumptions), _unique(notes.problems))
+
+
+def _pass_pieces(
+    aos_s: float,
+    los_s: float,
+    grid_t: NDArray,
+    step_s: float,
+    duration_s: float,
+    exact: bool,
+) -> list[tuple[float, float]]:
+    """The parts of a pass that are sampled: equal pieces of at most `LINK_SAMPLE_S` when the
+    geometry can be computed at any time, else the part of the pass in each grid step."""
+    if los_s - aos_s <= 1e-12:
+        return []
+    if exact:
+        count = max(1, math.ceil((los_s - aos_s) / LINK_SAMPLE_S - 1e-9))
+        bounds = np.linspace(aos_s, los_s, count + 1)
+        return [(float(a), float(b)) for a, b in zip(bounds[:-1], bounds[1:], strict=True)]
+    pieces: list[tuple[float, float]] = []
+    first = max(int(np.searchsorted(grid_t, aos_s, side="right")) - 1, 0)
+    last = int(np.searchsorted(grid_t, los_s, side="left"))
+    for i in range(first, min(last + 1, len(grid_t))):
+        t0, t1 = float(grid_t[i]), min(float(grid_t[i]) + step_s, duration_s)
+        lo, hi = max(t0, aos_s), min(t1, los_s)
+        if hi - lo > 1e-12:
+            pieces.append((lo, hi))
+    return pieces
 
 
 def format_offset_utc(run: ScenarioRun, seconds: float) -> str:

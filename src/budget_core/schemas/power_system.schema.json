@@ -5,6 +5,7 @@
       "description": "One array panel: its outward normal in the body frame and its cell count.",
       "properties": {
         "cells_per_string": {
+          "maximum": 10000,
           "minimum": 1,
           "title": "Cells Per String",
           "type": "integer"
@@ -22,6 +23,7 @@
           "type": "array"
         },
         "strings": {
+          "maximum": 10000,
           "minimum": 1,
           "title": "Strings",
           "type": "integer"
@@ -99,11 +101,13 @@
           "$ref": "#/$defs/Sourced"
         },
         "cells_in_parallel": {
+          "maximum": 10000,
           "minimum": 1,
           "title": "Cells In Parallel",
           "type": "integer"
         },
         "cells_in_series": {
+          "maximum": 1000,
           "minimum": 1,
           "title": "Cells In Series",
           "type": "integer"
