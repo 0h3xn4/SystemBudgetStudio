@@ -47,7 +47,7 @@ results/                  written by the tool; not part of the project
 
 Every file begins with `schema_version` and `kind`. Files are meant to be edited with any text editor and compared with ordinary tools: put the folder in git and you have a full history. Units, modes, links and scenarios are separate files so several people can work on different ones at the same time. The complete field list is the [project file format](../FILE_FORMAT.md); `budget export-schemas schemas` writes a JSON Schema for every kind, which many editors can use for completion.
 
-The **id** of a unit, mode, site, scenario or link is its file name without `.yaml`; use letters, digits, `_` and `-` (other names load with a warning, see the [file format](../FILE_FORMAT.md#ids-text-and-numbers-decisions-d-103-to-d-107)). Only names ending in exactly `.yaml` are read: a file such as `camera.yml` or a sub-folder inside `units/` is skipped, and the tool says so (`FILE_IGNORED`).
+The **id** of a unit, mode, site, scenario or link is its file name without `.yaml`; use letters, digits, `_` and `-` (other names load with a warning, see the [file format](../FILE_FORMAT.md#ids-text-and-numbers-decisions-d-120-to-d-124)). Only names ending in exactly `.yaml` are read: a file such as `camera.yml` or a sub-folder inside `units/` is skipped, and the tool says so (`FILE_IGNORED`).
 
 Files written by an earlier version of the tool are upgraded in memory when loaded (you see the information message `FILE_MIGRATED`) and are written back in the new format only when you save them. A file from a *newer* version is refused with a clear message.
 

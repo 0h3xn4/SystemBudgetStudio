@@ -20,7 +20,7 @@ Windows 10/11 and Linux (RHEL/Rocky 8 or newer, Ubuntu LTS), Python 3.11 to 3.13
 
 ### Is it free to use? What is the licence?
 
-It is for internal use; the project decided not to add a LICENSE file. The libraries it uses are permissively licensed or LGPL ([licence list](LICENCES.md)).
+Yes. It is released under the [MIT licence](../LICENSE): free to use, copy, modify and distribute, without warranty. The libraries it uses are permissively licensed or LGPL ([licence list](LICENCES.md)).
 
 ### Are the examples real?
 

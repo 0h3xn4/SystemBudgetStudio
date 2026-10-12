@@ -1,10 +1,19 @@
 # Changelog
 
-All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. The project is at version 0.1.0 and has not been released or tagged yet ([how to cut a release](docs/developer/README.md#cut-a-release)).
+All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Version 0.1.0 is ready to be tagged but has not been released yet ([how to cut a release](docs/developer/README.md#cut-a-release)).
 
 ## [Unreleased]
 
-### Unreleased / audit fixes: window (GUI)
+## [0.1.0] - 2026-10-12
+
+
+Everything below is in the repository at version 0.1.0.
+
+### Licence
+- **MIT licence** and a `LICENSE` file; the installers and bundles ship it (D-140). The eight earlier decisions marked "owner to confirm" are confirmed (D-141).
+- The mission phase of a scenario without a depth-of-discharge entry is warned about (`SCENARIO_PHASE_NO_DOD`).
+
+### Pre-release audit: window (GUI)
 - **A scenario edit is saved into the project that is open now.** Opening a second project with a scenario of the same name and pressing *Save scenario* used to write into the first project's file (D-103).
 - **Saving a unit no longer drops `heat_dissipation_ratio`** (or any field the table does not show), and the unit table and the scenario editor now edit the file in place: comments, key order and unchanged values stay, a save without a real change leaves the file byte-identical, and the write is atomic (D-103). The text tab keeps a byte-order mark and CRLF line ends, keeps cursor and undo after a save, and asks before overwriting a file that changed on disk.
 - **Results belong to their inputs.** A scenario, timeline, link or comparison result is marked stale (and its export switched off) when the project, an orbit, ground station or target file, the scenario selected or the demand basis changed; a result for a scenario that is no longer selected is not shown; findings of a stale result leave the Problems panel; link-pass findings now reach it (D-104).
@@ -14,7 +23,7 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 - **Qt file dialogs no longer write `~/.config/QtProject.conf`** (or the Windows registry); the dialogs do not remember the last folder (D-105).
 - Smaller: the project tree lists `links/`, keeps its selection on reload, and old tab pages are deleted (memory no longer grows with reloads); the Problems panel lists errors first and opens taller; the minimum window height fits a 1366 x 768 screen (the scenario editor scrolls); disabled buttons and focus are visible; the warning colour is readable; `1_0`, `nan` and a decimal comma in a cell give a clear message; Ctrl+S in the Scenario tab saves the scenario; double-clicking a missing file says it does not exist; the *File* menu has no duplicate mnemonic; the wizard expands `~`, refuses a blank or unwritable parent folder; a missing comparison folder is named as such; a flat plot no longer raises; jumping to a violation keeps its zoom; the Power timeline and Link passes exports are built in the background thread.
 
-### Audit fixes (loader, validation, command line, wizard, units)
+### Pre-release audit: loader, validation, command line, wizard, units
 - **Loader.** A file is refused on counts of its raw text (size, lines, brackets, depth) before the YAML parser runs: 60 KB of `[` no longer takes a minute. Tags (`!!omap`), the `<<` key and odd directives are `YAML_SYNTAX` problems instead of internal errors. A pipe or folder named `*.yaml` no longer blocks the loader (D-122).
 - **Stray files and ids.** `FILE_IGNORED` for `.yml`, `.YAML`, sub-folders and misspelt config files; `ID_UNUSUAL`, `ID_COLLISION`, `ID_INVALID` for odd file names; no `REF_UNKNOWN_*` cascade from a file that failed to load (D-120).
 - **Problem text.** Messages and hints no longer contain names or values read from files (phase, class, node, case, surface, limit, attenuation names; TLE digits). They give the path, line or an index (D-121).
@@ -24,7 +33,7 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 - **SpaceMissionStudio import.** Byte order mark accepted, size and row limits, files must lie inside `import_dir`, peak elevation checked, no invented time of the pass maximum (D-124).
 - **Command line.** `link-passes` fails on a link that closes at no rate and counts load problems like `run` and `power-timeline`; unencodable characters no longer crash a finished run; a bad `SOURCE_DATE_EPOCH` or `--date` is a clear error; `export-examples` needs `--force` to replace existing folders; `--series-every` and `--max-rows` are range-checked; several or no scenarios without `--scenario`, a file given as the project, `run --budget link` without links, `units-export` with a wrong suffix and `budget` without a command are explained; options cannot be abbreviated; the INCOMPLETE banner is printed when a later budget is incomplete; guide, schema and project files are written atomically (D-125). The JSON schemas fix `schema_version`.
 
-### Unreleased / audit fixes (solvers, environment, power, thermal, link, mass)
+### Pre-release audit: solvers, environment, power, thermal, link, mass
 - **Power:** beginning of life no longer needs the annual array degradation or the battery capacity fade (it was n/a with a placeholder in either; PWR-1). The battery's full and empty instants and the orbit boundaries are solver edges, so the start of a depletion, its worst unmet power and a depth-of-discharge crossing no longer depend on the step (PWR-2, D-131). The soft shadow comes from the eclipse and umbra intervals and is step-independent (PWR-5, DV-P6). Orbit windows are refused for a step longer than a quarter orbit (`ORBIT_BALANCE_NOT_EVALUATED`) and the last orbit is kept when the duration is not a multiple of the step (PWR-3, PWR-11). Checks that could not run are listed as "Not evaluated" in the report, the window and `budget power-timeline`, never as "No violations found", and the per-case violation count includes the case-independent findings (PWR-4, RC-7). No spurious depletion from rounding noise (PWR-9). Messages say "missing from <file>" when only a key is absent (PWR-10).
 - **Mass:** a limit that is met exactly is not exceeded (24.255 kg against a 24.255 kg limit gave `MASS_LIMIT_EXCEEDED`; PWR-6). New warning `MASS_INERTIA_NOT_SCALED` for an expendable whose own inertia does not follow its changing mass (PWR-7, DV-M4).
 - **Thermal:** every node must balance to its own heat; an isolated tiny node beside a large body was reported at 4.5 K / 5.985 K instead of the 3 K of space (TL-1). Stiff networks are refined with an exact residual before being refused (TL-17). Limit and margin findings name the case and are no longer merged (TL-14); an environment without cases is `RESULT_INCOMPLETE` (TL-13); messages no longer repeat surface and limit names (TL-15). D-132.
@@ -32,11 +41,11 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 - **Environment:** passes are found at any `step_s`, including passes of a few seconds (TL-6/MI-7, D-130). The time grid keeps the last sample of a decimal step (MI-6). Overlapping eclipses count once in the eclipse fraction (PWR-8). Limits: the cost limit covers the detection grid and running out of memory is a plain message (MI-5); start times and epochs in 1950 to 2100 (MI-8); semi-major axis 6.4e6 to 1e8 m, matching TLE satellite numbers, a valid TLE epoch and a warning for a TLE more than 30 days from the start (MI-9, D-133); bounded cell and string counts and direction vectors (MI-16).
 - **Shown where the results are used.** `budget link-passes` says `n/a per day` for a scenario shorter than a day; `budget scenario` and the Scenario tab show the stale-orbit warning; the timeline JSON lists the checks that did not run (`not_evaluated`); the timeline tab counts case-independent violations and names the checks that did not run.
 
-### Added
+### Added since the milestones
 - Unit power data as a table: `budget units-export` (CSV or XLSX), `budget units-import` (preview, then `--apply`), and *File → Export/Import unit table* in the window. Empty cell means unchanged; no unit is created or deleted; formulas are never evaluated; one problem stops the whole import; the unit files are edited in place so comments and key order stay (D-102).
 - Documentation restructure: [README](README.md), [docs index](docs/README.md), [getting started](docs/getting-started.md), [user manual](docs/user-manual/README.md), [examples guide](examples/README.md), [FAQ](docs/faq.md), [troubleshooting](docs/troubleshooting.md), [glossary](docs/glossary.md), [tips](docs/tips.md), [CONTRIBUTING](CONTRIBUTING.md), [developer docs](docs/developer/README.md) and the [documentation audit](docs/DOCS_AUDIT.md).
 
-### Reports and output (audit fixes)
+### Pre-release audit: reports and output
 - Every format rounds half up on the decimal value (0.125 is 0.13 in PDF, DOCX, CSV comparison and XLSX), never prints `-0.00`, and shows a number that is not finite as n/a; the *Configuration numbers used* table shows up to ten significant digits (D-110).
 - Writing outputs: the set is staged and moved into place together, the failing file is named, replaced files keep their permissions, names are limited by bytes, reserved names include `con.tar.gz`, names that differ only by case are refused (D-111).
 - The INCOMPLETE banner is on every sheet and page; JSON has `incomplete`, the provenance CSV a row `Incomplete`; link reports are incomplete when a pass result is n/a because a table entry is missing; equation lists include the PWR-* and ENV-* equations the results rely on (D-112).
@@ -46,15 +55,11 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 - PDF: very long cells are shortened with a note instead of failing the run, missing glyphs are `?`, header words are not split, the footer wraps; XLSX: valid unique sheet names, long cells shortened; DOCX properties are cut at 255 characters; plots: gaps, single samples, tick labels, legend overflow (D-115).
 - Series CSV files: the mode id is quoted and defused; the link series has `in_pass_s`, the time each row stands for (D-116).
 
-### Fixed
+### Fixed since the milestones
 - **File → Export scenario results** existed in the code but was not connected to any menu; it is now, and an unwritable folder gives a plain message. The "Compute a scenario first (Ctrl+R)" message named a shortcut that does not exist; it now says to press Compute in the Scenario tab.
 
-### Changed
+### Changed since the milestones
 - `docs/ARCHITECTURE.md`, `PLAN.md`, `BRANCH_PROTECTION.md`, `ENVIRONMENT_FORMAT.md`, `FILE_FORMAT.md` and the user guide chapters corrected where they described features that do not exist.
-
-## [0.1.0] - not yet released
-
-Everything below is in the repository at version 0.1.0.
 
 ### Honesty round
 - Unit import from CSV/XLSX and a separate expert mode are recorded as deferred; documents no longer claim them (D-099).
