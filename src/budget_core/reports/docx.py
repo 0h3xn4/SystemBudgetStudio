@@ -6,7 +6,7 @@ from __future__ import annotations
 import io
 import re
 from datetime import datetime
-from xml.sax.saxutils import escape
+from html import escape
 
 from docx import Document
 from docx.enum.section import WD_ORIENT
@@ -54,7 +54,7 @@ def _name_application(document: object, tool: str) -> None:
             xml = part.blob.decode("utf-8")
             xml = re.sub(
                 r"<Application>[^<]*</Application>",
-                f"<Application>{escape(tool)}</Application>",
+                f"<Application>{escape(tool, quote=False)}</Application>",
                 xml,
             )
             part._blob = xml.encode("utf-8")
