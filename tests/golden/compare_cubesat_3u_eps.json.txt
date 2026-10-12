@@ -1,5 +1,5 @@
 {
-  "compared": 1545,
+  "compared": 1527,
   "differences": [
     {
       "change": "+0.400 W",
@@ -14,15 +14,15 @@
       "value_b": "2.400"
     },
     {
-      "change": "+0.441 W",
-      "change_percent": "+20.4 %",
+      "change": "+0.440 W",
+      "change_percent": "+20.3 %",
       "comparison": "Static power budget",
       "quantity": "Average, unit margins (W)",
       "row": "Nominal",
       "section": "Summary",
       "status": "changed",
       "table": "Power by spacecraft mode",
-      "value_a": "2.167",
+      "value_a": "2.168",
       "value_b": "2.608"
     },
     {
@@ -50,7 +50,7 @@
       "value_b": "2.749"
     },
     {
-      "change": "+0.555 W",
+      "change": "+0.554 W",
       "change_percent": "+20.3 %",
       "comparison": "Static power budget",
       "quantity": "Average at source, with margins (W)",
@@ -158,7 +158,7 @@
       "value_b": "2.749"
     },
     {
-      "change": "+0.555 W",
+      "change": "+0.554 W",
       "change_percent": "+20.3 %",
       "comparison": "Static power budget",
       "quantity": "Average at source, with margins (W)",
@@ -182,15 +182,15 @@
       "value_b": "2.400"
     },
     {
-      "change": "+0.441 W",
-      "change_percent": "+20.4 %",
+      "change": "+0.440 W",
+      "change_percent": "+20.3 %",
       "comparison": "Static power budget",
       "quantity": "Average (W)",
       "row": "Load, with unit margins",
       "section": "Mode: Nominal",
       "status": "changed",
       "table": "Totals",
-      "value_a": "2.167",
+      "value_a": "2.168",
       "value_b": "2.608"
     },
     {
@@ -218,7 +218,7 @@
       "value_b": "2.749"
     },
     {
-      "change": "+0.555 W",
+      "change": "+0.554 W",
       "change_percent": "+20.3 %",
       "comparison": "Static power budget",
       "quantity": "Average (W)",
@@ -296,7 +296,15 @@
     "generated": "2026-01-02T03:04:05Z",
     "libraries": [
       [
+        "numpy",
+        "for-golden-tests"
+      ],
+      [
         "openpyxl",
+        "for-golden-tests"
+      ],
+      [
+        "Pillow",
         "for-golden-tests"
       ],
       [
@@ -308,11 +316,19 @@
         "for-golden-tests"
       ],
       [
+        "python-docx",
+        "for-golden-tests"
+      ],
+      [
         "reportlab",
         "for-golden-tests"
       ],
       [
         "ruamel.yaml",
+        "for-golden-tests"
+      ],
+      [
+        "sgp4",
         "for-golden-tests"
       ]
     ],
@@ -324,7 +340,9 @@
     "tool_version": "0.1.0",
     "user": "Golden User"
   },
+  "rows_one_sided": 0,
   "truncated": 0,
-  "unchanged": 1521,
-  "unmatched": []
+  "unchanged": 1503,
+  "unmatched": [],
+  "values_differ": 24
 }

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import math
 import zipfile
 from datetime import datetime
 
@@ -13,7 +14,16 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.writer.excel import ExcelWriter
 
-from budget_core.reports.document import NA, Column, ReportDocument, Section, Table
+from budget_core.reports.document import (
+    NA,
+    Column,
+    ReportDocument,
+    Section,
+    Table,
+    banner_headline,
+    format_cell,
+)
+from budget_core.reports.numfmt import no_negative_zero
 from budget_core.reports.textsafe import clean_document
 from budget_core.reports.zipnorm import normalise_zip
 
@@ -21,9 +31,12 @@ FONT = "IBM Plex Sans"
 HEADER_FILL = PatternFill("solid", fgColor="E0E0E0")
 FIGURE_WIDTH_PX = 1100
 ROW_PX = 20  # default row height in pixels
+CELL_LIMIT = 32000  # a spreadsheet cell holds 32,767 characters
 
 
 def _number_format(column: Column) -> str:
+    if column.decimals < 0:
+        return "General"
     if column.kind == "percent":
         return "0." + "0" * max(column.decimals - 2, 0) + "%" if column.decimals > 2 else "0%"
     return "0." + "0" * column.decimals if column.decimals else "0"
@@ -41,24 +54,35 @@ def _write_table(ws: Worksheet, table: Table, row: int, widths: dict[int, int]) 
     ws.freeze_panes = ws.freeze_panes or None
     row += 1
     last = len(table.rows) - 1
+    shortened = 0
     for i, values in enumerate(table.rows):
         for c, (value, column) in enumerate(zip(values, table.columns, strict=True), 1):
-            if value is None:
+            if value is None or (not isinstance(value, str) and not math.isfinite(value)):
                 cell = ws.cell(row=row, column=c, value=NA)
                 cell.alignment = Alignment(horizontal="right")
                 text = NA
             elif isinstance(value, str):
+                if len(value) > CELL_LIMIT:
+                    value = value[: CELL_LIMIT - 1] + "…"
+                    shortened += 1
                 cell = ws.cell(row=row, column=c, value=value)
                 text = value
             else:
-                cell = ws.cell(row=row, column=c, value=float(value))
+                cell = ws.cell(row=row, column=c, value=no_negative_zero(float(value)))
                 cell.number_format = _number_format(column)
-                text = f"{value:.{column.decimals}f}"
+                text = format_cell(value, column)
             cell.font = Font(name=FONT, bold=table.emphasise_last_row and i == last)
             widths[c] = max(widths.get(c, 0), min(len(text), 60))
         row += 1
     if table.note:
         ws.cell(row=row, column=1, value=table.note).font = Font(name=FONT, italic=True)
+        row += 1
+    if shortened:
+        note = (
+            f"{shortened} cell(s) were shortened to fit a spreadsheet cell (32,767 characters); "
+            "the DOCX and JSON files hold the full text."
+        )
+        ws.cell(row=row, column=1, value=note).font = Font(name=FONT, italic=True)
         row += 1
     return row + 1
 
@@ -68,10 +92,11 @@ def _write_section(ws: Worksheet, section: Section, banner: str, first: bool, ti
     if first:
         ws.cell(row=row, column=1, value=title).font = Font(name=FONT, bold=True, size=14)
         row += 1
-        if banner:
-            cell = ws.cell(row=row, column=1, value=banner)
-            cell.font = Font(name=FONT, bold=True, color="DA1E28")
-            row += 1
+    if banner:  # on every sheet: a sheet can be read or copied without the first one
+        cell = ws.cell(row=row, column=1, value=banner if first else banner_headline(banner))
+        cell.font = Font(name=FONT, bold=True, color="DA1E28")
+        row += 1
+    if first or banner:
         row += 1
     for text in section.paragraphs:
         ws.cell(row=row, column=1, value=text).font = Font(name=FONT)
@@ -108,7 +133,7 @@ def render_xlsx(doc: ReportDocument) -> bytes:
                     cell.data_type = "s"
     stamp = datetime.strptime(doc.provenance.generated, "%Y-%m-%dT%H:%M:%SZ")
     props = wb.properties
-    props.creator = doc.provenance.tool
+    props.creator = doc.provenance.user  # the author, as in the PDF and DOCX properties
     props.lastModifiedBy = doc.provenance.tool
     props.title = doc.title
     props.created = stamp

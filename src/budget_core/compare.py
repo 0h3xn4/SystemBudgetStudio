@@ -2,10 +2,14 @@
 
 The comparison works on the neutral report documents the budgets already produce, so one
 implementation serves the power, mass, thermal and link budgets and every scenario result.
-Tables are matched by section and table title, rows by their first column, values by column
-header. Only values that differ *as displayed* are reported (a change below the displayed
-precision is not a change a reader could see). Nothing is dropped silently: rows beyond the
-display limit are counted and stated.
+Tables are matched by section and table title (a second table with the same title is "Title #2"),
+rows by the key columns the table declares (the first column unless it says otherwise: a link
+table is keyed by link and point, so inserting a point does not shift the pairing), values by
+column header. Only values that differ *as displayed* are reported (a change below the displayed
+precision is not a change a reader could see); the change and the percentage are computed from
+the exact values. Nothing is dropped silently: rows beyond the display limit are counted and
+stated and stay in the CSV and JSON files, and sections, tables, columns and rows that exist on
+one side only are listed.
 """
 
 from __future__ import annotations
@@ -17,6 +21,7 @@ from dataclasses import asdict, dataclass
 from typing import Literal
 
 from budget_core.provenance import Provenance
+from budget_core.reports import numfmt
 from budget_core.reports.common import BANNER, sheet_name
 from budget_core.reports.csvutil import csv_writer
 from budget_core.reports.document import (
@@ -52,11 +57,12 @@ class Difference:
 
 @dataclass(frozen=True)
 class Unmatched:
-    """A section (`table` empty) or table that exists on one side only."""
+    """A section (`table` empty), a table or a column of a table that exists on one side only."""
 
     section: str
     table: str
     status: Literal["added", "removed"]
+    column: str = ""
 
 
 @dataclass(frozen=True)
@@ -64,7 +70,7 @@ class ComparisonResult:
     name: str
     label_a: str
     label_b: str
-    differences: tuple[Difference, ...]
+    differences: tuple[Difference, ...]  # the first `max_rows`: what the report and window list
     compared: int  # value cells present on both sides
     unchanged: int
     truncated: int  # differences beyond the display limit
@@ -73,18 +79,41 @@ class ComparisonResult:
     incomplete_b: bool
     provenance_a: Provenance
     provenance_b: Provenance
+    all_differences: tuple[Difference, ...] = ()  # every difference (the CSV and JSON files)
+    values_differ: int = 0  # value cells that differ, listed or not
+    rows_one_sided: int = 0  # rows that exist on one side only, listed or not
+
+    @property
+    def summary_line(self) -> str:
+        """The one line that says how much differs (the report, the command line and the window
+        use this text, so they agree)."""
+        return _summary(self.values_differ, self.compared, self.rows_one_sided)
+
+
+def _summary(values: int, compared: int, rows: int) -> str:
+    return (
+        f"{values} value(s) differ out of {compared} compared"
+        + (f", and {rows} row(s) exist on one side only" if rows else "")
+        + "."
+    )
 
 
 def _is_number(value: Cell) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
-def _keys(table: Table) -> list[str]:
-    """Row keys: the first cell as displayed; repeated keys get ' #2', ' #3', ... in order."""
+def _key_columns(table: Table) -> tuple[int, ...]:
+    valid = tuple(i for i in table.key_columns if 0 <= i < len(table.columns))
+    return valid or (0,)
+
+
+def _keys(table: Table, key_columns: Sequence[int]) -> list[str]:
+    """Row keys: the key cells as displayed, joined by ' / '; repeated keys get ' #2', ' #3', ...
+    in order."""
     seen: dict[str, int] = {}
     keys: list[str] = []
     for row in table.rows:
-        base = format_cell(row[0], table.columns[0]) if row else ""
+        base = " / ".join(format_cell(row[i], table.columns[i]) for i in key_columns) if row else ""
         seen[base] = seen.get(base, 0) + 1
         keys.append(base if seen[base] == 1 else f"{base} #{seen[base]}")
     return keys
@@ -101,21 +130,16 @@ def _headers(table: Table) -> list[str]:
     return names
 
 
-def _rounded(value: float, column: Column) -> float:
-    decimals = max(column.decimals - 2, 0) if column.kind == "percent" else column.decimals
-    scale = 100.0 if column.kind == "percent" else 1.0
-    return round(value * scale, decimals) / scale
-
-
 def _change(a: float, b: float, column: Column) -> tuple[str, str]:
-    ra, rb = _rounded(a, column), _rounded(b, column)
+    """Change and relative change from the exact values (not from the displayed ones)."""
     if column.kind == "percent":
-        decimals = max(column.decimals - 2, 0)
-        change = f"{(rb - ra) * 100:+.{decimals}f} pp"
+        change = numfmt.signed_change(a, b, max(column.decimals - 2, 0), 2) + " pp"
     else:
-        change = f"{rb - ra:+.{column.decimals}f}" + (f" {column.unit}" if column.unit else "")
-    percent = f"{(rb - ra) / abs(ra) * 100:+.1f} %" if ra != 0.0 else ""
-    return change, percent
+        change = numfmt.signed_change(a, b, column.decimals) + (
+            f" {column.unit}" if column.unit else ""
+        )
+    percent = numfmt.relative_percent(a, b)
+    return change, f"{percent} %" if percent else ""
 
 
 def _compare_cell(column: Column, a: Cell, b: Cell) -> tuple[str, str, str, str, Status] | None:
@@ -138,20 +162,40 @@ def _tables(doc: ReportDocument) -> dict[tuple[str, str], Table]:
     for section in doc.sections:
         if section.title in SKIP_SECTIONS:
             continue
+        seen: dict[str, int] = {}
         for table in section.tables:
-            if table.title not in SKIP_TABLES:
-                found.setdefault((section.title, table.title), table)
+            if table.title in SKIP_TABLES:
+                continue
+            seen[table.title] = seen.get(table.title, 0) + 1
+            title = table.title if seen[table.title] == 1 else f"{table.title} #{seen[table.title]}"
+            found[(section.title, title)] = table
     return found
 
 
 def _compare_tables(
     section: str, table: str, a: Table, b: Table
-) -> tuple[list[Difference], int, int]:
-    """Differences, number of compared cells, number of unchanged cells of one table pair."""
-    keys_a, keys_b = _keys(a), _keys(b)
-    index_b = {key: i for i, key in enumerate(keys_b)}
+) -> tuple[list[Difference], int, int, list[Unmatched]]:
+    """Differences, number of compared cells, number of unchanged cells and the columns on one
+    side only of one table pair."""
     names_a, names_b = _headers(a), _headers(b)
-    shared = [(names_a.index(n), names_b.index(n)) for n in names_a[1:] if n in names_b]
+    key_a, key_b = _key_columns(a), _key_columns(b)
+    if {names_a[i] for i in key_a} != {names_b[i] for i in key_b}:
+        key_a = key_b = (0,)  # the tables do not agree on a key: fall back to the first column
+    keys_a, keys_b = _keys(a, key_a), _keys(b, key_b)
+    index_b = {key: i for i, key in enumerate(keys_b)}
+    skip_a, skip_b = {names_a[i] for i in key_a}, {names_b[i] for i in key_b}
+    shared = [
+        (names_a.index(n), names_b.index(n)) for n in names_a if n not in skip_a and n in names_b
+    ]
+    columns = [
+        Unmatched(section, table, "removed", n)
+        for n in names_a
+        if n not in skip_a and n not in names_b
+    ] + [
+        Unmatched(section, table, "added", n)
+        for n in names_b
+        if n not in skip_b and n not in names_a
+    ]
     differences: list[Difference] = []
     compared = unchanged = 0
     for i, key in enumerate(keys_a):
@@ -179,7 +223,7 @@ def _compare_tables(
             differences.append(
                 Difference(section, table, key, WHOLE_ROW, "absent", "present", "", "", "added")
             )
-    return differences, compared, unchanged
+    return differences, compared, unchanged, columns
 
 
 def compare_documents(
@@ -203,8 +247,9 @@ def compare_documents(
             if section in sections_b:
                 unmatched.append(Unmatched(section, table, "removed"))
             continue
-        found, n, same = _compare_tables(section, table, table_a, table_b)
+        found, n, same, columns = _compare_tables(section, table, table_a, table_b)
         differences += found
+        unmatched += columns
         compared += n
         unchanged += same
     for section in sorted(sections_a - sections_b, key=lambda s: _first_index(a, s)):
@@ -217,6 +262,7 @@ def compare_documents(
     for section in sorted(sections_b - sections_a, key=lambda s: _first_index(b, s)):
         unmatched.append(Unmatched(section, "", "added"))
     truncated = max(len(differences) - max_rows, 0)
+    rows = sum(1 for d in differences if d.quantity == WHOLE_ROW)
     return ComparisonResult(
         name,
         label_a,
@@ -230,6 +276,9 @@ def compare_documents(
         bool(b.banner),
         a.provenance,
         b.provenance,
+        tuple(differences),
+        len(differences) - rows,
+        rows,
     )
 
 
@@ -261,7 +310,7 @@ def _csv(results: Sequence[ComparisonResult]) -> str:
     writer = csv_writer(buffer)
     writer.writerow(CSV_HEADER)
     for r in results:
-        for d in r.differences:
+        for d in r.all_differences:
             writer.writerow(
                 [
                     r.name,
@@ -287,12 +336,23 @@ def _json(results: Sequence[ComparisonResult], label_a: str, label_b: str, prov:
         "unchanged": sum(r.unchanged for r in results),
         "truncated": sum(r.truncated for r in results),
         "differences": [
-            {"comparison": r.name, **asdict(d)} for r in results for d in r.differences
+            {"comparison": r.name, **asdict(d)} for r in results for d in r.all_differences
         ],
+        "values_differ": sum(r.values_differ for r in results),
+        "rows_one_sided": sum(r.rows_one_sided for r in results),
         "unmatched": [{"comparison": r.name, **asdict(u)} for r in results for u in r.unmatched],
         "provenance": asdict(prov),
     }
     return json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+
+
+def totals_line(results: Sequence[ComparisonResult]) -> str:
+    """How much differs over all comparisons, in the words of `ComparisonResult.summary_line`."""
+    return _summary(
+        sum(r.values_differ for r in results),
+        sum(r.compared for r in results),
+        sum(r.rows_one_sided for r in results),
+    )
 
 
 def _plural(n: int, word: str) -> str:
@@ -328,15 +388,21 @@ def _table_sections(result: ComparisonResult, used: set[str]) -> Section:
         paragraphs.append("No differences.")
     paragraphs += [
         f"Present only in {result.label_a if u.status == 'removed' else result.label_b}: "
-        + (f"{u.section} — {u.table}" if u.table else f"section {u.section}")
+        + (
+            f"column {u.column} of {u.section} — {u.table}"
+            if u.column
+            else f"{u.section} — {u.table}"
+            if u.table
+            else f"section {u.section}"
+        )
         + "."
         for u in result.unmatched
     ]
     if result.truncated:
         paragraphs.append(
-            f"{_plural(result.truncated, 'further difference')} not shown here; the CSV and JSON "
-            "exports list the first "
-            f"{len(result.differences)} only. Narrow the comparison to a single budget to see them."
+            f"{_plural(result.truncated, 'further difference')} not listed here: the limit of "
+            f"{len(result.differences)} rows applies per budget (--max-rows). The CSV and JSON "
+            "exports list every difference."
         )
     return Section(
         f"Differences: {result.name}",
@@ -356,15 +422,9 @@ def comparison_output(
     """The report document, CSV and JSON of a set of comparisons (`BudgetOutput` prefix
     `compare`)."""
     used: set[str] = set()
-    changed = sum(1 for r in results for d in r.differences if d.quantity != WHOLE_ROW)
-    rows = sum(1 for r in results for d in r.differences if d.quantity == WHOLE_ROW)
-    compared = sum(r.compared for r in results)
-    truncated = sum(r.truncated for r in results)
     summary_lines = [
         f"{label_a} compared with {label_b}.",
-        f"{_plural(changed + truncated, 'value')} differ out of {compared} compared"
-        + (f", and {_plural(rows, 'row')} exist on one side only" if rows else "")
-        + ".",
+        totals_line(results),
         "Values that look equal at the displayed precision are not reported as differences.",
     ]
     side_rows: list[tuple[Cell, ...]] = []

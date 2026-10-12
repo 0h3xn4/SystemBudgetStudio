@@ -79,11 +79,11 @@
 24: 'TH-SB' | 'Stefan-Boltzmann constant' | 'sigma = 5.670374419e-8 W m^-2 K^-4' | 'CODATA 2018 / SI 2019 (exact from h, k, c)' | 
 25: 'TH-LIMIT' | 'Unit temperature limit check' | 'exceeded when T < T_min or T > T_max; margin check when T - T_min or T_max - T < temperature_margin_k' | 'SOURCE_MISSING' | 
 26: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
-## sheet Problems rows=4 cols=4
-1: 'Problems and open items' |  |  | 
-2: 'Severity' | 'Code' | 'Location' | 'Message'
-3: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u1.yaml' | "Unit 'u1' has no operating temperature limits; it is not checked."
-4: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u2.yaml' | "Unit 'u2' has no operating temperature limits; it is not checked."
+## sheet Problems rows=4 cols=6
+1: 'Problems and open items' |  |  |  |  | 
+2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+3: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u1.yaml' | 'temperature_limits' | "Unit 'u1' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+4: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u2.yaml' | 'temperature_limits' | "Unit 'u2' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
 ## sheet Provenance rows=10 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'

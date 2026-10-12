@@ -28,6 +28,16 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 - Unit power data as a table: `budget units-export` (CSV or XLSX), `budget units-import` (preview, then `--apply`), and *File → Export/Import unit table* in the window. Empty cell means unchanged; no unit is created or deleted; formulas are never evaluated; one problem stops the whole import; the unit files are edited in place so comments and key order stay (D-102).
 - Documentation restructure: [README](README.md), [docs index](docs/README.md), [getting started](docs/getting-started.md), [user manual](docs/user-manual/README.md), [examples guide](examples/README.md), [FAQ](docs/faq.md), [troubleshooting](docs/troubleshooting.md), [glossary](docs/glossary.md), [tips](docs/tips.md), [CONTRIBUTING](CONTRIBUTING.md), [developer docs](docs/developer/README.md) and the [documentation audit](docs/DOCS_AUDIT.md).
 
+### Reports and output (audit fixes)
+- Every format rounds half up on the decimal value (0.125 is 0.13 in PDF, DOCX, CSV comparison and XLSX), never prints `-0.00`, and shows a number that is not finite as n/a; the *Configuration numbers used* table shows up to ten significant digits (D-110).
+- Writing outputs: the set is staged and moved into place together, the failing file is named, replaced files keep their permissions, names are limited by bytes, reserved names include `con.tar.gz`, names that differ only by case are refused (D-111).
+- The INCOMPLETE banner is on every sheet and page; JSON has `incomplete`, the provenance CSV a row `Incomplete`; link reports are incomplete when a pass result is n/a because a table entry is missing; equation lists include the PWR-* and ENV-* equations the results rely on (D-112).
+- The Problems table has Path and Hint columns; JSON `problems` include the load-time problems (D-116).
+- Comparison pairs link tables by link, point, rate and AOS time, so inserting a point does not shift the rows; changes come from exact values; one-sided columns, tables and repeated titles are listed; CSV and JSON hold every difference; the summary separates values from rows (D-113).
+- Provenance lists numpy, Pillow, python-docx and sgp4 as well and the packaged build ships their metadata; PDF dates, DOCX application name and XLSX creator are consistent; scenario JSON carries Python and library versions; CSV defusing leaves plain words alone (D-114).
+- PDF: very long cells are shortened with a note instead of failing the run, missing glyphs are `?`, header words are not split, the footer wraps; XLSX: valid unique sheet names, long cells shortened; DOCX properties are cut at 255 characters; plots: gaps, single samples, tick labels, legend overflow (D-115).
+- Series CSV files: the mode id is quoted and defused; the link series has `in_pass_s` and `before_aos` (D-116).
+
 ### Fixed
 - **File → Export scenario results** existed in the code but was not connected to any menu; it is now, and an unwritable folder gives a plain message. The "Compute a scenario first (Ctrl+R)" message named a shortcut that does not exist; it now says to press Compute in the Scenario tab.
 

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import io
 import json
+from collections.abc import Sequence
 from dataclasses import asdict
 from datetime import timedelta
 from typing import Any
@@ -13,8 +14,10 @@ from typing import Any
 import numpy as np
 
 from budget_core.link.evaluate import LinkSeries, LinkSeriesResult, StaticLinkResult
+from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer
+from budget_core.reports.numfmt import clean_numbers, fixed
 from budget_core.timeutil import format_utc
 
 
@@ -31,7 +34,7 @@ def _rate_label(rate_bps: float) -> str:
 
 
 def _opt(value: float | None, decimals: int = 6) -> str:
-    return "" if value is None else f"{value:.{decimals}f}"
+    return "" if value is None else fixed(value, decimals)
 
 
 def static_csv(result: StaticLinkResult) -> str:
@@ -100,6 +103,8 @@ def series_csv(result: LinkSeriesResult, series: LinkSeries) -> str:
         "elevation_deg",
         "range_m",
         "active",
+        "in_pass_s",
+        "before_aos",
         "path_loss_db",
         "atmospheric_loss_db",
         "eirp_dbw",
@@ -109,9 +114,22 @@ def series_csv(result: LinkSeriesResult, series: LinkSeries) -> str:
         "selected_rate_bps",
     ]
     n = len(series.times_s)
+    # Seconds of each row's step that lie inside its pass: the data of a row is selected rate x
+    # in_pass_s (the first row of a pass can start before AOS; the geometry is that of the step
+    # start). Where the link is active in only some modes the volume uses the part of it spent in
+    # those modes, so the sum over these seconds is then an upper bound.
+    aos = np.array([series.passes[int(k)].aos_s for k in series.pass_index], dtype=np.float64)
+    los = np.array([series.passes[int(k)].los_s for k in series.pass_index], dtype=np.float64)
+    grid = result.run.env.grid
+    inside = np.clip(
+        np.minimum(np.minimum(series.times_s + grid.step_s, grid.duration_s), los)
+        - np.maximum(series.times_s, aos),
+        0.0,
+        None,
+    )
 
     def col(values: Any) -> list[str]:
-        return [""] * n if values is None else [f"{v:.6f}" for v in values.tolist()]
+        return [""] * n if values is None else [fixed(v, 6) for v in values.tolist()]
 
     margins = [
         col(None if series.margin_db is None else series.margin_db[:, i])
@@ -124,6 +142,8 @@ def series_csv(result: LinkSeriesResult, series: LinkSeries) -> str:
         col(series.elevation_deg),
         col(series.range_m),
         [str(bool(a)).lower() for a in series.active.tolist()],
+        [fixed(float(w), 6) for w in inside.tolist()],
+        [str(bool(b)).lower() for b in (series.times_s < aos).tolist()],
         col(series.path_loss_db),
         col(series.atmospheric_loss_db),
         col(series.eirp_dbw),
@@ -176,12 +196,18 @@ def passes_csv(result: LinkSeriesResult) -> str:
 
 
 def link_json(
-    static: StaticLinkResult, passes: LinkSeriesResult | None, provenance: Provenance
+    static: StaticLinkResult,
+    passes: LinkSeriesResult | None,
+    provenance: Provenance,
+    *,
+    incomplete: bool,
+    load_problems: Sequence[Problem] = (),
 ) -> str:
     data: dict[str, Any] = {
+        "incomplete": incomplete,
         "static": [asdict(r) for r in static.rows],
         "assumptions": [asdict(a) for a in static.assumptions],
-        "problems": [p.to_dict() for p in static.problems],
+        "problems": [p.to_dict() for p in sort_problems([*load_problems, *static.problems])],
         "provenance": asdict(provenance),
     }
     if passes is not None:
@@ -205,5 +231,7 @@ def link_json(
             }
             for s in passes.series
         ]
-        data["problems"] += [p.to_dict() for p in passes.problems]
-    return json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+        data["problems"] = [
+            p.to_dict() for p in sort_problems([*load_problems, *static.problems, *passes.problems])
+        ]
+    return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"

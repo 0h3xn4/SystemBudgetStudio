@@ -94,6 +94,18 @@ A bug. The message names only the kind of error, never your data. Run `budget va
 
 A number the result needs is a placeholder. That is intended: see [placeholders and sources](user-manual/placeholders-and-sources.md).
 
+### The output folder has only some of the files, or the tool says a file could not be written
+
+The files of a run are written under temporary names first, so a failing write leaves the old files untouched. The message names the file; check that the folder exists, that you may write there and that the disk is not full. If the message lists files as "already replaced", the failure came while moving the files into place: run the command again.
+
+### Two outputs would be written to the same file name
+
+Two ids differ only in case or in characters a file name cannot hold (`hot` and `Hot`), or an id equals a name the tool generates (a mode called `provenance`, a link called `summary`). The message names the file. Rename one id.
+
+### A `?` in the PDF where a name has non-Latin letters
+
+The bundled PDF font has no glyphs for CJK or emoji. The PDF shows `?` and a note gives the count; the XLSX, DOCX and JSON files hold the original text.
+
 ### `BOL: n/a (inputs missing, see the problems below).`
 
 The power timeline needs `config/power_system.yaml` with a complete array and battery, a scenario and a mission phase; the examples `cubesat_3u`, `microsat_150kg` and `stress_200_units` have templates only. Use `cubesat_3u_eps`, or fill in the numbers.

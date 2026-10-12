@@ -1,5 +1,6 @@
-pages=14
+pages=16
 ## page 1
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Power budget (static): Example 150 kg microsatellite
@@ -66,8 +67,7 @@ Mode: Downlink
 Units in mode Downlink
 Unit
 Name
-Subsyste
-m
+Subsystem
 Bus
 Power mode
 Average
@@ -257,12 +257,12 @@ downlink
  n/a
  0.500
 ## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Unit
 Name
-Subsyste
-m
+Subsystem
 Bus
 Power mode
 Average
@@ -387,8 +387,7 @@ Mode: Imaging
 Units in mode Imaging
 Unit
 Name
-Subsyste
-m
+Subsystem
 Bus
 Power
 mode
@@ -424,12 +423,12 @@ off
  n/a
  0.000
 ## page 3
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Unit
 Name
-Subsyste
-m
+Subsystem
 Bus
 Power
 mode
@@ -687,6 +686,7 @@ payload_12v
  n/a
 Totals
 ## page 4
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Quantity
@@ -711,8 +711,7 @@ Mode: Nominal
 Units in mode Nominal
 Unit
 Name
-Subsyste
-m
+Subsystem
 Bus
 Power
 mode
@@ -939,6 +938,7 @@ PL
  0.000
  n/a
 ## page 5
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Subsystem
@@ -1156,6 +1156,7 @@ safe
  n/a
  12.000
 ## page 6
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Unit
@@ -1338,13 +1339,13 @@ Source, with margins
  n/a
 Mode: Survival
 ## page 7
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Units in mode Survival
 Unit
 Name
-Subsyste
-m
+Subsystem
 Bus
 Power mode
 Average
@@ -1615,6 +1616,7 @@ main_28v
  32.500
  n/a
 ## page 8
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 Bus
@@ -1730,546 +1732,1136 @@ SOURCE_MISSING: the formula is a project convention or textbook definition whose
 Problems
 Problems and open items
 ## page 9
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
 Severity
 Code
 Location
+Path
 Message
+Hint
 warning
-RESULT_INCOMPLETE
+RESULT_INCO
+MPLETE
 config/margin_policy.yaml
-The margin of the maturity class is a placeholder.
+classes.class_a.power_margin_ratio
+The margin of the maturity class is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
 warning
-RESULT_INCOMPLETE
+RESULT_INCO
+MPLETE
 config/margin_policy.yaml
-The margin of the maturity class is a placeholder.
+classes.class_b.power_margin_ratio
+The margin of the maturity class is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
 warning
-RESULT_INCOMPLETE
+RESULT_INCO
+MPLETE
 config/margin_policy.yaml
-The margin of the maturity class is a placeholder.
+classes.class_c.power_margin_ratio
+The margin of the maturity class is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
 warning
-RESULT_INCOMPLETE
+RESULT_INCO
+MPLETE
 config/margin_policy.yaml
+system_power_margin_ratio
 The system margin is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:6
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+classes.class_a.power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:10
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+classes.class_a.mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:15
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+classes.class_b.power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:19
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+classes.class_b.mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:24
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+classes.class_c.power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:28
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+classes.class_c.mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:32
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+system_power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/margin_policy.yaml:36
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+system_mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/mass_limits.yaml:7
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+limits[0].limit_kg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-RESULT_INCOMPLETE
+RESULT_INCO
+MPLETE
 config/power_config.yaml
-The converter efficiency of the bus is a placeholder.
+converter_efficiency_ratio.main_28v
+The converter efficiency of the bus is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
 warning
-RESULT_INCOMPLETE
+RESULT_INCO
+MPLETE
 config/power_config.yaml
-The converter efficiency of the bus is a placeholder.
+converter_efficiency_ratio.payload_12v
+The converter efficiency of the bus is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
 warning
-RESULT_INCOMPLETE
+RESULT_INCO
+MPLETE
 config/power_config.yaml
+distribution_loss_ratio
 The distribution loss is a placeholder.
-warning
-CONFIG_PLACEHOLDER
-config/power_config.yaml:4
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_config.yaml:9
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_config.yaml:13
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:4
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:45
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:49
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:53
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
 ## page 10
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 10
 Severity
 Code
 Location
+Path
 Message
+Hint
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
+config/power_config.yaml:4
+distribution_loss_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_config.yaml:9
+converter_efficiency_ratio.main_28v
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_config.yaml:13
+converter_efficiency_ratio.payload_12v
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:4
+design_life_yr
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:45
+solar_array.solar_irradiance_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:49
+solar_array.cell_area_m2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:53
+solar_array.cell_efficiency_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
 config/power_system.yaml:57
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+solar_array.reference_temperature_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/power_system.yaml:61
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+solar_array.cell_temperature_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/power_system.yaml:65
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+solar_array.efficiency_temp_coeff_perk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/power_system.yaml:69
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+solar_array.packing_loss_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/power_system.yaml:73
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+solar_array.harness_loss_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/power_system.yaml:77
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+solar_array.annual_degradation_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
+CONFIG_PLAC
+EHOLDER
 config/power_system.yaml:82
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+battery.cell_capacity_ah
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:86
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:92
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:96
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:100
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:104
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:109
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:113
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:117
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/power_system.yaml:129
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:4
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:8
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:17
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:21
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 ## page 11
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 11
 Severity
 Code
 Location
+Path
 Message
+Hint
 warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:25
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:86
+battery.cell_nominal_voltage_v
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:33
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:92
+battery.charge_efficiency_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:37
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:96
+battery.discharge_efficiency_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_environment.yaml:41
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:100
+battery.annual_capacity_fade_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:24
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:104
+battery.initial_soc_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:30
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:109
+battery.max_dod_ratio.bol
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:36
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:113
+battery.max_dod_ratio.eol
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:42
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:117
+battery.max_dod_ratio.launch
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:48
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:129
+limits.peak_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:54
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:4
+space_temperature_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:60
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:8
+temperature_margin_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:68
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:17
+cases.cold.solar_flux_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:72
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:21
+cases.cold.albedo_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:78
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:25
+cases.cold.earth_ir_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:82
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:87
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:91
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:98
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:102
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:108
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 ## page 12
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 12
 Severity
 Code
 Location
+Path
 Message
+Hint
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:112
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:33
+cases.hot.solar_flux_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:117
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:37
+cases.hot.albedo_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:121
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:41
+cases.hot.earth_ir_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:128
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:24
+conductances[0].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:132
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:30
+conductances[1].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:138
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:36
+conductances[2].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:142
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:42
+conductances[3].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:147
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:48
+conductances[4].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:151
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:54
+conductances[5].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:158
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:60
+conductances[6].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:162
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:68
+surfaces[0].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:168
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:72
+surfaces[0].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:172
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:78
+surfaces[0].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:177
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:82
+surfaces[0].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:181
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:188
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:192
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:198
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:202
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:207
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 ## page 13
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 13
 Severity
 Code
 Location
+Path
 Message
+Hint
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:211
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:87
+surfaces[0].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:218
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:91
+surfaces[0].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:222
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:98
+surfaces[1].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:228
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:102
+surfaces[1].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:232
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:108
+surfaces[1].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:237
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:112
+surfaces[1].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:241
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:117
+surfaces[1].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:248
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:121
+surfaces[1].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:252
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:128
+surfaces[2].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:258
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:132
+surfaces[2].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:262
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:138
+surfaces[2].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:267
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:142
+surfaces[2].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:271
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:147
+surfaces[2].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:278
-This number is a placeholder (no value or source 'TBD'); results that use it are not
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:151
+surfaces[2].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
 trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:282
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:288
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:292
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:297
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
-warning
-CONFIG_PLACEHOLDER
-config/thermal_model.yaml:301
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 ## page 14
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 14
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:158
+surfaces[3].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:162
+surfaces[3].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:168
+surfaces[3].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:172
+surfaces[3].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:177
+surfaces[3].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:181
+surfaces[3].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:188
+surfaces[4].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:192
+surfaces[4].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:198
+surfaces[4].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:202
+surfaces[4].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:207
+surfaces[4].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:211
+surfaces[4].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:218
+surfaces[5].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:222
+surfaces[5].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 15
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 15
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:228
+surfaces[5].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:232
+surfaces[5].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:237
+surfaces[5].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:241
+surfaces[5].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:248
+surfaces[6].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:252
+surfaces[6].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:258
+surfaces[6].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:262
+surfaces[6].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:267
+surfaces[6].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:271
+surfaces[6].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:278
+surfaces[7].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:282
+surfaces[7].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:288
+surfaces[7].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:292
+surfaces[7].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 16
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 0.1.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 16
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:297
+surfaces[7].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:301
+surfaces[7].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 Provenance
 Provenance
 Item

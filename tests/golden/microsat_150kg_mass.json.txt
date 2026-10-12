@@ -46,6 +46,7 @@
       "value": null
     }
   ],
+  "incomplete": true,
   "phases": [
     {
       "cog": {
@@ -1480,6 +1481,15 @@
     },
     {
       "code": "MASS_INERTIA_POINT_MASS",
+      "file": "expendables/propellant.yaml",
+      "hint": "",
+      "line": null,
+      "message": "'propellant' has no own inertia; it is treated as a point mass.",
+      "path": "mass_properties",
+      "severity": "info"
+    },
+    {
+      "code": "MASS_INERTIA_POINT_MASS",
       "file": "units/gnss.yaml",
       "hint": "",
       "line": null,
@@ -1502,15 +1512,6 @@
       "hint": "",
       "line": null,
       "message": "'sun_sensors' has no own inertia; it is treated as a point mass.",
-      "path": "mass_properties",
-      "severity": "info"
-    },
-    {
-      "code": "MASS_INERTIA_POINT_MASS",
-      "file": "expendables/propellant.yaml",
-      "hint": "",
-      "line": null,
-      "message": "'propellant' has no own inertia; it is treated as a point mass.",
       "path": "mass_properties",
       "severity": "info"
     }

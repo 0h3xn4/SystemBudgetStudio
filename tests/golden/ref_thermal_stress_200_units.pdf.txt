@@ -1,5 +1,6 @@
-pages=62
+pages=69
 ## page 1
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example stress case (200 units) rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Thermal budget (static): Example stress case (200 units)
@@ -11,19 +12,19 @@ Mode
 Average (W)
 Peak (W)
 Charging
- 277.262
+ 277.263
  496.979
 Downlink
  275.978
  497.455
 Imaging
- 275.812
+ 275.813
  496.686
 Nominal
  277.025
  496.598
 Safe
- 275.957
+ 275.958
  497.183
 Average = sum of unit power x duty cycle x heat dissipation ratio. Peak uses the unit peak powers. n/a: a unit has no heat dissipation ratio for its power mode.
 Case: cold
@@ -147,6 +148,7 @@ PL
  n/a
 no limits
 ## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example stress case (200 units) rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Unit
@@ -430,6 +432,7 @@ PL-DATA
  n/a
 no limits
 ## page 3
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 0.1.0 | Example stress case (200 units) rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Unit

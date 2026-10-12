@@ -238,6 +238,7 @@
       ]
     }
   ],
+  "incomplete": false,
   "modes": [
     {
       "mode_id": "cold",

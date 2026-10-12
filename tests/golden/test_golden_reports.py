@@ -55,8 +55,8 @@ def test_pdf_golden(name: str) -> None:
 
 @pytest.mark.parametrize("name", sorted(LIMITS))
 def test_json_golden(name: str) -> None:
-    power, prov, _ = build(name)
-    text = result_json(power, prov)
+    power, prov, doc = build(name)
+    text = result_json(power, prov, incomplete=bool(doc.banner))
     if name == "stress_200_units":  # keep the repository small: hash plus size only
         import hashlib
 
@@ -106,8 +106,8 @@ def test_mass_pdf_golden(name: str) -> None:
 
 @pytest.mark.parametrize("name", sorted(LIMITS))
 def test_mass_json_golden(name: str) -> None:
-    mass, prov, _ = build_mass(name)
-    check_golden(f"{name}_mass.json.txt", result_json(mass, prov))
+    mass, prov, doc = build_mass(name)
+    check_golden(f"{name}_mass.json.txt", result_json(mass, prov, incomplete=bool(doc.banner)))
 
 
 def test_mass_csv_golden_microsat() -> None:

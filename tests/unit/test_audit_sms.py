@@ -152,6 +152,8 @@ def test_an_unknown_time_of_maximum_is_empty_in_csv_and_null_in_json(tmp_path: P
     provenance = SimpleNamespace(
         tool="t",
         tool_version="1",
+        python_version="3.13.0",
+        libraries=(("numpy", "2.0"),),
         project_name="p",
         project_revision="1",
         generated="2026-01-01T00:00:00Z",

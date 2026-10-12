@@ -238,7 +238,7 @@ class CompareView(QWidget):
         self._output_key = self._comparing_key
         self._show(output)
         results = output.result
-        total = sum(len(r.differences) + r.truncated for r in results)
+        total = sum(r.values_differ for r in results)
         text = (
             f"{total} value(s) differ across {len(results)} budget(s)."
             if total

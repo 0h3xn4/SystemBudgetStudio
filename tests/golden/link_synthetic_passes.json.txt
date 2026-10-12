@@ -82,6 +82,7 @@
       "value": 10.0
     }
   ],
+  "incomplete": false,
   "links": [
     {
       "direction": "downlink",

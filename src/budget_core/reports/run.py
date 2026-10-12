@@ -23,7 +23,7 @@ from budget_core.reports.export import (
     thermal_case_csv,
     thermal_mode_csv,
 )
-from budget_core.reports.files import OutputError, safe_name, write_file
+from budget_core.reports.files import write_files
 from budget_core.reports.link_export import (
     link_json,
     passes_csv,
@@ -58,6 +58,12 @@ class BudgetOutput:
     provenance: Provenance
     csv_files: tuple[tuple[str, str], ...]  # (file name, text)
     json_text: str | None = None  # when the result is not a plain dataclass tree
+    load_problems: tuple[Problem, ...] = ()  # found while loading the project (also in JSON)
+
+    @property
+    def incomplete(self) -> bool:
+        """The report carries the INCOMPLETE banner (placeholders or missing inputs)."""
+        return bool(self.document.banner)
 
 
 def power_output(
@@ -68,7 +74,9 @@ def power_output(
 ) -> BudgetOutput:
     document = build_power_report(project, power, provenance, list(load_problems))
     csvs = tuple((f"power_static_{m.mode_id}.csv", result_csv(m)) for m in power.modes)
-    return BudgetOutput("power_static", document, power, provenance, csvs)
+    return BudgetOutput(
+        "power_static", document, power, provenance, csvs, load_problems=tuple(load_problems)
+    )
 
 
 def mass_output(
@@ -79,7 +87,9 @@ def mass_output(
 ) -> BudgetOutput:
     document = build_mass_report(project, mass, provenance, list(load_problems))
     csvs = tuple((f"mass_static_{p.phase}.csv", mass_csv(p)) for p in mass.phases)
-    return BudgetOutput("mass_static", document, mass, provenance, csvs)
+    return BudgetOutput(
+        "mass_static", document, mass, provenance, csvs, load_problems=tuple(load_problems)
+    )
 
 
 def thermal_output(
@@ -91,7 +101,14 @@ def thermal_output(
     document = build_thermal_report(project, thermal, provenance, list(load_problems))
     csvs = tuple((f"thermal_static_{m.mode_id}.csv", thermal_mode_csv(m)) for m in thermal.modes)
     csvs += tuple((f"thermal_case_{c.case}.csv", thermal_case_csv(c)) for c in thermal.cases)
-    return BudgetOutput("thermal_static", document, thermal, provenance, csvs)
+    return BudgetOutput(
+        "thermal_static",
+        document,
+        thermal,
+        provenance,
+        csvs,
+        load_problems=tuple(load_problems),
+    )
 
 
 def link_output(
@@ -111,7 +128,19 @@ def link_output(
         csvs.append((f"{prefix}_summary.csv", passes_csv(passes)))
         csvs += [(f"{prefix}_{s.link_id}.csv", link_series_csv(passes, s)) for s in passes.series]
     return BudgetOutput(
-        prefix, document, static, provenance, tuple(csvs), link_json(static, passes, provenance)
+        prefix,
+        document,
+        static,
+        provenance,
+        tuple(csvs),
+        link_json(
+            static,
+            passes,
+            provenance,
+            incomplete=bool(document.banner),
+            load_problems=load_problems,
+        ),
+        tuple(load_problems),
     )
 
 
@@ -140,7 +169,10 @@ def timeline_output(
         result,
         provenance,
         tuple(csvs),
-        timeline_json(result, provenance),
+        timeline_json(
+            result, provenance, incomplete=bool(document.banner), load_problems=load_problems
+        ),
+        tuple(load_problems),
     )
 
 
@@ -149,8 +181,10 @@ def write_outputs(
 ) -> list[Path]:
     """Write the selected kinds of every output into `out_dir` (created if needed).
 
-    Names are reduced to plain file names (they may be built from project text) and written
-    atomically. Two outputs that would end up in the same file are refused, not overwritten."""
+    Names are reduced to plain file names (they may be built from project text). All files are
+    staged under temporary names first and moved into place together (see `write_files`), so a
+    failing write does not leave a mix of new and old files; two outputs that would end up in
+    the same file, also when only the case differs, are refused."""
     files: list[tuple[str, bytes | str]] = []
     for out in outputs:
         # Renderers are imported only when needed: ReportLab pulls in networking modules.
@@ -172,16 +206,20 @@ def write_outputs(
                     f"{out.prefix}.json",
                     out.json_text
                     if out.json_text is not None
-                    else result_json(out.result, out.provenance),
+                    else result_json(
+                        out.result,
+                        out.provenance,
+                        incomplete=out.incomplete,
+                        load_problems=out.load_problems,
+                    ),
                 )
             )
         if "csv" in kinds and out.csv_files:
             files.extend(out.csv_files)
-            files.append((f"{out.prefix}_provenance.csv", provenance_csv(out.provenance)))
-    names = [safe_name(name) for name, _ in files]
-    if len(set(names)) != len(names):
-        raise OutputError(
-            "Two outputs would be written to the same file name. Rename the units, links, "
-            "phases or cases whose names are almost identical."
-        )
-    return [write_file(Path(out_dir), name, data) for name, data in files]
+            files.append(
+                (
+                    f"{out.prefix}_provenance.csv",
+                    provenance_csv(out.provenance, incomplete=out.incomplete),
+                )
+            )
+    return write_files(Path(out_dir), files)

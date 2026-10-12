@@ -55,6 +55,7 @@
       "value": null
     }
   ],
+  "incomplete": true,
   "modes": [
     {
       "average": {
@@ -934,8 +935,8 @@
       "file": "config/power_config.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The distribution loss is a placeholder.",
-      "path": "distribution_loss_ratio",
+      "message": "The converter efficiency of the bus is a placeholder.",
+      "path": "converter_efficiency_ratio.main",
       "severity": "warning"
     },
     {
@@ -943,8 +944,8 @@
       "file": "config/power_config.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The converter efficiency of the bus is a placeholder.",
-      "path": "converter_efficiency_ratio.main",
+      "message": "The distribution loss is a placeholder.",
+      "path": "distribution_loss_ratio",
       "severity": "warning"
     }
   ],

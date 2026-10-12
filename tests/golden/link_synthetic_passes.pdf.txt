@@ -18,8 +18,8 @@ G/T
 (dB/K)
 Path loss
 (dB)
-Atmospheri
-c (dB)
+Atmospheric
+(dB)
 Other
 losses (dB)
 C/N0
@@ -126,17 +126,17 @@ Unit
 Source
 Status
 Transmit power
- 2.0000
+ 2
 W
 test fixture
 sourced
 Line loss
- 1.0000
+ 1
 dB
 test fixture
 sourced
 Antenna gain, transmitter
- 6.0000
+ 6
 dBi
 test fixture
 sourced
@@ -146,27 +146,27 @@ dB/K
 test fixture
 sourced
 Required margin
- 3.0000
+ 3
 dB
 test fixture
 sourced
 Pointing loss
- 1.0000
+ 1
 dB
 test fixture
 sourced
 Polarisation loss
- 0.5000
+ 0.5
 dB
 test fixture
 sourced
 Implementation loss
- 0.5000
+ 0.5
 dB
 test fixture
 sourced
 Required Eb/N0, TEST NONE
- 10.0000
+ 10
 dB
 test fixture
 sourced
@@ -175,6 +175,22 @@ ID
 Name
 Formula
 Source
+ENV-GMST
+Greenwich mean sidereal time (IAU-82)
+theta = 67310.54841 + (876600 h + 8640184.812866) T +
+0.093104 T^2 - 6.2e-6 T^3 s
+sgp4 library, sgp4.propagation.gstime (IAU-82 GMST, Vallado)
+ENV-GEODET
+IC
+WGS-84 geodetic to Earth-fixed coordinates
+N = a / sqrt(1 - e2 sin2 phi); x = (N + h) cos phi cos lam; z = (N (1 -
+e2) + h) sin phi
+WGS 84 (NIMA TR8350.2) ellipsoid definition
+ENV-TOPO
+Elevation, azimuth and range from a site
+local east-north-up basis at the geodetic latitude and longitude of
+the site
+SOURCE_MISSING
 LNK-EIRP
 Effective isotropic radiated power
 EIRP = P_tx - L_line + G_tx (dBW)
@@ -189,7 +205,8 @@ G/T = G_rx - L_feed - 10 log10(T_sys) (dB/K), or given directly
 SOURCE_MISSING
 LNK-CN0
 Carrier to noise density
-C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10 log10(k) (dBHz)
+C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10
+log10(k) (dBHz)
 SOURCE_MISSING
 LNK-EBN0
 Energy per bit to noise density
@@ -197,11 +214,13 @@ Eb/N0 = C/N0 - 10 log10(R_b) (dB)
 SOURCE_MISSING
 LNK-MARGIN
 Link margin
-margin = Eb/N0 - Eb/N0_required (dB); the link closes when margin >= required margin
+margin = Eb/N0 - Eb/N0_required (dB); the link closes when
+margin >= required margin
 SOURCE_MISSING
 LNK-ATT
 Atmospheric attenuation
-L_atm = sum of the named table entries, linear interpolation by elevation
+L_atm = sum of the named table entries, linear interpolation by
+elevation
 SOURCE_MISSING
 LNK-NADIR
 Angle from nadir at the spacecraft
@@ -209,21 +228,24 @@ sin(eta) = R cos(el) / r, r^2 = R^2 + d^2 + 2 R d sin(el)
 SOURCE_MISSING
 LNK-VOLUME
 Data volume
-V = sum over samples of R_selected * (time of the step inside the pass); R_selected is the
-highest listed rate with margin >= required margin while the link is active
+V = sum over samples of R_selected * (time of the step inside the
+pass); R_selected is the highest listed rate with margin >=
+required margin while the link is active
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
+## page 4
+System Budget Studio 0.1.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 4
 Problems
 Problems and open items
 Severity
 Code
 Location
+Path
 Message
+Hint
 Provenance
 Provenance
-## page 4
-System Budget Studio 0.1.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 4
 Item
 Value
 Tool

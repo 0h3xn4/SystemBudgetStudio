@@ -4,7 +4,9 @@ carry the provenance time, and the ZIP is rewritten with fixed timestamps and or
 from __future__ import annotations
 
 import io
+import re
 from datetime import datetime
+from html import escape
 
 from docx import Document
 from docx.enum.section import WD_ORIENT
@@ -17,7 +19,15 @@ from docx.shared import Mm, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from budget_core.plots.render import image_size
-from budget_core.reports.document import NA, Column, Figure, ReportDocument, Section, Table
+from budget_core.reports.document import (
+    NA,
+    Column,
+    Figure,
+    ReportDocument,
+    Section,
+    Table,
+    banner_headline,
+)
 from budget_core.reports.document import format_cell as _format_cell
 from budget_core.reports.textsafe import clean_document
 from budget_core.reports.zipnorm import normalise_zip
@@ -27,6 +37,27 @@ HEADER_FILL = "E0E0E0"
 EMPHASIS_FILL = "F4F4F4"
 RED = RGBColor(0xDA, 0x1E, 0x28)
 PAGE_W_MM, PAGE_H_MM, MARGIN_MM = 297.0, 210.0, 12.0
+
+
+CORE_PROPERTY_LIMIT = 255
+
+
+def _limit(text: str) -> str:
+    return text if len(text) <= CORE_PROPERTY_LIMIT else text[: CORE_PROPERTY_LIMIT - 1] + "…"
+
+
+def _name_application(document: object, tool: str) -> None:
+    """python-docx's template says "Microsoft Macintosh Word" made the file; name this tool."""
+    package = document.part.package  # type: ignore[attr-defined]
+    for part in package.iter_parts():
+        if str(part.partname) == "/docProps/app.xml":
+            xml = part.blob.decode("utf-8")
+            xml = re.sub(
+                r"<Application>[^<]*</Application>",
+                f"<Application>{escape(tool, quote=False)}</Application>",
+                xml,
+            )
+            part._blob = xml.encode("utf-8")
 
 
 def _shade(cell: object, fill: str) -> None:
@@ -166,6 +197,11 @@ def render_docx(doc: ReportDocument) -> bytes:
     for section in doc.sections:
         _section(document, section)
 
+    if doc.banner:  # the page header repeats the banner on every page
+        header = page.header.paragraphs[0]
+        _run(header, banner_headline(doc.banner), bold=True, size=8.0)
+        for run in header.runs:
+            run.font.color.rgb = RED
     prov = doc.provenance
     footer = page.footer.paragraphs[0]
     _run(
@@ -177,16 +213,17 @@ def render_docx(doc: ReportDocument) -> bytes:
 
     stamp = datetime.strptime(prov.generated, "%Y-%m-%dT%H:%M:%SZ")
     props = document.core_properties
-    props.author = prov.user
-    props.last_modified_by = prov.tool
-    props.title = doc.title
-    props.subject = prov.project_name
+    props.author = _limit(prov.user)  # Word limits these properties to 255 characters
+    props.last_modified_by = _limit(prov.tool)
+    props.title = _limit(doc.title)
+    props.subject = _limit(prov.project_name)
     props.created = stamp
     props.modified = stamp
     props.revision = 1
     props.comments = ""
     props.keywords = ""
     props.category = ""
+    _name_application(document, prov.tool)
     buffer = io.BytesIO()
     document.save(buffer)
     return normalise_zip(buffer.getvalue())

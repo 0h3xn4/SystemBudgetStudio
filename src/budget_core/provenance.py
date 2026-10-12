@@ -18,7 +18,21 @@ from budget_core import APP_NAME, __version__
 from budget_core.model import Project
 from budget_core.timeutil import MAX_YEAR, format_utc
 
-LIBRARIES = ("openpyxl", "pint", "pydantic", "reportlab", "ruamel.yaml")
+# Every runtime library that shapes an output (all of `[project.dependencies]` except the window
+# toolkit, which only draws the GUI). The PyInstaller spec ships the metadata of each, so a
+# packaged build reports the same versions (tests keep this list, pyproject.toml and the spec in
+# step).
+LIBRARIES = (
+    "numpy",
+    "openpyxl",
+    "Pillow",
+    "pint",
+    "pydantic",
+    "python-docx",
+    "reportlab",
+    "ruamel.yaml",
+    "sgp4",
+)
 
 
 @dataclass(frozen=True)

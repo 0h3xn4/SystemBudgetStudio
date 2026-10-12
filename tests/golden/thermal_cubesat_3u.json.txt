@@ -535,6 +535,7 @@
       "nodes": []
     }
   ],
+  "incomplete": true,
   "modes": [
     {
       "mode_id": "charging",
@@ -1213,6 +1214,60 @@
       "file": "config/thermal_environment.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
+      "message": "The albedo of the case is a placeholder.",
+      "path": "cases.cold.albedo_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth infrared flux of the case is a placeholder.",
+      "path": "cases.cold.earth_ir_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar flux of the case is a placeholder.",
+      "path": "cases.cold.solar_flux_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The albedo of the case is a placeholder.",
+      "path": "cases.hot.albedo_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth infrared flux of the case is a placeholder.",
+      "path": "cases.hot.earth_ir_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar flux of the case is a placeholder.",
+      "path": "cases.hot.solar_flux_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
       "message": "The space temperature is a placeholder.",
       "path": "space_temperature_k",
       "severity": "warning"
@@ -1264,29 +1319,11 @@
     },
     {
       "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_environment.yaml",
+      "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The solar flux of the case is a placeholder.",
-      "path": "cases.cold.solar_flux_wm2",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_environment.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The albedo of the case is a placeholder.",
-      "path": "cases.cold.albedo_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_environment.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The Earth infrared flux of the case is a placeholder.",
-      "path": "cases.cold.earth_ir_wm2",
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[0].absorptivity_ratio",
       "severity": "warning"
     },
     {
@@ -1303,8 +1340,8 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of the surface is a placeholder.",
-      "path": "surfaces[0].absorptivity_ratio",
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[0].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
     {
@@ -1322,7 +1359,25 @@
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
       "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[0].exposure.cold.earth_view_ratio",
+      "path": "surfaces[0].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[0].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[1].absorptivity_ratio",
       "severity": "warning"
     },
     {
@@ -1339,8 +1394,8 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of the surface is a placeholder.",
-      "path": "surfaces[1].absorptivity_ratio",
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[1].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
     {
@@ -1358,7 +1413,25 @@
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
       "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[1].exposure.cold.earth_view_ratio",
+      "path": "surfaces[1].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[1].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[2].absorptivity_ratio",
       "severity": "warning"
     },
     {
@@ -1375,8 +1448,8 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of the surface is a placeholder.",
-      "path": "surfaces[2].absorptivity_ratio",
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[2].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
     {
@@ -1394,7 +1467,25 @@
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
       "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[2].exposure.cold.earth_view_ratio",
+      "path": "surfaces[2].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[2].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[3].absorptivity_ratio",
       "severity": "warning"
     },
     {
@@ -1411,8 +1502,8 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of the surface is a placeholder.",
-      "path": "surfaces[3].absorptivity_ratio",
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[3].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
     {
@@ -1430,7 +1521,25 @@
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
       "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[3].exposure.cold.earth_view_ratio",
+      "path": "surfaces[3].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[3].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[4].absorptivity_ratio",
       "severity": "warning"
     },
     {
@@ -1447,8 +1556,8 @@
       "file": "config/thermal_model.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The absorptivity of the surface is a placeholder.",
-      "path": "surfaces[4].absorptivity_ratio",
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[4].exposure.cold.earth_view_ratio",
       "severity": "warning"
     },
     {
@@ -1466,7 +1575,16 @@
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
       "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[4].exposure.cold.earth_view_ratio",
+      "path": "surfaces[4].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[4].exposure.hot.solar_view_ratio",
       "severity": "warning"
     },
     {
@@ -1521,123 +1639,6 @@
       "line": null,
       "message": "Unit 'radio' has no operating temperature limits; it is not checked.",
       "path": "temperature_limits",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_environment.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The solar flux of the case is a placeholder.",
-      "path": "cases.hot.solar_flux_wm2",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_environment.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The albedo of the case is a placeholder.",
-      "path": "cases.hot.albedo_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_environment.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The Earth infrared flux of the case is a placeholder.",
-      "path": "cases.hot.earth_ir_wm2",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The solar view ratio of the surface is a placeholder.",
-      "path": "surfaces[0].exposure.hot.solar_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[0].exposure.hot.earth_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The solar view ratio of the surface is a placeholder.",
-      "path": "surfaces[1].exposure.hot.solar_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[1].exposure.hot.earth_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The solar view ratio of the surface is a placeholder.",
-      "path": "surfaces[2].exposure.hot.solar_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[2].exposure.hot.earth_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The solar view ratio of the surface is a placeholder.",
-      "path": "surfaces[3].exposure.hot.solar_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[3].exposure.hot.earth_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The solar view ratio of the surface is a placeholder.",
-      "path": "surfaces[4].exposure.hot.solar_view_ratio",
-      "severity": "warning"
-    },
-    {
-      "code": "RESULT_INCOMPLETE",
-      "file": "config/thermal_model.yaml",
-      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
-      "line": null,
-      "message": "The Earth view ratio of the surface is a placeholder.",
-      "path": "surfaces[4].exposure.hot.earth_view_ratio",
       "severity": "warning"
     }
   ],

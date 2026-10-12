@@ -1,11 +1,18 @@
 # PyInstaller spec: one-folder build (portable zip / installer payload). Run from the repo root.
 # The folder holds two executables that share one set of libraries: the windowed
 # `system-budget-studio` and the console tool `budget` (batch runs, scripts).
+import sys
 from pathlib import Path
 
-from PyInstaller.utils.hooks import collect_data_files
+from PyInstaller.utils.hooks import collect_data_files, copy_metadata
 
 root = Path(SPECPATH).parent
+sys.path.insert(0, str(root / "src"))
+# Provenance (spec constraint 19) reports the version of each of these libraries; a frozen build
+# can only read a version when the distribution metadata is bundled.
+from budget_core.provenance import LIBRARIES  # noqa: E402
+
+library_metadata = [item for name in LIBRARIES for item in copy_metadata(name)]
 
 a = Analysis(
     [str(root / "packaging" / "entry_gui.py"), str(root / "packaging" / "entry_cli.py")],
@@ -17,7 +24,8 @@ a = Analysis(
     + collect_data_files("pint")
     # python-docx reads its templates through "<package>/parts/../templates"; the .py files are
     # included so that the parts folder exists in the bundle (the path has to resolve).
-    + collect_data_files("docx", include_py_files=True),
+    + collect_data_files("docx", include_py_files=True)
+    + library_metadata,
     hiddenimports=["pint", "ruamel.yaml", "openpyxl", "reportlab.pdfbase._fontdata", "sgp4.vallado_cpp", "docx", "PIL"],
     # ssl, http and urllib cannot be excluded: ReportLab imports them (and never uses them for
     # network access, see DECISIONS D-043). The Qt network module is not needed.

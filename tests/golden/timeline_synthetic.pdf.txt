@@ -1,4 +1,4 @@
-pages=6
+pages=7
 ## page 1
 System Budget Studio 0.1.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 1
@@ -260,22 +260,22 @@ Unit
 Source
 Status
 Margin, maturity class m1
- 0.1000
+ 0.1
 ratio
 test fixture
 sourced
 System margin
- 0.0500
+ 0.05
 ratio
 test fixture
 sourced
 Distribution loss
- 0.0000
+ 0
 ratio
 test fixture
 sourced
 Converter efficiency, bus main
- 1.0000
+ 1
 ratio
 test fixture
 sourced
@@ -288,7 +288,7 @@ Unit
 Source
 Status
 Solar irradiance
- 1000.0000
+ 1000
 W/m2
 test fixture
 sourced
@@ -298,82 +298,82 @@ m2
 test fixture
 sourced
 Cell efficiency
- 0.5000
+ 0.5
 ratio
 test fixture
 sourced
 Reference temperature
- 300.0000
+ 300
 K
 test fixture
 sourced
 Cell temperature
- 300.0000
+ 300
 K
 test fixture
 sourced
 Efficiency temperature coefficient
- -0.0020
+ -0.002
 1/K
 test fixture
 sourced
 Packing loss
- 0.0000
+ 0
 ratio
 test fixture
 sourced
 Harness loss
- 0.0000
+ 0
 ratio
 test fixture
 sourced
 Design life
- 5.0000
+ 5
 yr
 test fixture
 sourced
 Battery cell capacity
- 5.0000
+ 5
 Ah
 test fixture
 sourced
 Battery cell voltage
- 4.0000
+ 4
 V
 test fixture
 sourced
 Battery charge efficiency
- 1.0000
+ 1
 ratio
 test fixture
 sourced
 Battery discharge efficiency
- 1.0000
+ 1
 ratio
 test fixture
 sourced
 Battery annual capacity fade
- 0.0100
+ 0.01
 ratio
 test fixture
 sourced
 Battery initial state of charge
- 1.0000
+ 1
 ratio
 test fixture
 sourced
 Allowed depth of discharge, phase eol
- 0.1500
+ 0.15
 ratio
 test fixture
 sourced
 Array annual degradation
- 0.0200
+ 0.02
 ratio
 test fixture
 sourced
 Peak power limit
- 110.0000
+ 110
 W
 test fixture
 sourced
@@ -382,6 +382,35 @@ ID
 Name
 Formula
 Source
+PWR-EFF
+Effective unit power
+P_eff = P_avg * duty_cycle_ratio
+SOURCE_MISSING
+PWR-MARGIN
+Unit power with maturity margin
+P_m = P_eff * (1 + margin_ratio(maturity))
+SOURCE_MISSING
+PWR-SYSMARGIN
+System margin on the sum of margined loads
+P_sys = (sum P_m) * (1 + system_margin_ratio)
+SOURCE_MISSING
+PWR-SOURCE
+Source power through converter and distribution
+P_source = P_load / (eta_converter(bus) * (1 - distribution_loss_ratio))
+SOURCE_MISSING
+PWR-PEAK
+Peak power
+P_peak = sum of unit peak_power_w (all units at peak at once, conservative)
+SOURCE_MISSING
+ENV-SUN
+Sun direction and distance (low precision)
+lambda = L + 1.915 sin g + 0.020 sin 2g; unit vector (cos lambda, cos eps sin
+lambda, sin eps sin lambda); R = 1.00014 - 0.01671 cos g - 0.00014 cos 2g (AU)
+SOURCE_MISSING
+ENV-SHADOW-CYL
+Cylindrical Earth shadow
+in shadow when r.s < 0 and |r - (r.s) s| < R_Earth (s: unit vector to the Sun)
+SOURCE_MISSING
 TDP-ARRAY
 Array output power per step
 P_gen = E * (sum_faces N_cells * max(0, cos theta)) * A_cell * eta_ref * k_T * (1 -
@@ -399,33 +428,6 @@ TDP-COS
 Sun incidence on a face
 cos theta = n_face . s_body (unit vectors), zero on the back side
 SOURCE_MISSING
-TDP-LIT
-Sunlit share of a step
-f_lit = 1 - (eclipse time inside the step) / step; trapezoid of the shadow ratio for a soft
-shadow
-SOURCE_MISSING
-TDP-DEMAND
-Demand per step
-P_dem = sum over modes of overlap(mode segment, step) * P_source(mode) / step
-SOURCE_MISSING
-TDP-CAP
-Battery capacity
-E_cap = C_cell * V_cell * N_series * N_parallel * (1 - annual_capacity_fade_ratio) ^
-years
-SOURCE_MISSING
-TDP-SOC
-Battery state of charge
-surplus: E += eta_c * min(P*dt, (E_cap - E) / eta_c); deficit: E -= min(P*dt, E * eta_d) /
-eta_d (P = generation - demand)
-SOURCE_MISSING
-TDP-DOD
-Depth of discharge
-DoD = 1 - E / E_cap; violation when DoD > allowed depth of discharge of the phase
-SOURCE_MISSING
-TDP-BALANCE
-Orbit energy balance
-balance = integral(P_gen - P_dem) dt over one revolution; negative is a violation
-SOURCE_MISSING
 ## page 6
 System Budget Studio 0.1.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 6
@@ -433,6 +435,35 @@ ID
 Name
 Formula
 Source
+TDP-LIT
+Sunlit share of a step
+f_lit = 1 - (eclipse time inside the step) / step; trapezoid of the shadow ratio for a
+soft shadow
+SOURCE_MISSING
+TDP-DEMAND
+Demand per step
+P_dem = sum over modes of overlap(mode segment, step) * P_source(mode) /
+step
+SOURCE_MISSING
+TDP-CAP
+Battery capacity
+E_cap = C_cell * V_cell * N_series * N_parallel * (1 - annual_capacity_fade_ratio)
+^ years
+SOURCE_MISSING
+TDP-SOC
+Battery state of charge
+surplus: E += eta_c * min(P*dt, (E_cap - E) / eta_c); deficit: E -= min(P*dt, E *
+eta_d) / eta_d (P = generation - demand)
+SOURCE_MISSING
+TDP-DOD
+Depth of discharge
+DoD = 1 - E / E_cap; violation when DoD > allowed depth of discharge of the
+phase
+SOURCE_MISSING
+TDP-BALANCE
+Orbit energy balance
+balance = integral(P_gen - P_dem) dt over one revolution; negative is a violation
+SOURCE_MISSING
 TDP-PEAK
 Peak power at the source
 P_peak,source = sum of unit peaks through converter and distribution losses;
@@ -444,21 +475,41 @@ Problems and open items
 Severity
 Code
 Location
+Path
 Message
+Hint
 error
-BATTERY_DOD_EXCEEDED
-config/power_system.yaml
-The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first
-at T+00:59:00.
+BATTERY_DOD_EXC
+EEDED
+config/power_system.ya
+ml
+battery.max_dod_ratio.eol
+The battery depth of discharge exceeds the limit of the
+mission phase. Case BOL. 2 interval(s), the first at
+T+00:59:00.
+Open the violations table for every interval; change the
+input named here or the scenario.
 error
-BATTERY_DOD_EXCEEDED
-config/power_system.yaml
-The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first
-at T+00:58:33.
+BATTERY_DOD_EXC
+EEDED
+config/power_system.ya
+ml
+battery.max_dod_ratio.eol
+The battery depth of discharge exceeds the limit of the
+mission phase. Case EOL. 2 interval(s), the first at
+T+00:58:33.
+Open the violations table for every interval; change the
+input named here or the scenario.
 error
-PEAK_POWER_EXCEEDED
-config/power_system.yaml
-The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00.
+PEAK_POWER_EXCE
+EDED
+config/power_system.ya
+ml
+limits.peak_power_w
+The peak power demand at the source exceeds the
+power limit. 2 interval(s), the first at T+00:50:00.
+Open the violations table for every interval; change the
+input named here or the scenario.
 Provenance
 Provenance
 Item
@@ -475,6 +526,11 @@ Project revision
 r1
 Scenario
 synthetic
+## page 7
+System Budget Studio 0.1.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+Page 7
+Item
+Value
 Generated (UTC)
 2026-01-02T03:04:05Z
 User

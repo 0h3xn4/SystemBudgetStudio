@@ -70,6 +70,12 @@ def _iso_datetime(text: str) -> datetime:
     return parsed
 
 
+def _folder(text: str) -> Path:
+    if not text.strip():
+        raise argparse.ArgumentTypeError("expected a folder name (an empty value is not a folder)")
+    return Path(text)
+
+
 def _at_least(minimum: int, what: str) -> Callable[[str], int]:
     def parse(text: str) -> int:
         try:
@@ -115,7 +121,7 @@ def build_parser() -> argparse.ArgumentParser:
         choices=REPORTS + ("all",),
         help="Output kind; repeat for several (default: all).",
     )
-    run.add_argument("--out", type=Path, help="Output folder (default: <project>/results).")
+    run.add_argument("--out", type=_folder, help="Output folder (default: <project>/results).")
     run.add_argument(
         "--user", help="User name for the provenance block (default: BUDGET_USER or login)."
     )
@@ -133,7 +139,7 @@ def build_parser() -> argparse.ArgumentParser:
     scn.add_argument(
         "--scenario", help="Scenario id (file name in scenarios/); optional if only one."
     )
-    scn.add_argument("--out", type=Path, help="Output folder (default: <project>/results).")
+    scn.add_argument("--out", type=_folder, help="Output folder (default: <project>/results).")
     scn.add_argument("--user", help="User name for the provenance block.")
     scn.add_argument("--date", type=_iso_datetime, help="Generation time, ISO 8601.")
 
@@ -164,7 +170,7 @@ def build_parser() -> argparse.ArgumentParser:
         choices=REPORTS + ("all",),
         help="Output kind; repeat for several (default: all).",
     )
-    pt.add_argument("--out", type=Path, help="Output folder (default: <project>/results).")
+    pt.add_argument("--out", type=_folder, help="Output folder (default: <project>/results).")
     pt.add_argument(
         "--series-every",
         type=_at_least(1, "1 or more"),
@@ -191,7 +197,7 @@ def build_parser() -> argparse.ArgumentParser:
         choices=REPORTS + ("all",),
         help="Output kind; repeat for several (default: all).",
     )
-    lp.add_argument("--out", type=Path, help="Output folder (default: <project>/results).")
+    lp.add_argument("--out", type=_folder, help="Output folder (default: <project>/results).")
     lp.add_argument("--no-plots", action="store_true", help="Leave the plots out of the reports.")
     lp.add_argument("--user", help="User name for the provenance block.")
     lp.add_argument("--date", type=_iso_datetime, help="Generation time, ISO 8601.")
@@ -220,13 +226,13 @@ def build_parser() -> argparse.ArgumentParser:
         choices=REPORTS + ("all",),
         help="Output kind; repeat for several (default: all).",
     )
-    cmp.add_argument("--out", type=Path, help="Output folder (default: <project>/results).")
+    cmp.add_argument("--out", type=_folder, help="Output folder (default: <project>/results).")
     cmp.add_argument(
         "--max-rows",
         type=_at_least(0, "0 or more"),
         default=200,
         metavar="N",
-        help="Differences listed per budget (default 200; the rest are counted).",
+        help="Differences the report lists per budget (default 200; the CSV and JSON list all).",
     )
     cmp.add_argument("--user", help="User name for the provenance block.")
     cmp.add_argument("--date", type=_iso_datetime, help="Generation time, ISO 8601.")
@@ -234,7 +240,7 @@ def build_parser() -> argparse.ArgumentParser:
     gde = sub.add_parser(
         "guide", help="Write the user guide (offline HTML and PDF) with the Equations and sources."
     )
-    gde.add_argument("--out", type=Path, required=True, help="Output folder.")
+    gde.add_argument("--out", type=_folder, required=True, help="Output folder.")
     gde.add_argument("--format", choices=("html", "pdf", "all"), default="all")
     gde.add_argument(
         "--project",
@@ -641,10 +647,7 @@ def _compare(args: argparse.Namespace) -> int:
     for note in notes:
         print(f"Note: {note}")
     for result in output.result:
-        print(
-            f"{result.name}: {len(result.differences) + result.truncated} value(s) differ "
-            f"out of {result.compared} compared."
-        )
+        print(f"{result.name}: {result.summary_line}")
     if output.document.banner:
         print(output.document.banner)
     return 0

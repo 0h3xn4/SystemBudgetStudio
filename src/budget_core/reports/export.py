@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import io
 import json
+from collections.abc import Sequence
 from dataclasses import asdict
 from typing import Any
 
 from budget_core.mass.static_mass import PhaseMass
 from budget_core.power.static_budget import ModePowerResult
+from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer
+from budget_core.reports.numfmt import clean_numbers, no_negative_zero
 from budget_core.thermal.static_thermal import CaseThermal, ModeHeat
 
 CSV_COLUMNS = (
@@ -39,11 +42,18 @@ def _plain(value: Any) -> Any:
     return value
 
 
-def result_json(result: Any, provenance: Provenance) -> str:
+def result_json(
+    result: Any,
+    provenance: Provenance,
+    *,
+    incomplete: bool,
+    load_problems: Sequence[Problem] = (),
+) -> str:
     data = _plain(asdict(result))
-    data["problems"] = [p.to_dict() for p in result.problems]
+    data["incomplete"] = incomplete
+    data["problems"] = [p.to_dict() for p in sort_problems([*load_problems, *result.problems])]
     data["provenance"] = _plain(asdict(provenance))
-    return json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
 
 
 def result_csv(mode: ModePowerResult) -> str:
@@ -97,7 +107,7 @@ def mass_csv(phase: PhaseMass) -> str:
 
 
 def _cell(value: Any) -> str:
-    return repr(value) if isinstance(value, float) else str(value)
+    return repr(no_negative_zero(value)) if isinstance(value, float) else str(value)
 
 
 THERMAL_CSV_COLUMNS = (

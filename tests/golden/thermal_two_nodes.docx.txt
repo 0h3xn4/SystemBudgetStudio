@@ -69,21 +69,21 @@ Assumptions
 Configuration numbers used
 ## table
 Name | Value | Unit | Source | Status
-Space temperature | 4.0000 | K | test fixture | sourced
-Temperature margin | 5.0000 | K | test fixture | sourced
-Conductance A - B | 2.0000 | W/K | test fixture | sourced
-Solar flux, case cold | 0.0000 | W/m2 | test fixture | sourced
-Albedo, case cold | 0.0000 | ratio | test fixture | sourced
-Earth infrared, case cold | 0.0000 | W/m2 | test fixture | sourced
-Emissivity, radiator | 0.8000 | ratio | test fixture | sourced
-Absorptivity, radiator | 0.3000 | ratio | test fixture | sourced
-Solar view, radiator, case cold | 0.0000 | ratio | test fixture | sourced
-Earth view, radiator, case cold | 0.0000 | ratio | test fixture | sourced
-Solar flux, case hot | 1000.0000 | W/m2 | test fixture | sourced
-Albedo, case hot | 0.3000 | ratio | test fixture | sourced
-Earth infrared, case hot | 200.0000 | W/m2 | test fixture | sourced
-Solar view, radiator, case hot | 0.5000 | ratio | test fixture | sourced
-Earth view, radiator, case hot | 0.5000 | ratio | test fixture | sourced
+Space temperature | 4 | K | test fixture | sourced
+Temperature margin | 5 | K | test fixture | sourced
+Conductance A - B | 2 | W/K | test fixture | sourced
+Solar flux, case cold | 0 | W/m2 | test fixture | sourced
+Albedo, case cold | 0 | ratio | test fixture | sourced
+Earth infrared, case cold | 0 | W/m2 | test fixture | sourced
+Emissivity, radiator | 0.8 | ratio | test fixture | sourced
+Absorptivity, radiator | 0.3 | ratio | test fixture | sourced
+Solar view, radiator, case cold | 0 | ratio | test fixture | sourced
+Earth view, radiator, case cold | 0 | ratio | test fixture | sourced
+Solar flux, case hot | 1000 | W/m2 | test fixture | sourced
+Albedo, case hot | 0.3 | ratio | test fixture | sourced
+Earth infrared, case hot | 200 | W/m2 | test fixture | sourced
+Solar view, radiator, case hot | 0.5 | ratio | test fixture | sourced
+Earth view, radiator, case hot | 0.5 | ratio | test fixture | sourced
 Equations
 ## table
 ID | Name | Formula | Source
@@ -96,9 +96,9 @@ SOURCE_MISSING: the formula is a project convention or textbook definition whose
 Problems
 Problems and open items
 ## table
-Severity | Code | Location | Message
-warning | THERMAL_NO_LIMITS | units/u1.yaml | Unit 'u1' has no operating temperature limits; it is not checked.
-warning | THERMAL_NO_LIMITS | units/u2.yaml | Unit 'u2' has no operating temperature limits; it is not checked.
+Severity | Code | Location | Path | Message | Hint
+warning | THERMAL_NO_LIMITS | units/u1.yaml | temperature_limits | Unit 'u1' has no operating temperature limits; it is not checked. | Add temperature_limits from the unit's data sheet.
+warning | THERMAL_NO_LIMITS | units/u2.yaml | temperature_limits | Unit 'u2' has no operating temperature limits; it is not checked. | Add temperature_limits from the unit's data sheet.
 Provenance
 Provenance
 ## table
