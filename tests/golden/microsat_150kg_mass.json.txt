@@ -46,6 +46,7 @@
       "value": null
     }
   ],
+  "incomplete": true,
   "phases": [
     {
       "cog": {
@@ -1438,7 +1439,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass margin of maturity class 'class_a' is a placeholder.",
+      "message": "The mass margin of the maturity class is a placeholder.",
       "path": "classes.class_a.mass_margin_ratio",
       "severity": "warning"
     },
@@ -1447,7 +1448,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass margin of maturity class 'class_b' is a placeholder.",
+      "message": "The mass margin of the maturity class is a placeholder.",
       "path": "classes.class_b.mass_margin_ratio",
       "severity": "warning"
     },
@@ -1456,7 +1457,7 @@
       "file": "config/margin_policy.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass margin of maturity class 'class_c' is a placeholder.",
+      "message": "The mass margin of the maturity class is a placeholder.",
       "path": "classes.class_c.mass_margin_ratio",
       "severity": "warning"
     },
@@ -1474,9 +1475,18 @@
       "file": "config/mass_limits.yaml",
       "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
       "line": null,
-      "message": "The mass limit number 1 is a placeholder.",
+      "message": "The mass limit is a placeholder.",
       "path": "limits[0].limit_kg",
       "severity": "warning"
+    },
+    {
+      "code": "MASS_INERTIA_POINT_MASS",
+      "file": "expendables/propellant.yaml",
+      "hint": "",
+      "line": null,
+      "message": "'propellant' has no own inertia; it is treated as a point mass.",
+      "path": "mass_properties",
+      "severity": "info"
     },
     {
       "code": "MASS_INERTIA_POINT_MASS",
@@ -1502,15 +1512,6 @@
       "hint": "",
       "line": null,
       "message": "'sun_sensors' has no own inertia; it is treated as a point mass.",
-      "path": "mass_properties",
-      "severity": "info"
-    },
-    {
-      "code": "MASS_INERTIA_POINT_MASS",
-      "file": "expendables/propellant.yaml",
-      "hint": "",
-      "line": null,
-      "message": "'propellant' has no own inertia; it is treated as a point mass.",
       "path": "mass_properties",
       "severity": "info"
     }

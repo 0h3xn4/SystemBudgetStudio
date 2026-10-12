@@ -22,7 +22,7 @@
 ## sheet Plot dl rows=42 cols=1
 1: 'Link dl over gs'
 42: 'Margin at each listed rate with the required margin, the selected data rate and the elevation, inside the passes.'
-## sheet Assumptions rows=24 cols=5
+## sheet Assumptions rows=27 cols=5
 1: 'Configuration numbers used' |  |  |  | 
 2: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
 3: 'Transmit power' | 2 | 'W' | 'test fixture' | 'sourced'
@@ -36,20 +36,23 @@
 11: 'Required Eb/N0, TEST NONE' | 10 | 'dB' | 'test fixture' | 'sourced'
 13: 'Equations' |  |  |  | 
 14: 'ID' | 'Name' | 'Formula' | 'Source' | 
-15: 'LNK-EIRP' | 'Effective isotropic radiated power' | 'EIRP = P_tx - L_line + G_tx  (dBW)' | 'SOURCE_MISSING' | 
-16: 'LNK-FSPL' | 'Free-space path loss' | 'L_fs = 20 log10(4 pi d f / c)  (dB)' | 'SOURCE_MISSING' | 
-17: 'LNK-GT' | 'Receiver figure of merit' | 'G/T = G_rx - L_feed - 10 log10(T_sys)  (dB/K), or given directly' | 'SOURCE_MISSING' | 
-18: 'LNK-CN0' | 'Carrier to noise density' | 'C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10 log10(k)  (dBHz)' | 'SOURCE_MISSING' | 
-19: 'LNK-EBN0' | 'Energy per bit to noise density' | 'Eb/N0 = C/N0 - 10 log10(R_b)  (dB)' | 'SOURCE_MISSING' | 
-20: 'LNK-MARGIN' | 'Link margin' | 'margin = Eb/N0 - Eb/N0_required  (dB); the link closes when margin >= required margin' | 'SOURCE_MISSING' | 
-21: 'LNK-ATT' | 'Atmospheric attenuation' | 'L_atm = sum of the named table entries, linear interpolation by elevation' | 'SOURCE_MISSING' | 
-22: 'LNK-NADIR' | 'Angle from nadir at the spacecraft' | 'sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el)' | 'SOURCE_MISSING' | 
-23: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
-24: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
-## sheet Problems rows=3 cols=4
-1: 'Problems and open items' |  |  | 
-2: 'Severity' | 'Code' | 'Location' | 'Message'
-3: 'info' | 'LINK_PER_DAY_NOT_GIVEN' | 'scenarios/synthetic.yaml' | 'The scenario is shorter than one day, so the data volume per day is not given (scaling a short scenario to a day would repeat its passes).'
+15: 'ENV-GMST' | 'Greenwich mean sidereal time (IAU-82)' | 'theta = 67310.54841 + (876600 h + 8640184.812866) T + 0.093104 T^2 - 6.2e-6 T^3 s' | 'sgp4 library, sgp4.propagation.gstime (IAU-82 GMST, Vallado)' | 
+16: 'ENV-GEODETIC' | 'WGS-84 geodetic to Earth-fixed coordinates' | 'N = a / sqrt(1 - e2 sin2 phi); x = (N + h) cos phi cos lam; z = (N (1 - e2) + h) sin phi' | 'WGS 84 (NIMA TR8350.2) ellipsoid definition' | 
+17: 'ENV-TOPO' | 'Elevation, azimuth and range from a site' | 'local east-north-up basis at the geodetic latitude and longitude of the site' | 'SOURCE_MISSING' | 
+18: 'LNK-EIRP' | 'Effective isotropic radiated power' | 'EIRP = P_tx - L_line + G_tx  (dBW)' | 'SOURCE_MISSING' | 
+19: 'LNK-FSPL' | 'Free-space path loss' | 'L_fs = 20 log10(4 pi d f / c)  (dB)' | 'SOURCE_MISSING' | 
+20: 'LNK-GT' | 'Receiver figure of merit' | 'G/T = G_rx - L_feed - 10 log10(T_sys)  (dB/K), or given directly' | 'SOURCE_MISSING' | 
+21: 'LNK-CN0' | 'Carrier to noise density' | 'C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10 log10(k)  (dBHz)' | 'SOURCE_MISSING' | 
+22: 'LNK-EBN0' | 'Energy per bit to noise density' | 'Eb/N0 = C/N0 - 10 log10(R_b)  (dB)' | 'SOURCE_MISSING' | 
+23: 'LNK-MARGIN' | 'Link margin' | 'margin = Eb/N0 - Eb/N0_required  (dB); the link closes when margin >= required margin' | 'SOURCE_MISSING' | 
+24: 'LNK-ATT' | 'Atmospheric attenuation' | 'L_atm = sum of the named table entries, linear interpolation by elevation' | 'SOURCE_MISSING' | 
+25: 'LNK-NADIR' | 'Angle from nadir at the spacecraft' | 'sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el)' | 'SOURCE_MISSING' | 
+26: 'LNK-VOLUME' | 'Data volume' | 'V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the highest listed rate with margin >= required margin while the link is active' | 'SOURCE_MISSING' | 
+27: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
+## sheet Problems rows=3 cols=6
+1: 'Problems and open items' |  |  |  |  | 
+2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+3: 'info' | 'LINK_PER_DAY_NOT_GIVEN' | 'scenarios/synthetic.yaml' | 'duration_s' | 'The scenario is shorter than one day, so the data volume per day is not given (scaling a short scenario to a day would repeat its passes).' | 'Use a scenario of at least one day for a per-day figure.'
 ## sheet Provenance rows=10 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'

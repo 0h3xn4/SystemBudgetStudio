@@ -24,146 +24,146 @@
 25: 'Violations' |  |  |  |  |  |  |  | 
 26: 'Case' | 'Finding' | 'From (T+)' | 'To (T+)' | 'Duration (s)' | 'Worst value' | 'Limit' | 'Unit' | 'Input to change'
 27: 'Not evaluated: Peak power above the limit (the peak power limit is missing); Depth of discharge above the allowed limit in BOL and EOL (an input of the array or battery is missing); Battery empty, demand not supplied in BOL and EOL (an input of the array or battery is missing); Negative energy balance over an orbit in BOL and EOL (an input of the array or demand is missing). No violations found by the checks that ran.' |  |  |  |  |  |  |  | 
-## sheet Modes and orbits rows=45 cols=8
-1: 'Spacecraft modes in the scenario' |  |  |  |  |  |  | 
-2: 'Mode' | 'Name' | 'Time (s)' | 'Share' | 'Load (W)' | 'Demand at source (W)' | 'Peak at source (W)' | 
-3: 'charging' | 'Charging' | 50577.8 | 0.585391 | 1.5 | 'n/a' | 'n/a' | 
-4: 'downlink' | 'Downlink' | 4827.36 | 0.0558723 | 2.8 | 'n/a' | 'n/a' | 
-5: 'imaging' | 'Imaging' | 138.381 | 0.00160163 | 3.84 | 'n/a' | 'n/a' | 
-6: 'nominal' | 'Nominal' | 30856.4 | 0.357135 | 2 | 'n/a' | 'n/a' | 
-7: 'Demand basis: nominal.' |  |  |  |  |  |  | 
-9: 'Orbit energy balance, BOL' |  |  |  |  |  |  | 
-10: 'Orbit' | 'Start (T+)' | 'Length (s)' | 'Eclipse (s)' | 'Generated (Wh)' | 'Demanded (Wh)' | 'Balance (Wh)' | 'Stored change (Wh)'
-11: '1' | 'T+00:00:00' | 5742.73 | 2056.8 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-12: '2' | 'T+01:35:42' | 5742.73 | 2056.84 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-13: '3' | 'T+03:11:25' | 5742.73 | 2056.88 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-14: '4' | 'T+04:47:08' | 5742.73 | 2056.93 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-15: '5' | 'T+06:22:50' | 5742.73 | 2056.97 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-16: '6' | 'T+07:58:33' | 5742.73 | 2057.01 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-17: '7' | 'T+09:34:16' | 5742.73 | 2057.05 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-18: '8' | 'T+11:09:59' | 5742.73 | 2057.1 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-19: '9' | 'T+12:45:41' | 5742.73 | 2057.14 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-20: '10' | 'T+14:21:24' | 5742.73 | 2057.18 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-21: '11' | 'T+15:57:07' | 5742.73 | 2057.22 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-22: '12' | 'T+17:32:50' | 5742.73 | 2057.27 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-23: '13' | 'T+19:08:32' | 5742.73 | 2057.31 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-24: '14' | 'T+20:44:15' | 5742.73 | 2057.35 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-25: '15' | 'T+22:19:58' | 5742.73 | 2057.39 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-26: 'Complete orbits only; the balance is generation minus demand at the source.' |  |  |  |  |  |  | 
-28: 'Orbit energy balance, EOL' |  |  |  |  |  |  | 
-29: 'Orbit' | 'Start (T+)' | 'Length (s)' | 'Eclipse (s)' | 'Generated (Wh)' | 'Demanded (Wh)' | 'Balance (Wh)' | 'Stored change (Wh)'
-30: '1' | 'T+00:00:00' | 5742.73 | 2056.8 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-31: '2' | 'T+01:35:42' | 5742.73 | 2056.84 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-32: '3' | 'T+03:11:25' | 5742.73 | 2056.88 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-33: '4' | 'T+04:47:08' | 5742.73 | 2056.93 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-34: '5' | 'T+06:22:50' | 5742.73 | 2056.97 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-35: '6' | 'T+07:58:33' | 5742.73 | 2057.01 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-36: '7' | 'T+09:34:16' | 5742.73 | 2057.05 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-37: '8' | 'T+11:09:59' | 5742.73 | 2057.1 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-38: '9' | 'T+12:45:41' | 5742.73 | 2057.14 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-39: '10' | 'T+14:21:24' | 5742.73 | 2057.18 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
-40: '11' | 'T+15:57:07' | 5742.73 | 2057.22 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+## sheet Modes and orbits rows=47 cols=8
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  | 
+3: 'Spacecraft modes in the scenario' |  |  |  |  |  |  | 
+4: 'Mode' | 'Name' | 'Time (s)' | 'Share' | 'Load (W)' | 'Demand at source (W)' | 'Peak at source (W)' | 
+5: 'charging' | 'Charging' | 50577.8 | 0.585391 | 1.5 | 'n/a' | 'n/a' | 
+6: 'downlink' | 'Downlink' | 4827.36 | 0.0558723 | 2.8 | 'n/a' | 'n/a' | 
+7: 'imaging' | 'Imaging' | 138.381 | 0.00160163 | 3.84 | 'n/a' | 'n/a' | 
+8: 'nominal' | 'Nominal' | 30856.4 | 0.357135 | 2 | 'n/a' | 'n/a' | 
+9: 'Demand basis: nominal.' |  |  |  |  |  |  | 
+11: 'Orbit energy balance, BOL' |  |  |  |  |  |  | 
+12: 'Orbit' | 'Start (T+)' | 'Length (s)' | 'Eclipse (s)' | 'Generated (Wh)' | 'Demanded (Wh)' | 'Balance (Wh)' | 'Stored change (Wh)'
+13: '1' | 'T+00:00:00' | 5742.73 | 2056.8 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+14: '2' | 'T+01:35:42' | 5742.73 | 2056.84 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+15: '3' | 'T+03:11:25' | 5742.73 | 2056.88 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+16: '4' | 'T+04:47:08' | 5742.73 | 2056.93 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+17: '5' | 'T+06:22:50' | 5742.73 | 2056.97 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+18: '6' | 'T+07:58:33' | 5742.73 | 2057.01 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+19: '7' | 'T+09:34:16' | 5742.73 | 2057.05 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+20: '8' | 'T+11:09:59' | 5742.73 | 2057.1 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+21: '9' | 'T+12:45:41' | 5742.73 | 2057.14 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+22: '10' | 'T+14:21:24' | 5742.73 | 2057.18 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+23: '11' | 'T+15:57:07' | 5742.73 | 2057.22 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+24: '12' | 'T+17:32:50' | 5742.73 | 2057.27 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+25: '13' | 'T+19:08:32' | 5742.73 | 2057.31 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+26: '14' | 'T+20:44:15' | 5742.73 | 2057.35 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+27: '15' | 'T+22:19:58' | 5742.73 | 2057.39 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+28: 'Complete orbits only; the balance is generation minus demand at the source.' |  |  |  |  |  |  | 
+30: 'Orbit energy balance, EOL' |  |  |  |  |  |  | 
+31: 'Orbit' | 'Start (T+)' | 'Length (s)' | 'Eclipse (s)' | 'Generated (Wh)' | 'Demanded (Wh)' | 'Balance (Wh)' | 'Stored change (Wh)'
+32: '1' | 'T+00:00:00' | 5742.73 | 2056.8 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+33: '2' | 'T+01:35:42' | 5742.73 | 2056.84 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+34: '3' | 'T+03:11:25' | 5742.73 | 2056.88 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+35: '4' | 'T+04:47:08' | 5742.73 | 2056.93 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+36: '5' | 'T+06:22:50' | 5742.73 | 2056.97 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+37: '6' | 'T+07:58:33' | 5742.73 | 2057.01 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+38: '7' | 'T+09:34:16' | 5742.73 | 2057.05 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+39: '8' | 'T+11:09:59' | 5742.73 | 2057.1 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+40: '9' | 'T+12:45:41' | 5742.73 | 2057.14 | 'n/a' | 'n/a' | 'n/a' | 'n/a'
 ...
-## sheet Static power rows=9 cols=8
-1: 'The static budget of every mode, the input of the time-domain run.' |  |  |  |  |  |  | 
-2: 'Power by spacecraft mode' |  |  |  |  |  |  | 
-3: 'Mode' | 'Average load (W)' | 'Average, unit margins (W)' | 'Average, system margin (W)' | 'Average at source (W)' | 'Average at source, with margins (W)' | 'Peak load (W)' | 'Peak at source, with margins (W)'
-4: 'Charging' | 1.5 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 2.45 | 'n/a'
-5: 'Downlink' | 2.8 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 6.95 | 'n/a'
-6: 'Imaging' | 3.84 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 6.95 | 'n/a'
-7: 'Nominal' | 2 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 3.15 | 'n/a'
-8: 'Safe' | 1 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 1.6 | 'n/a'
-9: 'Average = sum of unit power x duty cycle. Peak = sum of unit peak powers. Source = after converter and distribution losses.' |  |  |  |  |  |  | 
-## sheet Assumptions rows=40 cols=5
-1: 'Configuration numbers used' |  |  |  | 
-2: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
-3: 'Margin, maturity class class_a' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-4: 'Margin, maturity class class_b' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-5: 'Margin, maturity class class_c' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-6: 'System margin' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-7: 'Distribution loss' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-8: 'Converter efficiency, bus main' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-9: 'Solar irradiance' | 'n/a' | 'W/m2' | 'TBD' | 'PLACEHOLDER'
-10: 'Cell area' | 'n/a' | 'm2' | 'TBD' | 'PLACEHOLDER'
-11: 'Cell efficiency' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-12: 'Reference temperature' | 'n/a' | 'K' | 'TBD' | 'PLACEHOLDER'
-13: 'Cell temperature' | 'n/a' | 'K' | 'TBD' | 'PLACEHOLDER'
-14: 'Efficiency temperature coefficient' | 'n/a' | '1/K' | 'TBD' | 'PLACEHOLDER'
-15: 'Packing loss' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-16: 'Harness loss' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-17: 'Design life' | 'n/a' | 'yr' | 'TBD' | 'PLACEHOLDER'
-18: 'Battery cell capacity' | 'n/a' | 'Ah' | 'TBD' | 'PLACEHOLDER'
-19: 'Battery cell voltage' | 'n/a' | 'V' | 'TBD' | 'PLACEHOLDER'
-20: 'Battery charge efficiency' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-21: 'Battery discharge efficiency' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-22: 'Battery annual capacity fade' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-23: 'Battery initial state of charge' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-24: 'Array annual degradation' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
-25: 'Peak power limit' | 'n/a' | 'W' | 'TBD' | 'PLACEHOLDER'
-27: 'Equations' |  |  |  | 
-28: 'ID' | 'Name' | 'Formula' | 'Source' | 
-29: 'TDP-ARRAY' | 'Array output power per step' | 'P_gen = E * (sum_faces N_cells * max(0, cos theta)) * A_cell * eta_ref * k_T * (1 - l_pack) * (1 - l_harness) * k_age * f_lit' | 'SOURCE_MISSING' | 
-30: 'TDP-TEMP' | 'Cell efficiency at the operating temperature' | 'k_T = max(0, 1 + alpha * (T_cell - T_ref))' | 'SOURCE_MISSING' | 
-31: 'TDP-AGE' | 'Array degradation over life' | 'k_age = (1 - annual_degradation_ratio) ^ years' | 'SOURCE_MISSING' | 
-32: 'TDP-COS' | 'Sun incidence on a face' | 'cos theta = n_face . s_body (unit vectors), zero on the back side' | 'SOURCE_MISSING' | 
-33: 'TDP-LIT' | 'Sunlit share of a step' | 'f_lit = 1 - (eclipse time inside the step) / step; trapezoid of the shadow ratio for a soft shadow' | 'SOURCE_MISSING' | 
-34: 'TDP-DEMAND' | 'Demand per step' | 'P_dem = sum over modes of overlap(mode segment, step) * P_source(mode) / step' | 'SOURCE_MISSING' | 
-35: 'TDP-CAP' | 'Battery capacity' | 'E_cap = C_cell * V_cell * N_series * N_parallel * (1 - annual_capacity_fade_ratio) ^ years' | 'SOURCE_MISSING' | 
-36: 'TDP-SOC' | 'Battery state of charge' | 'surplus: E += eta_c * min(P*dt, (E_cap - E) / eta_c); deficit: E -= min(P*dt, E * eta_d) / eta_d (P = generation - demand)' | 'SOURCE_MISSING' | 
-37: 'TDP-DOD' | 'Depth of discharge' | 'DoD = 1 - E / E_cap; violation when DoD > allowed depth of discharge of the phase' | 'SOURCE_MISSING' | 
-38: 'TDP-BALANCE' | 'Orbit energy balance' | 'balance = integral(P_gen - P_dem) dt over one revolution; negative is a violation' | 'SOURCE_MISSING' | 
-39: 'TDP-PEAK' | 'Peak power at the source' | 'P_peak,source = sum of unit peaks through converter and distribution losses; violation when above the power limit during the mode' | 'SOURCE_MISSING' | 
-40: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
-## sheet Problems rows=108 cols=4
-1: 'Problems and open items' |  |  | 
-2: 'Severity' | 'Code' | 'Location' | 'Message'
-3: 'warning' | 'CONFIG_EMPTY_TABLE' | 'config/attenuation_table.yaml:3' | 'The table has no entries.'
-4: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/ebn0_table.yaml:7' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-5: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | "The margin of maturity class 'class_a' is a placeholder."
-6: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | "The margin of maturity class 'class_b' is a placeholder."
-7: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | "The margin of maturity class 'class_c' is a placeholder."
-8: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'The system margin is a placeholder.'
-9: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:6' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-10: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:10' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-11: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:15' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-12: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:19' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-13: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:24' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-14: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:28' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-15: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-16: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:36' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-17: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-18: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_config.yaml' | "The converter efficiency of bus 'main' is a placeholder."
-19: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_config.yaml' | 'The distribution loss is a placeholder.'
-20: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:4' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-21: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:9' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-22: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The battery capacity fade is a placeholder.'
-23: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The battery cell capacity is a placeholder.'
-24: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The battery cell voltage is a placeholder.'
-25: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The battery charge efficiency is a placeholder.'
-26: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The battery discharge efficiency is a placeholder.'
-27: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The initial state of charge is a placeholder.'
-28: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The design life is a placeholder.'
-29: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The peak power limit is a placeholder.'
-30: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The array annual degradation is a placeholder.'
-31: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The cell area is a placeholder.'
-32: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The cell efficiency is a placeholder.'
-33: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The cell temperature is a placeholder.'
-34: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The temperature coefficient is a placeholder.'
-35: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The harness loss is a placeholder.'
-36: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The packing loss is a placeholder.'
-37: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The reference temperature is a placeholder.'
-38: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'The solar irradiance is a placeholder.'
-39: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:4' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
-40: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:45' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy."
+## sheet Static power rows=11 cols=8
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  | 
+3: 'The static budget of every mode, the input of the time-domain run.' |  |  |  |  |  |  | 
+4: 'Power by spacecraft mode' |  |  |  |  |  |  | 
+5: 'Mode' | 'Average load (W)' | 'Average, unit margins (W)' | 'Average, system margin (W)' | 'Average at source (W)' | 'Average at source, with margins (W)' | 'Peak load (W)' | 'Peak at source, with margins (W)'
+6: 'Charging' | 1.5 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 2.45 | 'n/a'
+7: 'Downlink' | 2.8 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 6.95 | 'n/a'
+8: 'Imaging' | 3.84 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 6.95 | 'n/a'
+9: 'Nominal' | 2 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 3.15 | 'n/a'
+10: 'Safe' | 1 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 1.6 | 'n/a'
+11: 'Average = sum of unit power x duty cycle. Peak = sum of unit peak powers. Source = after converter and distribution losses.' |  |  |  |  |  |  | 
+## sheet Assumptions rows=52 cols=5
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  | 
+3: 'Configuration numbers used' |  |  |  | 
+4: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
+5: 'Margin, maturity class class_a' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+6: 'Margin, maturity class class_b' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+7: 'Margin, maturity class class_c' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+8: 'System margin' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+9: 'Distribution loss' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+10: 'Converter efficiency, bus main' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+11: 'Solar irradiance' | 'n/a' | 'W/m2' | 'TBD' | 'PLACEHOLDER'
+12: 'Cell area' | 'n/a' | 'm2' | 'TBD' | 'PLACEHOLDER'
+13: 'Cell efficiency' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+14: 'Reference temperature' | 'n/a' | 'K' | 'TBD' | 'PLACEHOLDER'
+15: 'Cell temperature' | 'n/a' | 'K' | 'TBD' | 'PLACEHOLDER'
+16: 'Efficiency temperature coefficient' | 'n/a' | '1/K' | 'TBD' | 'PLACEHOLDER'
+17: 'Packing loss' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+18: 'Harness loss' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+19: 'Design life' | 'n/a' | 'yr' | 'TBD' | 'PLACEHOLDER'
+20: 'Battery cell capacity' | 'n/a' | 'Ah' | 'TBD' | 'PLACEHOLDER'
+21: 'Battery cell voltage' | 'n/a' | 'V' | 'TBD' | 'PLACEHOLDER'
+22: 'Battery charge efficiency' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+23: 'Battery discharge efficiency' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+24: 'Battery annual capacity fade' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+25: 'Battery initial state of charge' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+26: 'Array annual degradation' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+27: 'Peak power limit' | 'n/a' | 'W' | 'TBD' | 'PLACEHOLDER'
+29: 'Equations' |  |  |  | 
+30: 'ID' | 'Name' | 'Formula' | 'Source' | 
+31: 'PWR-EFF' | 'Effective unit power' | 'P_eff = P_avg * duty_cycle_ratio' | 'SOURCE_MISSING' | 
+32: 'PWR-MARGIN' | 'Unit power with maturity margin' | 'P_m = P_eff * (1 + margin_ratio(maturity))' | 'SOURCE_MISSING' | 
+33: 'PWR-SYSMARGIN' | 'System margin on the sum of margined loads' | 'P_sys = (sum P_m) * (1 + system_margin_ratio)' | 'SOURCE_MISSING' | 
+34: 'PWR-SOURCE' | 'Source power through converter and distribution' | 'P_source = P_load / (eta_converter(bus) * (1 - distribution_loss_ratio))' | 'SOURCE_MISSING' | 
+35: 'PWR-PEAK' | 'Peak power' | 'P_peak = sum of unit peak_power_w (all units at peak at once, conservative)' | 'SOURCE_MISSING' | 
+36: 'ENV-SUN' | 'Sun direction and distance (low precision)' | 'lambda = L + 1.915 sin g + 0.020 sin 2g; unit vector (cos lambda, cos eps sin lambda, sin eps sin lambda); R = 1.00014 - 0.01671 cos g - 0.00014 cos 2g (AU)' | 'SOURCE_MISSING' | 
+37: 'ENV-GMST' | 'Greenwich mean sidereal time (IAU-82)' | 'theta = 67310.54841 + (876600 h + 8640184.812866) T + 0.093104 T^2 - 6.2e-6 T^3 s' | 'sgp4 library, sgp4.propagation.gstime (IAU-82 GMST, Vallado)' | 
+38: 'ENV-SHADOW-CYL' | 'Cylindrical Earth shadow' | 'in shadow when r.s < 0 and |r - (r.s) s| < R_Earth (s: unit vector to the Sun)' | 'SOURCE_MISSING' | 
+39: 'ENV-GEODETIC' | 'WGS-84 geodetic to Earth-fixed coordinates' | 'N = a / sqrt(1 - e2 sin2 phi); x = (N + h) cos phi cos lam; z = (N (1 - e2) + h) sin phi' | 'WGS 84 (NIMA TR8350.2) ellipsoid definition' | 
+40: 'ENV-TOPO' | 'Elevation, azimuth and range from a site' | 'local east-north-up basis at the geodetic latitude and longitude of the site' | 'SOURCE_MISSING' | 
 ...
-## sheet Provenance rows=10 cols=2
-1: 'Provenance' | 
-2: 'Item' | 'Value'
-3: 'Tool' | 'System Budget Studio 0.1.0'
-4: 'Python' | '3.x'
-5: 'Libraries' | 'pinned for-golden-tests'
-6: 'Project' | 'Example 3U CubeSat'
-7: 'Project revision' | '1'
-8: 'Scenario' | 'static (no scenario)'
-9: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-10: 'User' | 'Golden User'
+## sheet Problems rows=110 cols=6
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  | 
+3: 'Problems and open items' |  |  |  |  | 
+4: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+5: 'warning' | 'CONFIG_EMPTY_TABLE' | 'config/attenuation_table.yaml:3' | 'entries' | 'The table has no entries.' | 'Add entries from a cited source, or import them from a file.'
+6: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/ebn0_table.yaml:7' | 'entries[0].required_ebn0_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+7: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'classes.class_a.power_margin_ratio' | 'The margin of the maturity class is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+8: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'classes.class_b.power_margin_ratio' | 'The margin of the maturity class is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+9: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'classes.class_c.power_margin_ratio' | 'The margin of the maturity class is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+10: 'warning' | 'RESULT_INCOMPLETE' | 'config/margin_policy.yaml' | 'system_power_margin_ratio' | 'The system margin is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+11: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:6' | 'classes.class_a.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+12: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:10' | 'classes.class_a.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+13: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:15' | 'classes.class_b.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+14: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:19' | 'classes.class_b.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+15: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:24' | 'classes.class_c.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+16: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:28' | 'classes.class_c.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+17: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | 'system_power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+18: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:36' | 'system_mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+19: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | 'limits[0].limit_kg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+20: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_config.yaml' | 'converter_efficiency_ratio.main' | 'The converter efficiency of the bus is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+21: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_config.yaml' | 'distribution_loss_ratio' | 'The distribution loss is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+22: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:4' | 'distribution_loss_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+23: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:9' | 'converter_efficiency_ratio.main' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+24: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'battery.annual_capacity_fade_ratio' | 'The battery capacity fade is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+25: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'battery.cell_capacity_ah' | 'The battery cell capacity is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+26: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'battery.cell_nominal_voltage_v' | 'The battery cell voltage is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+27: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'battery.charge_efficiency_ratio' | 'The battery charge efficiency is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+28: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'battery.discharge_efficiency_ratio' | 'The battery discharge efficiency is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+29: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'battery.initial_soc_ratio' | 'The initial state of charge is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+30: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'design_life_yr' | 'The design life is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+31: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'limits.peak_power_w' | 'The peak power limit is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+32: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.annual_degradation_ratio' | 'The array annual degradation is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+33: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.cell_area_m2' | 'The cell area is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+34: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.cell_efficiency_ratio' | 'The cell efficiency is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+35: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.cell_temperature_k' | 'The cell temperature is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+36: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.efficiency_temp_coeff_perk' | 'The temperature coefficient is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+37: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.harness_loss_ratio' | 'The harness loss is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+38: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.packing_loss_ratio' | 'The packing loss is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+39: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.reference_temperature_k' | 'The reference temperature is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+40: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.solar_irradiance_wm2' | 'The solar irradiance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+...
+## sheet Provenance rows=12 cols=2
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
+3: 'Provenance' | 
+4: 'Item' | 'Value'
+5: 'Tool' | 'System Budget Studio 0.1.0'
+6: 'Python' | '3.x'
+7: 'Libraries' | 'pinned for-golden-tests'
+8: 'Project' | 'Example 3U CubeSat'
+9: 'Project revision' | '1'
+10: 'Scenario' | 'static (no scenario)'
+11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+12: 'User' | 'Golden User'

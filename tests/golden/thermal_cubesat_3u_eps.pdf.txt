@@ -785,87 +785,87 @@ Unit
 Source
 Status
 Space temperature
- 3.0000
+ 3
 K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Temperature margin
- 5.0000
+ 5
 K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Conductance ADCS - DH
- 0.5000
+ 0.5
 W/K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Conductance DH - EPS
- 0.5000
+ 0.5
 W/K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Conductance EPS - PL
- 0.5000
+ 0.5
 W/K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Conductance PL - TTC
- 0.5000
+ 0.5
 W/K
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar flux, case cold
- 0.0000
+ 0
 W/m2
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Albedo, case cold
- 0.0000
+ 0
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth infrared, case cold
- 240.0000
+ 240
 W/m2
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Emissivity, ADCS panel
- 0.8500
+ 0.85
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Absorptivity, ADCS panel
- 0.6000
+ 0.6
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, ADCS panel, case cold
- 0.0000
+ 0
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, ADCS panel, case cold
- 0.8000
+ 0.8
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Emissivity, DH panel
- 0.8500
+ 0.85
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Absorptivity, DH panel
- 0.6000
+ 0.6
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, DH panel, case cold
- 0.0000
+ 0
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, DH panel, case cold
- 0.8000
+ 0.8
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
@@ -878,127 +878,127 @@ Unit
 Source
 Status
 Emissivity, EPS panel
- 0.8500
+ 0.85
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Absorptivity, EPS panel
- 0.6000
+ 0.6
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, EPS panel, case cold
- 0.0000
+ 0
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, EPS panel, case cold
- 0.8000
+ 0.8
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Emissivity, PL panel
- 0.8500
+ 0.85
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Absorptivity, PL panel
- 0.6000
+ 0.6
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, PL panel, case cold
- 0.0000
+ 0
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, PL panel, case cold
- 0.8000
+ 0.8
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Emissivity, TTC panel
- 0.8500
+ 0.85
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Absorptivity, TTC panel
- 0.6000
+ 0.6
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, TTC panel, case cold
- 0.0000
+ 0
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, TTC panel, case cold
- 0.8000
+ 0.8
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar flux, case hot
- 1400.0000
+ 1400
 W/m2
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Albedo, case hot
- 0.3000
+ 0.3
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth infrared, case hot
- 240.0000
+ 240
 W/m2
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, ADCS panel, case hot
- 0.5000
+ 0.5
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, ADCS panel, case hot
- 0.3000
+ 0.3
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, DH panel, case hot
- 0.5000
+ 0.5
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, DH panel, case hot
- 0.3000
+ 0.3
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, EPS panel, case hot
- 0.5000
+ 0.5
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, EPS panel, case hot
- 0.3000
+ 0.3
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, PL panel, case hot
- 0.5000
+ 0.5
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, PL panel, case hot
- 0.3000
+ 0.3
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Solar view, TTC panel, case hot
- 0.5000
+ 0.5
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
 Earth view, TTC panel, case hot
- 0.3000
+ 0.3
 ratio
 Synthetic example value; not from a data sheet or a standard.
 sourced
@@ -1038,41 +1038,70 @@ Problems and open items
 Severity
 Code
 Location
+Path
 Message
+Hint
 warning
 CONFIG_EMPTY_TABLE
-config/attenuation_table.yaml:3
+config/attenuation_table.yaml
+:3
+entries
 The table has no entries.
+Add entries from a cited source, or import them
+from a file.
 warning
 CONFIG_PLACEHOLDER
 config/margin_policy.yaml:9
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+classes.class_a.mass_margin_r
+atio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
 CONFIG_PLACEHOLDER
 config/margin_policy.yaml:17
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+classes.class_b.mass_margin_r
+atio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
 CONFIG_PLACEHOLDER
 config/margin_policy.yaml:25
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+classes.class_c.mass_margin_r
+atio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
 CONFIG_PLACEHOLDER
 config/margin_policy.yaml:32
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+system_mass_margin_ratio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 warning
 CONFIG_PLACEHOLDER
 config/mass_limits.yaml:7
-This number is a placeholder (no value or source 'TBD'); results that use it are not
-trustworthy.
+limits[0].limit_kg
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
 error
-THERMAL_MARGIN_INSUFFICIENT
+THERMAL_MARGIN_INS
+UFFICIENT
 units/radio.yaml
-Unit 'radio' is within its operating limits in case 'hot' but closer than the required
-temperature margin.
+temperature_limits
+Unit 'radio' is within its operating limits in case
+'hot' but closer than the required temperature
+margin.
+The margin is set in
+config/thermal_environment.yaml.
 Provenance
 Provenance
 Item

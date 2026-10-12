@@ -245,7 +245,7 @@ def _link_equations() -> tuple[Equation, ...]:
             "is the highest listed rate with margin >= required margin while the link is active",
             None,
             "Per pass and per day (scenario total scaled to 86 400 s; n/a for a scenario shorter "
-            "than a day). Samples are evaluated in the middle of their part of the pass (D-103).",
+            "than a day). Samples are evaluated in the middle of their part of the pass (D-130).",
         ),
     )
 
