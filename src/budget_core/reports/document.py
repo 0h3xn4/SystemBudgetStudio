@@ -62,6 +62,11 @@ class ReportDocument:
     banner: str = ""  # shown first when results are incomplete
 
 
+def banner_headline(banner: str) -> str:
+    """The first sentence of the INCOMPLETE banner: the line every page and sheet carries."""
+    return banner.split(". ")[0].rstrip(".") + "." if banner else ""
+
+
 def format_cell(value: Cell, column: Column) -> str:
     """The text of a cell in every format. Numbers are rounded half up on their decimal value (as
     a spreadsheet shows them), never show a negative zero, and a number that is not finite is

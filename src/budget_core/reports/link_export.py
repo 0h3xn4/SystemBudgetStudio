@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import io
 import json
+from collections.abc import Sequence
 from dataclasses import asdict
 from datetime import timedelta
 from typing import Any
@@ -13,6 +14,7 @@ from typing import Any
 import numpy as np
 
 from budget_core.link.evaluate import LinkSeries, LinkSeriesResult, StaticLinkResult
+from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer
 from budget_core.reports.numfmt import clean_numbers, fixed
@@ -199,12 +201,13 @@ def link_json(
     provenance: Provenance,
     *,
     incomplete: bool,
+    load_problems: Sequence[Problem] = (),
 ) -> str:
     data: dict[str, Any] = {
         "incomplete": incomplete,
         "static": [asdict(r) for r in static.rows],
         "assumptions": [asdict(a) for a in static.assumptions],
-        "problems": [p.to_dict() for p in static.problems],
+        "problems": [p.to_dict() for p in sort_problems([*load_problems, *static.problems])],
         "provenance": asdict(provenance),
     }
     if passes is not None:
@@ -228,5 +231,7 @@ def link_json(
             }
             for s in passes.series
         ]
-        data["problems"] += [p.to_dict() for p in passes.problems]
+        data["problems"] = [
+            p.to_dict() for p in sort_problems([*load_problems, *static.problems, *passes.problems])
+        ]
     return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"

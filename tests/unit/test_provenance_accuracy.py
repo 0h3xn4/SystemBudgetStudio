@@ -16,8 +16,8 @@ from pypdf import PdfReader
 
 from budget_core.provenance import LIBRARIES, Provenance
 from budget_core.reports.csvutil import defuse
-from budget_core.reports.docx import render_docx
 from budget_core.reports.document import Column, ReportDocument, Section, Table
+from budget_core.reports.docx import render_docx
 from budget_core.reports.pdf import render_pdf
 from budget_core.reports.xlsx import render_xlsx
 

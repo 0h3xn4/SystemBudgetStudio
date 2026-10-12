@@ -58,6 +58,7 @@ class BudgetOutput:
     provenance: Provenance
     csv_files: tuple[tuple[str, str], ...]  # (file name, text)
     json_text: str | None = None  # when the result is not a plain dataclass tree
+    load_problems: tuple[Problem, ...] = ()  # found while loading the project (also in JSON)
 
     @property
     def incomplete(self) -> bool:
@@ -73,7 +74,9 @@ def power_output(
 ) -> BudgetOutput:
     document = build_power_report(project, power, provenance, list(load_problems))
     csvs = tuple((f"power_static_{m.mode_id}.csv", result_csv(m)) for m in power.modes)
-    return BudgetOutput("power_static", document, power, provenance, csvs)
+    return BudgetOutput(
+        "power_static", document, power, provenance, csvs, load_problems=tuple(load_problems)
+    )
 
 
 def mass_output(
@@ -84,7 +87,9 @@ def mass_output(
 ) -> BudgetOutput:
     document = build_mass_report(project, mass, provenance, list(load_problems))
     csvs = tuple((f"mass_static_{p.phase}.csv", mass_csv(p)) for p in mass.phases)
-    return BudgetOutput("mass_static", document, mass, provenance, csvs)
+    return BudgetOutput(
+        "mass_static", document, mass, provenance, csvs, load_problems=tuple(load_problems)
+    )
 
 
 def thermal_output(
@@ -96,7 +101,14 @@ def thermal_output(
     document = build_thermal_report(project, thermal, provenance, list(load_problems))
     csvs = tuple((f"thermal_static_{m.mode_id}.csv", thermal_mode_csv(m)) for m in thermal.modes)
     csvs += tuple((f"thermal_case_{c.case}.csv", thermal_case_csv(c)) for c in thermal.cases)
-    return BudgetOutput("thermal_static", document, thermal, provenance, csvs)
+    return BudgetOutput(
+        "thermal_static",
+        document,
+        thermal,
+        provenance,
+        csvs,
+        load_problems=tuple(load_problems),
+    )
 
 
 def link_output(
@@ -121,7 +133,14 @@ def link_output(
         static,
         provenance,
         tuple(csvs),
-        link_json(static, passes, provenance, incomplete=bool(document.banner)),
+        link_json(
+            static,
+            passes,
+            provenance,
+            incomplete=bool(document.banner),
+            load_problems=load_problems,
+        ),
+        tuple(load_problems),
     )
 
 
@@ -150,7 +169,10 @@ def timeline_output(
         result,
         provenance,
         tuple(csvs),
-        timeline_json(result, provenance, incomplete=bool(document.banner)),
+        timeline_json(
+            result, provenance, incomplete=bool(document.banner), load_problems=load_problems
+        ),
+        tuple(load_problems),
     )
 
 
@@ -184,7 +206,12 @@ def write_outputs(
                     f"{out.prefix}.json",
                     out.json_text
                     if out.json_text is not None
-                    else result_json(out.result, out.provenance, incomplete=out.incomplete),
+                    else result_json(
+                        out.result,
+                        out.provenance,
+                        incomplete=out.incomplete,
+                        load_problems=out.load_problems,
+                    ),
                 )
             )
         if "csv" in kinds and out.csv_files:

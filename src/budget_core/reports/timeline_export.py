@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import io
 import json
+from collections.abc import Sequence
 from dataclasses import asdict
 from typing import Any
 
@@ -20,6 +21,7 @@ from budget_core.power.time_domain import (
     format_offset,
     violation_problems,
 )
+from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_field, csv_writer
 from budget_core.reports.numfmt import clean_numbers, fixed
@@ -186,7 +188,13 @@ def _case_dict(c: CaseResult) -> dict[str, Any]:
     }
 
 
-def timeline_json(result: TimeDomainResult, provenance: Provenance, *, incomplete: bool) -> str:
+def timeline_json(
+    result: TimeDomainResult,
+    provenance: Provenance,
+    *,
+    incomplete: bool,
+    load_problems: Sequence[Problem] = (),
+) -> str:
     env, sc = result.run.env, result.run.scenario
     data: dict[str, Any] = {
         "incomplete": incomplete,
@@ -210,7 +218,10 @@ def timeline_json(result: TimeDomainResult, provenance: Provenance, *, incomplet
         "cases": {c.case: _case_dict(c) for c in result.cases},
         "violations": [_violation_dict(v) for v in result.violations],
         "assumptions": [asdict(a) for a in result.assumptions],
-        "problems": [p.to_dict() for p in [*result.problems, *violation_problems(result)]],
+        "problems": [
+            p.to_dict()
+            for p in sort_problems([*load_problems, *result.problems, *violation_problems(result)])
+        ],
         "provenance": asdict(provenance),
     }
     return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"

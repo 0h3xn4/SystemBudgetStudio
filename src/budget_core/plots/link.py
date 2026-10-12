@@ -10,7 +10,20 @@ from budget_core.link.evaluate import LinkSeries
 from budget_core.plots.spec import BLUE, GREEN, GREY, PURPLE, RED, HLine, Panel, PlotSpec, Series
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
-RATE_COLORS = (BLUE, GREEN, PURPLE, "#007d79", "#9f1853", "#b28600")
+RATE_COLORS = (
+    BLUE,
+    GREEN,
+    PURPLE,
+    "#007d79",
+    "#9f1853",
+    "#b28600",
+    "#0072c3",
+    "#ba4e00",
+    "#6929c4",
+    "#005d5d",
+    "#a2191f",
+    "#525252",
+)
 
 
 def _per_pass(

@@ -97,9 +97,41 @@ def nice_ticks(lo: float, hi: float, target: int = 6) -> list[float]:
     return [float(first + i * step) for i in range(max(count, 1))]
 
 
+def tick_labels(ticks: list[float]) -> list[str]:
+    """Labels for evenly spaced ticks with one number of decimals, enough to tell them apart
+    (0.010, 0.015, 0.020, ...); very large or very small values use exponent notation."""
+    if not ticks:
+        return []
+    largest = max(abs(t) for t in ticks)
+    smallest = min((abs(t) for t in ticks if t != 0.0), default=1.0)
+    if largest >= 1e6 or smallest < 1e-4:
+        return [_no_minus_zero(f"{t:.3g}") for t in ticks]
+    step = abs(ticks[1] - ticks[0]) if len(ticks) > 1 else smallest
+    decimals = 0 if step >= 1.0 else min(int(np.ceil(-np.log10(step) - 1e-9)), 8)
+    frac = step * 10**decimals % 1.0
+    if step < 1.0 and min(frac, 1.0 - frac) > 1e-6:  # a step such as 0.25 needs one place more
+        decimals += 1
+    return [_no_minus_zero(f"{t:.{decimals}f}") for t in ticks]
+
+
+def _no_minus_zero(text: str) -> str:
+    return text[1:] if text.startswith("-") and float(text) == 0.0 else text
+
+
+def finite_runs(x: NDArray, y: NDArray) -> list[tuple[NDArray, NDArray]]:
+    """The stretches of consecutive samples where both coordinates are finite. A line is drawn
+    through each stretch, never across a missing sample; a stretch of one sample is a marker."""
+    ok = np.isfinite(x) & np.isfinite(y)
+    if ok.all():
+        return [(x, y)] if len(x) else []
+    edges = np.flatnonzero(np.diff(np.concatenate(([0], ok.astype(np.int8), [0]))))
+    return [(x[a:b], y[a:b]) for a, b in zip(edges[::2], edges[1::2], strict=True)]
+
+
 def decimate(x: NDArray, y: NDArray, buckets: int) -> tuple[NDArray, NDArray]:
-    """Keep the minimum and the maximum of every bucket, in time order, so peaks survive.
-    Series with at most 2 * buckets points are returned unchanged."""
+    """Keep the minimum and the maximum of every bucket, in time order, so peaks survive (and the
+    first missing sample of a bucket, so a gap survives). Series with at most 2 * buckets points
+    are returned unchanged."""
     n = len(x)
     if n <= 2 * buckets:
         return x, y
@@ -109,8 +141,15 @@ def decimate(x: NDArray, y: NDArray, buckets: int) -> tuple[NDArray, NDArray]:
         if b <= a:
             continue
         window = y[a:b]
-        i_min, i_max = int(np.argmin(window)) + a, int(np.argmax(window)) + a
-        keep.extend(sorted({i_min, i_max}))
+        finite = np.isfinite(window)
+        if not finite.any():
+            keep.append(int(a))  # all missing: one NaN keeps the gap
+            continue
+        masked = np.where(finite, window, np.nan)
+        picks = {int(np.nanargmin(masked)) + a, int(np.nanargmax(masked)) + a}
+        if not finite.all():
+            picks.add(int(np.argmin(finite)) + a)  # the first missing sample
+        keep.extend(sorted(picks))
     index = np.array(keep, dtype=np.int64)
     return x[index], y[index]
 

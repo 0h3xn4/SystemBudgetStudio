@@ -19,7 +19,15 @@ from docx.shared import Mm, Pt, RGBColor
 from docx.text.paragraph import Paragraph
 
 from budget_core.plots.render import image_size
-from budget_core.reports.document import NA, Column, Figure, ReportDocument, Section, Table
+from budget_core.reports.document import (
+    NA,
+    Column,
+    Figure,
+    ReportDocument,
+    Section,
+    Table,
+    banner_headline,
+)
 from budget_core.reports.document import format_cell as _format_cell
 from budget_core.reports.textsafe import clean_document
 from budget_core.reports.zipnorm import normalise_zip
@@ -39,13 +47,15 @@ def _limit(text: str) -> str:
 
 
 def _name_application(document: object, tool: str) -> None:
-    """python-docx's template says the file was made by "Microsoft Macintosh Word"; name this tool."""
+    """python-docx's template says "Microsoft Macintosh Word" made the file; name this tool."""
     package = document.part.package  # type: ignore[attr-defined]
     for part in package.iter_parts():
         if str(part.partname) == "/docProps/app.xml":
             xml = part.blob.decode("utf-8")
             xml = re.sub(
-                r"<Application>[^<]*</Application>", f"<Application>{escape(tool)}</Application>", xml
+                r"<Application>[^<]*</Application>",
+                f"<Application>{escape(tool)}</Application>",
+                xml,
             )
             part._blob = xml.encode("utf-8")
 
@@ -187,6 +197,11 @@ def render_docx(doc: ReportDocument) -> bytes:
     for section in doc.sections:
         _section(document, section)
 
+    if doc.banner:  # the page header repeats the banner on every page
+        header = page.header.paragraphs[0]
+        _run(header, banner_headline(doc.banner), bold=True, size=8.0)
+        for run in header.runs:
+            run.font.color.rgb = RED
     prov = doc.provenance
     footer = page.footer.paragraphs[0]
     _run(

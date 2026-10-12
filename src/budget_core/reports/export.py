@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import io
 import json
+from collections.abc import Sequence
 from dataclasses import asdict
 from typing import Any
 
 from budget_core.mass.static_mass import PhaseMass
 from budget_core.power.static_budget import ModePowerResult
+from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer
 from budget_core.reports.numfmt import clean_numbers, no_negative_zero
@@ -40,10 +42,16 @@ def _plain(value: Any) -> Any:
     return value
 
 
-def result_json(result: Any, provenance: Provenance, *, incomplete: bool) -> str:
+def result_json(
+    result: Any,
+    provenance: Provenance,
+    *,
+    incomplete: bool,
+    load_problems: Sequence[Problem] = (),
+) -> str:
     data = _plain(asdict(result))
     data["incomplete"] = incomplete
-    data["problems"] = [p.to_dict() for p in result.problems]
+    data["problems"] = [p.to_dict() for p in sort_problems([*load_problems, *result.problems])]
     data["provenance"] = _plain(asdict(provenance))
     return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
 

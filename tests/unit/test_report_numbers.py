@@ -15,8 +15,8 @@ from pypdf import PdfReader
 from budget_core.assumptions import Assumption
 from budget_core.provenance import Provenance
 from budget_core.reports.common import closing_sections
-from budget_core.reports.docx import render_docx
 from budget_core.reports.document import NA, Column, ReportDocument, Section, Table, format_cell
+from budget_core.reports.docx import render_docx
 from budget_core.reports.export import result_json
 from budget_core.reports.pdf import render_pdf
 from budget_core.reports.xlsx import render_xlsx

@@ -12,7 +12,12 @@ from budget_core.plots.render import render_png
 from budget_core.power.time_domain import format_offset
 from budget_core.problems import Problem
 from budget_core.provenance import Provenance
-from budget_core.reports.common import BANNER, closing_sections, sheet_name
+from budget_core.reports.common import (
+    BANNER,
+    closing_sections,
+    environment_equations,
+    sheet_name,
+)
 from budget_core.reports.document import Cell, Column, Figure, ReportDocument, Section, Table
 from budget_core.timeutil import format_utc
 
@@ -225,9 +230,19 @@ def build_link_report(
         known = {(a.file, a.path) for a in assumptions}
         assumptions += [a for a in passes.assumptions if (a.file, a.path) not in known]
         problems += list(passes.problems)
-    sections += closing_sections(used, assumptions, "LNK-", problems, provenance)
-    incomplete = any(a.placeholder for a in assumptions) or any(
-        r.cn0_dbhz is None for r in static.rows
+    sections += closing_sections(
+        used,
+        assumptions,
+        "LNK-",
+        problems,
+        provenance,
+        environment_equations(None, True) if passes is not None else (),
+    )
+    incomplete = (
+        any(a.placeholder for a in assumptions)
+        or any(r.cn0_dbhz is None for r in static.rows)
+        # a missing table entry is not a placeholder, but the pass results are n/a all the same
+        or (passes is not None and any(s.margin_db is None for s in passes.series))
     )
     title = (
         f"Link budget: {project.meta.name}"

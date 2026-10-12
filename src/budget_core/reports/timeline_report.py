@@ -18,7 +18,13 @@ from budget_core.power.time_domain import (
 )
 from budget_core.problems import Problem
 from budget_core.provenance import Provenance
-from budget_core.reports.common import BANNER, closing_sections, sheet_name
+from budget_core.reports.common import (
+    BANNER,
+    closing_sections,
+    environment_equations,
+    equation_ids,
+    sheet_name,
+)
 from budget_core.reports.document import (
     Cell,
     Column,
@@ -231,7 +237,15 @@ def build_timeline_report(
         )
     )
     problems = [*load_problems, *result.problems, *violation_problems(result)]
-    sections += closing_sections(used, result.assumptions, "TDP-", problems, provenance)
+    env = result.run.env
+    sections += closing_sections(
+        used,
+        result.assumptions,
+        "TDP-",
+        problems,
+        provenance,
+        [*equation_ids("PWR-"), *environment_equations(env.shadow_model, bool(env.sites))],
+    )
     incomplete = any(a.placeholder for a in result.assumptions)
     return ReportDocument(
         title=f"Power budget over time: {project.meta.name}",
