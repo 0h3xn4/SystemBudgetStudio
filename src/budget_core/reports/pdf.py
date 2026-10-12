@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+from datetime import UTC, datetime
 from xml.sax.saxutils import escape
 
 from reportlab import rl_config
@@ -10,6 +11,7 @@ from reportlab.lib import colors
 from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib.utils import TimeStamp
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
@@ -122,6 +124,18 @@ def _figure_flowable(
     return [KeepTogether(parts), Spacer(1, 4 * mm)]
 
 
+def _timestamp(generated: str) -> TimeStamp:
+    """ReportLab's time stamp object for the provenance time (UTC); `invariant=1` alone would give
+    every PDF the date 2000-01-01."""
+    moment = datetime.strptime(generated, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=UTC)
+    stamp = TimeStamp(invariant=True)
+    stamp.t = moment.timestamp()
+    stamp.lt = moment.timetuple()
+    stamp.YMDhms = tuple(stamp.lt)[:6]
+    stamp.dhh = stamp.dmm = 0
+    return stamp
+
+
 def render_pdf(doc: ReportDocument) -> bytes:
     doc = clean_document(doc)
     _register_fonts()
@@ -165,7 +179,10 @@ def render_pdf(doc: ReportDocument) -> bytes:
         f"{prov.scenario} | {prov.generated} | {prov.user}"
     )
 
+    stamp = _timestamp(prov.generated)
+
     def draw(canvas, d) -> None:  # type: ignore[no-untyped-def]
+        canvas._doc._timeStamp = stamp  # the document dates (creation, modification) are ours
         canvas.saveState()
         canvas.setFont(REGULAR, 7)
         canvas.setFillColor(colors.HexColor("#525252"))

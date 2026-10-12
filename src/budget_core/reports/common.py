@@ -41,7 +41,7 @@ def closing_sections(
         "Configuration numbers used",
         (
             Column("Name"),
-            Column("Value", "number", 4),
+            Column("Value", "number", -1),
             Column("Unit"),
             Column("Source"),
             Column("Status"),

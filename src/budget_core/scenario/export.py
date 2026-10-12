@@ -152,6 +152,8 @@ def environment_json(run: ScenarioRun, provenance: Provenance) -> str:
         "provenance": {
             "tool": provenance.tool,
             "tool_version": provenance.tool_version,
+            "python_version": provenance.python_version,
+            "libraries": [list(item) for item in provenance.libraries],
             "project_name": provenance.project_name,
             "project_revision": provenance.project_revision,
             "scenario": run.scenario_id,

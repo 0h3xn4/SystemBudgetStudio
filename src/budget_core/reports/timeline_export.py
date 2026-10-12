@@ -21,7 +21,8 @@ from budget_core.power.time_domain import (
     violation_problems,
 )
 from budget_core.provenance import Provenance
-from budget_core.reports.csvutil import csv_writer
+from budget_core.reports.csvutil import csv_field, csv_writer
+from budget_core.reports.numfmt import clean_numbers, fixed
 from budget_core.timeutil import format_utc
 
 NDArray = np.ndarray[Any, np.dtype[Any]]
@@ -48,7 +49,8 @@ def _column(values: NDArray | None, count: int, every: int) -> tuple[str, list[A
     """(format, values) of a numeric column; a missing column is empty cells."""
     if values is None:
         return "%s", [""] * len(range(0, count, every))
-    return "%.6f", values[:count:every].tolist()
+    chosen = values[:count:every]
+    return "%.6f", np.where(np.abs(chosen) < 5e-7, 0.0, chosen).tolist()  # never "-0.000000"
 
 
 def series_csv(result: TimeDomainResult, case: str, every: int = 1) -> str:
@@ -59,7 +61,8 @@ def series_csv(result: TimeDomainResult, case: str, every: int = 1) -> str:
     start = np.datetime64(result.run.env.grid.start.replace(tzinfo=None), "ms")
     times = result.edges_s[:-1][::every]
     utc = (start + np.round(times * 1000.0).astype("timedelta64[ms]")).astype(str)
-    modes = np.array(result.mode_ids, dtype=object)[result.step_mode][::every]
+    fields = np.array([csv_field(m) for m in result.mode_ids], dtype=object)  # quoted, defused
+    modes = fields[result.step_mode][::every]
     columns: list[tuple[str, list[Any]]] = [
         ("%.3f", times.tolist()),
         ("%sZ", utc.tolist()),
@@ -90,7 +93,7 @@ def _csv(header: list[str], rows: list[list[str]]) -> str:
 
 
 def _opt(value: float | None, decimals: int = 6) -> str:
-    return "" if value is None else f"{value:.{decimals}f}"
+    return "" if value is None else fixed(value, decimals)
 
 
 def violations_csv(result: TimeDomainResult) -> str:
@@ -183,9 +186,10 @@ def _case_dict(c: CaseResult) -> dict[str, Any]:
     }
 
 
-def timeline_json(result: TimeDomainResult, provenance: Provenance) -> str:
+def timeline_json(result: TimeDomainResult, provenance: Provenance, *, incomplete: bool) -> str:
     env, sc = result.run.env, result.run.scenario
     data: dict[str, Any] = {
+        "incomplete": incomplete,
         "scenario": result.run.scenario_id,
         "load_basis": result.load_basis,
         "mission_phase": result.mission_phase,
@@ -209,4 +213,4 @@ def timeline_json(result: TimeDomainResult, provenance: Provenance) -> str:
         "problems": [p.to_dict() for p in [*result.problems, *violation_problems(result)]],
         "provenance": asdict(provenance),
     }
-    return json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"

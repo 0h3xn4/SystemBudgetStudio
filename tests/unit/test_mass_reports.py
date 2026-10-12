@@ -97,8 +97,8 @@ def test_xlsx_and_pdf_render_and_are_clock_independent() -> None:
 
 def test_json_export_is_deterministic_and_complete() -> None:
     mass, prov, _ = build(EXAMPLES / "microsat_150kg")
-    text = result_json(mass, prov)
-    assert text == result_json(mass, prov)
+    text = result_json(mass, prov, incomplete=True)
+    assert text == result_json(mass, prov, incomplete=True)
     data = json.loads(text)
     assert [p["phase"] for p in data["phases"]] == ["launch", "bol", "eol"]
     launch = data["phases"][0]

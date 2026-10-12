@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import math
 import zipfile
 from datetime import datetime
 
@@ -13,7 +14,15 @@ from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.worksheet import Worksheet
 from openpyxl.writer.excel import ExcelWriter
 
-from budget_core.reports.document import NA, Column, ReportDocument, Section, Table
+from budget_core.reports.document import (
+    NA,
+    Column,
+    ReportDocument,
+    Section,
+    Table,
+    format_cell,
+)
+from budget_core.reports.numfmt import no_negative_zero
 from budget_core.reports.textsafe import clean_document
 from budget_core.reports.zipnorm import normalise_zip
 
@@ -24,6 +33,8 @@ ROW_PX = 20  # default row height in pixels
 
 
 def _number_format(column: Column) -> str:
+    if column.decimals < 0:
+        return "General"
     if column.kind == "percent":
         return "0." + "0" * max(column.decimals - 2, 0) + "%" if column.decimals > 2 else "0%"
     return "0." + "0" * column.decimals if column.decimals else "0"
@@ -43,7 +54,7 @@ def _write_table(ws: Worksheet, table: Table, row: int, widths: dict[int, int]) 
     last = len(table.rows) - 1
     for i, values in enumerate(table.rows):
         for c, (value, column) in enumerate(zip(values, table.columns, strict=True), 1):
-            if value is None:
+            if value is None or (not isinstance(value, str) and not math.isfinite(value)):
                 cell = ws.cell(row=row, column=c, value=NA)
                 cell.alignment = Alignment(horizontal="right")
                 text = NA
@@ -51,9 +62,9 @@ def _write_table(ws: Worksheet, table: Table, row: int, widths: dict[int, int]) 
                 cell = ws.cell(row=row, column=c, value=value)
                 text = value
             else:
-                cell = ws.cell(row=row, column=c, value=float(value))
+                cell = ws.cell(row=row, column=c, value=no_negative_zero(float(value)))
                 cell.number_format = _number_format(column)
-                text = f"{value:.{column.decimals}f}"
+                text = format_cell(value, column)
             cell.font = Font(name=FONT, bold=table.emphasise_last_row and i == last)
             widths[c] = max(widths.get(c, 0), min(len(text), 60))
         row += 1
@@ -108,7 +119,7 @@ def render_xlsx(doc: ReportDocument) -> bytes:
                     cell.data_type = "s"
     stamp = datetime.strptime(doc.provenance.generated, "%Y-%m-%dT%H:%M:%SZ")
     props = wb.properties
-    props.creator = doc.provenance.tool
+    props.creator = doc.provenance.user  # the author, as in the PDF and DOCX properties
     props.lastModifiedBy = doc.provenance.tool
     props.title = doc.title
     props.created = stamp

@@ -48,7 +48,9 @@ def test_provenance_csv_is_deterministic() -> None:
 def test_csv_outputs_come_with_their_provenance_file(tmp_path: Path) -> None:
     written = write_outputs([output()], tmp_path, {"csv"})
     assert sorted(p.name for p in written) == ["demo_provenance.csv", "demo_table.csv"]
-    assert (tmp_path / "demo_provenance.csv").read_text(encoding="utf-8") == provenance_csv(PROV)
+    assert (tmp_path / "demo_provenance.csv").read_text(encoding="utf-8") == provenance_csv(
+        PROV, incomplete=False
+    )
 
 
 def test_no_provenance_file_without_csv_output(tmp_path: Path) -> None:
@@ -63,3 +65,12 @@ def test_scenario_files_come_with_provenance(tmp_path: Path) -> None:
     run = synthetic_run(synthetic_env(600.0, 60.0, [(100.0, 200.0)]))
     names = {p.name for p in write_scenario_outputs(run, PROV, tmp_path)}
     assert f"{run.scenario_id}_provenance.csv" in names
+
+
+def test_provenance_file_says_whether_the_report_is_incomplete(tmp_path: Path) -> None:
+    out = output()
+    banner = ReportDocument("R", PROV, out.document.sections, "INCOMPLETE: x")
+    incomplete = BudgetOutput("demo", banner, None, PROV, out.csv_files, "{}\n")
+    write_outputs([incomplete], tmp_path, {"csv"})
+    rows = list(csv.reader((tmp_path / "demo_provenance.csv").read_text("utf-8").splitlines()))
+    assert ["Incomplete", "yes"] in rows

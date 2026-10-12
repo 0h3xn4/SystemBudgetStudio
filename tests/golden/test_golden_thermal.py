@@ -70,7 +70,8 @@ def test_json(name: str) -> None:
     from budget_core.reports.export import result_json
 
     result, out = build(name)
-    check_golden(f"thermal_{name}.json.txt", stable_floats(result_json(result, out.provenance)))
+    text = result_json(result, out.provenance, incomplete=out.incomplete)
+    check_golden(f"thermal_{name}.json.txt", stable_floats(text))
 
 
 def test_csv_files() -> None:

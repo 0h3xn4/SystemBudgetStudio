@@ -97,7 +97,8 @@ def test_xlsx_content_and_properties() -> None:
     doc = document()
     wb = load_workbook(io.BytesIO(render_xlsx(doc)))
     assert wb.sheetnames[0] == "Summary" and wb.sheetnames[-1] == "Provenance"
-    assert wb.properties.creator == "System Budget Studio"
+    assert wb.properties.creator == "Test User"  # the author, as in the PDF and DOCX
+    assert wb.properties.lastModifiedBy == "System Budget Studio"
     assert wb.properties.created == datetime(2026, 1, 2, 3, 4, 5)
     text = "\n".join(
         str(c.value) for ws in wb for row in ws.iter_rows() for c in row if c.value is not None
@@ -172,8 +173,8 @@ def test_json_export_is_deterministic_and_complete() -> None:
     result = load_project(EXAMPLES / "cubesat_3u")
     assert result.project is not None
     power = static_power_budget(result.project)
-    text = result_json(power, prov())
-    assert text == result_json(power, prov())
+    text = result_json(power, prov(), incomplete=True)
+    assert text == result_json(power, prov(), incomplete=True)
     data = json.loads(text)
     assert data["provenance"]["user"] == "Test User"
     assert [m["mode_id"] for m in data["modes"]] == sorted(m["mode_id"] for m in data["modes"])

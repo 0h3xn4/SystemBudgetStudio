@@ -59,6 +59,11 @@ class BudgetOutput:
     csv_files: tuple[tuple[str, str], ...]  # (file name, text)
     json_text: str | None = None  # when the result is not a plain dataclass tree
 
+    @property
+    def incomplete(self) -> bool:
+        """The report carries the INCOMPLETE banner (placeholders or missing inputs)."""
+        return bool(self.document.banner)
+
 
 def power_output(
     project: Project,
@@ -111,7 +116,12 @@ def link_output(
         csvs.append((f"{prefix}_summary.csv", passes_csv(passes)))
         csvs += [(f"{prefix}_{s.link_id}.csv", link_series_csv(passes, s)) for s in passes.series]
     return BudgetOutput(
-        prefix, document, static, provenance, tuple(csvs), link_json(static, passes, provenance)
+        prefix,
+        document,
+        static,
+        provenance,
+        tuple(csvs),
+        link_json(static, passes, provenance, incomplete=bool(document.banner)),
     )
 
 
@@ -140,7 +150,7 @@ def timeline_output(
         result,
         provenance,
         tuple(csvs),
-        timeline_json(result, provenance),
+        timeline_json(result, provenance, incomplete=bool(document.banner)),
     )
 
 
@@ -174,10 +184,15 @@ def write_outputs(
                     f"{out.prefix}.json",
                     out.json_text
                     if out.json_text is not None
-                    else result_json(out.result, out.provenance),
+                    else result_json(out.result, out.provenance, incomplete=out.incomplete),
                 )
             )
         if "csv" in kinds and out.csv_files:
             files.extend(out.csv_files)
-            files.append((f"{out.prefix}_provenance.csv", provenance_csv(out.provenance)))
+            files.append(
+                (
+                    f"{out.prefix}_provenance.csv",
+                    provenance_csv(out.provenance, incomplete=out.incomplete),
+                )
+            )
     return write_files(Path(out_dir), files)
