@@ -285,6 +285,7 @@
       "title": "Phases"
     },
     "schema_version": {
+      "const": 2,
       "default": 2,
       "title": "Schema Version",
       "type": "integer"

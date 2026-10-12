@@ -121,3 +121,10 @@ def test_an_undecodable_file_name_is_an_error_not_a_crash(root: Path) -> None:
     assert problem.severity is Severity.ERROR
     problem.file.encode("ascii") if problem.file else None  # printable without an encoding error
     assert result.project is None
+
+
+def test_every_written_file_starts_with_schema_version_and_kind(tmp_path: Path) -> None:
+    write_valid_project(tmp_path / "p")
+    for path in sorted((tmp_path / "p").rglob("*.yaml")):
+        first = path.read_text(encoding="utf-8").splitlines()[:2]
+        assert first[0].startswith("schema_version:") and first[1].startswith("kind:"), path.name

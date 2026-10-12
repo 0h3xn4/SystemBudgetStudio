@@ -7,7 +7,7 @@ Docs index: `docs/README.md` (change the docs with the code: `docs/developer/REA
 - Test: `QT_QPA_PLATFORM=offscreen pytest` (offline test: `pytest tests/offline`)
 - Lint/type: `ruff check . && ruff format --check . && mypy`
 - Lock: `packaging/lock.sh` (uv, hashes)
-- Regenerate generated files after model changes: `budget export-schemas src/budget_core/schemas` and `budget export-examples examples` (tests fail on drift)
+- Regenerate generated files after model changes: `budget export-schemas src/budget_core/schemas` and `budget export-examples examples --force` (tests fail on drift)
 - Package: `pyinstaller packaging/system_budget_studio.spec` (Linux release: `packaging/linux/build_in_container.sh` in `rockylinux:8`)
 - Licences: `python packaging/licence_check.py --markdown docs/LICENCES.md` (permissive or LGPL only); user guide: `budget guide --out guide`
 

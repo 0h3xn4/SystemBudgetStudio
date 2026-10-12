@@ -1102,8 +1102,28 @@ EXAMPLES: dict[str, Callable[[], Project]] = {
 }
 
 
-def export_examples(out_dir: Path) -> list[str]:
-    """Write all example projects below `out_dir`; returns their folder names."""
+class ExportRefusedError(Exception):
+    """Example projects already exist at the target; nothing was written."""
+
+
+def export_examples(out_dir: Path, *, force: bool = False) -> list[str]:
+    """Write all example projects below `out_dir`; returns their folder names.
+
+    An example folder that already exists is never touched unless `force` is true (it may hold
+    the user's own edits). With `force` the files of the examples are replaced; files that are
+    not part of an example are left alone."""
+    out_dir = Path(out_dir)
+    if not force:
+        taken = [
+            n for n in sorted(EXAMPLES) if (out_dir / n).exists() or (out_dir / n).is_symlink()
+        ]
+        if taken:
+            raise ExportRefusedError(
+                "These example folders already exist, so nothing was written: "
+                + ", ".join(taken)
+                + ". Use --force to replace the files of the examples (your own edits in them "
+                "are lost), or choose another folder."
+            )
     for name, build in EXAMPLES.items():
         write_project(build(), out_dir / name)
     return sorted(EXAMPLES)

@@ -8,7 +8,7 @@ This page lists the files the tool writes, shows how to choose them, and explain
 
 | Kind | Content |
 |---|---|
-| XLSX | One sheet per table in the classic review layout, plots as pictures, the configuration numbers used with their sources, the equations, the problems and the provenance |
+| XLSX | One sheet per section (a section can hold several tables) in the classic review layout, plots as pictures, the configuration numbers used with their sources, the equations, the problems and the provenance |
 | PDF | The same tables and plots on A4 landscape pages, with a provenance footer |
 | DOCX | The same content for editing in a word processor |
 | CSV | Every table and every time series, one file each; empty cells where a value is n/a. Each set also has `<name>_provenance.csv` |

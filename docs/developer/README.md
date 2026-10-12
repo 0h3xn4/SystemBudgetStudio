@@ -40,7 +40,7 @@ Some files are produced by code and checked by tests, so they cannot drift:
 | File | Regenerate with | After changing |
 |---|---|---|
 | `src/budget_core/schemas/*.schema.json` | `budget export-schemas src/budget_core/schemas` | the model |
-| `examples/` | `budget export-examples examples` | the example builders |
+| `examples/` | `budget export-examples examples --force` | the example builders |
 | `docs/LICENCES.md` | `python packaging/licence_check.py --markdown docs/LICENCES.md` | the dependencies |
 | `requirements.lock`, `requirements-dev.lock` | `packaging/lock.sh` (uses `uv`; needs a network) | `pyproject.toml` dependencies |
 | `tests/golden/*` | `UPDATE_GOLDEN=1 pytest tests/golden`, then **read the diff** | a deliberate change of a report |

@@ -32,6 +32,8 @@ from budget_core.model import (
     ThermalModel,
     Unit,
 )
+from budget_core.model.versions import CURRENT_VERSIONS
+from budget_core.reports.files import write_file
 
 SCHEMA_DIR = Path(__file__).parent / "schemas"
 
@@ -60,6 +62,9 @@ SCHEMA_MODELS: dict[str, type[BudgetModel]] = {
 def json_schema(kind: str) -> dict[str, Any]:
     schema = SCHEMA_MODELS[kind].model_json_schema()
     schema["$schema"] = "https://json-schema.org/draft/2020-12/schema"
+    # an editor can then flag a file written for another schema version (the loader migrates
+    # older files in memory; the schema describes the current layout only)
+    schema["properties"]["schema_version"]["const"] = CURRENT_VERSIONS[kind]
     schema["title"] = f"System Budget Studio {kind}"
     schema["required"] = sorted(set(schema.get("required", [])) | {"schema_version", "kind"})
     return schema
@@ -70,10 +75,9 @@ def schema_text(kind: str) -> str:
 
 
 def export_schemas(out_dir: Path) -> list[Path]:
-    out_dir.mkdir(parents=True, exist_ok=True)
     written = []
     for kind in sorted(SCHEMA_MODELS):
-        path = out_dir / f"{kind}.schema.json"
-        path.write_bytes(schema_text(kind).encode("utf-8"))
-        written.append(path)
+        written.append(
+            write_file(out_dir, f"{kind}.schema.json", schema_text(kind), sanitise=False)
+        )
     return written

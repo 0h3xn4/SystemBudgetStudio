@@ -51,6 +51,7 @@ from budget_core.model import (
     Unit,
 )
 from budget_core.problems import Problem, Severity, sort_problems
+from budget_core.reports.files import write_file
 
 M = TypeVar("M", bound=BudgetModel)
 
@@ -81,7 +82,9 @@ class LoadResult:
 def model_to_data(model: BudgetModel) -> dict[str, Any]:
     """Model -> plain data in field order. Optional fields that are None or empty are omitted."""
     out: dict[str, Any] = {}
-    for name, info in type(model).model_fields.items():
+    # schema_version and kind come first in every file (a site model declares them last)
+    order = {"schema_version": 0, "kind": 1}
+    for name, info in sorted(type(model).model_fields.items(), key=lambda kv: order.get(kv[0], 2)):
         value = getattr(model, name)
         if not info.is_required() and (value is None or value == ""):
             continue
@@ -104,8 +107,8 @@ def dump_model(model: BudgetModel) -> str:
 
 
 def _write(path: FsPath, model: BudgetModel) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(dump_model(model).encode("utf-8"))
+    # atomic, and a link at the target is replaced, not followed (OutputError on failure)
+    write_file(path.parent, path.name, dump_model(model).encode("utf-8"), sanitise=False)
 
 
 def write_project(project: Project, root: FsPath) -> None:
@@ -283,7 +286,7 @@ def _yaml_names(folder: FsPath) -> list[str]:
 def _id_problems(folder: str, names: list[str]) -> tuple[list[Problem], set[str]]:
     """Checks on the ids (file names without .yaml) of one folder. Returns the problems and the
     names that cannot be used at all (an error: the id would be empty, hidden or unencodable).
-    Unusual but workable ids only get a warning (decision D-103)."""
+    Unusual but workable ids only get a warning (decision D-120)."""
     problems: list[Problem] = []
     unusable: set[str] = set()
     seen: dict[str, str] = {}
@@ -350,7 +353,7 @@ def _id_problems(folder: str, names: list[str]) -> tuple[list[Problem], set[str]
 
 
 def _ignored_files(root: FsPath) -> list[Problem]:
-    """Files the loader skips although they look like project files (decision D-103)."""
+    """Files the loader skips although they look like project files (decision D-120)."""
 
     def warn(rel: str, message: str, hint: str) -> Problem:
         return Problem(Severity.WARNING, "FILE_IGNORED", message, file=_safe_text(rel), hint=hint)
@@ -420,11 +423,16 @@ def load_project(root: FsPath, registry: MigrationRegistry = DEFAULT_REGISTRY) -
 
     root = FsPath(root)
     if not root.is_dir():
+        is_file = root.is_file()
         problem = Problem(
             Severity.ERROR,
             "FILE_NOT_FOUND",
-            "The project folder does not exist.",
-            hint="Check the path; a project folder contains project.yaml.",
+            "The project path is a file, not a folder."
+            if is_file
+            else "The project folder does not exist.",
+            hint="Give the folder that contains project.yaml, not a file inside it."
+            if is_file
+            else "Check the path; a project folder contains project.yaml.",
         )
         return LoadResult(None, [problem], {})
 

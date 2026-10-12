@@ -69,6 +69,8 @@ frequency_hz: 2.2 GHz
 
 The tool never converts a logarithmic unit to a linear one for you: `3 dBW` in a field that is in watts is an error (`UNIT_INVALID`), because that is the classic spreadsheet mistake this tool exists to prevent.
 
+Capitals matter in units, as everywhere (`mW` is not `MW`): write logarithmic units as `dB`, `dBi`, `dBW`, `dBm` and `dB/K`. Squares can be written `m2` or `m^2`, so the label shown for a field (`W/m2`, `kg m2`) can be typed back. A temperature in `degC` is converted (`-40 degC` is 233.15 K); a *difference* such as `temperature_margin_k` takes `K` or `delta_degC`, never `degC`. A yes/no value (`true`) or a number in quotes is not a number in a field without a unit.
+
 ## How do I add a spacecraft mode?
 
 A [**spacecraft mode**](../glossary.md#spacecraft-mode) (safe, nominal, imaging, downlink, charging) says which power mode each unit is in. Create `modes/<id>.yaml`:

@@ -16,6 +16,7 @@ from importlib.metadata import PackageNotFoundError, version
 
 from budget_core import APP_NAME, __version__
 from budget_core.model import Project
+from budget_core.timeutil import MAX_YEAR, format_utc
 
 LIBRARIES = ("openpyxl", "pint", "pydantic", "reportlab", "ruamel.yaml")
 
@@ -53,12 +54,36 @@ def _lib_version(name: str) -> str:
         return "unknown"
 
 
+class ProvenanceError(ValueError):
+    """The generation time cannot be determined; the message is plain language."""
+
+
 def resolve_time(generated_at: datetime | None = None) -> datetime:
+    """The generation time: the argument, else SOURCE_DATE_EPOCH, else the clock. A set but
+    unusable SOURCE_DATE_EPOCH is an error, not a reason to quietly use the clock: the output
+    would then differ from run to run although the caller asked for reproducible output."""
     if generated_at is not None:
-        return generated_at.astimezone(UTC).replace(microsecond=0)
+        try:
+            return generated_at.astimezone(UTC).replace(microsecond=0)
+        except (OverflowError, ValueError):
+            raise ProvenanceError("The generation time cannot be converted to UTC.") from None
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
-    if epoch is not None and epoch.strip().isdigit():
-        return datetime.fromtimestamp(int(epoch), UTC)
+    if epoch is not None:
+        text = epoch.strip()
+        if not (text.isascii() and text.isdigit()):
+            raise ProvenanceError(
+                "SOURCE_DATE_EPOCH must be a whole number of seconds since 1970-01-01 "
+                "(for example 1767323045); it is set to something else. Unset it or correct it."
+            )
+        try:
+            moment = datetime.fromtimestamp(int(text), UTC)
+        except (OverflowError, OSError, ValueError):
+            moment = None
+        if moment is None or moment.year > MAX_YEAR:
+            raise ProvenanceError(
+                f"SOURCE_DATE_EPOCH is outside the supported dates (up to the year {MAX_YEAR})."
+            )
+        return moment
     return datetime.now(UTC).replace(microsecond=0)
 
 
@@ -89,6 +114,6 @@ def make_provenance(
         project_name=project.meta.name,
         project_revision=project.meta.revision,
         scenario=scenario,
-        generated=resolve_time(generated_at).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        generated=format_utc(resolve_time(generated_at)),
         user=resolve_user(user),
     )

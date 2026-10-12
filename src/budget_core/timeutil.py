@@ -1,6 +1,6 @@
 """UTC time strings: ISO 8601 without a UTC offset other than Z (project files use UTC only).
 
-Times are accepted between the years 1950 and 2100 (decision D-103): the Sun and Earth models and
+Times are accepted between the years 1950 and 2100 (decision D-120): the Sun and Earth models and
 the TLE epoch convention are meant for that range, and a year outside it only ever came from a typo.
 """
 

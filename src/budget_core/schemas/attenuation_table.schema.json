@@ -102,6 +102,7 @@
       "type": "string"
     },
     "schema_version": {
+      "const": 1,
       "default": 1,
       "title": "Schema Version",
       "type": "integer"

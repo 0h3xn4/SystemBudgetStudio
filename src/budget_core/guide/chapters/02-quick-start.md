@@ -24,7 +24,7 @@ budget compare demo/cubesat_3u_eps demo/cubesat_3u --out out
 budget guide --out guide
 ```
 
-Every command that writes files accepts `--user` and `--date` so that you can regenerate a report byte for byte. Without them the user is `BUDGET_USER` or the login name, and the date is `SOURCE_DATE_EPOCH` or the clock.
+The commands that compute reports (`run`, `scenario`, `power-timeline`, `link-passes` and `compare`) accept `--user` and `--date` so that you can regenerate a report byte for byte. Without them the user is `BUDGET_USER` or the login name, and the date is `SOURCE_DATE_EPOCH` or the clock. `budget export-examples demo` refuses to touch example folders that already exist; add `--force` to replace their files.
 
 ## The window
 

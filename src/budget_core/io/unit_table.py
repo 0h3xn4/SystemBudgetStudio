@@ -515,11 +515,43 @@ def _insert_in_order(mapping: CommentedMap, key: str, value: float) -> None:
     mapping.insert(position, key, value)
 
 
+def _indent_of(line: str) -> int:
+    return len(line) - len(line.lstrip(" "))
+
+
+def _detect_indent(text: str) -> tuple[int, int, int]:
+    """(mapping indent, sequence indent, dash offset) of a file, so that an edit does not
+    re-indent the whole file. The canonical form of the tool is (2, 4, 2)."""
+    mapping, sequence, offset = 2, 4, 2
+    lines = [ln for ln in text.splitlines() if ln.strip() and not ln.lstrip().startswith("#")]
+    for number, line in enumerate(lines):
+        if line.lstrip(" ").startswith("- ") and number > 0:
+            parents = [p for p in lines[:number] if p.rstrip().endswith(":")]
+            if parents and _indent_of(line) >= _indent_of(parents[-1]):
+                parent = _indent_of(parents[-1])
+                body = line.lstrip(" ")[1:]
+                offset = _indent_of(line) - parent
+                sequence = offset + 1 + (len(body) - len(body.lstrip(" ")))
+            break
+    for number, line in enumerate(lines[1:], start=1):
+        previous = lines[number - 1]
+        if (
+            _indent_of(previous) == 0
+            and previous.rstrip().endswith(":")
+            and _indent_of(line) > 0
+            and not line.lstrip(" ").startswith("- ")
+        ):
+            mapping = _indent_of(line)
+            break
+    return mapping, max(sequence, offset + 2), offset
+
+
 def _edited_text(text: str, edits: Iterable[_Edit]) -> str:
     yaml = YAML(typ="rt")
     yaml.preserve_quotes = True
     yaml.default_flow_style = False
-    yaml.indent(mapping=2, sequence=4, offset=2)
+    mapping, sequence, offset = _detect_indent(text)
+    yaml.indent(mapping=mapping, sequence=sequence, offset=offset)
     yaml.width = 4096
     document = yaml.load(text)
     modes = document["modes"]

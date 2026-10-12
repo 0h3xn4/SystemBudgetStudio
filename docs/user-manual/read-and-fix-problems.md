@@ -30,8 +30,10 @@ In the window, double-click a row of the **Problems** panel at the bottom: the f
 | You see | Why | Do this |
 |---|---|---|
 | `CONFIG_PLACEHOLDER`, `RESULT_INCOMPLETE`, the INCOMPLETE banner, `n/a` | A number the tool needs is `TBD` or missing | Supply the number with its source: [placeholders](placeholders-and-sources.md) |
-| `FILE_NOT_FOUND` | A path is wrong, or the folder is not a project (no `project.yaml`) | Check the path; a project folder contains `project.yaml` |
-| `YAML_SYNTAX` | A file cannot be parsed | Open it at the line shown; check indentation (spaces, not tabs) and colons |
+| `FILE_NOT_FOUND` | A path is wrong, the folder is not a project (no `project.yaml`), or you gave a file instead of the folder | Check the path; a project folder contains `project.yaml` |
+| `FILE_IGNORED` | A file that looks like a project file is skipped (`camera.yml`, `Units.YAML`, a sub-folder inside `units/`, a misspelt config file) | Rename it to end in exactly `.yaml`, or move it |
+| `ID_UNUSUAL`, `ID_COLLISION`, `ID_INVALID` | An id (file name) has spaces, accents or look-alike letters; two ids differ only in capitals; or a name starts with a dot | Rename the file (and every reference to it): letters, digits, `_` and `-` |
+| `YAML_SYNTAX` | A file cannot be parsed, is too large or too deeply nested, or uses tags (`!!omap`), anchors or `<<` | Open it at the line shown; check indentation (spaces, not tabs) and colons; write values out instead of using tags or aliases |
 | `FIELD_UNKNOWN` | A field name is misspelled or does not exist | Compare with the [file format](../FILE_FORMAT.md) |
 | `UNIT_INVALID` | A unit is unknown, or of the wrong kind (a `dBW` in a watt field) | Write a plain number in the field's unit, or a value with a matching unit such as `2.5 W` |
 | `UNIT_NOT_MAPPED` | A unit is missing from a spacecraft mode | Add it under `assignments` in `modes/<id>.yaml` |

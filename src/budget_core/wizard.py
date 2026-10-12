@@ -20,6 +20,7 @@ from budget_core.environment.constants import EARTH_RADIUS
 from budget_core.examples import EXAMPLES
 from budget_core.io.project_loader import model_to_data, write_project
 from budget_core.model import Elements, Orbit, Project, ProjectMeta, Scenario
+from budget_core.reports.files import OutputError
 from budget_core.timeutil import MAX_YEAR, MIN_YEAR, end_in_range
 
 SAMPLES = {
@@ -161,7 +162,7 @@ def create_project(answers: WizardAnswers, parent: Path) -> Path:
         ) from exc
     try:
         write_project(project, folder)
-    except (OSError, ValueError, OverflowError) as exc:
+    except (OSError, OutputError, ValueError, OverflowError) as exc:
         shutil.rmtree(folder, ignore_errors=True)  # never leave a half-written project behind
         raise WizardError(
             "The project could not be written. Check that the folder exists and that you may "

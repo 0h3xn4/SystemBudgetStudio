@@ -6,13 +6,16 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 
 | Code | What to do |
 |---|---|
-| `FILE_NOT_FOUND`, `FILE_INVALID`, `YAML_SYNTAX` | Open the named file; the line is shown when the text cannot be parsed. |
+| `FILE_NOT_FOUND`, `FILE_INVALID`, `YAML_SYNTAX` | Open the named file; the line is shown when the text cannot be parsed. A file that is too large, too deeply nested, uses tags (`!!name`), anchors or `<<` is refused; write the values out. |
+| `FILE_IGNORED` | (Warning) A file that looks like a project file is skipped, for example `camera.yml` or `Units.YAML`, or a sub-folder inside `units/`. Rename it to end in exactly `.yaml`, or move it. |
+| `ID_UNUSUAL`, `ID_COLLISION`, `ID_INVALID` | (Warnings, and an error for `ID_INVALID`) The id is the file name without `.yaml`. Use letters, digits, `_` and `-`; a name that starts with a dot, or two names that differ only in capitals, cannot be used safely. |
 | `KIND_MISMATCH`, `SCHEMA_VERSION_MISSING`, `SCHEMA_TOO_NEW`, `SCHEMA_MIGRATION_MISSING`, `SCHEMA_MIGRATION_FAILED` | The file is of another kind or from a newer or unsupported version. Check the first two lines. |
 | `FIELD_MISSING`, `FIELD_UNKNOWN`, `FIELD_INVALID`, `UNIT_INVALID`, `DUPLICATE_NAME`, `DUPLICATE_ID` | Fix the named field: it is missing, misspelled, out of range, has an unknown unit or repeats a name. |
 | `SOURCE_MISSING` | A sourced number has no `source`. Write the source, or `TBD` if you do not have it yet. |
 | `REF_UNKNOWN_BUS`, `REF_UNKNOWN_MATURITY`, `REF_UNKNOWN_UNIT`, `REF_UNKNOWN_UNIT_MODE`, `UNIT_NOT_MAPPED`, `REF_UNKNOWN_PHASE`, `PHASE_MASS_MISSING` | A name points to something that does not exist, or a unit is not in a spacecraft mode. |
 | `CONFIG_VALUE_INVALID`, `CONFIG_MISSING`, `CONFIG_PLACEHOLDER`, `CONFIG_EMPTY_TABLE` | A configuration number is invalid, a file is absent, a number is still a placeholder, or a table is empty. |
 | `THERMAL_NODE_UNKNOWN`, `REF_UNKNOWN_CASE` | A thermal node or case name is not defined. |
+| `SCENARIO_OPTION_IGNORED` | (Warning) A scenario option does not apply to its environment source (an `import_dir` with orbit elements, an `orbit` with an imported environment). |
 | `REF_UNKNOWN_STATION`, `REF_UNKNOWN_ATTENUATION`, `REF_UNKNOWN_MODULATION`, `LINK_ANTENNA_PATTERN_GROUND`, `LINK_PATTERN_FILE_MISSING`, `LINK_INPUT_INVALID` | A link points to something missing, or a ground antenna has a pattern, or a pattern file cannot be read. |
 | `REF_UNKNOWN_ORBIT`, `REF_UNKNOWN_SITE`, `REF_UNKNOWN_MODE`, `IMPORT_DIR_MISSING`, `ORBIT_INVALID` | A scenario points to an orbit, site or mode that does not exist, or the imported environment folder is missing. |
 | `FILE_MIGRATED` | Information only: an older file was upgraded in memory. |

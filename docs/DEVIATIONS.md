@@ -26,4 +26,6 @@ _None yet. Planned (to be confirmed when implemented):_
 - **DV-G1 (M6):** the user guide PDF has no italic face (IBM Plex Italic is not bundled), so italics print upright; the HTML shows italics.
 - **DV-W1 (M6):** the wizard builds near-circular orbits only (eccentricity 0.001) from altitude, inclination and RAAN; argument of perigee 90 deg and mean anomaly 0 as in the samples; the orbit is not checked for sun-synchronism or decay.
 
+- **DV-I1 (audit round):** a pass imported with `budget scenario` from the interim SpaceMissionStudio format has no `time_of_max_s` unless the optional `profile_<site>.csv` exists; with it, the time is the profile sample with the highest elevation inside the pass, so it is only as precise as the profile is dense. The interim format has no column for it (D-124).
+
 Next: [Decisions](DECISIONS.md) · [Architecture](ARCHITECTURE.md) · [Docs index](README.md).
