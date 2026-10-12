@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterator, Mapping
 from pathlib import Path as FsPath
 from typing import Any
 
@@ -40,7 +40,21 @@ def _p(
     return Problem(sev, code, msg, file=file, path=format_path(path), line=line, hint=hint)
 
 
-def validate_references(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
+Failed = Mapping[str, set[str]]
+
+
+def _failed(failed: Failed | None, *folders: str) -> set[str]:
+    """Ids of files in `folders` that exist but did not load: a reference to one of them is
+    not reported as unknown (the file's own problem explains it)."""
+    found: set[str] = set()
+    for folder in folders:
+        found |= (failed or {}).get(folder, set())
+    return found
+
+
+def validate_references(
+    project: Project, lines: dict[str, LineMap], failed: Failed | None = None
+) -> list[Problem]:
     out: list[Problem] = []
     err, warn = Severity.ERROR, Severity.WARNING
     buses = sorted(b.name for b in project.spacecraft.buses)
@@ -57,7 +71,7 @@ def validate_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
                     file,
                     ("bus",),
                     lines,
-                    "Defined buses: " + ", ".join(buses) + ".",
+                    "Use the name of a bus listed under 'buses' in spacecraft.yaml.",
                 )
             )
         if policy is not None and unit.maturity not in policy.classes:
@@ -69,7 +83,7 @@ def validate_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
                     file,
                     ("maturity",),
                     lines,
-                    "Defined classes: " + ", ".join(policy.classes) + ".",
+                    "Use a class listed under 'classes' in config/margin_policy.yaml.",
                 )
             )
 
@@ -77,12 +91,14 @@ def validate_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
         file = f"modes/{mid}.yaml"
         for uid, unit_mode in mode.assignments.items():
             target = project.units.get(uid)
+            if target is None and uid in _failed(failed, "units"):
+                continue
             if target is None:
                 out.append(
                     _p(
                         err,
                         "REF_UNKNOWN_UNIT",
-                        f"Unit '{uid}' does not exist in units/.",
+                        "This unit id does not exist in units/.",
                         file,
                         ("assignments", uid),
                         lines,
@@ -98,7 +114,7 @@ def validate_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
                         file,
                         ("assignments", uid),
                         lines,
-                        "Defined modes: " + ", ".join(m.name for m in target.modes) + ".",
+                        "Use a power mode name listed under 'modes' in the unit file.",
                     )
                 )
         for uid in sorted(set(project.units) - set(mode.assignments)):
@@ -122,19 +138,19 @@ def validate_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
                     _p(
                         err,
                         "REF_UNKNOWN_BUS",
-                        f"Converter efficiency given for unknown bus '{bus}'.",
+                        "Converter efficiency is given for a bus that spacecraft.yaml lacks.",
                         "config/power_config.yaml",
                         ("converter_efficiency_ratio", bus),
                         lines,
-                        "Defined buses: " + ", ".join(buses) + ".",
+                        "Use the name of a bus listed under 'buses' in spacecraft.yaml.",
                     )
                 )
 
     out.extend(_mass_references(project, lines))
-    out.extend(_environment_references(project, lines))
-    out.extend(_power_system_references(project, lines))
-    out.extend(_thermal_references(project, lines))
-    out.extend(_link_references(project, lines))
+    out.extend(_environment_references(project, lines, failed))
+    out.extend(_power_system_references(project, lines, failed))
+    out.extend(_thermal_references(project, lines, failed))
+    out.extend(_link_references(project, lines, failed))
     out.extend(_value_ranges(project, lines))
 
     for kind in (
@@ -597,13 +613,19 @@ def _link_ranges(project: Project, check: Callable[..., None]) -> list[Problem]:
     return []
 
 
-def _link_references(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
+def _link_references(
+    project: Project, lines: dict[str, LineMap], failed: Failed | None = None
+) -> list[Problem]:
     out: list[Problem] = []
     err = Severity.ERROR
     ebn0, table = project.config.ebn0_table, project.config.attenuation_table
     for lid, link in project.links.items():
         file = f"links/{lid}.yaml"
-        if link.peer is not None and link.peer not in project.ground_stations:
+        if (
+            link.peer is not None
+            and link.peer not in project.ground_stations
+            and link.peer not in _failed(failed, "ground_stations")
+        ):
             out.append(
                 _p(
                     err,
@@ -616,12 +638,12 @@ def _link_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                 )
             )
         for i, mode in enumerate(link.active_modes):
-            if mode not in project.modes:
+            if mode not in project.modes and mode not in _failed(failed, "modes"):
                 out.append(
                     _p(
                         err,
                         "REF_UNKNOWN_MODE",
-                        f"'{mode}' is not a spacecraft mode in modes/.",
+                        "This is not a spacecraft mode in modes/.",
                         file,
                         ("active_modes", i),
                         lines,
@@ -640,7 +662,7 @@ def _link_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                             file,
                             ("attenuation", i),
                             lines,
-                            "Defined entries: " + ", ".join(sorted(names)) + ".",
+                            "Use a name listed under 'entries' in config/attenuation_table.yaml.",
                         )
                     )
         listed = ebn0 is not None and any(
@@ -696,11 +718,12 @@ def _inside_dir(root: FsPath, rel: str) -> bool:
     return found is not None and found.is_dir()
 
 
-def _thermal_references(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
+def _thermal_references(
+    project: Project, lines: dict[str, LineMap], failed: Failed | None = None
+) -> list[Problem]:
     out: list[Problem] = []
     err = Severity.ERROR
     model, env = project.config.thermal_model, project.config.thermal_environment
-    nodes = ", ".join(model.nodes) if model else ""
     mfile = "config/thermal_model.yaml"
     if model is not None:
         for i, link in enumerate(model.conductances):
@@ -714,7 +737,7 @@ def _thermal_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
                             mfile,
                             ("conductances", i, field),
                             lines,
-                            f"Defined nodes: {nodes}.",
+                            "Use a node listed under 'nodes' in config/thermal_model.yaml.",
                         )
                     )
         for i, surface in enumerate(model.surfaces):
@@ -727,7 +750,7 @@ def _thermal_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
                         mfile,
                         ("surfaces", i, "node"),
                         lines,
-                        f"Defined nodes: {nodes}.",
+                        "Use a node listed under 'nodes' in config/thermal_model.yaml.",
                     )
                 )
             if env is not None:
@@ -737,19 +760,19 @@ def _thermal_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
                             _p(
                                 err,
                                 "REF_UNKNOWN_CASE",
-                                f"Case '{case_name}' is not defined in the thermal environment.",
+                                "This case is not defined in the thermal environment.",
                                 mfile,
                                 ("surfaces", i, "exposure", case_name),
                                 lines,
-                                "Defined cases: " + ", ".join(env.cases) + ".",
+                                "Use a case listed under 'cases' in thermal_environment.yaml.",
                             )
                         )
         for uid, unit in project.units.items():
             node = unit.thermal_node or unit.subsystem
             if node not in model.nodes:
                 hint = (
-                    f"Defined nodes: {nodes}. Add a node named like the subsystem, or give the "
-                    "unit a 'thermal_node'."
+                    "Add a node named like the subsystem to config/thermal_model.yaml, or give "
+                    "the unit a 'thermal_node'."
                 )
                 out.append(
                     _p(
@@ -765,12 +788,14 @@ def _thermal_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
     if env is not None:
         known = ", ".join(sorted(project.modes))
         for name, case in env.cases.items():
-            if case.spacecraft_mode not in project.modes:
+            if case.spacecraft_mode not in project.modes and case.spacecraft_mode not in _failed(
+                failed, "modes"
+            ):
                 out.append(
                     _p(
                         err,
                         "REF_UNKNOWN_MODE",
-                        f"'{case.spacecraft_mode}' is not a spacecraft mode in modes/.",
+                        "This is not a spacecraft mode in modes/.",
                         "config/thermal_environment.yaml",
                         ("cases", name, "spacecraft_mode"),
                         lines,
@@ -780,11 +805,12 @@ def _thermal_references(project: Project, lines: dict[str, LineMap]) -> list[Pro
     return out
 
 
-def _power_system_references(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
+def _power_system_references(
+    project: Project, lines: dict[str, LineMap], failed: Failed | None = None
+) -> list[Problem]:
     out: list[Problem] = []
     system = project.config.power_system
     file = "config/power_system.yaml"
-    phases = ", ".join(project.phases)
     if system is not None:
         for phase in system.battery.max_dod_ratio:
             if phase not in project.phases:
@@ -792,21 +818,21 @@ def _power_system_references(project: Project, lines: dict[str, LineMap]) -> lis
                     _p(
                         Severity.ERROR,
                         "REF_UNKNOWN_PHASE",
-                        f"Phase '{phase}' is not a mission phase.",
+                        "This phase is not a mission phase.",
                         file,
                         ("battery", "max_dod_ratio", phase),
                         lines,
-                        f"Defined phases: {phases}.",
+                        "Use a name listed under 'mission_phases' in spacecraft.yaml.",
                     )
                 )
         known = ", ".join(sorted(project.modes))
         for mode in system.attitude.by_mode:
-            if mode not in project.modes:
+            if mode not in project.modes and mode not in _failed(failed, "modes"):
                 out.append(
                     _p(
                         Severity.ERROR,
                         "REF_UNKNOWN_MODE",
-                        f"'{mode}' is not a spacecraft mode in modes/.",
+                        "This is not a spacecraft mode in modes/.",
                         file,
                         ("attitude", "by_mode", mode),
                         lines,
@@ -819,11 +845,11 @@ def _power_system_references(project: Project, lines: dict[str, LineMap]) -> lis
                 _p(
                     Severity.ERROR,
                     "REF_UNKNOWN_PHASE",
-                    f"Phase '{sc.mission_phase}' is not a mission phase.",
+                    "This phase is not a mission phase.",
                     f"scenarios/{scid}.yaml",
                     ("mission_phase",),
                     lines,
-                    f"Defined phases: {phases}.",
+                    "Use a name listed under 'mission_phases' in spacecraft.yaml.",
                 )
             )
     return out
@@ -833,7 +859,6 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
     out: list[Problem] = []
     err = Severity.ERROR
     phases = project.phases
-    known = ", ".join(phases)
     policy = project.config.margin_policy
 
     for uid, unit in project.units.items():
@@ -843,11 +868,11 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                     _p(
                         err,
                         "REF_UNKNOWN_PHASE",
-                        f"Phase '{name}' is not a mission phase.",
+                        "This phase is not a mission phase.",
                         f"units/{uid}.yaml",
                         ("phases", index),
                         lines,
-                        f"Defined phases: {known}.",
+                        "Use a name listed under 'mission_phases' in spacecraft.yaml.",
                     )
                 )
 
@@ -862,20 +887,26 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                     file,
                     ("maturity",),
                     lines,
-                    "Defined classes: " + ", ".join(policy.classes) + ".",
+                    "Use a class listed under 'classes' in config/margin_policy.yaml.",
                 )
             )
-        for phase in phases:
+        for index, phase in enumerate(phases):
             if phase not in exp.masses_kg:
+                where = (
+                    f"mission_phases[{index}] in spacecraft.yaml"
+                    if project.spacecraft.mission_phases
+                    else "the implicit phase 'all'"
+                )
                 out.append(
                     _p(
                         err,
                         "PHASE_MASS_MISSING",
-                        f"No mass is given for phase '{phase}'.",
+                        f"No mass is given for the phase {where}.",
                         file,
                         ("masses_kg",),
                         lines,
-                        f"Add '{phase}: <mass in kg>' (write 0.0 if it is not present).",
+                        "Add an entry named like that phase, with its mass in kg (write 0.0 if it "
+                        "is not present).",
                     )
                 )
         for phase in exp.masses_kg:
@@ -884,11 +915,11 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                     _p(
                         err,
                         "REF_UNKNOWN_PHASE",
-                        f"Phase '{phase}' is not a mission phase.",
+                        "This phase is not a mission phase.",
                         file,
                         ("masses_kg", phase),
                         lines,
-                        f"Defined phases: {known}.",
+                        "Use a name listed under 'mission_phases' in spacecraft.yaml.",
                     )
                 )
 
@@ -899,11 +930,11 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                 _p(
                     err,
                     "REF_UNKNOWN_PHASE",
-                    f"Phase '{limit.phase}' is not a mission phase.",
+                    "This phase is not a mission phase.",
                     "config/mass_limits.yaml",
                     ("limits", index, "phase"),
                     lines,
-                    f"Defined phases: {known}.",
+                    "Use a name listed under 'mission_phases' in spacecraft.yaml.",
                 )
             )
 
@@ -926,7 +957,9 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
     return out
 
 
-def _environment_references(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
+def _environment_references(
+    project: Project, lines: dict[str, LineMap], failed: Failed | None = None
+) -> list[Problem]:
     from budget_core.environment.elements import check_orbit
 
     out: list[Problem] = []
@@ -964,7 +997,11 @@ def _environment_references(project: Project, lines: dict[str, LineMap]) -> list
 
     for scid, sc in project.scenarios.items():
         file = f"scenarios/{scid}.yaml"
-        if sc.environment_source == "elements" and sc.orbit not in project.orbits:
+        if (
+            sc.environment_source == "elements"
+            and sc.orbit not in project.orbits
+            and sc.orbit not in _failed(failed, "orbits")
+        ):
             out.append(
                 _p(
                     err,
@@ -995,12 +1032,12 @@ def _environment_references(project: Project, lines: dict[str, LineMap]) -> list
                 )
             )
         for index, site in enumerate(sc.sites):
-            if site not in sites:
+            if site not in sites and site not in _failed(failed, "ground_stations", "targets"):
                 out.append(
                     _p(
                         err,
                         "REF_UNKNOWN_SITE",
-                        f"Site '{site}' does not exist.",
+                        "This site does not exist.",
                         file,
                         ("sites", index),
                         lines,
@@ -1013,7 +1050,7 @@ def _environment_references(project: Project, lines: dict[str, LineMap]) -> list
                     _p(
                         err,
                         "REF_UNKNOWN_SITE",
-                        f"The rule uses site '{rule.site}', which the scenario does not list.",
+                        "The rule uses a site that the scenario does not list.",
                         file,
                         ("rules", index, "site"),
                         lines,
@@ -1025,7 +1062,7 @@ def _environment_references(project: Project, lines: dict[str, LineMap]) -> list
         wanted += [(f"rules[{i}].mode", r.mode) for i, r in enumerate(sc.rules)]
         wanted += [(f"segments[{i}].mode", s.mode) for i, s in enumerate(sc.segments)]
         for path, mode in wanted:
-            if mode not in project.modes:
+            if mode not in project.modes and mode not in _failed(failed, "modes"):
                 parts: tuple[str | int, ...] = tuple(
                     int(x) if x.isdigit() else x
                     for x in path.replace("]", "").replace("[", ".").split(".")
@@ -1034,7 +1071,7 @@ def _environment_references(project: Project, lines: dict[str, LineMap]) -> list
                     _p(
                         err,
                         "REF_UNKNOWN_MODE",
-                        f"'{mode}' is not a spacecraft mode in modes/.",
+                        "This is not a spacecraft mode in modes/.",
                         file,
                         parts,
                         lines,

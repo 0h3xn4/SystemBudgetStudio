@@ -84,7 +84,7 @@ def test_unknown_phase_in_the_depth_of_discharge_table(root: Path) -> None:
     problems = load_project(root).problems
     bad = next(p for p in problems if p.code == "REF_UNKNOWN_PHASE")
     assert bad.file == FILE and bad.path == "battery.max_dod_ratio.eoll" and bad.line is not None
-    assert "launch, eol" in bad.hint
+    assert "mission_phases" in bad.hint and "launch" not in bad.hint
 
 
 def test_unknown_mode_in_the_attitude_table(root: Path) -> None:

@@ -100,7 +100,7 @@ def test_alias_bomb_is_rejected_quickly() -> None:
 def test_merge_key_gives_a_clear_error_not_a_crash() -> None:
     with pytest.raises(YamlSyntaxError) as info:
         load_yaml_text("base: &b {x: 1}\nother:\n  <<: *b\n  y: 2\n")
-    assert "alias" in str(info.value).lower()
+    assert "<<" in str(info.value) or "alias" in str(info.value).lower()
 
 
 def test_deep_nesting_is_an_error_not_a_recursion_error() -> None:

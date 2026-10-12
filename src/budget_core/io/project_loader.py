@@ -6,6 +6,10 @@ Layout: project.yaml, spacecraft.yaml, units/*.yaml, modes/*.yaml, config/<kind>
 
 from __future__ import annotations
 
+import os
+import re
+import stat
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path as FsPath
 from typing import Any, TypeVar
@@ -21,6 +25,7 @@ from budget_core.io.yamlio import (
     YamlSyntaxError,
     dump_yaml,
     load_yaml_text,
+    read_limited,
 )
 from budget_core.model import (
     AttenuationTable,
@@ -150,7 +155,16 @@ class _Loader:
             )
             return None
         try:
-            if path.stat().st_size > MAX_YAML_BYTES:
+            if not stat.S_ISREG(path.stat().st_mode):  # a folder, a pipe or a device: never read
+                self.error(
+                    "FILE_INVALID",
+                    "This is not a regular file (it is a folder, a pipe or a device).",
+                    rel,
+                    "Remove it, or replace it with a text file.",
+                )
+                return None
+            raw = read_limited(path, MAX_YAML_BYTES)
+            if len(raw) > MAX_YAML_BYTES:
                 self.error(
                     "FILE_INVALID",
                     "The file is too large to be a project file.",
@@ -158,7 +172,7 @@ class _Loader:
                     "Project files are small text files; check that this is the right file.",
                 )
                 return None
-            text = path.read_bytes().decode("utf-8")
+            text = raw.decode("utf-8")
         except UnicodeDecodeError:
             self.error(
                 "FILE_INVALID", "The file is not valid UTF-8 text.", rel, "Save the file as UTF-8."
@@ -240,6 +254,167 @@ def _located(problem: Problem, file: str, lines: LineMap) -> Problem:
     )
 
 
+ENTITY_FOLDERS = (
+    "units",
+    "modes",
+    "expendables",
+    "orbits",
+    "ground_stations",
+    "targets",
+    "scenarios",
+    "links",
+)
+_CLEAN_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9_-]*")
+
+
+def _safe_text(text: str) -> str:
+    """`text` with lone surrogates (the bytes of a file name that is not UTF-8) escaped, so that
+    the Problem can be printed and written in any encoding."""
+    return "".join(f"\\u{ord(c):04x}" if 0xD800 <= ord(c) <= 0xDFFF else c for c in text)
+
+
+def _yaml_names(folder: FsPath) -> list[str]:
+    try:
+        return sorted(n for n in os.listdir(folder) if n.endswith(".yaml"))
+    except OSError:
+        return []
+
+
+def _id_problems(folder: str, names: list[str]) -> tuple[list[Problem], set[str]]:
+    """Checks on the ids (file names without .yaml) of one folder. Returns the problems and the
+    names that cannot be used at all (an error: the id would be empty, hidden or unencodable).
+    Unusual but workable ids only get a warning (decision D-103)."""
+    problems: list[Problem] = []
+    unusable: set[str] = set()
+    seen: dict[str, str] = {}
+    clashes: set[str] = set()
+    for name in names:
+        stem = name[: -len(".yaml")]
+        rel = _safe_text(f"{folder}/{name}")
+        try:
+            stem.encode("utf-8")
+        except UnicodeEncodeError:
+            unusable.add(name)
+            problems.append(
+                Problem(
+                    Severity.ERROR,
+                    "ID_INVALID",
+                    "The file name is not valid text (it holds bytes that are not UTF-8).",
+                    file=rel,
+                    hint="Rename the file with letters, digits, '_' and '-'.",
+                )
+            )
+            continue
+        if not stem or stem.startswith("."):
+            unusable.add(name)
+            problems.append(
+                Problem(
+                    Severity.ERROR,
+                    "ID_INVALID",
+                    "The id (the file name without .yaml) must not be empty or start with a dot.",
+                    file=rel,
+                    hint="Rename the file, for example to a name made of letters, digits, '_' "
+                    "and '-'.",
+                )
+            )
+            continue
+        if not _CLEAN_ID.fullmatch(stem):
+            problems.append(
+                Problem(
+                    Severity.WARNING,
+                    "ID_UNUSUAL",
+                    "The id (the file name without .yaml) has characters other than ASCII letters, "
+                    "digits, '_' and '-'.",
+                    file=rel,
+                    hint="Spaces, accents and look-alike letters make ids hard to type and to "
+                    "tell apart; rename the file (and every reference to it).",
+                )
+            )
+        folded = unicodedata.normalize("NFC", stem).casefold()
+        if folded in seen:
+            clashes.update((seen[folded], name))
+        else:
+            seen[folded] = name
+    for name in sorted(clashes):
+        problems.append(
+            Problem(
+                Severity.WARNING,
+                "ID_COLLISION",
+                "Another file in this folder has an id that differs only in capital letters or in "
+                "the way an accent is encoded.",
+                file=_safe_text(f"{folder}/{name}"),
+                hint="On Windows and macOS such names are the same file; rename one of them.",
+            )
+        )
+    return problems, unusable
+
+
+def _ignored_files(root: FsPath) -> list[Problem]:
+    """Files the loader skips although they look like project files (decision D-103)."""
+
+    def warn(rel: str, message: str, hint: str) -> Problem:
+        return Problem(Severity.WARNING, "FILE_IGNORED", message, file=_safe_text(rel), hint=hint)
+
+    out: list[Problem] = []
+    wrong_suffix = "Only files whose name ends in exactly '.yaml' are read."
+    try:
+        top = sorted(os.listdir(root))
+    except OSError:
+        return out
+    for name in top:
+        lower = name.lower()
+        if name.startswith(".") or not lower.endswith((".yaml", ".yml")):
+            continue
+        if name not in ("project.yaml", "spacecraft.yaml"):
+            out.append(
+                warn(
+                    name,
+                    "This file is ignored: only project.yaml and spacecraft.yaml are read here.",
+                    wrong_suffix + " Entities belong in the sub-folders (units/, modes/, ...).",
+                )
+            )
+    for folder in (*ENTITY_FOLDERS, "config"):
+        try:
+            entries = sorted(os.scandir(root / folder), key=lambda e: e.name)
+        except OSError:
+            continue
+        for entry in entries:
+            name = entry.name
+            rel = f"{folder}/{name}"
+            if name.startswith("."):
+                continue
+            try:
+                is_dir = entry.is_dir()
+            except OSError:
+                is_dir = False
+            if is_dir:
+                if not name.endswith(".yaml"):  # a folder named x.yaml is reported when loaded
+                    out.append(
+                        warn(
+                            rel,
+                            "This folder is ignored: project files are not read from sub-folders.",
+                            f"Move its files up into {folder}/.",
+                        )
+                    )
+                continue
+            lower = name.lower()
+            if name.endswith(".yaml"):
+                if folder == "config" and name[:-5] not in CONFIG_FILES:
+                    out.append(
+                        warn(
+                            rel,
+                            "This configuration file is ignored: its name is not one of the "
+                            "known configuration files.",
+                            "Known: " + ", ".join(f"{k}.yaml" for k in sorted(CONFIG_FILES)) + ".",
+                        )
+                    )
+            elif lower.endswith((".yaml", ".yml")):
+                out.append(
+                    warn(rel, "This file is ignored: its name does not end in .yaml.", wrong_suffix)
+                )
+    return out
+
+
 def load_project(root: FsPath, registry: MigrationRegistry = DEFAULT_REGISTRY) -> LoadResult:
     from budget_core.io.validation import validate_references
 
@@ -256,37 +431,34 @@ def load_project(root: FsPath, registry: MigrationRegistry = DEFAULT_REGISTRY) -
     loader = _Loader(root, registry)
     meta = loader.load("project.yaml", ProjectMeta, "project")
     spacecraft = loader.load("spacecraft.yaml", Spacecraft, "spacecraft")
-
-    units: dict[str, Unit] = {}
-    for path in sorted((root / "units").glob("*.yaml")):
-        unit = loader.load(f"units/{path.name}", Unit, "unit")
-        if unit is not None:
-            units[path.stem] = unit
-    modes: dict[str, SpacecraftMode] = {}
-    for path in sorted((root / "modes").glob("*.yaml")):
-        mode = loader.load(f"modes/{path.name}", SpacecraftMode, "spacecraft_mode")
-        if mode is not None:
-            modes[path.stem] = mode
-
-    expendables: dict[str, Expendable] = {}
-    for path in sorted((root / "expendables").glob("*.yaml")):
-        item = loader.load(f"expendables/{path.name}", Expendable, "expendable")
-        if item is not None:
-            expendables[path.stem] = item
+    failed: dict[str, set[str]] = {}  # per folder: ids of files that exist but did not load
 
     def load_dir(folder: str, cls: type[M], kind: str) -> dict[str, M]:
         found: dict[str, M] = {}
-        for path in sorted((root / folder).glob("*.yaml")):
-            item = loader.load(f"{folder}/{path.name}", cls, kind)
+        names = _yaml_names(root / folder)
+        id_problems, unusable = _id_problems(folder, names)
+        loader.problems.extend(id_problems)
+        for name in names:
+            stem = name[: -len(".yaml")]
+            if name in unusable:
+                failed.setdefault(folder, set()).add(stem)
+                continue
+            item = loader.load(f"{folder}/{name}", cls, kind)
             if item is not None:
-                found[path.stem] = item
+                found[stem] = item
+            else:
+                failed.setdefault(folder, set()).add(stem)
         return found
 
+    units = load_dir("units", Unit, "unit")
+    modes = load_dir("modes", SpacecraftMode, "spacecraft_mode")
+    expendables = load_dir("expendables", Expendable, "expendable")
     orbits = load_dir("orbits", Orbit, "orbit")
     stations = load_dir("ground_stations", GroundStation, "ground_station")
     targets = load_dir("targets", Target, "target")
     scenarios = load_dir("scenarios", Scenario, "scenario")
     links = load_dir("links", Link, "link")
+    loader.problems.extend(_ignored_files(root))
 
     configs: dict[str, Any] = {}
     for kind, cls in CONFIG_FILES.items():
@@ -305,6 +477,8 @@ def load_project(root: FsPath, registry: MigrationRegistry = DEFAULT_REGISTRY) -
             )
             continue
         configs[kind] = loader.load(rel, cls, kind)
+        if configs[kind] is None:
+            failed.setdefault("config", set()).add(kind)
 
     problems = loader.problems
     project: Project | None = None
@@ -323,7 +497,7 @@ def load_project(root: FsPath, registry: MigrationRegistry = DEFAULT_REGISTRY) -
             scenarios,
             links,
         )
-        problems = problems + validate_references(project, loader.lines)
+        problems = problems + validate_references(project, loader.lines, failed)
     problems = sort_problems(problems)
     if any(p.severity is Severity.ERROR for p in problems):
         project = None

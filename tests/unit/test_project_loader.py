@@ -152,7 +152,7 @@ def test_unknown_bus_and_maturity(root: Path) -> None:
     problems = load_project(root).problems
     bus = only(problems, "REF_UNKNOWN_BUS")
     assert bus.file == "units/obc.yaml" and bus.line == line_of(root, "units/obc.yaml", "bus: nope")
-    assert "main" in bus.hint
+    assert "spacecraft.yaml" in bus.hint and "main" not in bus.hint
     assert only(problems, "REF_UNKNOWN_MATURITY").file == "units/radio.yaml"
 
 
@@ -256,7 +256,7 @@ def test_placeholder_values_are_not_range_checked(root: Path) -> None:
 def test_unit_phase_must_exist(root: Path) -> None:
     edit(root, "units/obc.yaml", "mass_properties:", "phases:\n  - warp\nmass_properties:")
     p = only(load_project(root).problems, "REF_UNKNOWN_PHASE")
-    assert p.file == "units/obc.yaml" and p.path == "phases[0]" and "launch" in p.hint
+    assert p.file == "units/obc.yaml" and p.path == "phases[0]" and "mission_phases" in p.hint
 
 
 def test_expendable_needs_a_mass_for_every_phase_and_only_known_phases(root: Path) -> None:
@@ -329,7 +329,7 @@ def test_scenario_must_reference_an_existing_orbit_and_sites(root: Path) -> None
 def test_rule_site_must_be_listed_in_the_scenario(root: Path) -> None:
     edit(root, "scenarios/day.yaml", "- gs1\n", "")
     p = only(load_project(root).problems, "REF_UNKNOWN_SITE")
-    assert "rules" in p.path and "gs1" in p.message
+    assert "rules" in p.path and "gs1" not in p.message
 
 
 def test_scenario_modes_must_exist(root: Path) -> None:
