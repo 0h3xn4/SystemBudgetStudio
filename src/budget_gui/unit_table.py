@@ -112,4 +112,4 @@ def import_unit_table(window: MainWindow) -> None:
     except OutputError as exc:
         QMessageBox.warning(window, TITLE, str(exc))
         return
-    window.session.reload()
+    window.reload_project()

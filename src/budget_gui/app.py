@@ -67,7 +67,7 @@ def main() -> int:
     window = MainWindow()
     window.show()
     if args and not args[0].startswith("-"):
-        window.open_project(Path(args[0]))
+        window.open_project(Path(args[0]), background=True)
     return app.exec()
 
 

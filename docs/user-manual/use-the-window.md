@@ -30,7 +30,7 @@ Closing the window while a computation or an export is running does not interrup
 | Ctrl+N | New project (guided wizard) |
 | Ctrl+O | Open project |
 | Ctrl+S | Save the file you are editing (the text tab, the unit table or, in the Scenario tab, the scenario) |
-| F5 | Reload the project from disk |
+| F5 | Reload the project from disk (the window stays usable while it loads; the status bar says so) |
 | Ctrl+M | Edit the selected unit's power modes in a table |
 | Ctrl+E | Export reports of the static budgets |
 | Ctrl+Shift+E | Export the power timeline |

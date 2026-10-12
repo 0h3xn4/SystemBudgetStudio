@@ -37,6 +37,7 @@ SEVERITY_ORDER = {Severity.ERROR: 0, Severity.WARNING: 1, Severity.INFO: 2}
 Index = QModelIndex | QPersistentModelIndex
 _NO_PARENT = QModelIndex()
 UNIT_ROLE = int(Qt.ItemDataRole.UserRole) + 1
+COLUMN_WIDTH_ROWS = 60  # rows looked at to size a column
 
 
 class DocTableModel(QAbstractTableModel):
@@ -45,6 +46,7 @@ class DocTableModel(QAbstractTableModel):
     def __init__(self, table: Table) -> None:
         super().__init__()
         self.table = table
+        self._text: dict[tuple[int, int], str] = {}  # formatted cells, made when first asked for
 
     def rowCount(self, parent: Index = _NO_PARENT) -> int:
         return 0 if parent.isValid() else len(self.table.rows)
@@ -64,7 +66,10 @@ class DocTableModel(QAbstractTableModel):
             return None
         column = self.table.columns[index.column()]
         value = self.table.rows[index.row()][index.column()]
-        text = format_cell(value, column)
+        key = (index.row(), index.column())
+        text = self._text.get(key)
+        if text is None:  # Qt asks for each cell several times (text, alignment, colour)
+            text = self._text[key] = format_cell(value, column)
         if role == Qt.ItemDataRole.DisplayRole:
             return text
         if role == Qt.ItemDataRole.TextAlignmentRole:
@@ -307,6 +312,9 @@ class PowerView(QWidget):
                 view.verticalHeader().setVisible(False)
                 view.setAlternatingRowColors(True)
                 view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+                # the widths come from the first rows only: a table of thousands of rows would
+                # otherwise be measured cell by cell every time the project is loaded
+                view.horizontalHeader().setResizeContentsPrecision(COLUMN_WIDTH_ROWS)
                 view.resizeColumnsToContents()
                 view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
                 height = view.horizontalHeader().height() + 2 * view.frameWidth() + 18
