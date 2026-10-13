@@ -4,7 +4,8 @@
     python packaging/check_bundle.py dist/system-budget-studio
 
 Fails (exit 1) when development code such as hypothesis, mypy or pytest was bundled, or when the
-licence material the licences require is missing: the licence texts, `licences.md` and the SBOM.
+licence material the licences require is missing: the licence texts, `licences.md` and the SBOM,
+or when the application icon (assets/icons) was not bundled.
 """
 
 from __future__ import annotations
@@ -35,6 +36,8 @@ REQUIRED_FILES = (
 )
 
 
+# the window icon (D-148); the data files are in `_internal` of a PyInstaller bundle
+ICON = "budget_core/assets/icons/logo-256.png"
 EXECUTABLES = ("system-budget-studio", "budget")
 
 
@@ -55,6 +58,8 @@ def check(bundle: Path) -> list[str]:
     for rel in REQUIRED_FILES:
         if not (bundle / rel).is_file():
             problems.append(f"missing from the bundle: {rel}")
+    if not any((root / ICON).is_file() for root in roots):
+        problems.append(f"missing from the bundle: {ICON}")
     for exe in EXECUTABLES:
         if not has_executable(bundle, exe):
             problems.append(f"missing executable: {exe}")

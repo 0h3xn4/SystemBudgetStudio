@@ -54,6 +54,10 @@ def scripts(keep):
     return [s for s in a.scripts if s[0] not in own or s[0] == keep]
 
 
+# The program icon of the two executables (Windows only: a Linux program file cannot hold one;
+# the Linux menu entry gets its icon from install.sh). D-148.
+icon = str(root / "assets" / "icons" / "logo.ico") if sys.platform == "win32" else None
+
 gui = EXE(
     pyz,
     scripts("entry_gui"),
@@ -61,6 +65,7 @@ gui = EXE(
     exclude_binaries=True,
     name="system-budget-studio",
     console=False,
+    icon=icon,
 )
 cli = EXE(
     pyz,
@@ -69,5 +74,6 @@ cli = EXE(
     exclude_binaries=True,
     name="budget",
     console=True,
+    icon=icon,
 )
 coll = COLLECT(gui, cli, a.binaries, a.datas, name="system-budget-studio")

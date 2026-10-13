@@ -21,6 +21,11 @@ def bundle(tmp_path: Path) -> Path:
     folder = tmp_path / "bundle" / "system-budget-studio"
     (folder / "_internal").mkdir(parents=True)
     (folder / "_internal" / "lib.so").write_text("x")
+    icons = folder / "_internal" / "budget_core" / "assets" / "icons"
+    icons.mkdir(parents=True)
+    for size in (16, 256):
+        (icons / f"logo-{size}.png").write_bytes(f"png {size}".encode())
+    (icons / "logo-big.png").write_bytes(b"not a size")  # a name without a size is ignored
     for name in ("system-budget-studio", "budget"):
         exe = folder / name
         exe.write_text('#!/bin/sh\n[ "$1" = "--self-test" ] && echo "Self-test passed."\nexit 0\n')
@@ -52,6 +57,48 @@ def test_install_creates_program_links_and_menu_entry(bundle: Path, tmp_path: Pa
     assert f'Exec="{prefix}/system-budget-studio" %f' in entry
     assert "Terminal=false" in entry
     assert "Self-test passed." in result.stdout
+
+
+ICON_DIR = ".local/share/icons/hicolor"
+
+
+def test_the_menu_entry_has_the_icon_in_the_users_icon_theme(bundle: Path, tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    assert run(bundle / "install.sh", home).returncode == 0
+    entry = (home / ".local/share/applications/system-budget-studio.desktop").read_text()
+    assert "Icon=system-budget-studio\n" in entry
+    for size in (16, 256):
+        icon = home / ICON_DIR / f"{size}x{size}/apps/system-budget-studio.png"
+        assert icon.read_bytes() == f"png {size}".encode()
+    assert not list((home / ICON_DIR).glob("big*"))  # only files named with a size
+
+
+def test_uninstall_removes_the_icons_too(bundle: Path, tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    assert run(bundle / "install.sh", home).returncode == 0
+    assert run(home / ".local/opt/system-budget-studio/uninstall.sh", home).returncode == 0
+    assert not list((home / ICON_DIR).rglob("system-budget-studio.png"))
+
+
+def test_a_bundle_without_icons_still_installs_with_a_plain_entry(
+    bundle: Path, tmp_path: Path
+) -> None:
+    shutil.rmtree(bundle / "_internal" / "budget_core")
+    home = tmp_path / "home"
+    home.mkdir()
+    result = run(bundle / "install.sh", home)
+    assert result.returncode == 0, result.stderr
+    entry = (home / ".local/share/applications/system-budget-studio.desktop").read_text()
+    assert "Icon=" not in entry and not (home / ICON_DIR).exists()
+
+
+def test_no_menu_entry_means_no_icons(bundle: Path, tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    assert run(bundle / "install.sh", home, "--no-desktop").returncode == 0
+    assert not (home / ICON_DIR).exists()
 
 
 def test_uninstall_removes_exactly_what_was_installed(bundle: Path, tmp_path: Path) -> None:

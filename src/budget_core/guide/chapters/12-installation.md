@@ -20,11 +20,22 @@ cd system-budget-studio
 ./install.sh
 ```
 
-The script copies the program to `~/.local/opt/system-budget-studio`, links `system-budget-studio` and `budget` into `~/.local/bin`, adds an application-menu entry, and runs the self-test. Options: `--prefix DIR` for another folder, `--no-links`, `--no-desktop`, `--force`. Installing again from the downloaded folder replaces the previous version completely. A command of yours that is already called `budget` or `system-budget-studio` is not replaced unless you pass `--force`, and an existing folder that was not created by the installer is never overwritten. Run `install.sh` from the downloaded folder, not from the installed copy.
+The script copies the program to `~/.local/opt/system-budget-studio`, links `system-budget-studio` and `budget` into `~/.local/bin`, adds an application-menu entry with the program icon, and runs the self-test. Options: `--prefix DIR` for another folder, `--no-links`, `--no-desktop`, `--force`. Installing again from the downloaded folder replaces the previous version completely. A command of yours that is already called `budget` or `system-budget-studio` is not replaced unless you pass `--force`, and an existing folder that was not created by the installer is never overwritten. Run `install.sh` from the downloaded folder, not from the installed copy.
 
-The window needs the usual desktop libraries (EGL, OpenGL, xkbcommon, fontconfig). On a minimal RHEL 8 install them with `sudo dnf install mesa-libEGL mesa-libGL libxkbcommon libxkbcommon-x11 fontconfig xcb-util-wm xcb-util-image xcb-util-keysyms xcb-util-renderutil`. The command-line tool and the self-test work without a display.
+The window needs the usual desktop libraries (EGL, OpenGL, xkbcommon, fontconfig). On a minimal RHEL or Rocky 8 or 9 install them with `sudo dnf install mesa-libEGL mesa-libGL libxkbcommon libxkbcommon-x11 fontconfig xcb-util-wm xcb-util-image xcb-util-keysyms xcb-util-renderutil`, and `xcb-util-cursor` from EPEL (`sudo dnf install epel-release` first; RHEL itself gets `epel-release` from the Fedora project's EPEL page). Without `xcb-util-cursor` the window does not open. The command-line tool and the self-test work without a display.
 
-To uninstall run `~/.local/opt/system-budget-studio/uninstall.sh`. It removes the program, the links and the menu entry that the installer created and nothing else.
+To uninstall run `~/.local/opt/system-budget-studio/uninstall.sh`. It removes the program, the links, the menu entry and its icons that the installer created and nothing else.
+
+## Linux packages (.deb and .rpm)
+
+For a machine that several people use, or that an administrator sets up, the release also has a Debian package and an RPM package. They install for all users and need administrator rights (`sudo`); the tarball above does not.
+
+```
+sudo apt install ./system-budget-studio_<version>-1_amd64.deb      # Ubuntu 22.04 or newer, Debian 12
+sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm     # RHEL or Rocky 8 or 9
+```
+
+The package manager also installs the system libraries the window needs. On RHEL and Rocky one of them, `xcb-util-cursor`, is in EPEL: run `sudo dnf install epel-release` once before installing the `.rpm` (without it `dnf` says that nothing provides `xcb-util-cursor`). The program goes to `/opt/system-budget-studio`; `system-budget-studio` and `budget` are linked into `/usr/bin`; the menu entry and the icons are installed system-wide. To remove it use `sudo apt remove system-budget-studio` or `sudo dnf remove system-budget-studio`. A newer package of the same name replaces the old one. The packages are not signed: check the download against `SHA256SUMS-linux.txt` first. Do not install a package and the tarball in the same account: they are two separate copies.
 
 ## Your files
 

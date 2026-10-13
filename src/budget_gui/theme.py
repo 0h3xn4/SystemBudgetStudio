@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from PySide6.QtGui import QFont, QFontDatabase
+from PySide6.QtGui import QFont, QFontDatabase, QIcon
 from PySide6.QtWidgets import QApplication
 
-from budget_core.assets import assets_dir
+from budget_core.assets import assets_dir, icon_files
 
 
 @dataclass(frozen=True)
@@ -76,6 +76,15 @@ def stylesheet(t: CarbonTokens) -> str:
                                 alternate-background-color: {t.layer}; }}
     QPlainTextEdit {{ background: {t.background}; border: 1px solid {t.border}; }}
     """
+
+
+def app_icon() -> QIcon:
+    """The application icon (D-148): PNG files of 16 to 256 px, so no SVG plugin is needed. An
+    empty icon when the files are missing; the window still opens."""
+    icon = QIcon()
+    for path in icon_files():
+        icon.addFile(str(path))
+    return icon
 
 
 def apply_theme(app: QApplication, name: str = "white") -> None:

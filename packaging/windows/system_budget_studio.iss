@@ -33,6 +33,8 @@ Compression=lzma2
 SolidCompression=yes
 UninstallDisplayName=System Budget Studio
 UninstallDisplayIcon={app}\system-budget-studio.exe
+; the icon of setup.exe and of the uninstaller (the program itself carries the same icon)
+SetupIconFile=..\..\assets\icons\logo.ico
 WizardStyle=modern
 
 [InstallDelete]

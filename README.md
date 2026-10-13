@@ -23,12 +23,14 @@ If you know a little Python and nothing about this tool, start with the [getting
 
 ## Install
 
-Download the installer for your system from the [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest). No Python is needed; nothing needs administrator rights.
+Download the installer for your system from the [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest). No Python is needed. The Windows installer and the Linux tarball need no administrator rights; the `.deb` and `.rpm` packages install for all users and need `sudo`.
 
 | System | File | What to do |
 |---|---|---|
 | Windows 10/11 | `system-budget-studio-<version>-windows-x64-setup.exe` | Run it. A portable `…-portable.zip` also exists: extract it and start `system-budget-studio.exe`. |
-| Linux (RHEL/Rocky 8 or newer, Ubuntu LTS) | `system-budget-studio-<version>-linux-x86_64.tar.gz` | `tar xzf` it, `cd system-budget-studio`, run `./install.sh`. |
+| Linux, no administrator rights (RHEL/Rocky 8 or newer, Ubuntu LTS) | `system-budget-studio-<version>-linux-x86_64.tar.gz` | `tar xzf` it, `cd system-budget-studio`, run `./install.sh`. |
+| Ubuntu 22.04 or newer, Debian 12 | `system-budget-studio_<version>-1_amd64.deb` | `sudo apt install ./system-budget-studio_<version>-1_amd64.deb` |
+| RHEL or Rocky 8 or 9 | `system-budget-studio-<version>-1.x86_64.rpm` | `sudo dnf install epel-release` once (the window needs `xcb-util-cursor` from EPEL), then `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` |
 
 Check the download against `SHA256SUMS-windows.txt` or `SHA256SUMS-linux.txt` from the same page. The installers are unsigned, so Windows may show a warning on first run. Details, uninstalling and the Linux libraries the window needs are in [getting started](docs/getting-started.md#installers). To work on the code or run from source, use the quick start below.
 

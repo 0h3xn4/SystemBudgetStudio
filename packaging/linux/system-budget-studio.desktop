@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=System Budget Studio
+Comment=Satellite power, mass, thermal and link budgets (offline)
+Exec=/usr/bin/system-budget-studio %f
+Icon=system-budget-studio
+Terminal=false
+Categories=Science;Engineering;

@@ -66,6 +66,10 @@ def fake_bundle(tmp_path: Path, extra: tuple[str, ...] = (), skip: tuple[str, ..
             target = bundle / rel
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text("x", encoding="utf-8")
+    if "icon" not in skip:
+        icon = internal / "budget_core" / "assets" / "icons" / "logo-256.png"
+        icon.parent.mkdir(parents=True)
+        icon.write_bytes(b"x")
     for exe in ("system-budget-studio", "budget"):
         (bundle / exe).write_text("x", encoding="utf-8")
     return bundle
@@ -73,6 +77,11 @@ def fake_bundle(tmp_path: Path, extra: tuple[str, ...] = (), skip: tuple[str, ..
 
 def test_a_clean_bundle_passes(tmp_path: Path) -> None:
     assert check_bundle.check(fake_bundle(tmp_path)) == []
+
+
+def test_a_bundle_without_the_window_icon_fails(tmp_path: Path) -> None:
+    problems = check_bundle.check(fake_bundle(tmp_path, skip=("icon",)))
+    assert problems == ["missing from the bundle: budget_core/assets/icons/logo-256.png"]
 
 
 @pytest.mark.parametrize("module", ["hypothesis", "mypy", "pytest", "_pytest", "pytestqt", "pip"])

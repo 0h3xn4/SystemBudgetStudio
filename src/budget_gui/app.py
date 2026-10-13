@@ -11,7 +11,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from budget_core import APP_NAME
 from budget_gui.main_window import MainWindow
 from budget_gui.privacy import disable_settings_files
-from budget_gui.theme import apply_theme
+from budget_gui.theme import app_icon, apply_theme
 
 
 def describe_exception(exc_type: type[BaseException], exc: BaseException) -> str:
@@ -38,7 +38,9 @@ def create_app(argv: Sequence[str]) -> QApplication:
     app = QApplication.instance() or QApplication(list(argv))
     assert isinstance(app, QApplication)
     app.setApplicationName(APP_NAME)
+    app.setDesktopFileName("system-budget-studio")  # the Linux menu entry (Icon=, D-148)
     apply_theme(app)
+    app.setWindowIcon(app_icon())  # every window and dialog, the task bar included (D-148)
     return app
 
 
