@@ -20,11 +20,11 @@ cd system-budget-studio
 ./install.sh
 ```
 
-The script copies the program to `~/.local/opt/system-budget-studio`, links `system-budget-studio` and `budget` into `~/.local/bin`, adds an application-menu entry, and runs the self-test. Options: `--prefix DIR` for another folder, `--no-links`, `--no-desktop`, `--force`. Installing again from the downloaded folder replaces the previous version completely. A command of yours that is already called `budget` or `system-budget-studio` is not replaced unless you pass `--force`, and an existing folder that was not created by the installer is never overwritten. Run `install.sh` from the downloaded folder, not from the installed copy.
+The script copies the program to `~/.local/opt/system-budget-studio`, links `system-budget-studio` and `budget` into `~/.local/bin`, adds an application-menu entry with the program icon, and runs the self-test. Options: `--prefix DIR` for another folder, `--no-links`, `--no-desktop`, `--force`. Installing again from the downloaded folder replaces the previous version completely. A command of yours that is already called `budget` or `system-budget-studio` is not replaced unless you pass `--force`, and an existing folder that was not created by the installer is never overwritten. Run `install.sh` from the downloaded folder, not from the installed copy.
 
 The window needs the usual desktop libraries (EGL, OpenGL, xkbcommon, fontconfig). On a minimal RHEL 8 install them with `sudo dnf install mesa-libEGL mesa-libGL libxkbcommon libxkbcommon-x11 fontconfig xcb-util-wm xcb-util-image xcb-util-keysyms xcb-util-renderutil`. The command-line tool and the self-test work without a display.
 
-To uninstall run `~/.local/opt/system-budget-studio/uninstall.sh`. It removes the program, the links and the menu entry that the installer created and nothing else.
+To uninstall run `~/.local/opt/system-budget-studio/uninstall.sh`. It removes the program, the links, the menu entry and its icons that the installer created and nothing else.
 
 ## Your files
 

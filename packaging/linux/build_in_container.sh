@@ -38,9 +38,13 @@ budget --version
 budget self-test
 QT_QPA_PLATFORM=offscreen system-budget-studio --smoke
 test -f ~/.local/share/applications/system-budget-studio.desktop
+grep -q '^Icon=system-budget-studio\$' ~/.local/share/applications/system-budget-studio.desktop
+test -f ~/.local/share/icons/hicolor/256x256/apps/system-budget-studio.png
 ~/.local/opt/system-budget-studio/uninstall.sh
 test ! -e ~/.local/opt/system-budget-studio
 test ! -e ~/.local/bin/budget
+test ! -e ~/.local/share/icons/hicolor/256x256/apps/system-budget-studio.png
+test ! -e ~/.local/share/applications/system-budget-studio.desktop
 "
 echo "RHEL 8 build, install and uninstall: OK"
 

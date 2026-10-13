@@ -43,3 +43,21 @@ def test_the_svg_and_the_script_agree_on_the_bars() -> None:
     svg = (ROOT / "docs" / "images" / "logo.svg").read_text(encoding="utf-8")
     for x, y, w, h, colour in make.BARS:
         assert f'x="{x}" y="{y}" width="{w}" height="{h}" fill="{colour}"' in svg
+
+
+def test_the_windows_icon_holds_every_size_each_drawn_on_its_own() -> None:
+    make = load_make_icons()
+    with Image.open(ROOT / "assets" / "icons" / "logo.ico") as ico:
+        assert sorted(ico.ico.sizes()) == [(n, n) for n in make.SIZES]
+        for size in make.SIZES:
+            frame = ico.ico.getimage((size, size)).convert("RGBA")
+            difference = ImageChops.difference(frame, make.draw(size)).getextrema()
+            assert max(high for _low, high in difference) <= 3, f"{size} px is a scaled copy"
+
+
+def test_the_packaging_files_use_the_icon() -> None:
+    spec = (ROOT / "packaging" / "system_budget_studio.spec").read_text(encoding="utf-8")
+    assert spec.count("icon=icon") == 2 and "logo.ico" in spec  # both executables
+    inno = (ROOT / "packaging" / "windows" / "system_budget_studio.iss").read_text(encoding="utf-8")
+    assert "SetupIconFile=..\\..\\assets\\icons\\logo.ico" in inno
+    assert (ROOT / "assets" / "icons" / "logo.ico").is_file()

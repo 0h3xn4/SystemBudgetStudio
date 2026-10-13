@@ -43,7 +43,7 @@ Some files are produced by code and checked by tests, so they cannot drift:
 | `examples/` | `budget export-examples examples --force` | the example builders |
 | `docs/LICENCES.md` | `python packaging/licence_check.py --markdown docs/LICENCES.md` | the dependencies |
 | `requirements.lock`, `requirements-dev.lock` | `packaging/lock.sh` (uses `uv`; needs a network) | `pyproject.toml` dependencies |
-| `assets/icons/logo-*.png` | `python packaging/make_icons.py` (the same drawing as `docs/images/logo.svg`) | the logo |
+| `assets/icons/logo-*.png`, `assets/icons/logo.ico` | `python packaging/make_icons.py` (the same drawing as `docs/images/logo.svg`) | the logo |
 | `tests/golden/*` | `UPDATE_GOLDEN=1 pytest tests/golden`, then **read the diff** | a deliberate change of a report |
 
 ## Golden files

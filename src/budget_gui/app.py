@@ -38,6 +38,7 @@ def create_app(argv: Sequence[str]) -> QApplication:
     app = QApplication.instance() or QApplication(list(argv))
     assert isinstance(app, QApplication)
     app.setApplicationName(APP_NAME)
+    app.setDesktopFileName("system-budget-studio")  # the Linux menu entry (Icon=, D-148)
     apply_theme(app)
     app.setWindowIcon(app_icon())  # every window and dialog, the task bar included (D-148)
     return app

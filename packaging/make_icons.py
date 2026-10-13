@@ -2,7 +2,8 @@
 
 The drawing is the same as docs/images/logo.svg (256 x 256 units); keep the two in step. It is
 drawn at eight times the size and reduced, so the edges are smooth and the corners transparent.
-The files are committed (assets/icons/); run this only when the drawing changes:
+The files are committed (assets/icons/: logo-<size>.png and the Windows icon logo.ico); run this
+only when the drawing changes:
 
     python packaging/make_icons.py
 """
@@ -51,9 +52,18 @@ def draw(size: int) -> Image.Image:
 def main() -> None:
     out = Path(__file__).resolve().parent.parent / "assets" / "icons"
     out.mkdir(parents=True, exist_ok=True)
-    for size in SIZES:
-        draw(size).save(out / f"logo-{size}.png", optimize=True)
+    images = {size: draw(size) for size in SIZES}
+    for size, image in images.items():
+        image.save(out / f"logo-{size}.png", optimize=True)
         print(f"logo-{size}.png")
+    # the Windows icon holds every size, each drawn on its own (not one size scaled down)
+    largest = images[max(SIZES)]
+    largest.save(
+        out / "logo.ico",
+        sizes=[(size, size) for size in SIZES],
+        append_images=[images[size] for size in SIZES if size != max(SIZES)],
+    )
+    print("logo.ico")
 
 
 if __name__ == "__main__":

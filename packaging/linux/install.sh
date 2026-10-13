@@ -3,7 +3,8 @@
 #
 # Per-user install of System Budget Studio from the extracted bundle folder. No administrator
 # rights, no network. Installs to $HOME/.local/opt/system-budget-studio by default, links
-# `system-budget-studio` and `budget` into $HOME/.local/bin, and adds an application-menu entry.
+# `system-budget-studio` and `budget` into $HOME/.local/bin, and adds an application-menu entry
+# with the program icon.
 # An existing command of yours with one of these names is not replaced unless you pass --force.
 # Everything it creates is recorded in <prefix>/install-manifest.txt, which uninstall.sh uses.
 set -eu
@@ -91,6 +92,21 @@ if [ "$desktop" = 1 ]; then
     entry="$appdir/system-budget-studio.desktop"
     # Desktop Entry rules: a quoted Exec argument escapes " ` $ and \ with a backslash, the
     # string value then doubles every backslash, and a literal % is written %%.
+    # The icon: the PNG files of the bundle go into the user's icon theme, where menus and
+    # task bars look for `Icon=system-budget-studio`; each is recorded in the manifest.
+    datadir="${XDG_DATA_HOME:-$HOME/.local/share}"
+    has_icon=0
+    for png in "$src"/_internal/budget_core/assets/icons/logo-*.png; do
+        [ -f "$png" ] || continue
+        size="${png##*/logo-}"
+        size="${size%.png}"
+        case "$size" in ''|*[!0-9]*) continue ;; esac
+        icon_target="$datadir/icons/hicolor/${size}x${size}/apps/system-budget-studio.png"
+        mkdir -p "$(dirname "$icon_target")"
+        cp "$png" "$icon_target"
+        echo "file $icon_target" >> "$manifest"
+        has_icon=1
+    done
     quoted="$(printf '%s' "$prefix/system-budget-studio" \
         | sed -e 's/\\/\\\\\\\\/g' -e 's/["`$]/\\\\&/g' -e 's/%/%%/g')"
     {
@@ -101,6 +117,7 @@ if [ "$desktop" = 1 ]; then
         printf 'Exec="%s" %%f\n' "$quoted"  # printf: echo would interpret the backslashes
         echo "Terminal=false"
         echo "Categories=Science;Engineering;"
+        if [ "$has_icon" = 1 ]; then echo "Icon=system-budget-studio"; fi
     } > "$entry"
     echo "file $entry" >> "$manifest"
 fi
