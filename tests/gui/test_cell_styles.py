@@ -80,9 +80,12 @@ def has_pixel_near(image: QImage, colour: str, *, tolerance: int) -> bool:
 
 
 def test_a_plain_number_has_no_tint(qtbot) -> None:  # type: ignore[no-untyped-def]
-    colours = pixels(render(qtbot, "1.250", None))
+    image = render(qtbot, "1.250", None)
+    # A pixel in the corner of the cell, where no text or icon is. (Anti-aliased text can blend
+    # into the exact colour of a tint, so looking for the colour anywhere in the image is unsafe.)
+    corner = image.pixelColor(8, 8).name()
     for status in Status:
-        assert LIGHT.status(status).bg not in colours
+        assert LIGHT.status(status).bg != corner
 
 
 def test_n_a_does_not_look_like_zero_or_like_an_empty_cell(qtbot) -> None:  # type: ignore[no-untyped-def]
