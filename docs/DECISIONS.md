@@ -20,7 +20,7 @@ One line each: decision, rationale.
 | D-014 | *Superseded by D-068.* GUI plots: pyqtgraph. Report figures: Matplotlib (Agg backend, SVG/PNG). | Performance for 600k-point series vs. report quality. |
 | D-015 | Project layout: `project.yaml`, `units/`, `modes/`, `scenarios/`, `ground_stations/`, `links/`, `config/` (each with JSON Schema), `results/` (git-ignored by default). | Constraint 12: parallel team work, clean diffs. |
 | D-016 | Results: summary as JSON, time series as CSV with fixed float format and sorted keys. No HDF5/Parquet. | Byte-identical output (constraint 14), no binary deps. |
-| D-017 | Repo visibility is verified private before any push beyond docs; example projects use invented data only. | Constraints 10, 11. |
+| D-017 | Repo visibility is verified private before any push beyond docs; example projects use invented data only. **Superseded in its first half by D-140** (the repository is public by the owner's decision); the second half stands. | Constraints 10, 11. |
 | D-018 | Repo stayed **public** during M0 at the owner's explicit instruction ("Proceed while public"); M0 contains no project data. Owner to make it private before real data or examples with sensitive-looking values are added. | Spec step 2 asked to stop; owner answered. |
 | D-019 | `main` did not exist (default branch was the working branch); `main` was created from the docs commit, owner to set it as default and protect it. M0 goes in by PR from `claude/blissful-maxwell-46xhwj`. | A PR cannot target its own head branch. |
 | D-020 | Build backend hatchling; runtime dependency in M0 is only `PySide6-Essentials` (no QtNetwork use; `PySide6.QtNetwork` excluded in the PyInstaller spec). | Smaller bundle, no networking stack. |

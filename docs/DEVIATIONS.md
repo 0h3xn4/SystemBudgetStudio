@@ -2,7 +2,7 @@
 
 Each entry: what is simplified, why, expected error, and the milestone that may remove it.
 
-_None yet. Planned (to be confirmed when implemented):_
+_Each entry names the milestone or audit round that introduced it; "implemented" marks the ones that were planned before they were built. DV-L2 is confirmed by the owner (D-141)._
 
 - **DV-P1 (M3):** conical/cylindrical shadow model only; no Earth oblateness or atmospheric refraction in eclipse timing.
 - **DV-P2 (M4, implemented):** the array cell temperature is one configured constant for the whole array and scenario, not a thermal model and not per mode or phase; expected error grows with the temperature swing between sunlight and eclipse. M4b may later supply temperatures.

@@ -61,8 +61,8 @@ Severity: **high** = a newcomer is blocked or misled; **medium** = wrong or miss
 | B11 | — | GUI shortcuts (Ctrl+N, Ctrl+O, Ctrl+S, F5, Ctrl+M, Ctrl+E, Ctrl+Shift+E, F1) are not listed anywhere together. | low | In `docs/tips.md` and the manual. | fixed |
 | B12 | repository | No screenshot anywhere. | medium | Two screenshots of the real window, saved under `docs/images/`. | fixed (screenshots from Linux/offscreen; owner may replace) |
 | B13 | `docs/SPEC.md`, `README.md` | Unit-data import from CSV/XLSX and an expert mode are in the spec but not built (D-099). | low | Already recorded as deferred; the README feature list does not claim them. | fixed |
-| B14 | `README.md` | No licence statement. By decision (SPEC, open decisions) there is no LICENSE file: internal use. | low | State this in the README; flag in "Decisions needed". | fixed (stated; the licence decision is the owner's) |
-| B15 | repository | There is no release and no tag yet, so the installers described in guide ch. 12 cannot be downloaded. | medium | Getting-started installs from source and says installers come with the first release. | fixed (documented as source install for now) |
+| B14 | `README.md` | No licence statement. By decision (SPEC, open decisions) there is no LICENSE file: internal use. | low | State this in the README; flag in "Decisions needed". | fixed (stated), then superseded: MIT licence and a `LICENSE` file (D-140) |
+| B15 | repository | There is no release and no tag yet, so the installers described in guide ch. 12 cannot be downloaded. | medium | Getting-started installs from source and says installers come with the first release. | fixed (documented as source install), then superseded: version 1.0.0 is released and the installers are on the Releases page (D-143, D-144) |
 
 ### C. Links and images
 
@@ -129,11 +129,11 @@ Severity: **high** = a newcomer is blocked or misled; **medium** = wrong or miss
 
 ## Decisions needed from the owner
 
-1. **Repository visibility.** The GitHub API reports the repository as **public**. `docs/SPEC.md` says to stop and ask in that case (project data may be export-controlled), and `docs/BRANCH_PROTECTION.md` lists making it private. The examples contain invented data only. This documentation PR does not change visibility.
-2. **Licence.** The spec says "internal only; no LICENSE file". The README says so. If the repository is to stay public, a licence decision is needed.
+1. **Repository visibility.** The GitHub API reports the repository as **public**. `docs/SPEC.md` says to stop and ask in that case (project data may be export-controlled), and `docs/BRANCH_PROTECTION.md` lists making it private. The examples contain invented data only. This documentation PR does not change visibility. **Decided later:** the repository stays public (D-140).
+2. **Licence.** The spec says "internal only; no LICENSE file". The README says so. **Decided later:** MIT, with a `LICENSE` file (D-140).
 3. **Integration with the other tools** (Harness Design Studio, Requirements Studio, AIT Logbook, ICD Studio). Only SpaceMissionStudio has an importer (an interim CSV format, D-055, waiting for real sample files). For the others, `docs/tips.md` describes only what exists today: the CSV, JSON and XLSX exports any tool can read. No import or export is documented that the code does not have. Say which exchanges you want built.
 4. **Screenshots.** Generated from the real window with Qt's offscreen platform, on Linux. Replace them with screenshots from Windows if you prefer.
-5. **Installers.** No release exists, so the documents say "from source" for now.
+5. **Installers.** No release existed when this audit was written, so the documents said "from source". **Since then:** version 1.0.0 is released and the documents point to the Releases page (D-143, D-144).
 
 ## Changes to the README (not a fork)
 

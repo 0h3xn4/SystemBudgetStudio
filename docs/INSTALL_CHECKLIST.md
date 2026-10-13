@@ -30,7 +30,7 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 ## Licences and integrity (all platforms)
 
 - [ ] The program folder contains `licences/`, `licences.md` and `sbom.cdx.json`; the SBOM lists only the tool's runtime packages (about 21), no test or build tools. (CI: `packaging/check_bundle.py`.)
-- [ ] The checksum of each download matches `SHA256SUMS.txt`. (Manual.)
+- [ ] The checksum of each download matches the list in `SHA256SUMS-windows.txt` (Windows files) or `SHA256SUMS-linux.txt` (Linux file) on the Releases page. (Manual.)
 - [ ] `system-budget-studio --smoke` exits with success on a machine with a display and, with `QT_QPA_PLATFORM=offscreen`, without one. (CI: all three platforms.)
 
 ## Sign-off
