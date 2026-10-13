@@ -58,9 +58,25 @@ def pixels(image: QImage) -> set[str]:
 @pytest.mark.parametrize("status", list(Status))
 def test_a_state_paints_its_tint_and_its_text_colour(qtbot, status: Status) -> None:  # type: ignore[no-untyped-def]
     style = LIGHT.status(status)
-    colours = pixels(render(qtbot, "1.0", status))
-    assert style.bg in colours  # the tint behind the cell
-    assert style.fg in colours or QColor(style.fg).name() in colours  # text, icon, border
+    image = render(qtbot, "1.0", status)
+    assert style.bg in pixels(image)  # the tint behind the cell
+    # Text and icons are anti-aliased (and differ by platform), so the exact foreground colour
+    # need not occur: a pixel close to it must, and it must be far from the tint.
+    assert has_pixel_near(image, style.fg, tolerance=24)
+
+
+def has_pixel_near(image: QImage, colour: str, *, tolerance: int) -> bool:
+    want = QColor(colour)
+    for x in range(image.width()):
+        for y in range(image.height()):
+            got = image.pixelColor(x, y)
+            if (
+                abs(got.red() - want.red()) <= tolerance
+                and abs(got.green() - want.green()) <= tolerance
+                and abs(got.blue() - want.blue()) <= tolerance
+            ):
+                return True
+    return False
 
 
 def test_a_plain_number_has_no_tint(qtbot) -> None:  # type: ignore[no-untyped-def]
