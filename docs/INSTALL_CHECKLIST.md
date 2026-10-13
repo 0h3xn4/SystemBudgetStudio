@@ -27,10 +27,22 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 - [ ] The same bundle installs and passes the self-test. (CI: ubuntu-latest, no sudo for the install.)
 - [ ] The window starts and the guided wizard completes. (Manual.)
 
+## Ubuntu or Debian, with the .deb (administrator)
+
+- [ ] `sudo apt install ./system-budget-studio_<version>-1_amd64.deb` installs the package and the libraries it needs; `budget --version` and `budget self-test` pass. (CI: Ubuntu 22.04 and 24.04 and Debian 12 containers, as root.)
+- [ ] The menu entry *System Budget Studio* is there with the logo as its icon; the window starts from it and shows the logo in the title bar and the task bar. (Manual; CI starts the window on a virtual X server.)
+- [ ] `sudo apt remove system-budget-studio` takes away `/opt/system-budget-studio`, the two links in `/usr/bin`, the menu entry and the icons; your project folders are untouched. (CI.)
+
+## RHEL or Rocky 8 or 9, with the .rpm (administrator)
+
+- [ ] `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` installs the package and the libraries it needs; `budget --version` and `budget self-test` pass. (CI: rockylinux:8 and :9 containers, as root.)
+- [ ] The menu entry is there with the logo, and the window starts from it. (Manual; CI starts the window on a virtual X server.)
+- [ ] `sudo dnf remove system-budget-studio` takes away everything the package installed. (CI.)
+
 ## Licences and integrity (all platforms)
 
 - [ ] The program folder contains `licences/`, `licences.md` and `sbom.cdx.json`; the SBOM lists only the tool's runtime packages (about 21), no test or build tools. (CI: `packaging/check_bundle.py`.)
-- [ ] The checksum of each download matches the list in `SHA256SUMS-windows.txt` (Windows files) or `SHA256SUMS-linux.txt` (Linux file) on the Releases page. (Manual.)
+- [ ] The checksum of each download matches the list in `SHA256SUMS-windows.txt` (Windows files) or `SHA256SUMS-linux.txt` (the tarball, the `.deb` and the `.rpm`) on the Releases page. (Manual.)
 - [ ] `system-budget-studio --smoke` exits with success on a machine with a display and, with `QT_QPA_PLATFORM=offscreen`, without one. (CI: all three platforms.)
 
 ## Sign-off

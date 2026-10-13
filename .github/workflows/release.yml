@@ -1,7 +1,8 @@
 name: Installers
 
 # Builds the Linux bundle on Rocky Linux 8 and the Windows installer, installs each as an ordinary
-# user and uninstalls it again. Runs on tags (release artefacts) and on pull requests that touch
+# user and uninstalls it again, and makes the .deb and .rpm packages of the Linux bundle and installs
+# and removes them on clean Ubuntu, Debian and Rocky containers. Runs on tags (release artefacts) and on pull requests that touch
 # the packaging, so installer changes are verified before they are merged.
 on:
   push:
@@ -19,7 +20,7 @@ permissions:
 
 jobs:
   linux:
-    name: Linux (built on Rocky 8, tested on Rocky 8 and Ubuntu)
+    name: Linux (built on Rocky 8; tarball, .deb and .rpm tested on Rocky, Ubuntu and Debian)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -46,11 +47,28 @@ jobs:
           python3 packaging/check_bundle.py "$HOME/.local/opt/system-budget-studio"
           "$HOME/.local/opt/system-budget-studio/uninstall.sh"
           test ! -e "$HOME/.local/opt/system-budget-studio"
+      - name: Install, check and remove the .deb and the .rpm on clean systems (root, containers)
+        run: |
+          set -e
+          for image in ubuntu:22.04 ubuntu:24.04 debian:12; do
+            echo "::group::.deb on $image"
+            docker run --rm -v "$PWD":/src -w /src "$image" \
+              sh packaging/linux/test_package.sh deb dist/system-budget-studio_*_amd64.deb
+            echo "::endgroup::"
+          done
+          for image in rockylinux:8 rockylinux:9; do
+            echo "::group::.rpm on $image"
+            docker run --rm -v "$PWD":/src -w /src "$image" \
+              sh packaging/linux/test_package.sh rpm dist/system-budget-studio-*.x86_64.rpm
+            echo "::endgroup::"
+          done
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: system-budget-studio-Linux
           path: |
             dist/*.tar.gz
+            dist/*.deb
+            dist/*.rpm
             dist/SHA256SUMS.txt
             dist/sbom.cdx.json
             dist/licences.md

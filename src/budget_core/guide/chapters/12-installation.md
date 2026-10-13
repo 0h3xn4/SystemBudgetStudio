@@ -26,6 +26,17 @@ The window needs the usual desktop libraries (EGL, OpenGL, xkbcommon, fontconfig
 
 To uninstall run `~/.local/opt/system-budget-studio/uninstall.sh`. It removes the program, the links, the menu entry and its icons that the installer created and nothing else.
 
+## Linux packages (.deb and .rpm)
+
+For a machine that several people use, or that an administrator sets up, the release also has a Debian package and an RPM package. They install for all users and need administrator rights (`sudo`); the tarball above does not.
+
+```
+sudo apt install ./system-budget-studio_<version>-1_amd64.deb      # Ubuntu 22.04 or newer, Debian 12
+sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm     # RHEL or Rocky 8 or 9
+```
+
+The package manager also installs the system libraries the window needs. The program goes to `/opt/system-budget-studio`; `system-budget-studio` and `budget` are linked into `/usr/bin`; the menu entry and the icons are installed system-wide. To remove it use `sudo apt remove system-budget-studio` or `sudo dnf remove system-budget-studio`. A newer package of the same name replaces the old one. The packages are not signed: check the download against `SHA256SUMS-linux.txt` first. Do not install a package and the tarball in the same account: they are two separate copies.
+
 ## Your files
 
 Projects, reports and exports live in folders you choose. Neither installing, upgrading nor uninstalling touches them. The tool keeps no settings, caches, logs or crash dumps outside your project folders.

@@ -82,7 +82,10 @@ The installers are built by CI ([`release.yml`](../../.github/workflows/release.
 ```bash
 pip install -e ".[dev]"
 packaging/build.sh                        # one-folder bundle in dist/, SBOM, licence report, bundle check
-packaging/linux/build_in_container.sh     # the Linux release, inside rockylinux:8 (old glibc)
+packaging/linux/build_in_container.sh     # the Linux release, inside rockylinux:8 (old glibc): tarball, .deb, .rpm
+python packaging/linux/make_deb.py dist/system-budget-studio --out dist   # only the .deb, from a built bundle
+packaging/linux/make_rpm.sh dist/system-budget-studio dist                # only the .rpm (needs rpmbuild)
+sudo packaging/linux/test_package.sh deb dist/*.deb                       # install, check, remove (use a container)
 ```
 
 `packaging/check_bundle.py` fails the build if development code is bundled, or licence material is missing. `system-budget-studio --smoke` creates the window and exits; CI runs it on every platform. See the decisions D-088, D-089, D-095 and D-096.
@@ -93,7 +96,7 @@ packaging/linux/build_in_container.sh     # the Linux release, inside rockylinux
 2. If dependencies changed run `packaging/lock.sh` and `python packaging/licence_check.py --markdown docs/LICENCES.md`.
 3. Update [CHANGELOG.md](../../CHANGELOG.md): move *Unreleased* under the new version with the date.
 4. Merge to `main` through a pull request with CI green.
-5. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z` (or create the release on GitHub with a new tag `vX.Y.Z` on `main`). The **Installers** workflow runs: it refuses a tag that differs from the `pyproject.toml` version, builds the Linux bundle on Rocky 8 and the Windows installer and portable zip, installs and uninstalls each as an ordinary user, and uploads the artefacts: the installers, `SHA256SUMS.txt`, `sbom.cdx.json` and `licences.md`. Its last job (`publish`, D-144) then checks every file against the checksum lists and attaches the files to the release of the tag with `packaging/attach_release.sh`; a release that does not exist yet is created as a **draft**, so nothing becomes public by itself.
+5. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z` (or create the release on GitHub with a new tag `vX.Y.Z` on `main`). The **Installers** workflow runs: it refuses a tag that differs from the `pyproject.toml` version, builds the Linux bundle on Rocky 8 and the Windows installer and portable zip, installs and uninstalls each as an ordinary user, makes the `.deb` and the `.rpm` of the Linux bundle and installs and removes them on clean Ubuntu 22.04 and 24.04, Debian 12 and Rocky 8 and 9 containers (`packaging/linux/test_package.sh`, with the window started on a virtual X server), and uploads the artefacts: the installers, the `.deb` and `.rpm`, `SHA256SUMS.txt`, `sbom.cdx.json` and `licences.md`. Its last job (`publish`, D-144) then checks every file against the checksum lists and attaches the files to the release of the tag with `packaging/attach_release.sh`; a release that does not exist yet is created as a **draft**, so nothing becomes public by itself.
 6. Download the artefacts and carry out the manual steps of the [clean-machine checklist](../INSTALL_CHECKLIST.md) on a clean Windows and a clean Rocky 8 machine.
 7. Publish: write the description of the release and press **Publish** (the files are attached already). To attach the files of an earlier run to a release, start **Actions > Attach release files** with the run id and the tag.
 

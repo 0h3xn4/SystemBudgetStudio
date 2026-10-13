@@ -4,10 +4,11 @@
 #   packaging/attach_release.sh <run-id> <tag>
 #
 # Needs the GitHub CLI (`gh`) with GH_TOKEN set (contents: write, actions: read). It downloads the
-# two artefacts of the run, checks every file against the checksum lists the run made, gives the
-# two checksum lists distinct names, and uploads the result to the release of the tag. A release
-# that does not exist yet is created as a DRAFT, so nothing becomes public by itself. Files
-# already attached are replaced (--clobber), so the script can be run again.
+# two artefacts of the run (the Windows installer and zip; the Linux tarball, .deb and .rpm),
+# checks every file against the checksum lists the run made, gives the two checksum lists distinct
+# names, and uploads the result to the release of the tag. A release that does not exist yet is
+# created as a DRAFT, so nothing becomes public by itself. Files already attached are replaced
+# (--clobber), so the script can be run again.
 set -euo pipefail
 
 if [ $# -ne 2 ]; then
@@ -29,7 +30,7 @@ done
 
 stage="$work/upload"
 mkdir "$stage"
-cp "$win"/*-setup.exe "$win"/*-portable.zip "$lin"/*.tar.gz "$stage"/
+cp "$win"/*-setup.exe "$win"/*-portable.zip "$lin"/*.tar.gz "$lin"/*.deb "$lin"/*.rpm "$stage"/
 cp "$win/SHA256SUMS.txt" "$stage/SHA256SUMS-windows.txt"
 cp "$lin/SHA256SUMS.txt" "$stage/SHA256SUMS-linux.txt"
 cp "$lin/sbom.cdx.json" "$lin/licences.md" "$stage"/

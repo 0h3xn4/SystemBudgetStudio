@@ -50,6 +50,8 @@ def files(tmp_path: Path) -> Path:
         ("system-budget-studio-1.0.0-windows-x64-setup.exe", win),
         ("system-budget-studio-1.0.0-windows-x64-portable.zip", win),
         ("system-budget-studio-1.0.0-linux-x86_64.tar.gz", lin),
+        ("system-budget-studio_1.0.0-1_amd64.deb", lin),
+        ("system-budget-studio-1.0.0-1.x86_64.rpm", lin),
     ):
         (folder / name).write_bytes(name.encode())
     for folder in (win, lin):
@@ -101,9 +103,11 @@ def test_files_are_checked_renamed_and_uploaded_to_a_new_draft_release(
         "SHA256SUMS-windows.txt",
         "licences.md",
         "sbom.cdx.json",
+        "system-budget-studio-1.0.0-1.x86_64.rpm",
         "system-budget-studio-1.0.0-linux-x86_64.tar.gz",
         "system-budget-studio-1.0.0-windows-x64-portable.zip",
         "system-budget-studio-1.0.0-windows-x64-setup.exe",
+        "system-budget-studio_1.0.0-1_amd64.deb",
     ]
 
 
