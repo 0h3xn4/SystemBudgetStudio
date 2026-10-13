@@ -88,7 +88,7 @@ def test_a_limit_finding_writes_the_reports_but_exits_one(
             *FIXED,
         ]
     )
-    text = capsys.readouterr().out
+    text = capsys.readouterr().err
     assert code == 1 and "THERMAL_MARGIN_INSUFFICIENT" in text and "units/radio.yaml" in text
     assert (tmp_path / "out" / "thermal_static.json").exists()
 

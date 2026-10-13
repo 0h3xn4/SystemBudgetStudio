@@ -61,7 +61,7 @@ def test_exceeded_limit_writes_reports_but_exits_one(
     out = tmp_path / "out"
     assert main(["run", str(root), "--budget", "mass", "--out", str(out), *FIXED]) == 1
     assert (out / "mass_static.xlsx").exists()
-    text = capsys.readouterr().out
+    text = capsys.readouterr().err
     assert "MASS_LIMIT_EXCEEDED" in text and "mission phase number 1" in text
     data = json.loads((out / "mass_static.json").read_text(encoding="utf-8"))
     assert data["phases"][0]["limits"][0]["status"] == "exceeded"

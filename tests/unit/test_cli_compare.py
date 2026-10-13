@@ -90,7 +90,7 @@ def test_single_project_without_two_scenarios_is_refused(
 ) -> None:
     code = main(["compare", str(EXAMPLES / "cubesat_3u_eps")])
     assert code == 2
-    assert "second project" in capsys.readouterr().out
+    assert "second project" in capsys.readouterr().err
 
 
 def test_invalid_project_stops_with_plain_message(
@@ -101,7 +101,7 @@ def test_invalid_project_stops_with_plain_message(
     code = main(["compare", str(a), str(b), "--out", str(tmp_path / "out")])
     assert code == 1
     assert not (tmp_path / "out").exists()
-    assert "nothing was written" in capsys.readouterr().out
+    assert "nothing was written" in capsys.readouterr().err
 
 
 def test_unknown_scenario_is_reported(
@@ -110,7 +110,7 @@ def test_unknown_scenario_is_reported(
     a, b = pair
     code = main(["compare", str(a), str(b), "--scenario", "nope", "--budget", "timeline"])
     assert code == 1
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert "scenario" in out.lower()
 
 

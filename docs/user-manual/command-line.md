@@ -2,7 +2,7 @@
 
 This page lists every `budget` command with its options, the exit codes, and the environment variables that matter. `budget <command> --help` prints the same options.
 
-**Contents:** [Commands](#commands) · [Common options](#common-options) · [Exit codes](#exit-codes) · [Environment variables](#environment-variables) · [Use in scripts and CI](#how-do-i-use-it-in-a-script-or-in-ci)
+**Contents:** [Commands](#commands) · [Common options](#common-options) · [Exit codes](#exit-codes) · [Standard output and standard error](#standard-output-and-standard-error) · [Environment variables](#environment-variables) · [Use in scripts and CI](#how-do-i-use-it-in-a-script-or-in-ci)
 
 ## Commands
 
@@ -44,6 +44,15 @@ This page lists every `budget` command with its options, the exit codes, and the
 
 Note that finding a *result* problem (a limit exceeded) is exit code 1 even though every file was written.
 
+## Standard output and standard error
+
+| Stream | What goes there |
+|---|---|
+| Standard output | What the command produced: `Wrote ...` lines, summaries, warnings that need a person, the `INCOMPLETE` banner, the one-line summary (`N errors, M warnings.`), the table of a unit import, `validate`'s list of problems, `validate --format json` |
+| Standard error | Why a command could not do its work: the error problems that make a run fail, `N errors; nothing was written.`, a project that cannot be loaded, a command called wrongly, a file that could not be written, `Internal error (...)`, failed self-test checks |
+
+`budget validate` is the one exception: its list of problems is its result, so errors and warnings both go to standard output (`budget validate project > problems.txt` keeps them). The exit codes did not change. Both streams are in the same order on a terminal and with `2>&1`.
+
 ## Environment variables
 
 | Variable | Used for |
@@ -60,6 +69,6 @@ budget run project --budget power --report csv --report json --out out
 budget power-timeline project --out out || echo "violations found"   # exit code 1
 ```
 
-`budget validate --format json` prints the problems as JSON for other tools. The tool needs no network and writes only into the output folder you name. The [offline test](../developer/README.md#the-offline-test) keeps that true.
+`budget validate --format json` prints the problems as JSON for other tools. In a script, read the results from standard output and the reasons for a failure from standard error: `budget run project --out out > log.txt 2> errors.txt`. The tool needs no network and writes only into the output folder you name. The [offline test](../developer/README.md#the-offline-test) keeps that true.
 
 Next: [Tips](../tips.md) · [Troubleshooting](../troubleshooting.md).

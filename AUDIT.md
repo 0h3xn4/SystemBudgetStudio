@@ -17,7 +17,7 @@ Every fix has a regression test that fails on the old code (about 640 new tests;
 | PWR-1 (high) | Fixed | #20 |
 | PWR-2 to PWR-12 | Fixed (PWR-10 in #20 for the wording and in the release-preparation PR for the validation warning `SCENARIO_PHASE_NO_DOD`) | #20 |
 | RC-1, RC-3, RC-16, RC-22, RC-23, LD-1, LD-2 | Fixed | #18 |
-| RC-15 | **Partly.** A non-UTF-8 console no longer turns a finished run into "Internal error"; error text still goes to standard output, not standard error (many tests and documents rely on it). | #18 |
+| RC-15 | **Fixed.** A non-UTF-8 console no longer turns a finished run into "Internal error" (#18); error text now goes to standard error and results stay on standard output, with `budget validate` as the documented exception (D-145). | #18, then the standard-error PR |
 | RC-2, RC-4 to RC-6, RC-8 to RC-14, RC-17 to RC-21, RC-24, RC-25 | Fixed | #19 |
 | RC-7 | Fixed | #20 |
 | TL-2, TL-3, TL-16 | Fixed | #19 |
@@ -313,7 +313,7 @@ What I am **not certain** about:
 2. **The window on a real display.** The window tests run offscreen. A plot of a week at 1 s resolution repaints slowly on hover (GUI-28); opening a project of 200 units loads in a background thread (GUI-14, D-142) but still pauses the window for up to about half a second while the tables are shown.
 3. **Real data.** The example projects hold invented data and the tool ships no standards values, as the spec requires. The numerical results are only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
 4. **Short eclipses** (under about 20 s) can still be missed (DV-E4); passes of any length are found.
-5. **Error text on standard output** (RC-15): scripts that separate the two streams will see errors on standard output.
+5. ~~**Error text on standard output** (RC-15)~~ Fixed after the release (D-145): errors go to standard error.
 
 ## Steps that stay with you
 
