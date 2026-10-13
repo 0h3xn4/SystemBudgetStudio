@@ -30,7 +30,7 @@ Every fix has a regression test that fails on the old code (about 640 new tests;
 | MI-5 to MI-9, MI-16 | Fixed | #20 (MI-8 also #18) |
 | MI-18 | **Deferred.** Frozen models are shallow (a list inside can be changed in code). No user path reaches it; nothing in the tool relies on it. | |
 | PK-1 (package description) | Fixed | release preparation |
-| Eclipses shorter than 20 s | **Known limit** (DV-E4). Passes of any length are found; a very short eclipse could still be missed. | |
+| Eclipses shorter than 20 s | **Fixed after the release** (D-146, DV-E4). Passes and, now, eclipses and umbras of any length are found; the regression test uses an orbit with an 11.6 s eclipse that the 20 s grid missed at some phases. | the short-eclipse PR |
 
 ### Your decisions of 2026-10-12
 
@@ -312,7 +312,7 @@ What I am **not certain** about:
 1. **Excel and Windows by hand.** I could not open the XLSX files in Excel (sheet-name and cell-length rules follow the documented limits), and nobody has done the [clean-machine checklist](docs/INSTALL_CHECKLIST.md) on a real Windows or Rocky 8 machine. CI builds, installs, self-tests and uninstalls both installers; it cannot look at the window.
 2. **The window on a real display.** The window tests run offscreen. A plot of a week at 1 s resolution repaints slowly on hover (GUI-28); opening a project of 200 units loads in a background thread (GUI-14, D-142) but still pauses the window for up to about half a second while the tables are shown.
 3. **Real data.** The example projects hold invented data and the tool ships no standards values, as the spec requires. The numerical results are only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
-4. **Short eclipses** (under about 20 s) can still be missed (DV-E4); passes of any length are found.
+4. ~~**Short eclipses** (under about 20 s) can still be missed (DV-E4)~~ Fixed after the release (D-146).
 5. ~~**Error text on standard output** (RC-15)~~ Fixed after the release (D-145): errors go to standard error.
 
 ## Steps that stay with you

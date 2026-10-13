@@ -31,7 +31,7 @@ Timeline layering (D-056): default mode over the whole scenario, then each rule 
 
 ## Conventions
 
-Inertial positions are SGP4 TEME in metres; time in seconds from the scenario start; the Sun uses the Astronomical Almanac low-precision formulae; Earth rotation uses GMST only (DEVIATIONS DV-E1). Passes and eclipses are detected on a fixed 20 s grid whatever `step_s`; a pass that rises above the minimum elevation between two samples is found from the local maximum of the elevation, and edges are refined by bisection to about 1 ms, so passes and eclipse edges do not depend on `step_s` (an eclipse shorter than 20 s could still be missed, DEVIATIONS DV-E4). A scenario that needs more memory than is available is refused with `SCENARIO_TOO_LARGE`.
+Inertial positions are SGP4 TEME in metres; time in seconds from the scenario start; the Sun uses the Astronomical Almanac low-precision formulae; Earth rotation uses GMST only (DEVIATIONS DV-E1). Passes and eclipses are detected on a fixed 20 s grid whatever `step_s`; a pass that rises above the minimum elevation between two samples is found from the local maximum of the elevation, and edges are refined by bisection to about 1 ms, so passes and eclipse edges do not depend on `step_s` (an eclipse or umbra shorter than 20 s is found from the maximum of how far inside the shadow the satellite is, D-146 and DEVIATIONS DV-E4). A scenario that needs more memory than is available is refused with `SCENARIO_TOO_LARGE`.
 
 ## Interim SpaceMissionStudio format (decision D-055)
 

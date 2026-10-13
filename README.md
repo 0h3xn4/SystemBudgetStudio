@@ -98,7 +98,7 @@ Known limits, stated plainly:
 
 - The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 8 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
-- An eclipse shorter than about 20 s can be missed ([DV-E4](docs/DEVIATIONS.md)); hovering over a plot of a week at 1 s resolution repaints slowly.
+- Hovering over a plot of a week at 1 s resolution repaints slowly.
 - The XLSX files were not opened in Excel.
 
 ## Related tools
