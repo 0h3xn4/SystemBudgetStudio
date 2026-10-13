@@ -4,6 +4,10 @@ Draws a `PlotSpec` (the same description the report renderer uses). The wheel zo
 pointer, dragging pans, double-click shows everything, hovering moves a cursor with a readout of
 every series, a click pins a second cursor and the readout then shows the differences, and
 Escape or a right click unpins.
+
+The plot itself (panels, shading, series) is drawn into a picture that is kept until the data, the
+view, the size or the shading change; moving the cursor draws only the cursor lines and the
+readout on top of it, so hovering over a plot of 600,000 points per series stays quick (D-147).
 """
 
 from __future__ import annotations
@@ -20,7 +24,9 @@ from PySide6.QtGui import (
     QPainter,
     QPaintEvent,
     QPen,
+    QPixmap,
     QPolygonF,
+    QResizeEvent,
     QWheelEvent,
 )
 from PySide6.QtWidgets import QSizePolicy, QWidget
@@ -71,6 +77,9 @@ class PlotWidget(QWidget):
         self._moved = False
         self._info: Callable[[float], str] | None = None
         self._shading = True
+        self._layer: QPixmap | None = None  # the plot without the cursors, see paintEvent
+        self._layer_key: tuple[object, ...] | None = None
+        self._ranges: dict[int, tuple[float, float]] = {}  # y range of a panel: data only
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -79,6 +88,8 @@ class PlotWidget(QWidget):
     # ---- data --------------------------------------------------------------------------------
     def set_spec(self, spec: PlotSpec | None) -> None:
         self._spec = spec
+        self._ranges = {}
+        self._layer = None
         if spec is not None:
             self._view = (spec.x_min_s, spec.x_max_s)
             self.setMinimumHeight(TOP + BOTTOM + len(spec.panels) * (MIN_PANEL_HEIGHT + GAP) - GAP)
@@ -91,6 +102,7 @@ class PlotWidget(QWidget):
 
     def set_shading(self, enabled: bool) -> None:
         self._shading = enabled
+        self._layer = None
         self.update()
 
     def set_info_provider(self, provider: Callable[[float], str] | None) -> None:
@@ -109,6 +121,7 @@ class PlotWidget(QWidget):
         width = min(max(end - start, 1.0), hi - lo)
         start = min(max(start, lo), hi - width)
         self._view = (start, start + width)
+        self._layer = None
         self.update()
         self.view_changed.emit()
 
@@ -197,18 +210,61 @@ class PlotWidget(QWidget):
     # ---- painting ----------------------------------------------------------------------------
     def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.fillRect(self.rect(), QColor("#ffffff"))
         spec = self._spec
         if spec is None:
+            painter.fillRect(self.rect(), QColor("#ffffff"))
             painter.setPen(QColor("#6f6f6f"))
             painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, "No results to show")
             return
+        painter.drawPixmap(0, 0, self._plot_layer(spec))
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        self._paint_cursors(painter, self._panel_rects())
+
+    def _plot_layer(self, spec: PlotSpec) -> QPixmap:
+        """The plot without the cursors, drawn again only when something it shows changed."""
+        ratio = self.devicePixelRatioF()
+        key = (
+            self.size().width(),
+            self.size().height(),
+            ratio,
+            self._view,
+            self._shading,
+            id(spec),
+        )
+        if self._layer is not None and self._layer_key == key:
+            return self._layer
+        layer = QPixmap(int(self.width() * ratio), int(self.height() * ratio))
+        layer.setDevicePixelRatio(ratio)
+        painter = QPainter(layer)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.fillRect(QRectF(0, 0, self.width(), self.height()), QColor("#ffffff"))
         rects = self._panel_rects()
         divisor, unit = time_axis(self._view[1] - self._view[0])
         for index, (panel, rect) in enumerate(zip(spec.panels, rects, strict=True)):
             self._paint_panel(painter, spec, panel, rect, index == len(rects) - 1, divisor, unit)
-        self._paint_cursors(painter, rects)
+        painter.end()
+        self._layer, self._layer_key = layer, key
+        return layer
+
+    def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802
+        self._layer = None
+        super().resizeEvent(event)
+
+    def _y_range(self, panel: Panel) -> tuple[float, float]:
+        """The y range of a panel. It depends on the data only (not on the view), so it is worked
+        out once per plot: scaling and scanning 600,000 points per series is the slow part."""
+        cached = self._ranges.get(id(panel))
+        if cached is None:
+            lo, hi = visible_range(
+                [s.y * panel.y_scale for s in panel.series]
+                + [np.array([h.y * panel.y_scale]) for h in panel.hlines],
+                None if panel.y_min is None else panel.y_min * panel.y_scale,
+                None if panel.y_max is None else panel.y_max * panel.y_scale,
+            )
+            if hi - lo <= 0.0:  # equal fixed limits would divide by zero below
+                hi = lo + 1.0
+            cached = self._ranges[id(panel)] = (lo, hi)
+        return cached
 
     def _paint_panel(
         self,
@@ -220,14 +276,7 @@ class PlotWidget(QWidget):
         divisor: float,
         unit: str,
     ) -> None:
-        lo, hi = visible_range(
-            [s.y * panel.y_scale for s in panel.series]
-            + [np.array([h.y * panel.y_scale]) for h in panel.hlines],
-            None if panel.y_min is None else panel.y_min * panel.y_scale,
-            None if panel.y_max is None else panel.y_max * panel.y_scale,
-        )
-        if hi - lo <= 0.0:  # equal fixed limits would divide by zero below
-            hi = lo + 1.0
+        lo, hi = self._y_range(panel)
 
         def sy(v: float) -> float:
             return rect.bottom() - (v - lo) / (hi - lo) * rect.height()

@@ -298,6 +298,13 @@ def _plural(n: int, word: str) -> str:
     return f"{n} {word}" + ("" if n == 1 else "s")
 
 
+def _fail(text: str) -> None:
+    """Say on standard error why a command could not do its work (D-145). Standard output is
+    flushed first so the two streams read in order on a terminal and in `2>&1`."""
+    sys.stdout.flush()
+    print(text, file=sys.stderr)
+
+
 def _validate(args: argparse.Namespace) -> int:
     result = load_project(args.project)
     problems = result.problems
@@ -325,8 +332,8 @@ def _valid_project(path: Path) -> tuple[Project | None, int]:
     errors = _count(loaded.problems, Severity.ERROR)
     if loaded.project is None or errors:
         for problem in loaded.problems:
-            print(problem.format())
-        print(f"{_plural(errors, 'error')}; nothing was written.")
+            _fail(problem.format())
+        _fail(f"{_plural(errors, 'error')}; nothing was written.")
         return None, 1
     return loaded.project, 0
 
@@ -335,7 +342,7 @@ def _units_export(args: argparse.Namespace) -> int:
     out = args.out or (args.project / "results" / "unit_power_modes.csv")
     kind = out.suffix.lower()
     if kind not in (".csv", ".xlsx"):  # checked first: no need to load a project for this
-        print("The output file must end in .csv or .xlsx.")
+        _fail("The output file must end in .csv or .xlsx.")
         return 2
     project, code = _valid_project(args.project)
     if project is None:
@@ -361,12 +368,14 @@ def _units_import(args: argparse.Namespace) -> int:
         return code
     table = read_table(args.table)
     plan = plan_import(project, table, args.table.name)
+    if not plan.ok:
+        for problem in plan.problems:
+            _fail(problem.format())
+        errors = sum(1 for p in plan.problems if p.severity is Severity.ERROR)
+        _fail(f"{_plural(errors, 'error')}; nothing was written.")
+        return 1
     for problem in plan.problems:
         print(problem.format())
-    if not plan.ok:
-        errors = sum(1 for p in plan.problems if p.severity is Severity.ERROR)
-        print(f"{_plural(errors, 'error')}; nothing was written.")
-        return 1
     if not plan.changes:
         print(f"No change: {_plural(plan.unchanged, 'power mode')} already as in the table.")
         return 0
@@ -399,8 +408,8 @@ def _load_or_fail(path: Path) -> tuple[LoadResult | None, int]:
     errors = _count(loaded.problems, Severity.ERROR)
     if loaded.project is None or errors:
         for problem in loaded.problems:
-            print(problem.format())
-        print(f"{_plural(errors, 'error')}; nothing was written.")
+            _fail(problem.format())
+        _fail(f"{_plural(errors, 'error')}; nothing was written.")
         return None, 1
     return loaded, 0
 
@@ -413,9 +422,9 @@ def _finish(problems: Sequence[Problem], outputs: Sequence[BudgetOutput], strict
     errors = [p for p in ordered if p.severity is Severity.ERROR]
     warnings = [p for p in ordered if p.severity is Severity.WARNING]
     for problem in ordered:
-        if problem.severity is Severity.ERROR or (
-            problem.severity is Severity.WARNING and problem.code not in _COUNTED_ONLY
-        ):
+        if problem.severity is Severity.ERROR:
+            _fail(problem.format())
+        elif problem.severity is Severity.WARNING and problem.code not in _COUNTED_ONLY:
             print(problem.format())
     banner = next((o.document.banner for o in outputs if o.document.banner), "")
     if banner:
@@ -430,10 +439,10 @@ def _choose_scenario(project: Project, requested: str | None) -> tuple[str | Non
         return requested, 0
     ids = sorted(project.scenarios)
     if not ids:
-        print("The project has no scenarios (scenarios/*.yaml); nothing to compute.")
+        _fail("The project has no scenarios (scenarios/*.yaml); nothing to compute.")
         return None, 1
     if len(ids) > 1:
-        print(
+        _fail(
             "The project has several scenarios; choose one with --scenario. "
             "Scenarios: " + ", ".join(ids) + "."
         )
@@ -492,7 +501,7 @@ def _scenario(args: argparse.Namespace) -> int:
     try:
         run = run_scenario(project, scenario_id)
     except ScenarioRunError as exc:
-        print(exc.problem.format())
+        _fail(exc.problem.format())
         return 1
     provenance = make_provenance(
         project, scenario=run.scenario_id, user=args.user, generated_at=args.date
@@ -520,7 +529,7 @@ def _link_passes(args: argparse.Namespace) -> int:
         return code
     project = loaded.project
     if not project.links:
-        print("The project has no links (links/*.yaml); nothing to compute.")
+        _fail("The project has no links (links/*.yaml); nothing to compute.")
         return 1
     scenario_id, code = _choose_scenario(project, args.scenario)
     if scenario_id is None:
@@ -528,7 +537,7 @@ def _link_passes(args: argparse.Namespace) -> int:
     try:
         run = run_scenario(project, scenario_id)
     except ScenarioRunError as exc:
-        print(exc.problem.format())
+        _fail(exc.problem.format())
         return 1
     static = link_static_budget(project)
     passes = link_pass_series(project, run)
@@ -571,7 +580,7 @@ def _power_timeline(args: argparse.Namespace) -> int:
     try:
         run = run_scenario(project, scenario_id)
     except ScenarioRunError as exc:
-        print(exc.problem.format())
+        _fail(exc.problem.format())
         return 1
     cases = ("bol", "eol") if args.case == "both" else (args.case,)
     result = time_domain_budget(
@@ -617,7 +626,7 @@ def _compare(args: argparse.Namespace) -> int:
     if args.other is None and (
         scenario_a is None or scenario_b is None or scenario_a == scenario_b
     ):
-        print(
+        _fail(
             "Give a second project folder, or two different scenarios "
             "(--scenario-a and --scenario-b) of the same project."
         )
@@ -628,8 +637,8 @@ def _compare(args: argparse.Namespace) -> int:
         errors = _count(loaded.problems, Severity.ERROR)
         if loaded.project is None or errors:
             for problem in loaded.problems:
-                print(problem.format())
-            print(f"{_plural(errors, 'error')}; nothing was written.")
+                _fail(problem.format())
+            _fail(f"{_plural(errors, 'error')}; nothing was written.")
             return 1
         sides.append(Side(loaded.project, scenario))
     a, b = sides
@@ -644,7 +653,7 @@ def _compare(args: argparse.Namespace) -> int:
             a, b, kinds, user=args.user, generated_at=args.date, max_rows=args.max_rows
         )
     except ScenarioRunError as exc:
-        print(exc.problem.format())
+        _fail(exc.problem.format())
         return 1
     reports = set(args.report or ["all"])
     if "all" in reports:
@@ -670,8 +679,8 @@ def _guide(args: argparse.Namespace) -> int:
         errors = _count(loaded.problems, Severity.ERROR)
         if loaded.project is None or errors:
             for problem in loaded.problems:
-                print(problem.format())
-            print(f"{_plural(errors, 'error')}; nothing was written.")
+                _fail(problem.format())
+            _fail(f"{_plural(errors, 'error')}; nothing was written.")
             return 1
         project = loaded.project
     guide = build_guide(project)
@@ -707,8 +716,11 @@ def _dispatch(
     if args.command == "self-test":
         failures = run_selftest()
         for failure in failures:
-            print(f"FAILED: {failure}")
-        print("Self-test passed." if not failures else f"{len(failures)} check(s) failed.")
+            _fail(f"FAILED: {failure}")
+        if failures:
+            _fail(f"{len(failures)} check(s) failed.")
+        else:
+            print("Self-test passed.")
         return 1 if failures else 0
     if args.command == "run":
         return _run(args)
@@ -752,16 +764,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     except BrokenPipeError:  # the reader of our output went away (for example `| head`)
         return 1
     except OutputError as exc:
-        print(str(exc))
+        _fail(str(exc))
         return 1
     except ExportRefusedError as exc:
-        print(str(exc))
+        _fail(str(exc))
         return 1
     except ProvenanceError as exc:
-        print(str(exc))
+        _fail(str(exc))
         return 2
     except OSError:
-        print(
+        _fail(
             "A file or folder could not be read or written. Check the paths and that you "
             "may use them."
         )
@@ -773,5 +785,5 @@ def main(argv: Sequence[str] | None = None) -> int:
             else "Run 'budget validate <project folder>' to check the project and report the "
             "problem."
         )
-        print(f"Internal error ({type(exc).__name__}). {advice}")
+        _fail(f"Internal error ({type(exc).__name__}). {advice}")
         return 1

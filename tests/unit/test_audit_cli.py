@@ -41,9 +41,10 @@ def test_link_passes_fails_when_a_link_closes_at_no_rate(
 ) -> None:
     dead_link(eps)
     code = main(["link-passes", str(eps), "--report", "json", *FIXED])
-    out = capsys.readouterr().out
+    captured = capsys.readouterr()
+    out = captured.out + captured.err
     assert code == 1
-    assert "LINK_NOT_CLOSED" in out
+    assert "LINK_NOT_CLOSED" in captured.err
     assert not re.search(r"(?<![1-9])0 errors", out) and re.search(r"[1-9]\d* errors?, ", out)
 
 
@@ -124,7 +125,7 @@ def test_a_bad_source_date_epoch_is_a_clear_error(
 ) -> None:
     monkeypatch.setenv("SOURCE_DATE_EPOCH", value)
     code = main(["run", str(plain), "--budget", "mass", "--report", "json", "--user", "u"])
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert code == 2
     assert "SOURCE_DATE_EPOCH" in out and "Internal error" not in out
     assert not (plain / "results").exists()
@@ -161,7 +162,7 @@ def test_export_examples_does_not_replace_existing_projects(
     mine.write_text("# my own edit\n", encoding="utf-8")
     capsys.readouterr()
     assert main(["export-examples", str(target)]) == 1
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert "--force" in out and "cubesat_3u" in out
     assert mine.read_text(encoding="utf-8") == "# my own edit\n"
 
@@ -212,7 +213,7 @@ def test_several_scenarios_without_a_choice_name_the_choices(
 ) -> None:
     shutil.copy(eps / "scenarios" / "one_day.yaml", eps / "scenarios" / "two_day.yaml")
     code = main([command, str(eps), "--out", str(eps / "o")])
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert code == 2
     assert "--scenario" in out and "one_day" in out and "two_day" in out
     assert "does not exist" not in out
@@ -225,7 +226,7 @@ def test_no_scenario_in_the_project_is_said_plainly(
     for path in (eps / "scenarios").glob("*.yaml"):
         path.unlink()
     code = main([command, str(eps), "--out", str(eps / "o")])
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert code in (1, 2)
     assert "no scenario" in out.lower() and "does not exist" not in out
 
@@ -258,7 +259,7 @@ def test_units_export_checks_the_file_type_before_loading(
     code = main(
         ["units-export", str(tmp_path / "no_such_project"), "--out", str(tmp_path / "x.txt")]
     )
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert code == 2 and ".csv or .xlsx" in out and "does not exist" not in out
 
 

@@ -203,9 +203,10 @@ def test_cli_reports_findings_and_writes_every_file(
 ) -> None:
     out = tmp_path / "out"
     code = main(["power-timeline", str(eps), "--out", str(out), *FIXED])
-    text = capsys.readouterr().out
+    captured = capsys.readouterr()
     assert code == 1  # the example's peak power is above its limit
-    assert "PEAK_POWER_EXCEEDED" in text and "BOL:" in text and "EOL:" in text
+    assert "PEAK_POWER_EXCEEDED" in captured.err and "BOL:" in captured.out
+    assert "EOL:" in captured.out
     assert sorted(p.name for p in out.iterdir()) == [
         "power_time_one_day.docx",
         "power_time_one_day.json",
@@ -309,4 +310,4 @@ def test_cli_invalid_project_writes_nothing(
     (eps / "project.yaml").unlink()
     out = tmp_path / "out"
     assert main(["power-timeline", str(eps), "--out", str(out)]) == 1
-    assert not out.exists() and "nothing was written" in capsys.readouterr().out
+    assert not out.exists() and "nothing was written" in capsys.readouterr().err

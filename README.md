@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/banner.svg" alt="System Budget Studio: power, mass, thermal and link budgets for small satellites, offline" width="960">
+</p>
+
 # System Budget Studio
 
 An offline desktop and command-line tool that computes **power, mass, thermal and radio-link budgets** for a small satellite from one spacecraft model kept in plain text files.
@@ -94,7 +98,7 @@ Known limits, stated plainly:
 
 - The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 8 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
-- An eclipse shorter than about 20 s can be missed ([DV-E4](docs/DEVIATIONS.md)); error messages go to standard output; hovering over a plot of a week at 1 s resolution repaints slowly.
+- Zooming or panning a plot of a week at 1 s resolution with many series takes a second or two (hovering is quick).
 - The XLSX files were not opened in Excel.
 
 ## Related tools

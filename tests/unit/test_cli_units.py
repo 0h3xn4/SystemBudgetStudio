@@ -54,7 +54,7 @@ def test_export_refuses_a_file_type_it_does_not_write(
     root: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     assert main(["units-export", str(root), "--out", str(tmp_path / "t.ods")]) == 2
-    assert ".csv" in capsys.readouterr().out
+    assert ".csv" in capsys.readouterr().err
 
 
 def test_import_shows_the_changes_and_writes_nothing_without_apply(
@@ -98,7 +98,7 @@ def test_a_problem_is_listed_exits_1_and_writes_nothing(
     before = (root / "units" / "radio.yaml").read_bytes()
     capsys.readouterr()
     assert main(["units-import", str(root), str(table), "--apply"]) == 1
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert "IMPORT_VALUE_INVALID" in out and "a lot" not in out
     assert "nothing was written" in out.lower()
     assert (root / "units" / "radio.yaml").read_bytes() == before
@@ -108,7 +108,7 @@ def test_a_missing_table_is_a_plain_message(
     root: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     assert main(["units-import", str(root), str(tmp_path / "nope.csv")]) == 1
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert "IMPORT_FILE_UNREADABLE" in out and "Traceback" not in out
 
 
@@ -119,7 +119,7 @@ def test_a_project_with_errors_is_not_touched(
     (root / "spacecraft.yaml").unlink()
     capsys.readouterr()
     assert main(["units-import", str(root), str(table), "--apply"]) == 1
-    assert "nothing was written" in capsys.readouterr().out.lower()
+    assert "nothing was written" in capsys.readouterr().err.lower()
 
 
 def test_apply_works_with_a_relative_project_path(

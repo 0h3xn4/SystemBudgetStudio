@@ -20,9 +20,9 @@ def test_unexpected_exception_gives_a_plain_message(
     code = cli.main(["validate", str(tmp_path)])
     captured = capsys.readouterr()
     assert code == 1
-    assert "ValueError" in captured.out
-    assert "SECRETVALUE" not in captured.out + captured.err
-    assert "Traceback" not in captured.out + captured.err
+    assert "ValueError" in captured.err
+    assert "SECRETVALUE" not in captured.err + captured.err
+    assert "Traceback" not in captured.err + captured.err
 
 
 def test_unwritable_output_folder_is_a_plain_message(
@@ -35,8 +35,8 @@ def test_unwritable_output_folder_is_a_plain_message(
     code = cli.main(["run", str(root), "--budget", "power", "--out", str(blocker)])
     out = capsys.readouterr()
     assert code == 1
-    assert "could not be written" in out.out
-    assert "Traceback" not in out.out + out.err
+    assert "could not be written" in out.err
+    assert "Traceback" not in out.err + out.err
 
 
 def test_output_errors_are_printed_plainly(
@@ -51,7 +51,7 @@ def test_output_errors_are_printed_plainly(
     write_valid_project(root)
     monkeypatch.setattr(cli, "write_outputs", refuse)
     assert cli.main(["run", str(root), "--budget", "power", "--out", str(tmp_path / "o")]) == 1
-    assert "same file name" in capsys.readouterr().out
+    assert "same file name" in capsys.readouterr().err
 
 
 def test_keyboard_interrupt_exits_quietly(monkeypatch: pytest.MonkeyPatch) -> None:

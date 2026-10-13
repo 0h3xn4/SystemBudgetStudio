@@ -227,10 +227,10 @@ def test_link_passes_without_links_or_with_a_wrong_scenario(
     assert (
         main(["link-passes", str(micro), "--scenario", "nope", "--out", str(tmp_path / "o")]) == 1
     )
-    assert "SCENARIO_UNKNOWN" in capsys.readouterr().out
+    assert "SCENARIO_UNKNOWN" in capsys.readouterr().err
     shutil.rmtree(micro / "links")
     assert main(["link-passes", str(micro), "--out", str(tmp_path / "o")]) == 1
-    assert "no links" in capsys.readouterr().out
+    assert "no links" in capsys.readouterr().err
 
 
 def test_placeholder_example_warns_and_strict_fails(tmp_path: Path) -> None:

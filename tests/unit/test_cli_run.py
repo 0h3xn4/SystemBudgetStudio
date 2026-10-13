@@ -90,7 +90,7 @@ def test_errors_stop_the_run_and_write_nothing(
     out = tmp_path / "out"
     assert run(str(root), "--out", str(out), *FIXED) == 1
     assert not out.exists()
-    assert "REF_UNKNOWN_BUS" in capsys.readouterr().out
+    assert "REF_UNKNOWN_BUS" in capsys.readouterr().err
 
 
 def test_placeholders_warn_but_succeed_unless_strict(
@@ -111,4 +111,4 @@ def test_invalid_date_is_a_usage_error(root: Path) -> None:
 
 def test_missing_project(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     assert run(str(tmp_path / "nope")) == 1
-    assert "FILE_NOT_FOUND" in capsys.readouterr().out
+    assert "FILE_NOT_FOUND" in capsys.readouterr().err

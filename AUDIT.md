@@ -13,11 +13,12 @@ Every fix has a regression test that fails on the old code (about 640 new tests;
 | GUI-3 to GUI-7, GUI-9 to GUI-12 (high) | Fixed | #17 |
 | GUI-8, GUI-13, GUI-15 to GUI-27, GUI-30 to GUI-34 | Fixed | #17 |
 | GUI-14 | **Fixed.** Export output is built in the worker thread (#17); loading and reloading a project runs in a background thread and showing the tables is cheaper (D-142): the longest freeze on opening the 200-unit project went from about 3.6 s to about 0.5 s. | #17, then the load-in-background PR |
-| GUI-28, mouse-only plot (GUI-29), GUI-35 (layout) | **Not done / partly.** Hover repaint speed of a 600,000-point plot, keyboard access to the plot, and three small layout items. | |
+| GUI-28 | **Fixed after the release** (D-147). Hovering over a plot of 20 series of 604,800 points took 1.7 s a paint and now about 2 ms: the plot is kept as a picture and only the cursor is drawn on top. A zoom, a pan, a resize or a switch of shading still draws the plot again (about 1.5 s for 20 such series). | the hover PR |
+| Mouse-only plot (GUI-29), GUI-35 (layout) | **Not done / partly.** Keyboard access to the plot and three small layout items. | |
 | PWR-1 (high) | Fixed | #20 |
 | PWR-2 to PWR-12 | Fixed (PWR-10 in #20 for the wording and in the release-preparation PR for the validation warning `SCENARIO_PHASE_NO_DOD`) | #20 |
 | RC-1, RC-3, RC-16, RC-22, RC-23, LD-1, LD-2 | Fixed | #18 |
-| RC-15 | **Partly.** A non-UTF-8 console no longer turns a finished run into "Internal error"; error text still goes to standard output, not standard error (many tests and documents rely on it). | #18 |
+| RC-15 | **Fixed.** A non-UTF-8 console no longer turns a finished run into "Internal error" (#18); error text now goes to standard error and results stay on standard output, with `budget validate` as the documented exception (D-145). | #18, then the standard-error PR |
 | RC-2, RC-4 to RC-6, RC-8 to RC-14, RC-17 to RC-21, RC-24, RC-25 | Fixed | #19 |
 | RC-7 | Fixed | #20 |
 | TL-2, TL-3, TL-16 | Fixed | #19 |
@@ -30,7 +31,7 @@ Every fix has a regression test that fails on the old code (about 640 new tests;
 | MI-5 to MI-9, MI-16 | Fixed | #20 (MI-8 also #18) |
 | MI-18 | **Deferred.** Frozen models are shallow (a list inside can be changed in code). No user path reaches it; nothing in the tool relies on it. | |
 | PK-1 (package description) | Fixed | release preparation |
-| Eclipses shorter than 20 s | **Known limit** (DV-E4). Passes of any length are found; a very short eclipse could still be missed. | |
+| Eclipses shorter than 20 s | **Fixed after the release** (D-146, DV-E4). Passes and, now, eclipses and umbras of any length are found; the regression test uses an orbit with an 11.6 s eclipse that the 20 s grid missed at some phases. | the short-eclipse PR |
 
 ### Your decisions of 2026-10-12
 
@@ -310,10 +311,10 @@ Checked on 2026-10-12 on the tree of the release-preparation pull request (all f
 What I am **not certain** about:
 
 1. **Excel and Windows by hand.** I could not open the XLSX files in Excel (sheet-name and cell-length rules follow the documented limits), and nobody has done the [clean-machine checklist](docs/INSTALL_CHECKLIST.md) on a real Windows or Rocky 8 machine. CI builds, installs, self-tests and uninstalls both installers; it cannot look at the window.
-2. **The window on a real display.** The window tests run offscreen. A plot of a week at 1 s resolution repaints slowly on hover (GUI-28); opening a project of 200 units loads in a background thread (GUI-14, D-142) but still pauses the window for up to about half a second while the tables are shown.
+2. **The window on a real display.** The window tests run offscreen. ~~A plot of a week at 1 s resolution repaints slowly on hover (GUI-28)~~ (fixed after the release, D-147; a zoom or pan of such a plot still takes up to a second or two with many series); opening a project of 200 units loads in a background thread (GUI-14, D-142) but still pauses the window for up to about half a second while the tables are shown.
 3. **Real data.** The example projects hold invented data and the tool ships no standards values, as the spec requires. The numerical results are only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
-4. **Short eclipses** (under about 20 s) can still be missed (DV-E4); passes of any length are found.
-5. **Error text on standard output** (RC-15): scripts that separate the two streams will see errors on standard output.
+4. ~~**Short eclipses** (under about 20 s) can still be missed (DV-E4)~~ Fixed after the release (D-146).
+5. ~~**Error text on standard output** (RC-15)~~ Fixed after the release (D-145): errors go to standard error.
 
 ## Steps that stay with you
 

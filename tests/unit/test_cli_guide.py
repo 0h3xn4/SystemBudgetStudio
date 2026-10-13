@@ -51,4 +51,4 @@ def test_guide_with_a_broken_project_stops(
 ) -> None:
     code = main(["guide", "--out", str(tmp_path / "o"), "--project", str(tmp_path / "missing")])
     assert code == 1
-    assert "nothing was written" in capsys.readouterr().out
+    assert "nothing was written" in capsys.readouterr().err

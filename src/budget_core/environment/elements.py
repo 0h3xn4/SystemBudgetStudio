@@ -33,7 +33,8 @@ from budget_core.timeutil import parse_utc
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
 # Passes and eclipses are detected on this fixed grid, whatever the scenario step (D-057): a pass
 # that rises above its minimum elevation between two samples is found from the local maximum of
-# the elevation. An eclipse shorter than this could still be missed (DEVIATIONS DV-E4).
+# the elevation, and an eclipse or an umbra shorter than the grid from the local maximum of how
+# far inside the shadow the satellite is (D-146, DEVIATIONS DV-E4).
 LIT = 1.0 - 1e-12
 UMBRA = 1e-12
 EDGE_TOLERANCE_S = 1e-3
@@ -135,19 +136,46 @@ class ElementsPropagator:
         sun_dir, sun_dist = geo.sun_direction_and_distance(jd)
         ratio = geo.sun_visibility(pos, sun_dir * sun_dist[:, None], shadow_model)
 
-        def nu_at(t: float) -> float:
+        def sun_state(t: float) -> tuple[NDArray, NDArray]:
             r, _ = self.state_teme(grid.start, t)
             jd_t = np.array([sum(geo.julian_date_parts(grid.start + timedelta(seconds=t)))])
             d, dist = geo.sun_direction_and_distance(jd_t)
-            return float(geo.sun_visibility(r[None, :], d * dist[:, None], shadow_model)[0])
+            return r[None, :], d * dist[:, None]
+
+        def nu_at(t: float) -> float:
+            return float(geo.sun_visibility(*sun_state(t), shadow_model)[0])
+
+        def eclipse_margin_at(t: float) -> float:
+            return float(geo.shadow_margins(*sun_state(t), shadow_model)[0][0])
+
+        def umbra_margin_at(t: float) -> float:
+            return float(geo.shadow_margins(*sun_state(t), shadow_model)[1][0])
 
         detect = _detection_times(grid)
         det_pos, det_jd = self._positions(grid.start, detect)
         det_dir, det_dist = geo.sun_direction_and_distance(det_jd)
         det_ratio = geo.sun_visibility(det_pos, det_dir * det_dist[:, None], shadow_model)
-        eclipses = _intervals(detect, det_ratio < LIT, lambda t: nu_at(t) < LIT, grid.duration_s)
-        umbras = _intervals(
-            detect, det_ratio <= UMBRA, lambda t: nu_at(t) <= UMBRA, grid.duration_s
+        eclipse_margin, umbra_margin = geo.shadow_margins(
+            det_pos, det_dir * det_dist[:, None], shadow_model
+        )
+        in_eclipse = det_ratio < LIT
+        in_umbra = det_ratio <= UMBRA
+
+        def eclipsed(t: float) -> bool:
+            return nu_at(t) < LIT
+
+        def umbral(t: float) -> bool:
+            return nu_at(t) <= UMBRA
+
+        eclipses = sorted(
+            _intervals(detect, in_eclipse, eclipsed, grid.duration_s)
+            + _short_intervals(detect, eclipse_margin, in_eclipse, eclipse_margin_at, eclipsed),
+            key=lambda i: i.start_s,
+        )
+        umbras = sorted(
+            _intervals(detect, in_umbra, umbral, grid.duration_s)
+            + _short_intervals(detect, umbra_margin, in_umbra, umbra_margin_at, umbral),
+            key=lambda i: i.start_s,
         )
 
         visibility: dict[str, SiteVisibility] = {}
@@ -228,6 +256,41 @@ def _intervals(
     detect: NDArray, mask: BoolArray, predicate: Callable[[float], bool], duration_s: float
 ) -> list[Interval]:
     return [Interval(s, e) for s, e, _, _ in _edges(detect, mask, predicate, duration_s)]
+
+
+def _short_intervals(
+    detect: NDArray,
+    margin: NDArray,
+    mask: BoolArray,
+    margin_at: Callable[[float], float],
+    predicate: Callable[[float], bool],
+) -> list[Interval]:
+    """Shadows (or umbras) that begin and end between two detection samples. `margin` is how far
+    inside the shadow the satellite is (positive inside, see `geo.shadow_margins`). Each local
+    maximum of the sampled margin whose neighbours are all outside the shadow, and that could
+    still reach it, is refined on its two intervals; an interval found there is as exact as any
+    other (edges to about 1 ms)."""
+    out: list[Interval] = []
+    for k in range(1, len(detect) - 1):
+        if mask[k - 1] or mask[k] or mask[k + 1]:
+            continue
+        if not (margin[k] >= margin[k - 1] and margin[k] > margin[k + 1]):
+            continue
+        before, after = float(detect[k - 1]), float(detect[k + 1])
+        # the margin cannot rise much faster than it did over the two intervals
+        rate = max(
+            abs(margin[k] - margin[k - 1]) / (detect[k] - detect[k - 1]),
+            abs(margin[k + 1] - margin[k]) / (detect[k + 1] - detect[k]),
+        )
+        if margin[k] + rate * (after - before) < 0.0:
+            continue
+        t_max, _ = _maximise(margin_at, before, after)
+        if not predicate(t_max) or predicate(before) or predicate(after):
+            continue
+        start = bisect_edge(predicate, before, t_max, EDGE_TOLERANCE_S)
+        end = bisect_edge(predicate, t_max, after, EDGE_TOLERANCE_S)
+        out.append(Interval(start, end))
+    return out
 
 
 def _passes(

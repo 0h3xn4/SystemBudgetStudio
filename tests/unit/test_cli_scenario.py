@@ -83,7 +83,7 @@ def test_unknown_scenario_is_a_plain_error(
     root: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     assert run(root, tmp_path / "o", "--scenario", "nope") == 1
-    out = capsys.readouterr().out
+    out = capsys.readouterr().err
     assert "SCENARIO_UNKNOWN" in out and "day" in out and "Traceback" not in out
 
 
@@ -93,7 +93,7 @@ def test_project_errors_stop_the_run(
     edit(root, "scenarios/day.yaml", "orbit: leo", "orbit: nope")
     out = tmp_path / "o"
     assert run(root, out) == 1
-    assert not out.exists() and "REF_UNKNOWN_ORBIT" in capsys.readouterr().out
+    assert not out.exists() and "REF_UNKNOWN_ORBIT" in capsys.readouterr().err
 
 
 def test_conical_shadow_is_used_when_asked(root: Path, tmp_path: Path) -> None:
@@ -144,5 +144,5 @@ def test_broken_import_files_name_the_file_and_line(
         "environment_source: spacemissionstudio\nimport_dir: imports/run1",
     )
     assert run(root, tmp_path / "o") == 1
-    text = capsys.readouterr().out
+    text = capsys.readouterr().err
     assert "ENV_INPUT_INVALID" in text and "orbit.csv" in text and "SECRET" not in text
