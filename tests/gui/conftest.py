@@ -18,6 +18,22 @@ def _synchronous_loading(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
+def _no_layout_file(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A test never reads or writes the user's layout file (D-150)."""
+    monkeypatch.setenv("BUDGET_NO_LAYOUT", "1")
+
+
+@pytest.fixture(autouse=True)
+def _light_theme_again():  # type: ignore[no-untyped-def]
+    """The theme is one object for the whole process: a test that changed it puts it back."""
+    yield
+    from budget_gui import theme
+
+    if QApplication.instance() is not None and theme.manager().mode is not theme.Mode.LIGHT:
+        theme.manager().set_mode(theme.Mode.LIGHT)
+
+
+@pytest.fixture(autouse=True)
 def _finish_jobs(request: pytest.FixtureRequest):  # type: ignore[no-untyped-def]
     request.getfixturevalue("qtbot")  # set up first, so this runs before qtbot closes the windows
     yield

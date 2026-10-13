@@ -33,6 +33,7 @@ from budget_core.io.roundtrip import (
     write_bytes_atomic,
 )
 from budget_core.model import Unit
+from budget_gui import theme
 from budget_gui.unit_editor import UnitEditor
 
 
@@ -127,7 +128,7 @@ class YamlEditor(QPlainTextEdit):
         self.centerCursor()
         selection = QTextEdit.ExtraSelection()
         highlight = QTextCharFormat()
-        highlight.setBackground(QColor("#fcf4d6"))
+        highlight.setBackground(QColor(theme.tokens().line_highlight))
         highlight.setProperty(QTextFormat.Property.FullWidthSelection, True)
         selection.format = highlight  # type: ignore[attr-defined]
         selection.cursor = cursor  # type: ignore[attr-defined]
@@ -157,8 +158,9 @@ class YamlEditor(QPlainTextEdit):
 
     def paint_gutter(self, event: QPaintEvent) -> None:
         painter = QPainter(self._gutter)
-        painter.fillRect(event.rect(), QColor("#f4f4f4"))
-        painter.setPen(QColor("#6f6f6f"))
+        tokens = theme.tokens()
+        painter.fillRect(event.rect(), QColor(tokens.gutter_bg))
+        painter.setPen(QColor(tokens.gutter_text))
         block = self.firstVisibleBlock()
         number = block.blockNumber()
         top = round(self.blockBoundingGeometry(block).translated(self.contentOffset()).top())

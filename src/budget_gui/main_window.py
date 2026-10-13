@@ -8,7 +8,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
-from PySide6.QtGui import QAction, QCloseEvent, QKeySequence
+from PySide6.QtGui import QAction, QActionGroup, QCloseEvent, QKeySequence
 from PySide6.QtWidgets import (
     QApplication,
     QDockWidget,
@@ -22,10 +22,13 @@ from budget_core import APP_NAME, __version__
 from budget_core.problems import sort_problems
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
+from budget_gui import theme
 from budget_gui.compare_view import CompareView
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
+from budget_gui.layout_settings import LayoutSettings
+from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.privacy import disable_settings_files
 from budget_gui.scenario_view import ScenarioView
@@ -61,6 +64,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(APP_NAME)
         self.resize(1400, 860)
         self.session = ProjectSession()
+        self.layout_settings = LayoutSettings.default()
         self.tree = ProjectTree()
         self.problems_panel = ProblemsPanel()
         self.power_view = PowerView()
@@ -138,11 +142,48 @@ class MainWindow(QMainWindow):
         add("&Import unit table…", QKeySequence(), lambda: import_unit_table(self))
         file_menu.addSeparator()
         add("&Quit", QKeySequence.StandardKey.Quit, self.close)
+        self._build_view_menu()
         help_menu = self.menuBar().addMenu("&Help")
         guide = QAction("&User guide", self)
         guide.setShortcut(QKeySequence.StandardKey.HelpContents)
         guide.triggered.connect(lambda: self.open_guide())
         help_menu.addAction(guide)
+
+    def _build_view_menu(self) -> None:
+        view_menu = self.menuBar().addMenu("&View")
+        theme_menu = view_menu.addMenu("&Theme")
+        group = QActionGroup(self)
+        group.setExclusive(True)
+        self.theme_actions: dict[theme.Mode, QAction] = {}
+        for mode, text in (
+            (theme.Mode.LIGHT, "&Light"),
+            (theme.Mode.DARK, "&Dark"),
+            (theme.Mode.SYSTEM, "&Same as the system"),
+        ):
+            action = QAction(text, self)
+            action.setCheckable(True)
+            action.setChecked(theme.manager().mode is mode)
+            action.triggered.connect(lambda _checked=False, m=mode: self.set_theme(m))
+            group.addAction(action)
+            theme_menu.addAction(action)
+            self.theme_actions[mode] = action
+        view_menu.addSeparator()
+        styles = QAction("&Cell styles…", self)
+        styles.triggered.connect(lambda: self.show_cell_styles())
+        view_menu.addAction(styles)
+
+    def set_theme(self, mode: theme.Mode) -> None:
+        """Switch the theme now and keep the choice for the next start."""
+        theme.manager().set_mode(mode)
+        self.theme_actions[mode].setChecked(True)
+        self.layout_settings.set_word("theme/mode", mode.value, tuple(m.value for m in theme.Mode))
+        self.layout_settings.sync()
+
+    def show_cell_styles(self) -> LegendDialog:
+        """The legend of the cell styles (placeholder, n/a, limit states, margin bars)."""
+        dialog = LegendDialog(self)
+        dialog.open()
+        return dialog
 
     def open_guided_wizard(self, parent_folder: Path | None = None) -> GuidedWizard:
         """Show the guided new-project wizard; on Finish the project opens and its first power

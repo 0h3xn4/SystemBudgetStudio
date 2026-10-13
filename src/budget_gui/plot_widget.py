@@ -40,9 +40,9 @@ from budget_core.plots.spec import (
     value_at,
     visible_range,
 )
+from budget_gui import theme
 
 LEFT, RIGHT, TOP, BOTTOM, GAP, TITLE = 64, 14, 8, 36, 26, 18
-GRID, INK, MUTED = "#e0e0e0", "#161616", "#525252"
 MIN_PANEL_HEIGHT = 110
 
 
@@ -84,6 +84,11 @@ class PlotWidget(QWidget):
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setMinimumHeight(220)
+        theme.manager().changed.connect(self._theme_changed)
+
+    def _theme_changed(self) -> None:
+        self._layer = None
+        self.update()
 
     # ---- data --------------------------------------------------------------------------------
     def set_spec(self, spec: PlotSpec | None) -> None:
@@ -212,8 +217,9 @@ class PlotWidget(QWidget):
         painter = QPainter(self)
         spec = self._spec
         if spec is None:
-            painter.fillRect(self.rect(), QColor("#ffffff"))
-            painter.setPen(QColor("#6f6f6f"))
+            t = theme.tokens()
+            painter.fillRect(self.rect(), QColor(t.plot_bg))
+            painter.setPen(QColor(t.text_disabled))
             painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, "No results to show")
             return
         painter.drawPixmap(0, 0, self._plot_layer(spec))
@@ -230,6 +236,7 @@ class PlotWidget(QWidget):
             self._view,
             self._shading,
             id(spec),
+            theme.tokens().name,
         )
         if self._layer is not None and self._layer_key == key:
             return self._layer
@@ -237,7 +244,7 @@ class PlotWidget(QWidget):
         layer.setDevicePixelRatio(ratio)
         painter = QPainter(layer)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        painter.fillRect(QRectF(0, 0, self.width(), self.height()), QColor("#ffffff"))
+        painter.fillRect(QRectF(0, 0, self.width(), self.height()), QColor(theme.tokens().plot_bg))
         rects = self._panel_rects()
         divisor, unit = time_axis(self._view[1] - self._view[0])
         for index, (panel, rect) in enumerate(zip(spec.panels, rects, strict=True)):
@@ -276,6 +283,7 @@ class PlotWidget(QWidget):
         divisor: float,
         unit: str,
     ) -> None:
+        t = theme.tokens()
         lo, hi = self._y_range(panel)
 
         def sy(v: float) -> float:
@@ -285,15 +293,15 @@ class PlotWidget(QWidget):
         painter.setClipRect(rect)
         if self._shading:
             for band in spec.bands:
-                colour = QColor(band.color)
-                colour.setAlpha(140)
+                colour = theme.plot_colour(t, band.color)
+                colour.setAlpha(t.band_alpha)
                 for a, b in band.intervals:
                     x0, x1 = self.time_to_x(a), self.time_to_x(b)
                     if x1 >= rect.left() and x0 <= rect.right():
                         painter.fillRect(
                             QRectF(x0, rect.top(), max(x1 - x0, 1.0), rect.height()), colour
                         )
-        painter.setPen(QPen(QColor(GRID), 1))
+        painter.setPen(QPen(QColor(t.plot_grid), 1))
         for tick in nice_ticks(lo, hi, 4):
             painter.drawLine(QPointF(rect.left(), sy(tick)), QPointF(rect.right(), sy(tick)))
         start, end = self._view
@@ -305,7 +313,7 @@ class PlotWidget(QWidget):
             px, py = plot_points(series, start, end, spec.x_max_s, buckets)
             if len(px) < 2:
                 continue
-            painter.setPen(QPen(QColor(series.color), 1.6))
+            painter.setPen(QPen(theme.plot_colour(t, series.color), 1.6))
             painter.drawPolyline(
                 QPolygonF(
                     [
@@ -315,13 +323,13 @@ class PlotWidget(QWidget):
                 )
             )
         for hline in panel.hlines:
-            pen = QPen(QColor(hline.color), 1.2, Qt.PenStyle.DashLine)
+            pen = QPen(theme.plot_colour(t, hline.color), 1.2, Qt.PenStyle.DashLine)
             painter.setPen(pen)
             y = sy(hline.y * panel.y_scale)
             painter.drawLine(QPointF(rect.left(), y), QPointF(rect.right(), y))
         painter.restore()
 
-        painter.setPen(QPen(QColor(INK), 1))
+        painter.setPen(QPen(QColor(t.plot_ink), 1))
         painter.drawRect(rect)
         metrics = QFontMetrics(painter.font())
         for tick in nice_ticks(lo, hi, 4):
@@ -330,7 +338,7 @@ class PlotWidget(QWidget):
                 Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter,
                 _number(tick),
             )
-        painter.setPen(QColor(INK))
+        painter.setPen(QColor(t.plot_ink))
         title_y = rect.top() - 5
         painter.drawText(QPointF(rect.left(), title_y), panel.y_label)
         x = rect.left() + metrics.horizontalAdvance(panel.y_label) + 24
@@ -340,13 +348,13 @@ class PlotWidget(QWidget):
         for h in panel.hlines:
             entries.setdefault(h.label, h.color)
         for label, legend_colour in entries.items():
-            painter.setPen(QPen(QColor(legend_colour), 3))
+            painter.setPen(QPen(theme.plot_colour(t, legend_colour), 3))
             painter.drawLine(QPointF(x, title_y - 4), QPointF(x + 16, title_y - 4))
-            painter.setPen(QColor(MUTED))
+            painter.setPen(QColor(t.plot_muted))
             painter.drawText(QPointF(x + 21, title_y), label)
             x += 21 + metrics.horizontalAdvance(label) + 18
         if last:
-            painter.setPen(QColor(INK))
+            painter.setPen(QColor(t.plot_ink))
             for tick in nice_ticks(start / divisor, end / divisor, 8):
                 x_tick = self.time_to_x(tick * divisor)
                 if rect.left() - 1 <= x_tick <= rect.right() + 1:
@@ -362,6 +370,7 @@ class PlotWidget(QWidget):
             )
 
     def _paint_cursors(self, painter: QPainter, rects: list[QRectF]) -> None:
+        tk = theme.tokens()
         if not rects:
             return
         top, bottom = rects[0].top(), rects[-1].bottom()
@@ -373,7 +382,7 @@ class PlotWidget(QWidget):
                 continue
             x = self.time_to_x(t)
             if rects[0].left() <= x <= rects[0].right():
-                painter.setPen(QPen(QColor(INK), 1, dash))
+                painter.setPen(QPen(QColor(tk.plot_ink), 1, dash))
                 painter.drawLine(QPointF(x, top), QPointF(x, bottom))
         if self._cursor is None:
             return
@@ -385,10 +394,10 @@ class PlotWidget(QWidget):
         if x + width > self.width() - RIGHT:
             x = self.time_to_x(self._cursor) - width - 12
         box = QRectF(max(x, LEFT + 2), top + 4, width, height)
-        painter.fillRect(box, QColor(255, 255, 255, 235))
-        painter.setPen(QPen(QColor("#8d8d8d"), 1))
+        painter.fillRect(box, QColor(tk.plot_readout_bg))
+        painter.setPen(QPen(QColor(tk.border_strong), 1))
         painter.drawRect(box)
-        painter.setPen(QColor(INK))
+        painter.setPen(QColor(tk.plot_ink))
         for i, text in enumerate(lines):
             painter.drawText(
                 QPointF(box.left() + 8, box.top() + 5 + (i + 1) * metrics.height() - 4), text

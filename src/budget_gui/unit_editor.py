@@ -86,7 +86,7 @@ class UnitEditor(QWidget):
 
         self.error_label = QLabel()
         self.error_label.setWordWrap(True)
-        self.error_label.setStyleSheet("color: #da1e28;")
+        self.error_label.setProperty("role", "error")
         self.note_label = QLabel()
         self.note_label.setWordWrap(True)
 

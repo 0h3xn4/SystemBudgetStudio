@@ -31,17 +31,18 @@ from budget_core.model import Project
 from budget_core.problems import Severity
 from budget_core.reports.run import REPORT_KINDS, BudgetOutput
 from budget_core.scenario.run import ScenarioRunError
+from budget_gui import theme
 from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, STALE_TEXT, ResultKey
 from budget_gui.worker import ExportWorker
 
 NO_SCENARIO = "(none)"
 HEADERS = ["Budget", "Section", "Row", "Quantity", "A", "B", "Change", "Change (%)", "Status"]
-TINTS = {  # Carbon support-colour backgrounds, dark text on all of them
-    "changed": "#fcf4d6",
-    "added": "#defbe6",
-    "removed": "#fff1f1",
-    "now computed": "#edf5ff",
-    "now n/a": "#e8daff",
+TINTS = {  # the status of a row -> the token of its background
+    "changed": "diff_changed",
+    "added": "diff_added",
+    "removed": "diff_removed",
+    "now computed": "diff_now_computed",
+    "now n/a": "diff_now_na",
 }
 
 
@@ -120,6 +121,8 @@ class CompareView(QWidget):
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
+        self._shown: BudgetOutput | None = None
+        theme.manager().changed.connect(lambda: self._show(self._shown))
         self.table = QTableWidget(0, len(HEADERS))
         self.table.setHorizontalHeaderLabels(HEADERS)
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
@@ -268,6 +271,7 @@ class CompareView(QWidget):
 
     # ---- display -----------------------------------------------------------------------------
     def _show(self, output: BudgetOutput | None) -> None:
+        self._shown = output
         rows = [(r.name, d) for r in (output.result if output else ()) for d in r.differences]
         self.table.setRowCount(len(rows))
         for i, (name, d) in enumerate(rows):
@@ -284,8 +288,9 @@ class CompareView(QWidget):
             ]
             for column, text in enumerate(texts):
                 item = QTableWidgetItem(text)
-                item.setBackground(QBrush(QColor(TINTS[d.status])))
-                item.setForeground(QBrush(QColor("#161616")))
+                tokens = theme.tokens()
+                item.setBackground(QBrush(QColor(getattr(tokens, TINTS[d.status]))))
+                item.setForeground(QBrush(QColor(tokens.text)))
                 if column in (4, 5, 6, 7):
                     item.setTextAlignment(
                         Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter

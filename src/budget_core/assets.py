@@ -28,3 +28,18 @@ def icon_files() -> list[Path]:
     except FileNotFoundError:
         return []
     return sorted(folder.glob("logo-*.png"), key=lambda path: int(path.stem.split("-")[1]))
+
+
+def ui_icon_files(name: str) -> dict[int, Path]:
+    """The black PNG mask of a user-interface icon by size (assets/icons/ui/<name>-<size>.png);
+    empty when the icon or the folder is missing."""
+    try:
+        folder = assets_dir() / "icons" / "ui"
+    except FileNotFoundError:
+        return {}
+    found: dict[int, Path] = {}
+    for path in folder.glob(f"{name}-*.png"):
+        size = path.stem.rsplit("-", 1)[-1]
+        if size.isdigit() and path.stem == f"{name}-{size}":
+            found[int(size)] = path
+    return dict(sorted(found.items()))

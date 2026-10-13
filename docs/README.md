@@ -74,6 +74,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [demo/](demo/M0.md) | One short note per milestone (historical: written when each milestone was finished): [M0](demo/M0.md) · [M1](demo/M1.md) · [M2a](demo/M2a.md) · [M2b](demo/M2b.md) · [M3a](demo/M3a.md) · [M3b](demo/M3b.md) · [M4](demo/M4.md) · [M4b](demo/M4b.md) · [M5](demo/M5.md) · [M6](demo/M6.md) |
 | [DOCS_AUDIT.md](DOCS_AUDIT.md) | The audit behind this documentation structure |
 | [UX_STANDARD.md](UX_STANDARD.md) | The UX/UI standard the window is redesigned to (the owner's brief) |
+| [DESIGN.md](DESIGN.md) | The design system of the window: colour tokens, status styles, cell styles, icons, layout file (generated tables, kept true by a test) |
 | [ux-audit.md](ux-audit.md) | The UX audit of the current window: findings, screenshots, measurements, decisions needed |
 
 Next: [Getting started](getting-started.md).

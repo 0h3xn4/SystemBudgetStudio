@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 from PySide6.QtCore import QCoreApplication, QEvent, QThread
-from PySide6.QtGui import QColor, QTextCursor
+from PySide6.QtGui import QTextCursor
 from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox, QPushButton, QTableView
 
 from budget_core.io.project_loader import load_project
@@ -18,7 +18,7 @@ from budget_core.problems import Problem, Severity
 from budget_gui import timeline_view as tv
 from budget_gui.main_window import MainWindow
 from budget_gui.theme import WHITE, apply_theme, stylesheet
-from budget_gui.widgets import SEVERITY_COLOURS, ProblemsPanel
+from budget_gui.widgets import ProblemsPanel
 
 pytestmark = pytest.mark.gui
 
@@ -449,18 +449,13 @@ def test_a_missing_comparison_folder_gets_its_own_message(
 
 
 # ---- GUI-32: contrast and a missing assets folder ---
-def _luminance(colour: str) -> float:
-    c = QColor(colour)
-    parts = []
-    for v in (c.redF(), c.greenF(), c.blueF()):
-        parts.append(v / 12.92 if v <= 0.03928 else ((v + 0.055) / 1.055) ** 2.4)
-    return 0.2126 * parts[0] + 0.7152 * parts[1] + 0.0722 * parts[2]
+def test_severity_colours_are_readable_on_the_layer_of_both_themes() -> None:
+    from budget_gui.theme import DARK, WHITE, contrast_ratio, severity_colour
 
-
-def test_severity_colours_are_readable_on_the_light_layer() -> None:
-    for severity in (Severity.ERROR, Severity.WARNING, Severity.INFO):
-        a, b = _luminance(SEVERITY_COLOURS[severity]), _luminance(WHITE.layer)
-        assert (max(a, b) + 0.05) / (min(a, b) + 0.05) >= 4.5, severity
+    for tokens in (WHITE, DARK):
+        for severity in (Severity.ERROR, Severity.WARNING, Severity.INFO):
+            colour = severity_colour(tokens, severity.value)
+            assert contrast_ratio(colour, tokens.layer) >= 4.5, (tokens.name, severity)
 
 
 def test_missing_fonts_do_not_stop_the_start(monkeypatch: pytest.MonkeyPatch) -> None:
