@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/images/banner.svg" alt="System Budget Studio: power, mass, thermal and link budgets for small satellites, offline" width="960">
+</p>
+
 # System Budget Studio
 
 An offline desktop and command-line tool that computes **power, mass, thermal and radio-link budgets** for a small satellite from one spacecraft model kept in plain text files.

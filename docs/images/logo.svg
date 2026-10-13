@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="t d">
+  <title id="t">System Budget Studio</title>
+  <desc id="d">Four bars of growing height under a dashed limit line, on a dark rounded square.</desc>
+  <rect width="256" height="256" rx="40" fill="#161616"/>
+  <g transform="translate(46 44)">
+    <rect x="0" y="86" width="30" height="86" fill="#78a9ff"/>
+    <rect x="40" y="58" width="30" height="114" fill="#4589ff"/>
+    <rect x="80" y="34" width="30" height="138" fill="#0f62fe"/>
+    <rect x="120" y="14" width="30" height="158" fill="#f4f4f4"/>
+    <line x1="-10" y1="14" x2="160" y2="14" stroke="#f4f4f4" stroke-width="3" stroke-dasharray="8 7"/>
+    <line x1="-10" y1="172" x2="160" y2="172" stroke="#c6c6c6" stroke-width="3"/>
+  </g>
+</svg>

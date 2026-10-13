@@ -4,6 +4,7 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **A banner and a logo.** `docs/images/banner.svg` (top of the README) and `docs/images/logo.svg`: four budget bars under a dashed limit line, in the style of the SpaceMissionStudio banner. They are plain SVG, drawn for this project; the window and the installers do not use them yet.
 - **Documentation brought up to date after the release.** README, getting started and the changelog point to the installers on the Releases page; the records of the documentation audit, the audit report, the branch-protection page, D-017 and the deviations page no longer say that there is no release, no licence or an undecided visibility (D-140, D-143, D-144). The README now starts with an install section for the installers, has release and licence badges, and states the known limits.
 - **The release workflow attaches the installers to the release.** After a tag is built, the files are checked against their checksums and uploaded to the GitHub Release (a missing release is created as a draft); *Actions > Attach release files* does the same for an earlier run (D-144).
 
