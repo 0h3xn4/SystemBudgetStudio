@@ -22,25 +22,8 @@ from PySide6.QtWidgets import QSizePolicy, QToolTip, QWidget
 
 from budget_core.scenario.run import ScenarioRun
 from budget_core.timeutil import format_utc
+from budget_gui import theme
 
-# IBM Carbon categorical palette (user-interface styling, not engineering data).
-PALETTE = (
-    "#6929c4",
-    "#1192e8",
-    "#005d5d",
-    "#9f1853",
-    "#fa4d56",
-    "#198038",
-    "#002d9c",
-    "#ee538b",
-    "#b28600",
-    "#009d9a",
-    "#8a3800",
-    "#a56eff",
-    "#570408",
-    "#012749",
-)
-SUNLIT, ECLIPSE, UMBRA, PASS, TRACK = "#fcf4d6", "#525252", "#161616", "#0f62fe", "#e0e0e0"
 TICK_STEPS = (
     1,
     2,
@@ -77,7 +60,8 @@ def nice_tick_step(range_s: float, width_px: int, min_px: int = 90) -> float:
 def mode_colour(mode: str, modes: list[str]) -> QColor:
     """Stable colour of a mode: the palette entry at the mode's place in the sorted mode list."""
     ordered = sorted(set(modes) | {mode})
-    return QColor(PALETTE[ordered.index(mode) % len(PALETTE)])
+    palette = theme.tokens().categorical
+    return QColor(palette[ordered.index(mode) % len(palette)])
 
 
 def _hms(seconds: float) -> str:
@@ -105,6 +89,7 @@ class TimelineWidget(QWidget):
         self._cursor_s: float | None = None
         self.setMouseTracking(True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        theme.manager().changed.connect(self.update)
 
     # ---- data --------------------------------------------------------------------------------
     def set_run(self, run: ScenarioRun | None, all_modes: list[str] | None = None) -> None:
@@ -202,35 +187,38 @@ class TimelineWidget(QWidget):
     # ---- painting ----------------------------------------------------------------------------
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
-        painter.fillRect(self.rect(), QColor("#ffffff"))
+        t = theme.tokens()
+        painter.fillRect(self.rect(), QColor(t.plot_bg))
         run = self._run
         if run is None:
-            painter.setPen(QColor("#6f6f6f"))
+            painter.setPen(QColor(t.text_disabled))
             painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, "No scenario computed")
             return
         metrics = QFontMetrics(painter.font())
         self._draw_axis(painter)
         for index, name in enumerate(self.rows()):
             y = TOP + index * (ROW + GAP)
-            painter.setPen(QColor("#161616"))
+            painter.setPen(QColor(t.plot_ink))
             painter.drawText(QRectF(6, y, LEFT - 12, ROW), Qt.AlignmentFlag.AlignVCenter, name)
             track = QRectF(LEFT, y, self._plot_width(), ROW)
             painter.save()
             painter.setClipRect(track)
             if name == "Sunlight":
-                painter.fillRect(track, QColor(SUNLIT))
+                painter.fillRect(track, QColor(t.strip_sunlit))
                 for e in run.env.eclipses:
-                    self._bar(painter, e.start_s, e.end_s, y, QColor(ECLIPSE))
+                    self._bar(painter, e.start_s, e.end_s, y, QColor(t.strip_eclipse))
                 for e in run.env.umbras:
-                    self._bar(painter, e.start_s, e.end_s, y + 6, QColor(UMBRA), height=ROW - 12)
+                    self._bar(
+                        painter, e.start_s, e.end_s, y + 6, QColor(t.strip_umbra), height=ROW - 12
+                    )
             elif name == "Mode":
-                painter.fillRect(track, QColor(TRACK))
+                painter.fillRect(track, QColor(t.strip_track))
                 for seg in run.timeline:
                     self._bar(painter, seg.start_s, seg.end_s, y, self.colour_for(seg.mode))
                     x0 = self.time_to_x(seg.start_s)
                     x1 = self.time_to_x(seg.end_s)
                     if x1 - x0 > 46 and x1 > LEFT and x0 < self.width():
-                        painter.setPen(QColor("#ffffff"))
+                        painter.setPen(theme.readable_text(self.colour_for(seg.mode).name()))
                         label = metrics.elidedText(
                             seg.mode, Qt.TextElideMode.ElideRight, int(x1 - x0 - 6)
                         )
@@ -240,9 +228,9 @@ class TimelineWidget(QWidget):
                             label,
                         )
             else:
-                painter.fillRect(track, QColor(TRACK))
+                painter.fillRect(track, QColor(t.strip_track))
                 for p in run.env.sites[name].passes:
-                    self._bar(painter, p.aos_s, p.los_s, y, QColor(PASS))
+                    self._bar(painter, p.aos_s, p.los_s, y, QColor(t.strip_pass))
             painter.restore()
         self._draw_overlays(painter)
 
@@ -257,7 +245,7 @@ class TimelineWidget(QWidget):
     def _draw_axis(self, painter: QPainter) -> None:
         start, end = self._view
         step = nice_tick_step(end - start, int(self._plot_width()))
-        painter.setPen(QPen(QColor("#8d8d8d")))
+        painter.setPen(QPen(QColor(theme.tokens().border_strong)))
         first = int(start // step) * step
         t = first
         while t <= end + step:
@@ -270,12 +258,13 @@ class TimelineWidget(QWidget):
     def _draw_overlays(self, painter: QPainter) -> None:
         if self._cursor_s is not None:
             x = self.time_to_x(self._cursor_s)
-            painter.setPen(QPen(QColor("#161616"), 1, Qt.PenStyle.DashLine))
+            painter.setPen(QPen(QColor(theme.tokens().plot_ink), 1, Qt.PenStyle.DashLine))
             painter.drawLine(QPointF(x, TOP - 4), QPointF(x, self.height() - BOTTOM))
         if self._select_from is not None and self._select_to is not None:
             x0, x1 = sorted((self.time_to_x(self._select_from), self.time_to_x(self._select_to)))
             painter.fillRect(
-                QRectF(x0, TOP, x1 - x0, self.height() - TOP - BOTTOM), QColor(15, 98, 254, 60)
+                QRectF(x0, TOP, x1 - x0, self.height() - TOP - BOTTOM),
+                QColor(*theme.tokens().selection_overlay),
             )
 
     # ---- mouse -------------------------------------------------------------------------------

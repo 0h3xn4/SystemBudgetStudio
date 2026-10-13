@@ -27,12 +27,10 @@ from PySide6.QtWidgets import (
 from budget_core.model import Project
 from budget_core.problems import Problem, Severity
 from budget_core.reports.document import NA, ReportDocument, Table, format_cell
+from budget_gui import theme
+from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE, CellDelegate, tooltip_for
+from budget_gui.theme import Status
 
-SEVERITY_COLOURS = {
-    Severity.ERROR: "#da1e28",
-    Severity.WARNING: "#8a6a00",  # 4.6:1 on the light layer (WCAG AA for text)
-    Severity.INFO: "#0043ce",
-}
 SEVERITY_ORDER = {Severity.ERROR: 0, Severity.WARNING: 1, Severity.INFO: 2}
 Index = QModelIndex | QPersistentModelIndex
 _NO_PARENT = QModelIndex()
@@ -76,8 +74,12 @@ class DocTableModel(QAbstractTableModel):
             numeric = column.kind != "text" or value is None
             horizontal = Qt.AlignmentFlag.AlignRight if numeric else Qt.AlignmentFlag.AlignLeft
             return int(horizontal | Qt.AlignmentFlag.AlignVCenter)
-        if role == Qt.ItemDataRole.ForegroundRole and text == NA:
-            return QBrush(QColor("#8d8d8d"))
+        if role == STATE_ROLE:
+            return Status.NOT_CHECKED.value if text == NA else None
+        if role == NUMERIC_ROLE:
+            return column.kind != "text" or value is None
+        if role == Qt.ItemDataRole.ToolTipRole and text == NA:
+            return tooltip_for(Status.NOT_CHECKED)
         return None
 
 
@@ -103,6 +105,7 @@ class ProblemsPanel(QWidget):
         layout.addWidget(self.summary)
         layout.addWidget(self.table)
         self._problems: list[Problem] = []
+        theme.manager().changed.connect(self._recolour)
 
     def set_problems(self, problems: list[Problem]) -> None:
         # errors first, then warnings, then information; inside a group the given order (file, line)
@@ -126,11 +129,22 @@ class ProblemsPanel(QWidget):
             for column, text in enumerate(cells):
                 item = QTableWidgetItem(text)
                 if column == 0:
-                    item.setForeground(QBrush(QColor(SEVERITY_COLOURS[problem.severity])))
+                    item.setForeground(QBrush(self._severity_brush(problem.severity)))
                 item.setToolTip(problem.path)
                 self.table.setItem(row, column, item)
         self.table.resizeColumnsToContents()
         self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+
+    @staticmethod
+    def _severity_brush(severity: Severity) -> QColor:
+        return QColor(theme.severity_colour(theme.tokens(), severity.value))
+
+    def _recolour(self) -> None:
+        """The theme changed: colour the severity column again."""
+        for row, problem in enumerate(self._problems):
+            item = self.table.item(row, 0)
+            if item is not None:
+                item.setForeground(QBrush(self._severity_brush(problem.severity)))
 
     def activate_row(self, row: int) -> None:
         if 0 <= row < len(self._problems):
@@ -258,7 +272,7 @@ class PowerView(QWidget):
         super().__init__()
         self.banner = QLabel()
         self.banner.setWordWrap(True)
-        self.banner.setStyleSheet("color: #da1e28; font-weight: 600; padding: 4px;")
+        self.banner.setProperty("role", "banner")
         self.empty_label = QLabel("No budget to show. Open a project without errors.")
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabs = QTabWidget()
@@ -303,12 +317,13 @@ class PowerView(QWidget):
                 layout.addWidget(QLabel(text))
             for table in section.tables:
                 title = QLabel(table.title)
-                title.setStyleSheet("font-weight: 600; padding-top: 6px;")
+                title.setProperty("role", "section-title")
                 layout.addWidget(title)
                 model = DocTableModel(table)
                 models.append(model)
                 view = QTableView()
                 view.setModel(model)
+                view.setItemDelegate(CellDelegate(view))
                 view.verticalHeader().setVisible(False)
                 view.setAlternatingRowColors(True)
                 view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)

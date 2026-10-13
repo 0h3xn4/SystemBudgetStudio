@@ -73,7 +73,7 @@ class GuidedWizard(QWizard):
         self.parent_folder = Path(parent_folder)
         self.error_label = QLabel("")
         self.error_label.setWordWrap(True)
-        self.error_label.setStyleSheet("color: #da1e28;")  # Carbon red 60
+        self.error_label.setProperty("role", "error")
 
         self.name_edit = QLineEdit("My first satellite")
         self.folder_edit = QLineEdit(str(self.parent_folder))

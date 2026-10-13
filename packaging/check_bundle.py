@@ -5,7 +5,7 @@
 
 Fails (exit 1) when development code such as hypothesis, mypy or pytest was bundled, or when the
 licence material the licences require is missing: the licence texts, `licences.md` and the SBOM,
-or when the application icon (assets/icons) was not bundled.
+or when the application icon or the user-interface icons (assets/icons) were not bundled.
 """
 
 from __future__ import annotations
@@ -37,7 +37,10 @@ REQUIRED_FILES = (
 
 
 # the window icon (D-148); the data files are in `_internal` of a PyInstaller bundle
-ICON = "budget_core/assets/icons/logo-256.png"
+ICONS = (
+    "budget_core/assets/icons/logo-256.png",
+    "budget_core/assets/icons/ui/circle-check-24.png",  # the user-interface icons (D-150)
+)
 EXECUTABLES = ("system-budget-studio", "budget")
 
 
@@ -58,8 +61,9 @@ def check(bundle: Path) -> list[str]:
     for rel in REQUIRED_FILES:
         if not (bundle / rel).is_file():
             problems.append(f"missing from the bundle: {rel}")
-    if not any((root / ICON).is_file() for root in roots):
-        problems.append(f"missing from the bundle: {ICON}")
+    for icon in ICONS:
+        if not any((root / icon).is_file() for root in roots):
+            problems.append(f"missing from the bundle: {icon}")
     for exe in EXECUTABLES:
         if not has_executable(bundle, exe):
             problems.append(f"missing executable: {exe}")
