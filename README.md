@@ -3,7 +3,9 @@
 An offline desktop and command-line tool that computes **power, mass, thermal and radio-link budgets** for a small satellite from one spacecraft model kept in plain text files.
 
 [![CI](https://github.com/0h3xn4/systembudgetstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/systembudgetstudio/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/0h3xn4/systembudgetstudio)](https://github.com/0h3xn4/systembudgetstudio/releases/latest)
 ![Python 3.11 to 3.13](https://img.shields.io/badge/python-3.11%20to%203.13-blue)
+[![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
 
 ![System Budget Studio showing the power timeline of the example CubeSat: generation, demand and state of charge over one orbit, with eclipse shading and a list of problems](docs/images/power-timeline.png)
 
@@ -15,7 +17,18 @@ It runs entirely on your own computer. There is no cloud service, no telemetry a
 
 If you know a little Python and nothing about this tool, start with the [getting-started guide](docs/getting-started.md).
 
-## Quick start
+## Install
+
+Download the installer for your system from the [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest). No Python is needed; nothing needs administrator rights.
+
+| System | File | What to do |
+|---|---|---|
+| Windows 10/11 | `system-budget-studio-<version>-windows-x64-setup.exe` | Run it. A portable `…-portable.zip` also exists: extract it and start `system-budget-studio.exe`. |
+| Linux (RHEL/Rocky 8 or newer, Ubuntu LTS) | `system-budget-studio-<version>-linux-x86_64.tar.gz` | `tar xzf` it, `cd system-budget-studio`, run `./install.sh`. |
+
+Check the download against `SHA256SUMS-windows.txt` or `SHA256SUMS-linux.txt` from the same page. The installers are unsigned, so Windows may show a warning on first run. Details, uninstalling and the Linux libraries the window needs are in [getting started](docs/getting-started.md#installers). To work on the code or run from source, use the quick start below.
+
+## Quick start (from source)
 
 You need Python 3.11, 3.12 or 3.13 and git. On Linux also read the [prerequisites](docs/getting-started.md#1-prerequisites) (the window needs one system library).
 
@@ -69,13 +82,20 @@ Not in version 1: data-storage budgets, transient thermal simulation, interferen
 - Python 3.11, 3.12 or 3.13 (checked in CI on Windows and Ubuntu with 3.11 and 3.13).
 - Windows 10/11 or Linux (RHEL/Rocky 8 or newer, Ubuntu LTS). macOS is not tested.
 - No administrator rights and no internet access are needed after the install. For an air-gapped machine see [offline install](docs/getting-started.md#offline-install).
-- Self-contained installers for Windows (per user, no administrator rights) and Linux are on the [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest), with checksums; or install from source as above.
+- The installers above are self-contained; Python is needed only to install from source.
 
 ## Licence and status
 
 Released under the [MIT licence](LICENSE) (decision D-140). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/OFL-IBM-Plex.txt)).
 
-Status: version 1.0.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
+Status: version 1.0.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
+
+Known limits, stated plainly:
+
+- The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
+- The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 8 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
+- An eclipse shorter than about 20 s can be missed ([DV-E4](docs/DEVIATIONS.md)); error messages go to standard output; hovering over a plot of a week at 1 s resolution repaints slowly.
+- The XLSX files were not opened in Excel.
 
 ## Related tools
 
