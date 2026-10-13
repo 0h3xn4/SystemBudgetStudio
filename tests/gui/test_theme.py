@@ -222,3 +222,18 @@ def test_the_design_page_states_the_colours_of_the_code() -> None:
         assert theme.STATUS_ICONS[status] in page
     for scale in ("12, 13, 16, 20", "4, 8, 12, 16, 24, 32"):
         assert scale in page
+
+
+def test_a_closed_view_does_not_answer_a_theme_change(qtbot: object) -> None:
+    """The theme manager outlives every window: a view that is gone must not be called when the
+    theme changes (it raised "already deleted" in the next test)."""
+    from PySide6.QtCore import QCoreApplication, QEvent
+
+    from budget_gui.compare_view import CompareView
+
+    view = CompareView()
+    view.deleteLater()
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    theme.manager().set_mode(Mode.DARK)
+    theme.manager().set_mode(Mode.LIGHT)  # raises in the event loop if the view still listens
+    QApplication.processEvents()

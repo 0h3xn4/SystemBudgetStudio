@@ -122,7 +122,7 @@ class CompareView(QWidget):
         self.status = QLabel("")
         self.status.setWordWrap(True)
         self._shown: BudgetOutput | None = None
-        theme.manager().changed.connect(lambda: self._show(self._shown))
+        theme.manager().changed.connect(self._theme_changed)
         self.table = QTableWidget(0, len(HEADERS))
         self.table.setHorizontalHeaderLabels(HEADERS)
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
@@ -270,6 +270,10 @@ class CompareView(QWidget):
                 worker.wait(30000)
 
     # ---- display -----------------------------------------------------------------------------
+    def _theme_changed(self) -> None:
+        """Colour the table again (a bound method, so the connection ends with the widget)."""
+        self._show(self._shown)
+
     def _show(self, output: BudgetOutput | None) -> None:
         self._shown = output
         rows = [(r.name, d) for r in (output.result if output else ()) for d in r.differences]
