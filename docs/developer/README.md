@@ -14,7 +14,7 @@ tests/             unit, regression, golden, gui, offline
 docs/              this documentation; docs/demo = milestone notes
 examples/          the four example projects (generated; invented data)
 packaging/         PyInstaller spec, Linux and Windows installers, licence and bundle checks
-assets/            bundled fonts and licence texts
+assets/            bundled fonts, licence texts and the application icon (assets/icons)
 ```
 
 The [architecture overview](../ARCHITECTURE.md) explains the design: pure solvers over NumPy arrays, `Problem` records instead of exceptions for user errors, configuration with sources, and the decision numbers ([DECISIONS.md](../DECISIONS.md)) behind each choice. The rule that matters most when you add code: **the core imports neither the GUI nor anything networked**, and the CLI and GUI call the same core functions, so they cannot disagree.
@@ -43,6 +43,7 @@ Some files are produced by code and checked by tests, so they cannot drift:
 | `examples/` | `budget export-examples examples --force` | the example builders |
 | `docs/LICENCES.md` | `python packaging/licence_check.py --markdown docs/LICENCES.md` | the dependencies |
 | `requirements.lock`, `requirements-dev.lock` | `packaging/lock.sh` (uses `uv`; needs a network) | `pyproject.toml` dependencies |
+| `assets/icons/logo-*.png` | `python packaging/make_icons.py` (the same drawing as `docs/images/logo.svg`) | the logo |
 | `tests/golden/*` | `UPDATE_GOLDEN=1 pytest tests/golden`, then **read the diff** | a deliberate change of a report |
 
 ## Golden files

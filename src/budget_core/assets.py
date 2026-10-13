@@ -1,4 +1,6 @@
-"""Location of the bundled assets (IBM Plex fonts and licence). No network, no downloads."""
+"""Location of the bundled assets (IBM Plex fonts, licences, application icons).
+
+No network, no downloads."""
 
 from __future__ import annotations
 
@@ -16,3 +18,13 @@ def assets_dir() -> Path:
 
 def font_path(name: str) -> Path:
     return assets_dir() / "fonts" / name
+
+
+def icon_files() -> list[Path]:
+    """The application icon as PNG files of several sizes (assets/icons/logo-<size>.png), the
+    smallest first; an empty list when the folder is missing (the window then has no icon)."""
+    try:
+        folder = assets_dir() / "icons"
+    except FileNotFoundError:
+        return []
+    return sorted(folder.glob("logo-*.png"), key=lambda path: int(path.stem.split("-")[1]))
