@@ -36,7 +36,7 @@ qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it 
 This application failed to start because no Qt platform plugin could be initialized.
 ```
 
-A system library is missing. On Ubuntu or Debian: `sudo apt install libxcb-cursor0`. On RHEL or Rocky install the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)) and, if the message stays, the package that provides `libxcb-cursor.so.0` (`dnf provides '*/libxcb-cursor.so.0'`). The command-line `budget` does not need it. To see what else is missing: `QT_DEBUG_PLUGINS=1 system-budget-studio`.
+A system library is missing. On Ubuntu or Debian: `sudo apt install libxcb-cursor0`. On RHEL or Rocky install the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)) and `xcb-util-cursor`, which is in EPEL and not in their own repositories: `sudo dnf install epel-release`, then `sudo dnf install xcb-util-cursor`. The command-line `budget` does not need it. To see what else is missing: `QT_DEBUG_PLUGINS=1 system-budget-studio`.
 
 ### "This plugin does not support propagateSizeHints()"
 

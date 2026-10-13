@@ -26,6 +26,7 @@ Requires:       xcb-util-wm
 Requires:       xcb-util-image
 Requires:       xcb-util-keysyms
 Requires:       xcb-util-renderutil
+# in EPEL on RHEL and Rocky 8 and 9 (not in their own repositories): enable EPEL first
 Requires:       xcb-util-cursor
 
 %global debug_package %{nil}

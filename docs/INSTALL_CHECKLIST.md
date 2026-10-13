@@ -35,7 +35,7 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 
 ## RHEL or Rocky 8 or 9, with the .rpm (administrator)
 
-- [ ] `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` installs the package and the libraries it needs; `budget --version` and `budget self-test` pass. (CI: rockylinux:8 and :9 containers, as root.)
+- [ ] `sudo dnf install epel-release`, then `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` installs the package and the libraries it needs (`xcb-util-cursor` comes from EPEL); `budget --version` and `budget self-test` pass. (CI: rockylinux:8 and :9 containers, as root.)
 - [ ] The menu entry is there with the logo, and the window starts from it. (Manual; CI starts the window on a virtual X server.)
 - [ ] `sudo dnf remove system-budget-studio` takes away everything the package installed. (CI.)
 
