@@ -367,13 +367,11 @@ def test_ctrl_s_on_the_scenario_tab_saves_the_scenario(window: MainWindow, proje
 
 
 def test_the_tree_selection_survives_a_reload(window: MainWindow) -> None:
-    top = window.tree.topLevelItem(0)
-    units = next(
-        top.child(i) for i in range(top.childCount()) if top.child(i).text(0).startswith("Units")
-    )
-    window.tree.setCurrentItem(units.child(1))
+    item = window.tree.find_item("units/gnss.yaml", kind="file")
+    assert item is not None
+    window.tree.setCurrentItem(item)
     chosen = window.tree.current_unit_id()
-    assert chosen
+    assert chosen == "gnss"
     window.session.reload()
     assert window.tree.current_unit_id() == chosen
 

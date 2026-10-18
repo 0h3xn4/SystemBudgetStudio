@@ -416,6 +416,11 @@ def stylesheet(t: Tokens) -> str:
     QPushButton[kind="secondary"]:hover {{ background: {t.layer}; }}
     QPushButton[kind="danger"] {{ background: {t.s_fail.fg}; border-color: {t.s_fail.fg};
                                   color: {t.background}; }}
+    QPushButton[kind="link"] {{ background: transparent; color: {t.accent_text}; border: none;
+                                padding: 0 {s1}px; text-decoration: underline; }}
+    QPushButton[kind="link"]:hover {{ background: transparent; color: {t.accent_hover}; }}
+    QPushButton[kind="link"]:focus {{ border: 2px solid {t.focus}; }}
+    QStatusBar QLabel {{ background: transparent; }}
     QLineEdit:focus, QPlainTextEdit:focus, QTableView:focus, QTreeView:focus, QComboBox:focus,
     QListWidget:focus {{ border: 2px solid {t.focus}; }}
     QTableView, QTreeView, QLineEdit {{ background: {t.layer}; border: 1px solid {t.border}; }}

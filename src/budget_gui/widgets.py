@@ -1,26 +1,21 @@
-"""Project tree and the budget view (the Problems panel is in `problems_panel`)."""
+"""The budget view and its table model (the tree and the Problems panel have their own modules)."""
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt, Signal
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QFrame,
     QLabel,
-    QMenu,
     QScrollArea,
     QTableView,
     QTabWidget,
-    QTreeWidget,
-    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
 
-from budget_core.model import Project
 from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Table, format_cell
 from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE, CellDelegate, tooltip_for
@@ -76,118 +71,6 @@ class DocTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.ToolTipRole and text == NA:
             return tooltip_for(Status.NOT_CHECKED)
         return None
-
-
-class ProjectTree(QTreeWidget):
-    """Files of the project folder, grouped like the project layout."""
-
-    file_requested = Signal(str)
-    unit_requested = Signal(str)
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.setHeaderHidden(True)
-        self.itemDoubleClicked.connect(self._activated)
-        self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self.customContextMenuRequested.connect(self._context_menu)
-
-    def _activated(self, item: QTreeWidgetItem, _column: int) -> None:
-        rel = item.data(0, Qt.ItemDataRole.UserRole)
-        if rel:
-            self.file_requested.emit(str(rel))
-
-    def current_unit_id(self) -> str | None:
-        item = self.currentItem()
-        unit = item.data(0, UNIT_ROLE) if item else None
-        return str(unit) if unit else None
-
-    def _context_menu(self, pos: Any) -> None:
-        item = self.itemAt(pos)
-        unit = item.data(0, UNIT_ROLE) if item else None
-        if not unit:
-            return
-        menu = QMenu(self)
-        action = menu.addAction("Edit power modes…")
-        if menu.exec(self.viewport().mapToGlobal(pos)) is action:
-            self.unit_requested.emit(str(unit))
-
-    def request_file(self, rel: str) -> None:
-        self.file_requested.emit(rel)
-
-    def file_item_count(self) -> int:
-        count = 0
-        stack = [self.invisibleRootItem()]
-        while stack:
-            node = stack.pop()
-            for i in range(node.childCount()):
-                child = node.child(i)
-                count += 1 if child.data(0, Qt.ItemDataRole.UserRole) else 0
-                stack.append(child)
-        return count
-
-    def current_file(self) -> str | None:
-        item = self.currentItem()
-        rel = item.data(0, Qt.ItemDataRole.UserRole) if item else None
-        return str(rel) if rel else None
-
-    def set_project(self, root: Path | None, project: Project | None) -> None:
-        selected = self.current_file()
-        self.clear()
-        if root is None:
-            return
-        top = QTreeWidgetItem([project.meta.name if project else root.name])
-        self.addTopLevelItem(top)
-
-        def add(parent: QTreeWidgetItem, label: str, rel: str, unit_id: str | None = None) -> None:
-            item = QTreeWidgetItem([label])
-            item.setData(0, Qt.ItemDataRole.UserRole, rel)
-            if unit_id:
-                item.setData(0, UNIT_ROLE, unit_id)
-            parent.addChild(item)
-
-        for name in ("project.yaml", "spacecraft.yaml"):
-            if (root / name).is_file():
-                add(top, name, name)
-        for folder, title in (
-            ("units", "Units"),
-            ("expendables", "Expendables"),
-            ("modes", "Spacecraft modes"),
-            ("orbits", "Orbits"),
-            ("ground_stations", "Ground stations"),
-            ("targets", "Imaging targets"),
-            ("links", "Links"),
-            ("scenarios", "Scenarios"),
-            ("config", "Configuration"),
-        ):
-            files = sorted((root / folder).glob("*.yaml")) if (root / folder).is_dir() else []
-            if not files:
-                continue
-            group = QTreeWidgetItem([f"{title} ({len(files)})"])
-            top.addChild(group)
-            for path in files:
-                label = path.stem
-                if project and folder == "units" and path.stem in project.units:
-                    label = f"{path.stem}: {project.units[path.stem].name}"
-                add(
-                    group,
-                    label,
-                    f"{folder}/{path.name}",
-                    path.stem
-                    if folder == "units" and project and path.stem in project.units
-                    else None,
-                )
-            group.setExpanded(folder != "config")
-        top.setExpanded(True)
-        if selected is not None:  # keep the selection across a reload
-            stack = [top]
-            while stack:
-                node = stack.pop()
-                for i in range(node.childCount()):
-                    child = node.child(i)
-                    if child.data(0, Qt.ItemDataRole.UserRole) == selected:
-                        self.setCurrentItem(child)
-                        return
-                    stack.append(child)
 
 
 class PowerView(QWidget):

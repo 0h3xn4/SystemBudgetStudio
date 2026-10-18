@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 from collections.abc import Collection
 from dataclasses import replace
+from datetime import datetime
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
@@ -15,10 +16,9 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QMainWindow,
     QMessageBox,
-    QStatusBar,
 )
 
-from budget_core import APP_NAME, __version__
+from budget_core import APP_NAME
 from budget_core.problems import sort_problems
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
@@ -31,13 +31,16 @@ from budget_gui.layout_settings import LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.privacy import disable_settings_files
+from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
+from budget_gui.project_tree import ProjectTree
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
+from budget_gui.status_bar import AppStatusBar
 from budget_gui.timeline_view import PowerTimelineView
 from budget_gui.unit_editor import UnitEditor
 from budget_gui.unit_table import export_unit_table, import_unit_table
-from budget_gui.widgets import PowerView, ProjectTree
+from budget_gui.widgets import PowerView
 from budget_gui.worker import ExportWorker
 
 
@@ -98,21 +101,27 @@ class MainWindow(QMainWindow):
         bottom.setWidget(self.problems_panel)
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, bottom)
         self.resizeDocks([bottom], [170], Qt.Orientation.Vertical)  # room for several rows
-        self.setStatusBar(QStatusBar())
-        self.statusBar().showMessage(
-            f"Version {__version__} — offline. File > New project (guided) starts a first budget."
+        self.status_bar = AppStatusBar()
+        self.setStatusBar(self.status_bar)
+        self.status_bar.showMessage(
+            "Offline. File > Open project, or File > New project (guided), starts a budget."
         )
+        self.status_bar.not_checked_requested.connect(self.show_not_checked)
+        self.problems_dock = bottom
 
         self._build_menu()
         self.session.changed.connect(self._refresh)
         self.session.loading_changed.connect(self._loading_changed)
         self.scenario_view.editor.saved.connect(self.reload_project)
         self.tree.file_requested.connect(lambda rel: self.open_file(rel))
+        self.tree.field_requested.connect(self.jump_to_input)
         self.tree.unit_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self._export_folder = Path()
         self.timeline_view.computed.connect(lambda _result: self._update_problems())
         self.link_passes_view.computed.connect(lambda _result: self._update_problems())
+        for computing in (self.scenario_view, self.timeline_view, self.link_passes_view):
+            computing.computed.connect(lambda _result: self._mark_run())
         self.timeline_view.jump_requested.connect(self.jump_to_input)
         for view in (self.timeline_view, self.link_passes_view, self.compare_view):
             view.export_finished.connect(self._view_export_done)
@@ -303,6 +312,17 @@ class MainWindow(QMainWindow):
         """Load the open project again without freezing the window (F5, after a save)."""
         self.session.reload_async()
 
+    def _mark_run(self) -> None:
+        """Something was worked out just now: say so in the status bar."""
+        self.status_bar.set_last_run(datetime.now())
+
+    def show_not_checked(self) -> None:
+        """List the 'not checked' findings (the link in the status bar)."""
+        self.problems_panel.set_class_filter(ProblemClass.NOT_CHECKED)
+        self.problems_dock.show()
+        self.problems_dock.raise_()
+        self.problems_panel.setFocus()
+
     def _loading_changed(self, loading: bool) -> None:
         if loading:
             self.statusBar().showMessage("Loading the project… the window stays usable.")
@@ -404,6 +424,8 @@ class MainWindow(QMainWindow):
         self.editors.reload_clean_files(project.units if project else None)
         name = project.meta.name if project else (session.path.name if session.path else "")
         self.setWindowTitle(f"{name} — {APP_NAME}" if name else APP_NAME)
+        self.status_bar.set_project_path(session.path)
+        self.status_bar.set_last_run(datetime.now() if project else None)
         self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
 
     def _update_problems(self) -> None:
@@ -421,9 +443,10 @@ class MainWindow(QMainWindow):
             else p
             for p in [*self.session.problems, *extra]
         ]
-        self.problems_panel.set_problems(
-            sort_problems(located), project_open=self.session.path is not None
-        )
+        shown = sort_problems(located)
+        self.problems_panel.set_problems(shown, project_open=self.session.path is not None)
+        self.tree.set_problems(shown)
+        self.status_bar.set_not_checked(self.problems_panel.counts()[ProblemClass.NOT_CHECKED])
         if self.session.project is not None:
             name = self.session.project.meta.name
             self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
