@@ -264,3 +264,61 @@ def test_plot_widget_cursor_pin_and_paint(window: MainWindow, qtbot) -> None:  #
         for py in range(0, image.height(), 7)
     }
     assert len(colours) > 6  # shading, lines and text were painted
+
+
+# ---- markers, next/previous violation and the time axis (D-162) ------------------------------
+def test_each_violation_of_the_case_is_a_marker_and_next_goes_through_them(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    compute(window, qtbot)
+    view = window.timeline_view
+    assert view.result is not None
+    rows = view._case_rows()
+    assert len(view.plot.markers()) == len(rows) > 1
+    assert view.next_violation.isEnabled() and view.previous_violation.isEnabled()
+    starts = [view.plot.markers()[i].start_s for i in range(len(rows))]
+    assert starts == sorted(starts)
+    view.next_violation.click()
+    assert view.plot.pinned_s() == pytest.approx(starts[0])
+    first_view = view.plot.view()
+    view.next_violation.click()
+    assert view.plot.pinned_s() == pytest.approx(starts[1]) and view.plot.view() != first_view
+    assert view.violations_table.currentRow() == rows[1]
+    view.previous_violation.click()
+    view.previous_violation.click()  # wraps round to the last
+    assert view.plot.pinned_s() == pytest.approx(starts[-1])
+
+
+def test_a_click_on_a_marker_selects_that_violation(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
+    compute(window, qtbot)
+    view = window.timeline_view
+    view.plot.grab()
+    marker = view.plot.markers()[2]
+    view.plot.marker_clicked.emit(2)
+    assert view.plot.pinned_s() == pytest.approx(marker.start_s)
+
+
+def test_changing_the_case_changes_the_markers(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
+    compute(window, qtbot)
+    view = window.timeline_view
+    bol = len(view.plot.markers())
+    view.case_combo.setCurrentText("EOL")
+    assert len(view.plot.markers()) == len(view._case_rows())
+    assert bol > 0
+
+
+def test_the_axis_choice_survives_a_new_result_and_orbit_needs_eclipses(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    compute(window, qtbot)
+    view = window.timeline_view
+    view.axis_combo.setCurrentText("UTC")
+    assert view.plot.time_axis().name == "utc"
+    view.case_combo.setCurrentText("EOL")  # a new plot spec
+    assert view.plot.time_axis().name == "utc"
+    view.axis_combo.setCurrentText("Orbit")
+    assert view.plot.time_axis().name == "orbit"
+    view.axis_combo.setCurrentText("Elapsed")
+    assert view.plot.time_axis().name == "elapsed"

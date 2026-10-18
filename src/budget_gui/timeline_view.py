@@ -3,7 +3,9 @@
 The computation (environment, array, battery) runs in a worker thread. The environment of the
 Scenario tab is reused when it is current. Both cases (BOL and EOL) are solved together; the case
 selector only changes what is shown. Violations zoom the plot to their interval, and a double
-click opens the input that governs them.
+click opens the input that governs them. Each violation of the case on show is also a marker
+along the top of the plot; Previous and Next violation (or a click on a marker) go through them
+(D-162).
 """
 
 from __future__ import annotations
@@ -42,8 +44,11 @@ from budget_core.provenance import make_provenance
 from budget_core.reports.run import BudgetOutput, timeline_output
 from budget_core.scenario.run import ScenarioRun, ScenarioRunError, run_scenario
 from budget_core.timeutil import format_utc
-from budget_gui.plot_widget import PlotWidget
+from budget_gui.delegates import CellDelegate
+from budget_gui.plot_widget import PlotMarker, PlotWidget
 from budget_gui.scenario_view import fill_table
+from budget_gui.theme import Status
+from budget_gui.time_axis import ElapsedAxis, OrbitAxis, TimeAxis, UtcAxis, orbit_period_s
 from budget_gui.validity import (
     CHANGED_WHILE_RUNNING_TEXT,
     NOT_COMPUTED_TEXT,
@@ -54,6 +59,7 @@ from budget_gui.worker import ExportWorker
 
 BASES = ("nominal", "margined")
 CASE_NAMES = ("bol", "eol")
+AXES = ("Elapsed", "UTC", "Orbit")
 
 
 EMPTY_TEXT = (
@@ -118,6 +124,23 @@ class PowerTimelineView(QWidget):
         self.case_combo.addItems(["BOL", "EOL"])
         self.shading = QCheckBox("Shade eclipses and passes")
         self.shading.setChecked(True)
+        self.axis_combo = QComboBox()
+        self.axis_combo.addItems(AXES)
+        self.axis_combo.setToolTip(
+            "Time axis of the plot: elapsed time, UTC clock time, or orbit number "
+            "(counted from the spacing of the eclipses)."
+        )
+        self.previous_violation = QPushButton("◀")
+        self.next_violation = QPushButton("▶")
+        for button in (self.previous_violation, self.next_violation):
+            button.setProperty("kind", "secondary")
+            button.setEnabled(False)
+            button.setMaximumWidth(36)
+        self.previous_violation.setToolTip("Go to the previous interval that breaks a limit.")
+        self.previous_violation.setAccessibleName("Previous violation")
+        self.next_violation.setToolTip("Go to the next interval that breaks a limit.")
+        self.next_violation.setAccessibleName("Next violation")
+        self._selected_row: int | None = None  # index into result.violations
         self.compute_button = QPushButton("Compute")
         self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button = QPushButton("Export…")
@@ -141,10 +164,14 @@ class PowerTimelineView(QWidget):
                 self.shared_labels.append(label)
             top.addWidget(label)
             top.addWidget(widget)
-        top.addWidget(self.shading)
+        top.addWidget(QLabel("Axis"))
+        top.addWidget(self.axis_combo)
+        top.addWidget(QLabel("Violation"))
+        top.addWidget(self.previous_violation)
+        top.addWidget(self.next_violation)
         top.addWidget(self.compute_button)
         top.addWidget(self.export_button)
-        top.addWidget(self.status, 1)
+        top.addStretch(1)
 
         self.plot = PlotWidget()
         self.summary_table = QTableWidget()
@@ -155,6 +182,17 @@ class PowerTimelineView(QWidget):
         self.violations_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.orbits_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.modes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        for table in (
+            self.summary_table,
+            self.violations_table,
+            self.orbits_table,
+            self.modes_table,
+        ):
+            table.setItemDelegate(
+                CellDelegate(table)
+            )  # broken limits and n/a look like the budgets
+            table.verticalHeader().setVisible(False)
+            table.setAlternatingRowColors(True)
         self.tabs = QTabWidget()
         self.tabs.addTab(self.summary_table, "Summary")
         self.tabs.addTab(self.violations_table, "Violations")
@@ -168,6 +206,10 @@ class PowerTimelineView(QWidget):
 
         layout = QVBoxLayout(self)
         layout.addLayout(top)
+        second = QHBoxLayout()  # its own row: a long message does not squeeze the controls
+        second.addWidget(self.shading)
+        second.addWidget(self.status, 1)
+        layout.addLayout(second)
         layout.addWidget(self.empty_label)
         layout.addWidget(self.body)
 
@@ -175,6 +217,10 @@ class PowerTimelineView(QWidget):
         self.export_button.clicked.connect(lambda: self._choose_export())
         self.case_combo.currentTextChanged.connect(lambda _t: self._show())
         self.shading.toggled.connect(self.plot.set_shading)
+        self.axis_combo.currentTextChanged.connect(self._axis_changed)
+        self.previous_violation.clicked.connect(self.go_to_previous_violation)
+        self.next_violation.clicked.connect(self.go_to_next_violation)
+        self.plot.marker_clicked.connect(self._marker_clicked)
         self.scenario_combo.currentTextChanged.connect(self._scenario_changed)
         self.basis_combo.currentTextChanged.connect(lambda _t: self._update_validity())
         self.violations_table.cellClicked.connect(lambda row, _c: self.select_violation(row))
@@ -232,7 +278,13 @@ class PowerTimelineView(QWidget):
         shown = bool(ids)
         self.empty_label.setVisible(not shown)
         self.body.setVisible(shown)
-        for widget in (self.scenario_combo, self.basis_combo, self.case_combo, self.shading):
+        for widget in (
+            self.scenario_combo,
+            self.basis_combo,
+            self.case_combo,
+            self.shading,
+            self.axis_combo,
+        ):
             widget.setEnabled(shown)
         self.compute_button.setEnabled(shown and self._worker is None)
         if not shown:
@@ -332,8 +384,10 @@ class PowerTimelineView(QWidget):
 
     def _show(self) -> None:
         result = self.result
+        self._selected_row = None
         if result is None:
             self.plot.set_spec(None)
+            self._update_violation_buttons()
             for table in (
                 self.summary_table,
                 self.violations_table,
@@ -346,7 +400,86 @@ class PowerTimelineView(QWidget):
             return
         self.plot.set_spec(power_plot(result, self.current_case()))
         self.plot.set_shading(self.shading.isChecked())
+        self._apply_axis()
+        self._show_markers()
         self._fill_tables(result)
+
+    # ---- axis and markers --------------------------------------------------------------------
+    def _axis_for(self, name: str) -> TimeAxis:
+        result = self.result
+        if result is not None and name == "UTC":
+            return UtcAxis(result.run.env.grid.start)
+        if result is not None and name == "Orbit":
+            period = orbit_period_s([e.start_s for e in result.run.env.eclipses])
+            if period is not None:
+                return OrbitAxis(period)
+        return ElapsedAxis()
+
+    def _apply_axis(self) -> None:
+        """Offer the orbit axis only where the eclipses give a period, and show the chosen one."""
+        result = self.result
+        has_period = (
+            result is not None
+            and orbit_period_s([e.start_s for e in result.run.env.eclipses]) is not None
+        )
+        item = self.axis_combo.model().item(AXES.index("Orbit"))  # type: ignore[attr-defined]
+        item.setEnabled(has_period)
+        item.setToolTip(
+            "" if has_period else "There are too few eclipses to tell the orbit period."
+        )
+        self.plot.set_time_axis(self._axis_for(self.axis_combo.currentText()))
+
+    def _axis_changed(self, _name: str) -> None:
+        self._apply_axis()
+
+    def _case_rows(self) -> list[int]:
+        """Rows of result.violations that belong to the case on show, in time order."""
+        if self.result is None:
+            return []
+        case = self.current_case()
+        rows = [i for i, v in enumerate(self.result.violations) if v.case in (case, "", None)]
+        return sorted(rows, key=lambda i: self.result.violations[i].start_s)  # type: ignore[union-attr]
+
+    def _show_markers(self) -> None:
+        rows = self._case_rows()
+        violations = self.result.violations if self.result else ()
+        markers = [
+            PlotMarker(
+                violations[i].start_s,
+                violations[i].end_s,
+                CODES_TEXT.get(violations[i].code, violations[i].code),
+            )
+            for i in rows
+        ]
+        selected = rows.index(self._selected_row) if self._selected_row in rows else None
+        self.plot.set_markers(markers, selected)
+        self._update_violation_buttons()
+
+    def _update_violation_buttons(self) -> None:
+        has = bool(self._case_rows())
+        self.previous_violation.setEnabled(has)
+        self.next_violation.setEnabled(has)
+
+    def _step_violation(self, step: int) -> None:
+        rows = self._case_rows()
+        if not rows:
+            return
+        if self._selected_row in rows:
+            target = rows[(rows.index(self._selected_row) + step) % len(rows)]
+        else:
+            target = rows[0] if step > 0 else rows[-1]
+        self.select_violation(target)
+
+    def go_to_next_violation(self) -> None:
+        self._step_violation(1)
+
+    def go_to_previous_violation(self) -> None:
+        self._step_violation(-1)
+
+    def _marker_clicked(self, index: int) -> None:
+        rows = self._case_rows()
+        if 0 <= index < len(rows):
+            self.select_violation(rows[index])
 
     def _fill_tables(self, result: TimeDomainResult) -> None:
         def num(value: float | None, digits: int = 2) -> str:
@@ -388,6 +521,15 @@ class PowerTimelineView(QWidget):
                 "Violations",
             ],
             rows,
+            numeric=range(1, 10),
+            states={
+                **{(r, 9): Status.FAIL for r in range(len(rows)) if rows[r][9] != "0"},
+                **{
+                    (r, 8): Status.FAIL
+                    for r, c in enumerate(result.cases)
+                    if (c.summary.unmet_wh or 0.0) > 0.0
+                },
+            },
         )
         fill_table(
             self.violations_table,
@@ -416,6 +558,8 @@ class PowerTimelineView(QWidget):
                 ]
                 for v in result.violations
             ],
+            numeric=(4, 5, 6),
+            states={(r, 5): Status.FAIL for r in range(len(result.violations))},
         )
         fill_table(
             self.orbits_table,
@@ -440,6 +584,10 @@ class PowerTimelineView(QWidget):
                 ]
                 for b in case.balances
             ],
+            numeric=(0, 2, 3, 4, 5, 6),
+            states={
+                (r, 5): Status.FAIL for r, b in enumerate(case.balances) if (b.balance_wh or 0) < 0
+            },
         )
         total = result.run.scenario.duration_s
         fill_table(
@@ -456,6 +604,7 @@ class PowerTimelineView(QWidget):
                 ]
                 for m in result.modes
             ],
+            numeric=(2, 3, 4, 5),
         )
 
     # ---- violations --------------------------------------------------------------------------
@@ -468,6 +617,9 @@ class PowerTimelineView(QWidget):
         pad = max((v.end_s - v.start_s) * 0.5, 300.0)
         self.plot.set_view(v.start_s - pad, v.end_s + pad)
         self.plot.pin_cursor(v.start_s)
+        self._selected_row = row
+        self._show_markers()
+        self.violations_table.selectRow(row)
 
     def jump_to(self, row: int) -> None:
         if self.result is None or not 0 <= row < len(self.result.violations):

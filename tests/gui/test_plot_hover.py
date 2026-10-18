@@ -135,3 +135,34 @@ def test_hovering_over_twenty_series_of_a_week_is_quick(plot: PlotWidget) -> Non
         plot.repaint()
     per_paint = (time.perf_counter() - start) / 20
     assert per_paint < 0.05  # about 0.001 s now; the bound leaves room for a slow machine
+
+
+def test_panning_and_zooming_twenty_series_of_a_week_is_quick(plot: PlotWidget) -> None:
+    """UX-26: the plot reduced every series with a Python loop and stroked thick zigzags, 2 to 3 s
+    for every pan or zoom of 20 series of a week; the block summaries and separate lines (D-161)
+    take about 0.06 s."""
+    plot.set_spec(week_spec())
+    plot.grab()  # the first draw summarises every series once
+    changes = [lambda: plot.zoom(2.0, 100_000.0), lambda: plot.pan(30_000.0)] * 5
+    start = time.perf_counter()
+    for change in changes:
+        change()
+        plot.grab()
+    per_change = (time.perf_counter() - start) / len(changes)
+    assert per_change < 0.5  # about 0.06 s here; the bound leaves room for a slow runner
+
+
+def test_a_one_sample_spike_survives_the_reduction(plot: PlotWidget) -> None:
+    x = np.arange(N, dtype=np.float64)
+    y = np.zeros(N)
+    y[400_000] = 100.0
+    plot.set_spec(PlotSpec("spike", (Panel("p", "W", (Series("s", x, y),)),), x_max_s=float(N)))
+    image = plot.grab().toImage()
+    rect = plot._panel_rects()[0]
+    column = int(plot.time_to_x(400_000.0))
+    background = image.pixelColor(int(rect.left()) + 3, int(rect.top()) + 12).name()
+    upper_half = range(int(rect.top()) + 2, int(rect.top() + rect.height() / 2))
+    top_rows = [
+        image.pixelColor(column + dx, row).name() for dx in (-1, 0, 1) for row in upper_half
+    ]
+    assert any(colour != background for colour in top_rows)  # a line rises into the upper half

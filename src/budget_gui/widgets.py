@@ -19,7 +19,13 @@ from PySide6.QtWidgets import (
 
 from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
-from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE, CellDelegate, tooltip_for
+from budget_gui.delegates import (
+    NUMERIC_ROLE,
+    STATE_ROLE,
+    TOTAL_ROLE,
+    CellDelegate,
+    tooltip_for,
+)
 from budget_gui.theme import Status
 
 SEVERITY_ORDER = {Severity.ERROR: 0, Severity.WARNING: 1, Severity.INFO: 2}
@@ -30,6 +36,19 @@ COLUMN_WIDTH_ROWS = 60  # rows looked at to size a column
 
 
 EMPTY_TEXT = "No budget to show. Open a project without errors."
+HEADER_LINE = 14  # a header longer than this is broken into two lines at a space
+
+
+def wrap_header(text: str) -> str:
+    """A long column header on two lines, broken at the space nearest the middle, so a table of
+    many columns fits the window (the report keeps the one-line header)."""
+    if len(text) <= HEADER_LINE:
+        return text
+    spaces = [i for i, c in enumerate(text) if c == " "]
+    if not spaces:
+        return text
+    cut = min(spaces, key=lambda i: abs(i - len(text) / 2))
+    return text[:cut] + "\n" + text[cut + 1 :]
 
 
 class DocTableModel(QAbstractTableModel):
@@ -49,8 +68,12 @@ class DocTableModel(QAbstractTableModel):
     def headerData(
         self, section: int, orientation: Qt.Orientation, role: int = Qt.ItemDataRole.DisplayRole
     ) -> Any:
-        if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
-            return self.table.columns[section].header
+        if orientation == Qt.Orientation.Horizontal:
+            header = self.table.columns[section].header
+            if role == Qt.ItemDataRole.DisplayRole:
+                return wrap_header(header)
+            if role == Qt.ItemDataRole.ToolTipRole:
+                return header
         return None
 
     def data(self, index: Index, role: int = Qt.ItemDataRole.DisplayRole) -> Any:
@@ -72,6 +95,8 @@ class DocTableModel(QAbstractTableModel):
             return Status.NOT_CHECKED.value if text == NA else None
         if role == NUMERIC_ROLE:
             return column.kind != "text" or value is None
+        if role == TOTAL_ROLE:
+            return self.table.emphasise_last_row and index.row() == len(self.table.rows) - 1
         if role == Qt.ItemDataRole.ToolTipRole and text == NA:
             return tooltip_for(Status.NOT_CHECKED)
         return None

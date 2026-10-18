@@ -48,7 +48,7 @@ EOL: generated 93.8 Wh, lowest state of charge 89.0 %, 0 violation(s).
 
 A check that could not run is never reported as passed. If the peak power limit, the allowed depth of discharge (a placeholder, or no mission phase) or an array or battery input is missing, or the scenario has no complete orbit, the command adds a line `Not evaluated: ...`, the Violations table says `Not evaluated: ...` instead of "No violations found", and the violation count of a case includes the findings that do not depend on the case (the peak power).
 
-In the window: the top plot shows generation, demand at the source and the peak limit; then state of charge; then the margin (generation minus demand). Shaded bands are eclipses and passes. The tables below give a **Summary** per case, the **Violations**, one row per **Orbit**, and the **Modes** with their loads.
+In the window: the top plot shows generation, demand at the source and the peak limit; then state of charge; then the margin (generation minus demand). Shaded bands are eclipses and passes. Click a legend entry to hide that series, and Shift-click to see only that one (again to bring the others back). Each interval that breaks a limit is marked by a red bar along the top of the plot; **◀** and **▶** beside *Violation* (or a click on a bar) go from one to the next, zoom to it and select its row in the Violations table. **Axis** chooses elapsed time, UTC clock time or the orbit number (counted from the spacing of the eclipses, so it is offered when the scenario has at least three eclipses). The tables below give a **Summary** per case, the **Violations**, one row per **Orbit**, and the **Modes** with their loads.
 
 ## What are the violations?
 
