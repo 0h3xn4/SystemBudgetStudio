@@ -124,7 +124,15 @@ A computation or an export is still running in the background; stopping it half 
 
 ### Export is switched off, or says "out of date" / "changed since this result was computed"
 
-The result on screen was computed from different inputs than the ones set now: the project was reloaded or saved, another scenario or demand basis is selected, or the other folder in **Compare** changed. Press **Compute** (or **Compare**) again, then export.
+The result on screen was computed from different inputs than the ones set now: the project was reloaded or saved, another scenario or demand basis is selected, or the other folder in **Compare** changed. The run status in the top bar says **Out of date**. Press **Run** (or **Compute** in the view, or **Compare**) again, then export.
+
+### A yellow banner says the tables show the last results that worked
+
+The project has an error since you last saved. The budget tables are kept from before it so you can see what your change did, and nothing can be exported from them. Press **Show the first error** in the banner, fix it, save; the banner goes when the project loads.
+
+### A panel is missing or the window looks wrong
+
+**View → Reset layout** restores the panels, their sizes and the Problems columns. The panels can also be switched on in the **View** menu. The window layout is kept in `layout.ini` (see [use the window](user-manual/use-the-window.md#where-does-the-window-keep-its-layout)); deleting that file does the same.
 
 ### "The file ... changed on disk after it was opened in this tab"
 

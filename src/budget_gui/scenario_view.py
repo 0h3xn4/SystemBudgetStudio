@@ -60,6 +60,12 @@ SHADOW_MODELS = ("cylindrical", "conical")
 _number = cell_value
 
 
+EMPTY_TEXT = (
+    "This project has no scenario. Add a file in scenarios/ to work out the power timeline "
+    "and the link passes."
+)
+
+
 class ScenarioWorker(QThread):
     finished_ok = Signal(object)
     failed = Signal(str)
@@ -503,14 +509,17 @@ class ScenarioView(QWidget):
 
         self.combo = QComboBox()
         self.compute_button = QPushButton("Compute")
+        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
         self.compute_button.clicked.connect(lambda: self.compute())
         self.status = QLabel("")
         self.status.setWordWrap(True)
-        self.empty_label = QLabel("No scenario to show. Open a project that has scenarios.")
+        self.empty_label = QLabel(EMPTY_TEXT)
+        self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        self.scenario_label = QLabel("Scenario")
         top = QHBoxLayout()
-        top.addWidget(QLabel("Scenario"))
+        top.addWidget(self.scenario_label)
         top.addWidget(self.combo)
         top.addWidget(self.compute_button)
         top.addWidget(self.status, 1)
@@ -520,6 +529,9 @@ class ScenarioView(QWidget):
         self.eclipse_table = QTableWidget()
         self.passes_table = QTableWidget()
         self.timeline_table = QTableWidget()
+        self.eclipse_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.passes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.timeline_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         tabs = QTabWidget()
         scroll = (
             QScrollArea()
@@ -546,7 +558,16 @@ class ScenarioView(QWidget):
         self.timeline.range_selected.connect(self._range_selected)
         self.set_project(None)
 
+    def use_shared_selector(self) -> None:
+        """The scenario is chosen in the top bar: this view keeps its selector hidden."""
+        self.scenario_label.hide()
+        self.combo.hide()
+
     # ---- project -----------------------------------------------------------------------------
+    def set_empty_text(self, text: str | None) -> None:
+        """Say why there is nothing to show (None: the usual sentence)."""
+        self.empty_label.setText(text or EMPTY_TEXT)
+
     def selected_id(self) -> str:
         return self.combo.currentText()
 

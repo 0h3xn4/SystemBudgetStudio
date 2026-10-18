@@ -1,33 +1,24 @@
-"""Project tree, Problems panel and the power budget view."""
+"""The budget view and its table model (the tree and the Problems panel have their own modules)."""
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt, Signal
-from PySide6.QtGui import QBrush, QColor
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QFrame,
-    QHeaderView,
     QLabel,
-    QMenu,
     QScrollArea,
     QTableView,
-    QTableWidget,
-    QTableWidgetItem,
     QTabWidget,
-    QTreeWidget,
-    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
 
-from budget_core.model import Project
-from budget_core.problems import Problem, Severity
-from budget_core.reports.document import NA, ReportDocument, Table, format_cell
-from budget_gui import theme
+from budget_core.problems import Severity
+from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
 from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE, CellDelegate, tooltip_for
 from budget_gui.theme import Status
 
@@ -36,6 +27,9 @@ Index = QModelIndex | QPersistentModelIndex
 _NO_PARENT = QModelIndex()
 UNIT_ROLE = int(Qt.ItemDataRole.UserRole) + 1
 COLUMN_WIDTH_ROWS = 60  # rows looked at to size a column
+
+
+EMPTY_TEXT = "No budget to show. Open a project without errors."
 
 
 class DocTableModel(QAbstractTableModel):
@@ -83,186 +77,59 @@ class DocTableModel(QAbstractTableModel):
         return None
 
 
-class ProblemsPanel(QWidget):
-    """All problems of the open project; double-click or Enter jumps to the offending line."""
+class _SectionPage(QScrollArea):
+    """One sheet of a budget. Its tables are made the first time the page is shown: a project with
+    200 units has tables of 200 rows in every sheet, and making all of them when the project loads
+    (most are never looked at) kept the window busy for a second."""
 
-    jump_requested = Signal(str, int)
-
-    def __init__(self) -> None:
+    def __init__(self, section: Section) -> None:
         super().__init__()
-        self.summary = QLabel("No project open")
-        self.table = QTableWidget(0, 4)
-        self.table.setHorizontalHeaderLabels(["Severity", "Code", "Location", "Message"])
-        self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-        self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.table.verticalHeader().setVisible(False)
-        self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.setMinimumHeight(48)
-        self.table.itemActivated.connect(lambda item: self.activate_row(item.row()))
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(8, 4, 8, 4)
-        layout.addWidget(self.summary)
-        layout.addWidget(self.table)
-        self._problems: list[Problem] = []
-        theme.manager().changed.connect(self._recolour)
+        self.section = section
+        self.models: list[DocTableModel] = []
+        self._built = False
+        self.setWidgetResizable(True)
+        self.setFrameShape(QFrame.Shape.NoFrame)
 
-    def set_problems(self, problems: list[Problem]) -> None:
-        # errors first, then warnings, then information; inside a group the given order (file, line)
-        problems = sorted(problems, key=lambda p: SEVERITY_ORDER[p.severity])
-        self._problems = list(problems)
-        errors = sum(p.severity is Severity.ERROR for p in problems)
-        warnings = sum(p.severity is Severity.WARNING for p in problems)
-        infos = len(problems) - errors - warnings
-        self.summary.setText(
-            f"{errors} error{'s' if errors != 1 else ''}, "
-            f"{warnings} warning{'s' if warnings != 1 else ''}"
-            + (f", {infos} info" if infos else "")
-        )
-        self.table.setRowCount(len(problems))
-        for row, problem in enumerate(problems):
-            where = problem.file or "<project>"
-            if problem.line is not None:
-                where += f":{problem.line}"
-            message = problem.message + (f"  {problem.hint}" if problem.hint else "")
-            cells = [problem.severity.value.capitalize(), problem.code, where, message]
-            for column, text in enumerate(cells):
-                item = QTableWidgetItem(text)
-                if column == 0:
-                    item.setForeground(QBrush(self._severity_brush(problem.severity)))
-                item.setToolTip(problem.path)
-                self.table.setItem(row, column, item)
-        self.table.resizeColumnsToContents()
-        self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+    def showEvent(self, event: QShowEvent) -> None:  # noqa: N802 (Qt naming)
+        super().showEvent(event)
+        self.ensure_built()
 
-    @staticmethod
-    def _severity_brush(severity: Severity) -> QColor:
-        return QColor(theme.severity_colour(theme.tokens(), severity.value))
-
-    def _recolour(self) -> None:
-        """The theme changed: colour the severity column again."""
-        for row, problem in enumerate(self._problems):
-            item = self.table.item(row, 0)
-            if item is not None:
-                item.setForeground(QBrush(self._severity_brush(problem.severity)))
-
-    def activate_row(self, row: int) -> None:
-        if 0 <= row < len(self._problems):
-            problem = self._problems[row]
-            if problem.file:
-                self.jump_requested.emit(problem.file, problem.line or 1)
-
-
-class ProjectTree(QTreeWidget):
-    """Files of the project folder, grouped like the project layout."""
-
-    file_requested = Signal(str)
-    unit_requested = Signal(str)
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.setHeaderHidden(True)
-        self.itemDoubleClicked.connect(self._activated)
-        self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        self.customContextMenuRequested.connect(self._context_menu)
-
-    def _activated(self, item: QTreeWidgetItem, _column: int) -> None:
-        rel = item.data(0, Qt.ItemDataRole.UserRole)
-        if rel:
-            self.file_requested.emit(str(rel))
-
-    def current_unit_id(self) -> str | None:
-        item = self.currentItem()
-        unit = item.data(0, UNIT_ROLE) if item else None
-        return str(unit) if unit else None
-
-    def _context_menu(self, pos: Any) -> None:
-        item = self.itemAt(pos)
-        unit = item.data(0, UNIT_ROLE) if item else None
-        if not unit:
+    def ensure_built(self) -> None:
+        if self._built:
             return
-        menu = QMenu(self)
-        action = menu.addAction("Edit power modes…")
-        if menu.exec(self.viewport().mapToGlobal(pos)) is action:
-            self.unit_requested.emit(str(unit))
-
-    def request_file(self, rel: str) -> None:
-        self.file_requested.emit(rel)
-
-    def file_item_count(self) -> int:
-        count = 0
-        stack = [self.invisibleRootItem()]
-        while stack:
-            node = stack.pop()
-            for i in range(node.childCount()):
-                child = node.child(i)
-                count += 1 if child.data(0, Qt.ItemDataRole.UserRole) else 0
-                stack.append(child)
-        return count
-
-    def current_file(self) -> str | None:
-        item = self.currentItem()
-        rel = item.data(0, Qt.ItemDataRole.UserRole) if item else None
-        return str(rel) if rel else None
-
-    def set_project(self, root: Path | None, project: Project | None) -> None:
-        selected = self.current_file()
-        self.clear()
-        if root is None:
-            return
-        top = QTreeWidgetItem([project.meta.name if project else root.name])
-        self.addTopLevelItem(top)
-
-        def add(parent: QTreeWidgetItem, label: str, rel: str, unit_id: str | None = None) -> None:
-            item = QTreeWidgetItem([label])
-            item.setData(0, Qt.ItemDataRole.UserRole, rel)
-            if unit_id:
-                item.setData(0, UNIT_ROLE, unit_id)
-            parent.addChild(item)
-
-        for name in ("project.yaml", "spacecraft.yaml"):
-            if (root / name).is_file():
-                add(top, name, name)
-        for folder, title in (
-            ("units", "Units"),
-            ("expendables", "Expendables"),
-            ("modes", "Spacecraft modes"),
-            ("orbits", "Orbits"),
-            ("ground_stations", "Ground stations"),
-            ("targets", "Imaging targets"),
-            ("links", "Links"),
-            ("scenarios", "Scenarios"),
-            ("config", "Configuration"),
-        ):
-            files = sorted((root / folder).glob("*.yaml")) if (root / folder).is_dir() else []
-            if not files:
-                continue
-            group = QTreeWidgetItem([f"{title} ({len(files)})"])
-            top.addChild(group)
-            for path in files:
-                label = path.stem
-                if project and folder == "units" and path.stem in project.units:
-                    label = f"{path.stem}: {project.units[path.stem].name}"
-                add(
-                    group,
-                    label,
-                    f"{folder}/{path.name}",
-                    path.stem
-                    if folder == "units" and project and path.stem in project.units
-                    else None,
-                )
-            group.setExpanded(folder != "config")
-        top.setExpanded(True)
-        if selected is not None:  # keep the selection across a reload
-            stack = [top]
-            while stack:
-                node = stack.pop()
-                for i in range(node.childCount()):
-                    child = node.child(i)
-                    if child.data(0, Qt.ItemDataRole.UserRole) == selected:
-                        self.setCurrentItem(child)
-                        return
-                    stack.append(child)
+        self._built = True
+        page = QWidget()
+        layout = QVBoxLayout(page)
+        for text in self.section.paragraphs:
+            layout.addWidget(QLabel(text))
+        for table in self.section.tables:
+            title = QLabel(table.title)
+            title.setProperty("role", "section-title")
+            layout.addWidget(title)
+            model = DocTableModel(table)
+            self.models.append(model)
+            view = QTableView()
+            view.setModel(model)
+            view.setItemDelegate(CellDelegate(view))
+            view.verticalHeader().setVisible(False)
+            view.setAlternatingRowColors(True)
+            view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+            view.setTabKeyNavigation(False)  # Tab leaves a read-only table (it is not a form)
+            # the widths come from the first rows only: a table of thousands of rows would
+            # otherwise be measured cell by cell every time the project is loaded
+            view.horizontalHeader().setResizeContentsPrecision(COLUMN_WIDTH_ROWS)
+            view.resizeColumnsToContents()
+            view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            height = view.horizontalHeader().height() + 2 * view.frameWidth() + 18
+            height += sum(view.rowHeight(r) for r in range(len(table.rows)))
+            view.setFixedHeight(max(height, 60))
+            layout.addWidget(view)
+            if table.note:
+                note = QLabel(table.note)
+                note.setWordWrap(True)
+                layout.addWidget(note)
+        layout.addStretch(1)
+        self.setWidget(page)
 
 
 class PowerView(QWidget):
@@ -273,7 +140,8 @@ class PowerView(QWidget):
         self.banner = QLabel()
         self.banner.setWordWrap(True)
         self.banner.setProperty("role", "banner")
-        self.empty_label = QLabel("No budget to show. Open a project without errors.")
+        self.empty_label = QLabel(EMPTY_TEXT)
+        self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabs = QTabWidget()
         layout = QVBoxLayout(self)
@@ -281,8 +149,12 @@ class PowerView(QWidget):
         layout.addWidget(self.banner)
         layout.addWidget(self.empty_label)
         layout.addWidget(self.tabs)
-        self._models: dict[str, list[DocTableModel]] = {}
+        self._pages: dict[str, _SectionPage] = {}
         self.set_document(None)
+
+    def set_empty_text(self, text: str | None) -> None:
+        """Say why there is nothing to show (None: the usual sentence)."""
+        self.empty_label.setText(text or EMPTY_TEXT)
 
     def count(self) -> int:
         return self.tabs.count()
@@ -290,16 +162,24 @@ class PowerView(QWidget):
     def tabText(self, index: int) -> str:  # noqa: N802 (Qt naming)
         return self.tabs.tabText(index)
 
+    def build_pages(self) -> None:
+        """Make the tables of every sheet now (they are made when a sheet is first shown)."""
+        for page in self._pages.values():
+            page.ensure_built()
+
     def table_model(self, tab: str, index: int) -> DocTableModel:
-        return self._models[tab][index]
+        page = self._pages[tab]
+        page.ensure_built()
+        return page.models[index]
 
     def set_document(self, document: ReportDocument | None) -> None:
+        self.tabs.setVisible(False)  # a hidden tab bar does not build the pages it uncovers
         while self.tabs.count():  # QTabWidget.clear() keeps the pages alive: delete them
             page = self.tabs.widget(0)
             self.tabs.removeTab(0)
             page.setParent(None)
             page.deleteLater()
-        self._models = {}
+        self._pages = {}
         shown = document is not None
         self.empty_label.setVisible(not shown)
         self.tabs.setVisible(shown)
@@ -310,42 +190,6 @@ class PowerView(QWidget):
         for section in document.sections:
             if section.sheet_name == "Problems":  # shown in the Problems panel instead
                 continue
-            page = QWidget()
-            layout = QVBoxLayout(page)
-            models: list[DocTableModel] = []
-            for text in section.paragraphs:
-                layout.addWidget(QLabel(text))
-            for table in section.tables:
-                title = QLabel(table.title)
-                title.setProperty("role", "section-title")
-                layout.addWidget(title)
-                model = DocTableModel(table)
-                models.append(model)
-                view = QTableView()
-                view.setModel(model)
-                view.setItemDelegate(CellDelegate(view))
-                view.verticalHeader().setVisible(False)
-                view.setAlternatingRowColors(True)
-                view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-                # the widths come from the first rows only: a table of thousands of rows would
-                # otherwise be measured cell by cell every time the project is loaded
-                view.horizontalHeader().setResizeContentsPrecision(COLUMN_WIDTH_ROWS)
-                view.resizeColumnsToContents()
-                view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-                height = view.horizontalHeader().height() + 2 * view.frameWidth() + 18
-                height += sum(view.rowHeight(r) for r in range(len(table.rows)))
-                view.setFixedHeight(max(height, 60))
-                layout.addWidget(view)
-                if table.note:
-                    note = QLabel(table.note)
-                    note.setWordWrap(True)
-                    layout.addWidget(note)
-            layout.addStretch(1)
-            scroll = QScrollArea()
-            scroll.setWidgetResizable(True)
-            scroll.setFrameShape(QFrame.Shape.NoFrame)
-            scroll.setWidget(page)
-            self.tabs.addTab(
-                scroll, section.sheet_name if section.sheet_name != "Summary" else "Summary"
-            )
-            self._models[section.sheet_name] = models
+            page = _SectionPage(section)
+            self.tabs.addTab(page, section.sheet_name)
+            self._pages[section.sheet_name] = page

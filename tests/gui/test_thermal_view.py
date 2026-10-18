@@ -24,7 +24,7 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
 def test_the_tab_shows_cases_modes_and_node_temperatures(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "cubesat_3u_eps")
     view = window.thermal_view
-    window.editors.setCurrentWidget(view)
+    window.show_view(view)
     titles = [view.tabText(i) for i in range(view.count())]
     assert titles[0] == "Summary" and "Case cold" in titles and "Case hot" in titles
     assert "Mode charging" in titles and titles[-2:] == ["Assumptions", "Provenance"]
@@ -36,7 +36,7 @@ def test_the_tab_shows_cases_modes_and_node_temperatures(window: MainWindow) -> 
 def test_placeholder_examples_show_na_and_the_banner(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "cubesat_3u")
     view = window.thermal_view
-    window.editors.setCurrentWidget(view)
+    window.show_view(view)
     assert view.banner.isVisibleTo(window) and "INCOMPLETE" in view.banner.text()
     model = view.table_model("Summary", 0)
     assert model.data(model.index(0, 1)) != ""
@@ -47,7 +47,7 @@ def test_placeholder_examples_show_na_and_the_banner(window: MainWindow) -> None
 def test_a_finding_reaches_the_problems_panel_and_jumps_to_the_unit(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "cubesat_3u_eps")
     panel = window.problems_panel
-    codes = [panel.table.item(r, 1).text() for r in range(panel.table.rowCount())]
+    codes = panel.codes()
     assert "THERMAL_MARGIN_INSUFFICIENT" in codes
     panel.activate_row(codes.index("THERMAL_MARGIN_INSUFFICIENT"))
     editor = window.editors.current_editor()
@@ -60,5 +60,5 @@ def test_editing_a_limit_updates_the_findings(window: MainWindow, tmp_path: Path
     path.write_text(path.read_text().replace("operating_max_k: 335.15", "operating_max_k: 340.0"))
     window.open_project(tmp_path / "p")
     panel = window.problems_panel
-    codes = [panel.table.item(r, 1).text() for r in range(panel.table.rowCount())]
+    codes = panel.codes()
     assert "THERMAL_MARGIN_INSUFFICIENT" not in codes

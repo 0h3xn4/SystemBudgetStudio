@@ -47,7 +47,7 @@ def test_open_example_fills_tree_problems_and_power_view(window: MainWindow) -> 
     top = window.tree.topLevelItem(0)
     assert top is not None and "Example 3U CubeSat" in top.text(0)
     assert window.tree.file_item_count() >= 6 + 5 + 2  # units, modes, project and spacecraft files
-    assert window.problems_panel.table.rowCount() == len(window.session.problems) > 0
+    assert len(window.problems_panel.visible_problems) == len(window.session.problems) > 0
     assert "0 errors" in window.problems_panel.summary.text()
     titles = [window.power_view.tabText(i) for i in range(window.power_view.count())]
     assert titles[0] == "Summary" and "Assumptions" in titles and "Provenance" in titles
@@ -69,10 +69,7 @@ def test_errors_block_the_budget_and_are_listed(window: MainWindow, broken: Path
     window.open_project(broken)
     assert "1 error" in window.problems_panel.summary.text()
     assert window.power_view.count() == 0 and window.power_view.empty_label.isVisibleTo(window)
-    codes = [
-        window.problems_panel.table.item(r, 1).text()
-        for r in range(window.problems_panel.table.rowCount())
-    ]
+    codes = window.problems_panel.codes()
     assert "REF_UNKNOWN_BUS" in codes
 
 
@@ -141,7 +138,7 @@ def test_export_failure_is_a_plain_message_not_a_traceback(
 
 def test_open_missing_folder_is_reported_not_raised(window: MainWindow, tmp_path: Path) -> None:
     window.open_project(tmp_path / "nope")
-    assert "FILE_NOT_FOUND" in window.problems_panel.table.item(0, 1).text()
+    assert "FILE_NOT_FOUND" in window.problems_panel.codes()[0]
     assert window.power_view.count() == 0
 
 
@@ -196,7 +193,7 @@ def test_reload_keeps_unsaved_edits(window: MainWindow, broken: Path) -> None:
 def test_mass_budget_tab_shows_phases_and_a_centre_of_gravity(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "microsat_150kg")
     view = window.mass_view
-    window.editors.setCurrentWidget(view)  # a hidden tab is not visible
+    window.show_view(view)  # a hidden tab is not visible
     titles = [view.tabText(i) for i in range(view.count())]
     assert titles == [
         "Summary",
@@ -234,10 +231,7 @@ def test_removing_a_position_in_the_editor_produces_a_mass_warning(
     start = text.index("mass_properties:")
     replace_text(editor, text[start:], "")
     assert window.save_current() is True
-    codes = {
-        window.problems_panel.table.item(r, 1).text()
-        for r in range(window.problems_panel.table.rowCount())
-    }
+    codes = set(window.problems_panel.codes())
     assert "MASS_PROPS_MISSING" in codes
     assert "1 error" not in window.problems_panel.summary.text()
 

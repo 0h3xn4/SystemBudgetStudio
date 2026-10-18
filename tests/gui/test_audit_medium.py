@@ -17,8 +17,8 @@ from budget_core.power.time_domain import Violation
 from budget_core.problems import Problem, Severity
 from budget_gui import timeline_view as tv
 from budget_gui.main_window import MainWindow
+from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.theme import WHITE, apply_theme, stylesheet
-from budget_gui.widgets import ProblemsPanel
 
 pytestmark = pytest.mark.gui
 
@@ -99,6 +99,7 @@ def test_the_timeline_export_is_built_in_the_worker_thread(
 def test_reloading_does_not_pile_up_table_views(window: MainWindow) -> None:
     def tables() -> int:
         QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+        window.power_view.build_pages()  # the sheets are made when first shown
         return len(window.power_view.findChildren(QTableView))
 
     window.session.reload()
@@ -302,11 +303,11 @@ def test_the_minimum_window_size_fits_a_1366_by_768_screen(
 ) -> None:
     window.show()
     QApplication.processEvents()
-    for index in range(window.editors.count()):
-        window.editors.setCurrentIndex(index)
+    for index in range(window.workspace.count()):
+        window.workspace.setCurrentIndex(index)
         QApplication.processEvents()
         size = window.minimumSizeHint()
-        assert size.height() <= 650 and size.width() <= 1200, window.editors.tabText(index)
+        assert size.height() <= 650 and size.width() <= 1200, window.workspace.tabText(index)
 
 
 # ---- GUI-25: disabled and focused controls look different ---
@@ -359,7 +360,7 @@ def test_a_panel_with_equal_limits_paints(qtbot) -> None:  # type: ignore[no-unt
 
 # ---- GUI-29: small things ---
 def test_ctrl_s_on_the_scenario_tab_saves_the_scenario(window: MainWindow, project: Path) -> None:
-    window.editors.setCurrentWidget(window.scenario_view)
+    window.show_view(window.scenario_view)
     window.scenario_view.editor.add_segment(5.0, 50.0)
     assert window.save_current() is True
     assert not window.scenario_view.editor.is_modified()
@@ -367,13 +368,11 @@ def test_ctrl_s_on_the_scenario_tab_saves_the_scenario(window: MainWindow, proje
 
 
 def test_the_tree_selection_survives_a_reload(window: MainWindow) -> None:
-    top = window.tree.topLevelItem(0)
-    units = next(
-        top.child(i) for i in range(top.childCount()) if top.child(i).text(0).startswith("Units")
-    )
-    window.tree.setCurrentItem(units.child(1))
+    item = window.tree.find_item("units/gnss.yaml", kind="file")
+    assert item is not None
+    window.tree.setCurrentItem(item)
     chosen = window.tree.current_unit_id()
-    assert chosen
+    assert chosen == "gnss"
     window.session.reload()
     assert window.tree.current_unit_id() == chosen
 
@@ -419,7 +418,7 @@ def test_errors_come_first_in_the_problems_panel(qtbot) -> None:  # type: ignore
             Problem(Severity.ERROR, "E1", "c", file="z.yaml"),
         ]
     )
-    assert [panel.table.item(r, 1).text() for r in range(3)] == ["E1", "W1", "I1"]
+    assert panel.codes() == ["E1", "W1", "I1"]
     emitted: list[tuple[str, int]] = []
     panel.jump_requested.connect(lambda f, line: emitted.append((f, line)))
     panel.activate_row(0)
@@ -430,7 +429,7 @@ def test_the_problems_panel_opens_tall_enough_for_several_rows(window: MainWindo
     window.resize(1400, 860)
     window.show()
     QApplication.processEvents()
-    assert window.problems_panel.table.height() >= 80
+    assert window.problems_panel.view.height() >= 80
 
 
 # ---- GUI-31: a missing comparison folder is named as such ---

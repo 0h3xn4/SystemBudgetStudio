@@ -44,7 +44,7 @@ def test_the_tab_lists_the_scenario_and_waits_for_compute(window: MainWindow) ->
     ]
     assert view.result is None and "Not computed" in view.status.text()
     assert not view.export_button.isEnabled()
-    assert "Power timeline" in [window.editors.tabText(i) for i in range(window.editors.count())]
+    assert "Power" in [window.workspace.tabText(i) for i in range(window.workspace.count())]
 
 
 def test_compute_fills_plot_and_tables(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
@@ -74,11 +74,11 @@ def test_switching_the_case_changes_the_plot_without_recomputing(window: MainWin
 
 
 def test_violations_reach_the_problems_panel_with_a_line(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
-    before = window.problems_panel.table.rowCount()
+    before = len(window.problems_panel.visible_problems)
     compute(window, qtbot)
     panel = window.problems_panel
-    codes = [panel.table.item(r, 1).text() for r in range(panel.table.rowCount())]
-    assert PEAK_POWER_EXCEEDED in codes and panel.table.rowCount() > before
+    codes = panel.codes()
+    assert PEAK_POWER_EXCEEDED in codes and len(panel.visible_problems) > before
     row = codes.index(PEAK_POWER_EXCEEDED)
     panel.activate_row(row)
     editor = window.editors.current_editor()
@@ -247,7 +247,7 @@ def test_plot_readout_gives_every_series_and_differences(window: MainWindow, qtb
 def test_plot_widget_cursor_pin_and_paint(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
     compute(window, qtbot)
     window.resize(1200, 800)
-    window.editors.setCurrentWidget(window.timeline_view)
+    window.show_view(window.timeline_view)
     window.show()
     plot = window.timeline_view.plot
     qtbot.waitExposed(window)

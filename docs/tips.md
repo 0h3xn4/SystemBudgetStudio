@@ -13,7 +13,7 @@ Shortcuts, working habits and ways to connect System Budget Studio to your other
 - **Run only what you need**: `--budget power`, `--report csv`, `--no-plots` make a run much faster.
 - **Start from an example**, not from an empty folder: copy the closest one from [`examples/`](../examples/README.md) and replace the numbers.
 - **Use the guided wizard** (Ctrl+N) to get a working orbit and scenario in a minute, then replace its sample spacecraft with yours.
-- **Jump from a problem to the cause** by double-clicking it in the Problems panel.
+- **Jump from a problem to the cause** by double-clicking it in the Problems panel, or with **F8** and **Shift+F8**. Ctrl+1 to Ctrl+7 switch tabs and Ctrl+R runs the scenario, the timeline and the passes.
 
 ## Keep projects healthy
 

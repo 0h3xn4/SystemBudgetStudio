@@ -56,6 +56,12 @@ BASES = ("nominal", "margined")
 CASE_NAMES = ("bol", "eol")
 
 
+EMPTY_TEXT = (
+    "This project has no scenario. Add a file in scenarios/ to work out the power timeline "
+    "and the link passes."
+)
+
+
 class TimelineWorker(QThread):
     finished_ok = Signal(object)
     failed = Signal(str)
@@ -113,20 +119,27 @@ class PowerTimelineView(QWidget):
         self.shading = QCheckBox("Shade eclipses and passes")
         self.shading.setChecked(True)
         self.compute_button = QPushButton("Compute")
+        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button = QPushButton("Export…")
+        self.export_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
-        self.empty_label = QLabel("No scenario to show. Open a project that has scenarios.")
+        self.empty_label = QLabel(EMPTY_TEXT)
+        self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         top = QHBoxLayout()
+        self.shared_labels: list[QLabel] = []
         for text, widget in (
             ("Scenario", self.scenario_combo),
             ("Demand", self.basis_combo),
             ("Case", self.case_combo),
         ):
-            top.addWidget(QLabel(text))
+            label = QLabel(text)
+            if text != "Demand":
+                self.shared_labels.append(label)
+            top.addWidget(label)
             top.addWidget(widget)
         top.addWidget(self.shading)
         top.addWidget(self.compute_button)
@@ -138,6 +151,10 @@ class PowerTimelineView(QWidget):
         self.violations_table = QTableWidget()
         self.orbits_table = QTableWidget()
         self.modes_table = QTableWidget()
+        self.summary_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.violations_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.orbits_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.modes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.tabs = QTabWidget()
         self.tabs.addTab(self.summary_table, "Summary")
         self.tabs.addTab(self.violations_table, "Violations")
@@ -165,7 +182,16 @@ class PowerTimelineView(QWidget):
         self.plot.set_info_provider(self._info_at)
         self.set_project(None, [])
 
+    def use_shared_selectors(self) -> None:
+        """Scenario and case (BOL or EOL) are chosen in the top bar: hide this view's own."""
+        for widget in (*self.shared_labels, self.scenario_combo, self.case_combo):
+            widget.hide()
+
     # ---- project -----------------------------------------------------------------------------
+    def set_empty_text(self, text: str | None) -> None:
+        """Say why there is nothing to show (None: the usual sentence)."""
+        self.empty_label.setText(text or EMPTY_TEXT)
+
     def selected_id(self) -> str:
         return self.scenario_combo.currentText()
 

@@ -124,10 +124,7 @@ def test_removing_a_mode_in_use_is_reported_by_the_problems_panel(window: MainWi
     editor.remove_mode(1)  # 'imaging' is used by the imaging spacecraft mode
     assert editor.save() is True
     assert "1 error" in window.problems_panel.summary.text()
-    codes = {
-        window.problems_panel.table.item(r, 1).text()
-        for r in range(window.problems_panel.table.rowCount())
-    }
+    codes = set(window.problems_panel.codes())
     assert "REF_UNKNOWN_UNIT_MODE" in codes
 
 

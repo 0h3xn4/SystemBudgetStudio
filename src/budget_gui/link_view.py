@@ -50,6 +50,8 @@ from budget_gui.validity import (
 )
 from budget_gui.worker import ExportWorker
 
+EMPTY_TEXT = "No links to show. Add links/*.yaml and a scenario."
+
 
 class LinkWorker(QThread):
     finished_ok = Signal(object)
@@ -95,17 +97,22 @@ class LinkPassesView(QWidget):
         self.scenario_combo = QComboBox()
         self.link_combo = QComboBox()
         self.compute_button = QPushButton("Compute")
+        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button = QPushButton("Export…")
+        self.export_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
-        self.empty_label = QLabel("No links to show. Add links/*.yaml and a scenario.")
+        self.empty_label = QLabel(EMPTY_TEXT)
+        self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         top = QHBoxLayout()
-        for text, widget in (("Scenario", self.scenario_combo), ("Link", self.link_combo)):
-            top.addWidget(QLabel(text))
-            top.addWidget(widget)
+        self.scenario_label = QLabel("Scenario")
+        top.addWidget(self.scenario_label)
+        top.addWidget(self.scenario_combo)
+        top.addWidget(QLabel("Link"))
+        top.addWidget(self.link_combo)
         top.addWidget(self.compute_button)
         top.addWidget(self.export_button)
         top.addWidget(self.status, 1)
@@ -113,6 +120,8 @@ class LinkPassesView(QWidget):
         self.plot = PlotWidget()
         self.passes_table = QTableWidget()
         self.volume_table = QTableWidget()
+        self.passes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.volume_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.tabs = QTabWidget()
         self.tabs.addTab(self.passes_table, "Passes")
         self.tabs.addTab(self.volume_table, "Data volume")
@@ -135,7 +144,16 @@ class LinkPassesView(QWidget):
         self.plot.set_info_provider(self._info_at)
         self.set_project(None, [])
 
+    def use_shared_selector(self) -> None:
+        """The scenario is chosen in the top bar: this view keeps its selector hidden."""
+        self.scenario_label.hide()
+        self.scenario_combo.hide()
+
     # ---- project -----------------------------------------------------------------------------
+    def set_empty_text(self, text: str | None) -> None:
+        """Say why there is nothing to show (None: the usual sentence)."""
+        self.empty_label.setText(text or EMPTY_TEXT)
+
     def selected_id(self) -> str:
         return self.scenario_combo.currentText()
 

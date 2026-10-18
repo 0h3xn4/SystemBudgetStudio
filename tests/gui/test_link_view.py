@@ -37,7 +37,7 @@ def compute(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
 def test_static_tab_shows_the_link_tables(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "microsat_150kg")
     view = window.link_view
-    window.editors.setCurrentWidget(view)
+    window.show_view(view)
     titles = [view.tabText(i) for i in range(view.count())]
     assert titles[0] == "Summary" and titles[-2:] == ["Assumptions", "Provenance"]
     model = view.table_model("Summary", 0)
@@ -57,7 +57,7 @@ def test_a_project_without_links_has_an_empty_tab_and_a_disabled_passes_view(
 def test_placeholder_links_show_na(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "cubesat_3u")
     view = window.link_view
-    window.editors.setCurrentWidget(view)
+    window.show_view(view)
     assert view.banner.isVisibleTo(window)
     model = view.table_model("Summary", 0)
     assert model.data(model.index(0, 10)) == "n/a"

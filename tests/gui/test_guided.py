@@ -91,7 +91,7 @@ def test_orbit_to_first_budget_is_far_inside_ten_minutes(
     assert window.session.project is not None
     assert window.session.project.meta.name == "Timed satellite"
     assert window.timeline_view.result is not None
-    assert window.editors.currentWidget() is window.timeline_view
+    assert window.workspace.is_showing(window.timeline_view)
     assert (tmp_path / "timed-satellite" / "project.yaml").is_file()
 
 
