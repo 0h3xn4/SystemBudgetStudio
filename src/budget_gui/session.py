@@ -134,15 +134,28 @@ class ProjectSession(QObject):
         self.link_document: ReportDocument | None = None
         self.outputs: list[BudgetOutput] = []
         self.problems: list[Problem] = []
+        # the last load of this folder that worked: when a later load fails (an error was typed),
+        # its budgets stay on screen, marked as old, so the engineer can see what the fix changed
+        self.last_good: _Computed | None = None
+        self.showing_last_good = False
 
     @property
     def project(self) -> Project | None:
         return self.load_result.project if self.load_result else None
 
+    @property
+    def display_project(self) -> Project | None:
+        """The project to take names from: the loaded one, else that of the last good load."""
+        if self.project is not None:
+            return self.project
+        if self.last_good is not None and self.last_good.load_result is not None:
+            return self.last_good.load_result.project
+        return None
+
     # ---- loading -----------------------------------------------------------------------------
     def open(self, path: Path) -> None:
         """Open a project and wait for it (programs and tests). The window uses `open_async`."""
-        self.path = Path(path)
+        self._set_path(Path(path))
         self.reload()
 
     def reload(self) -> None:
@@ -154,8 +167,14 @@ class ProjectSession(QObject):
         self._apply(_compute(self.path))
 
     def open_async(self, path: Path) -> None:
-        self.path = Path(path)
+        self._set_path(Path(path))
         self.reload_async()
+
+    def _set_path(self, path: Path) -> None:
+        if path != self.path:
+            self.last_good = None  # the old results belong to another project
+            self.showing_last_good = False
+        self.path = path
 
     def reload_async(self) -> None:
         """Load in a background thread; `changed` is emitted when the result is in. A request
@@ -208,6 +227,28 @@ class ProjectSession(QObject):
             QCoreApplication.processEvents()
 
     def _apply(self, computed: _Computed) -> None:
+        failed = computed.load_result is None or computed.load_result.project is None
+        if failed and self.last_good is not None:
+            # keep the budgets of the last good load on screen; the findings are the new ones
+            keep = self.last_good
+            self.showing_last_good = True
+            self.load_result = computed.load_result
+            self.power, self.mass, self.thermal, self.link = (
+                keep.power,
+                keep.mass,
+                keep.thermal,
+                keep.link,
+            )
+            self.provenance = keep.provenance
+            self.document, self.mass_document = keep.document, keep.mass_document
+            self.thermal_document, self.link_document = keep.thermal_document, keep.link_document
+            self.outputs = []  # an export would describe inputs that are no longer in the files
+            self.problems = list(computed.problems)
+            self.changed.emit()
+            return
+        self.showing_last_good = False
+        if not failed:
+            self.last_good = computed
         self.load_result = computed.load_result
         self.power, self.mass = computed.power, computed.mass
         self.thermal, self.link = computed.thermal, computed.link

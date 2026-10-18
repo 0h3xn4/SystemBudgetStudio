@@ -50,6 +50,8 @@ from budget_gui.validity import (
 )
 from budget_gui.worker import ExportWorker
 
+EMPTY_TEXT = "No links to show. Add links/*.yaml and a scenario."
+
 
 class LinkWorker(QThread):
     finished_ok = Signal(object)
@@ -99,7 +101,8 @@ class LinkPassesView(QWidget):
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
-        self.empty_label = QLabel("No links to show. Add links/*.yaml and a scenario.")
+        self.empty_label = QLabel(EMPTY_TEXT)
+        self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         top = QHBoxLayout()
@@ -143,6 +146,10 @@ class LinkPassesView(QWidget):
         self.scenario_combo.hide()
 
     # ---- project -----------------------------------------------------------------------------
+    def set_empty_text(self, text: str | None) -> None:
+        """Say why there is nothing to show (None: the usual sentence)."""
+        self.empty_label.setText(text or EMPTY_TEXT)
+
     def selected_id(self) -> str:
         return self.scenario_combo.currentText()
 

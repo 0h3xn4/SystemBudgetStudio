@@ -28,6 +28,9 @@ UNIT_ROLE = int(Qt.ItemDataRole.UserRole) + 1
 COLUMN_WIDTH_ROWS = 60  # rows looked at to size a column
 
 
+EMPTY_TEXT = "No budget to show. Open a project without errors."
+
+
 class DocTableModel(QAbstractTableModel):
     """Read-only model over a report `Table`, so the screen shows exactly what reports contain."""
 
@@ -81,7 +84,8 @@ class PowerView(QWidget):
         self.banner = QLabel()
         self.banner.setWordWrap(True)
         self.banner.setProperty("role", "banner")
-        self.empty_label = QLabel("No budget to show. Open a project without errors.")
+        self.empty_label = QLabel(EMPTY_TEXT)
+        self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabs = QTabWidget()
         layout = QVBoxLayout(self)
@@ -91,6 +95,10 @@ class PowerView(QWidget):
         layout.addWidget(self.tabs)
         self._models: dict[str, list[DocTableModel]] = {}
         self.set_document(None)
+
+    def set_empty_text(self, text: str | None) -> None:
+        """Say why there is nothing to show (None: the usual sentence)."""
+        self.empty_label.setText(text or EMPTY_TEXT)
 
     def count(self) -> int:
         return self.tabs.count()

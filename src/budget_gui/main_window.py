@@ -24,7 +24,9 @@ from budget_core import APP_NAME
 from budget_core.problems import sort_problems
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
+from budget_gui import problem_class as pc
 from budget_gui import theme
+from budget_gui.banner import Banner
 from budget_gui.compare_view import CompareView
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
@@ -118,7 +120,11 @@ class MainWindow(QMainWindow):
         stack = QVBoxLayout(central)
         stack.setContentsMargins(0, 0, 0, 0)
         stack.setSpacing(0)
+        self.stale_banner = Banner("stale")
+        self.failed_banner = Banner("failed")
         stack.addWidget(self.top_bar)
+        stack.addWidget(self.stale_banner)
+        stack.addWidget(self.failed_banner)
         stack.addWidget(self.workspace, 1)
         self.setCentralWidget(central)
         self.workspace.setCurrentIndex(1)  # Power: a project opens on its budgets
@@ -152,6 +158,8 @@ class MainWindow(QMainWindow):
         self.top_bar.case_chosen.connect(self.timeline_view.case_combo.setCurrentText)
         self.timeline_view.case_combo.currentTextChanged.connect(self.top_bar.set_case)
         self.top_bar.run_requested.connect(self.run_all)
+        self.stale_banner.action_requested.connect(self.show_first_error)
+        self.failed_banner.action_requested.connect(self.run_all)
         self.run_controller.changed.connect(self._update_run_state)
         self.editors.dirty_changed.connect(self._update_dirty)
         self.scenario_view.editor.modified_changed.connect(lambda _m: self._update_dirty())
@@ -503,6 +511,48 @@ class MainWindow(QMainWindow):
         self._update_run_state()
         return True
 
+    def _update_banners(self) -> None:
+        """Say it when the tables are old (an error since) and say why a view is empty."""
+        session = self.session
+        errors = self.problems_panel.counts()[ProblemClass.ERROR]
+        plural = "s" if errors != 1 else ""
+        if session.showing_last_good:
+            self.stale_banner.show_message(
+                f"The project has {errors} error{plural}. The tables show the last results that "
+                "worked, from before the error: they may not match the files.",
+                "Show the first error",
+            )
+        else:
+            self.stale_banner.clear()
+        reason: str | None = None
+        if session.path is not None and session.project is None and not session.showing_last_good:
+            reason = (
+                f"The project has {errors} error{plural}, so there is nothing to show yet. "
+                "Fix them (the Problems panel lists them) and the budgets appear."
+            )
+        for view in (
+            self.power_view,
+            self.mass_view,
+            self.thermal_view,
+            self.link_view,
+            self.scenario_view,
+            self.timeline_view,
+            self.link_passes_view,
+        ):
+            view.set_empty_text(reason)
+
+    def show_first_error(self) -> None:
+        """Select the first error in the Problems panel and open its file at the line."""
+        panel = self.problems_panel
+        for position, problem in enumerate(panel.visible_problems):
+            if pc.classify(problem) is ProblemClass.ERROR:
+                panel.select_row(position)
+                self.problems_dock.show()
+                self.problems_dock.raise_()
+                if problem.file:
+                    self.open_file(problem.file, problem.line or 1)
+                return
+
     def _update_run_state(self) -> None:
         controller = self.run_controller
         state = controller.state()
@@ -518,6 +568,12 @@ class MainWindow(QMainWindow):
         if state is RunState.OK and self._last_run is not None:
             detail = f"{self._last_run:%H:%M:%S}"
         self.top_bar.set_run_state(state, controller.can_run(), detail, tips[state])
+        if state is RunState.FAILED:
+            self.failed_banner.show_message(
+                f"The last run did not finish: {controller.failure}", "Run again"
+            )
+        else:
+            self.failed_banner.clear()
         self.run_action.setEnabled(controller.can_run())
 
     def _update_dirty(self) -> None:
@@ -639,7 +695,7 @@ class MainWindow(QMainWindow):
     def _refresh(self) -> None:
         session = self.session
         project = session.project
-        self.tree.set_project(session.path, project)
+        self.tree.set_project(session.path, session.display_project)
         self.power_view.set_document(session.document)
         self.mass_view.set_document(session.mass_document)
         self.thermal_view.set_document(session.thermal_document)
@@ -651,8 +707,9 @@ class MainWindow(QMainWindow):
         self.compare_view.set_project(project)
         self._update_problems()
         self.editors.reload_clean_files(project.units if project else None)
-        name = project.meta.name if project else (session.path.name if session.path else "")
-        self.top_bar.set_project(name, project.meta.revision if project else "")
+        shown = session.display_project  # the name and revision stay while the project has an error
+        name = shown.meta.name if shown else (session.path.name if session.path else "")
+        self.top_bar.set_project(name, shown.meta.revision if shown else "")
         self.setWindowTitle(f"{name} — {APP_NAME}" if name else APP_NAME)
         ids = sorted(project.scenarios) if project else []
         self.top_bar.set_scenarios(ids, self.scenario_view.selected_id())
@@ -662,6 +719,7 @@ class MainWindow(QMainWindow):
         self.status_bar.set_project_path(session.path)
         self.status_bar.set_last_run(self._last_run)
         self.provenance_panel.set_provenance(session.provenance)
+        self._update_banners()
         self._inspect()
         self._update_dirty()
         self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")

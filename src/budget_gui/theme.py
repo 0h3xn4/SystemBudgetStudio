@@ -430,6 +430,26 @@ def _chip_rules(t: Tokens) -> str:
     return "\n    ".join(rules)
 
 
+def banner_colours(t: Tokens, kind: str) -> tuple[str, str]:
+    """(text and icon colour, tint) of a banner: `stale` is a caution, `failed` a failure."""
+    style = t.s_fail if kind == "failed" else t.s_near
+    return (style.fg, style.bg)
+
+
+def _banner_rules(t: Tokens) -> str:
+    rules = []
+    for kind in ("stale", "failed"):
+        fg, bg = banner_colours(t, kind)
+        rules.append(
+            f'QFrame[role="banner-bar"][kind="{kind}"] {{ background: {bg}; }}\n'
+            f'    QFrame[role="banner-bar"][kind="{kind}"] QLabel {{ background: transparent; '
+            f"color: {fg}; }}\n"
+            f'    QFrame[role="banner-bar"][kind="{kind}"] QPushButton[kind="link"] '
+            f"{{ color: {fg}; font-weight: 600; }}"
+        )
+    return "\n    ".join(rules)
+
+
 def stylesheet(t: Tokens) -> str:
     s1, s2, s3 = SPACE[1], SPACE[2], SPACE[3]
     return f"""
@@ -486,6 +506,7 @@ def stylesheet(t: Tokens) -> str:
                            font-size: {TYPE_SMALL}px; }}
     QFrame[role="chip"] {{ border-radius: {s3 // 2 + 2}px; }}
     {_chip_rules(t)}
+    {_banner_rules(t)}
     QLabel[role="dirty"] {{ color: {t.s_near.fg}; font-weight: 600; }}
     """
 
