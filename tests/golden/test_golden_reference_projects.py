@@ -2,10 +2,11 @@
 
 Static power and mass goldens of the three reference projects are in test_golden_reports.py; this
 file adds the thermal budget, the power timeline and the link passes, so that each of the three
-(3U CubeSat, 150 kg microsatellite with two links, 200-unit stress case with a one-week scenario)
-has a golden XLSX and PDF for all of them. The stress case golden covers the first rows and pages
-(full-precision JSON is not compared here: last digits of solver and propagation results can
-differ between platforms); completeness of the full outputs is checked elsewhere."""
+(250 kg minisatellite, 150 kg microsatellite with two links, 200-unit stress case with a
+one-week scenario) has a golden XLSX and PDF for all of them. The stress case golden covers the
+first rows and pages (full-precision JSON is not compared here: last digits of solver and
+propagation results can differ between platforms); completeness of the full outputs is checked
+elsewhere."""
 
 from __future__ import annotations
 
@@ -33,7 +34,7 @@ ROWS, PAGES = 40, 3
 
 CASES = [
     (kind, name)
-    for name in ("cubesat_3u", "microsat_150kg", "stress_200_units")
+    for name in ("microsat_250kg", "microsat_150kg", "stress_200_units")
     for kind in ("thermal", "timeline", "link-passes")
     if not (kind == "link-passes" and name == "stress_200_units")  # the stress case has no links
 ]

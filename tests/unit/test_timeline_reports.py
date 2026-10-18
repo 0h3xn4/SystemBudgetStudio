@@ -194,7 +194,7 @@ def test_write_outputs_names(output, tmp_path: Path) -> None:  # type: ignore[no
 
 @pytest.fixture
 def eps(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 

@@ -19,7 +19,7 @@ from budget_core.wizard import (
 
 
 def answers(**kw: object) -> WizardAnswers:
-    base = {"project_name": "My first satellite", "sample": "cubesat_3u_eps"}
+    base = {"project_name": "My first satellite", "sample": "microsat_250kg_eps"}
     return WizardAnswers(**{**base, **kw})  # type: ignore[arg-type]
 
 

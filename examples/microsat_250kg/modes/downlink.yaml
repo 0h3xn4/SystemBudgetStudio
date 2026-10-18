@@ -1,0 +1,23 @@
+schema_version: 1
+kind: spacecraft_mode
+name: Downlink
+description: Radio transmitting.
+assignments:
+  adapter: off
+  adcs: downlink
+  battery: off
+  camera: off
+  eps: downlink
+  gnss: downlink
+  harness: off
+  heaters: downlink
+  magnetorquers: off
+  obc: downlink
+  pdu_data: downlink
+  radio: downlink
+  reaction_wheels: downlink
+  solar_array: off
+  star_tracker: downlink
+  structure: off
+  sun_sensors: downlink
+  xband_tx: downlink

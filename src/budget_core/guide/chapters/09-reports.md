@@ -30,7 +30,7 @@ Plots exist only inside the reports, which carry the same provenance block; no p
 
 ## Entering power data
 
-Unit power data is typed in the unit editor or written in the unit's YAML file (`units/<id>.yaml`). It can also be filled in a spreadsheet: `budget units-export project --out units.csv` (or `.xlsx`) writes one row per power mode, you fill in or change the values, and `budget units-import project units.csv` shows what would change. Add `--apply` to write the changes into the unit files. In the window use *File > Export unit table* and *File > Import unit table*.
+Unit power data is typed in the Power modes grid of the Model tab or written in the unit's YAML file (`units/<id>.yaml`). It can also be filled in a spreadsheet: `budget units-export project --out units.csv` (or `.xlsx`) writes one row per power mode, you fill in or change the values, and `budget units-import project units.csv` shows what would change. Add `--apply` to write the changes into the unit files. In the window use *File > Export unit table* and *File > Import unit table*.
 
 - An **empty cell means unchanged**, never zero.
 - Only power modes of units that exist are changed; a row with a new power mode name adds that mode (average and peak power are required). Nothing is deleted.

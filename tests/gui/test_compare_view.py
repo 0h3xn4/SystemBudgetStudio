@@ -25,9 +25,9 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
 @pytest.fixture
 def revisions(tmp_path: Path) -> tuple[Path, Path]:
     a, b = tmp_path / "rev1", tmp_path / "rev2"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", a)
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", b)
-    edit(b, "units/adcs.yaml", "avg_power_w: 0.9", "avg_power_w: 1.3")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", a)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", b)
+    edit(b, "units/adcs.yaml", "avg_power_w: 7.0", "avg_power_w: 9.0")
     edit(b, "project.yaml", "revision: '1'", "revision: '2'")
     return a, b
 
@@ -84,7 +84,7 @@ def test_unloadable_other_project_says_so_plainly(
     qtbot,  # type: ignore[no-untyped-def]
 ) -> None:
     a, b = revisions
-    edit(b, "units/adcs.yaml", "avg_power_w: 1.3", "avg_power_w: 9.9")
+    edit(b, "units/adcs.yaml", "avg_power_w: 9.0", "avg_power_w: 99.9")
     window.open_project(a)
     window.compare_view.set_other_folder(b)
     with qtbot.waitSignal(window.compare_view.compute_failed, timeout=60000):
@@ -94,7 +94,7 @@ def test_unloadable_other_project_says_so_plainly(
 
 def test_scenarios_of_one_project(window: MainWindow, tmp_path: Path, qtbot) -> None:  # type: ignore[no-untyped-def]
     root = tmp_path / "p"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", root)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", root)
     shutil.copy(root / "scenarios/one_day.yaml", root / "scenarios/variant.yaml")
     edit(root, "scenarios/variant.yaml", "default_mode: charging", "default_mode: safe")
     window.open_project(root)

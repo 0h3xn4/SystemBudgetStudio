@@ -55,7 +55,7 @@ def test_a_project_without_links_has_an_empty_tab_and_a_disabled_passes_view(
 
 
 def test_placeholder_links_show_na(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     view = window.link_view
     window.show_view(view)
     assert view.banner.isVisibleTo(window)
@@ -159,7 +159,7 @@ def test_a_project_change_marks_the_result_stale(window: MainWindow, micro: Path
 
 
 def test_placeholder_links_compute_to_na(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     compute(window, qtbot)
     view = window.link_passes_view
     assert "placeholders" in view.status.text()

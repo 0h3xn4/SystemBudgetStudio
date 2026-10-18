@@ -125,8 +125,11 @@ def test_the_chip_says_a_word_and_shows_an_icon_for_every_state(qtbot) -> None: 
 def test_the_top_bar_shows_project_revision_and_the_unsaved_marker(qtbot) -> None:  # type: ignore[no-untyped-def]
     bar = TopBar()
     qtbot.addWidget(bar)
-    bar.set_project("Example 3U CubeSat", "A")
-    assert bar.name_label.text() == "Example 3U CubeSat" and bar.revision_label.text() == "rev A"
+    bar.set_project("Example 250 kg minisatellite", "A")
+    assert (
+        bar.name_label.text() == "Example 250 kg minisatellite"
+        and bar.revision_label.text() == "rev A"
+    )
     bar.set_dirty(True)
     assert "Unsaved changes" in bar.dirty_label.text()
     bar.set_dirty(False)
@@ -148,7 +151,7 @@ def test_the_case_toggle_is_exclusive_and_starts_at_bol(qtbot) -> None:  # type:
 @pytest.fixture
 def window(qtbot, tmp_path: Path) -> MainWindow:  # type: ignore[no-untyped-def]
     project = tmp_path / "p"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", project)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", project)
     shutil.copy(project / "scenarios" / "one_day.yaml", project / "scenarios" / "second.yaml")
     w = MainWindow()
     qtbot.addWidget(w)
@@ -159,8 +162,9 @@ def window(qtbot, tmp_path: Path) -> MainWindow:  # type: ignore[no-untyped-def]
 
 def test_the_top_bar_shows_the_open_project(window: MainWindow) -> None:
     bar = window.top_bar
-    assert "Example 3U CubeSat" in bar.name_label.text() and bar.revision_label.text().startswith(
-        "rev "
+    assert (
+        "Example 250 kg minisatellite" in bar.name_label.text()
+        and bar.revision_label.text().startswith("rev ")
     )
     assert [bar.scenario_combo.itemText(i) for i in range(bar.scenario_combo.count())] == [
         "one_day",

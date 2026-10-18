@@ -2,11 +2,11 @@
 
 ```
 budget export-examples demo
-budget run demo/cubesat_3u_eps --budget thermal --out out
-system-budget-studio demo/cubesat_3u_eps        # tab "Thermal budget"
+budget run demo/microsat_250kg_eps --budget thermal --out out
+system-budget-studio demo/microsat_250kg_eps        # tab "Thermal budget"
 ```
 
-`cubesat_3u_eps` has complete **invented** thermal values (their source text says so): one node per subsystem in a chain, one radiating panel per node, a hot case (sunlight, imaging mode) and a cold case (eclipse, safe mode), unit limits and a 5 K margin. The other examples carry a thermal template whose numbers are `TBD`; their cases show "not computed (inputs missing)" and the INCOMPLETE banner, never a zero.
+`microsat_250kg_eps` has complete **invented** thermal values (their source text says so): one node per subsystem in a chain, one radiating panel per node, a hot case (sunlight, imaging mode) and a cold case (eclipse, safe mode), unit limits and a 5 K margin. The other examples carry a thermal template whose numbers are `TBD`; their cases show "not computed (inputs missing)" and the INCOMPLETE banner, never a zero.
 
 What you see for the complete example: node temperatures per case (cold about -28 C, hot about 60 C), the heat absorbed from the environment, radiated to space and conducted between nodes, a check of each unit against its operating limits, and one finding built to show the feature: **the radio is closer than the required 5 K margin to its upper limit in the hot case** (`THERMAL_MARGIN_INSUFFICIENT`, exit code 1, jump link to `units/radio.yaml`). Dissipation tables by unit, subsystem, thermal node and spacecraft mode are in the reports (XLSX, PDF, DOCX, JSON) and in the window; CSV files hold dissipation per mode and node temperatures per case.
 

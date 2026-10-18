@@ -1,0 +1,25 @@
+schema_version: 2
+kind: unit
+name: Primary structure
+subsystem: STRUCT
+mass_kg: 100.5
+bus: main
+maturity: class_a
+modes:
+  - name: off
+    avg_power_w: 0.0
+    peak_power_w: 0.0
+    duty_cycle_ratio: 1.0
+    heat_dissipation_ratio: 1.0
+mass_properties:
+  position_m:
+    - 0.0
+    - 0.0
+    - 0.55
+  inertia:
+    ixx_kgm2: 20.435
+    iyy_kgm2: 20.435
+    izz_kgm2: 16.75
+    ixy_kgm2: 0.0
+    ixz_kgm2: 0.0
+    iyz_kgm2: 0.0

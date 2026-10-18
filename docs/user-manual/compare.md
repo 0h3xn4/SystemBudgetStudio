@@ -9,7 +9,7 @@ This page shows how to see exactly what changed between two project revisions, o
 A revision is a project folder: a copy of last month's folder, or a checkout of an earlier git tag. Compare any two:
 
 ```bash
-budget compare demo/cubesat_3u_eps demo/cubesat_3u --out out
+budget compare demo/microsat_250kg_eps demo/microsat_250kg --out out
 ```
 
 ```text

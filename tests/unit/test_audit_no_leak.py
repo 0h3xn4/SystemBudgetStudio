@@ -29,7 +29,7 @@ from budget_core.thermal.static_thermal import static_thermal_budget
 
 SECRET = "ZQSECRETQZ"
 EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
-PROJECTS = ("cubesat_3u_eps", "microsat_150kg", "cubesat_3u")
+PROJECTS = ("microsat_250kg_eps", "microsat_150kg", "microsat_250kg")
 
 Leaf = tuple[Path, tuple[str | int, ...], bool]  # file, path in the data, is_key
 
@@ -168,7 +168,7 @@ def test_a_tle_digit_that_int_cannot_read_is_not_echoed(tmp_path: Path) -> None:
     """tle_checksum_ok raises ValueError("invalid literal for int(): '²'") for a superscript digit;
     that text must not reach the Problem."""
     root = tmp_path / "p"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", root)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", root)
     orbit = next((root / "orbits").glob("*.yaml"))
     first = "1 25544U 98067A   19343.69339541  .00001764  00000-0  38792-4 0  9991"
     second = "2 25544  51.6439 211.2001 0007417  17.6667  85.6398 15.50103472202482"

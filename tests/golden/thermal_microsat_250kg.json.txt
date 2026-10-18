@@ -1,0 +1,3105 @@
+{
+  "assumptions": [
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Space temperature",
+      "path": "space_temperature_k",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Temperature margin",
+      "path": "temperature_margin_k",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Conductance ADCS - DH",
+      "path": "conductances[0].conductance_wk",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Conductance DH - EPS",
+      "path": "conductances[1].conductance_wk",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Conductance EPS - PL",
+      "path": "conductances[2].conductance_wk",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Conductance PL - STRUCT",
+      "path": "conductances[3].conductance_wk",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Conductance STRUCT - THERM",
+      "path": "conductances[4].conductance_wk",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Conductance THERM - TTC",
+      "path": "conductances[5].conductance_wk",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/K",
+      "value": null
+    },
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Solar flux, case cold",
+      "path": "cases.cold.solar_flux_wm2",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/m2",
+      "value": null
+    },
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Albedo, case cold",
+      "path": "cases.cold.albedo_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Earth infrared, case cold",
+      "path": "cases.cold.earth_ir_wm2",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/m2",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Emissivity, ADCS panel",
+      "path": "surfaces[0].emissivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Absorptivity, ADCS panel",
+      "path": "surfaces[0].absorptivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, ADCS panel, case cold",
+      "path": "surfaces[0].exposure.cold.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, ADCS panel, case cold",
+      "path": "surfaces[0].exposure.cold.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Emissivity, DH panel",
+      "path": "surfaces[1].emissivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Absorptivity, DH panel",
+      "path": "surfaces[1].absorptivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, DH panel, case cold",
+      "path": "surfaces[1].exposure.cold.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, DH panel, case cold",
+      "path": "surfaces[1].exposure.cold.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Emissivity, EPS panel",
+      "path": "surfaces[2].emissivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Absorptivity, EPS panel",
+      "path": "surfaces[2].absorptivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, EPS panel, case cold",
+      "path": "surfaces[2].exposure.cold.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, EPS panel, case cold",
+      "path": "surfaces[2].exposure.cold.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Emissivity, PL panel",
+      "path": "surfaces[3].emissivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Absorptivity, PL panel",
+      "path": "surfaces[3].absorptivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, PL panel, case cold",
+      "path": "surfaces[3].exposure.cold.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, PL panel, case cold",
+      "path": "surfaces[3].exposure.cold.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Emissivity, STRUCT panel",
+      "path": "surfaces[4].emissivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Absorptivity, STRUCT panel",
+      "path": "surfaces[4].absorptivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, STRUCT panel, case cold",
+      "path": "surfaces[4].exposure.cold.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, STRUCT panel, case cold",
+      "path": "surfaces[4].exposure.cold.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Emissivity, THERM panel",
+      "path": "surfaces[5].emissivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Absorptivity, THERM panel",
+      "path": "surfaces[5].absorptivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, THERM panel, case cold",
+      "path": "surfaces[5].exposure.cold.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, THERM panel, case cold",
+      "path": "surfaces[5].exposure.cold.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Emissivity, TTC panel",
+      "path": "surfaces[6].emissivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Absorptivity, TTC panel",
+      "path": "surfaces[6].absorptivity_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, TTC panel, case cold",
+      "path": "surfaces[6].exposure.cold.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, TTC panel, case cold",
+      "path": "surfaces[6].exposure.cold.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Solar flux, case hot",
+      "path": "cases.hot.solar_flux_wm2",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/m2",
+      "value": null
+    },
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Albedo, case hot",
+      "path": "cases.hot.albedo_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_environment.yaml",
+      "name": "Earth infrared, case hot",
+      "path": "cases.hot.earth_ir_wm2",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "W/m2",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, ADCS panel, case hot",
+      "path": "surfaces[0].exposure.hot.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, ADCS panel, case hot",
+      "path": "surfaces[0].exposure.hot.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, DH panel, case hot",
+      "path": "surfaces[1].exposure.hot.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, DH panel, case hot",
+      "path": "surfaces[1].exposure.hot.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, EPS panel, case hot",
+      "path": "surfaces[2].exposure.hot.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, EPS panel, case hot",
+      "path": "surfaces[2].exposure.hot.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, PL panel, case hot",
+      "path": "surfaces[3].exposure.hot.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, PL panel, case hot",
+      "path": "surfaces[3].exposure.hot.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, STRUCT panel, case hot",
+      "path": "surfaces[4].exposure.hot.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, STRUCT panel, case hot",
+      "path": "surfaces[4].exposure.hot.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, THERM panel, case hot",
+      "path": "surfaces[5].exposure.hot.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, THERM panel, case hot",
+      "path": "surfaces[5].exposure.hot.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Solar view, TTC panel, case hot",
+      "path": "surfaces[6].exposure.hot.solar_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/thermal_model.yaml",
+      "name": "Earth view, TTC panel, case hot",
+      "path": "surfaces[6].exposure.hot.earth_view_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    }
+  ],
+  "cases": [
+    {
+      "balance_residual_w": null,
+      "case": "cold",
+      "checks": [
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "STRUCT",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "adapter",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "adcs",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "EPS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "battery",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "PL",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "camera",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "EPS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "eps",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "gnss",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "STRUCT",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "harness",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "THERM",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "heaters",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "magnetorquers",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "DH",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "obc",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "DH",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "pdu_data",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "TTC",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "radio",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "reaction_wheels",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "EPS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "solar_array",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "star_tracker",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "STRUCT",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "structure",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "sun_sensors",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "PL",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "xband_tx",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        }
+      ],
+      "complete": false,
+      "description": "Eclipse with the lowest-power mode.",
+      "limit_set": "operating",
+      "mode_id": "safe",
+      "nodes": []
+    },
+    {
+      "balance_residual_w": null,
+      "case": "hot",
+      "checks": [
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "STRUCT",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "adapter",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "adcs",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "EPS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "battery",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "PL",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "camera",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "EPS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "eps",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "gnss",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "STRUCT",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "harness",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "THERM",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "heaters",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "magnetorquers",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "DH",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "obc",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "DH",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "pdu_data",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "TTC",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "radio",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "reaction_wheels",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "EPS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "solar_array",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "star_tracker",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "STRUCT",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "structure",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "ADCS",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "sun_sensors",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        },
+        {
+          "lower_headroom_k": null,
+          "lower_limit_k": null,
+          "node": "PL",
+          "required_margin_k": null,
+          "status": "no limits",
+          "temperature_k": null,
+          "unit_id": "xband_tx",
+          "upper_headroom_k": null,
+          "upper_limit_k": null
+        }
+      ],
+      "complete": false,
+      "description": "Sunlight with the highest-power mode.",
+      "limit_set": "operating",
+      "mode_id": "imaging",
+      "nodes": []
+    }
+  ],
+  "incomplete": true,
+  "modes": [
+    {
+      "mode_id": "charging",
+      "mode_name": "Charging",
+      "nodes": [
+        {
+          "dissipation_w": 17.5,
+          "name": "ADCS",
+          "peak_dissipation_w": 47.3
+        },
+        {
+          "dissipation_w": 10.0,
+          "name": "DH",
+          "peak_dissipation_w": 14.0
+        },
+        {
+          "dissipation_w": 14.0,
+          "name": "EPS",
+          "peak_dissipation_w": 20.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "PL",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.8,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "peak_total_w": 105.3,
+      "rows": [
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "adapter",
+          "unit_name": "Separation adapter"
+        },
+        {
+          "dissipation_w": 5.0,
+          "effective_power_w": 5.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 7.0,
+          "peak_power_w": 7.0,
+          "power_mode": "charging",
+          "subsystem": "ADCS",
+          "unit_id": "adcs",
+          "unit_name": "Attitude control electronics"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "battery",
+          "unit_name": "Battery pack"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "camera",
+          "unit_name": "Camera payload"
+        },
+        {
+          "dissipation_w": 14.0,
+          "effective_power_w": 14.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 20.0,
+          "peak_power_w": 20.0,
+          "power_mode": "charging",
+          "subsystem": "EPS",
+          "unit_id": "eps",
+          "unit_name": "Power conditioning unit"
+        },
+        {
+          "dissipation_w": 1.2,
+          "effective_power_w": 1.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 1.8,
+          "peak_power_w": 1.8,
+          "power_mode": "charging",
+          "subsystem": "ADCS",
+          "unit_id": "gnss",
+          "unit_name": "GNSS receiver"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "harness",
+          "unit_name": "Harness"
+        },
+        {
+          "dissipation_w": 1.8,
+          "effective_power_w": 1.8,
+          "heat_dissipation_ratio": 1.0,
+          "node": "THERM",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "charging",
+          "subsystem": "THERM",
+          "unit_id": "heaters",
+          "unit_name": "Thermal heaters"
+        },
+        {
+          "dissipation_w": 0.2,
+          "effective_power_w": 0.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 3.0,
+          "peak_power_w": 3.0,
+          "power_mode": "charging",
+          "subsystem": "ADCS",
+          "unit_id": "magnetorquers",
+          "unit_name": "Magnetorquers"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "charging",
+          "subsystem": "DH",
+          "unit_id": "obc",
+          "unit_name": "On-board computer"
+        },
+        {
+          "dissipation_w": 4.0,
+          "effective_power_w": 4.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 6.0,
+          "peak_power_w": 6.0,
+          "power_mode": "charging",
+          "subsystem": "DH",
+          "unit_id": "pdu_data",
+          "unit_name": "Payload data unit"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "TTC",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "charging",
+          "subsystem": "TTC",
+          "unit_id": "radio",
+          "unit_name": "S-band transceiver"
+        },
+        {
+          "dissipation_w": 7.2,
+          "effective_power_w": 7.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 30.0,
+          "peak_power_w": 30.0,
+          "power_mode": "charging",
+          "subsystem": "ADCS",
+          "unit_id": "reaction_wheels",
+          "unit_name": "Reaction wheels"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "solar_array",
+          "unit_name": "Solar array panels"
+        },
+        {
+          "dissipation_w": 3.5,
+          "effective_power_w": 3.5,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 5.0,
+          "peak_power_w": 5.0,
+          "power_mode": "charging",
+          "subsystem": "ADCS",
+          "unit_id": "star_tracker",
+          "unit_name": "Star tracker"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "structure",
+          "unit_name": "Primary structure"
+        },
+        {
+          "dissipation_w": 0.4,
+          "effective_power_w": 0.4,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.5,
+          "peak_power_w": 0.5,
+          "power_mode": "charging",
+          "subsystem": "ADCS",
+          "unit_id": "sun_sensors",
+          "unit_name": "Coarse sun sensors"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "xband_tx",
+          "unit_name": "X-band transmitter"
+        }
+      ],
+      "subsystems": [
+        {
+          "dissipation_w": 17.5,
+          "name": "ADCS",
+          "peak_dissipation_w": 47.3
+        },
+        {
+          "dissipation_w": 10.0,
+          "name": "DH",
+          "peak_dissipation_w": 14.0
+        },
+        {
+          "dissipation_w": 14.0,
+          "name": "EPS",
+          "peak_dissipation_w": 20.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "PL",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.8,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "total_w": 49.3
+    },
+    {
+      "mode_id": "downlink",
+      "mode_name": "Downlink",
+      "nodes": [
+        {
+          "dissipation_w": 18.3,
+          "name": "ADCS",
+          "peak_dissipation_w": 45.3
+        },
+        {
+          "dissipation_w": 20.0,
+          "name": "DH",
+          "peak_dissipation_w": 29.0
+        },
+        {
+          "dissipation_w": 12.0,
+          "name": "EPS",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 27.5,
+          "name": "PL",
+          "peak_dissipation_w": 35.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.8,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 19.6,
+          "name": "TTC",
+          "peak_dissipation_w": 28.0
+        }
+      ],
+      "peak_total_w": 169.3,
+      "rows": [
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "adapter",
+          "unit_name": "Separation adapter"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "downlink",
+          "subsystem": "ADCS",
+          "unit_id": "adcs",
+          "unit_name": "Attitude control electronics"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "battery",
+          "unit_name": "Battery pack"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "camera",
+          "unit_name": "Camera payload"
+        },
+        {
+          "dissipation_w": 12.0,
+          "effective_power_w": 12.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "downlink",
+          "subsystem": "EPS",
+          "unit_id": "eps",
+          "unit_name": "Power conditioning unit"
+        },
+        {
+          "dissipation_w": 1.2,
+          "effective_power_w": 1.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 1.8,
+          "peak_power_w": 1.8,
+          "power_mode": "downlink",
+          "subsystem": "ADCS",
+          "unit_id": "gnss",
+          "unit_name": "GNSS receiver"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "harness",
+          "unit_name": "Harness"
+        },
+        {
+          "dissipation_w": 1.8,
+          "effective_power_w": 1.8,
+          "heat_dissipation_ratio": 1.0,
+          "node": "THERM",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "downlink",
+          "subsystem": "THERM",
+          "unit_id": "heaters",
+          "unit_name": "Thermal heaters"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "ADCS",
+          "unit_id": "magnetorquers",
+          "unit_name": "Magnetorquers"
+        },
+        {
+          "dissipation_w": 11.0,
+          "effective_power_w": 11.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 15.0,
+          "peak_power_w": 15.0,
+          "power_mode": "downlink",
+          "subsystem": "DH",
+          "unit_id": "obc",
+          "unit_name": "On-board computer"
+        },
+        {
+          "dissipation_w": 9.0,
+          "effective_power_w": 9.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 14.0,
+          "peak_power_w": 14.0,
+          "power_mode": "downlink",
+          "subsystem": "DH",
+          "unit_id": "pdu_data",
+          "unit_name": "Payload data unit"
+        },
+        {
+          "dissipation_w": 19.6,
+          "effective_power_w": 28.0,
+          "heat_dissipation_ratio": 0.7,
+          "node": "TTC",
+          "peak_dissipation_w": 28.0,
+          "peak_power_w": 40.0,
+          "power_mode": "downlink",
+          "subsystem": "TTC",
+          "unit_id": "radio",
+          "unit_name": "S-band transceiver"
+        },
+        {
+          "dissipation_w": 7.2,
+          "effective_power_w": 7.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 30.0,
+          "peak_power_w": 30.0,
+          "power_mode": "downlink",
+          "subsystem": "ADCS",
+          "unit_id": "reaction_wheels",
+          "unit_name": "Reaction wheels"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "solar_array",
+          "unit_name": "Solar array panels"
+        },
+        {
+          "dissipation_w": 3.5,
+          "effective_power_w": 3.5,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 5.0,
+          "peak_power_w": 5.0,
+          "power_mode": "downlink",
+          "subsystem": "ADCS",
+          "unit_id": "star_tracker",
+          "unit_name": "Star tracker"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "structure",
+          "unit_name": "Primary structure"
+        },
+        {
+          "dissipation_w": 0.4,
+          "effective_power_w": 0.4,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.5,
+          "peak_power_w": 0.5,
+          "power_mode": "downlink",
+          "subsystem": "ADCS",
+          "unit_id": "sun_sensors",
+          "unit_name": "Coarse sun sensors"
+        },
+        {
+          "dissipation_w": 27.5,
+          "effective_power_w": 55.0,
+          "heat_dissipation_ratio": 0.5,
+          "node": "PL",
+          "peak_dissipation_w": 35.0,
+          "peak_power_w": 70.0,
+          "power_mode": "downlink",
+          "subsystem": "PL",
+          "unit_id": "xband_tx",
+          "unit_name": "X-band transmitter"
+        }
+      ],
+      "subsystems": [
+        {
+          "dissipation_w": 18.3,
+          "name": "ADCS",
+          "peak_dissipation_w": 45.3
+        },
+        {
+          "dissipation_w": 20.0,
+          "name": "DH",
+          "peak_dissipation_w": 29.0
+        },
+        {
+          "dissipation_w": 12.0,
+          "name": "EPS",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 27.5,
+          "name": "PL",
+          "peak_dissipation_w": 35.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.8,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 19.6,
+          "name": "TTC",
+          "peak_dissipation_w": 28.0
+        }
+      ],
+      "total_w": 99.2
+    },
+    {
+      "mode_id": "imaging",
+      "mode_name": "Imaging",
+      "nodes": [
+        {
+          "dissipation_w": 24.7,
+          "name": "ADCS",
+          "peak_dissipation_w": 57.3
+        },
+        {
+          "dissipation_w": 21.0,
+          "name": "DH",
+          "peak_dissipation_w": 30.0
+        },
+        {
+          "dissipation_w": 12.0,
+          "name": "EPS",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 36.0,
+          "name": "PL",
+          "peak_dissipation_w": 80.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.0,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "peak_total_w": 207.3,
+      "rows": [
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "adapter",
+          "unit_name": "Separation adapter"
+        },
+        {
+          "dissipation_w": 7.0,
+          "effective_power_w": 7.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 10.0,
+          "peak_power_w": 10.0,
+          "power_mode": "imaging",
+          "subsystem": "ADCS",
+          "unit_id": "adcs",
+          "unit_name": "Attitude control electronics"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "battery",
+          "unit_name": "Battery pack"
+        },
+        {
+          "dissipation_w": 36.0,
+          "effective_power_w": 36.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 80.0,
+          "peak_power_w": 80.0,
+          "power_mode": "imaging",
+          "subsystem": "PL",
+          "unit_id": "camera",
+          "unit_name": "Camera payload"
+        },
+        {
+          "dissipation_w": 12.0,
+          "effective_power_w": 12.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "imaging",
+          "subsystem": "EPS",
+          "unit_id": "eps",
+          "unit_name": "Power conditioning unit"
+        },
+        {
+          "dissipation_w": 1.2,
+          "effective_power_w": 1.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 1.8,
+          "peak_power_w": 1.8,
+          "power_mode": "imaging",
+          "subsystem": "ADCS",
+          "unit_id": "gnss",
+          "unit_name": "GNSS receiver"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "harness",
+          "unit_name": "Harness"
+        },
+        {
+          "dissipation_w": 1.0,
+          "effective_power_w": 1.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "THERM",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "imaging",
+          "subsystem": "THERM",
+          "unit_id": "heaters",
+          "unit_name": "Thermal heaters"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "ADCS",
+          "unit_id": "magnetorquers",
+          "unit_name": "Magnetorquers"
+        },
+        {
+          "dissipation_w": 12.0,
+          "effective_power_w": 12.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "imaging",
+          "subsystem": "DH",
+          "unit_id": "obc",
+          "unit_name": "On-board computer"
+        },
+        {
+          "dissipation_w": 9.0,
+          "effective_power_w": 9.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 14.0,
+          "peak_power_w": 14.0,
+          "power_mode": "imaging",
+          "subsystem": "DH",
+          "unit_id": "pdu_data",
+          "unit_name": "Payload data unit"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "TTC",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "imaging",
+          "subsystem": "TTC",
+          "unit_id": "radio",
+          "unit_name": "S-band transceiver"
+        },
+        {
+          "dissipation_w": 12.6,
+          "effective_power_w": 12.6,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 40.0,
+          "peak_power_w": 40.0,
+          "power_mode": "imaging",
+          "subsystem": "ADCS",
+          "unit_id": "reaction_wheels",
+          "unit_name": "Reaction wheels"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "solar_array",
+          "unit_name": "Solar array panels"
+        },
+        {
+          "dissipation_w": 3.5,
+          "effective_power_w": 3.5,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 5.0,
+          "peak_power_w": 5.0,
+          "power_mode": "imaging",
+          "subsystem": "ADCS",
+          "unit_id": "star_tracker",
+          "unit_name": "Star tracker"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "structure",
+          "unit_name": "Primary structure"
+        },
+        {
+          "dissipation_w": 0.4,
+          "effective_power_w": 0.4,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.5,
+          "peak_power_w": 0.5,
+          "power_mode": "imaging",
+          "subsystem": "ADCS",
+          "unit_id": "sun_sensors",
+          "unit_name": "Coarse sun sensors"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "xband_tx",
+          "unit_name": "X-band transmitter"
+        }
+      ],
+      "subsystems": [
+        {
+          "dissipation_w": 24.7,
+          "name": "ADCS",
+          "peak_dissipation_w": 57.3
+        },
+        {
+          "dissipation_w": 21.0,
+          "name": "DH",
+          "peak_dissipation_w": 30.0
+        },
+        {
+          "dissipation_w": 12.0,
+          "name": "EPS",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 36.0,
+          "name": "PL",
+          "peak_dissipation_w": 80.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.0,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "total_w": 100.7
+    },
+    {
+      "mode_id": "nominal",
+      "mode_name": "Nominal",
+      "nodes": [
+        {
+          "dissipation_w": 18.5,
+          "name": "ADCS",
+          "peak_dissipation_w": 48.3
+        },
+        {
+          "dissipation_w": 14.0,
+          "name": "DH",
+          "peak_dissipation_w": 20.0
+        },
+        {
+          "dissipation_w": 12.0,
+          "name": "EPS",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "PL",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.8,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "peak_total_w": 108.3,
+      "rows": [
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "adapter",
+          "unit_name": "Separation adapter"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "nominal",
+          "subsystem": "ADCS",
+          "unit_id": "adcs",
+          "unit_name": "Attitude control electronics"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "battery",
+          "unit_name": "Battery pack"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "camera",
+          "unit_name": "Camera payload"
+        },
+        {
+          "dissipation_w": 12.0,
+          "effective_power_w": 12.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "nominal",
+          "subsystem": "EPS",
+          "unit_id": "eps",
+          "unit_name": "Power conditioning unit"
+        },
+        {
+          "dissipation_w": 1.2,
+          "effective_power_w": 1.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 1.8,
+          "peak_power_w": 1.8,
+          "power_mode": "nominal",
+          "subsystem": "ADCS",
+          "unit_id": "gnss",
+          "unit_name": "GNSS receiver"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "harness",
+          "unit_name": "Harness"
+        },
+        {
+          "dissipation_w": 1.8,
+          "effective_power_w": 1.8,
+          "heat_dissipation_ratio": 1.0,
+          "node": "THERM",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "nominal",
+          "subsystem": "THERM",
+          "unit_id": "heaters",
+          "unit_name": "Thermal heaters"
+        },
+        {
+          "dissipation_w": 0.2,
+          "effective_power_w": 0.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 3.0,
+          "peak_power_w": 3.0,
+          "power_mode": "nominal",
+          "subsystem": "ADCS",
+          "unit_id": "magnetorquers",
+          "unit_name": "Magnetorquers"
+        },
+        {
+          "dissipation_w": 10.0,
+          "effective_power_w": 10.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 14.0,
+          "peak_power_w": 14.0,
+          "power_mode": "nominal",
+          "subsystem": "DH",
+          "unit_id": "obc",
+          "unit_name": "On-board computer"
+        },
+        {
+          "dissipation_w": 4.0,
+          "effective_power_w": 4.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 6.0,
+          "peak_power_w": 6.0,
+          "power_mode": "nominal",
+          "subsystem": "DH",
+          "unit_id": "pdu_data",
+          "unit_name": "Payload data unit"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "TTC",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "nominal",
+          "subsystem": "TTC",
+          "unit_id": "radio",
+          "unit_name": "S-band transceiver"
+        },
+        {
+          "dissipation_w": 7.2,
+          "effective_power_w": 7.2,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 30.0,
+          "peak_power_w": 30.0,
+          "power_mode": "nominal",
+          "subsystem": "ADCS",
+          "unit_id": "reaction_wheels",
+          "unit_name": "Reaction wheels"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "solar_array",
+          "unit_name": "Solar array panels"
+        },
+        {
+          "dissipation_w": 3.5,
+          "effective_power_w": 3.5,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 5.0,
+          "peak_power_w": 5.0,
+          "power_mode": "nominal",
+          "subsystem": "ADCS",
+          "unit_id": "star_tracker",
+          "unit_name": "Star tracker"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "structure",
+          "unit_name": "Primary structure"
+        },
+        {
+          "dissipation_w": 0.4,
+          "effective_power_w": 0.4,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.5,
+          "peak_power_w": 0.5,
+          "power_mode": "nominal",
+          "subsystem": "ADCS",
+          "unit_id": "sun_sensors",
+          "unit_name": "Coarse sun sensors"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "xband_tx",
+          "unit_name": "X-band transmitter"
+        }
+      ],
+      "subsystems": [
+        {
+          "dissipation_w": 18.5,
+          "name": "ADCS",
+          "peak_dissipation_w": 48.3
+        },
+        {
+          "dissipation_w": 14.0,
+          "name": "DH",
+          "peak_dissipation_w": 20.0
+        },
+        {
+          "dissipation_w": 12.0,
+          "name": "EPS",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "PL",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 1.8,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "total_w": 52.3
+    },
+    {
+      "mode_id": "safe",
+      "mode_name": "Safe",
+      "nodes": [
+        {
+          "dissipation_w": 5.85,
+          "name": "ADCS",
+          "peak_dissipation_w": 21.5
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "DH",
+          "peak_dissipation_w": 8.0
+        },
+        {
+          "dissipation_w": 8.0,
+          "name": "EPS",
+          "peak_dissipation_w": 10.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "PL",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "peak_total_w": 63.5,
+      "rows": [
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "adapter",
+          "unit_name": "Separation adapter"
+        },
+        {
+          "dissipation_w": 4.0,
+          "effective_power_w": 4.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 6.0,
+          "peak_power_w": 6.0,
+          "power_mode": "safe",
+          "subsystem": "ADCS",
+          "unit_id": "adcs",
+          "unit_name": "Attitude control electronics"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "battery",
+          "unit_name": "Battery pack"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "camera",
+          "unit_name": "Camera payload"
+        },
+        {
+          "dissipation_w": 8.0,
+          "effective_power_w": 8.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 10.0,
+          "peak_power_w": 10.0,
+          "power_mode": "safe",
+          "subsystem": "EPS",
+          "unit_id": "eps",
+          "unit_name": "Power conditioning unit"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "ADCS",
+          "unit_id": "gnss",
+          "unit_name": "GNSS receiver"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "harness",
+          "unit_name": "Harness"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "THERM",
+          "peak_dissipation_w": 16.0,
+          "peak_power_w": 16.0,
+          "power_mode": "safe",
+          "subsystem": "THERM",
+          "unit_id": "heaters",
+          "unit_name": "Thermal heaters"
+        },
+        {
+          "dissipation_w": 0.45,
+          "effective_power_w": 0.45,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 3.0,
+          "peak_power_w": 3.0,
+          "power_mode": "safe",
+          "subsystem": "ADCS",
+          "unit_id": "magnetorquers",
+          "unit_name": "Magnetorquers"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "safe",
+          "subsystem": "DH",
+          "unit_id": "obc",
+          "unit_name": "On-board computer"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "DH",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "DH",
+          "unit_id": "pdu_data",
+          "unit_name": "Payload data unit"
+        },
+        {
+          "dissipation_w": 6.0,
+          "effective_power_w": 6.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "TTC",
+          "peak_dissipation_w": 8.0,
+          "peak_power_w": 8.0,
+          "power_mode": "safe",
+          "subsystem": "TTC",
+          "unit_id": "radio",
+          "unit_name": "S-band transceiver"
+        },
+        {
+          "dissipation_w": 1.0,
+          "effective_power_w": 1.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 12.0,
+          "peak_power_w": 12.0,
+          "power_mode": "safe",
+          "subsystem": "ADCS",
+          "unit_id": "reaction_wheels",
+          "unit_name": "Reaction wheels"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "EPS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "EPS",
+          "unit_id": "solar_array",
+          "unit_name": "Solar array panels"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "ADCS",
+          "unit_id": "star_tracker",
+          "unit_name": "Star tracker"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "STRUCT",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "STRUCT",
+          "unit_id": "structure",
+          "unit_name": "Primary structure"
+        },
+        {
+          "dissipation_w": 0.4,
+          "effective_power_w": 0.4,
+          "heat_dissipation_ratio": 1.0,
+          "node": "ADCS",
+          "peak_dissipation_w": 0.5,
+          "peak_power_w": 0.5,
+          "power_mode": "safe",
+          "subsystem": "ADCS",
+          "unit_id": "sun_sensors",
+          "unit_name": "Coarse sun sensors"
+        },
+        {
+          "dissipation_w": 0.0,
+          "effective_power_w": 0.0,
+          "heat_dissipation_ratio": 1.0,
+          "node": "PL",
+          "peak_dissipation_w": 0.0,
+          "peak_power_w": 0.0,
+          "power_mode": "off",
+          "subsystem": "PL",
+          "unit_id": "xband_tx",
+          "unit_name": "X-band transmitter"
+        }
+      ],
+      "subsystems": [
+        {
+          "dissipation_w": 5.85,
+          "name": "ADCS",
+          "peak_dissipation_w": 21.5
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "DH",
+          "peak_dissipation_w": 8.0
+        },
+        {
+          "dissipation_w": 8.0,
+          "name": "EPS",
+          "peak_dissipation_w": 10.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "PL",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 0.0,
+          "name": "STRUCT",
+          "peak_dissipation_w": 0.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "THERM",
+          "peak_dissipation_w": 16.0
+        },
+        {
+          "dissipation_w": 6.0,
+          "name": "TTC",
+          "peak_dissipation_w": 8.0
+        }
+      ],
+      "total_w": 31.85
+    }
+  ],
+  "problems": [
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The albedo of the case is a placeholder.",
+      "path": "cases.cold.albedo_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth infrared flux of the case is a placeholder.",
+      "path": "cases.cold.earth_ir_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar flux of the case is a placeholder.",
+      "path": "cases.cold.solar_flux_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The albedo of the case is a placeholder.",
+      "path": "cases.hot.albedo_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth infrared flux of the case is a placeholder.",
+      "path": "cases.hot.earth_ir_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar flux of the case is a placeholder.",
+      "path": "cases.hot.solar_flux_wm2",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The space temperature is a placeholder.",
+      "path": "space_temperature_k",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_environment.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The temperature margin is a placeholder.",
+      "path": "temperature_margin_k",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "A conductance is a placeholder.",
+      "path": "conductances[0].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "A conductance is a placeholder.",
+      "path": "conductances[1].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "A conductance is a placeholder.",
+      "path": "conductances[2].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "A conductance is a placeholder.",
+      "path": "conductances[3].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "A conductance is a placeholder.",
+      "path": "conductances[4].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "A conductance is a placeholder.",
+      "path": "conductances[5].conductance_wk",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[0].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The emissivity of the surface is a placeholder.",
+      "path": "surfaces[0].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[0].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[0].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[0].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[0].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[1].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The emissivity of the surface is a placeholder.",
+      "path": "surfaces[1].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[1].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[1].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[1].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[1].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[2].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The emissivity of the surface is a placeholder.",
+      "path": "surfaces[2].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[2].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[2].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[2].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[2].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[3].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The emissivity of the surface is a placeholder.",
+      "path": "surfaces[3].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[3].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[3].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[3].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[3].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[4].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The emissivity of the surface is a placeholder.",
+      "path": "surfaces[4].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[4].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[4].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[4].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[4].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[5].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The emissivity of the surface is a placeholder.",
+      "path": "surfaces[5].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[5].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[5].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[5].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[5].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The absorptivity of the surface is a placeholder.",
+      "path": "surfaces[6].absorptivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The emissivity of the surface is a placeholder.",
+      "path": "surfaces[6].emissivity_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[6].exposure.cold.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[6].exposure.cold.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The Earth view ratio of the surface is a placeholder.",
+      "path": "surfaces[6].exposure.hot.earth_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/thermal_model.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The solar view ratio of the surface is a placeholder.",
+      "path": "surfaces[6].exposure.hot.solar_view_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/adapter.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'adapter' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/adcs.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'adcs' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/battery.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'battery' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/camera.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'camera' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/eps.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'eps' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/gnss.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'gnss' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/harness.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'harness' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/heaters.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'heaters' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/magnetorquers.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'magnetorquers' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/obc.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'obc' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/pdu_data.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'pdu_data' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/radio.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'radio' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/reaction_wheels.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'reaction_wheels' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/solar_array.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'solar_array' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/star_tracker.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'star_tracker' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/structure.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'structure' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/sun_sensors.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'sun_sensors' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    },
+    {
+      "code": "THERMAL_NO_LIMITS",
+      "file": "units/xband_tx.yaml",
+      "hint": "Add temperature_limits from the unit's data sheet.",
+      "line": null,
+      "message": "Unit 'xband_tx' has no operating temperature limits; it is not checked.",
+      "path": "temperature_limits",
+      "severity": "warning"
+    }
+  ],
+  "provenance": {
+    "generated": "2026-01-02T03:04:05Z",
+    "libraries": [
+      [
+        "pinned",
+        "for-golden-tests"
+      ]
+    ],
+    "project_name": "Example 250 kg minisatellite",
+    "project_revision": "1",
+    "python_version": "3.x",
+    "scenario": "static (no scenario)",
+    "tool": "System Budget Studio",
+    "tool_version": "1.0.0",
+    "user": "Golden User"
+  }
+}

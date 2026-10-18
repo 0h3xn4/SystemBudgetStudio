@@ -18,7 +18,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture(scope="module")
 def run() -> ScenarioRun:
-    project = load_project(EXAMPLES / "cubesat_3u").project
+    project = load_project(EXAMPLES / "microsat_250kg").project
     assert project is not None
     return run_scenario(project, "one_day")
 
@@ -49,7 +49,7 @@ def test_mode_colours_are_stable_and_distinct() -> None:
 
 
 def test_rows_and_full_range(widget: TimelineWidget) -> None:
-    assert widget.rows() == ["Sunlight", "gs_north", "tgt_plains", "Mode"]
+    assert widget.rows() == ["Sunlight", "gs_north", "gs_south", "tgt_plains", "Mode"]
     assert widget.visible_range() == (0.0, 86400.0)
 
 

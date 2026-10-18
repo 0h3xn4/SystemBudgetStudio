@@ -50,8 +50,8 @@ LOAD = Problem(
 )
 
 
-def cubesat_output(load_problems: list[Problem]) -> BudgetOutput:
-    project = load_project(EXAMPLES / "cubesat_3u").project
+def minisat_output(load_problems: list[Problem]) -> BudgetOutput:
+    project = load_project(EXAMPLES / "microsat_250kg").project
     assert project is not None
     prov = make_provenance(project, user="u", generated_at=WHEN)
     return power_output(project, static_power_budget(project), prov, load_problems)
@@ -59,7 +59,7 @@ def cubesat_output(load_problems: list[Problem]) -> BudgetOutput:
 
 # ---- RC-4 -----------------------------------------------------------------------------------
 def test_json_problems_include_the_load_time_problems(tmp_path: Path) -> None:
-    out = cubesat_output([LOAD])
+    out = minisat_output([LOAD])
     write_outputs([out], tmp_path, {"json"})
     data = json.loads((tmp_path / "power_static.json").read_text(encoding="utf-8"))
     codes = [p["code"] for p in data["problems"]]
@@ -84,7 +84,7 @@ def test_timeline_and_link_json_include_the_load_time_problems() -> None:
 
 # ---- RC-11 ----------------------------------------------------------------------------------
 def test_problems_table_has_path_and_hint_columns() -> None:
-    out = cubesat_output([LOAD])
+    out = minisat_output([LOAD])
     table = next(
         t for s in out.document.sections for t in s.tables if t.title == "Problems and open items"
     )
@@ -136,7 +136,7 @@ def test_complete_reports_have_no_banner_anywhere() -> None:
 
 
 def test_json_carries_the_incomplete_flag(tmp_path: Path) -> None:
-    out = cubesat_output([])
+    out = minisat_output([])
     write_outputs([out], tmp_path, {"json"})
     data = json.loads((tmp_path / "power_static.json").read_text(encoding="utf-8"))
     assert data["incomplete"] is True

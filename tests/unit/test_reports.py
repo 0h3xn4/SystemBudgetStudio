@@ -29,13 +29,13 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 WHEN = datetime(2026, 1, 2, 3, 4, 5, tzinfo=UTC)
 
 
-def prov(project_root: Path = EXAMPLES / "cubesat_3u") -> Provenance:
+def prov(project_root: Path = EXAMPLES / "microsat_250kg") -> Provenance:
     project = load_project(project_root).project
     assert project is not None
     return make_provenance(project, user="Test User", generated_at=WHEN)
 
 
-def document(name: str = "cubesat_3u") -> ReportDocument:
+def document(name: str = "microsat_250kg") -> ReportDocument:
     result = load_project(EXAMPLES / name)
     assert result.project is not None
     power = static_power_budget(result.project)
@@ -51,7 +51,7 @@ def test_provenance_fields() -> None:
 
 
 def test_provenance_uses_source_date_epoch_and_budget_user(monkeypatch: pytest.MonkeyPatch) -> None:
-    project = load_project(EXAMPLES / "cubesat_3u").project
+    project = load_project(EXAMPLES / "microsat_250kg").project
     assert project is not None
     monkeypatch.setenv("SOURCE_DATE_EPOCH", "86400")
     monkeypatch.setenv("BUDGET_USER", "Env User")
@@ -170,7 +170,7 @@ def test_normalise_zip_is_stable_and_valid() -> None:
 
 
 def test_json_export_is_deterministic_and_complete() -> None:
-    result = load_project(EXAMPLES / "cubesat_3u")
+    result = load_project(EXAMPLES / "microsat_250kg")
     assert result.project is not None
     power = static_power_budget(result.project)
     text = result_json(power, prov(), incomplete=True)
@@ -183,13 +183,13 @@ def test_json_export_is_deterministic_and_complete() -> None:
 
 
 def test_csv_export_has_header_provenance_comment_free_rows() -> None:
-    result = load_project(EXAMPLES / "cubesat_3u")
+    result = load_project(EXAMPLES / "microsat_250kg")
     assert result.project is not None
     power = static_power_budget(result.project)
     text = result_csv(power.modes[0])
     lines = text.strip().split("\n")
     assert lines[0].startswith("unit_id,unit_name,subsystem,bus,power_mode,avg_power_w")
-    assert len(lines) == 1 + 6 and "\r" not in text and ",," in text  # empty cell for n/a
+    assert len(lines) == 1 + 18 and "\r" not in text and ",," in text  # empty cell for n/a
 
 
 def test_problems_listed_in_report() -> None:

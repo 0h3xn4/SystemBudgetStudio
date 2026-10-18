@@ -2,10 +2,10 @@
 
 ```
 budget export-examples demo
-budget scenario demo/cubesat_3u --out out --user "Your Name"
+budget scenario demo/microsat_250kg --out out --user "Your Name"
 ```
 
-Prints how many eclipses and passes the day has and writes `one_day_environment.json`, `one_day_eclipses.csv`, `one_day_passes.csv` and `one_day_timeline.csv`. In the 3U example the mode timeline shows the layering: `charging` by default, `nominal` during eclipse, `imaging` over the target and `downlink` over the station (later rules win; manual segments win last).
+Prints how many eclipses and passes the day has and writes `one_day_environment.json`, `one_day_eclipses.csv`, `one_day_passes.csv` and `one_day_timeline.csv`. In the 250 kg example the mode timeline shows the layering: `charging` by default, `nominal` during eclipse, `imaging` over the target and `downlink` over the station (later rules win; manual segments win last).
 
 How it is checked:
 - **Eclipse duration** against the closed-form circular-orbit formula, 16 hand-calculated orbit geometries; the beta angle from the propagated state is compared with `asin(sin i sin RAAN)`.

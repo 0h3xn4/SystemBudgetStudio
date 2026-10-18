@@ -1,0 +1,1580 @@
+{
+  "assumptions": [
+    {
+      "file": "config/margin_policy.yaml",
+      "name": "Mass margin, maturity class class_a",
+      "path": "classes.class_a.mass_margin_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/margin_policy.yaml",
+      "name": "Mass margin, maturity class class_b",
+      "path": "classes.class_b.mass_margin_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/margin_policy.yaml",
+      "name": "Mass margin, maturity class class_c",
+      "path": "classes.class_c.mass_margin_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/margin_policy.yaml",
+      "name": "System mass margin",
+      "path": "system_mass_margin_ratio",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "ratio",
+      "value": null
+    },
+    {
+      "file": "config/mass_limits.yaml",
+      "name": "Mass limit, Launch mass",
+      "path": "limits[0].limit_kg",
+      "placeholder": true,
+      "source": "TBD",
+      "unit": "kg",
+      "value": null
+    }
+  ],
+  "incomplete": true,
+  "phases": [
+    {
+      "cog": {
+        "coverage_ratio": 1.0,
+        "excluded_ids": [],
+        "inertia_cg": {
+          "ixx": 36.992212804,
+          "ixy": 0.17285000000000003,
+          "ixz": -1.17271936,
+          "iyy": 48.566506704,
+          "iyz": 0.3728650000000001,
+          "izz": 36.7899189
+        },
+        "inertia_origin": {
+          "ixx": 118.09681100000002,
+          "ixy": 0.20750000000000002,
+          "ixz": 1.4585000000000001,
+          "iyy": 129.74242,
+          "iyz": -0.6950000000000002,
+          "izz": 36.889359
+        },
+        "mass_kg": 250.0,
+        "point_mass_ids": [
+          "gnss",
+          "harness",
+          "heaters",
+          "sun_sensors",
+          "propellant"
+        ],
+        "position_m": [
+          -0.01848,
+          0.0075000000000000015,
+          0.569528
+        ]
+      },
+      "limits": [
+        {
+          "limit_kg": null,
+          "margin_kg": null,
+          "name": "Launch mass",
+          "status": "n/a",
+          "total_kg": null
+        }
+      ],
+      "phase": "launch",
+      "rows": [
+        {
+          "item_id": "adapter",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.0,
+          "maturity": "class_a",
+          "name": "Separation adapter",
+          "own_inertia": {
+            "ixx": 0.296667,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.296667,
+            "iyz": 0.0,
+            "izz": 0.589067
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            -0.04
+          ],
+          "subsystem": "STRUCT"
+        },
+        {
+          "item_id": "adcs",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 3.0,
+          "maturity": "class_b",
+          "name": "Attitude control electronics",
+          "own_inertia": {
+            "ixx": 0.006525,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0109,
+            "iyz": 0.0,
+            "izz": 0.015625
+          },
+          "position_m": [
+            0.15,
+            -0.15,
+            0.45
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "battery",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 14.0,
+          "maturity": "class_b",
+          "name": "Battery pack",
+          "own_inertia": {
+            "ixx": 0.110717,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.180717,
+            "iyz": 0.0,
+            "izz": 0.215833
+          },
+          "position_m": [
+            -0.15,
+            0.1,
+            0.22
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "camera",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 38.0,
+          "maturity": "class_c",
+          "name": "Camera payload",
+          "own_inertia": {
+            "ixx": 1.345833,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 1.345833,
+            "iyz": 0.0,
+            "izz": 0.775833
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.95
+          ],
+          "subsystem": "PL"
+        },
+        {
+          "item_id": "eps",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 10.0,
+          "maturity": "class_a",
+          "name": "Power conditioning unit",
+          "own_inertia": {
+            "ixx": 0.068333,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.097333,
+            "iyz": 0.0,
+            "izz": 0.141667
+          },
+          "position_m": [
+            -0.2,
+            0.0,
+            0.4
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "gnss",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 0.9,
+          "maturity": "class_b",
+          "name": "GNSS receiver",
+          "own_inertia": null,
+          "position_m": [
+            -0.3,
+            -0.25,
+            1.1
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "harness",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 6.0,
+          "maturity": "class_b",
+          "name": "Harness",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "STRUCT"
+        },
+        {
+          "item_id": "heaters",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 1.5,
+          "maturity": "class_b",
+          "name": "Thermal heaters",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "THERM"
+        },
+        {
+          "item_id": "magnetorquers",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.0,
+          "maturity": "class_b",
+          "name": "Magnetorquers",
+          "own_inertia": {
+            "ixx": 0.101667,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.101667,
+            "iyz": 0.0,
+            "izz": 0.201667
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.7
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "obc",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 3.0,
+          "maturity": "class_a",
+          "name": "On-board computer",
+          "own_inertia": {
+            "ixx": 0.008,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0137,
+            "iyz": 0.0,
+            "izz": 0.0185
+          },
+          "position_m": [
+            0.2,
+            0.1,
+            0.45
+          ],
+          "subsystem": "DH"
+        },
+        {
+          "item_id": "pdu_data",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 6.0,
+          "maturity": "class_b",
+          "name": "Payload data unit",
+          "own_inertia": {
+            "ixx": 0.0292,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0442,
+            "iyz": 0.0,
+            "izz": 0.0634
+          },
+          "position_m": [
+            -0.2,
+            -0.15,
+            0.55
+          ],
+          "subsystem": "DH"
+        },
+        {
+          "item_id": "radio",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.5,
+          "maturity": "class_b",
+          "name": "S-band transceiver",
+          "own_inertia": {
+            "ixx": 0.009188,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.016838,
+            "iyz": 0.0,
+            "izz": 0.02235
+          },
+          "position_m": [
+            0.2,
+            0.0,
+            0.6
+          ],
+          "subsystem": "TTC"
+        },
+        {
+          "item_id": "reaction_wheels",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 14.0,
+          "maturity": "class_b",
+          "name": "Reaction wheels",
+          "own_inertia": {
+            "ixx": 0.266117,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.266117,
+            "iyz": 0.0,
+            "izz": 0.4725
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.3
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "solar_array",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 26.0,
+          "maturity": "class_b",
+          "name": "Solar array panels",
+          "own_inertia": {
+            "ixx": 2.172083,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 12.485417,
+            "iyz": 0.0,
+            "izz": 14.646667
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "star_tracker",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 2.0,
+          "maturity": "class_b",
+          "name": "Star tracker",
+          "own_inertia": {
+            "ixx": 0.005933,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.005933,
+            "iyz": 0.0,
+            "izz": 0.003333
+          },
+          "position_m": [
+            0.3,
+            0.25,
+            1.05
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "structure",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 100.5,
+          "maturity": "class_a",
+          "name": "Primary structure",
+          "own_inertia": {
+            "ixx": 20.435,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 20.435,
+            "iyz": 0.0,
+            "izz": 16.75
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "STRUCT"
+        },
+        {
+          "item_id": "sun_sensors",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 0.6,
+          "maturity": "class_b",
+          "name": "Coarse sun sensors",
+          "own_inertia": null,
+          "position_m": [
+            0.25,
+            -0.25,
+            1.12
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "xband_tx",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 7.0,
+          "maturity": "class_b",
+          "name": "X-band transmitter",
+          "own_inertia": {
+            "ixx": 0.019658,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.032958,
+            "iyz": 0.0,
+            "izz": 0.043167
+          },
+          "position_m": [
+            -0.25,
+            0.2,
+            0.6
+          ],
+          "subsystem": "PL"
+        },
+        {
+          "item_id": "propellant",
+          "kind": "expendable",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 5.0,
+          "maturity": "class_c",
+          "name": "Propellant",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.4
+          ],
+          "subsystem": "PROP"
+        }
+      ],
+      "subsystems": [
+        {
+          "margined_kg": null,
+          "mass_kg": 24.5,
+          "subsystem": "ADCS"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 9.0,
+          "subsystem": "DH"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 50.0,
+          "subsystem": "EPS"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 45.0,
+          "subsystem": "PL"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 5.0,
+          "subsystem": "PROP"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 110.5,
+          "subsystem": "STRUCT"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 1.5,
+          "subsystem": "THERM"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 4.5,
+          "subsystem": "TTC"
+        }
+      ],
+      "system_margined_kg": null,
+      "total_kg": 250.0,
+      "unit_margined_kg": null
+    },
+    {
+      "cog": {
+        "coverage_ratio": 1.0,
+        "excluded_ids": [],
+        "inertia_cg": {
+          "ixx": 35.17859888608625,
+          "ixy": 0.1722579332790887,
+          "ixz": -1.2191828315703825,
+          "iyy": 46.75167422050447,
+          "iyz": 0.391721928397071,
+          "izz": 36.199152760781125
+        },
+        "inertia_origin": {
+          "ixx": 117.76174400000001,
+          "ixy": 0.20750000000000002,
+          "ixz": 1.4585000000000001,
+          "iyy": 129.407353,
+          "iyz": -0.6950000000000002,
+          "izz": 36.300292
+        },
+        "mass_kg": 245.8,
+        "point_mass_ids": [
+          "gnss",
+          "harness",
+          "heaters",
+          "sun_sensors",
+          "propellant"
+        ],
+        "position_m": [
+          -0.018795768917819367,
+          0.007628152969894224,
+          0.5795850284784378
+        ]
+      },
+      "limits": [],
+      "phase": "bol",
+      "rows": [
+        {
+          "item_id": "adcs",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 3.0,
+          "maturity": "class_b",
+          "name": "Attitude control electronics",
+          "own_inertia": {
+            "ixx": 0.006525,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0109,
+            "iyz": 0.0,
+            "izz": 0.015625
+          },
+          "position_m": [
+            0.15,
+            -0.15,
+            0.45
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "battery",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 14.0,
+          "maturity": "class_b",
+          "name": "Battery pack",
+          "own_inertia": {
+            "ixx": 0.110717,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.180717,
+            "iyz": 0.0,
+            "izz": 0.215833
+          },
+          "position_m": [
+            -0.15,
+            0.1,
+            0.22
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "camera",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 38.0,
+          "maturity": "class_c",
+          "name": "Camera payload",
+          "own_inertia": {
+            "ixx": 1.345833,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 1.345833,
+            "iyz": 0.0,
+            "izz": 0.775833
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.95
+          ],
+          "subsystem": "PL"
+        },
+        {
+          "item_id": "eps",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 10.0,
+          "maturity": "class_a",
+          "name": "Power conditioning unit",
+          "own_inertia": {
+            "ixx": 0.068333,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.097333,
+            "iyz": 0.0,
+            "izz": 0.141667
+          },
+          "position_m": [
+            -0.2,
+            0.0,
+            0.4
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "gnss",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 0.9,
+          "maturity": "class_b",
+          "name": "GNSS receiver",
+          "own_inertia": null,
+          "position_m": [
+            -0.3,
+            -0.25,
+            1.1
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "harness",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 6.0,
+          "maturity": "class_b",
+          "name": "Harness",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "STRUCT"
+        },
+        {
+          "item_id": "heaters",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 1.5,
+          "maturity": "class_b",
+          "name": "Thermal heaters",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "THERM"
+        },
+        {
+          "item_id": "magnetorquers",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.0,
+          "maturity": "class_b",
+          "name": "Magnetorquers",
+          "own_inertia": {
+            "ixx": 0.101667,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.101667,
+            "iyz": 0.0,
+            "izz": 0.201667
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.7
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "obc",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 3.0,
+          "maturity": "class_a",
+          "name": "On-board computer",
+          "own_inertia": {
+            "ixx": 0.008,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0137,
+            "iyz": 0.0,
+            "izz": 0.0185
+          },
+          "position_m": [
+            0.2,
+            0.1,
+            0.45
+          ],
+          "subsystem": "DH"
+        },
+        {
+          "item_id": "pdu_data",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 6.0,
+          "maturity": "class_b",
+          "name": "Payload data unit",
+          "own_inertia": {
+            "ixx": 0.0292,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0442,
+            "iyz": 0.0,
+            "izz": 0.0634
+          },
+          "position_m": [
+            -0.2,
+            -0.15,
+            0.55
+          ],
+          "subsystem": "DH"
+        },
+        {
+          "item_id": "radio",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.5,
+          "maturity": "class_b",
+          "name": "S-band transceiver",
+          "own_inertia": {
+            "ixx": 0.009188,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.016838,
+            "iyz": 0.0,
+            "izz": 0.02235
+          },
+          "position_m": [
+            0.2,
+            0.0,
+            0.6
+          ],
+          "subsystem": "TTC"
+        },
+        {
+          "item_id": "reaction_wheels",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 14.0,
+          "maturity": "class_b",
+          "name": "Reaction wheels",
+          "own_inertia": {
+            "ixx": 0.266117,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.266117,
+            "iyz": 0.0,
+            "izz": 0.4725
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.3
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "solar_array",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 26.0,
+          "maturity": "class_b",
+          "name": "Solar array panels",
+          "own_inertia": {
+            "ixx": 2.172083,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 12.485417,
+            "iyz": 0.0,
+            "izz": 14.646667
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "star_tracker",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 2.0,
+          "maturity": "class_b",
+          "name": "Star tracker",
+          "own_inertia": {
+            "ixx": 0.005933,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.005933,
+            "iyz": 0.0,
+            "izz": 0.003333
+          },
+          "position_m": [
+            0.3,
+            0.25,
+            1.05
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "structure",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 100.5,
+          "maturity": "class_a",
+          "name": "Primary structure",
+          "own_inertia": {
+            "ixx": 20.435,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 20.435,
+            "iyz": 0.0,
+            "izz": 16.75
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "STRUCT"
+        },
+        {
+          "item_id": "sun_sensors",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 0.6,
+          "maturity": "class_b",
+          "name": "Coarse sun sensors",
+          "own_inertia": null,
+          "position_m": [
+            0.25,
+            -0.25,
+            1.12
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "xband_tx",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 7.0,
+          "maturity": "class_b",
+          "name": "X-band transmitter",
+          "own_inertia": {
+            "ixx": 0.019658,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.032958,
+            "iyz": 0.0,
+            "izz": 0.043167
+          },
+          "position_m": [
+            -0.25,
+            0.2,
+            0.6
+          ],
+          "subsystem": "PL"
+        },
+        {
+          "item_id": "propellant",
+          "kind": "expendable",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.8,
+          "maturity": "class_c",
+          "name": "Propellant",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.4
+          ],
+          "subsystem": "PROP"
+        }
+      ],
+      "subsystems": [
+        {
+          "margined_kg": null,
+          "mass_kg": 24.5,
+          "subsystem": "ADCS"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 9.0,
+          "subsystem": "DH"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 50.0,
+          "subsystem": "EPS"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 45.0,
+          "subsystem": "PL"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 4.8,
+          "subsystem": "PROP"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 106.5,
+          "subsystem": "STRUCT"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 1.5,
+          "subsystem": "THERM"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 4.5,
+          "subsystem": "TTC"
+        }
+      ],
+      "system_margined_kg": null,
+      "total_kg": 245.8,
+      "unit_margined_kg": null
+    },
+    {
+      "cog": {
+        "coverage_ratio": 1.0,
+        "excluded_ids": [],
+        "inertia_cg": {
+          "ixx": 35.04054222433774,
+          "ixy": 0.17164528145695362,
+          "ixz": -1.2336061258278146,
+          "iyy": 46.612356625827815,
+          "iyz": 0.39757553807947044,
+          "izz": 36.1973945455298
+        },
+        "inertia_origin": {
+          "ixx": 117.08974400000001,
+          "ixy": 0.20750000000000002,
+          "ixz": 1.4585000000000001,
+          "iyy": 128.735353,
+          "iyz": -0.6950000000000002,
+          "izz": 36.300292
+        },
+        "mass_kg": 241.6,
+        "point_mass_ids": [
+          "gnss",
+          "harness",
+          "heaters",
+          "sun_sensors",
+          "propellant"
+        ],
+        "position_m": [
+          -0.01912251655629139,
+          0.007760761589403976,
+          0.5827069536423841
+        ]
+      },
+      "limits": [],
+      "phase": "eol",
+      "rows": [
+        {
+          "item_id": "adcs",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 3.0,
+          "maturity": "class_b",
+          "name": "Attitude control electronics",
+          "own_inertia": {
+            "ixx": 0.006525,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0109,
+            "iyz": 0.0,
+            "izz": 0.015625
+          },
+          "position_m": [
+            0.15,
+            -0.15,
+            0.45
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "battery",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 14.0,
+          "maturity": "class_b",
+          "name": "Battery pack",
+          "own_inertia": {
+            "ixx": 0.110717,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.180717,
+            "iyz": 0.0,
+            "izz": 0.215833
+          },
+          "position_m": [
+            -0.15,
+            0.1,
+            0.22
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "camera",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 38.0,
+          "maturity": "class_c",
+          "name": "Camera payload",
+          "own_inertia": {
+            "ixx": 1.345833,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 1.345833,
+            "iyz": 0.0,
+            "izz": 0.775833
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.95
+          ],
+          "subsystem": "PL"
+        },
+        {
+          "item_id": "eps",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 10.0,
+          "maturity": "class_a",
+          "name": "Power conditioning unit",
+          "own_inertia": {
+            "ixx": 0.068333,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.097333,
+            "iyz": 0.0,
+            "izz": 0.141667
+          },
+          "position_m": [
+            -0.2,
+            0.0,
+            0.4
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "gnss",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 0.9,
+          "maturity": "class_b",
+          "name": "GNSS receiver",
+          "own_inertia": null,
+          "position_m": [
+            -0.3,
+            -0.25,
+            1.1
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "harness",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 6.0,
+          "maturity": "class_b",
+          "name": "Harness",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "STRUCT"
+        },
+        {
+          "item_id": "heaters",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 1.5,
+          "maturity": "class_b",
+          "name": "Thermal heaters",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "THERM"
+        },
+        {
+          "item_id": "magnetorquers",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.0,
+          "maturity": "class_b",
+          "name": "Magnetorquers",
+          "own_inertia": {
+            "ixx": 0.101667,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.101667,
+            "iyz": 0.0,
+            "izz": 0.201667
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.7
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "obc",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 3.0,
+          "maturity": "class_a",
+          "name": "On-board computer",
+          "own_inertia": {
+            "ixx": 0.008,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0137,
+            "iyz": 0.0,
+            "izz": 0.0185
+          },
+          "position_m": [
+            0.2,
+            0.1,
+            0.45
+          ],
+          "subsystem": "DH"
+        },
+        {
+          "item_id": "pdu_data",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 6.0,
+          "maturity": "class_b",
+          "name": "Payload data unit",
+          "own_inertia": {
+            "ixx": 0.0292,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.0442,
+            "iyz": 0.0,
+            "izz": 0.0634
+          },
+          "position_m": [
+            -0.2,
+            -0.15,
+            0.55
+          ],
+          "subsystem": "DH"
+        },
+        {
+          "item_id": "radio",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 4.5,
+          "maturity": "class_b",
+          "name": "S-band transceiver",
+          "own_inertia": {
+            "ixx": 0.009188,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.016838,
+            "iyz": 0.0,
+            "izz": 0.02235
+          },
+          "position_m": [
+            0.2,
+            0.0,
+            0.6
+          ],
+          "subsystem": "TTC"
+        },
+        {
+          "item_id": "reaction_wheels",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 14.0,
+          "maturity": "class_b",
+          "name": "Reaction wheels",
+          "own_inertia": {
+            "ixx": 0.266117,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.266117,
+            "iyz": 0.0,
+            "izz": 0.4725
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.3
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "solar_array",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 26.0,
+          "maturity": "class_b",
+          "name": "Solar array panels",
+          "own_inertia": {
+            "ixx": 2.172083,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 12.485417,
+            "iyz": 0.0,
+            "izz": 14.646667
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "EPS"
+        },
+        {
+          "item_id": "star_tracker",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 2.0,
+          "maturity": "class_b",
+          "name": "Star tracker",
+          "own_inertia": {
+            "ixx": 0.005933,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.005933,
+            "iyz": 0.0,
+            "izz": 0.003333
+          },
+          "position_m": [
+            0.3,
+            0.25,
+            1.05
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "structure",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 100.5,
+          "maturity": "class_a",
+          "name": "Primary structure",
+          "own_inertia": {
+            "ixx": 20.435,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 20.435,
+            "iyz": 0.0,
+            "izz": 16.75
+          },
+          "position_m": [
+            0.0,
+            0.0,
+            0.55
+          ],
+          "subsystem": "STRUCT"
+        },
+        {
+          "item_id": "sun_sensors",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 0.6,
+          "maturity": "class_b",
+          "name": "Coarse sun sensors",
+          "own_inertia": null,
+          "position_m": [
+            0.25,
+            -0.25,
+            1.12
+          ],
+          "subsystem": "ADCS"
+        },
+        {
+          "item_id": "xband_tx",
+          "kind": "unit",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 7.0,
+          "maturity": "class_b",
+          "name": "X-band transmitter",
+          "own_inertia": {
+            "ixx": 0.019658,
+            "ixy": 0.0,
+            "ixz": 0.0,
+            "iyy": 0.032958,
+            "iyz": 0.0,
+            "izz": 0.043167
+          },
+          "position_m": [
+            -0.25,
+            0.2,
+            0.6
+          ],
+          "subsystem": "PL"
+        },
+        {
+          "item_id": "propellant",
+          "kind": "expendable",
+          "margin_ratio": null,
+          "margined_mass_kg": null,
+          "mass_kg": 0.6,
+          "maturity": "class_c",
+          "name": "Propellant",
+          "own_inertia": null,
+          "position_m": [
+            0.0,
+            0.0,
+            0.4
+          ],
+          "subsystem": "PROP"
+        }
+      ],
+      "subsystems": [
+        {
+          "margined_kg": null,
+          "mass_kg": 24.5,
+          "subsystem": "ADCS"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 9.0,
+          "subsystem": "DH"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 50.0,
+          "subsystem": "EPS"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 45.0,
+          "subsystem": "PL"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 0.6,
+          "subsystem": "PROP"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 106.5,
+          "subsystem": "STRUCT"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 1.5,
+          "subsystem": "THERM"
+        },
+        {
+          "margined_kg": null,
+          "mass_kg": 4.5,
+          "subsystem": "TTC"
+        }
+      ],
+      "system_margined_kg": null,
+      "total_kg": 241.6,
+      "unit_margined_kg": null
+    }
+  ],
+  "problems": [
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The mass margin of the maturity class is a placeholder.",
+      "path": "classes.class_a.mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The mass margin of the maturity class is a placeholder.",
+      "path": "classes.class_b.mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The mass margin of the maturity class is a placeholder.",
+      "path": "classes.class_c.mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/margin_policy.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The system mass margin is a placeholder.",
+      "path": "system_mass_margin_ratio",
+      "severity": "warning"
+    },
+    {
+      "code": "RESULT_INCOMPLETE",
+      "file": "config/mass_limits.yaml",
+      "hint": "Replace the placeholder with a sourced value; results that need it show n/a.",
+      "line": null,
+      "message": "The mass limit is a placeholder.",
+      "path": "limits[0].limit_kg",
+      "severity": "warning"
+    },
+    {
+      "code": "MASS_INERTIA_POINT_MASS",
+      "file": "expendables/propellant.yaml",
+      "hint": "",
+      "line": null,
+      "message": "'propellant' has no own inertia; it is treated as a point mass.",
+      "path": "mass_properties",
+      "severity": "info"
+    },
+    {
+      "code": "MASS_INERTIA_POINT_MASS",
+      "file": "units/gnss.yaml",
+      "hint": "",
+      "line": null,
+      "message": "'gnss' has no own inertia; it is treated as a point mass.",
+      "path": "mass_properties",
+      "severity": "info"
+    },
+    {
+      "code": "MASS_INERTIA_POINT_MASS",
+      "file": "units/harness.yaml",
+      "hint": "",
+      "line": null,
+      "message": "'harness' has no own inertia; it is treated as a point mass.",
+      "path": "mass_properties",
+      "severity": "info"
+    },
+    {
+      "code": "MASS_INERTIA_POINT_MASS",
+      "file": "units/heaters.yaml",
+      "hint": "",
+      "line": null,
+      "message": "'heaters' has no own inertia; it is treated as a point mass.",
+      "path": "mass_properties",
+      "severity": "info"
+    },
+    {
+      "code": "MASS_INERTIA_POINT_MASS",
+      "file": "units/sun_sensors.yaml",
+      "hint": "",
+      "line": null,
+      "message": "'sun_sensors' has no own inertia; it is treated as a point mass.",
+      "path": "mass_properties",
+      "severity": "info"
+    }
+  ],
+  "provenance": {
+    "generated": "2026-01-02T03:04:05Z",
+    "libraries": [
+      [
+        "pinned",
+        "for-golden-tests"
+      ]
+    ],
+    "project_name": "Example 250 kg minisatellite",
+    "project_revision": "1",
+    "python_version": "3.x",
+    "scenario": "static (no scenario)",
+    "tool": "System Budget Studio",
+    "tool_version": "1.0.0",
+    "user": "Golden User"
+  }
+}

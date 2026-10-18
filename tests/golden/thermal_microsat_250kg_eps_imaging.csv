@@ -1,0 +1,19 @@
+unit_id,unit_name,subsystem,node,power_mode,effective_power_w,heat_dissipation_ratio,dissipation_w,peak_dissipation_w
+adapter,Separation adapter,STRUCT,STRUCT,off,0.0,1.0,0.0,0.0
+adcs,Attitude control electronics,ADCS,ADCS,imaging,7.0,1.0,7.0,10.0
+battery,Battery pack,EPS,EPS,off,0.0,1.0,0.0,0.0
+camera,Camera payload,PL,PL,imaging,36.0,1.0,36.0,80.0
+eps,Power conditioning unit,EPS,EPS,imaging,12.0,1.0,12.0,16.0
+gnss,GNSS receiver,ADCS,ADCS,imaging,1.2,1.0,1.2,1.8
+harness,Harness,STRUCT,STRUCT,off,0.0,1.0,0.0,0.0
+heaters,Thermal heaters,THERM,THERM,imaging,1.0,1.0,1.0,16.0
+magnetorquers,Magnetorquers,ADCS,ADCS,off,0.0,1.0,0.0,0.0
+obc,On-board computer,DH,DH,imaging,12.0,1.0,12.0,16.0
+pdu_data,Payload data unit,DH,DH,imaging,9.0,1.0,9.0,14.0
+radio,S-band transceiver,TTC,TTC,imaging,6.0,1.0,6.0,8.0
+reaction_wheels,Reaction wheels,ADCS,ADCS,imaging,12.6,1.0,12.6,40.0
+solar_array,Solar array panels,EPS,EPS,off,0.0,1.0,0.0,0.0
+star_tracker,Star tracker,ADCS,ADCS,imaging,3.5,1.0,3.5,5.0
+structure,Primary structure,STRUCT,STRUCT,off,0.0,1.0,0.0,0.0
+sun_sensors,Coarse sun sensors,ADCS,ADCS,imaging,0.4,1.0,0.4,0.5
+xband_tx,X-band transmitter,PL,PL,off,0.0,1.0,0.0,0.0

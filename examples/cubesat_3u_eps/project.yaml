@@ -1,5 +1,0 @@
-schema_version: 1
-kind: project
-name: Example 3U CubeSat, complete power and thermal inputs
-revision: '1'
-description: Synthetic example data; not a real spacecraft. Array, battery, power and thermal configuration have invented values.

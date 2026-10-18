@@ -22,7 +22,7 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
 
 
 def test_the_tab_shows_cases_modes_and_node_temperatures(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u_eps")
+    window.open_project(EXAMPLES / "microsat_250kg_eps")
     view = window.thermal_view
     window.show_view(view)
     titles = [view.tabText(i) for i in range(view.count())]
@@ -34,7 +34,7 @@ def test_the_tab_shows_cases_modes_and_node_temperatures(window: MainWindow) -> 
 
 
 def test_placeholder_examples_show_na_and_the_banner(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     view = window.thermal_view
     window.show_view(view)
     assert view.banner.isVisibleTo(window) and "INCOMPLETE" in view.banner.text()
@@ -45,7 +45,7 @@ def test_placeholder_examples_show_na_and_the_banner(window: MainWindow) -> None
 
 
 def test_a_finding_reaches_the_problems_panel_and_jumps_to_the_unit(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u_eps")
+    window.open_project(EXAMPLES / "microsat_250kg_eps")
     panel = window.problems_panel
     codes = panel.codes()
     assert "THERMAL_MARGIN_INSUFFICIENT" in codes
@@ -55,9 +55,9 @@ def test_a_finding_reaches_the_problems_panel_and_jumps_to_the_unit(window: Main
 
 
 def test_editing_a_limit_updates_the_findings(window: MainWindow, tmp_path: Path) -> None:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     path = tmp_path / "p" / "units" / "radio.yaml"
-    path.write_text(path.read_text().replace("operating_max_k: 335.15", "operating_max_k: 340.0"))
+    path.write_text(path.read_text().replace("operating_max_k: 332.15", "operating_max_k: 345.0"))
     window.open_project(tmp_path / "p")
     panel = window.problems_panel
     codes = panel.codes()

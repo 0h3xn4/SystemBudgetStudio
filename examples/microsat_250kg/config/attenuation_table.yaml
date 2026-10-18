@@ -1,0 +1,41 @@
+schema_version: 1
+kind: attenuation_table
+entries:
+  - name: gas_s
+    attenuation_kind: gas
+    freq_hz: 2200000000.0
+    loss_db:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+  - name: gas_x
+    attenuation_kind: gas
+    freq_hz: 8200000000.0
+    loss_db:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+  - name: rain_x
+    attenuation_kind: rain
+    freq_hz: 8200000000.0
+    elevation_deg: 5.0
+    loss_db:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+  - name: rain_x
+    attenuation_kind: rain
+    freq_hz: 8200000000.0
+    elevation_deg: 20.0
+    loss_db:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+  - name: rain_x
+    attenuation_kind: rain
+    freq_hz: 8200000000.0
+    elevation_deg: 90.0
+    loss_db:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."

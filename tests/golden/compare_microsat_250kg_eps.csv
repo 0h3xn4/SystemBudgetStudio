@@ -1,0 +1,75 @@
+comparison,section,table,row,quantity,value_a,value_b,change,change_percent,status
+Static power budget,Summary,Power by spacecraft mode,Imaging,Average load (W),100.700,102.700,+2.000 W,+2.0 %,changed
+Static power budget,Summary,Power by spacecraft mode,Imaging,"Average, unit margins (W)",113.170,115.370,+2.200 W,+1.9 %,changed
+Static power budget,Summary,Power by spacecraft mode,Imaging,"Average, system margin (W)",124.487,126.907,+2.420 W,+1.9 %,changed
+Static power budget,Summary,Power by spacecraft mode,Imaging,Average at source (W),115.349,117.640,+2.291 W,+2.0 %,changed
+Static power budget,Summary,Power by spacecraft mode,Imaging,"Average at source, with margins (W)",142.597,145.369,+2.772 W,+1.9 %,changed
+Static power budget,Mode: Imaging,Units in mode Imaging,adcs,Average (W),7.000,9.000,+2.000 W,+28.6 %,changed
+Static power budget,Mode: Imaging,Units in mode Imaging,adcs,Effective (W),7.000,9.000,+2.000 W,+28.6 %,changed
+Static power budget,Mode: Imaging,Units in mode Imaging,adcs,With margin (W),7.700,9.900,+2.200 W,+28.6 %,changed
+Static power budget,Mode: Imaging,By subsystem,ADCS,Effective (W),24.700,26.700,+2.000 W,+8.1 %,changed
+Static power budget,Mode: Imaging,By subsystem,ADCS,With margin (W),27.170,29.370,+2.200 W,+8.1 %,changed
+Static power budget,Mode: Imaging,By supply bus,main,Average load (W),55.700,57.700,+2.000 W,+3.6 %,changed
+Static power budget,Mode: Imaging,By supply bus,main,"Average load, with margins (W)",66.077,68.497,+2.420 W,+3.7 %,changed
+Static power budget,Mode: Imaging,By supply bus,main,Average at source (W),63.803,66.094,+2.291 W,+3.6 %,changed
+Static power budget,Mode: Imaging,By supply bus,main,"Average at source, with margins (W)",75.690,78.462,+2.772 W,+3.7 %,changed
+Static power budget,Mode: Imaging,Totals,"Load, nominal",Average (W),100.700,102.700,+2.000 W,+2.0 %,changed
+Static power budget,Mode: Imaging,Totals,"Load, with unit margins",Average (W),113.170,115.370,+2.200 W,+1.9 %,changed
+Static power budget,Mode: Imaging,Totals,"Load, with system margin",Average (W),124.487,126.907,+2.420 W,+1.9 %,changed
+Static power budget,Mode: Imaging,Totals,"Source, nominal",Average (W),115.349,117.640,+2.291 W,+2.0 %,changed
+Static power budget,Mode: Imaging,Totals,"Source, with margins",Average (W),142.597,145.369,+2.772 W,+1.9 %,changed
+Thermal budget,Summary,Heat dissipation by spacecraft mode,Imaging,Average (W),100.700,102.700,+2.000 W,+2.0 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",ADCS,Temperature (K),334.75,335.24,+0.49,+0.1 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",ADCS,Temperature (C),61.60,62.09,+0.49,+0.8 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",ADCS,Dissipated (W),24.700,26.700,+2.000 W,+8.1 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",ADCS,Radiated to space (W),302.610,304.391,+1.781 W,+0.6 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",ADCS,Conducted to other nodes (W),0.490,0.709,+0.219 W,+44.6 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",DH,Temperature (K),333.77,333.82,+0.05,+0.01625776261 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",DH,Temperature (C),60.62,60.67,+0.05,+0.1 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",DH,Radiated to space (W),299.081,299.275,+0.195 W,+0.1 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",DH,Conducted to other nodes (W),0.319,0.125,-0.195 W,-61.0 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",EPS,Temperature (K),332.15,332.16,+0.01,+0.001824025935 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",EPS,Temperature (C),59.00,59.01,+0.01,+0.01026846342 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",EPS,Radiated to space (W),293.322,293.343,+0.021 W,+0.007296303415 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",EPS,Conducted to other nodes (W),-2.922,-2.943,-0.021 W,-0.7 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",PL,Radiated to space (W),308.534,308.537,+0.002 W,+0.0007811029464 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",PL,Conducted to other nodes (W),5.866,5.863,-0.002 W,-0.04108529595 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",STRUCT,Radiated to space (W),281.902,281.903,+0.0002576143509 W,+9.138423328e-05 %,changed
+Thermal budget,Case: hot,"Node temperatures, case hot",STRUCT,Conducted to other nodes (W),-3.502,-3.503,-0.0002576143508 W,-0.007355356994 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",adcs,Temperature (K),334.75,335.24,+0.49,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",adcs,Headroom to lower (K),101.60,102.09,+0.49,+0.5 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",adcs,Headroom to upper (K),8.40,7.91,-0.49,-5.9 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",battery,Temperature (K),332.15,332.16,+0.01,+0.001824025935 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",battery,Headroom to lower (K),99.00,99.01,+0.01,+0.006119643269 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",battery,Headroom to upper (K),11.00,10.99,-0.01,-0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",eps,Temperature (K),332.15,332.16,+0.01,+0.001824025935 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",eps,Headroom to lower (K),99.00,99.01,+0.01,+0.006119643269 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",eps,Headroom to upper (K),11.00,10.99,-0.01,-0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",gnss,Temperature (K),334.75,335.24,+0.49,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",gnss,Headroom to lower (K),101.60,102.09,+0.49,+0.5 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",gnss,Headroom to upper (K),8.40,7.91,-0.49,-5.9 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",magnetorquers,Temperature (K),334.75,335.24,+0.49,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",magnetorquers,Headroom to lower (K),101.60,102.09,+0.49,+0.5 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",magnetorquers,Headroom to upper (K),8.40,7.91,-0.49,-5.9 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",obc,Temperature (K),333.77,333.82,+0.05,+0.01625776261 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",obc,Headroom to lower (K),100.62,100.67,+0.05,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",obc,Headroom to upper (K),9.38,9.33,-0.05,-0.6 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",pdu_data,Temperature (K),333.77,333.82,+0.05,+0.01625776261 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",pdu_data,Headroom to lower (K),100.62,100.67,+0.05,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",pdu_data,Headroom to upper (K),9.38,9.33,-0.05,-0.6 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",reaction_wheels,Temperature (K),334.75,335.24,+0.49,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",reaction_wheels,Headroom to lower (K),101.60,102.09,+0.49,+0.5 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",reaction_wheels,Headroom to upper (K),8.40,7.91,-0.49,-5.9 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",solar_array,Temperature (K),332.15,332.16,+0.01,+0.001824025935 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",solar_array,Headroom to lower (K),99.00,99.01,+0.01,+0.006119643269 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",solar_array,Headroom to upper (K),11.00,10.99,-0.01,-0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",star_tracker,Temperature (K),334.75,335.24,+0.49,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",star_tracker,Headroom to lower (K),101.60,102.09,+0.49,+0.5 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",star_tracker,Headroom to upper (K),8.40,7.91,-0.49,-5.9 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",sun_sensors,Temperature (K),334.75,335.24,+0.49,+0.1 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",sun_sensors,Headroom to lower (K),101.60,102.09,+0.49,+0.5 %,changed
+Thermal budget,Case: hot,"Unit temperature limits, case hot (operating)",sun_sensors,Headroom to upper (K),8.40,7.91,-0.49,-5.9 %,changed
+Thermal budget,Mode: Imaging,Units in mode Imaging,adcs,Effective power (W),7.000,9.000,+2.000 W,+28.6 %,changed
+Thermal budget,Mode: Imaging,Units in mode Imaging,adcs,Dissipation (W),7.000,9.000,+2.000 W,+28.6 %,changed
+Thermal budget,Mode: Imaging,By subsystem,ADCS,Dissipation (W),24.700,26.700,+2.000 W,+8.1 %,changed
+Thermal budget,Mode: Imaging,By thermal node,ADCS,Dissipation (W),24.700,26.700,+2.000 W,+8.1 %,changed

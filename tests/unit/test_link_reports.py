@@ -234,7 +234,7 @@ def test_link_passes_without_links_or_with_a_wrong_scenario(
 
 
 def test_placeholder_example_warns_and_strict_fails(tmp_path: Path) -> None:
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     args = [
         "link-passes",
         str(tmp_path / "p"),

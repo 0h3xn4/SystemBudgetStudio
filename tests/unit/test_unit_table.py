@@ -32,7 +32,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def root(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -72,7 +72,7 @@ def row(unit: str, mode: str, **values: object) -> list[object]:
 
 
 def test_the_template_has_one_row_per_power_mode_in_file_order() -> None:
-    project = load_project(EXAMPLES / "cubesat_3u_eps").project
+    project = load_project(EXAMPLES / "microsat_250kg_eps").project
     assert project is not None
     rows = rows_of(table_csv(project))
     assert tuple(rows[0]) == HEADER
@@ -83,8 +83,8 @@ def test_the_template_has_one_row_per_power_mode_in_file_order() -> None:
         m.name for m in project.units["radio"].modes
     ]
     downlink = next(r for r in radio if r[HEADER.index("power_mode")] == "downlink")
-    assert float(downlink[HEADER.index("avg_power_w")]) == pytest.approx(1.8)
-    assert float(downlink[HEADER.index("duty_cycle_ratio")]) == pytest.approx(0.5)
+    assert float(downlink[HEADER.index("avg_power_w")]) == pytest.approx(28.0)
+    assert float(downlink[HEADER.index("duty_cycle_ratio")]) == pytest.approx(1.0)
 
 
 def test_the_header_names_carry_their_units() -> None:
@@ -129,11 +129,11 @@ def test_importing_the_untouched_template_changes_nothing(
 
 
 def test_a_changed_value_is_planned_with_old_and_new(root: Path, tmp_path: Path) -> None:
-    plan = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="2.0 W"))
+    plan = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="30.0 W"))
     assert plan.ok
     (change,) = plan.changes
     assert (change.unit_id, change.power_mode, change.field) == ("radio", "downlink", "avg_power_w")
-    assert change.old == pytest.approx(1.8) and change.new == pytest.approx(2.0)
+    assert change.old == pytest.approx(28.0) and change.new == pytest.approx(30.0)
     assert change.kind == "changed"
 
 
@@ -151,13 +151,13 @@ def test_units_are_converted_like_in_the_yaml_files(root: Path, tmp_path: Path) 
 
 
 def test_an_empty_cell_means_unchanged_not_zero(root: Path, tmp_path: Path) -> None:
-    plan = import_rows(root, tmp_path, row("radio", "downlink", peak_power_w=4.5))
+    plan = import_rows(root, tmp_path, row("radio", "downlink", peak_power_w=45.0))
     assert [c.field for c in plan.changes] == ["peak_power_w"]
 
 
 def test_a_value_equal_to_the_current_one_is_not_a_change(root: Path, tmp_path: Path) -> None:
     plan = import_rows(
-        root, tmp_path, row("radio", "downlink", avg_power_w=1.8, peak_power_w="4000 mW")
+        root, tmp_path, row("radio", "downlink", avg_power_w=28.0, peak_power_w="40000 mW")
     )
     assert plan.ok and plan.changes == () and plan.unchanged == 1
 
@@ -179,7 +179,7 @@ def test_the_semicolon_delimiter_and_a_byte_order_mark_are_accepted(
 ) -> None:
     path = write_table(
         tmp_path / "semi.csv",
-        [list(HEADER), row("radio", "downlink", avg_power_w="2.0 W")],
+        [list(HEADER), row("radio", "downlink", avg_power_w="30.0 W")],
         delimiter=";",
     )
     plan = plan_import(project_of(root), read_table(path), "semi.csv")
@@ -195,7 +195,7 @@ def test_an_unknown_unit_is_an_error_and_nothing_is_planned_for_it(
     plan = import_rows(
         root,
         tmp_path,
-        row("radio", "downlink", avg_power_w="2.0 W"),
+        row("radio", "downlink", avg_power_w="30.0 W"),
         row("ghost", "on", avg_power_w=1.0, peak_power_w=2.0),
     )
     assert not plan.ok
@@ -208,8 +208,8 @@ def test_a_repeated_unit_and_mode_is_an_error(root: Path, tmp_path: Path) -> Non
     plan = import_rows(
         root,
         tmp_path,
-        row("radio", "downlink", avg_power_w=2.0),
-        row("radio", "downlink", avg_power_w=2.5),
+        row("radio", "downlink", avg_power_w=30.0),
+        row("radio", "downlink", avg_power_w=31.0),
     )
     assert any(p.code == "IMPORT_DUPLICATE_ROW" and p.line == 3 for p in plan.problems)
 
@@ -252,7 +252,7 @@ def test_unknown_columns_are_ignored_with_a_warning_that_names_the_position(
 ) -> None:
     header = [*HEADER, "supplier comment"]
     plan = import_rows(
-        root, tmp_path, [*row("radio", "downlink", avg_power_w=2.0), "check!"], header=header
+        root, tmp_path, [*row("radio", "downlink", avg_power_w=30.0), "check!"], header=header
     )
     assert plan.ok and [c.field for c in plan.changes] == ["avg_power_w"]
     (warning,) = [p for p in plan.problems if p.severity is Severity.WARNING]
@@ -292,7 +292,7 @@ def test_a_formula_in_a_spreadsheet_is_never_evaluated(root: Path, tmp_path: Pat
 
 def test_planning_writes_nothing(root: Path, tmp_path: Path) -> None:
     before = (root / "units" / "radio.yaml").read_bytes()
-    import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="2.0 W"))
+    import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="30.0 W"))
     assert (root / "units" / "radio.yaml").read_bytes() == before
 
 
@@ -303,12 +303,12 @@ def test_applying_changes_only_the_named_values_and_keeps_comments(
     text = path.read_text(encoding="utf-8")
     path.write_text(
         text.replace(
-            "    avg_power_w: 1.8\n", "    # supplier data sheet rev B\n    avg_power_w: 1.8\n"
+            "    avg_power_w: 28.0\n", "    # supplier data sheet rev B\n    avg_power_w: 28.0\n"
         ),
         encoding="utf-8",
     )
     original = path.read_text(encoding="utf-8")
-    plan = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="2.0 W"))
+    plan = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="30.0 W"))
     written = apply_plan(root, plan)
     assert written == [path]
     after = path.read_text(encoding="utf-8")
@@ -316,10 +316,10 @@ def test_applying_changes_only_the_named_values_and_keeps_comments(
     changed = [
         (a, b) for a, b in zip(original.splitlines(), after.splitlines(), strict=True) if a != b
     ]
-    assert changed == [("    avg_power_w: 1.8", "    avg_power_w: 2.0")]
-    assert project_of(root).units["radio"].modes[4].avg_power_w == pytest.approx(2.0)
+    assert changed == [("    avg_power_w: 28.0", "    avg_power_w: 30.0")]
+    assert project_of(root).units["radio"].modes[5].avg_power_w == pytest.approx(30.0)
     assert (root / "units" / "obc.yaml").read_bytes() == (
-        EXAMPLES / "cubesat_3u_eps" / "units" / "obc.yaml"
+        EXAMPLES / "microsat_250kg_eps" / "units" / "obc.yaml"
     ).read_bytes()
 
 
@@ -336,7 +336,7 @@ def test_applying_a_new_mode_appends_it_and_the_project_still_loads(
     names = [m.name for m in project_of(root).units["radio"].modes]
     assert names[-1] == "burst" and names[:-1] == [
         m.name
-        for m in load_project(EXAMPLES / "cubesat_3u_eps").project.units["radio"].modes  # type: ignore[union-attr]
+        for m in load_project(EXAMPLES / "microsat_250kg_eps").project.units["radio"].modes  # type: ignore[union-attr]
     ]
     burst = project_of(root).units["radio"].modes[-1]
     assert (burst.avg_power_w, burst.peak_power_w, burst.heat_dissipation_ratio) == (3.0, 5.0, 0.6)
@@ -348,7 +348,7 @@ def test_a_plan_with_an_error_writes_nothing_at_all(root: Path, tmp_path: Path) 
     plan = import_rows(
         root,
         tmp_path,
-        row("radio", "downlink", avg_power_w="2.0 W"),
+        row("radio", "downlink", avg_power_w="30.0 W"),
         row("ghost", "on", avg_power_w=1.0, peak_power_w=2.0),
     )
     assert apply_plan(root, plan) == []
@@ -356,10 +356,10 @@ def test_a_plan_with_an_error_writes_nothing_at_all(root: Path, tmp_path: Path) 
 
 
 def test_applying_twice_is_the_same_as_once(root: Path, tmp_path: Path) -> None:
-    plan = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="2.0 W"))
+    plan = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="30.0 W"))
     apply_plan(root, plan)
     once = (root / "units" / "radio.yaml").read_bytes()
-    again = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="2.0 W"))
+    again = import_rows(root, tmp_path, row("radio", "downlink", avg_power_w="30.0 W"))
     assert again.changes == ()
     apply_plan(root, again)
     assert (root / "units" / "radio.yaml").read_bytes() == once

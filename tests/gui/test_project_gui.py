@@ -42,10 +42,10 @@ def broken(tmp_path: Path) -> Path:
 
 
 def test_open_example_fills_tree_problems_and_power_view(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u")
-    assert "Example 3U CubeSat" in window.windowTitle()
+    window.open_project(EXAMPLES / "microsat_250kg")
+    assert "Example 250 kg minisatellite" in window.windowTitle()
     top = window.tree.topLevelItem(0)
-    assert top is not None and "Example 3U CubeSat" in top.text(0)
+    assert top is not None and "Example 250 kg minisatellite" in top.text(0)
     assert window.tree.file_item_count() >= 6 + 5 + 2  # units, modes, project and spacecraft files
     assert len(window.problems_panel.visible_problems) == len(window.session.problems) > 0
     assert "0 errors" in window.problems_panel.summary.text()
@@ -55,7 +55,7 @@ def test_open_example_fills_tree_problems_and_power_view(window: MainWindow) -> 
 
 
 def test_placeholders_show_as_na_and_a_banner_is_visible(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     assert (
         window.power_view.banner.isVisibleTo(window)
         and "INCOMPLETE" in window.power_view.banner.text()
@@ -108,7 +108,7 @@ def test_saved_files_use_lf_line_endings(window: MainWindow, broken: Path) -> No
 def test_export_runs_in_a_worker_and_writes_files(
     window: MainWindow, qtbot, tmp_path: Path
 ) -> None:  # type: ignore[no-untyped-def]
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     with qtbot.waitSignal(window.export_finished, timeout=60000) as blocker:
         window.export_to(tmp_path / "out", {"xlsx", "json"})
     names = sorted(Path(p).name for p in blocker.args[0])
@@ -128,7 +128,7 @@ def test_export_runs_in_a_worker_and_writes_files(
 def test_export_failure_is_a_plain_message_not_a_traceback(
     window: MainWindow, qtbot, tmp_path: Path
 ) -> None:  # type: ignore[no-untyped-def]
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     blocked = tmp_path / "file"
     blocked.write_text("x", encoding="utf-8")
     with qtbot.waitSignal(window.export_failed, timeout=60000) as blocker:
@@ -143,7 +143,7 @@ def test_open_missing_folder_is_reported_not_raised(window: MainWindow, tmp_path
 
 
 def test_tree_double_click_opens_the_file(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     window.tree.request_file("units/obc.yaml")
     editor = window.editors.current_editor()
     assert editor is not None and editor.rel_path == "units/obc.yaml"
@@ -151,7 +151,7 @@ def test_tree_double_click_opens_the_file(window: MainWindow) -> None:
 
 
 def test_dirty_state_is_shown_in_the_tab_title(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     window.tree.request_file("units/obc.yaml")
     editor = window.editors.current_editor()
     assert editor is not None
@@ -167,7 +167,7 @@ def test_closing_with_unsaved_changes_asks(
 ) -> None:
     from PySide6.QtWidgets import QMessageBox
 
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     window.tree.request_file("units/obc.yaml")
     editor = window.editors.current_editor()
     assert editor is not None
@@ -222,7 +222,7 @@ def test_removing_a_position_in_the_editor_produces_a_mass_warning(
 ) -> None:
     import shutil
 
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     window.open_project(tmp_path / "p")
     window.tree.request_file("units/gnss.yaml")
     editor = window.editors.current_editor()
@@ -241,12 +241,12 @@ def test_unit_editor_keeps_mass_properties(window: MainWindow, tmp_path: Path) -
 
     from budget_core.io.project_loader import load_project
 
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     window.open_project(tmp_path / "p")
-    editor = window.open_unit_editor("camera")
-    assert editor is not None
-    editor.table.item(1, 1).setText("2.6")
-    editor.table.item(1, 2).setText("3.5")
-    assert editor.save() is True
+    from tests.gui_helpers import set_mode_value
+
+    set_mode_value(window, "camera", "imaging", "avg_power_w", "62.0")
+    set_mode_value(window, "camera", "imaging", "peak_power_w", "85.0")
+    assert window.save_grids() is True
     unit = load_project(tmp_path / "p").project.units["camera"]  # type: ignore[union-attr]
-    assert unit.mass_properties is not None and unit.mass_properties.position_m[2] == 0.26
+    assert unit.mass_properties is not None and unit.mass_properties.position_m[2] == 0.95

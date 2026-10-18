@@ -11,12 +11,15 @@ These live in `spacecraft.yaml`:
 ```yaml
 schema_version: 1
 kind: spacecraft
-name: CubeSat 3U
+name: Minisat 250
 buses:
   - name: main
-    nominal_voltage_v: 5.0
+    nominal_voltage_v: 28.0
+  - name: payload
+    nominal_voltage_v: 12.0
 mission_phases:
   - launch
+  - bol
   - eol
 body_frame: 'Right-handed body frame. Origin: centre of the launch-vehicle interface plane. +Z: along the launch axis, away from the interface. X and Y: in the interface plane. Positions are item centres of mass in metres.'
 ```
@@ -95,6 +98,6 @@ Export the power modes as a table, let the supplier fill it in, and import it wi
 
 ## How do I edit power modes in a table?
 
-In the window, select a unit in the project tree and choose **File → Edit unit power modes** (Ctrl+M), or double-click the unit. You get a table with one row per power mode; typing a value with a unit works there too. **Ctrl+S** saves.
+In the window, select a unit in the project tree and press Enter (or choose **File → Edit unit power modes**, Ctrl+M): the **Power modes** grid of the **Model** tab shows its rows. Every unit is in the grid, so you can compare the radio with the OBC without switching tabs; typing a value with a unit works, you can paste a range from a spreadsheet, and **Ctrl+Z** undoes. **Ctrl+S** saves. [How to edit in the grids](use-the-window.md#how-do-i-edit-in-the-grids).
 
 Next: [Placeholders and sources](placeholders-and-sources.md), then the [power budget](power-budget.md).

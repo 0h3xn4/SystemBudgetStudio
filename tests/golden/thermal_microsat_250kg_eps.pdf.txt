@@ -1,0 +1,2104 @@
+pages=12
+## page 1
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 1
+Thermal budget (static): Example 250 kg minisatellite, complete power and thermal inputs
+Summary
+Heat dissipation by spacecraft mode
+Mode
+Average (W)
+Peak (W)
+Charging
+ 49.300
+ 105.300
+Downlink
+ 99.200
+ 169.300
+Imaging
+ 100.700
+ 207.300
+Nominal
+ 52.300
+ 108.300
+Safe
+ 31.850
+ 63.500
+Average = sum of unit power x duty cycle x heat dissipation ratio. Peak uses the unit peak powers. n/a: a unit has no heat dissipation ratio for its power mode.
+Case: cold
+Eclipse with the lowest-power mode.
+Node temperatures, case cold
+Node
+Temperature (K)
+Temperature (C)
+Dissipated (W)
+Absorbed from environment (W)
+Radiated to space (W)
+Conducted to other nodes (W)
+ADCS
+ 245.47
+ -27.68
+ 5.850
+ 81.600
+ 87.497
+ -0.047
+DH
+ 245.56
+ -27.59
+ 6.000
+ 81.600
+ 87.631
+ -0.031
+EPS
+ 245.72
+ -27.43
+ 8.000
+ 81.600
+ 87.856
+ 1.744
+PL
+ 242.39
+ -30.76
+ 0.000
+ 81.600
+ 83.187
+ -1.587
+STRUCT
+ 242.23
+ -30.92
+ 0.000
+ 81.600
+ 82.972
+ -1.372
+THERM
+ 244.82
+ -28.33
+ 6.000
+ 81.600
+ 86.574
+ 1.026
+TTC
+ 245.35
+ -27.80
+ 6.000
+ 81.600
+ 87.333
+ 0.267
+Mode safe; limit set: operating. Largest node imbalance after solving: below 0.000001 W.
+Unit temperature limits, case cold (operating)
+Unit
+Node
+Temperature (K)
+Lower limit (K)
+Upper limit (K)
+Headroom to lower (K)
+Headroom to upper (K)
+Status
+adapter
+STRUCT
+ 242.23
+ 233.15
+ 343.15
+ 9.08
+ 100.92
+ok
+adcs
+ADCS
+ 245.47
+ 233.15
+ 343.15
+ 12.32
+ 97.68
+ok
+battery
+EPS
+ 245.72
+ 233.15
+ 343.15
+ 12.57
+ 97.43
+ok
+camera
+PL
+ 242.39
+ 233.15
+ 343.15
+ 9.24
+ 100.76
+ok
+eps
+EPS
+ 245.72
+ 233.15
+ 343.15
+ 12.57
+ 97.43
+ok
+gnss
+ADCS
+ 245.47
+ 233.15
+ 343.15
+ 12.32
+ 97.68
+ok
+harness
+STRUCT
+ 242.23
+ 233.15
+ 343.15
+ 9.08
+ 100.92
+ok
+heaters
+THERM
+ 244.82
+ 233.15
+ 343.15
+ 11.67
+ 98.33
+ok
+## page 2
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 2
+Unit
+Node
+Temperature (K)
+Lower limit (K)
+Upper limit (K)
+Headroom to lower (K)
+Headroom to upper (K)
+Status
+magnetorquers
+ADCS
+ 245.47
+ 233.15
+ 343.15
+ 12.32
+ 97.68
+ok
+obc
+DH
+ 245.56
+ 233.15
+ 343.15
+ 12.41
+ 97.59
+ok
+pdu_data
+DH
+ 245.56
+ 233.15
+ 343.15
+ 12.41
+ 97.59
+ok
+radio
+TTC
+ 245.35
+ 233.15
+ 332.15
+ 12.20
+ 86.80
+ok
+reaction_wheels
+ADCS
+ 245.47
+ 233.15
+ 343.15
+ 12.32
+ 97.68
+ok
+solar_array
+EPS
+ 245.72
+ 233.15
+ 343.15
+ 12.57
+ 97.43
+ok
+star_tracker
+ADCS
+ 245.47
+ 233.15
+ 343.15
+ 12.32
+ 97.68
+ok
+structure
+STRUCT
+ 242.23
+ 233.15
+ 343.15
+ 9.08
+ 100.92
+ok
+sun_sensors
+ADCS
+ 245.47
+ 233.15
+ 343.15
+ 12.32
+ 97.68
+ok
+xband_tx
+PL
+ 242.39
+ 233.15
+ 343.15
+ 9.24
+ 100.76
+ok
+Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
+Case: hot
+Sunlight with the highest-power mode.
+Node temperatures, case hot
+Node
+Temperature (K)
+Temperature (C)
+Dissipated (W)
+Absorbed from environment (W)
+Radiated to space (W)
+Conducted to other nodes (W)
+ADCS
+ 334.75
+ 61.60
+ 24.700
+ 278.400
+ 302.610
+ 0.490
+DH
+ 333.77
+ 60.62
+ 21.000
+ 278.400
+ 299.081
+ 0.319
+EPS
+ 332.15
+ 59.00
+ 12.000
+ 278.400
+ 293.322
+ -2.922
+PL
+ 336.38
+ 63.23
+ 36.000
+ 278.400
+ 308.534
+ 5.866
+STRUCT
+ 328.87
+ 55.72
+ 0.000
+ 278.400
+ 281.902
+ -3.502
+THERM
+ 328.37
+ 55.22
+ 1.000
+ 278.400
+ 280.187
+ -0.787
+TTC
+ 329.44
+ 56.29
+ 6.000
+ 278.400
+ 283.864
+ 0.536
+Mode imaging; limit set: operating. Largest node imbalance after solving: below 0.000001 W.
+Unit temperature limits, case hot (operating)
+Unit
+Node
+Temperature (K)
+Lower limit (K)
+Upper limit (K)
+Headroom to lower (K)
+Headroom to upper (K)
+Status
+adapter
+STRUCT
+ 328.87
+ 233.15
+ 343.15
+ 95.72
+ 14.28
+ok
+adcs
+ADCS
+ 334.75
+ 233.15
+ 343.15
+ 101.60
+ 8.40
+ok
+battery
+EPS
+ 332.15
+ 233.15
+ 343.15
+ 99.00
+ 11.00
+ok
+camera
+PL
+ 336.38
+ 233.15
+ 343.15
+ 103.23
+ 6.77
+ok
+eps
+EPS
+ 332.15
+ 233.15
+ 343.15
+ 99.00
+ 11.00
+ok
+gnss
+ADCS
+ 334.75
+ 233.15
+ 343.15
+ 101.60
+ 8.40
+ok
+harness
+STRUCT
+ 328.87
+ 233.15
+ 343.15
+ 95.72
+ 14.28
+ok
+heaters
+THERM
+ 328.37
+ 233.15
+ 343.15
+ 95.22
+ 14.78
+ok
+## page 3
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 3
+Unit
+Node
+Temperature (K)
+Lower limit (K)
+Upper limit (K)
+Headroom to lower (K)
+Headroom to upper (K)
+Status
+magnetorquers
+ADCS
+ 334.75
+ 233.15
+ 343.15
+ 101.60
+ 8.40
+ok
+obc
+DH
+ 333.77
+ 233.15
+ 343.15
+ 100.62
+ 9.38
+ok
+pdu_data
+DH
+ 333.77
+ 233.15
+ 343.15
+ 100.62
+ 9.38
+ok
+radio
+TTC
+ 329.44
+ 233.15
+ 332.15
+ 96.29
+ 2.71
+margin
+reaction_wheels
+ADCS
+ 334.75
+ 233.15
+ 343.15
+ 101.60
+ 8.40
+ok
+solar_array
+EPS
+ 332.15
+ 233.15
+ 343.15
+ 99.00
+ 11.00
+ok
+star_tracker
+ADCS
+ 334.75
+ 233.15
+ 343.15
+ 101.60
+ 8.40
+ok
+structure
+STRUCT
+ 328.87
+ 233.15
+ 343.15
+ 95.72
+ 14.28
+ok
+sun_sensors
+ADCS
+ 334.75
+ 233.15
+ 343.15
+ 101.60
+ 8.40
+ok
+xband_tx
+PL
+ 336.38
+ 233.15
+ 343.15
+ 103.23
+ 6.77
+ok
+Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
+Mode: Charging
+Units in mode Charging
+Unit
+Name
+Subsystem
+Node
+Power mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+charging
+ 5.000
+ 1.00
+ 5.000
+ 7.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+charging
+ 14.000
+ 1.00
+ 14.000
+ 20.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+charging
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+charging
+ 1.800
+ 1.00
+ 1.800
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+charging
+ 0.200
+ 1.00
+ 0.200
+ 3.000
+obc
+On-board computer
+DH
+DH
+charging
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+pdu_data
+Payload data unit
+DH
+DH
+charging
+ 4.000
+ 1.00
+ 4.000
+ 6.000
+radio
+S-band transceiver
+TTC
+TTC
+charging
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+charging
+ 7.200
+ 1.00
+ 7.200
+ 30.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+charging
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+charging
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+## page 4
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 4
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 17.500
+ 47.300
+DH
+ 10.000
+ 14.000
+EPS
+ 14.000
+ 20.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 6.000
+ 8.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 17.500
+ 47.300
+DH
+ 10.000
+ 14.000
+EPS
+ 14.000
+ 20.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 6.000
+ 8.000
+Mode: Downlink
+Units in mode Downlink
+Unit
+Name
+Subsystem
+Node
+Power mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+downlink
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+downlink
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+downlink
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+downlink
+ 1.800
+ 1.00
+ 1.800
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+obc
+On-board computer
+DH
+DH
+downlink
+ 11.000
+ 1.00
+ 11.000
+ 15.000
+pdu_data
+Payload data unit
+DH
+DH
+downlink
+ 9.000
+ 1.00
+ 9.000
+ 14.000
+## page 5
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 5
+Unit
+Name
+Subsystem
+Node
+Power mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+radio
+S-band transceiver
+TTC
+TTC
+downlink
+ 28.000
+ 0.70
+ 19.600
+ 28.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+downlink
+ 7.200
+ 1.00
+ 7.200
+ 30.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+downlink
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+downlink
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+downlink
+ 55.000
+ 0.50
+ 27.500
+ 35.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.300
+ 45.300
+DH
+ 20.000
+ 29.000
+EPS
+ 12.000
+ 16.000
+PL
+ 27.500
+ 35.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 19.600
+ 28.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.300
+ 45.300
+DH
+ 20.000
+ 29.000
+EPS
+ 12.000
+ 16.000
+PL
+ 27.500
+ 35.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 19.600
+ 28.000
+Mode: Imaging
+Units in mode Imaging
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+## page 6
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 6
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adcs
+Attitude control electronics
+ADCS
+ADCS
+imaging
+ 7.000
+ 1.00
+ 7.000
+ 10.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+imaging
+ 36.000
+ 1.00
+ 36.000
+ 80.000
+eps
+Power conditioning unit
+EPS
+EPS
+imaging
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+imaging
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+imaging
+ 1.000
+ 1.00
+ 1.000
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+obc
+On-board computer
+DH
+DH
+imaging
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+pdu_data
+Payload data unit
+DH
+DH
+imaging
+ 9.000
+ 1.00
+ 9.000
+ 14.000
+radio
+S-band transceiver
+TTC
+TTC
+imaging
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+imaging
+ 12.600
+ 1.00
+ 12.600
+ 40.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+imaging
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+imaging
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 24.700
+ 57.300
+DH
+ 21.000
+ 30.000
+EPS
+ 12.000
+ 16.000
+PL
+ 36.000
+ 80.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 24.700
+ 57.300
+DH
+ 21.000
+ 30.000
+EPS
+ 12.000
+ 16.000
+PL
+ 36.000
+ 80.000
+## page 7
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 7
+Node
+Dissipation (W)
+Peak dissipation (W)
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+Mode: Nominal
+Units in mode Nominal
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+nominal
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+nominal
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+nominal
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+nominal
+ 1.800
+ 1.00
+ 1.800
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+nominal
+ 0.200
+ 1.00
+ 0.200
+ 3.000
+obc
+On-board computer
+DH
+DH
+nominal
+ 10.000
+ 1.00
+ 10.000
+ 14.000
+pdu_data
+Payload data unit
+DH
+DH
+nominal
+ 4.000
+ 1.00
+ 4.000
+ 6.000
+radio
+S-band transceiver
+TTC
+TTC
+nominal
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+nominal
+ 7.200
+ 1.00
+ 7.200
+ 30.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+nominal
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+nominal
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.500
+ 48.300
+DH
+ 14.000
+ 20.000
+EPS
+ 12.000
+ 16.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+## page 8
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 8
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+THERM
+ 1.800
+ 16.000
+TTC
+ 6.000
+ 8.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.500
+ 48.300
+DH
+ 14.000
+ 20.000
+EPS
+ 12.000
+ 16.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 6.000
+ 8.000
+Mode: Safe
+Units in mode Safe
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+safe
+ 4.000
+ 1.00
+ 4.000
+ 6.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+safe
+ 8.000
+ 1.00
+ 8.000
+ 10.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+safe
+ 6.000
+ 1.00
+ 6.000
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+safe
+ 0.450
+ 1.00
+ 0.450
+ 3.000
+obc
+On-board computer
+DH
+DH
+safe
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+pdu_data
+Payload data unit
+DH
+DH
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+radio
+S-band transceiver
+TTC
+TTC
+safe
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+safe
+ 1.000
+ 1.00
+ 1.000
+ 12.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+safe
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+## page 9
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 9
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 5.850
+ 21.500
+DH
+ 6.000
+ 8.000
+EPS
+ 8.000
+ 10.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 6.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 5.850
+ 21.500
+DH
+ 6.000
+ 8.000
+EPS
+ 8.000
+ 10.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 6.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+Assumptions
+Configuration numbers used
+Name
+Value
+Unit
+Source
+Status
+Space temperature
+ 3
+K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Temperature margin
+ 5
+K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Conductance ADCS - DH
+ 0.5
+W/K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Conductance DH - EPS
+ 0.5
+W/K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Conductance EPS - PL
+ 0.5
+W/K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Conductance PL - STRUCT
+ 0.5
+W/K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Conductance STRUCT - THERM
+ 0.5
+W/K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Conductance THERM - TTC
+ 0.5
+W/K
+Synthetic example value; not from a data sheet or a standard.
+sourced
+## page 10
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 10
+Name
+Value
+Unit
+Source
+Status
+Solar flux, case cold
+ 0
+W/m2
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Albedo, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth infrared, case cold
+ 240
+W/m2
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Emissivity, ADCS panel
+ 0.85
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Absorptivity, ADCS panel
+ 0.6
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, ADCS panel, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, ADCS panel, case cold
+ 0.8
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Emissivity, DH panel
+ 0.85
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Absorptivity, DH panel
+ 0.6
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, DH panel, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, DH panel, case cold
+ 0.8
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Emissivity, EPS panel
+ 0.85
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Absorptivity, EPS panel
+ 0.6
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, EPS panel, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, EPS panel, case cold
+ 0.8
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Emissivity, PL panel
+ 0.85
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Absorptivity, PL panel
+ 0.6
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, PL panel, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, PL panel, case cold
+ 0.8
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Emissivity, STRUCT panel
+ 0.85
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Absorptivity, STRUCT panel
+ 0.6
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, STRUCT panel, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, STRUCT panel, case cold
+ 0.8
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Emissivity, THERM panel
+ 0.85
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Absorptivity, THERM panel
+ 0.6
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, THERM panel, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, THERM panel, case cold
+ 0.8
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Emissivity, TTC panel
+ 0.85
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Absorptivity, TTC panel
+ 0.6
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, TTC panel, case cold
+ 0
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, TTC panel, case cold
+ 0.8
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar flux, case hot
+ 1400
+W/m2
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Albedo, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth infrared, case hot
+ 240
+W/m2
+Synthetic example value; not from a data sheet or a standard.
+sourced
+## page 11
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 11
+Name
+Value
+Unit
+Source
+Status
+Solar view, ADCS panel, case hot
+ 0.5
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, ADCS panel, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, DH panel, case hot
+ 0.5
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, DH panel, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, EPS panel, case hot
+ 0.5
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, EPS panel, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, PL panel, case hot
+ 0.5
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, PL panel, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, STRUCT panel, case hot
+ 0.5
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, STRUCT panel, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, THERM panel, case hot
+ 0.5
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, THERM panel, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Solar view, TTC panel, case hot
+ 0.5
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Earth view, TTC panel, case hot
+ 0.3
+ratio
+Synthetic example value; not from a data sheet or a standard.
+sourced
+Equations
+ID
+Name
+Formula
+Source
+TH-DISS
+Heat dissipated by a unit
+Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak: P_peak * ratio)
+SOURCE_MISSING
+TH-ABS
+Heat absorbed by a surface
+Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth * E_IR)
+SOURCE_MISSING
+TH-BAL
+Steady-state node heat balance
+sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i
+= 0
+SOURCE_MISSING
+TH-SB
+Stefan-Boltzmann constant
+sigma = 5.670374419e-8 W m^-2 K^-4
+CODATA 2018 / SI 2019 (exact from h, k, c)
+TH-LIMIT
+Unit temperature limit check
+exceeded when T < T_min or T > T_max; margin check when T - T_min or
+T_max - T < temperature_margin_k
+SOURCE_MISSING
+SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
+Problems
+Problems and open items
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLACEHOLDER
+config/margin_policy.yaml:
+9
+classes.class_a.mass_margin_ra
+tio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLACEHOLDER
+config/margin_policy.yaml:
+17
+classes.class_b.mass_margin_ra
+tio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLACEHOLDER
+config/margin_policy.yaml:
+25
+classes.class_c.mass_margin_ra
+tio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 12
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 12
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLACEHOLDER
+config/margin_policy.yaml:
+32
+system_mass_margin_ratio
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLACEHOLDER
+config/mass_limits.yaml:7
+limits[0].limit_kg
+This number is a placeholder (no value or source
+'TBD'); results that use it are not trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+error
+THERMAL_MARGIN_INSU
+FFICIENT
+units/radio.yaml
+temperature_limits (case hot)
+Unit 'radio' is within its operating limits in a
+thermal case but closer than the required
+temperature margin.
+The margin is set in
+config/thermal_environment.yaml.
+Provenance
+Provenance
+Item
+Value
+Tool
+System Budget Studio 1.0.0
+Python
+3.x
+Libraries
+pinned for-golden-tests
+Project
+Example 250 kg minisatellite, complete power and thermal inputs
+Project revision
+1
+Scenario
+static (no scenario)
+Generated (UTC)
+2026-01-02T03:04:05Z
+User
+Golden User

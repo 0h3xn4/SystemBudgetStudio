@@ -35,6 +35,8 @@ from budget_gui.inspector import InspectorPanel
 from budget_gui.layout_settings import LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
+from budget_gui.model_document import ModelDocument
+from budget_gui.model_pages import InputsPage, PowerModesPage, UnitsPage
 from budget_gui.privacy import disable_settings_files
 from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
@@ -47,7 +49,6 @@ from budget_gui.session import ProjectSession
 from budget_gui.status_bar import AppStatusBar
 from budget_gui.timeline_view import PowerTimelineView
 from budget_gui.top_bar import TopBar
-from budget_gui.unit_editor import UnitEditor
 from budget_gui.unit_table import export_unit_table, import_unit_table
 from budget_gui.widgets import PowerView
 from budget_gui.worker import ExportWorker
@@ -87,7 +88,20 @@ class MainWindow(QMainWindow):
         self.mass_view = PowerView()
         self.thermal_view = PowerView()
         self.link_view = PowerView()
-        self.editors = EditorTabs()  # the Model tab: the scenario, the files, the unit tables
+        self.editors = EditorTabs()  # the Model tab: the grids, the scenario and the open files
+        self.document = ModelDocument()  # what the grids edit; one undo stack, saved explicitly
+        self.units_page = UnitsPage(self.document)
+        self.modes_page = PowerModesPage(self.document)
+        self.inputs_page = InputsPage(self.document)
+        for title, page in (
+            ("Units", self.units_page),
+            ("Power modes", self.modes_page),
+            ("Inputs", self.inputs_page),
+        ):
+            self.editors.add_fixed(page, title)
+            page.save_requested.connect(self.save_grids)
+            page.legend_requested.connect(self.show_cell_styles)
+        self.editors.register_modifiable(self.document)
         self.scenario_view = ScenarioView()
         self.editors.add_fixed(self.scenario_view, "Scenario")
         self.editors.register_modifiable(self.scenario_view.editor)
@@ -154,6 +168,8 @@ class MainWindow(QMainWindow):
         self.session.changed.connect(self._refresh)
         self.session.loading_changed.connect(self._loading_changed)
         self.scenario_view.editor.saved.connect(self.reload_project)
+        self.document.saved.connect(self.reload_project)
+        self.document.dirty_changed.connect(lambda _d: self._update_dirty())
         self.top_bar.scenario_chosen.connect(self.select_scenario)
         self.top_bar.case_chosen.connect(self.timeline_view.case_combo.setCurrentText)
         self.timeline_view.case_combo.currentTextChanged.connect(self.top_bar.set_case)
@@ -170,9 +186,9 @@ class MainWindow(QMainWindow):
         self.tree.field_requested.connect(self.jump_to_input)
         self.tree.currentItemChanged.connect(lambda _current, _previous: self._inspect())
         self.inspector.open_requested.connect(self.tree.activate_current)
-        self.inspector.modes_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
+        self.inspector.modes_requested.connect(lambda unit_id: self.show_unit(unit_id))
         self.inspector.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
-        self.tree.unit_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
+        self.tree.unit_requested.connect(lambda unit_id: self.show_unit(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self._export_folder = Path()
         self.timeline_view.computed.connect(lambda _result: self._update_problems())
@@ -198,7 +214,7 @@ class MainWindow(QMainWindow):
 
         add("&New project (guided)…", QKeySequence.StandardKey.New, self.open_guided_wizard)
         add("&Open project…", QKeySequence.StandardKey.Open, self._choose_project)
-        add("&Save file", QKeySequence.StandardKey.Save, self.save_current)
+        add("&Save", QKeySequence.StandardKey.Save, self.save_current)
         add("&Reload project", QKeySequence(Qt.Key.Key_F5), self.reload_project)
         file_menu.addSeparator()
         add("Edit unit &power modes\u2026", QKeySequence("Ctrl+M"), self._edit_selected_unit)
@@ -210,6 +226,7 @@ class MainWindow(QMainWindow):
         add("&Import unit table…", QKeySequence(), lambda: import_unit_table(self))
         file_menu.addSeparator()
         add("&Quit", QKeySequence.StandardKey.Quit, self.close)
+        self._build_edit_menu()
         self._build_run_menu()
         self._build_view_menu()
         help_menu = self.menuBar().addMenu("&Help")
@@ -217,6 +234,18 @@ class MainWindow(QMainWindow):
         guide.setShortcut(QKeySequence.StandardKey.HelpContents)
         guide.triggered.connect(lambda: self.open_guide())
         help_menu.addAction(guide)
+
+    def _build_edit_menu(self) -> None:
+        """Undo and redo of the grids; a text field or the text editor keeps its own undo while
+        it has the keyboard (Qt gives it the keys first)."""
+        edit_menu = self.menuBar().addMenu("&Edit")
+        stack = self.document.undo_stack
+        self.undo_action = stack.createUndoAction(self, "&Undo")
+        self.undo_action.setShortcut(QKeySequence.StandardKey.Undo)
+        self.redo_action = stack.createRedoAction(self, "&Redo")
+        self.redo_action.setShortcut(QKeySequence.StandardKey.Redo)
+        edit_menu.addAction(self.undo_action)
+        edit_menu.addAction(self.redo_action)
 
     def _build_run_menu(self) -> None:
         run_menu = self.menuBar().addMenu("&Run")
@@ -378,7 +407,7 @@ class MainWindow(QMainWindow):
     def _edit_selected_unit(self) -> None:
         unit_id = self.tree.current_unit_id()
         if unit_id:
-            self.open_unit_editor(unit_id)
+            self.show_unit(unit_id)
 
     def _choose_export(self) -> None:
         if not self.session.outputs:
@@ -622,26 +651,18 @@ class MainWindow(QMainWindow):
         """Open the file that governs a finding at the line of the named field."""
         self.open_file(rel, self._line_of(rel, path))
 
-    def open_unit_editor(self, unit_id: str) -> UnitEditor | None:
-        """Open (or focus) the power-mode table editor of a unit of the loaded project."""
+    def show_unit(self, unit_id: str) -> PowerModesPage | None:
+        """Show a unit's power modes in the grid of the Model tab, its first row current."""
         project = self.session.project
         if project is None or self.session.path is None or unit_id not in project.units:
-            QMessageBox.information(
-                self,
-                APP_NAME,
-                "Fix the errors in the Problems panel first; "
-                "the table editor needs a project that loads.",
+            self.status_bar.showMessage(
+                "Fix the errors in the Problems panel first; the grids need a project that loads."
             )
             return None
-        existing = self.editors.unit_editor(unit_id)
-        if existing is not None:
-            self.show_view(existing)
-            return existing
-        editor = UnitEditor(self.session.path, unit_id, project.units[unit_id])
-        editor.saved.connect(self.reload_project)
-        self.editors.add_unit_editor(unit_id, editor)
-        self.workspace.show_view(self.editors)
-        return editor
+        self.show_view(self.modes_page)
+        self.modes_page.select_unit(unit_id)
+        self.modes_page.table.view.setFocus()
+        return self.modes_page
 
     def show_view(self, widget: QWidget) -> bool:
         """Bring any view to the front: its tab, and its page inside the tab."""
@@ -655,9 +676,8 @@ class MainWindow(QMainWindow):
             return False  # Save belongs to the editors of the Model tab
         if self.editors.currentWidget() is self.scenario_view:
             return self.scenario_view.editor.save()
-        unit_editor = self.editors.current_unit_editor()
-        if unit_editor is not None:
-            return unit_editor.save()
+        if self.editors.currentWidget() in (self.units_page, self.modes_page, self.inputs_page):
+            return self.save_grids()
         editor = self.editors.current_editor()
         if editor is None:
             return False
@@ -665,6 +685,25 @@ class MainWindow(QMainWindow):
             return False
         self.reload_project()
         return True
+
+    def save_grids(self) -> bool:
+        """Write the files the grids changed (nothing while a cell is wrong or a file moved)."""
+        report = self.document.save()
+        page = self.editors.currentWidget()
+        grid = page if page in (self.units_page, self.modes_page, self.inputs_page) else None
+        if report.ok:
+            n = len(report.written)
+            text = (
+                f"Saved {n} file{'s' if n != 1 else ''}." if n else "Nothing to save: no changes."
+            )
+            self.status_bar.showMessage(text)
+            if grid is not None:
+                grid.show_message(text)
+        else:
+            self.status_bar.showMessage(report.message)
+            for candidate in (self.units_page, self.modes_page, self.inputs_page):
+                candidate.show_message(report.message)
+        return report.ok
 
     def _write(self, editor: YamlEditor) -> bool:
         """Save a text tab; asks before overwriting a file that changed on disk."""
@@ -706,7 +745,8 @@ class MainWindow(QMainWindow):
         self.link_passes_view.set_project(project, load_problems)
         self.compare_view.set_project(project)
         self._update_problems()
-        self.editors.reload_clean_files(project.units if project else None)
+        self.editors.reload_clean_files()
+        self.document.reload(session.path, project)
         shown = session.display_project  # the name and revision stay while the project has an error
         name = shown.meta.name if shown else (session.path.name if session.path else "")
         self.top_bar.set_project(name, shown.meta.revision if shown else "")

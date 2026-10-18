@@ -25,7 +25,7 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
 
 @pytest.fixture
 def eps(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -160,8 +160,8 @@ def test_clean_tabs_close_without_asking(
 
 # ---- jump lines ------------------------------------------------------------------------------
 def test_jump_line_for_a_list_path(window: MainWindow) -> None:
-    window.open_project(EXAMPLES / "cubesat_3u")
-    text = (EXAMPLES / "cubesat_3u" / "config" / "mass_limits.yaml").read_text(encoding="utf-8")
+    window.open_project(EXAMPLES / "microsat_250kg")
+    text = (EXAMPLES / "microsat_250kg" / "config" / "mass_limits.yaml").read_text(encoding="utf-8")
     expected = next(i for i, line in enumerate(text.splitlines(), 1) if "limit_kg" in line)
     # a mapping-valued key resolves to its first child line, so it is at or just after the key
     assert (

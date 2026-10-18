@@ -80,33 +80,31 @@ budget export-examples demo
 ```
 
 ```text
-cubesat_3u
-cubesat_3u_eps
 microsat_150kg
+microsat_250kg
+microsat_250kg_eps
 stress_200_units
 ```
 
 Check one project. `validate` reads every file of the project folder and lists what is wrong or still open:
 
 ```bash
-budget validate demo/cubesat_3u_eps
+budget validate demo/microsat_250kg_eps
 ```
 
 ```text
-config/attenuation_table.yaml:3: warning CONFIG_EMPTY_TABLE: The table has no entries. (at entries)
-    Add entries from a cited source, or import them from a file.
-config/margin_policy.yaml:6: warning CONFIG_PLACEHOLDER: This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. (at classes.class_a.power_margin_ratio)
+config/margin_policy.yaml:9: warning CONFIG_PLACEHOLDER: This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. (at classes.class_a.mass_margin_ratio)
     Replace it with a value from your margin policy, standard or data sheet and cite the source.
 …
-0 errors, 6 warnings.
+0 errors, 5 warnings.
 ```
 
-Reading it: each problem is `file:line: severity CODE: message (at field)` and a hint on the next line. **Warnings** are open items, here the *[placeholders](glossary.md#placeholder)*: numbers the tool will not invent (the margin policy, the mass limit, the Eb/N0 table). **Errors** would stop a budget from being computed. Add `--strict` to treat warnings as failures too.
+Reading it: each problem is `file:line: severity CODE: message (at field)` and a hint on the next line. **Warnings** are open items, here the *[placeholders](glossary.md#placeholder)*: numbers the tool will not invent (the margin policy and the mass limit). **Errors** would stop a budget from being computed. Add `--strict` to treat warnings as failures too.
 
 Compute the static power budget and write the reports:
 
 ```bash
-budget run demo/cubesat_3u_eps --budget power --out out
+budget run demo/microsat_250kg_eps --budget power --out out
 ```
 
 ```text
@@ -118,76 +116,76 @@ Wrote out/power_static_charging.csv
 Wrote out/power_static_downlink.csv
 …
 Wrote out/power_static_provenance.csv
-0 errors, 6 warnings.
+0 errors, 5 warnings.
 ```
 
 Open `out/power_static.xlsx` (or the PDF). You see the average and peak power of each spacecraft mode, with and without margins; the last sheets list the configuration numbers used with their sources, the equations, the problems and the provenance. Entries that depend on a placeholder show **n/a** and the report starts with an **INCOMPLETE** banner: that is the tool refusing to present guesses as results. Leave out `--budget power` to compute power, mass, thermal and link budgets in one go.
 
 ## 5. A first worked example: find and fix a power violation
 
-Question: *does the example CubeSat's solar array and battery support its operating modes over one day?* This needs the time-domain budget, which steps through an orbit scenario.
+Question: *does the 250 kg example satellite's solar array and battery support its operating modes over one day?* This needs the time-domain budget, which steps through an orbit scenario.
 
 **Step 1: run it.**
 
 ```bash
-budget power-timeline demo/cubesat_3u_eps --out out
+budget power-timeline demo/microsat_250kg_eps --out out
 ```
 
 ```text
 Wrote out/power_time_one_day.xlsx
 …
-BOL: generated 99.7 Wh, lowest state of charge 89.3 %, 0 violation(s).
-EOL: generated 93.8 Wh, lowest state of charge 89.0 %, 0 violation(s).
-config/power_system.yaml: error PEAK_POWER_EXCEEDED: The peak power demand at the source exceeds the power limit. 12 interval(s), the first at T+00:02:06. (at limits.peak_power_w)
+BOL: generated 2399.2 Wh, lowest state of charge 82.7 %, 16 violation(s).
+EOL: generated 2060.3 Wh, lowest state of charge 79.7 %, 16 violation(s).
+config/power_system.yaml: error PEAK_POWER_EXCEEDED: The peak power demand at the source exceeds the power limit. 16 interval(s), the first at T+00:02:06. (at limits.peak_power_w)
     Open the violations table for every interval; change the input named here or the scenario.
-1 error, 0 warnings.
+1 error, 5 warnings.
 ```
 
-**What it says.** BOL and EOL are *[beginning* and *end of life](glossary.md#bol-eol)* (the array is new, or aged by its design life; see the [glossary](glossary.md)). The battery never gets below 89 % charge, so there is no battery problem. But the demand at the power source exceeds the **[peak power limit](glossary.md#peak-power)** during 12 intervals, the first starting 2 minutes 6 seconds into the scenario. The command ends with exit code 1 because it found an error; scripts can use that.
+**What it says.** BOL and EOL are *[beginning* and *end of life](glossary.md#bol-eol)* (the array is new, or aged by its design life; see the [glossary](glossary.md)). The battery never gets below 79 % charge, so there is no battery problem. But the demand at the power source exceeds the **[peak power limit](glossary.md#peak-power)** during 16 intervals, the first starting 2 minutes 6 seconds into the scenario. The command ends with exit code 1 because it found an error; scripts can use that.
 
 **Step 2: look at the details.** `out/power_time_one_day_violations.csv` has one row per interval, with start and end time, the worst value, the limit and the input to change:
 
 ```text
 case,code,start_s,end_s,duration_s,…,worst_value,limit,unit,file,path
-,PEAK_POWER_EXCEEDED,126.126,619.344,493.218,…,7.961054,7.500000,W,config/power_system.yaml,limits.peak_power_w
+,PEAK_POWER_EXCEEDED,126.126,619.344,493.218,…,247.766323,180.000000,W,config/power_system.yaml,limits.peak_power_w
 ```
 
-The worst demand is 7.96 W and the limit is 7.5 W, in `config/power_system.yaml` at `limits.peak_power_w`. The intervals are the downlink passes: the radio transmits.
+The worst demand is 247.8 W and the limit is 180 W, in `config/power_system.yaml` at `limits.peak_power_w`. The intervals are mostly the downlink passes: the radio transmits while the camera and the attitude control are on.
 
-**Step 3: decide.** You can reduce the demand (change the scenario or the radio's modes) or change the limit **if you have a better, sourced value**. For this example we only want to see the effect, so raise the invented limit. Open `demo/cubesat_3u_eps/config/power_system.yaml` in a text editor and find:
+**Step 3: decide.** You can reduce the demand (change the scenario or the radio's modes) or change the limit **if you have a better, sourced value**. For this example we only want to see the effect, so raise the invented limit. Open `demo/microsat_250kg_eps/config/power_system.yaml` in a text editor and find:
 
 ```yaml
 limits:
   peak_power_w:
-    value: 7.5
+    value: 180.0
     source: Synthetic example value; not from a data sheet or a standard.
 ```
 
-Change `value: 7.5` to `value: 8.5`. In a real project you would also change the `source` to say where the new number comes from.
+Change `value: 180.0` to `value: 260.0`. In a real project you would also change the `source` to say where the new number comes from.
 
 **Step 4: run again.**
 
 ```bash
-budget power-timeline demo/cubesat_3u_eps --out out
+budget power-timeline demo/microsat_250kg_eps --out out
 ```
 
 ```text
-BOL: generated 99.7 Wh, lowest state of charge 89.3 %, 0 violation(s).
-EOL: generated 93.8 Wh, lowest state of charge 89.0 %, 0 violation(s).
-0 errors, 0 warnings.
+BOL: generated 2399.2 Wh, lowest state of charge 82.7 %, 0 violation(s).
+EOL: generated 2060.3 Wh, lowest state of charge 79.7 %, 0 violation(s).
+0 errors, 5 warnings.
 ```
 
-Exit code 0: the violation is gone. You have now done the core loop of the tool: **describe, compute, read the findings, change an input, compute again**. To see exactly what a change did, [compare the two revisions](user-manual/compare.md).
+Exit code 0: the violation is gone (the radio's thermal finding is a separate check; see the [examples](../examples/README.md)). You have now done the core loop of the tool: **describe, compute, read the findings, change an input, compute again**. To see exactly what a change did, [compare the two revisions](user-manual/compare.md).
 
 ## 6. Open the window
 
 ```bash
-system-budget-studio demo/cubesat_3u_eps
+system-budget-studio demo/microsat_250kg_eps
 ```
 
 You should see the window below: the **top bar** (project, revision, scenario, BOL and EOL, **Run** and the run status), the **project tree** on the left, seven **tabs** (Model, Power, Mass, Thermal, Link, Compare, Reports), and on the right the **Inspector**, **Problems** and **Provenance** panels.
 
-![The Power budget tab of the example CubeSat: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/power-budget.png)
+![The Power budget tab of the 250 kg example satellite: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/power-budget.png)
 
 - **Power → Budget** is the table you saw in the XLSX file; **Mass**, **Thermal** and **Link → Budget** are the other static budgets. Cells with `n/a` have a marker and a tooltip that says which kind of input is missing.
 - Press **Run** (Ctrl+R) to work out the scenario you ran above, the power timeline and the link passes in one go; the chip next to it says when they are up to date. In **Power → Timeline**, hover over a plot to read the values at that time; the wheel zooms, dragging pans, a double-click shows everything again, a click pins a second cursor (the readout then shows differences) and Escape unpins it. The shaded bands are eclipses and passes. Click a row of the **Violations** table to zoom to that interval.

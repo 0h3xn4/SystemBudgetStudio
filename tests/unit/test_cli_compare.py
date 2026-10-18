@@ -17,9 +17,9 @@ FIXED = ["--user", "Test User", "--date", "2026-01-02T03:04:05Z"]
 @pytest.fixture
 def pair(tmp_path: Path) -> tuple[Path, Path]:
     a, b = tmp_path / "rev1", tmp_path / "rev2"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", a)
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", b)
-    edit(b, "units/adcs.yaml", "avg_power_w: 0.9", "avg_power_w: 1.3")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", a)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", b)
+    edit(b, "units/adcs.yaml", "avg_power_w: 7.0", "avg_power_w: 9.0")
     edit(b, "project.yaml", "revision: '1'", "revision: '2'")
     return a, b
 
@@ -62,7 +62,7 @@ def test_compare_is_byte_identical_between_runs(pair: tuple[Path, Path], tmp_pat
 
 def test_two_scenarios_of_one_project(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     root = tmp_path / "p"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", root)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", root)
     shutil.copy(root / "scenarios/one_day.yaml", root / "scenarios/variant.yaml")
     edit(root, "scenarios/variant.yaml", "default_mode: charging", "default_mode: safe")
     code = main(
@@ -88,7 +88,7 @@ def test_two_scenarios_of_one_project(tmp_path: Path, capsys: pytest.CaptureFixt
 def test_single_project_without_two_scenarios_is_refused(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    code = main(["compare", str(EXAMPLES / "cubesat_3u_eps")])
+    code = main(["compare", str(EXAMPLES / "microsat_250kg_eps")])
     assert code == 2
     assert "second project" in capsys.readouterr().err
 
@@ -97,7 +97,7 @@ def test_invalid_project_stops_with_plain_message(
     pair: tuple[Path, Path], tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     a, b = pair
-    edit(b, "units/adcs.yaml", "avg_power_w: 1.3", "avg_power_w: 9.9")
+    edit(b, "units/adcs.yaml", "avg_power_w: 9.0", "avg_power_w: 99.9")
     code = main(["compare", str(a), str(b), "--out", str(tmp_path / "out")])
     assert code == 1
     assert not (tmp_path / "out").exists()
@@ -134,7 +134,7 @@ def test_an_empty_out_folder_is_refused(
     command: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     root = tmp_path / "p"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", root)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", root)
     with pytest.raises(SystemExit) as exc:
         main([command, str(root), "--out", ""])
     assert exc.value.code == 2

@@ -29,7 +29,7 @@ def test_guide_opens_without_a_project(window: MainWindow, qtbot) -> None:  # ty
 
 
 def test_guide_lists_the_open_projects_numbers(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
-    window.open_project(EXAMPLES / "cubesat_3u")
+    window.open_project(EXAMPLES / "microsat_250kg")
     dialog = window.open_guide()
     qtbot.addWidget(dialog)
     assert "Numbers in the configuration of" in dialog.browser.toPlainText()

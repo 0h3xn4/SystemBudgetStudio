@@ -17,7 +17,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -51,7 +51,7 @@ def test_compute_runs_in_a_worker_and_fills_timeline_and_tables(window: MainWind
     assert view.eclipse_table.rowCount() == len(run.env.eclipses) >= 12
     assert view.passes_table.rowCount() == sum(len(v.passes) for v in run.env.sites.values())
     assert view.timeline_table.rowCount() == len(run.timeline)
-    assert view.timeline.rows() == ["Sunlight", "gs_north", "tgt_plains", "Mode"]
+    assert view.timeline.rows() == ["Sunlight", "gs_north", "gs_south", "tgt_plains", "Mode"]
     assert "eclipse" in view.status.text().lower() and not view.is_stale
     assert view.compute_button.isEnabled()
 

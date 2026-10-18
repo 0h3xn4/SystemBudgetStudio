@@ -152,7 +152,7 @@ def test_a_scenario_start_inside_the_range_is_accepted(start: str) -> None:
 
 
 def load_example() -> object:
-    project = load_project(EXAMPLES / "cubesat_3u_eps").project
+    project = load_project(EXAMPLES / "microsat_250kg_eps").project
     assert project is not None
     return project
 

@@ -9,10 +9,12 @@ import time
 from pathlib import Path
 
 import pytest
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMessageBox
 
 from budget_core.io.project_loader import load_project
 from budget_gui.main_window import MainWindow
+from tests.gui_helpers import mode_row, set_mode_value, set_unit_value
 
 pytestmark = pytest.mark.gui
 
@@ -21,8 +23,8 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    """cubesat_3u with a short step and a second scenario called 'two'."""
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    """microsat_250kg with a short step and a second scenario called 'two'."""
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     root = tmp_path / "p"
     text = (root / "scenarios/one_day.yaml").read_text(encoding="utf-8")
     text = text.replace("step_s: 10.0", "step_s: 60.0")
@@ -74,37 +76,35 @@ def compute_timeline(window: MainWindow, qtbot) -> None:  # type: ignore[no-unty
 def test_a_text_edit_is_not_reverted_by_the_next_save_in_the_unit_table(
     window: MainWindow, project: Path
 ) -> None:
-    table = window.open_unit_editor("camera")
-    assert table is not None
     window.open_file("units/camera.yaml")
     text = window.editors.current_editor()
     assert text is not None
     document = text.toPlainText()
-    assert "avg_power_w: 2.4" in document
-    text.setPlainText(document.replace("avg_power_w: 2.4", "avg_power_w: 2.6"))
+    assert "avg_power_w: 60.0" in document
+    text.setPlainText(document.replace("avg_power_w: 60.0", "avg_power_w: 62.0"))
     assert window.save_current()  # saves the text tab, the project reloads
-    assert table.table.item(1, 1).text() == "2.6"  # the clean table shows the new file
-    table.table.item(1, 2).setText("3.5")  # now an edit in the table (peak power)
-    window.show_view(table)
+    model = window.modes_page.modes
+    row = mode_row(window, "camera", "imaging")
+    assert model.index(row, 2).data(Qt.ItemDataRole.EditRole) == "62"  # the clean grid shows it
+    set_mode_value(window, "camera", "imaging", "peak_power_w", "85.0")  # now an edit in the grid
+    window.show_view(window.modes_page)
     assert window.save_current()
     saved = load_project(project).project.units["camera"]  # type: ignore[union-attr]
-    assert saved.modes[1].avg_power_w == 2.6 and saved.modes[1].peak_power_w == 3.5
+    assert saved.modes[1].avg_power_w == 62.0 and saved.modes[1].peak_power_w == 85.0
 
 
 def test_a_table_with_pending_edits_refuses_to_overwrite_a_newer_file(
     window: MainWindow, project: Path
 ) -> None:
-    table = window.open_unit_editor("camera")
-    assert table is not None
-    table.table.item(0, 0).setText("off2")
+    set_unit_value(window, "camera", "mass_kg", "39")
     path = project / "units/camera.yaml"
     path.write_text(
-        path.read_text(encoding="utf-8").replace("avg_power_w: 2.4", "avg_power_w: 2.7"),
+        path.read_text(encoding="utf-8").replace("avg_power_w: 60.0", "avg_power_w: 63.0"),
         encoding="utf-8",
     )
-    assert not table.save()
-    assert "changed on disk" in table.error_label.text()
-    assert "avg_power_w: 2.7" in path.read_text(encoding="utf-8")
+    assert not window.save_grids()
+    assert "changed on disk" in window.modes_page.feedback_label.text()
+    assert "avg_power_w: 63.0" in path.read_text(encoding="utf-8")
 
 
 # ---- GUI-4: switching the scenario asks before dropping edits ---------------------------------
@@ -254,7 +254,7 @@ def test_a_comparison_cannot_be_exported_after_the_project_changed(
     shutil.copytree(project, other)
     other_unit = other / "units/camera.yaml"
     other_unit.write_text(
-        other_unit.read_text(encoding="utf-8").replace("avg_power_w: 2.4", "avg_power_w: 2.9"),
+        other_unit.read_text(encoding="utf-8").replace("avg_power_w: 60.0", "avg_power_w: 2.9"),
         encoding="utf-8",
     )
     view.set_other_folder(other)

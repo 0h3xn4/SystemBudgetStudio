@@ -54,7 +54,7 @@ The path is wrong. A project folder contains `project.yaml`. Run `budget validat
 
 ### `spacecraft.yaml: error FILE_NOT_FOUND: The file cannot be read.`
 
-The folder exists but is not a project (for example an empty folder), or a file is missing. Compare with an example: `budget export-examples demo` and look at `demo/cubesat_3u`.
+The folder exists but is not a project (for example an empty folder), or a file is missing. Compare with an example: `budget export-examples demo` and look at `demo/microsat_250kg`.
 
 ### `A file could not be written. Check that the output folder exists, is a folder and that you may write to it.`
 
@@ -78,7 +78,7 @@ You gave a value the option does not accept; the message lists the allowed ones.
 
 ### The command wrote all its files but exited with code 1
 
-By design: an error-level *finding* (a limit exceeded) makes the exit code 1. Read the last lines of the output. The `cubesat_3u_eps` example does this on purpose ([examples](../examples/README.md#exit-codes-in-the-examples)).
+By design: an error-level *finding* (a limit exceeded) makes the exit code 1. Read the last lines of the output. The `microsat_250kg_eps` example does this on purpose ([examples](../examples/README.md#exit-codes-in-the-examples)).
 
 ### `A file or folder could not be read or written. Check the paths and that you may use them.`
 
@@ -108,7 +108,7 @@ The bundled PDF font has no glyphs for CJK or emoji. The PDF shows `?` and a not
 
 ### `BOL: n/a (inputs missing, see the problems below).`
 
-The power timeline needs `config/power_system.yaml` with a complete array and battery, a scenario and a mission phase; the examples `cubesat_3u`, `microsat_150kg` and `stress_200_units` have templates only. Use `cubesat_3u_eps`, or fill in the numbers.
+The power timeline needs `config/power_system.yaml` with a complete array and battery, a scenario and a mission phase; the examples `microsat_250kg`, `microsat_150kg` and `stress_200_units` have templates only. Use `microsat_250kg_eps`, or fill in the numbers.
 
 ### Same inputs, different file bytes
 

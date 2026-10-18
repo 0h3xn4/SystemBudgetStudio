@@ -13,7 +13,7 @@ from dataclasses import replace
 
 import pytest
 
-from budget_core.examples import _config, _power_system, _stress
+from budget_core.examples import _config, _minisat_power_system, _stress
 from budget_core.power.time_domain import time_domain_budget
 from budget_core.scenario.run import run_scenario
 from tests.perf_limits import LIMIT_S, TARGET_S
@@ -26,7 +26,9 @@ def test_one_week_at_one_second_with_two_cases() -> None:
     project = replace(
         project,
         config=_config(
-            ["main", "aux"], _power_system(True, ["launch", "eol"], {"imaging": "nadir"}), True
+            ["main", "aux"],
+            _minisat_power_system(True, ["launch", "eol"], {"imaging": "nadir"}),
+            True,
         ),
         scenarios={
             "stress_week": project.scenarios["stress_week"].model_copy(
@@ -50,7 +52,9 @@ def _time_budget(duration_s: float) -> float:
     project = replace(
         project,
         config=_config(
-            ["main", "aux"], _power_system(True, ["launch", "eol"], {"imaging": "nadir"}), True
+            ["main", "aux"],
+            _minisat_power_system(True, ["launch", "eol"], {"imaging": "nadir"}),
+            True,
         ),
         scenarios={
             "stress_week": project.scenarios["stress_week"].model_copy(

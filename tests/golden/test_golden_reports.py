@@ -23,7 +23,11 @@ from tests.golden_util import check_golden, dump_docx, dump_pdf, dump_xlsx
 EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 WHEN = datetime(2026, 1, 2, 3, 4, 5, tzinfo=UTC)
 # Stress case: golden covers the first rows/pages only; the full run is checked for size below.
-LIMITS = {"cubesat_3u": (None, None), "microsat_150kg": (None, None), "stress_200_units": (14, 2)}
+LIMITS = {
+    "microsat_250kg": (None, None),
+    "microsat_150kg": (None, None),
+    "stress_200_units": (14, 2),
+}
 
 
 def build(name: str):  # type: ignore[no-untyped-def]
@@ -64,9 +68,9 @@ def test_json_golden(name: str) -> None:
     check_golden(f"{name}_power.json.txt", text)
 
 
-def test_csv_golden_cubesat() -> None:
-    power, _, _ = build("cubesat_3u")
-    check_golden("cubesat_3u_power_nominal.csv", result_csv(power.modes[1]))
+def test_csv_golden_minisat() -> None:
+    power, _, _ = build("microsat_250kg")
+    check_golden("microsat_250kg_power_nominal.csv", result_csv(power.modes[1]))
 
 
 def test_stress_case_is_complete() -> None:
@@ -115,7 +119,7 @@ def test_mass_csv_golden_microsat() -> None:
     check_golden("microsat_150kg_mass_launch.csv", mass_csv(mass.phases[0]))
 
 
-@pytest.mark.parametrize("name", ["cubesat_3u", "microsat_150kg"])
+@pytest.mark.parametrize("name", ["microsat_250kg", "microsat_150kg"])
 def test_docx_golden(name: str) -> None:
     _, _, doc = build(name)
     check_golden(f"{name}_power.docx.txt", dump_docx(render_docx(doc)))

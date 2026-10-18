@@ -15,7 +15,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -53,8 +53,8 @@ def test_the_tree_keeps_the_unit_names_while_the_project_has_an_error(
 ) -> None:
     break_it(project)
     window.session.reload()
-    item = window.tree.find_item("units/radio.yaml", kind="file")
-    assert item is not None and item.text(0) == "radio: UHF/VHF radio"
+    item = window.tree.find_item("units/radio.yaml", kind="unit")
+    assert item is not None and item.text(0) == "S-band transceiver"
 
 
 def test_nothing_old_can_be_exported(window: MainWindow, project: Path) -> None:
@@ -89,7 +89,7 @@ def test_another_project_does_not_inherit_the_old_results(
     window: MainWindow, tmp_path: Path
 ) -> None:
     broken = tmp_path / "other"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", broken)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", broken)
     break_it(broken)
     window.open_project(broken)
     assert not window.session.showing_last_good
@@ -98,7 +98,7 @@ def test_another_project_does_not_inherit_the_old_results(
 
 def test_an_empty_view_says_why(window: MainWindow, tmp_path: Path) -> None:
     broken = tmp_path / "other"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", broken)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", broken)
     break_it(broken)
     window.open_project(broken)
     for view in (window.power_view, window.scenario_view, window.timeline_view):

@@ -74,7 +74,7 @@ def test_outputs_are_byte_identical(two_nodes: Path, tmp_path: Path) -> None:
 def test_a_limit_finding_writes_the_reports_but_exits_one(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     code = main(
         [
             "run",
@@ -96,7 +96,7 @@ def test_a_limit_finding_writes_the_reports_but_exits_one(
 def test_placeholder_examples_warn_and_strict_fails(tmp_path: Path) -> None:
     args = [
         "run",
-        str(EXAMPLES / "cubesat_3u"),
+        str(EXAMPLES / "microsat_250kg"),
         "--budget",
         "thermal",
         "--report",

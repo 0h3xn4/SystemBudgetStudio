@@ -20,7 +20,7 @@ Shortcuts, working habits and ways to connect System Budget Studio to your other
 - **Put the project folder in git.** Files are plain text with stable formatting: diffs show exactly which number changed. Commit after every sourced number you add; tag the revisions you review.
 - **Raise `revision` in `project.yaml`** when you change numbers behind a report; it appears on every output and labels the sides of a [comparison](user-manual/compare.md).
 - **Compare before you review**: `budget compare old new` lists what changed between two revisions, so reviewers read the differences, not two whole reports.
-- **Keep sources as comments in the unit and scenario files.** The unit table, the scenario editor and the unit-table import all edit in place, so a comment such as `# datasheet rev C, table 4` survives every save and `git diff` shows only the lines you changed.
+- **Keep sources as comments in the unit and scenario files.** The grids, the scenario editor and the unit-table import all edit in place, so a comment such as `# datasheet rev C, table 4` survives every save and `git diff` shows only the lines you changed.
 - **Fill in the `source` honestly.** `TBD` is a fine value, and a report that says INCOMPLETE is better than one that looks complete and is not.
 - **Look at `budget validate --strict`** before sending a report out: it fails on any placeholder still open.
 - **Keep one project per spacecraft design**, with scenarios for the operating cases (commissioning, nominal, safe mode) in the same folder.

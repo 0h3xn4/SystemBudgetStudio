@@ -1,0 +1,358 @@
+## sheet Summary rows=10 cols=3
+1: 'Thermal budget (static): Example 250 kg minisatellite, complete power and thermal inputs' |  | 
+3: 'Heat dissipation by spacecraft mode' |  | 
+4: 'Mode' | 'Average (W)' | 'Peak (W)'
+5: 'Charging' | 49.3 | 105.3
+6: 'Downlink' | 99.2 | 169.3
+7: 'Imaging' | 100.7 | 207.3
+8: 'Nominal' | 52.3 | 108.3
+9: 'Safe' | 31.85 | 63.5
+10: 'Average = sum of unit power x duty cycle x heat dissipation ratio. Peak uses the unit peak powers. n/a: a unit has no heat dissipation ratio for its power mode.' |  | 
+## sheet Case cold rows=33 cols=8
+1: 'Eclipse with the lowest-power mode.' |  |  |  |  |  |  | 
+2: 'Node temperatures, case cold' |  |  |  |  |  |  | 
+3: 'Node' | 'Temperature (K)' | 'Temperature (C)' | 'Dissipated (W)' | 'Absorbed from environment (W)' | 'Radiated to space (W)' | 'Conducted to other nodes (W)' | 
+4: 'ADCS' | 245.469891 | -27.6801087 | 5.85 | 81.6 | 87.4970838 | -0.0470837703 | 
+5: 'DH' | 245.564059 | -27.5859411 | 6 | 81.6 | 87.6314241 | -0.0314241206 | 
+6: 'EPS' | 245.721075 | -27.4289253 | 8 | 81.6 | 87.8557683 | 1.74423166 | 
+7: 'PL' | 242.389627 | -30.7603729 | 0 | 81.6 | 83.1872522 | -1.58725216 | 
+8: 'STRUCT' | 242.232684 | -30.9173161 | 0 | 81.6 | 82.9720119 | -1.37201193 | 
+9: 'THERM' | 244.819765 | -28.3302354 | 6 | 81.6 | 86.573816 | 1.02618398 | 
+10: 'TTC' | 245.354477 | -27.7955227 | 6 | 81.6 | 87.3326437 | 0.267356347 | 
+11: 'Mode safe; limit set: operating. Largest node imbalance after solving: below 0.000001 W.' |  |  |  |  |  |  | 
+13: 'Unit temperature limits, case cold (operating)' |  |  |  |  |  |  | 
+14: 'Unit' | 'Node' | 'Temperature (K)' | 'Lower limit (K)' | 'Upper limit (K)' | 'Headroom to lower (K)' | 'Headroom to upper (K)' | 'Status'
+15: 'adapter' | 'STRUCT' | 242.232684 | 233.15 | 343.15 | 9.08268393 | 100.917316 | 'ok'
+16: 'adcs' | 'ADCS' | 245.469891 | 233.15 | 343.15 | 12.3198913 | 97.6801087 | 'ok'
+17: 'battery' | 'EPS' | 245.721075 | 233.15 | 343.15 | 12.5710747 | 97.4289253 | 'ok'
+18: 'camera' | 'PL' | 242.389627 | 233.15 | 343.15 | 9.23962713 | 100.760373 | 'ok'
+19: 'eps' | 'EPS' | 245.721075 | 233.15 | 343.15 | 12.5710747 | 97.4289253 | 'ok'
+20: 'gnss' | 'ADCS' | 245.469891 | 233.15 | 343.15 | 12.3198913 | 97.6801087 | 'ok'
+21: 'harness' | 'STRUCT' | 242.232684 | 233.15 | 343.15 | 9.08268393 | 100.917316 | 'ok'
+22: 'heaters' | 'THERM' | 244.819765 | 233.15 | 343.15 | 11.6697646 | 98.3302354 | 'ok'
+23: 'magnetorquers' | 'ADCS' | 245.469891 | 233.15 | 343.15 | 12.3198913 | 97.6801087 | 'ok'
+24: 'obc' | 'DH' | 245.564059 | 233.15 | 343.15 | 12.4140589 | 97.5859411 | 'ok'
+25: 'pdu_data' | 'DH' | 245.564059 | 233.15 | 343.15 | 12.4140589 | 97.5859411 | 'ok'
+26: 'radio' | 'TTC' | 245.354477 | 233.15 | 332.15 | 12.2044773 | 86.7955227 | 'ok'
+27: 'reaction_wheels' | 'ADCS' | 245.469891 | 233.15 | 343.15 | 12.3198913 | 97.6801087 | 'ok'
+28: 'solar_array' | 'EPS' | 245.721075 | 233.15 | 343.15 | 12.5710747 | 97.4289253 | 'ok'
+29: 'star_tracker' | 'ADCS' | 245.469891 | 233.15 | 343.15 | 12.3198913 | 97.6801087 | 'ok'
+30: 'structure' | 'STRUCT' | 242.232684 | 233.15 | 343.15 | 9.08268393 | 100.917316 | 'ok'
+31: 'sun_sensors' | 'ADCS' | 245.469891 | 233.15 | 343.15 | 12.3198913 | 97.6801087 | 'ok'
+32: 'xband_tx' | 'PL' | 242.389627 | 233.15 | 343.15 | 9.23962713 | 100.760373 | 'ok'
+33: 'Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).' |  |  |  |  |  |  | 
+## sheet Case hot rows=33 cols=8
+1: 'Sunlight with the highest-power mode.' |  |  |  |  |  |  | 
+2: 'Node temperatures, case hot' |  |  |  |  |  |  | 
+3: 'Node' | 'Temperature (K)' | 'Temperature (C)' | 'Dissipated (W)' | 'Absorbed from environment (W)' | 'Radiated to space (W)' | 'Conducted to other nodes (W)' | 
+4: 'ADCS' | 334.750017 | 61.6000174 | 24.7 | 278.4 | 302.609876 | 0.49012434 | 
+5: 'DH' | 333.769769 | 60.6197688 | 21 | 278.4 | 299.080884 | 0.319116288 | 
+6: 'EPS' | 332.151288 | 59.0012875 | 12 | 278.4 | 293.321856 | -2.92185621 | 
+7: 'PL' | 336.376519 | 63.2265187 | 36 | 278.4 | 308.534228 | 5.86577238 | 
+8: 'STRUCT' | 328.870205 | 55.7202051 | 0 | 278.4 | 281.902404 | -3.50240445 | 
+9: 'THERM' | 328.3687 | 55.2187004 | 1 | 278.4 | 280.186806 | -0.786805703 | 
+10: 'TTC' | 329.440807 | 56.2908071 | 6 | 278.4 | 283.863947 | 0.536053354 | 
+11: 'Mode imaging; limit set: operating. Largest node imbalance after solving: below 0.000001 W.' |  |  |  |  |  |  | 
+13: 'Unit temperature limits, case hot (operating)' |  |  |  |  |  |  | 
+14: 'Unit' | 'Node' | 'Temperature (K)' | 'Lower limit (K)' | 'Upper limit (K)' | 'Headroom to lower (K)' | 'Headroom to upper (K)' | 'Status'
+15: 'adapter' | 'STRUCT' | 328.870205 | 233.15 | 343.15 | 95.7202051 | 14.2797949 | 'ok'
+16: 'adcs' | 'ADCS' | 334.750017 | 233.15 | 343.15 | 101.600017 | 8.39998256 | 'ok'
+17: 'battery' | 'EPS' | 332.151288 | 233.15 | 343.15 | 99.0012875 | 10.9987125 | 'ok'
+18: 'camera' | 'PL' | 336.376519 | 233.15 | 343.15 | 103.226519 | 6.77348133 | 'ok'
+19: 'eps' | 'EPS' | 332.151288 | 233.15 | 343.15 | 99.0012875 | 10.9987125 | 'ok'
+20: 'gnss' | 'ADCS' | 334.750017 | 233.15 | 343.15 | 101.600017 | 8.39998256 | 'ok'
+21: 'harness' | 'STRUCT' | 328.870205 | 233.15 | 343.15 | 95.7202051 | 14.2797949 | 'ok'
+22: 'heaters' | 'THERM' | 328.3687 | 233.15 | 343.15 | 95.2187004 | 14.7812996 | 'ok'
+23: 'magnetorquers' | 'ADCS' | 334.750017 | 233.15 | 343.15 | 101.600017 | 8.39998256 | 'ok'
+24: 'obc' | 'DH' | 333.769769 | 233.15 | 343.15 | 100.619769 | 9.38023124 | 'ok'
+25: 'pdu_data' | 'DH' | 333.769769 | 233.15 | 343.15 | 100.619769 | 9.38023124 | 'ok'
+26: 'radio' | 'TTC' | 329.440807 | 233.15 | 332.15 | 96.2908071 | 2.70919292 | 'margin'
+27: 'reaction_wheels' | 'ADCS' | 334.750017 | 233.15 | 343.15 | 101.600017 | 8.39998256 | 'ok'
+28: 'solar_array' | 'EPS' | 332.151288 | 233.15 | 343.15 | 99.0012875 | 10.9987125 | 'ok'
+29: 'star_tracker' | 'ADCS' | 334.750017 | 233.15 | 343.15 | 101.600017 | 8.39998256 | 'ok'
+30: 'structure' | 'STRUCT' | 328.870205 | 233.15 | 343.15 | 95.7202051 | 14.2797949 | 'ok'
+31: 'sun_sensors' | 'ADCS' | 334.750017 | 233.15 | 343.15 | 101.600017 | 8.39998256 | 'ok'
+32: 'xband_tx' | 'PL' | 336.376519 | 233.15 | 343.15 | 103.226519 | 6.77348133 | 'ok'
+33: 'Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).' |  |  |  |  |  |  | 
+## sheet Mode charging rows=40 cols=9
+1: 'Units in mode Charging' |  |  |  |  |  |  |  | 
+2: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+3: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+4: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'charging' | 5 | 1 | 5 | 7
+5: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+6: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+7: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'charging' | 14 | 1 | 14 | 20
+8: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'charging' | 1.2 | 1 | 1.2 | 1.8
+9: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+10: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'charging' | 1.8 | 1 | 1.8 | 16
+11: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'charging' | 0.2 | 1 | 0.2 | 3
+12: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'charging' | 6 | 1 | 6 | 8
+13: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'charging' | 4 | 1 | 4 | 6
+14: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'charging' | 6 | 1 | 6 | 8
+15: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'charging' | 7.2 | 1 | 7.2 | 30
+16: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+17: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'charging' | 3.5 | 1 | 3.5 | 5
+18: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+19: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'charging' | 0.4 | 1 | 0.4 | 0.5
+20: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+22: 'By subsystem' |  |  |  |  |  |  |  | 
+23: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+24: 'ADCS' | 17.5 | 47.3 |  |  |  |  |  | 
+25: 'DH' | 10 | 14 |  |  |  |  |  | 
+26: 'EPS' | 14 | 20 |  |  |  |  |  | 
+27: 'PL' | 0 | 0 |  |  |  |  |  | 
+28: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+29: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+30: 'TTC' | 6 | 8 |  |  |  |  |  | 
+32: 'By thermal node' |  |  |  |  |  |  |  | 
+33: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+34: 'ADCS' | 17.5 | 47.3 |  |  |  |  |  | 
+35: 'DH' | 10 | 14 |  |  |  |  |  | 
+36: 'EPS' | 14 | 20 |  |  |  |  |  | 
+37: 'PL' | 0 | 0 |  |  |  |  |  | 
+38: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+39: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+40: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Mode downlink rows=40 cols=9
+1: 'Units in mode Downlink' |  |  |  |  |  |  |  | 
+2: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+3: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+4: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'downlink' | 6 | 1 | 6 | 8
+5: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+6: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+7: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'downlink' | 12 | 1 | 12 | 16
+8: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'downlink' | 1.2 | 1 | 1.2 | 1.8
+9: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+10: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'downlink' | 1.8 | 1 | 1.8 | 16
+11: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+12: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'downlink' | 11 | 1 | 11 | 15
+13: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'downlink' | 9 | 1 | 9 | 14
+14: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'downlink' | 28 | 0.7 | 19.6 | 28
+15: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'downlink' | 7.2 | 1 | 7.2 | 30
+16: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+17: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'downlink' | 3.5 | 1 | 3.5 | 5
+18: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+19: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'downlink' | 0.4 | 1 | 0.4 | 0.5
+20: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'downlink' | 55 | 0.5 | 27.5 | 35
+22: 'By subsystem' |  |  |  |  |  |  |  | 
+23: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+24: 'ADCS' | 18.3 | 45.3 |  |  |  |  |  | 
+25: 'DH' | 20 | 29 |  |  |  |  |  | 
+26: 'EPS' | 12 | 16 |  |  |  |  |  | 
+27: 'PL' | 27.5 | 35 |  |  |  |  |  | 
+28: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+29: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+30: 'TTC' | 19.6 | 28 |  |  |  |  |  | 
+32: 'By thermal node' |  |  |  |  |  |  |  | 
+33: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+34: 'ADCS' | 18.3 | 45.3 |  |  |  |  |  | 
+35: 'DH' | 20 | 29 |  |  |  |  |  | 
+36: 'EPS' | 12 | 16 |  |  |  |  |  | 
+37: 'PL' | 27.5 | 35 |  |  |  |  |  | 
+38: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+39: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+40: 'TTC' | 19.6 | 28 |  |  |  |  |  | 
+## sheet Mode imaging rows=40 cols=9
+1: 'Units in mode Imaging' |  |  |  |  |  |  |  | 
+2: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+3: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+4: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'imaging' | 7 | 1 | 7 | 10
+5: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+6: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'imaging' | 36 | 1 | 36 | 80
+7: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'imaging' | 12 | 1 | 12 | 16
+8: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'imaging' | 1.2 | 1 | 1.2 | 1.8
+9: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+10: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'imaging' | 1 | 1 | 1 | 16
+11: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+12: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'imaging' | 12 | 1 | 12 | 16
+13: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'imaging' | 9 | 1 | 9 | 14
+14: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'imaging' | 6 | 1 | 6 | 8
+15: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'imaging' | 12.6 | 1 | 12.6 | 40
+16: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+17: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'imaging' | 3.5 | 1 | 3.5 | 5
+18: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+19: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'imaging' | 0.4 | 1 | 0.4 | 0.5
+20: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+22: 'By subsystem' |  |  |  |  |  |  |  | 
+23: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+24: 'ADCS' | 24.7 | 57.3 |  |  |  |  |  | 
+25: 'DH' | 21 | 30 |  |  |  |  |  | 
+26: 'EPS' | 12 | 16 |  |  |  |  |  | 
+27: 'PL' | 36 | 80 |  |  |  |  |  | 
+28: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+29: 'THERM' | 1 | 16 |  |  |  |  |  | 
+30: 'TTC' | 6 | 8 |  |  |  |  |  | 
+32: 'By thermal node' |  |  |  |  |  |  |  | 
+33: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+34: 'ADCS' | 24.7 | 57.3 |  |  |  |  |  | 
+35: 'DH' | 21 | 30 |  |  |  |  |  | 
+36: 'EPS' | 12 | 16 |  |  |  |  |  | 
+37: 'PL' | 36 | 80 |  |  |  |  |  | 
+38: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+39: 'THERM' | 1 | 16 |  |  |  |  |  | 
+40: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Mode nominal rows=40 cols=9
+1: 'Units in mode Nominal' |  |  |  |  |  |  |  | 
+2: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+3: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+4: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'nominal' | 6 | 1 | 6 | 8
+5: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+6: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+7: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'nominal' | 12 | 1 | 12 | 16
+8: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'nominal' | 1.2 | 1 | 1.2 | 1.8
+9: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+10: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'nominal' | 1.8 | 1 | 1.8 | 16
+11: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'nominal' | 0.2 | 1 | 0.2 | 3
+12: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'nominal' | 10 | 1 | 10 | 14
+13: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'nominal' | 4 | 1 | 4 | 6
+14: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'nominal' | 6 | 1 | 6 | 8
+15: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'nominal' | 7.2 | 1 | 7.2 | 30
+16: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+17: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'nominal' | 3.5 | 1 | 3.5 | 5
+18: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+19: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'nominal' | 0.4 | 1 | 0.4 | 0.5
+20: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+22: 'By subsystem' |  |  |  |  |  |  |  | 
+23: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+24: 'ADCS' | 18.5 | 48.3 |  |  |  |  |  | 
+25: 'DH' | 14 | 20 |  |  |  |  |  | 
+26: 'EPS' | 12 | 16 |  |  |  |  |  | 
+27: 'PL' | 0 | 0 |  |  |  |  |  | 
+28: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+29: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+30: 'TTC' | 6 | 8 |  |  |  |  |  | 
+32: 'By thermal node' |  |  |  |  |  |  |  | 
+33: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+34: 'ADCS' | 18.5 | 48.3 |  |  |  |  |  | 
+35: 'DH' | 14 | 20 |  |  |  |  |  | 
+36: 'EPS' | 12 | 16 |  |  |  |  |  | 
+37: 'PL' | 0 | 0 |  |  |  |  |  | 
+38: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+39: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+40: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Mode safe rows=40 cols=9
+1: 'Units in mode Safe' |  |  |  |  |  |  |  | 
+2: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+3: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+4: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'safe' | 4 | 1 | 4 | 6
+5: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+6: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+7: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'safe' | 8 | 1 | 8 | 10
+8: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+9: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+10: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'safe' | 6 | 1 | 6 | 16
+11: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'safe' | 0.45 | 1 | 0.45 | 3
+12: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'safe' | 6 | 1 | 6 | 8
+13: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'off' | 0 | 1 | 0 | 0
+14: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'safe' | 6 | 1 | 6 | 8
+15: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'safe' | 1 | 1 | 1 | 12
+16: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+17: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+18: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+19: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'safe' | 0.4 | 1 | 0.4 | 0.5
+20: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+22: 'By subsystem' |  |  |  |  |  |  |  | 
+23: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+24: 'ADCS' | 5.85 | 21.5 |  |  |  |  |  | 
+25: 'DH' | 6 | 8 |  |  |  |  |  | 
+26: 'EPS' | 8 | 10 |  |  |  |  |  | 
+27: 'PL' | 0 | 0 |  |  |  |  |  | 
+28: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+29: 'THERM' | 6 | 16 |  |  |  |  |  | 
+30: 'TTC' | 6 | 8 |  |  |  |  |  | 
+32: 'By thermal node' |  |  |  |  |  |  |  | 
+33: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+34: 'ADCS' | 5.85 | 21.5 |  |  |  |  |  | 
+35: 'DH' | 6 | 8 |  |  |  |  |  | 
+36: 'EPS' | 8 | 10 |  |  |  |  |  | 
+37: 'PL' | 0 | 0 |  |  |  |  |  | 
+38: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+39: 'THERM' | 6 | 16 |  |  |  |  |  | 
+40: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Assumptions rows=67 cols=5
+1: 'Configuration numbers used' |  |  |  | 
+2: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
+3: 'Space temperature' | 3 | 'K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+4: 'Temperature margin' | 5 | 'K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+5: 'Conductance ADCS - DH' | 0.5 | 'W/K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+6: 'Conductance DH - EPS' | 0.5 | 'W/K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+7: 'Conductance EPS - PL' | 0.5 | 'W/K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+8: 'Conductance PL - STRUCT' | 0.5 | 'W/K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+9: 'Conductance STRUCT - THERM' | 0.5 | 'W/K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+10: 'Conductance THERM - TTC' | 0.5 | 'W/K' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+11: 'Solar flux, case cold' | 0 | 'W/m2' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+12: 'Albedo, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+13: 'Earth infrared, case cold' | 240 | 'W/m2' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+14: 'Emissivity, ADCS panel' | 0.85 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+15: 'Absorptivity, ADCS panel' | 0.6 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+16: 'Solar view, ADCS panel, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+17: 'Earth view, ADCS panel, case cold' | 0.8 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+18: 'Emissivity, DH panel' | 0.85 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+19: 'Absorptivity, DH panel' | 0.6 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+20: 'Solar view, DH panel, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+21: 'Earth view, DH panel, case cold' | 0.8 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+22: 'Emissivity, EPS panel' | 0.85 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+23: 'Absorptivity, EPS panel' | 0.6 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+24: 'Solar view, EPS panel, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+25: 'Earth view, EPS panel, case cold' | 0.8 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+26: 'Emissivity, PL panel' | 0.85 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+27: 'Absorptivity, PL panel' | 0.6 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+28: 'Solar view, PL panel, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+29: 'Earth view, PL panel, case cold' | 0.8 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+30: 'Emissivity, STRUCT panel' | 0.85 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+31: 'Absorptivity, STRUCT panel' | 0.6 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+32: 'Solar view, STRUCT panel, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+33: 'Earth view, STRUCT panel, case cold' | 0.8 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+34: 'Emissivity, THERM panel' | 0.85 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+35: 'Absorptivity, THERM panel' | 0.6 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+36: 'Solar view, THERM panel, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+37: 'Earth view, THERM panel, case cold' | 0.8 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+38: 'Emissivity, TTC panel' | 0.85 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+39: 'Absorptivity, TTC panel' | 0.6 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+40: 'Solar view, TTC panel, case cold' | 0 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+41: 'Earth view, TTC panel, case cold' | 0.8 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+42: 'Solar flux, case hot' | 1400 | 'W/m2' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+43: 'Albedo, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+44: 'Earth infrared, case hot' | 240 | 'W/m2' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+45: 'Solar view, ADCS panel, case hot' | 0.5 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+46: 'Earth view, ADCS panel, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+47: 'Solar view, DH panel, case hot' | 0.5 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+48: 'Earth view, DH panel, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+49: 'Solar view, EPS panel, case hot' | 0.5 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+50: 'Earth view, EPS panel, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+51: 'Solar view, PL panel, case hot' | 0.5 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+52: 'Earth view, PL panel, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+53: 'Solar view, STRUCT panel, case hot' | 0.5 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+54: 'Earth view, STRUCT panel, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+55: 'Solar view, THERM panel, case hot' | 0.5 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+56: 'Earth view, THERM panel, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+57: 'Solar view, TTC panel, case hot' | 0.5 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+58: 'Earth view, TTC panel, case hot' | 0.3 | 'ratio' | 'Synthetic example value; not from a data sheet or a standard.' | 'sourced'
+60: 'Equations' |  |  |  | 
+61: 'ID' | 'Name' | 'Formula' | 'Source' | 
+62: 'TH-DISS' | 'Heat dissipated by a unit' | 'Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak: P_peak * ratio)' | 'SOURCE_MISSING' | 
+63: 'TH-ABS' | 'Heat absorbed by a surface' | 'Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth * E_IR)' | 'SOURCE_MISSING' | 
+64: 'TH-BAL' | 'Steady-state node heat balance' | 'sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i = 0' | 'SOURCE_MISSING' | 
+65: 'TH-SB' | 'Stefan-Boltzmann constant' | 'sigma = 5.670374419e-8 W m^-2 K^-4' | 'CODATA 2018 / SI 2019 (exact from h, k, c)' | 
+66: 'TH-LIMIT' | 'Unit temperature limit check' | 'exceeded when T < T_min or T > T_max; margin check when T - T_min or T_max - T < temperature_margin_k' | 'SOURCE_MISSING' | 
+67: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
+## sheet Problems rows=8 cols=6
+1: 'Problems and open items' |  |  |  |  | 
+2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+3: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:9' | 'classes.class_a.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+4: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:17' | 'classes.class_b.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+5: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:25' | 'classes.class_c.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+6: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | 'system_mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+7: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | 'limits[0].limit_kg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+8: 'error' | 'THERMAL_MARGIN_INSUFFICIENT' | 'units/radio.yaml' | 'temperature_limits (case hot)' | "Unit 'radio' is within its operating limits in a thermal case but closer than the required temperature margin." | 'The margin is set in config/thermal_environment.yaml.'
+## sheet Provenance rows=10 cols=2
+1: 'Provenance' | 
+2: 'Item' | 'Value'
+3: 'Tool' | 'System Budget Studio 1.0.0'
+4: 'Python' | '3.x'
+5: 'Libraries' | 'pinned for-golden-tests'
+6: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs'
+7: 'Project revision' | '1'
+8: 'Scenario' | 'static (no scenario)'
+9: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+10: 'User' | 'Golden User'

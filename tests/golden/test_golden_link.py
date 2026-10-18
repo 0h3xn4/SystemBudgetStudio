@@ -41,7 +41,7 @@ def build(name: str):  # type: ignore[no-untyped-def]
     return static, link_output(project, static, prov, problems, passes)
 
 
-NAMES = ["microsat_150kg", "cubesat_3u", "synthetic_passes"]
+NAMES = ["microsat_150kg", "microsat_250kg", "synthetic_passes"]
 
 
 @pytest.mark.parametrize("name", NAMES)

@@ -1,0 +1,23 @@
+schema_version: 1
+kind: spacecraft_mode
+name: Nominal
+description: Housekeeping.
+assignments:
+  adapter: off
+  adcs: nominal
+  battery: off
+  camera: off
+  eps: nominal
+  gnss: nominal
+  harness: off
+  heaters: nominal
+  magnetorquers: nominal
+  obc: nominal
+  pdu_data: nominal
+  radio: nominal
+  reaction_wheels: nominal
+  solar_array: off
+  star_tracker: nominal
+  structure: off
+  sun_sensors: nominal
+  xband_tx: off

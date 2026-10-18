@@ -19,6 +19,7 @@ from budget_gui import timeline_view as tv
 from budget_gui.main_window import MainWindow
 from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.theme import WHITE, apply_theme, stylesheet
+from tests.gui_helpers import set_mode_value
 
 pytestmark = pytest.mark.gui
 
@@ -27,7 +28,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     root = tmp_path / "p"
     path = root / "scenarios/one_day.yaml"
     path.write_text(
@@ -140,10 +141,8 @@ def test_a_unit_edit_keeps_the_comments_of_the_file(window: MainWindow, project:
         encoding="utf-8",
     )
     window.session.reload()
-    editor = window.open_unit_editor("camera")
-    assert editor is not None
-    editor.table.item(1, 1).setText("2.5")
-    assert editor.save()
+    assert set_mode_value(window, "camera", "imaging", "avg_power_w", "2.5")
+    assert window.save_grids()
     saved = path.read_text(encoding="utf-8")
     assert saved.startswith("# source: vendor datasheet rev C\n") and "  # measured\n" in saved
     assert "avg_power_w: 2.5" in saved and saved.index("name:") < saved.index("modes:")
@@ -172,17 +171,15 @@ def test_a_scenario_edit_keeps_the_comments_of_the_file(window: MainWindow, proj
 def test_a_failed_unit_save_leaves_the_file_and_no_temporary_file(
     window: MainWindow, project: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    editor = window.open_unit_editor("camera")
-    assert editor is not None
     before = (project / "units/camera.yaml").read_bytes()
-    editor.table.item(1, 1).setText("2.5")
+    set_mode_value(window, "camera", "imaging", "avg_power_w", "2.5")
 
     def refuse(*_args: object, **_kwargs: object) -> None:
         raise OSError("disk full")
 
     monkeypatch.setattr("budget_core.reports.files.os.replace", refuse)
-    assert editor.save() is False
-    assert "could not be written" in editor.error_label.text()
+    assert window.save_grids() is False
+    assert "could not be written" in window.modes_page.feedback_label.text()
     assert (project / "units/camera.yaml").read_bytes() == before
     assert not [p for p in (project / "units").iterdir() if p.name.endswith(".tmp")]
 
@@ -368,7 +365,7 @@ def test_ctrl_s_on_the_scenario_tab_saves_the_scenario(window: MainWindow, proje
 
 
 def test_the_tree_selection_survives_a_reload(window: MainWindow) -> None:
-    item = window.tree.find_item("units/gnss.yaml", kind="file")
+    item = window.tree.find_item("units/gnss.yaml", kind="unit")
     assert item is not None
     window.tree.setCurrentItem(item)
     chosen = window.tree.current_unit_id()
@@ -397,14 +394,12 @@ def test_menu_mnemonics_are_unique(window: MainWindow) -> None:
 def test_a_cell_with_an_underscore_or_a_decimal_comma_is_not_a_number(
     window: MainWindow,
 ) -> None:
-    editor = window.open_unit_editor("camera")
-    assert editor is not None
-    editor.table.item(1, 1).setText("1_0")
-    assert editor.error_label.text() and editor.save() is False
-    editor.table.item(1, 1).setText("1,5")
-    assert "decimal point" in editor.error_label.text()
-    editor.table.item(1, 1).setText("2.4")
-    assert editor.error_label.text() == ""
+    set_mode_value(window, "camera", "imaging", "avg_power_w", "1_0")
+    assert window.modes_page.problem_label.text() and window.save_grids() is False
+    set_mode_value(window, "camera", "imaging", "avg_power_w", "1,5")
+    assert "decimal point" in window.modes_page.problem_label.text()
+    set_mode_value(window, "camera", "imaging", "avg_power_w", "60")
+    assert window.modes_page.problem_label.text() == ""
 
 
 # ---- GUI-30: the Problems panel ---

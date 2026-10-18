@@ -1,0 +1,50 @@
+schema_version: 2
+kind: unit
+name: Power conditioning unit
+subsystem: EPS
+mass_kg: 10.0
+bus: main
+maturity: class_a
+modes:
+  - name: safe
+    avg_power_w: 8.0
+    peak_power_w: 10.0
+    duty_cycle_ratio: 1.0
+    heat_dissipation_ratio: 1.0
+  - name: nominal
+    avg_power_w: 12.0
+    peak_power_w: 16.0
+    duty_cycle_ratio: 1.0
+    heat_dissipation_ratio: 1.0
+  - name: imaging
+    avg_power_w: 12.0
+    peak_power_w: 16.0
+    duty_cycle_ratio: 1.0
+    heat_dissipation_ratio: 1.0
+  - name: downlink
+    avg_power_w: 12.0
+    peak_power_w: 16.0
+    duty_cycle_ratio: 1.0
+    heat_dissipation_ratio: 1.0
+  - name: charging
+    avg_power_w: 14.0
+    peak_power_w: 20.0
+    duty_cycle_ratio: 1.0
+    heat_dissipation_ratio: 1.0
+mass_properties:
+  position_m:
+    - -0.2
+    - 0.0
+    - 0.4
+  inertia:
+    ixx_kgm2: 0.068333
+    iyy_kgm2: 0.097333
+    izz_kgm2: 0.141667
+    ixy_kgm2: 0.0
+    ixz_kgm2: 0.0
+    iyz_kgm2: 0.0
+temperature_limits:
+  operating_min_k: 233.15
+  operating_max_k: 343.15
+  survival_min_k: 218.15
+  survival_max_k: 358.15

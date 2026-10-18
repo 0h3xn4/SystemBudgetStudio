@@ -11,36 +11,36 @@ solar_array:
         - 1.0
         - 0.0
         - 0.0
-      strings: 2
-      cells_per_string: 3
+      strings: 6
+      cells_per_string: 24
     - name: minus_x
       normal_body:
         - -1.0
         - 0.0
         - 0.0
-      strings: 2
-      cells_per_string: 3
+      strings: 6
+      cells_per_string: 24
     - name: plus_y
       normal_body:
         - 0.0
         - 1.0
         - 0.0
-      strings: 2
-      cells_per_string: 3
+      strings: 3
+      cells_per_string: 16
     - name: minus_y
       normal_body:
         - 0.0
         - -1.0
         - 0.0
-      strings: 2
-      cells_per_string: 3
+      strings: 3
+      cells_per_string: 16
     - name: minus_z
       normal_body:
         - 0.0
         - 0.0
         - -1.0
-      strings: 1
-      cells_per_string: 2
+      strings: 2
+      cells_per_string: 10
   solar_irradiance_wm2:
     value: null
     source: TBD
@@ -86,8 +86,8 @@ battery:
     value: null
     source: TBD
     note: "Placeholder: supply the project's value."
-  cells_in_series: 2
-  cells_in_parallel: 2
+  cells_in_series: 8
+  cells_in_parallel: 4
   charge_efficiency_ratio:
     value: null
     source: TBD

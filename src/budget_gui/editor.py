@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -32,9 +31,7 @@ from budget_core.io.roundtrip import (
     stamp_of,
     write_bytes_atomic,
 )
-from budget_core.model import Unit
 from budget_gui import theme
-from budget_gui.unit_editor import UnitEditor
 
 
 class FileChangedError(Exception):
@@ -191,7 +188,6 @@ class EditorTabs(QTabWidget):
         self.setTabsClosable(True)
         self.tabCloseRequested.connect(self._close_tab)
         self._editors: dict[str, YamlEditor] = {}
-        self._unit_editors: dict[str, UnitEditor] = {}
         self._modifiable: list[Any] = []  # fixed widgets with is_modified() and discard_changes()
 
     def add_fixed(self, widget: QWidget, title: str) -> None:
@@ -228,17 +224,13 @@ class EditorTabs(QTabWidget):
 
     def _close_tab(self, index: int) -> None:
         widget = self.widget(index)
-        modified = (isinstance(widget, YamlEditor) and widget.document().isModified()) or (
-            isinstance(widget, UnitEditor) and widget.is_modified()
-        )
-        if modified and not self.confirm_discard("This file has unsaved changes."):
+        if not isinstance(widget, YamlEditor):
+            return  # the grids and the scenario are fixed tabs
+        if widget.document().isModified() and not self.confirm_discard(
+            "This file has unsaved changes."
+        ):
             return
-        if isinstance(widget, YamlEditor):
-            self._editors.pop(widget.rel_path, None)
-        elif isinstance(widget, UnitEditor):
-            self._unit_editors.pop(widget.unit_id, None)
-        else:
-            return
+        self._editors.pop(widget.rel_path, None)
         self.removeTab(index)
         widget.deleteLater()
 
@@ -252,59 +244,28 @@ class EditorTabs(QTabWidget):
         )
         return answer == QMessageBox.StandardButton.Discard
 
-    def add_unit_editor(self, unit_id: str, editor: UnitEditor) -> None:
-        self._unit_editors[unit_id] = editor
-        index = self.addTab(editor, f"{unit_id} (modes)")
-        editor.modified_changed.connect(lambda _m, e=editor: self._retitle_unit(e))
-        self.setTabToolTip(index, editor.rel_path)
-        self.setCurrentWidget(editor)
-
-    def unit_editor(self, unit_id: str) -> UnitEditor | None:
-        return self._unit_editors.get(unit_id)
-
-    def current_unit_editor(self) -> UnitEditor | None:
-        widget = self.currentWidget()
-        return widget if isinstance(widget, UnitEditor) else None
-
-    def _retitle_unit(self, editor: UnitEditor) -> None:
-        index = self.indexOf(editor)
-        if index >= 0:
-            self.setTabText(
-                index, f"{editor.unit_id} (modes)" + ("*" if editor.is_modified() else "")
-            )
-        self.dirty_changed.emit()
-
     def register_modifiable(self, widget: Any) -> None:
         self._modifiable.append(widget)
 
     def has_unsaved_changes(self) -> bool:
-        return (
-            any(e.document().isModified() for e in self._editors.values())
-            or any(u.is_modified() for u in self._unit_editors.values())
-            or any(w.is_modified() for w in self._modifiable)
+        return any(e.document().isModified() for e in self._editors.values()) or any(
+            w.is_modified() for w in self._modifiable
         )
 
     def discard_all_changes(self) -> None:
         """Forget unsaved edits (after the user chose 'close without saving')."""
         for editor in self._editors.values():
             editor.document().setModified(False)
-        for unit_editor in self._unit_editors.values():
-            unit_editor.discard_changes()
         for widget in self._modifiable:
             widget.discard_changes()
 
     def close_all_files(self) -> None:
         for rel in list(self._editors):
             self._close_tab(self.indexOf(self._editors[rel]))
-        for unit_id in list(self._unit_editors):
-            self._close_tab(self.indexOf(self._unit_editors[unit_id]))
 
-    def reload_clean_files(self, units: Mapping[str, Unit] | None = None) -> None:
-        """After a project reload, refresh the editors that have no unsaved edits and whose file
-        changed: text editors from the file, table editors from `units` (the reloaded project).
-        An editor whose file is as it left it is not touched (cursor and undo history stay)."""
+    def reload_clean_files(self) -> None:
+        """After a project reload, refresh the text editors that have no unsaved edits and whose
+        file changed; an editor whose file is as it left it is not touched (cursor and undo
+        history stay). The grids follow the project through their own document."""
         for editor in self._editors.values():
             editor.refresh_from_disk()
-        for unit_id, unit_editor in self._unit_editors.items():
-            if units is not None and unit_id in units:
-                unit_editor.reload(units[unit_id])

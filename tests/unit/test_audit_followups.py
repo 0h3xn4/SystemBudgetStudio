@@ -20,7 +20,7 @@ FIXED = ["--user", "Test User", "--date", "2026-01-02T03:04:05Z"]
 @pytest.fixture
 def root(tmp_path: Path) -> Path:
     dest = tmp_path / "p"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", dest)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", dest)
     return dest
 
 

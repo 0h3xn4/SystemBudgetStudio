@@ -47,7 +47,7 @@ def items_for(example: str, phase: str) -> list[tuple[float, list[float], dict[s
         ("microsat_150kg", "launch"),
         ("microsat_150kg", "bol"),
         ("microsat_150kg", "eol"),
-        ("cubesat_3u", "launch"),
+        ("microsat_250kg", "launch"),
         ("stress_200_units", "eol"),
     ],
 )

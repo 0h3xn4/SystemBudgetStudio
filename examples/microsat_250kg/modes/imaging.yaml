@@ -1,0 +1,23 @@
+schema_version: 1
+kind: spacecraft_mode
+name: Imaging
+description: Camera on.
+assignments:
+  adapter: off
+  adcs: imaging
+  battery: off
+  camera: imaging
+  eps: imaging
+  gnss: imaging
+  harness: off
+  heaters: imaging
+  magnetorquers: off
+  obc: imaging
+  pdu_data: imaging
+  radio: imaging
+  reaction_wheels: imaging
+  solar_array: off
+  star_tracker: imaging
+  structure: off
+  sun_sensors: imaging
+  xband_tx: off
