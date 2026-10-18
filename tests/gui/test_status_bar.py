@@ -20,8 +20,9 @@ def test_the_segments_say_what_they_hold(qtbot) -> None:  # type: ignore[no-unty
     qtbot.addWidget(bar)
     assert bar.path_label.text() == "No project open" and not bar.last_run_label.text()
     assert f"{__version__}" in bar.version_label.text()
-    bar.set_project_path(Path("/work/projects/cubesat"))
-    assert bar.path_label.text() == "/work/projects/cubesat"
+    folder = Path("/work/projects/cubesat")
+    bar.set_project_path(folder)
+    assert bar.path_label.text() == str(folder)  # the platform's own separators
     bar.set_last_run(datetime(2026, 10, 13, 14, 2, 11))
     assert bar.last_run_label.text() == "Last run 14:02:11"
     assert "2026-10-13 14:02:11" in bar.last_run_label.toolTip()
