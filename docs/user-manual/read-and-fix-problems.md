@@ -2,7 +2,7 @@
 
 This page explains the messages the tool prints (the **Problems**), how to find the cause, and what to do about the common ones.
 
-**Contents:** [Anatomy](#what-is-in-a-problem-message) · [Severity](#what-do-error-warning-and-info-mean) · [Jump to the cause](#how-do-i-jump-to-the-cause) · [Common problems](#common-problems-and-fixes) · [All codes](#where-are-all-the-codes)
+**Contents:** [Anatomy](#what-is-in-a-problem-message) · [Severity](#what-do-error-warning-and-info-mean) · [Not checked](#what-is-not-checked-in-the-window) · [Jump to the cause](#how-do-i-jump-to-the-cause) · [Common problems](#common-problems-and-fixes) · [All codes](#where-are-all-the-codes)
 
 ## What is in a problem message?
 
@@ -21,9 +21,13 @@ config/margin_policy.yaml:6: warning CONFIG_PLACEHOLDER: This number is a placeh
 | **warning** | Something is open or suspicious: a placeholder, an empty table, a unit without temperature limits | Exit code 0, unless you pass `--strict` (then 1). |
 | **info** | For your information, such as `FILE_MIGRATED` | None. |
 
+## What is "not checked" in the window?
+
+The window shows four classes, not three: the placeholders and the results that depend on them (`CONFIG_PLACEHOLDER`, `RESULT_INCOMPLETE`, and `THERMAL_NO_LIMITS` for a unit without temperature limits) are listed as **Not checked**, apart from the warnings. They are warnings for the command line, as before. The window keeps them apart because they are not defects to fix first: the result shows `n/a`, which is neither a pass nor a fail, and a project with a hundred placeholders should not hide its few real warnings. The **N not checked** link in the status bar lists them. See [placeholders and sources](placeholders-and-sources.md).
+
 ## How do I jump to the cause?
 
-In the window, double-click a row of the **Problems** panel at the bottom: the file opens at the line. On the command line, open the named file and go to the line or field.
+In the window, double-click (or press Enter on) a row of the **Problems** panel, or press **F8** for the next problem: the file opens at the line. The filter box and the class and grouping selectors narrow the list. On the command line, open the named file and go to the line or field.
 
 ## Common problems and fixes
 

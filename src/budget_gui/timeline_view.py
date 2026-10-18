@@ -119,7 +119,9 @@ class PowerTimelineView(QWidget):
         self.shading = QCheckBox("Shade eclipses and passes")
         self.shading.setChecked(True)
         self.compute_button = QPushButton("Compute")
+        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button = QPushButton("Export…")
+        self.export_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)

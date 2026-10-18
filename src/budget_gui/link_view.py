@@ -97,7 +97,9 @@ class LinkPassesView(QWidget):
         self.scenario_combo = QComboBox()
         self.link_combo = QComboBox()
         self.compute_button = QPushButton("Compute")
+        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button = QPushButton("Export…")
+        self.export_button.setProperty("kind", "secondary")  # Run is the primary action
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)

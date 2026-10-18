@@ -509,6 +509,7 @@ class ScenarioView(QWidget):
 
         self.combo = QComboBox()
         self.compute_button = QPushButton("Compute")
+        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
         self.compute_button.clicked.connect(lambda: self.compute())
         self.status = QLabel("")
         self.status.setWordWrap(True)

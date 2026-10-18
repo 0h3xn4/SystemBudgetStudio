@@ -43,6 +43,8 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   provenance.py       tool/library versions, project revision, scenario, date, user
 src/budget_cli/       `budget validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | export-schemas | export-examples`
 src/budget_gui/       PySide6 + Carbon theme; worker threads; no logic beyond presentation
+                      (theme.py colours, main_window.py shell, top_bar.py, workspace.py tabs, project_tree.py,
+                       problems_panel.py, inspector.py, run_controller.py; docs/DESIGN.md)
 ```
 
 Dependency direction: the GUI and the CLI both depend only on `budget_core`. Nothing depends on the GUI.
@@ -109,7 +111,7 @@ Solvers are pure functions: dissipation roll-up, then a steady-state nodal heat 
 
 ## 7. GUI
 
-Carbon g100/white themes via bundled QSS + IBM Plex; main window = project tree (left), tabbed editors (table editors with unit-aware delegates, timeline editor), result plots (a QPainter widget, cursors, eclipse/pass shading; D-068), bottom Problems panel (double-click jumps to the offending editor cell). Runs execute in a `QThread` worker with cancel and progress; the GUI only touches `budget_core` public API and `Problem` objects. Guided mode = wizard over the same API (`budget_core.wizard` builds the project, `budget_gui.guided` is the QWizard; D-086). The Compare tab runs `budget_core.compare_run` in a worker thread (D-084, D-085); Help > User guide shows `budget_core.guide` (D-087). Tracebacks are caught at the top level and replaced by a message and a "save diagnostic (no project content)" option.
+Carbon g100/white themes via bundled QSS + IBM Plex; main window = top bar, seven tabs (Model with the editors; Power, Mass, Thermal, Link, Compare, Reports), project tree (left), Inspector / Problems / Provenance (right); table editors with unit-aware delegates, timeline editor, result plots (a QPainter widget, cursors, eclipse/pass shading; D-068), bottom Problems panel (double-click jumps to the offending editor cell). Runs execute in a `QThread` worker with cancel and progress; the GUI only touches `budget_core` public API and `Problem` objects. Guided mode = wizard over the same API (`budget_core.wizard` builds the project, `budget_gui.guided` is the QWizard; D-086). The Compare tab runs `budget_core.compare_run` in a worker thread (D-084, D-085); Help > User guide shows `budget_core.guide` (D-087). Tracebacks are caught at the top level and replaced by a message and a "save diagnostic (no project content)" option.
 
 ## 8. Packaging, CI, supply chain
 

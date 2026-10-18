@@ -1,8 +1,8 @@
 # UX audit of the current window
 
-Status: **for approval.** Nothing has been redesigned yet. This is step 1 of [the UX standard](UX_STANDARD.md): walk the demo through the window, list what is wrong against the standard, and stop. Approve it (or change it) and the redesign starts with the order in [Plan](#plan).
+Status: **approved; being implemented.** The owner approved the eight decisions and the five conventions ("as recommended"). Step 0 (foundation, D-150) and step 1 (the shell, D-151 to D-156) are done; [the status of each finding](#status-of-the-findings) is at the end. This page is kept as it was written; the table at the end says what changed.
 
-**Contents:** [How this was done](#how-this-was-done) · [Verdict](#verdict) · [What to keep](#what-to-keep) · [Findings](#findings) · [Screenshots](#screenshots) · [Measurements](#measurements) · [Standard against the window](#the-standard-against-the-window) · [Conflicts with project rules](#where-the-standard-meets-the-project-rules-decisions-needed) · [Questions about conventions](#questions-about-conventions) · [Plan](#plan)
+**Contents:** [How this was done](#how-this-was-done) · [Verdict](#verdict) · [What to keep](#what-to-keep) · [Findings](#findings) · [Screenshots](#screenshots) · [Measurements](#measurements) · [Standard against the window](#the-standard-against-the-window) · [Conflicts with project rules](#where-the-standard-meets-the-project-rules-decisions-needed) · [Questions about conventions](#questions-about-conventions) · [Plan](#plan) · [Status of the findings](#status-of-the-findings)
 
 ## How this was done
 
@@ -214,3 +214,30 @@ Each step is one pull request, with before and after screenshots (offscreen), on
 Acceptance per view (from the standard): keyboard only · light and dark · a placeholder-heavy project · 200 units · a week at 1 s · an empty project · 1280 × 720 and 4K · tests green · no hard-coded colours.
 
 **What I need from you before step 0:** the answers to the eight decisions and five questions above (a one-word "as recommended" is enough), and whether the standard should be committed as `docs/UX_STANDARD.md` (I did so for traceability).
+
+## Status of the findings
+
+After step 1 (the shell). *Done* means the finding no longer applies in the window; *partly* names what is left; *open* is untouched. Later steps are in [the plan](#plan).
+
+| Finding | Status | Where |
+|---|---|---|
+| UX-01 top bar | done | project, revision, unsaved marker, one scenario selector, BOL/EOL, Run, status (D-153) |
+| UX-02 no Run | done | Run (Ctrl+R); the views keep an outline Compute |
+| UX-03 revision shown nowhere | done | top bar |
+| UX-04 dirty marker | partly | top bar and window title; the tab star stays. Not on the tree nodes yet |
+| UX-05 file tree, no badges | done | model tree with badges (D-152); no radio or antenna nodes: the model has none |
+| UX-06 Enter does not open | done | Enter opens a tree row and a problem |
+| UX-07 no inspector | partly | Inspector skeleton (file, field, problems); field help, unit, source, range with the editable model (step 2) |
+| UX-08 only the Problems dock | done | Inspector, Problems, Provenance; View menu; Reset layout; the layout is kept (D-154) |
+| UX-09 status bar | done | folder, last run, version, not-checked link |
+| UX-10 one error blanks everything | done | the last good tables stay, with a banner (D-155); the time-domain views are empty with a sentence |
+| UX-11 tab strip | done | seven tabs; files open inside Model |
+| UX-12 empty first screen | open | recent projects and a New button: step 6 |
+| UX-34 Problems panel | done | four classes, icons, filter, grouping, wrapped message (D-151) |
+| UX-38 to UX-40 visual system | done in step 0 (D-150) | |
+| UX-41 keyboard | partly | Ctrl+1 to Ctrl+7, Ctrl+R, F8; Tab no longer trapped in tables; `Ctrl+K` in step 6 |
+| UX-43 progress and Cancel | open | step 3 |
+| UX-44 stale banner | partly | the *out of date* run status; a banner for the failed run and for old results after an error |
+| UX-45 toasts | partly | failed-run banner; toasts for success: later |
+| UX-46 empty states | done | each empty view says why or what to add |
+| all others | open | steps 2 to 6 |

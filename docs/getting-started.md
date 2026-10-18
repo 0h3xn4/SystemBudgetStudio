@@ -185,14 +185,14 @@ Exit code 0: the violation is gone. You have now done the core loop of the tool:
 system-budget-studio demo/cubesat_3u_eps
 ```
 
-You should see the window below: the **project tree** on the left, one **tab per budget** (Power budget, Mass budget, Thermal budget, Link budget, Scenario, Power timeline, Link passes, Compare), and the **Problems** panel at the bottom.
+You should see the window below: the **top bar** (project, revision, scenario, BOL and EOL, **Run** and the run status), the **project tree** on the left, seven **tabs** (Model, Power, Mass, Thermal, Link, Compare, Reports), and on the right the **Inspector**, **Problems** and **Provenance** panels.
 
 ![The Power budget tab of the example CubeSat: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/power-budget.png)
 
-- The **Power budget** tab is the table you saw in the XLSX file.
-- In the **Power timeline** tab click **Compute** to run the scenario you ran above. Hover over a plot to read the values at that time; the wheel zooms, dragging pans, a double-click shows everything again, a click pins a second cursor (the readout then shows differences) and Escape unpins it. The shaded bands are eclipses and passes. Click a row of the **Violations** table to zoom to that interval.
-- Double-click a row of the **Problems** panel to jump to the file and line it names. Double-click a file in the tree to edit it; **Ctrl+S** saves, and the budgets update.
-- **File → Export reports** (Ctrl+E) writes the same files as the command line.
+- **Power → Budget** is the table you saw in the XLSX file; **Mass**, **Thermal** and **Link → Budget** are the other static budgets. Cells with `n/a` have a marker and a tooltip that says which kind of input is missing.
+- Press **Run** (Ctrl+R) to work out the scenario you ran above, the power timeline and the link passes in one go; the chip next to it says when they are up to date. In **Power → Timeline**, hover over a plot to read the values at that time; the wheel zooms, dragging pans, a double-click shows everything again, a click pins a second cursor (the readout then shows differences) and Escape unpins it. The shaded bands are eclipses and passes. Click a row of the **Violations** table to zoom to that interval.
+- Double-click (or Enter on) a row of the **Problems** panel to jump to the file and line it names; **F8** goes to the next problem. Press Enter on a file in the tree to edit it; **Ctrl+S** saves, and the budgets update. If you make a mistake the tables keep the last results that worked, with a yellow banner that says so.
+- **File → Export reports** (Ctrl+E), or the **Reports** tab, writes the same files as the command line.
 - **File → New project (guided)** (Ctrl+N) builds a new project from a sample spacecraft in five short pages.
 
 On Linux without a display (a server, a container) set `QT_QPA_PLATFORM=offscreen` to run the window without showing it. That is only useful for tests: `system-budget-studio --smoke` creates the window and exits.
