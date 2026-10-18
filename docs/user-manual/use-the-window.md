@@ -55,7 +55,7 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | Ctrl+N | New project (guided wizard) |
 | Ctrl+O | Open project |
 | Ctrl+S | Save what you are editing (a text tab, the grids of *Units*, *Power modes* and *Inputs*, or the scenario); it acts only while the **Model** tab is in front |
-| Ctrl+Z / Ctrl+Shift+Z | Undo / redo an edit of the grids (the Edit menu names the step); a text editor keeps its own undo while it has the keyboard |
+| Ctrl+Z / Ctrl+Shift+Z | Undo / redo an edit of the grids or the scenario (the Edit menu names the step); a text editor keeps its own undo while it has the keyboard |
 | Ctrl+C / Ctrl+V | In a grid: copy the selected cells as text with tabs; paste a block (from this or any spreadsheet) |
 | Ctrl+D / Delete | In a grid: fill the selection down from its top cell / empty the optional cells of the selection |
 | F5 | Reload the project from disk (the window stays usable while it loads; the status bar says so) |
@@ -85,7 +85,7 @@ Hover to move a cursor with a readout of every series at that time. The mouse wh
 
 Press Enter (or double-click) on it in the tree. It opens as text in a tab of the **Model** tab; **Ctrl+S** saves, and the project is checked again (the same checks as `budget validate`). Closing a modified tab, opening another project or quitting asks first, so you cannot lose edits by accident. A file that is not valid UTF-8 is refused instead of being damaged. A byte-order mark and Windows line ends in the file are kept. If the file changed on disk after you opened it (another program, a git checkout), saving asks before it overwrites that change; an editor without edits shows the new file by itself.
 
-In **Model → Scenario**, use the rule and segment buttons and **Save scenario**. The grids have a **Save** button and Ctrl+S ([below](#how-do-i-edit-in-the-grids)). Both change only what you edited: comments, the order of the keys and fields the grid does not show stay in the file, and saving without a change leaves the file untouched. Only if a file is in an older layout that cannot be patched is it rewritten whole.
+In **Model → Scenario**, rules and segments are sentences you edit in place ([scenarios](scenarios.md#how-do-i-edit-the-rules-in-the-window)); the grids and the scenario share one undo (Ctrl+Z) and one **Save** button and Ctrl+S ([below](#how-do-i-edit-in-the-grids)), and Save writes every changed file at once. Saving and undo change only what you edited: comments, the order of the keys and fields the grid does not show stay in the file, and saving without a change leaves the file untouched. Only if a file is in an older layout that cannot be patched is it rewritten whole.
 
 ## How do I edit in the grids?
 

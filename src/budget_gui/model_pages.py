@@ -37,10 +37,10 @@ class PowerModesPage(GridPage):
             what="power mode",
             filter_hint="Filter power modes (unit or mode name…)",
         )
-        self.add_button = self._button(
+        self.add_button = self.bar.make_button(
             "Add mode", "plus", "Add a power mode to the unit of the selected row"
         )
-        self.remove_button = self._button(
+        self.remove_button = self.bar.make_button(
             "Remove mode", "trash-2", "Remove the selected power mode (Undo brings it back)"
         )
         self.add_button.clicked.connect(self.add_mode)

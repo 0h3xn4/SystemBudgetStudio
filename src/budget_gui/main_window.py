@@ -89,7 +89,7 @@ class MainWindow(QMainWindow):
         self.thermal_view = PowerView()
         self.link_view = PowerView()
         self.editors = EditorTabs()  # the Model tab: the grids, the scenario and the open files
-        self.document = ModelDocument()  # what the grids edit; one undo stack, saved explicitly
+        self.document = ModelDocument()  # what the grids and the scenario edit: one undo stack
         self.units_page = UnitsPage(self.document)
         self.modes_page = PowerModesPage(self.document)
         self.inputs_page = InputsPage(self.document)
@@ -99,12 +99,12 @@ class MainWindow(QMainWindow):
             ("Inputs", self.inputs_page),
         ):
             self.editors.add_fixed(page, title)
-            page.save_requested.connect(self.save_grids)
+            page.save_requested.connect(self.save_model)
             page.legend_requested.connect(self.show_cell_styles)
         self.editors.register_modifiable(self.document)
-        self.scenario_view = ScenarioView()
+        self.scenario_view = ScenarioView(self.document)
         self.editors.add_fixed(self.scenario_view, "Scenario")
-        self.editors.register_modifiable(self.scenario_view.editor)
+        self.scenario_view.editor.save_requested.connect(self.save_model)
         self.timeline_view = PowerTimelineView()
         self.timeline_view.run_provider = self.scenario_view.reusable_run
         self.link_passes_view = LinkPassesView()
@@ -167,7 +167,6 @@ class MainWindow(QMainWindow):
         self._build_menu()
         self.session.changed.connect(self._refresh)
         self.session.loading_changed.connect(self._loading_changed)
-        self.scenario_view.editor.saved.connect(self.reload_project)
         self.document.saved.connect(self.reload_project)
         self.document.dirty_changed.connect(lambda _d: self._update_dirty())
         self.top_bar.scenario_chosen.connect(self.select_scenario)
@@ -178,7 +177,6 @@ class MainWindow(QMainWindow):
         self.failed_banner.action_requested.connect(self.run_all)
         self.run_controller.changed.connect(self._update_run_state)
         self.editors.dirty_changed.connect(self._update_dirty)
-        self.scenario_view.editor.modified_changed.connect(lambda _m: self._update_dirty())
         self.reports_view.reports_requested.connect(self._choose_export)
         self.reports_view.timeline_requested.connect(self._choose_timeline_export)
         self.reports_view.scenario_requested.connect(self._choose_scenario_export)
@@ -674,10 +672,13 @@ class MainWindow(QMainWindow):
     def save_current(self) -> bool:
         if self.workspace.currentWidget() is not self.editors:
             return False  # Save belongs to the editors of the Model tab
-        if self.editors.currentWidget() is self.scenario_view:
-            return self.scenario_view.editor.save()
-        if self.editors.currentWidget() in (self.units_page, self.modes_page, self.inputs_page):
-            return self.save_grids()
+        if self.editors.currentWidget() in (
+            self.units_page,
+            self.modes_page,
+            self.inputs_page,
+            self.scenario_view,
+        ):
+            return self.save_model()
         editor = self.editors.current_editor()
         if editor is None:
             return False
@@ -686,8 +687,9 @@ class MainWindow(QMainWindow):
         self.reload_project()
         return True
 
-    def save_grids(self) -> bool:
-        """Write the files the grids changed (nothing while a cell is wrong or a file moved)."""
+    def save_model(self) -> bool:
+        """Write the files the grids and the scenario editor changed (nothing while a cell is
+        wrong or a file moved on disk)."""
         report = self.document.save()
         page = self.editors.currentWidget()
         grid = page if page in (self.units_page, self.modes_page, self.inputs_page) else None
@@ -703,6 +705,7 @@ class MainWindow(QMainWindow):
             self.status_bar.showMessage(report.message)
             for candidate in (self.units_page, self.modes_page, self.inputs_page):
                 candidate.show_message(report.message)
+            self.scenario_view.editor.note_label.setText(report.message)
         return report.ok
 
     def _write(self, editor: YamlEditor) -> bool:
@@ -739,6 +742,7 @@ class MainWindow(QMainWindow):
         self.mass_view.set_document(session.mass_document)
         self.thermal_view.set_document(session.thermal_document)
         self.link_view.set_document(session.link_document)
+        self.document.reload(session.path, project)
         self.scenario_view.set_project(project)
         load_problems = session.load_result.problems if session.load_result else []
         self.timeline_view.set_project(project, load_problems)
@@ -746,7 +750,6 @@ class MainWindow(QMainWindow):
         self.compare_view.set_project(project)
         self._update_problems()
         self.editors.reload_clean_files()
-        self.document.reload(session.path, project)
         shown = session.display_project  # the name and revision stay while the project has an error
         name = shown.meta.name if shown else (session.path.name if session.path else "")
         self.top_bar.set_project(name, shown.meta.revision if shown else "")

@@ -34,15 +34,15 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMenu,
-    QPushButton,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
     QWidget,
 )
 
-from budget_gui import icons, theme
+from budget_gui import icons
 from budget_gui.delegates import CellDelegate
+from budget_gui.edit_bar import EditBar
 from budget_gui.grid_models import GridModel
 from budget_gui.model_document import ModelDocument
 
@@ -496,17 +496,11 @@ class GridPage(QWidget):
         self.tools.addWidget(self.filter, 1)
         self.tools_extra = QHBoxLayout()
         self.tools.addLayout(self.tools_extra)
-        self._icon_names: dict[QPushButton, str] = {}
-        self.undo_button = self._button("Undo", "undo-2", "Undo the last edit (Ctrl+Z)")
-        self.redo_button = self._button("Redo", "redo-2", "Redo (Ctrl+Shift+Z)")
-        self.save_button = QPushButton(icons.icon("save"), "Save")
-        self._icon_names[self.save_button] = "save"
-        self.save_button.setToolTip("Write the changed files (Ctrl+S)")
-        self.legend_button = self._button("Cell styles", "circle-help", "What the cell styles mean")
-        self.undo_button.clicked.connect(document.undo_stack.undo)
-        self.redo_button.clicked.connect(document.undo_stack.redo)
-        self.save_button.clicked.connect(self.save_requested)
-        self.legend_button.clicked.connect(self.legend_requested)
+        self.bar = EditBar(document)
+        self.undo_button, self.redo_button = self.bar.undo_button, self.bar.redo_button
+        self.save_button, self.legend_button = self.bar.save_button, self.bar.legend_button
+        self.bar.save_requested.connect(self.save_requested)
+        self.bar.legend_requested.connect(self.legend_requested)
         self.count_label = QLabel()
         self.count_label.setProperty("role", "muted")
         self.problem_label = QLabel()
@@ -516,8 +510,7 @@ class GridPage(QWidget):
         self.feedback_label.setWordWrap(True)
         bottom = QHBoxLayout()
         bottom.addWidget(self.count_label, 1)
-        for button in (self.undo_button, self.redo_button, self.legend_button, self.save_button):
-            bottom.addWidget(button)
+        bottom.addWidget(self.bar)
         layout = QVBoxLayout(self)
         layout.addLayout(self.tools)
         layout.addWidget(self.table, 1)
@@ -525,15 +518,7 @@ class GridPage(QWidget):
         layout.addWidget(self.feedback_label)
         layout.addLayout(bottom)
         self.table.message.connect(self.show_message)
-        theme.manager().changed.connect(self._retint)
         document.changed.connect(self._refresh)
-        for signal in (
-            document.undo_stack.canUndoChanged,
-            document.undo_stack.canRedoChanged,
-            document.undo_stack.undoTextChanged,
-            document.undo_stack.redoTextChanged,
-        ):
-            signal.connect(self._refresh_buttons)
         self.model.modelReset.connect(self.table.request_fit)
         self._refresh()
 
@@ -542,18 +527,6 @@ class GridPage(QWidget):
         self.feedback_label.setText(text)
         self.feedback_label.setVisible(bool(text))
 
-    def _button(self, text: str, icon: str, tip: str) -> QPushButton:
-        button = QPushButton(icons.icon(icon), text)
-        button.setProperty("kind", "secondary")
-        button.setToolTip(tip)
-        self._icon_names[button] = icon
-        return button
-
-    def _retint(self) -> None:
-        """Icons are tinted when they are made: make them again for the theme now in use."""
-        for button, name in self._icon_names.items():
-            button.setIcon(icons.icon(name))
-
     def add_tool(self, widget: QWidget) -> None:
         self.tools_extra.addWidget(widget)
 
@@ -561,23 +534,7 @@ class GridPage(QWidget):
         self.table.set_filter(text)
         self._refresh()
 
-    def _refresh_buttons(self, *_args: object) -> None:
-        stack = self.document.undo_stack
-        try:
-            can_undo, can_redo = stack.canUndo(), stack.canRedo()
-        except RuntimeError:  # the document is going away with the window
-            return
-        self.undo_button.setEnabled(can_undo)
-        self.redo_button.setEnabled(can_redo)
-        self.undo_button.setToolTip(
-            f"Undo: {stack.undoText()} (Ctrl+Z)" if can_undo else "Nothing to undo"
-        )
-        self.redo_button.setToolTip(
-            f"Redo: {stack.redoText()} (Ctrl+Shift+Z)" if can_redo else "Nothing to redo"
-        )
-
     def _refresh(self) -> None:
-        self._refresh_buttons()
         lines = self.model.problem_lines()
         if lines:
             shown = "; ".join(lines[:SHOWN_PROBLEMS])

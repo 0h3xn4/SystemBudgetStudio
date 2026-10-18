@@ -28,7 +28,7 @@ from budget_core.io.roundtrip import file_stamp, save_edited_data
 from budget_core.io.yamlio import LineMap, format_path
 from budget_core.model import Project
 from budget_core.model.base import BudgetModel
-from budget_core.problems import Problem
+from budget_core.problems import Problem, Severity
 from budget_core.reports.files import OutputError
 
 Path_ = tuple[str | int, ...]  # keys and list positions that lead to a value inside a file
@@ -318,6 +318,8 @@ class ModelDocument(QObject):
 def _models_of(project: Project) -> Iterable[tuple[str, BudgetModel]]:
     for unit_id, unit in project.units.items():
         yield f"units/{unit_id}.yaml", unit
+    for scenario_id, scenario in project.scenarios.items():
+        yield f"scenarios/{scenario_id}.yaml", scenario
     for link_id, link in project.links.items():
         yield f"links/{link_id}.yaml", link
     for kind in CONFIG_FILES:
@@ -347,4 +349,24 @@ def _problems(state: FileState) -> list[Problem]:
         state.cls.model_validate(state.current)
     except ValidationError as exc:
         return explain(exc, state.cls, state.rel, LineMap())
-    return []
+    return _cross_checks(state)
+
+
+def _cross_checks(state: FileState) -> list[Problem]:
+    """What the loader checks between values of one file and the model alone does not: a
+    scenario rule must name a site that the scenario lists (the loader's REF_UNKNOWN_SITE)."""
+    if not state.rel.startswith("scenarios/"):
+        return []
+    sites = state.current.get("sites") or []
+    return [
+        Problem(
+            Severity.ERROR,
+            "REF_UNKNOWN_SITE",
+            "The rule uses a site that the scenario does not list.",
+            file=state.rel,
+            path=f"rules[{index}].site",
+            hint="Tick the site under Sites of this scenario, or choose another site.",
+        )
+        for index, rule in enumerate(state.current.get("rules") or [])
+        if isinstance(rule, dict) and rule.get("site") and rule["site"] not in sites
+    ]

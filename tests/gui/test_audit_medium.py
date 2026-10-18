@@ -142,7 +142,7 @@ def test_a_unit_edit_keeps_the_comments_of_the_file(window: MainWindow, project:
     )
     window.session.reload()
     assert set_mode_value(window, "camera", "imaging", "avg_power_w", "2.5")
-    assert window.save_grids()
+    assert window.save_model()
     saved = path.read_text(encoding="utf-8")
     assert saved.startswith("# source: vendor datasheet rev C\n") and "  # measured\n" in saved
     assert "avg_power_w: 2.5" in saved and saved.index("name:") < saved.index("modes:")
@@ -178,7 +178,7 @@ def test_a_failed_unit_save_leaves_the_file_and_no_temporary_file(
         raise OSError("disk full")
 
     monkeypatch.setattr("budget_core.reports.files.os.replace", refuse)
-    assert window.save_grids() is False
+    assert window.save_model() is False
     assert "could not be written" in window.modes_page.feedback_label.text()
     assert (project / "units/camera.yaml").read_bytes() == before
     assert not [p for p in (project / "units").iterdir() if p.name.endswith(".tmp")]
@@ -395,7 +395,7 @@ def test_a_cell_with_an_underscore_or_a_decimal_comma_is_not_a_number(
     window: MainWindow,
 ) -> None:
     set_mode_value(window, "camera", "imaging", "avg_power_w", "1_0")
-    assert window.modes_page.problem_label.text() and window.save_grids() is False
+    assert window.modes_page.problem_label.text() and window.save_model() is False
     set_mode_value(window, "camera", "imaging", "avg_power_w", "1,5")
     assert "decimal point" in window.modes_page.problem_label.text()
     set_mode_value(window, "camera", "imaging", "avg_power_w", "60")
