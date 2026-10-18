@@ -87,7 +87,7 @@ Icons are [Lucide](https://lucide.dev) 0.468.0 (ISC licence). The SVG files in `
 ├ banners (only when needed): stale results · failed run ─────────────────────────────────┤
 │ Project   │ Model │ Power │ Mass │ Thermal │ Link │ Compare │ Reports │ Inspector     │
 │ tree with │  Power: Budget | Timeline       Link: Budget | Passes     │ Problems      │
-│ badges    │  Model: Scenario, files, unit tables                      │ Provenance    │
+│ badges    │  Model: Units, Power modes, Inputs, Scenario, files       │ Provenance    │
 ├ status bar: N not checked · project folder · last run · version ──────────────────────┤
 ```
 
@@ -95,8 +95,9 @@ Icons are [Lucide](https://lucide.dev) 0.468.0 (ISC licence). The SVG files in `
 - **Run status chip** (icon, word, tint from the status palette): *Not run* (not checked), *Running…* (accent text on the layer), *Up to date · time* (pass), *Out of date* (near), *Run failed* (fail).
 - **Banners** (icon, sentence, one action; tint from the status palette): *stale* (near) when the tables show the last results that worked, from before an error, with **Show the first error**; *failed* (fail) when a run did not finish, with **Run again**.
 - **Problems classes.** Error (`circle-x`, fail colour), warning (`triangle-alert`, near), **not checked** (`circle-minus`, not-checked grey; a placeholder, an incomplete result or a unit without limits) and info (`info`). The class is chosen from the problem code only; an error stays an error. The tree shows the same icons with counts as badges; a node counts its own problems and those of its children, the project node counts all.
-- **Tabs.** Model · Power · Mass · Thermal · Link · Compare · Reports, fixed; files, unit tables and the scenario open inside *Model*; *Power* and *Link* have two pages (budget, and timeline or passes). `Ctrl+1` to `Ctrl+7`.
+- **Tabs.** Model · Power · Mass · Thermal · Link · Compare · Reports, fixed; the grids (Units, Power modes, Inputs), the scenario and the files open inside *Model*; *Power* and *Link* have two pages (budget, and timeline or passes). `Ctrl+1` to `Ctrl+7`.
 - **Project tree.** Rows by name, ids in the tooltip; units grouped by subsystem above eight units; a badge only for errors and warnings, rolled up on a folded group and never repeated on an open one; the raw file list adds nothing to its group (D-158).
+- **Grids** (D-159). A grid is a `QTableView` over a model of the editable document, painted by the one cell delegate: numbers with fixed decimals in the mono font, the unit in the header, *not given* (a missing limit or heat ratio) as *not checked* with `n/a`, a **placeholder** (italic, dashed border, hollow marker) for a sourced number without a value or with the source `TBD`, a wrong cell as *fail* with its reason in the tooltip. The filter is above, the line of what is wrong, the line of feedback and the buttons (Undo, Redo, Cell styles, Save) below; no message box.
 - **Panels.** The project tree on the left; Inspector, Problems and Provenance as tabs of the right dock. Each has an object name, which is the key of the saved arrangement.
 - **Status bar.** Action messages on the left (they go away); on the right the not-checked link, the project folder, the last run time and the version.
 - **Speed.** Updating the window after a load or reload takes about 0.1 s for a project of 200 units: the cells of a budget table are measured from the font, a sheet is built the first time it is shown, and replacing a budget does not build the sheets it uncovers.
@@ -115,11 +116,14 @@ The window keeps no Qt settings file (D-105): Qt's dialogs would write the folde
 | `Ctrl+1` … `Ctrl+7` | Go to the tab Model, Power, Mass, Thermal, Link, Compare, Reports | in the window |
 | `Enter` | Open the selected row of the project tree or the Problems panel | in the window |
 | `F8` / `Shift+F8` | Next / previous problem | in the window |
-| `Ctrl+M` | Edit the power modes of the selected unit | in the window |
+| `Ctrl+M` | Show the power modes of the selected unit in the grid | in the window |
 | `Ctrl+E` / `Ctrl+Shift+E` | Export reports / export the power timeline | in the window |
 | `F1` | User guide | in the window |
 | `Ctrl+K` | Command palette | planned (step 6) |
-| `Ctrl+Z` / `Ctrl+Shift+Z` | Undo / redo across edits | planned (step 2) |
+| `Ctrl+Z` / `Ctrl+Shift+Z` | Undo / redo the edits of the grids | in the window |
+| `Ctrl+C` / `Ctrl+V` | In a grid: copy the cells as text with tabs / paste a block, with a preview for more than one cell | in the window |
+| `Ctrl+D` / `Delete` | In a grid: fill down / empty the optional cells | in the window |
+| `Enter` / `Tab` / `Esc` | In a grid: accept and move down / accept and move right (leaves the grid after the last cell) / cancel | in the window |
 
 ## Acceptance per view
 

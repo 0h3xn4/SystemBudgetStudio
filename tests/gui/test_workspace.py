@@ -44,7 +44,7 @@ def test_a_file_tab_does_not_push_a_budget_out_of_view(window: MainWindow) -> No
         window.open_file(rel)
     assert window.workspace.count() == 7  # editors live inside the Model tab
     assert window.workspace.currentWidget() is window.editors
-    assert window.editors.count() == 1 + 3  # the scenario and three files
+    assert window.editors.count() == 3 + 1 + 3  # three grids, the scenario and three files
 
 
 def test_power_and_link_have_a_page_for_the_time_domain_results(window: MainWindow) -> None:
@@ -72,10 +72,10 @@ def test_show_view_finds_a_view_wherever_it_sits(window: MainWindow) -> None:
 
 def test_opening_a_unit_table_brings_the_model_tab_forward(window: MainWindow) -> None:
     window.show_view(window.mass_view)
-    editor = window.open_unit_editor("radio")
-    assert editor is not None
+    page = window.show_unit("radio")
+    assert page is not None
     assert window.workspace.currentWidget() is window.editors
-    assert window.editors.currentWidget() is editor
+    assert window.editors.currentWidget() is page
 
 
 def test_ctrl_number_goes_to_the_tab(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]

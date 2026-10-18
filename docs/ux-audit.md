@@ -227,12 +227,20 @@ After step 1 (the shell). *Done* means the finding no longer applies in the wind
 | UX-04 dirty marker | partly | top bar and window title; the tab star stays. Not on the tree nodes yet |
 | UX-05 file tree, no badges | done | model tree with badges (D-152); no radio or antenna nodes: the model has none |
 | UX-06 Enter does not open | done | Enter opens a tree row and a problem |
-| UX-07 no inspector | partly | Inspector skeleton (file, field, problems); field help, unit, source, range with the editable model (step 2) |
+| UX-07 no inspector | partly | Inspector skeleton (file, field, problems); the unit and source of a field are in the grid columns and tooltips; the Inspector does not follow a grid cell yet |
 | UX-08 only the Problems dock | done | Inspector, Problems, Provenance; View menu; Reset layout; the layout is kept (D-154) |
 | UX-09 status bar | done | folder, last run, version, not-checked link |
 | UX-10 one error blanks everything | done | the last good tables stay, with a banner (D-155); the time-domain views are empty with a sentence |
 | UX-11 tab strip | done | seven tabs; files open inside Model |
 | UX-12 empty first screen | open | recent projects and a New button: step 6 |
+| UX-13 one tab per unit | done | the Units and Power modes grids across all units (D-159) |
+| UX-14 no source column, no placeholder styling | partly | placeholders, source and unit in the Inputs grid (every sourced number of the configuration and the links); unit values have no source in the file format |
+| UX-15 precision | done | fixed decimals per column; the exact value in the tooltip and the editor |
+| UX-16 every button primary | partly | Save is the primary button of a grid, the others are secondary; the other views follow in their steps |
+| UX-17 validation by message box | partly | the grids have none (a cell, a tooltip and a line under the grid); the other views follow |
+| UX-18 no undo | partly | one undo stack for the grids; the scenario editor follows (step 2c) |
+| UX-20 no paste, fill-down, copy | done | Ctrl+C, Ctrl+V with a preview, Ctrl+D, Delete in every grid |
+| UX-21 rules as combo boxes | open | step 2c |
 | UX-34 Problems panel | done | four classes, icons, filter, grouping, wrapped message (D-151) |
 | UX-38 to UX-40 visual system | done in step 0 (D-150) | |
 | UX-41 keyboard | partly | Ctrl+1 to Ctrl+7, Ctrl+R, F8; Tab no longer trapped in tables; `Ctrl+K` in step 6 |

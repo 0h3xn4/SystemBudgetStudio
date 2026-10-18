@@ -83,7 +83,7 @@ def test_a_unit_node_offers_its_power_modes(window: MainWindow) -> None:
     window.tree.setCurrentItem(item)
     assert not window.inspector.modes_button.isHidden()
     window.inspector.modes_button.click()
-    assert window.editors.unit_editor("radio") is not None
+    assert window.editors.currentWidget() is window.modes_page
 
 
 def test_a_group_node_shows_the_problems_of_its_children(window: MainWindow) -> None:

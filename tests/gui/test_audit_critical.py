@@ -10,6 +10,7 @@ import pytest
 
 from budget_core.io.project_loader import load_project
 from budget_gui.main_window import MainWindow
+from tests.gui_helpers import set_mode_value
 
 pytestmark = pytest.mark.gui
 
@@ -62,13 +63,14 @@ def test_saving_a_unit_without_an_edit_leaves_the_file_byte_identical(
 ) -> None:
     project = copy("microsat_250kg_eps", tmp_path, "p")
     window.open_project(project)
-    editor = window.open_unit_editor("adcs")
-    assert editor is not None
+    page = window.show_unit("adcs")
+    assert page is not None
     before = (project / "units/adcs.yaml").read_bytes()
     assert b"heat_dissipation_ratio" in before
-    editor.add_mode()
-    editor.remove_mode(editor.table.rowCount() - 1)  # modified, but equal to the file
-    assert editor.is_modified() and editor.save()
+    assert page.add_mode()
+    page.table.select_cell(page.modes.rows_of("adcs")[-1], 1)
+    assert page.remove_mode()  # edited twice, but equal to the file again
+    assert not window.document.is_modified() and window.save_grids()
     assert (project / "units/adcs.yaml").read_bytes() == before
 
 
@@ -77,12 +79,8 @@ def test_a_unit_edit_keeps_heat_dissipation_ratio_of_every_mode(
 ) -> None:
     project = copy("microsat_250kg_eps", tmp_path, "p")
     window.open_project(project)
-    editor = window.open_unit_editor("adcs")
-    assert editor is not None
-    item = editor.table.item(1, 1)  # safe: avg_power_w
-    assert item is not None
-    item.setText("0.45")
-    assert editor.save()
+    assert set_mode_value(window, "adcs", "safe", "avg_power_w", "0.45")
+    assert window.save_grids()
     unit = load_project(project).project.units["adcs"]  # type: ignore[union-attr]
     assert [m.heat_dissipation_ratio for m in unit.modes] == [1.0] * len(unit.modes)
     assert unit.modes[1].avg_power_w == 0.45
@@ -99,10 +97,11 @@ def test_the_heat_ratio_of_a_mode_stays_with_its_row_when_a_row_is_removed(
         encoding="utf-8",
     )
     window.open_project(project)
-    editor = window.open_unit_editor("adcs")
-    assert editor is not None
-    editor.remove_mode(0)  # the 'off' mode that carries 0.5
-    assert editor.save()
+    page = window.show_unit("adcs")
+    assert page is not None
+    page.table.select_cell(page.modes.rows_of("adcs")[0], 1)
+    assert page.remove_mode()  # the 'off' mode that carries 0.5
+    assert window.save_grids()
     unit = load_project(project).project.units["adcs"]  # type: ignore[union-attr]
     assert [m.name for m in unit.modes][0] == "safe"
     assert all(m.heat_dissipation_ratio == 1.0 for m in unit.modes)

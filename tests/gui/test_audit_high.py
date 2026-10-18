@@ -9,10 +9,12 @@ import time
 from pathlib import Path
 
 import pytest
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QMessageBox
 
 from budget_core.io.project_loader import load_project
 from budget_gui.main_window import MainWindow
+from tests.gui_helpers import mode_row, set_mode_value, set_unit_value
 
 pytestmark = pytest.mark.gui
 
@@ -74,8 +76,6 @@ def compute_timeline(window: MainWindow, qtbot) -> None:  # type: ignore[no-unty
 def test_a_text_edit_is_not_reverted_by_the_next_save_in_the_unit_table(
     window: MainWindow, project: Path
 ) -> None:
-    table = window.open_unit_editor("camera")
-    assert table is not None
     window.open_file("units/camera.yaml")
     text = window.editors.current_editor()
     assert text is not None
@@ -83,9 +83,11 @@ def test_a_text_edit_is_not_reverted_by_the_next_save_in_the_unit_table(
     assert "avg_power_w: 60.0" in document
     text.setPlainText(document.replace("avg_power_w: 60.0", "avg_power_w: 62.0"))
     assert window.save_current()  # saves the text tab, the project reloads
-    assert table.table.item(1, 1).text() == "62.0"  # the clean table shows the new file
-    table.table.item(1, 2).setText("85.0")  # now an edit in the table (peak power)
-    window.show_view(table)
+    model = window.modes_page.modes
+    row = mode_row(window, "camera", "imaging")
+    assert model.index(row, 2).data(Qt.ItemDataRole.EditRole) == "62"  # the clean grid shows it
+    set_mode_value(window, "camera", "imaging", "peak_power_w", "85.0")  # now an edit in the grid
+    window.show_view(window.modes_page)
     assert window.save_current()
     saved = load_project(project).project.units["camera"]  # type: ignore[union-attr]
     assert saved.modes[1].avg_power_w == 62.0 and saved.modes[1].peak_power_w == 85.0
@@ -94,16 +96,14 @@ def test_a_text_edit_is_not_reverted_by_the_next_save_in_the_unit_table(
 def test_a_table_with_pending_edits_refuses_to_overwrite_a_newer_file(
     window: MainWindow, project: Path
 ) -> None:
-    table = window.open_unit_editor("camera")
-    assert table is not None
-    table.table.item(0, 0).setText("off2")
+    set_unit_value(window, "camera", "mass_kg", "39")
     path = project / "units/camera.yaml"
     path.write_text(
         path.read_text(encoding="utf-8").replace("avg_power_w: 60.0", "avg_power_w: 63.0"),
         encoding="utf-8",
     )
-    assert not table.save()
-    assert "changed on disk" in table.error_label.text()
+    assert not window.save_grids()
+    assert "changed on disk" in window.modes_page.feedback_label.text()
     assert "avg_power_w: 63.0" in path.read_text(encoding="utf-8")
 
 

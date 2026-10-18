@@ -234,7 +234,7 @@ def test_enter_on_a_unit_opens_the_table_of_its_power_modes(window: MainWindow) 
     assert item is not None
     window.tree.setCurrentItem(item)
     window.tree.activate_current()
-    assert window.editors.unit_editor("radio") is not None
+    assert window.editors.currentWidget() is window.modes_page
 
 
 def test_the_tree_is_a_keyboard_widget(window: MainWindow) -> None:

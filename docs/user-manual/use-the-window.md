@@ -17,7 +17,7 @@ system-budget-studio path/to/project       # open a project at start
 
 - **Top bar**: the project name and revision, a marker when something is unsaved, the **scenario** every tab shows, the **BOL / EOL** switch (beginning or end of life, for the power timeline), the **Run** button and the **run status** (not run, running, up to date, out of date, failed).
 - **Project tree** (left): the spacecraft model, not the folder listing. It lists the **Spacecraft** file, the **Units** (one row each, by name; with many units they are grouped by subsystem, and the groups start folded), the spacecraft modes, expendables, the solar array and the battery, then the orbits, ground stations, imaging targets, scenarios and links, **Budget configuration**, and **Files**, the plain list of every project file. The id of a unit or link is in its tooltip and in the Inspector. A row with a number next to an icon has an **error** or a **warning** on it (see [the Problems panel](#the-problems-panel)); a folded group shows those of the rows inside it, so that nothing is hidden, and an open one shows only its own. Placeholders (*not checked*) are not counted in the tree: the status bar and the Problems panel count them. **Enter** or a double-click opens a row: a unit opens the table of its power modes (the right-click menu has *Open the file*), a field (the solar array, the battery) opens its file at the line of the field, and any other row opens its file as text. What you fold or open stays that way when the project reloads.
-- **Tabs** (centre): **Model** (the scenario, and every file or unit table you open), **Power** (*Budget* tables and the *Timeline*), **Mass**, **Thermal**, **Link** (*Budget* and *Passes*), **Compare** and **Reports** (the exports). **Ctrl+1** to **Ctrl+7** go to a tab. Opening a file never adds a tab to the budgets; the files open inside **Model**.
+- **Tabs** (centre): **Model** (the **Units**, **Power modes** and **Inputs** grids, the scenario, and every file you open), **Power** (*Budget* tables and the *Timeline*), **Mass**, **Thermal**, **Link** (*Budget* and *Passes*), **Compare** and **Reports** (the exports). **Ctrl+1** to **Ctrl+7** go to a tab. Opening a file never adds a tab to the budgets; the files open inside **Model**.
 - **Right panel**: **Inspector** (what is known about the selected tree row: its file and field, and its problems), **Problems** and **Provenance** (the rows that every report and export carries: tool, versions, project, revision, time, user). Drag a tab out of the panel to move it; **View → Reset layout** puts everything back.
 - **Status bar**: the project folder, when something was last worked out, the program version, and **N not checked**, a link that lists the placeholders in the Problems panel.
 
@@ -54,13 +54,16 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 |---|---|
 | Ctrl+N | New project (guided wizard) |
 | Ctrl+O | Open project |
-| Ctrl+S | Save the file you are editing (the text tab, the unit table or, in *Model → Scenario*, the scenario); it acts only while the **Model** tab is in front |
+| Ctrl+S | Save what you are editing (a text tab, the grids of *Units*, *Power modes* and *Inputs*, or the scenario); it acts only while the **Model** tab is in front |
+| Ctrl+Z / Ctrl+Shift+Z | Undo / redo an edit of the grids (the Edit menu names the step); a text editor keeps its own undo while it has the keyboard |
+| Ctrl+C / Ctrl+V | In a grid: copy the selected cells as text with tabs; paste a block (from this or any spreadsheet) |
+| Ctrl+D / Delete | In a grid: fill the selection down from its top cell / empty the optional cells of the selection |
 | F5 | Reload the project from disk (the window stays usable while it loads; the status bar says so) |
 | Ctrl+R | Run: the scenario, the power timeline and the link passes |
 | Ctrl+1 … Ctrl+7 | Go to the tab Model, Power, Mass, Thermal, Link, Compare, Reports |
 | Enter | Open the selected row of the project tree or of the Problems panel |
 | F8 / Shift+F8 | Next / previous problem (opens its file at the line) |
-| Ctrl+M | Edit the selected unit's power modes in a table |
+| Ctrl+M | Show the selected unit's power modes in the **Power modes** grid |
 | Ctrl+E | Export reports of the static budgets |
 | Ctrl+Shift+E | Export the power timeline |
 | (menu only) | File → Export unit table / Import unit table: the unit power modes as a CSV or XLSX table, imported with a preview ([unit tables](unit-tables.md)) |
@@ -68,7 +71,7 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | (menu only) | View → Theme (light, dark, same as the system), Cell styles (what every cell style means), the panel toggles, Reset layout |
 | F1 | Open the user guide |
 
-**Tab** moves through the controls of the window and **Shift+Tab** back; it does not stay inside a table. (On macOS the Ctrl key shortcuts are not tested.)
+**Tab** moves through the controls of the window and **Shift+Tab** back; it does not stay inside a read-only table. In a grid it moves from cell to cell and leaves the grid after the last one. (On macOS the Ctrl key shortcuts are not tested.)
 
 ## Where does the window keep its layout?
 
@@ -82,7 +85,24 @@ Hover to move a cursor with a readout of every series at that time. The mouse wh
 
 Press Enter (or double-click) on it in the tree. It opens as text in a tab of the **Model** tab; **Ctrl+S** saves, and the project is checked again (the same checks as `budget validate`). Closing a modified tab, opening another project or quitting asks first, so you cannot lose edits by accident. A file that is not valid UTF-8 is refused instead of being damaged. A byte-order mark and Windows line ends in the file are kept. If the file changed on disk after you opened it (another program, a git checkout), saving asks before it overwrites that change; an editor without edits shows the new file by itself.
 
-In **Model → Scenario**, use the rule and segment buttons and **Save scenario**; the unit table has its own **Save**. Both change only what you edited: comments, the order of the keys and fields the table does not show (for example the heat dissipation ratio of a power mode) stay in the file, and saving without a change leaves the file untouched. Only if a file is in an older layout that cannot be patched is it rewritten whole, and the editor then says that comments were not kept.
+In **Model → Scenario**, use the rule and segment buttons and **Save scenario**. The grids have a **Save** button and Ctrl+S ([below](#how-do-i-edit-in-the-grids)). Both change only what you edited: comments, the order of the keys and fields the grid does not show stay in the file, and saving without a change leaves the file untouched. Only if a file is in an older layout that cannot be patched is it rewritten whole.
+
+## How do I edit in the grids?
+
+**Model → Units** has one row per unit: name, subsystem, bus, maturity, mass and the four temperature limits. **Power modes** has one row per power mode of every unit: average and peak power, duty cycle, heat ratio and durations, with the effective average (average times duty) beside them. **Inputs** has one row per sourced number of the configuration and the links: value, unit, source and note. The unit is in every column header; numbers show a fixed number of decimals, and the tooltip and the editor have the exact value.
+
+![The Power modes grid filtered to the radio, with a wrong cell marked and explained under the grid](../images/ux-redesign/step2-modes-light.png)
+
+- **Type or paste.** Double-click a cell, press F2 or start typing. A value with a unit is converted (`2500 mW` is 2.5 W). **Enter** accepts and moves down, **Esc** cancels, **Tab** accepts and moves right. Copy a range from a spreadsheet and press **Ctrl+V**: the block goes in from the current cell (one value goes into every selected cell). More than one cell shows you a preview, old and new, first. Cells that cannot be edited (the unit id, the computed average) are left out and counted.
+- **Fill down and clear.** Select a cell and the cells below it and press **Ctrl+D**. **Delete** empties the cells that may be empty (an optional field); a field the model needs keeps its value.
+- **A wrong value is kept and explained.** The cell gets a red marker, its tooltip and the line under the grid say what is wrong, in words and with the field only, never the text you typed. Nothing is written while a cell is wrong: **Save** says so, and you can correct the cell or undo.
+- **Undo.** Every edit, paste, fill and added or removed mode is one step of **Edit → Undo** (Ctrl+Z); **Redo** is Ctrl+Shift+Z. The step is named ("Edit radio / downlink: avg_power_w"). Undo works across a save.
+- **Save.** **Save** (the button or Ctrl+S) writes only the files that changed, in place: comments, key order and the fields the grids do not show stay as they were. It refuses to overwrite a file that changed on disk after the grid loaded it, and says which. Closing, opening another project or quitting asks first when edits are not saved.
+- **Add or remove a mode.** *Power modes → Add mode* adds a mode to the unit of the current row; *Remove mode* removes the current one (a unit keeps at least one). Both can be undone. Removing a mode that a spacecraft mode uses is allowed, and the Problems panel then names the spacecraft mode.
+- **Filter.** The box above a grid keeps the rows that contain the text in any column; a paste goes to the rows shown. *Inputs* also has **Placeholders only**.
+- **Cell styles.** The **Cell styles** button opens the legend. A *not checked* cell with `n/a` in the units grid means no temperature limit (or no heat ratio) is given, so the unit is not checked against it. In *Inputs* a **placeholder** (no value, or the source `TBD`) is italic with a dashed border and a hollow marker: type its value and its source, and the style goes when both are there. **Right-click → Mark as sourced…** takes the cursor to what is missing.
+
+A unit in the project tree opens its power modes in this grid (Enter, double-click, or **Ctrl+M**).
 
 The file dialogs do not remember the last folder you used: the program keeps no settings outside your project folders.
 

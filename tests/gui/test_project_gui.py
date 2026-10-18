@@ -243,10 +243,10 @@ def test_unit_editor_keeps_mass_properties(window: MainWindow, tmp_path: Path) -
 
     shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     window.open_project(tmp_path / "p")
-    editor = window.open_unit_editor("camera")
-    assert editor is not None
-    editor.table.item(1, 1).setText("62.0")
-    editor.table.item(1, 2).setText("85.0")
-    assert editor.save() is True
+    from tests.gui_helpers import set_mode_value
+
+    set_mode_value(window, "camera", "imaging", "avg_power_w", "62.0")
+    set_mode_value(window, "camera", "imaging", "peak_power_w", "85.0")
+    assert window.save_grids() is True
     unit = load_project(tmp_path / "p").project.units["camera"]  # type: ignore[union-attr]
     assert unit.mass_properties is not None and unit.mass_properties.position_m[2] == 0.95
