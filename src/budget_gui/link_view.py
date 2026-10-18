@@ -103,9 +103,11 @@ class LinkPassesView(QWidget):
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         top = QHBoxLayout()
-        for text, widget in (("Scenario", self.scenario_combo), ("Link", self.link_combo)):
-            top.addWidget(QLabel(text))
-            top.addWidget(widget)
+        self.scenario_label = QLabel("Scenario")
+        top.addWidget(self.scenario_label)
+        top.addWidget(self.scenario_combo)
+        top.addWidget(QLabel("Link"))
+        top.addWidget(self.link_combo)
         top.addWidget(self.compute_button)
         top.addWidget(self.export_button)
         top.addWidget(self.status, 1)
@@ -134,6 +136,11 @@ class LinkPassesView(QWidget):
         self.passes_table.cellClicked.connect(lambda row, _c: self.select_pass(row))
         self.plot.set_info_provider(self._info_at)
         self.set_project(None, [])
+
+    def use_shared_selector(self) -> None:
+        """The scenario is chosen in the top bar: this view keeps its selector hidden."""
+        self.scenario_label.hide()
+        self.scenario_combo.hide()
 
     # ---- project -----------------------------------------------------------------------------
     def selected_id(self) -> str:

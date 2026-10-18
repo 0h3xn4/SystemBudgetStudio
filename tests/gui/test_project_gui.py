@@ -193,7 +193,7 @@ def test_reload_keeps_unsaved_edits(window: MainWindow, broken: Path) -> None:
 def test_mass_budget_tab_shows_phases_and_a_centre_of_gravity(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "microsat_150kg")
     view = window.mass_view
-    window.editors.setCurrentWidget(view)  # a hidden tab is not visible
+    window.show_view(view)  # a hidden tab is not visible
     titles = [view.tabText(i) for i in range(view.count())]
     assert titles == [
         "Summary",

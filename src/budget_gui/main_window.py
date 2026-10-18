@@ -16,6 +16,8 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QMainWindow,
     QMessageBox,
+    QVBoxLayout,
+    QWidget,
 )
 
 from budget_core import APP_NAME
@@ -34,14 +36,18 @@ from budget_gui.privacy import disable_settings_files
 from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.project_tree import ProjectTree
+from budget_gui.reports_view import ReportsView
+from budget_gui.run_controller import RunController, RunState
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.status_bar import AppStatusBar
 from budget_gui.timeline_view import PowerTimelineView
+from budget_gui.top_bar import TopBar
 from budget_gui.unit_editor import UnitEditor
 from budget_gui.unit_table import export_unit_table, import_unit_table
 from budget_gui.widgets import PowerView
 from budget_gui.worker import ExportWorker
+from budget_gui.workspace import TABS, SubTabs, Workspace
 
 
 def _path_tokens(path: str) -> tuple[str | int, ...]:
@@ -75,23 +81,43 @@ class MainWindow(QMainWindow):
         self.mass_view = PowerView()
         self.thermal_view = PowerView()
         self.link_view = PowerView()
-        self.editors = EditorTabs()
-        self.editors.add_fixed(self.power_view, "Power budget")
-        self.editors.add_fixed(self.mass_view, "Mass budget")
-        self.editors.add_fixed(self.thermal_view, "Thermal budget")
-        self.editors.add_fixed(self.link_view, "Link budget")
+        self.editors = EditorTabs()  # the Model tab: the scenario, the files, the unit tables
         self.scenario_view = ScenarioView()
         self.editors.add_fixed(self.scenario_view, "Scenario")
         self.editors.register_modifiable(self.scenario_view.editor)
         self.timeline_view = PowerTimelineView()
         self.timeline_view.run_provider = self.scenario_view.reusable_run
-        self.editors.add_fixed(self.timeline_view, "Power timeline")
         self.link_passes_view = LinkPassesView()
         self.link_passes_view.run_provider = self.scenario_view.reusable_run
-        self.editors.add_fixed(self.link_passes_view, "Link passes")
         self.compare_view = CompareView()
-        self.editors.add_fixed(self.compare_view, "Compare")
-        self.setCentralWidget(self.editors)
+        self.reports_view = ReportsView()
+        self.workspace = Workspace()
+        self.workspace.add_page("Model", self.editors)
+        self.workspace.add_page(
+            "Power", SubTabs([("Budget", self.power_view), ("Timeline", self.timeline_view)])
+        )
+        self.workspace.add_page("Mass", self.mass_view)
+        self.workspace.add_page("Thermal", self.thermal_view)
+        self.workspace.add_page(
+            "Link", SubTabs([("Budget", self.link_view), ("Passes", self.link_passes_view)])
+        )
+        self.workspace.add_page("Compare", self.compare_view)
+        self.workspace.add_page("Reports", self.reports_view)
+        self.top_bar = TopBar()
+        self.run_controller = RunController(
+            self.scenario_view, self.timeline_view, self.link_passes_view
+        )
+        self.scenario_view.use_shared_selector()
+        self.timeline_view.use_shared_selectors()
+        self.link_passes_view.use_shared_selector()
+        central = QWidget()
+        stack = QVBoxLayout(central)
+        stack.setContentsMargins(0, 0, 0, 0)
+        stack.setSpacing(0)
+        stack.addWidget(self.top_bar)
+        stack.addWidget(self.workspace, 1)
+        self.setCentralWidget(central)
+        self.workspace.setCurrentIndex(1)  # Power: a project opens on its budgets
         self._worker: ExportWorker | None = None
 
         left = QDockWidget("Project", self)
@@ -113,7 +139,17 @@ class MainWindow(QMainWindow):
         self.session.changed.connect(self._refresh)
         self.session.loading_changed.connect(self._loading_changed)
         self.scenario_view.editor.saved.connect(self.reload_project)
-        self.tree.file_requested.connect(lambda rel: self.open_file(rel))
+        self.top_bar.scenario_chosen.connect(self.select_scenario)
+        self.top_bar.case_chosen.connect(self.timeline_view.case_combo.setCurrentText)
+        self.timeline_view.case_combo.currentTextChanged.connect(self.top_bar.set_case)
+        self.top_bar.run_requested.connect(self.run_all)
+        self.run_controller.changed.connect(self._update_run_state)
+        self.editors.dirty_changed.connect(self._update_dirty)
+        self.scenario_view.editor.modified_changed.connect(lambda _m: self._update_dirty())
+        self.reports_view.reports_requested.connect(self._choose_export)
+        self.reports_view.timeline_requested.connect(self._choose_timeline_export)
+        self.reports_view.scenario_requested.connect(self._choose_scenario_export)
+        self.tree.file_requested.connect(self._tree_file)
         self.tree.field_requested.connect(self.jump_to_input)
         self.tree.unit_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
@@ -127,6 +163,7 @@ class MainWindow(QMainWindow):
             view.export_finished.connect(self._view_export_done)
             view.export_failed.connect(self._view_export_failed)
         self._closing = False  # a close was asked for while a job runs
+        self._last_run: datetime | None = None
 
     # ---- actions -----------------------------------------------------------------------------
     def _build_menu(self) -> None:
@@ -152,6 +189,7 @@ class MainWindow(QMainWindow):
         add("&Import unit table…", QKeySequence(), lambda: import_unit_table(self))
         file_menu.addSeparator()
         add("&Quit", QKeySequence.StandardKey.Quit, self.close)
+        self._build_run_menu()
         self._build_view_menu()
         help_menu = self.menuBar().addMenu("&Help")
         guide = QAction("&User guide", self)
@@ -159,8 +197,24 @@ class MainWindow(QMainWindow):
         guide.triggered.connect(lambda: self.open_guide())
         help_menu.addAction(guide)
 
+    def _build_run_menu(self) -> None:
+        run_menu = self.menuBar().addMenu("&Run")
+        self.run_action = QAction("&Run all", self)
+        self.run_action.setShortcut(QKeySequence("Ctrl+R"))
+        self.run_action.setStatusTip(
+            "Work out the scenario, the power timeline and the link passes of the scenario."
+        )
+        self.run_action.triggered.connect(self.run_all)
+        run_menu.addAction(self.run_action)
+
     def _build_view_menu(self) -> None:
         view_menu = self.menuBar().addMenu("&View")
+        for number, title in enumerate(TABS, start=1):
+            action = QAction(f"Go to {title}", self)
+            action.setShortcut(QKeySequence(f"Ctrl+{number}"))
+            action.triggered.connect(lambda _checked=False, n=number - 1: self._go_to_tab(n))
+            view_menu.addAction(action)
+        view_menu.addSeparator()
         theme_menu = view_menu.addMenu("&Theme")
         group = QActionGroup(self)
         group.setExclusive(True)
@@ -181,6 +235,12 @@ class MainWindow(QMainWindow):
         styles = QAction("&Cell styles…", self)
         styles.triggered.connect(lambda: self.show_cell_styles())
         view_menu.addAction(styles)
+
+    def _go_to_tab(self, index: int) -> None:
+        self.workspace.setCurrentIndex(index)
+        page = self.workspace.currentWidget()
+        if page is not None:
+            page.setFocus()
 
     def set_theme(self, mode: theme.Mode) -> None:
         """Switch the theme now and keep the choice for the next start."""
@@ -219,7 +279,7 @@ class MainWindow(QMainWindow):
                 f"The new project was created in {folder}. Open it with File > Open project."
             )
             return
-        self.editors.setCurrentWidget(self.timeline_view)
+        self.show_view(self.timeline_view)
         self.timeline_view.compute()
 
     def _choose_project(self) -> None:
@@ -312,9 +372,67 @@ class MainWindow(QMainWindow):
         """Load the open project again without freezing the window (F5, after a save)."""
         self.session.reload_async()
 
+    # ---- top bar -----------------------------------------------------------------------------
+    def _tree_file(self, rel: str) -> None:
+        self.open_file(rel)
+        project = self.session.project
+        stem = Path(rel).stem
+        if rel.startswith("scenarios/") and project is not None and stem in project.scenarios:
+            self.select_scenario(stem)
+
+    def select_scenario(self, scenario_id: str) -> None:
+        """Choose the scenario every tab shows. The scenario editor may refuse (it has unsaved
+        edits that belong to another scenario); then nothing changes."""
+        if self.scenario_view.selected_id() != scenario_id:
+            self.scenario_view.combo.setCurrentText(scenario_id)  # asks before dropping edits
+        chosen = self.scenario_view.selected_id()
+        for combo in (self.timeline_view.scenario_combo, self.link_passes_view.scenario_combo):
+            if combo.currentText() != chosen:
+                combo.setCurrentText(chosen)
+        self.top_bar.set_scenario(chosen)
+        self._update_run_state()
+
+    def run_all(self) -> bool:
+        """Run: the scenario, the power timeline and the link passes of the selected scenario."""
+        if not self.run_controller.run():
+            self.status_bar.showMessage(
+                "Nothing to run: open a project that has a scenario, and wait for a run in "
+                "progress to end."
+            )
+            return False
+        self._update_run_state()
+        return True
+
+    def _update_run_state(self) -> None:
+        controller = self.run_controller
+        state = controller.state()
+        tips = {
+            RunState.NOT_RUN: "The scenario, the power timeline and the link passes have not "
+            "been worked out for this scenario. Press Run (Ctrl+R).",
+            RunState.RUNNING: "Working out the scenario, the power timeline and the link passes.",
+            RunState.OK: "Everything was worked out from the inputs now on screen.",
+            RunState.STALE: "The project or a setting changed since the last run. Press Run.",
+            RunState.FAILED: controller.failure or "",
+        }
+        detail = ""
+        if state is RunState.OK and self._last_run is not None:
+            detail = f"{self._last_run:%H:%M:%S}"
+        self.top_bar.set_run_state(state, controller.can_run(), detail, tips[state])
+        self.run_action.setEnabled(controller.can_run())
+
+    def _update_dirty(self) -> None:
+        dirty = self.editors.has_unsaved_changes()
+        self.top_bar.set_dirty(dirty)
+        name = self.top_bar.name_label.text()
+        has_project = self.session.project is not None or self.session.path is not None
+        if has_project and name:
+            self.setWindowTitle(f"{'● ' if dirty else ''}{name} — {APP_NAME}")
+
     def _mark_run(self) -> None:
         """Something was worked out just now: say so in the status bar."""
-        self.status_bar.set_last_run(datetime.now())
+        self._last_run = datetime.now()
+        self.status_bar.set_last_run(self._last_run)
+        self._update_run_state()
 
     def show_not_checked(self) -> None:
         """List the 'not checked' findings (the link in the status bar)."""
@@ -336,6 +454,7 @@ class MainWindow(QMainWindow):
             )
             return
         self.editors.open_file(self.session.path, rel, line)
+        self.workspace.show_view(self.editors)
 
     def _line_of(self, rel: str, path: str) -> int | None:
         lines = self.session.load_result.lines.get(rel) if self.session.load_result else None
@@ -360,14 +479,24 @@ class MainWindow(QMainWindow):
             return None
         existing = self.editors.unit_editor(unit_id)
         if existing is not None:
-            self.editors.setCurrentWidget(existing)
+            self.show_view(existing)
             return existing
         editor = UnitEditor(self.session.path, unit_id, project.units[unit_id])
         editor.saved.connect(self.reload_project)
         self.editors.add_unit_editor(unit_id, editor)
+        self.workspace.show_view(self.editors)
         return editor
 
+    def show_view(self, widget: QWidget) -> bool:
+        """Bring any view to the front: its tab, and its page inside the tab."""
+        if self.editors.indexOf(widget) >= 0:
+            self.editors.setCurrentWidget(widget)
+            return self.workspace.show_view(self.editors)
+        return self.workspace.show_view(widget)
+
     def save_current(self) -> bool:
+        if self.workspace.currentWidget() is not self.editors:
+            return False  # Save belongs to the editors of the Model tab
         if self.editors.currentWidget() is self.scenario_view:
             return self.scenario_view.editor.save()
         unit_editor = self.editors.current_unit_editor()
@@ -423,9 +552,16 @@ class MainWindow(QMainWindow):
         self._update_problems()
         self.editors.reload_clean_files(project.units if project else None)
         name = project.meta.name if project else (session.path.name if session.path else "")
+        self.top_bar.set_project(name, project.meta.revision if project else "")
         self.setWindowTitle(f"{name} — {APP_NAME}" if name else APP_NAME)
+        ids = sorted(project.scenarios) if project else []
+        self.top_bar.set_scenarios(ids, self.scenario_view.selected_id())
+        self.select_scenario(self.scenario_view.selected_id())
+        self.run_controller.reset_failure()
+        self._last_run = datetime.now() if project else None
         self.status_bar.set_project_path(session.path)
-        self.status_bar.set_last_run(datetime.now() if project else None)
+        self.status_bar.set_last_run(self._last_run)
+        self._update_dirty()
         self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
 
     def _update_problems(self) -> None:

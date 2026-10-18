@@ -509,8 +509,9 @@ class ScenarioView(QWidget):
         self.empty_label = QLabel("No scenario to show. Open a project that has scenarios.")
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        self.scenario_label = QLabel("Scenario")
         top = QHBoxLayout()
-        top.addWidget(QLabel("Scenario"))
+        top.addWidget(self.scenario_label)
         top.addWidget(self.combo)
         top.addWidget(self.compute_button)
         top.addWidget(self.status, 1)
@@ -545,6 +546,11 @@ class ScenarioView(QWidget):
         self.combo.currentTextChanged.connect(self._selected)
         self.timeline.range_selected.connect(self._range_selected)
         self.set_project(None)
+
+    def use_shared_selector(self) -> None:
+        """The scenario is chosen in the top bar: this view keeps its selector hidden."""
+        self.scenario_label.hide()
+        self.combo.hide()
 
     # ---- project -----------------------------------------------------------------------------
     def selected_id(self) -> str:

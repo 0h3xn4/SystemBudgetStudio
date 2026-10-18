@@ -44,7 +44,7 @@ def test_the_tab_lists_the_scenario_and_waits_for_compute(window: MainWindow) ->
     ]
     assert view.result is None and "Not computed" in view.status.text()
     assert not view.export_button.isEnabled()
-    assert "Power timeline" in [window.editors.tabText(i) for i in range(window.editors.count())]
+    assert "Power" in [window.workspace.tabText(i) for i in range(window.workspace.count())]
 
 
 def test_compute_fills_plot_and_tables(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
@@ -247,7 +247,7 @@ def test_plot_readout_gives_every_series_and_differences(window: MainWindow, qtb
 def test_plot_widget_cursor_pin_and_paint(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
     compute(window, qtbot)
     window.resize(1200, 800)
-    window.editors.setCurrentWidget(window.timeline_view)
+    window.show_view(window.timeline_view)
     window.show()
     plot = window.timeline_view.plot
     qtbot.waitExposed(window)

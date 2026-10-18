@@ -121,12 +121,16 @@ class PowerTimelineView(QWidget):
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         top = QHBoxLayout()
+        self.shared_labels: list[QLabel] = []
         for text, widget in (
             ("Scenario", self.scenario_combo),
             ("Demand", self.basis_combo),
             ("Case", self.case_combo),
         ):
-            top.addWidget(QLabel(text))
+            label = QLabel(text)
+            if text != "Demand":
+                self.shared_labels.append(label)
+            top.addWidget(label)
             top.addWidget(widget)
         top.addWidget(self.shading)
         top.addWidget(self.compute_button)
@@ -164,6 +168,11 @@ class PowerTimelineView(QWidget):
         self.violations_table.cellDoubleClicked.connect(lambda row, _c: self.jump_to(row))
         self.plot.set_info_provider(self._info_at)
         self.set_project(None, [])
+
+    def use_shared_selectors(self) -> None:
+        """Scenario and case (BOL or EOL) are chosen in the top bar: hide this view's own."""
+        for widget in (*self.shared_labels, self.scenario_combo, self.case_combo):
+            widget.hide()
 
     # ---- project -----------------------------------------------------------------------------
     def selected_id(self) -> str:

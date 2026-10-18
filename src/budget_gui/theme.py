@@ -399,6 +399,37 @@ def palette(t: Tokens) -> QPalette:
     return pal
 
 
+CHIP_STATES = ("not_run", "running", "ok", "stale", "failed")
+
+
+def chip_colours(t: Tokens, state: str) -> tuple[str, str]:
+    """(text and icon colour, tint) of the run-status chip: the status palette, so a state looks
+    the same wherever it appears. `running` is the one state that is not a verdict."""
+    if state == "ok":
+        style = t.s_pass
+    elif state == "stale":
+        style = t.s_near
+    elif state == "failed":
+        style = t.s_fail
+    elif state == "running":
+        return (t.accent_text, t.layer)
+    else:
+        style = t.s_not_checked
+    return (style.fg, style.bg)
+
+
+def _chip_rules(t: Tokens) -> str:
+    rules = []
+    for state in CHIP_STATES:
+        fg, bg = chip_colours(t, state)
+        rules.append(
+            f'QFrame[role="chip"][state="{state}"] {{ background: {bg}; }}\n'
+            f'    QFrame[role="chip"][state="{state}"] QLabel {{ background: transparent; '
+            f"color: {fg}; font-weight: 600; }}"
+        )
+    return "\n    ".join(rules)
+
+
 def stylesheet(t: Tokens) -> str:
     s1, s2, s3 = SPACE[1], SPACE[2], SPACE[3]
     return f"""
@@ -414,6 +445,8 @@ def stylesheet(t: Tokens) -> str:
     QPushButton[kind="secondary"] {{ background: {t.background}; color: {t.accent_text};
                                      border: 1px solid {t.accent_text}; }}
     QPushButton[kind="secondary"]:hover {{ background: {t.layer}; }}
+    QPushButton[kind="secondary"]:checked {{ background: {t.selection_bg};
+                                             color: {t.selection_text}; }}
     QPushButton[kind="danger"] {{ background: {t.s_fail.fg}; border-color: {t.s_fail.fg};
                                   color: {t.background}; }}
     QPushButton[kind="link"] {{ background: transparent; color: {t.accent_text}; border: none;
@@ -451,6 +484,9 @@ def stylesheet(t: Tokens) -> str:
     QLabel[role="small"] {{ font-size: {TYPE_SMALL}px; color: {t.text_secondary}; }}
     QLabel[role="chip"] {{ padding: 1px {s1}px; border-radius: {s3 // 2}px;
                            font-size: {TYPE_SMALL}px; }}
+    QFrame[role="chip"] {{ border-radius: {s3 // 2 + 2}px; }}
+    {_chip_rules(t)}
+    QLabel[role="dirty"] {{ color: {t.s_near.fg}; font-weight: 600; }}
     """
 
 

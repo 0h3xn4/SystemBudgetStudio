@@ -85,7 +85,7 @@ def test_a_text_edit_is_not_reverted_by_the_next_save_in_the_unit_table(
     assert window.save_current()  # saves the text tab, the project reloads
     assert table.table.item(1, 1).text() == "2.6"  # the clean table shows the new file
     table.table.item(1, 2).setText("3.5")  # now an edit in the table (peak power)
-    window.editors.setCurrentWidget(table)
+    window.show_view(table)
     assert window.save_current()
     saved = load_project(project).project.units["camera"]  # type: ignore[union-attr]
     assert saved.modes[1].avg_power_w == 2.6 and saved.modes[1].peak_power_w == 3.5

@@ -302,11 +302,11 @@ def test_the_minimum_window_size_fits_a_1366_by_768_screen(
 ) -> None:
     window.show()
     QApplication.processEvents()
-    for index in range(window.editors.count()):
-        window.editors.setCurrentIndex(index)
+    for index in range(window.workspace.count()):
+        window.workspace.setCurrentIndex(index)
         QApplication.processEvents()
         size = window.minimumSizeHint()
-        assert size.height() <= 650 and size.width() <= 1200, window.editors.tabText(index)
+        assert size.height() <= 650 and size.width() <= 1200, window.workspace.tabText(index)
 
 
 # ---- GUI-25: disabled and focused controls look different ---
@@ -359,7 +359,7 @@ def test_a_panel_with_equal_limits_paints(qtbot) -> None:  # type: ignore[no-unt
 
 # ---- GUI-29: small things ---
 def test_ctrl_s_on_the_scenario_tab_saves_the_scenario(window: MainWindow, project: Path) -> None:
-    window.editors.setCurrentWidget(window.scenario_view)
+    window.show_view(window.scenario_view)
     window.scenario_view.editor.add_segment(5.0, 50.0)
     assert window.save_current() is True
     assert not window.scenario_view.editor.is_modified()

@@ -24,7 +24,7 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
 def test_the_tab_shows_cases_modes_and_node_temperatures(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "cubesat_3u_eps")
     view = window.thermal_view
-    window.editors.setCurrentWidget(view)
+    window.show_view(view)
     titles = [view.tabText(i) for i in range(view.count())]
     assert titles[0] == "Summary" and "Case cold" in titles and "Case hot" in titles
     assert "Mode charging" in titles and titles[-2:] == ["Assumptions", "Provenance"]
@@ -36,7 +36,7 @@ def test_the_tab_shows_cases_modes_and_node_temperatures(window: MainWindow) -> 
 def test_placeholder_examples_show_na_and_the_banner(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "cubesat_3u")
     view = window.thermal_view
-    window.editors.setCurrentWidget(view)
+    window.show_view(view)
     assert view.banner.isVisibleTo(window) and "INCOMPLETE" in view.banner.text()
     model = view.table_model("Summary", 0)
     assert model.data(model.index(0, 1)) != ""
