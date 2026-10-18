@@ -9,7 +9,8 @@ the results stand.
 
 from __future__ import annotations
 
-from PySide6.QtCore import QSize, Signal
+from PySide6.QtCore import QSize, Qt, Signal
+from PySide6.QtGui import QPainter, QPaintEvent, QPalette
 from PySide6.QtWidgets import (
     QButtonGroup,
     QComboBox,
@@ -31,6 +32,34 @@ CHIP_ICON = {
     RunState.STALE: "triangle-alert",
     RunState.FAILED: "circle-x",
 }
+
+
+class ElidedLabel(QLabel):
+    """A label that gives up width before anything else does: a long project name ends in an
+    ellipsis (the whole name is the tooltip) instead of forcing the window wide."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._full = ""
+
+    def setText(self, text: str) -> None:  # noqa: N802 (Qt naming)
+        self._full = text
+        super().setText(text)
+        self.setToolTip(text)
+
+    def minimumSizeHint(self) -> QSize:  # noqa: N802 (Qt naming)
+        return QSize(48, super().minimumSizeHint().height())
+
+    def paintEvent(self, event: QPaintEvent) -> None:  # noqa: N802 (Qt naming)
+        painter = QPainter(self)
+        painter.setFont(self.font())
+        painter.setPen(self.palette().color(QPalette.ColorRole.WindowText))
+        elided = self.fontMetrics().elidedText(
+            self._full, Qt.TextElideMode.ElideRight, self.width()
+        )
+        painter.drawText(
+            self.rect(), int(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft), elided
+        )
 
 
 class StatusChip(QFrame):
@@ -73,7 +102,6 @@ class StatusChip(QFrame):
         self._icon.setPixmap(
             icons.icon(CHIP_ICON[self._state], colour).pixmap(self.ICON, self.ICON)
         )
-        self.setStyleSheet("")  # the rule of the theme applies; see `theme.stylesheet`
         self.style().unpolish(self)
         self.style().polish(self)
 
@@ -85,7 +113,8 @@ class TopBar(QWidget):
 
     def __init__(self) -> None:
         super().__init__()
-        self.name_label = QLabel("No project open")
+        self.name_label = ElidedLabel()
+        self.name_label.setText("No project open")
         self.name_label.setProperty("role", "title")
         self.revision_label = QLabel("")
         self.revision_label.setProperty("role", "muted")
@@ -94,7 +123,10 @@ class TopBar(QWidget):
         self.dirty_label.setToolTip("Some files or tables have changes that are not saved yet.")
 
         self.scenario_combo = QComboBox()
-        self.scenario_combo.setMinimumContentsLength(10)
+        self.scenario_combo.setSizeAdjustPolicy(
+            QComboBox.SizeAdjustPolicy.AdjustToMinimumContentsLengthWithIcon
+        )
+        self.scenario_combo.setMinimumContentsLength(12)
         self.scenario_combo.setToolTip(
             "The scenario every tab shows (Model > Scenario, Power > Timeline, Link > Passes)."
         )
@@ -126,8 +158,8 @@ class TopBar(QWidget):
         self.chip = StatusChip()
 
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(16, 8, 16, 8)
-        layout.setSpacing(12)
+        layout.setContentsMargins(12, 8, 12, 8)
+        layout.setSpacing(8)
         layout.addWidget(self.name_label)
         layout.addWidget(self.revision_label)
         layout.addWidget(self.dirty_label)

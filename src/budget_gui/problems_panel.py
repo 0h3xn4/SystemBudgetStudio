@@ -8,9 +8,18 @@ information. The panel only shows what the core reported; it never adds text rea
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Any
 
-from PySide6.QtCore import QModelIndex, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QFont, QStandardItem, QStandardItemModel
+from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QPoint, QRect, QSize, Qt, Signal
+from PySide6.QtGui import (
+    QBrush,
+    QColor,
+    QFont,
+    QResizeEvent,
+    QShowEvent,
+    QStandardItem,
+    QStandardItemModel,
+)
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
@@ -18,7 +27,10 @@ from PySide6.QtWidgets import (
     QHeaderView,
     QLabel,
     QLineEdit,
+    QMenu,
     QStackedLayout,
+    QStyledItemDelegate,
+    QStyleOptionViewItem,
     QTreeView,
     QVBoxLayout,
     QWidget,
@@ -30,8 +42,8 @@ from budget_gui import problem_class as pc
 from budget_gui.problem_class import ProblemClass
 
 PROBLEM_ROLE = int(Qt.ItemDataRole.UserRole) + 10  # index into the list of shown problems
-COLUMNS = ("Class", "Message", "File", "Field", "Code")
-MESSAGE, FILE, FIELD, CODE = 1, 2, 3, 4
+COLUMNS = ("Class", "Problem", "Field", "Code")
+CLASS, MESSAGE, FIELD, CODE = 0, 1, 2, 3
 
 
 class Grouping(StrEnum):
@@ -54,6 +66,44 @@ def _where(problem: Problem) -> str:
 
 def _key(problem: Problem) -> tuple[str, str, str, str]:
     return (problem.code, problem.file or "", problem.path, problem.message)
+
+
+class _WrapDelegate(QStyledItemDelegate):
+    """Measures the wrapped text of the problem column from the width the column has now (a tree
+    view does not do that by itself)."""
+
+    def __init__(self, view: QTreeView) -> None:
+        super().__init__(view)
+        self._view = view
+
+    def sizeHint(  # noqa: N802 (Qt naming)
+        self, option: QStyleOptionViewItem, index: QModelIndex | QPersistentModelIndex
+    ) -> QSize:
+        size = super().sizeHint(option, index)
+        if index.column() != MESSAGE:
+            return size
+        opt: Any = option
+        width = max(self._view.columnWidth(MESSAGE) - 12, 40)
+        text = str(index.data(Qt.ItemDataRole.DisplayRole) or "")
+        rect = opt.fontMetrics.boundingRect(
+            QRect(0, 0, width, 100000),
+            int(Qt.TextFlag.TextWordWrap | Qt.AlignmentFlag.AlignLeft),
+            text,
+        )
+        return QSize(size.width(), max(size.height(), rect.height() + 8))
+
+
+class _WrapTree(QTreeView):
+    """A tree whose rows are measured again when its width changes: wrapped text needs the final
+    width of its column, which is only known after the first layout."""
+
+    def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802 (Qt naming)
+        super().resizeEvent(event)
+        self.doItemsLayout()
+
+    def showEvent(self, event: QShowEvent) -> None:  # noqa: N802 (Qt naming)
+        super().showEvent(event)
+        self.doItemsLayout()
 
 
 class ProblemsPanel(QWidget):
@@ -81,8 +131,9 @@ class ProblemsPanel(QWidget):
 
         self.list_model = QStandardItemModel(0, len(COLUMNS))
         self.list_model.setHorizontalHeaderLabels(list(COLUMNS))
-        self.view = QTreeView()
+        self.view = _WrapTree()
         self.view.setModel(self.list_model)
+        self.view.setItemDelegate(_WrapDelegate(self.view))
         self.view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.view.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.view.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
@@ -91,16 +142,22 @@ class ProblemsPanel(QWidget):
         self.view.setAllColumnsShowFocus(True)
         self.view.setAlternatingRowColors(True)
         self.view.setMinimumHeight(48)
-        self.view.setTextElideMode(Qt.TextElideMode.ElideRight)
+        self.view.setTextElideMode(Qt.TextElideMode.ElideNone)  # long messages wrap
         header = self.view.header()
         header.setStretchLastSection(False)
         header.setSectionResizeMode(MESSAGE, QHeaderView.ResizeMode.Stretch)
-        for column in (0, FILE, FIELD, CODE):
+        for column in (CLASS, FIELD, CODE):
             header.setSectionResizeMode(column, QHeaderView.ResizeMode.Interactive)
-        self.view.setColumnWidth(0, 120)
-        self.view.setColumnWidth(FILE, 170)
-        self.view.setColumnWidth(FIELD, 150)
-        self.view.setColumnWidth(CODE, 190)
+        self.list_model.setHeaderData(
+            CLASS,
+            Qt.Orientation.Horizontal,
+            "Class: error, warning, not checked or info",
+            Qt.ItemDataRole.ToolTipRole,
+        )
+        header.setMinimumSectionSize(40)
+        header.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        header.customContextMenuRequested.connect(self._header_menu)
+        self.set_column_widths([])
         self.empty = QLabel()
         self.empty.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.empty.setWordWrap(True)
@@ -129,6 +186,40 @@ class ProblemsPanel(QWidget):
         self.group_box.currentIndexChanged.connect(lambda _i: self._rebuild())
         self.view.activated.connect(self._activated)
         theme.manager().changed.connect(self._theme_changed)
+
+    # ---- columns (widths and visibility are kept in the layout file) ---------------------------
+    DEFAULT_WIDTHS = (34, 0, 150, 190)  # the problem column stretches
+    DEFAULT_HIDDEN = (FIELD, CODE)  # the narrow dock shows the class icon and the problem
+
+    def column_widths(self) -> list[int]:
+        """Width of each column; 0 for a hidden one (the message column is never hidden)."""
+        return [
+            0 if self.view.isColumnHidden(c) else self.view.columnWidth(c)
+            for c in range(len(COLUMNS))
+        ]
+
+    def set_column_widths(self, widths: list[int]) -> None:
+        """Apply saved widths (0 hides a column); an unusable list gives the defaults."""
+        usable = len(widths) == len(COLUMNS) and all(w >= 0 for w in widths)
+        for column in range(len(COLUMNS)):
+            if column == MESSAGE:
+                continue
+            if usable:
+                hidden, width = widths[column] == 0, widths[column]
+            else:
+                hidden, width = column in self.DEFAULT_HIDDEN, self.DEFAULT_WIDTHS[column]
+            self.view.setColumnHidden(column, hidden)
+            if not hidden:
+                self.view.setColumnWidth(column, max(int(width), 40))
+
+    def _header_menu(self, pos: QPoint) -> None:
+        menu = QMenu(self)
+        for column in (FIELD, CODE):
+            action = menu.addAction(COLUMNS[column])
+            action.setCheckable(True)
+            action.setChecked(not self.view.isColumnHidden(column))
+            action.toggled.connect(lambda shown, c=column: self.view.setColumnHidden(c, not shown))
+        menu.exec(self.view.header().mapToGlobal(pos))
 
     # ---- data --------------------------------------------------------------------------------
     def set_problems(self, problems: list[Problem], *, project_open: bool = True) -> None:
@@ -256,18 +347,20 @@ class ProblemsPanel(QWidget):
         tip = pc.EXPLANATIONS[cls]
         if problem.hint:
             tip += f"\n{problem.hint}"
+        where = _where(problem)
+        text = problem.message + (f"  {problem.hint}" if problem.hint else "")
         items = [
-            QStandardItem(icons.icon(pc.ICONS[cls], pc.colour(cls)), pc.LABELS[cls]),
-            QStandardItem(problem.message + (f"  {problem.hint}" if problem.hint else "")),
-            QStandardItem(_where(problem)),
+            QStandardItem(icons.icon(pc.ICONS[cls], pc.colour(cls)), ""),
+            QStandardItem(f"{text}\n{where}"),
             QStandardItem(problem.path),
             QStandardItem(problem.code),
         ]
+        items[0].setData(pc.LABELS[cls], Qt.ItemDataRole.AccessibleTextRole)
         items[0].setForeground(colour)
         for column, item in enumerate(items):
             item.setEditable(False)
-            item.setToolTip(tip if column == 0 else problem.format())
-            if column in (FILE, FIELD, CODE):
+            item.setToolTip(tip if column == CLASS else problem.format())
+            if column in (FIELD, CODE):
                 item.setData(theme.mono_font(), Qt.ItemDataRole.FontRole)
         items[0].setData(position, PROBLEM_ROLE)
         return items

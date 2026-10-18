@@ -12,7 +12,7 @@ def test_window_title_and_status(qtbot) -> None:  # type: ignore[no-untyped-def]
     window = MainWindow()
     qtbot.addWidget(window)
     assert window.windowTitle() == APP_NAME
-    assert "offline" in window.statusBar().currentMessage()
+    assert "Offline" in window.statusBar().currentMessage()
 
 
 def test_plex_fonts_bundled(qtbot) -> None:  # type: ignore[no-untyped-def]

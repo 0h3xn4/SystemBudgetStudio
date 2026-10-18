@@ -44,6 +44,7 @@ UNIT_ROLE = FILE_ROLE + 1  # id of the unit a node belongs to
 PATH_ROLE = FILE_ROLE + 2  # field inside the file ("" for the whole file)
 KIND_ROLE = FILE_ROLE + 3  # "file", "field", "unit_modes" or "group"
 BADGE_ROLE = FILE_ROLE + 4  # tuple of (class value, count)
+NODE_ROLE = FILE_ROLE + 5  # index of the node in the tree's list of nodes
 Index = QModelIndex | QPersistentModelIndex
 
 CONFIG_FOLDER = "config"
@@ -189,6 +190,18 @@ def _belongs(problem: Problem, node: Node) -> bool:
     )
 
 
+def problems_of(node: Node, problems: Iterable[Problem]) -> list[Problem]:
+    """The problems that belong to a node, in the order given: those of its own file and field and
+    of its children (the project node: all of them, also those without a file)."""
+    listed = list(problems)
+    if node.kind == "project":
+        return listed
+    if node.kind == "unit_modes":
+        return [p for p in listed if p.file == node.rel and p.path.startswith(node.path)]
+    members = [n for n in node.walk() if n.kind != "unit_modes"]
+    return [p for p in listed if any(_belongs(p, n) for n in members)]
+
+
 def badge_counts(top: Node, problems: Iterable[Problem]) -> dict[int, dict[ProblemClass, int]]:
     """Problems per class for every node (by `id(node)`). A node counts the problems of its own
     file and field plus those of its children; the project node counts every problem."""
@@ -274,6 +287,7 @@ class ProjectTree(QTreeWidget):
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self._context_menu)
         self._top: Node | None = None
+        self._nodes: list[Node] = []
         self._items: dict[int, QTreeWidgetItem] = {}
         self._problems: list[Problem] = []
 
@@ -355,6 +369,7 @@ class ProjectTree(QTreeWidget):
         selected = self._current_key()
         self.clear()
         self._items = {}
+        self._nodes = []
         self._top = None
         if root is None:
             return
@@ -367,6 +382,8 @@ class ProjectTree(QTreeWidget):
     def _add(self, parent: QTreeWidgetItem, node: Node) -> None:
         item = QTreeWidgetItem([node.label])
         item.setData(0, KIND_ROLE, node.kind)
+        item.setData(0, NODE_ROLE, len(self._nodes))
+        self._nodes.append(node)
         if node.rel:
             item.setData(0, FILE_ROLE, node.rel)
         if node.path:
@@ -423,6 +440,16 @@ class ProjectTree(QTreeWidget):
         if shown:
             lines.append(", ".join(f"{by_class[c]} {pc.LABELS[c].lower()}" for c in shown))
         return "\n".join(lines)
+
+    def current_node(self) -> Node | None:
+        """The node of the selected row (None when nothing is selected)."""
+        item = self.currentItem()
+        index = item.data(0, NODE_ROLE) if item is not None else None
+        return self._nodes[int(index)] if index is not None else None
+
+    def problems_of_current(self) -> list[Problem]:
+        node = self.current_node()
+        return problems_of(node, self._problems) if node is not None else []
 
     def badges_of(self, item: QTreeWidgetItem) -> dict[ProblemClass, int]:
         """The counts shown on an item (for tests and the Inspector)."""

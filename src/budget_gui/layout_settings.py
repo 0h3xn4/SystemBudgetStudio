@@ -104,6 +104,13 @@ class LayoutSettings:
         if self._settings is not None:
             self._settings.setValue(key, value)
 
+    def clear_group(self, group: str) -> None:
+        """Forget every key of one group (for example `dock` and `window` on Reset layout)."""
+        if group not in GROUPS:
+            raise LayoutError("Only the groups window, dock, columns and theme are kept.")
+        if self._settings is not None:
+            self._settings.remove(group)
+
     def sync(self) -> None:
         if self._settings is not None:
             self._settings.sync()

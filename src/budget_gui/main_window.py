@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 
 from PySide6.QtCore import Qt, QThread, QTimer, Signal
-from PySide6.QtGui import QAction, QActionGroup, QCloseEvent, QKeySequence
+from PySide6.QtGui import QAction, QActionGroup, QCloseEvent, QKeySequence, QShowEvent
 from PySide6.QtWidgets import (
     QApplication,
     QDockWidget,
@@ -29,6 +29,7 @@ from budget_gui.compare_view import CompareView
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
+from budget_gui.inspector import InspectorPanel
 from budget_gui.layout_settings import LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
@@ -36,6 +37,7 @@ from budget_gui.privacy import disable_settings_files
 from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.project_tree import ProjectTree
+from budget_gui.provenance_panel import ProvenancePanel
 from budget_gui.reports_view import ReportsView
 from budget_gui.run_controller import RunController, RunState
 from budget_gui.scenario_view import ScenarioView
@@ -68,15 +70,17 @@ class MainWindow(QMainWindow):
     export_finished = Signal(list)
     export_failed = Signal(str)
 
-    def __init__(self) -> None:
+    def __init__(self, layout: LayoutSettings | None = None) -> None:
         super().__init__()
         disable_settings_files()  # also when the window is made without create_app
         self.setWindowTitle(APP_NAME)
         self.resize(1400, 860)
         self.session = ProjectSession()
-        self.layout_settings = LayoutSettings.default()
+        self.layout_settings = layout if layout is not None else LayoutSettings.default()
         self.tree = ProjectTree()
         self.problems_panel = ProblemsPanel()
+        self.inspector = InspectorPanel()
+        self.provenance_panel = ProvenancePanel()
         self.power_view = PowerView()
         self.mass_view = PowerView()
         self.thermal_view = PowerView()
@@ -120,20 +124,25 @@ class MainWindow(QMainWindow):
         self.workspace.setCurrentIndex(1)  # Power: a project opens on its budgets
         self._worker: ExportWorker | None = None
 
-        left = QDockWidget("Project", self)
-        left.setWidget(self.tree)
-        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, left)
-        bottom = QDockWidget("Problems", self)
-        bottom.setWidget(self.problems_panel)
-        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, bottom)
-        self.resizeDocks([bottom], [170], Qt.Orientation.Vertical)  # room for several rows
+        self.project_dock = self._dock("Project", "dock-project", self.tree)
+        self.inspector_dock = self._dock("Inspector", "dock-inspector", self.inspector)
+        self.problems_dock = self._dock("Problems", "dock-problems", self.problems_panel)
+        self.provenance_dock = self._dock("Provenance", "dock-provenance", self.provenance_panel)
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.project_dock)
+        for dock in (self.inspector_dock, self.problems_dock, self.provenance_dock):
+            self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
+        self.tabifyDockWidget(self.inspector_dock, self.problems_dock)
+        self.tabifyDockWidget(self.problems_dock, self.provenance_dock)
+        self.problems_dock.raise_()
+        self._sized = False  # the dock widths are set when the window is first shown
         self.status_bar = AppStatusBar()
         self.setStatusBar(self.status_bar)
         self.status_bar.showMessage(
             "Offline. File > Open project, or File > New project (guided), starts a budget."
         )
         self.status_bar.not_checked_requested.connect(self.show_not_checked)
-        self.problems_dock = bottom
+        self._default_state = self.saveState()  # what View > Reset layout goes back to
+        self._restore_layout()
 
         self._build_menu()
         self.session.changed.connect(self._refresh)
@@ -151,6 +160,10 @@ class MainWindow(QMainWindow):
         self.reports_view.scenario_requested.connect(self._choose_scenario_export)
         self.tree.file_requested.connect(self._tree_file)
         self.tree.field_requested.connect(self.jump_to_input)
+        self.tree.currentItemChanged.connect(lambda _current, _previous: self._inspect())
+        self.inspector.open_requested.connect(self.tree.activate_current)
+        self.inspector.modes_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
+        self.inspector.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self.tree.unit_requested.connect(lambda unit_id: self.open_unit_editor(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self._export_folder = Path()
@@ -208,7 +221,7 @@ class MainWindow(QMainWindow):
         run_menu.addAction(self.run_action)
 
     def _build_view_menu(self) -> None:
-        view_menu = self.menuBar().addMenu("&View")
+        view_menu = self.view_menu = self.menuBar().addMenu("&View")
         for number, title in enumerate(TABS, start=1):
             action = QAction(f"Go to {title}", self)
             action.setShortcut(QKeySequence(f"Ctrl+{number}"))
@@ -231,6 +244,26 @@ class MainWindow(QMainWindow):
             group.addAction(action)
             theme_menu.addAction(action)
             self.theme_actions[mode] = action
+        view_menu.addSeparator()
+        for dock in (
+            self.project_dock,
+            self.inspector_dock,
+            self.problems_dock,
+            self.provenance_dock,
+        ):
+            view_menu.addAction(dock.toggleViewAction())
+        reset = QAction("Re&set layout", self)
+        reset.triggered.connect(self.reset_layout)
+        view_menu.addAction(reset)
+        view_menu.addSeparator()
+        for text, key, step in (
+            ("&Next problem", "F8", 1),
+            ("&Previous problem", "Shift+F8", -1),
+        ):
+            action = QAction(text, self)
+            action.setShortcut(QKeySequence(key))
+            action.triggered.connect(lambda _checked=False, s=step: self.next_problem(s))
+            view_menu.addAction(action)
         view_menu.addSeparator()
         styles = QAction("&Cell styles…", self)
         styles.triggered.connect(lambda: self.show_cell_styles())
@@ -371,6 +404,73 @@ class MainWindow(QMainWindow):
     def reload_project(self) -> None:
         """Load the open project again without freezing the window (F5, after a save)."""
         self.session.reload_async()
+
+    # ---- docks and layout --------------------------------------------------------------------
+    def _dock(self, title: str, name: str, widget: QWidget) -> QDockWidget:
+        dock = QDockWidget(title, self)
+        dock.setObjectName(name)  # the name is the key of the saved layout
+        dock.setWidget(widget)
+        return dock
+
+    def _inspect(self) -> None:
+        """The Inspector follows the selected node of the tree."""
+        self.inspector.show_node(self.tree.current_node(), self.tree.problems_of_current())
+
+    def _restore_layout(self) -> None:
+        settings = self.layout_settings
+        geometry = settings.bytes_value("window/geometry")
+        if geometry is not None:
+            self.restoreGeometry(geometry)
+        state = settings.bytes_value("dock/state")
+        if state is not None:
+            self.restoreState(state)
+        self.problems_panel.set_column_widths(settings.int_list("columns/problems"))
+
+    def save_layout(self) -> None:
+        """Keep the window geometry, the dock arrangement and the widths of the Problems columns."""
+        settings = self.layout_settings
+        settings.set_bytes("window/geometry", self.saveGeometry())
+        settings.set_bytes("dock/state", self.saveState())
+        settings.set_int_list("columns/problems", self.problems_panel.column_widths())
+        settings.sync()
+
+    def reset_layout(self) -> None:
+        """View > Reset layout: the arrangement the window starts with, and forget the saved one."""
+        for group in ("window", "dock", "columns"):
+            self.layout_settings.clear_group(group)
+        self.layout_settings.sync()
+        for dock in (
+            self.project_dock,
+            self.inspector_dock,
+            self.problems_dock,
+            self.provenance_dock,
+        ):
+            dock.setFloating(False)
+            dock.show()
+        self.restoreState(self._default_state)
+        self._apply_default_sizes()
+        self.problems_panel.set_column_widths([])
+        self.resize(1400, 860)
+
+    def _apply_default_sizes(self) -> None:
+        self.resizeDocks(
+            [self.project_dock, self.problems_dock], [280, 420], Qt.Orientation.Horizontal
+        )
+
+    def showEvent(self, event: QShowEvent) -> None:  # noqa: N802 (Qt naming)
+        super().showEvent(event)
+        if not self._sized:
+            self._sized = True
+            if self.layout_settings.bytes_value("dock/state") is None:
+                QTimer.singleShot(0, self._apply_default_sizes)  # after the first layout
+
+    def next_problem(self, step: int = 1) -> None:
+        """Select the next (or previous) problem and open its file at the line."""
+        problem = self.problems_panel.select_next(step)
+        self.problems_dock.show()
+        self.problems_dock.raise_()
+        if problem is not None and problem.file:
+            self.open_file(problem.file, problem.line or 1)
 
     # ---- top bar -----------------------------------------------------------------------------
     def _tree_file(self, rel: str) -> None:
@@ -561,6 +661,8 @@ class MainWindow(QMainWindow):
         self._last_run = datetime.now() if project else None
         self.status_bar.set_project_path(session.path)
         self.status_bar.set_last_run(self._last_run)
+        self.provenance_panel.set_provenance(session.provenance)
+        self._inspect()
         self._update_dirty()
         self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
 
@@ -582,6 +684,7 @@ class MainWindow(QMainWindow):
         shown = sort_problems(located)
         self.problems_panel.set_problems(shown, project_open=self.session.path is not None)
         self.tree.set_problems(shown)
+        self._inspect()
         self.status_bar.set_not_checked(self.problems_panel.counts()[ProblemClass.NOT_CHECKED])
         if self.session.project is not None:
             name = self.session.project.meta.name
@@ -649,6 +752,7 @@ class MainWindow(QMainWindow):
             event.ignore()
             QTimer.singleShot(200, self._close_when_idle)
             return
+        self.save_layout()
         event.accept()
 
     def busy(self) -> bool:
