@@ -71,7 +71,7 @@ temperature_limits:
   survival_max_k: 353.15
 ```
 
-Each case picks the `operating` or `survival` set. Every unit gets a status:
+Each case picks the `operating` or `survival` set. Every unit gets a status (in the window the unit's temperature and its status are coloured by it: green within, amber near, red exceeded, grey not checked):
 
 | Status | Meaning |
 |---|---|

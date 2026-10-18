@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
 from budget_gui.delegates import (
+    MARGIN_ROLE,
     NUMERIC_ROLE,
     STATE_ROLE,
     TOTAL_ROLE,
@@ -37,6 +38,19 @@ COLUMN_WIDTH_ROWS = 60  # rows looked at to size a column
 
 EMPTY_TEXT = "No budget to show. Open a project without errors."
 HEADER_LINE = 14  # a header longer than this is broken into two lines at a space
+
+
+# how the words of a status column read on screen; a word that is not here has no state
+STATUS_WORDS = {
+    "ok": Status.PASS,
+    "yes": Status.PASS,
+    "margin": Status.NEAR,
+    "exceeded": Status.FAIL,
+    "no": Status.FAIL,
+    "no limits": Status.NOT_CHECKED,
+    "ok (margin not checked)": Status.NOT_CHECKED,
+    NA: Status.NOT_CHECKED,
+}
 
 
 def wrap_header(text: str) -> str:
@@ -58,6 +72,24 @@ class DocTableModel(QAbstractTableModel):
         super().__init__()
         self.table = table
         self._text: dict[tuple[int, int], str] = {}  # formatted cells, made when first asked for
+
+    def _row_state(self, row: int, column: int) -> Status | None:
+        """The state a status column gives to this cell of its row, if the table has one."""
+        table = self.table
+        if table.status_column is None or column not in (table.status_column, *table.status_marks):
+            return None
+        word = table.rows[row][table.status_column]
+        return STATUS_WORDS.get(word.lower()) if isinstance(word, str) else None
+
+    def _share(self, row: int, column: int) -> float | None:
+        """Share of the limit used, for a (value, limit) bar; over 1 is over the limit."""
+        table = self.table
+        if table.bar is None or column != table.bar[0]:
+            return None
+        value, limit = table.rows[row][table.bar[0]], table.rows[row][table.bar[1]]
+        if isinstance(value, str) or isinstance(limit, str) or value is None or not limit:
+            return None
+        return float(value) / float(limit) if limit > 0 else None
 
     def rowCount(self, parent: Index = _NO_PARENT) -> int:
         return 0 if parent.isValid() else len(self.table.rows)
@@ -92,13 +124,21 @@ class DocTableModel(QAbstractTableModel):
             horizontal = Qt.AlignmentFlag.AlignRight if numeric else Qt.AlignmentFlag.AlignLeft
             return int(horizontal | Qt.AlignmentFlag.AlignVCenter)
         if role == STATE_ROLE:
+            row_state = self._row_state(index.row(), index.column())
+            if row_state is not None:
+                return row_state.value
             return Status.NOT_CHECKED.value if text == NA else None
+        if role == MARGIN_ROLE:
+            return self._share(index.row(), index.column())
         if role == NUMERIC_ROLE:
             return column.kind != "text" or value is None
         if role == TOTAL_ROLE:
             return self.table.emphasise_last_row and index.row() == len(self.table.rows) - 1
-        if role == Qt.ItemDataRole.ToolTipRole and text == NA:
-            return tooltip_for(Status.NOT_CHECKED)
+        if role == Qt.ItemDataRole.ToolTipRole:
+            state = self._row_state(index.row(), index.column())
+            if state is not None:
+                return tooltip_for(state)
+            return tooltip_for(Status.NOT_CHECKED) if text == NA else None
         return None
 
 

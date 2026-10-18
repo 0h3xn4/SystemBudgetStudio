@@ -34,6 +34,12 @@ class Table:
     # Columns that identify a row (a comparison pairs rows by them): the first column unless the
     # first column repeats, as the link id does when a link has several points.
     key_columns: tuple[int, ...] = (0,)
+    # For the window only (no report renderer reads them): the column that says in words how a
+    # row stands against its limit (ok, margin, exceeded, yes, no, n/a), the columns of that row
+    # the window colours by it, and the (value, limit) columns of a bar of the share used.
+    status_column: int | None = None
+    status_marks: tuple[int, ...] = ()
+    bar: tuple[int, int] | None = None
 
 
 @dataclass(frozen=True)
