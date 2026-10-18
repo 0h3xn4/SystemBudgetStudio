@@ -247,6 +247,6 @@ def test_unit_editor_keeps_mass_properties(window: MainWindow, tmp_path: Path) -
 
     set_mode_value(window, "camera", "imaging", "avg_power_w", "62.0")
     set_mode_value(window, "camera", "imaging", "peak_power_w", "85.0")
-    assert window.save_grids() is True
+    assert window.save_model() is True
     unit = load_project(tmp_path / "p").project.units["camera"]  # type: ignore[union-attr]
     assert unit.mass_properties is not None and unit.mass_properties.position_m[2] == 0.95

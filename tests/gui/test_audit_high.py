@@ -102,34 +102,22 @@ def test_a_table_with_pending_edits_refuses_to_overwrite_a_newer_file(
         path.read_text(encoding="utf-8").replace("avg_power_w: 60.0", "avg_power_w: 63.0"),
         encoding="utf-8",
     )
-    assert not window.save_grids()
+    assert not window.save_model()
     assert "changed on disk" in window.modes_page.feedback_label.text()
     assert "avg_power_w: 63.0" in path.read_text(encoding="utf-8")
 
 
-# ---- GUI-4: switching the scenario asks before dropping edits ---------------------------------
-def test_switching_the_scenario_with_unsaved_edits_asks_and_can_cancel(
-    window: MainWindow, monkeypatch: pytest.MonkeyPatch
-) -> None:
+# ---- GUI-4: switching the scenario keeps the unsaved edits of the first --------------------------
+def test_switching_the_scenario_keeps_the_unsaved_edits_of_the_first(window: MainWindow) -> None:
     view = window.scenario_view
     assert view.selected_id() == "one_day"
     view.editor.add_segment(10.0, 20.0)
-    asked = answer(monkeypatch, QMessageBox.StandardButton.Cancel)
-    view.combo.setCurrentText("two")
-    assert asked
-    assert view.selected_id() == "one_day"  # the combo went back
-    assert view.editor.is_modified() and view.editor.segments_table.rowCount() == 1
-
-
-def test_switching_the_scenario_and_discarding_loads_the_other_one(
-    window: MainWindow, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    view = window.scenario_view
-    view.editor.add_segment(10.0, 20.0)
-    answer(monkeypatch, QMessageBox.StandardButton.Discard)
     view.combo.setCurrentText("two")
     assert view.selected_id() == "two" and view.editor.scenario_id == "two"
-    assert not view.editor.is_modified() and view.editor.segments_table.rowCount() == 0
+    assert view.editor.segment_count() == 0 and not view.editor.is_modified()
+    assert window.editors.has_unsaved_changes()  # the edit of the first one is still there
+    view.combo.setCurrentText("one_day")
+    assert view.editor.segment_count() == 1 and view.editor.is_modified()
 
 
 # ---- GUI-5: a reload without a project keeps the edits ----------------------------------------
@@ -141,7 +129,7 @@ def test_a_reload_that_finds_no_project_keeps_unsaved_scenario_edits(
     (project / "project.yaml").write_text("not: [valid\n", encoding="utf-8")
     window.session.reload()
     assert window.session.project is None
-    assert editor.is_modified() and editor.segments_table.rowCount() == 1
+    assert editor.is_modified() and editor.segment_count() == 1
     assert window.editors.has_unsaved_changes()
 
 

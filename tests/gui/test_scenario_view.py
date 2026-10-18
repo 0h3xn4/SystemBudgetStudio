@@ -77,21 +77,21 @@ def test_editing_the_default_mode_rebuilds_the_timeline_without_recomputing(
 def test_rules_can_be_added_changed_and_removed(window: MainWindow, project: Path, qtbot) -> None:  # type: ignore[no-untyped-def]
     compute(window, qtbot)
     editor = window.scenario_view.editor
-    before = editor.rules_table.rowCount()
+    before = editor.rule_count()
     editor.add_rule()
     editor.set_rule(before, kind="in_sunlight", site="", mode="charging")
     editor.remove_rule(0)
     assert editor.save() is True
     text = (project / "scenarios" / "one_day.yaml").read_text(encoding="utf-8")
     assert "in_sunlight" in text and text.count("kind: in_eclipse") == 0
-    assert editor.rules_table.rowCount() == before
+    assert editor.rule_count() == before
 
 
 def test_an_invalid_rule_is_explained_and_not_saved(window: MainWindow, project: Path) -> None:
     editor = window.scenario_view.editor
     before = (project / "scenarios" / "one_day.yaml").read_bytes()
     editor.add_rule()
-    editor.set_rule(editor.rules_table.rowCount() - 1, kind="during_pass", site="", mode="safe")
+    editor.set_rule(editor.rule_count() - 1, kind="during_pass", site="", mode="safe")
     assert editor.save() is False
     assert "site" in editor.error_label.text().lower()
     assert (project / "scenarios" / "one_day.yaml").read_bytes() == before
@@ -103,7 +103,7 @@ def test_selecting_a_range_on_the_timeline_adds_a_manual_segment(
     compute(window, qtbot)
     view = window.scenario_view
     view.timeline.range_selected.emit(100.0, 400.0)
-    assert view.editor.segments_table.rowCount() == 1
+    assert view.editor.segment_count() == 1
     assert view.editor.segment(0) == (100.0, 300.0, view.editor.default_mode.currentText())
     view.editor.set_segment(0, start=100.0, duration=300.0, mode="safe")
     assert view.editor.save() is True

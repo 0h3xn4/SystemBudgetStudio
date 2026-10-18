@@ -9,20 +9,13 @@ from __future__ import annotations
 
 from datetime import timedelta
 from pathlib import Path
-from typing import Any
 
-from pydantic import ValidationError
 from PySide6.QtCore import Qt, QThread, Signal
 from PySide6.QtWidgets import (
-    QAbstractItemView,
     QComboBox,
-    QFormLayout,
     QFrame,
     QHBoxLayout,
     QLabel,
-    QListWidget,
-    QListWidgetItem,
-    QMessageBox,
     QPushButton,
     QScrollArea,
     QSplitter,
@@ -33,11 +26,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from budget_core.io.errors import explain
-from budget_core.io.project_loader import model_to_data
-from budget_core.io.roundtrip import file_stamp, save_edited_data
-from budget_core.io.yamlio import LineMap
-from budget_core.model import Project, Scenario
+from budget_core.model import Project
 from budget_core.provenance import make_provenance
 from budget_core.reports.files import OutputError
 from budget_core.scenario.export import write_scenario_outputs
@@ -49,16 +38,10 @@ from budget_core.scenario.run import (
     run_scenario,
 )
 from budget_core.timeutil import format_utc
-from budget_gui.entry import cell_value
+from budget_gui.model_document import ModelDocument
+from budget_gui.scenario_editor import ScenarioEditor
 from budget_gui.timeline import TimelineWidget
 from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, NOT_COMPUTED_TEXT
-
-RULE_KINDS = ("during_pass", "in_eclipse", "in_sunlight")
-SHADOW_MODELS = ("cylindrical", "conical")
-
-
-_number = cell_value
-
 
 EMPTY_TEXT = (
     "This project has no scenario. Add a file in scenarios/ to work out the power timeline "
@@ -84,403 +67,6 @@ class ScenarioWorker(QThread):
             self.failed.emit(f"The scenario could not be computed ({type(exc).__name__}).")
 
 
-class ScenarioEditor(QWidget):
-    """Edits the default mode, shadow model, sites, rules and manual segments of a scenario."""
-
-    saved = Signal()
-    modified_changed = Signal(bool)
-
-    def __init__(self) -> None:
-        super().__init__()
-        self._root: Path | None = None
-        self._id = ""
-        self._original: Scenario | None = None
-        self._stamp: str | None = None  # the scenario file as the editor last read or wrote it
-        self._modes: list[str] = []
-        self._sites: list[str] = []
-        self._modified = False
-        self._loading = False
-
-        self.default_mode = QComboBox()
-        self.shadow_model = QComboBox()
-        self.shadow_model.addItems(SHADOW_MODELS)
-        self.sites_list = QListWidget()
-        self.sites_list.setMaximumHeight(72)
-        form = QFormLayout()
-        form.addRow("Default mode", self.default_mode)
-        form.addRow("Shadow model", self.shadow_model)
-        form.addRow("Sites", self.sites_list)
-
-        self.rules_table = QTableWidget(0, 5)
-        self.rules_table.setHorizontalHeaderLabels(["Rule", "Site", "Mode", "Lead (s)", "Lag (s)"])
-        self.segments_table = QTableWidget(0, 3)
-        self.segments_table.setHorizontalHeaderLabels(["Start (s)", "Duration (s)", "Mode"])
-        for table in (self.rules_table, self.segments_table):
-            table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-            table.itemChanged.connect(lambda _item: self._edited())
-
-        self.error_label = QLabel()
-        self.error_label.setWordWrap(True)
-        self.error_label.setProperty("role", "error")
-        self.note_label = QLabel()
-        self.note_label.setWordWrap(True)
-
-        def button(text: str, slot: Any) -> QPushButton:
-            b = QPushButton(text)
-            b.clicked.connect(slot)
-            return b
-
-        rule_buttons = [
-            button("Add rule", lambda: self.add_rule()),
-            button("Remove rule", lambda: self.remove_rule(self.rules_table.currentRow())),
-        ]
-        segment_buttons = [
-            button("Add segment", lambda: self.add_segment()),
-            button("Remove segment", lambda: self.remove_segment(self.segments_table.currentRow())),
-        ]
-        save_buttons = [
-            button("Save scenario", lambda: self.save()),
-            button("Discard changes", lambda: self.discard_changes()),
-        ]
-
-        for table in (self.rules_table, self.segments_table):
-            table.setMinimumHeight(72)
-            table.horizontalHeader().setStretchLastSection(True)
-
-        def row_of(*buttons: QPushButton) -> QHBoxLayout:
-            row = QHBoxLayout()
-            for b in buttons:
-                row.addWidget(b)
-            row.addStretch(1)
-            return row
-
-        left = QVBoxLayout()
-        left.addLayout(form)
-        left.addWidget(QLabel("Rules (applied in order, later rules win)"))
-        left.addWidget(self.rules_table, 1)
-        left.addLayout(row_of(*rule_buttons))
-        right = QVBoxLayout()
-        right.addWidget(
-            QLabel("Manual segments (applied last; Shift+drag on the timeline adds one)")
-        )
-        right.addWidget(self.segments_table, 1)
-        right.addLayout(row_of(*segment_buttons))
-        right.addWidget(self.error_label)
-        right.addWidget(self.note_label)
-        right.addLayout(row_of(*save_buttons))
-        right.addStretch(1)
-        layout = QHBoxLayout(self)
-        layout.addLayout(left, 3)
-        layout.addLayout(right, 2)
-
-        self.default_mode.currentTextChanged.connect(lambda _t: self._edited())
-        self.shadow_model.currentTextChanged.connect(lambda _t: self._edited())
-        self.sites_list.itemChanged.connect(lambda _i: self._edited())
-
-    # ---- state -------------------------------------------------------------------------------
-    def is_modified(self) -> bool:
-        return self._modified
-
-    def _set_modified(self, value: bool) -> None:
-        if value != self._modified:
-            self._modified = value
-            self.modified_changed.emit(value)
-
-    @property
-    def root(self) -> Path | None:
-        """The project folder this editor saves into: always the one it was last loaded from."""
-        return self._root
-
-    @property
-    def scenario_id(self) -> str:
-        return self._id
-
-    def _path(self) -> Path | None:
-        return None if self._root is None else self._root / "scenarios" / f"{self._id}.yaml"
-
-    def clear(self) -> None:
-        self._original = None
-        self._loading = True
-        self.rules_table.setRowCount(0)
-        self.segments_table.setRowCount(0)
-        self.sites_list.clear()
-        self.default_mode.clear()
-        self._loading = False
-        self._set_modified(False)
-        self.error_label.setText("")
-
-    def load(
-        self, root: Path, scenario_id: str, scenario: Scenario, modes: list[str], sites: list[str]
-    ) -> None:
-        self._root, self._id, self._original = root, scenario_id, scenario
-        self._stamp = file_stamp(root / "scenarios" / f"{scenario_id}.yaml")
-        self._modes, self._sites = sorted(modes), sorted(sites)
-        self._populate(scenario)
-
-    def _populate(self, scenario: Scenario) -> None:
-        self._loading = True
-        self.default_mode.clear()
-        self.default_mode.addItems(self._modes)
-        self.default_mode.setCurrentText(scenario.default_mode)
-        self.shadow_model.setCurrentText(scenario.shadow_model)
-        self.sites_list.clear()
-        for site in self._sites:
-            item = QListWidgetItem(site)
-            item.setFlags(item.flags() | Qt.ItemFlag.ItemIsUserCheckable)
-            item.setCheckState(
-                Qt.CheckState.Checked if site in scenario.sites else Qt.CheckState.Unchecked
-            )
-            self.sites_list.addItem(item)
-        self.rules_table.setRowCount(0)
-        for rule in scenario.rules:
-            self._append_rule(rule.kind, rule.site or "", rule.mode, rule.lead_s, rule.lag_s)
-        self.segments_table.setRowCount(0)
-        for seg in scenario.segments:
-            self._append_segment(seg.start_s, seg.duration_s, seg.mode)
-        self._loading = False
-        self.error_label.setText("")
-        self.note_label.setText("")
-
-    def discard_changes(self) -> None:
-        if self._original is not None:
-            self._populate(self._original)
-        self._set_modified(False)
-
-    def reload_if_clean(
-        self, root: Path, scenario: Scenario, modes: list[str], sites: list[str]
-    ) -> None:
-        """After the project reloaded: refresh the widgets unless the user has pending edits (the
-        edit then stays based on the scenario it started from, and `save` checks the file). The
-        editor always saves into `root`, the folder of the project that is open now."""
-        self._root = root
-        new_modes, new_sites = sorted(modes), sorted(sites)
-        path = self._path()
-        stamp = file_stamp(path) if path is not None else None
-        if self._modified:
-            self._modes, self._sites = new_modes, new_sites
-            return
-        if (
-            scenario == self._original
-            and stamp == self._stamp
-            and (new_modes, new_sites)
-            == (
-                self._modes,
-                self._sites,
-            )
-        ):
-            return  # nothing changed: keep the selection and scroll position
-        self._original = scenario
-        self._stamp = stamp
-        self._modes, self._sites = new_modes, new_sites
-        self._populate(scenario)
-
-    # ---- rules -------------------------------------------------------------------------------
-    def _combo(self, items: list[str], current: str) -> QComboBox:
-        box = QComboBox()
-        box.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
-        box.addItems(items)
-        box.setCurrentText(current)
-        box.currentTextChanged.connect(lambda _t: self._edited())
-        return box
-
-    def _append_rule(self, kind: str, site: str, mode: str, lead: float, lag: float) -> None:
-        row = self.rules_table.rowCount()
-        self._loading = True
-        self.rules_table.insertRow(row)
-        self.rules_table.setCellWidget(row, 0, self._combo(list(RULE_KINDS), kind))
-        self.rules_table.setCellWidget(row, 1, self._combo(["", *self._sites], site))
-        self.rules_table.setCellWidget(row, 2, self._combo(self._modes, mode))
-        self.rules_table.setItem(row, 3, QTableWidgetItem(str(lead)))
-        self.rules_table.setItem(row, 4, QTableWidgetItem(str(lag)))
-        self._loading = False
-
-    def add_rule(self) -> None:
-        mode = self.default_mode.currentText() or (self._modes[0] if self._modes else "")
-        self._append_rule("during_pass", self._sites[0] if self._sites else "", mode, 0.0, 0.0)
-        self._edited()
-
-    def remove_rule(self, row: int) -> None:
-        if 0 <= row < self.rules_table.rowCount():
-            self.rules_table.removeRow(row)
-            self._edited()
-
-    def set_rule(
-        self,
-        row: int,
-        kind: str | None = None,
-        site: str | None = None,
-        mode: str | None = None,
-        lead_s: float | None = None,
-        lag_s: float | None = None,
-    ) -> None:
-        for column, value in ((0, kind), (1, site), (2, mode)):
-            if value is not None:
-                box = self.rules_table.cellWidget(row, column)
-                assert isinstance(box, QComboBox)
-                box.setCurrentText(value)
-        for column, number in ((3, lead_s), (4, lag_s)):
-            if number is not None:
-                item = self.rules_table.item(row, column)
-                assert item is not None
-                item.setText(str(number))
-
-    def _rule_data(self, row: int) -> dict[str, Any]:
-        def combo(column: int) -> str:
-            box = self.rules_table.cellWidget(row, column)
-            assert isinstance(box, QComboBox)
-            return box.currentText()
-
-        rule: dict[str, Any] = {"kind": combo(0), "mode": combo(2)}
-        if combo(1):
-            rule["site"] = combo(1)
-        for column, key in ((3, "lead_s"), (4, "lag_s")):
-            item = self.rules_table.item(row, column)
-            value = _number(item.text()) if item else 0.0
-            if value != 0.0:
-                rule[key] = value
-        return rule
-
-    # ---- segments ----------------------------------------------------------------------------
-    def _append_segment(self, start: float, duration: float, mode: str) -> None:
-        row = self.segments_table.rowCount()
-        self._loading = True
-        self.segments_table.insertRow(row)
-        self.segments_table.setItem(row, 0, QTableWidgetItem(str(start)))
-        self.segments_table.setItem(row, 1, QTableWidgetItem(str(duration)))
-        self.segments_table.setCellWidget(row, 2, self._combo(self._modes, mode))
-        self._loading = False
-
-    def add_segment(self, start: float = 0.0, duration: float = 60.0) -> None:
-        self._append_segment(start, duration, self.default_mode.currentText())
-        self._edited()
-
-    def remove_segment(self, row: int) -> None:
-        if 0 <= row < self.segments_table.rowCount():
-            self.segments_table.removeRow(row)
-            self._edited()
-
-    def set_segment(
-        self,
-        row: int,
-        start: float | None = None,
-        duration: float | None = None,
-        mode: str | None = None,
-    ) -> None:
-        for column, number in ((0, start), (1, duration)):
-            if number is not None:
-                item = self.segments_table.item(row, column)
-                assert item is not None
-                item.setText(str(number))
-        if mode is not None:
-            box = self.segments_table.cellWidget(row, 2)
-            assert isinstance(box, QComboBox)
-            box.setCurrentText(mode)
-
-    def segment(self, row: int) -> tuple[float, float, str]:
-        start, duration = self.segments_table.item(row, 0), self.segments_table.item(row, 1)
-        box = self.segments_table.cellWidget(row, 2)
-        assert start and duration and isinstance(box, QComboBox)
-        return float(start.text()), float(duration.text()), box.currentText()
-
-    # ---- validation and saving ---------------------------------------------------------------
-    def _edited(self) -> None:
-        if self._loading:
-            return
-        self._set_modified(True)
-        self._validate()
-
-    def _data(self) -> dict[str, Any]:
-        assert self._original is not None
-        data = model_to_data(self._original)
-        data["default_mode"] = self.default_mode.currentText()
-        data["shadow_model"] = self.shadow_model.currentText()
-        checked = [
-            self.sites_list.item(i).text()
-            for i in range(self.sites_list.count())
-            if self.sites_list.item(i).checkState() == Qt.CheckState.Checked
-        ]
-        data["sites"] = [s for s in self._original.sites if s in checked] + [
-            s for s in checked if s not in self._original.sites
-        ]
-        data["rules"] = [self._rule_data(r) for r in range(self.rules_table.rowCount())]
-        data["segments"] = []
-        for row in range(self.segments_table.rowCount()):
-            start, duration = self.segments_table.item(row, 0), self.segments_table.item(row, 1)
-            box = self.segments_table.cellWidget(row, 2)
-            assert isinstance(box, QComboBox)
-            data["segments"].append(
-                {
-                    "start_s": _number(start.text()) if start else 0.0,
-                    "duration_s": _number(duration.text()) if duration else 0.0,
-                    "mode": box.currentText(),
-                }
-            )
-        return data
-
-    def current_scenario(self) -> Scenario:
-        return Scenario.model_validate(self._data())
-
-    def _validate(self) -> Scenario | None:
-        try:
-            scenario = self.current_scenario()
-        except ValidationError as exc:
-            lines = [
-                f"{p.path or 'scenario'}: {p.message}" + (f" {p.hint}" if p.hint else "")
-                for p in explain(exc, Scenario, f"scenarios/{self._id}.yaml", LineMap())
-            ]
-            self.error_label.setText("\n".join(lines))
-            return None
-        problems = [
-            f"rules[{i}].site: the site is not listed under Sites of this scenario."
-            for i, rule in enumerate(scenario.rules)
-            if rule.site is not None and rule.site not in scenario.sites
-        ]
-        if problems:
-            self.error_label.setText("\n".join(problems))
-            return None
-        self.error_label.setText("")
-        return scenario
-
-    def save(self) -> bool:
-        path = self._path()
-        if path is None or self._original is None:
-            return False
-        if file_stamp(path) != self._stamp:
-            if self._modified:
-                self.error_label.setText(
-                    "The scenario file changed on disk after it was opened here. Saving would "
-                    "overwrite that change. Press Discard changes, then edit again."
-                )
-                return False
-            return True
-        if not self._modified:
-            return True
-        scenario = self._validate()
-        if scenario is None:
-            return False
-        try:
-            result = save_edited_data(
-                path,
-                model_to_data(self._original),
-                model_to_data(scenario),
-                lambda data: model_to_data(Scenario.model_validate(data)),
-            )
-        except (OSError, OutputError, UnicodeDecodeError):
-            self.error_label.setText("The file could not be written. Check the folder permissions.")
-            return False
-        self._original = scenario
-        self._stamp = file_stamp(path)
-        self.note_label.setText(
-            "Saved. The file could not be edited in place, so it was rewritten in the standard "
-            "layout; its comments were not kept."
-            if result.canonical
-            else ""
-        )
-        self._set_modified(False)
-        self.saved.emit()
-        return True
-
-
 def fill_table(table: QTableWidget, headers: list[str], rows: list[list[str]]) -> None:
     table.setColumnCount(len(headers))
     table.setHorizontalHeaderLabels(headers)
@@ -497,8 +83,10 @@ class ScenarioView(QWidget):
     computed = Signal(object)
     compute_failed = Signal(str)
 
-    def __init__(self) -> None:
+    def __init__(self, document: ModelDocument | None = None) -> None:
         super().__init__()
+        self._owns_document = document is None  # a view on its own keeps its own document
+        self.document = document if document is not None else ModelDocument()
         self.project: Project | None = None
         self.last_run: ScenarioRun | None = None
         self.is_stale = False
@@ -525,7 +113,7 @@ class ScenarioView(QWidget):
         top.addWidget(self.status, 1)
 
         self.timeline = TimelineWidget()
-        self.editor = ScenarioEditor()
+        self.editor = ScenarioEditor(self.document)
         self.eclipse_table = QTableWidget()
         self.passes_table = QTableWidget()
         self.timeline_table = QTableWidget()
@@ -547,7 +135,11 @@ class ScenarioView(QWidget):
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.timeline)
         self.body.addWidget(tabs)
-        self.body.setStretchFactor(1, 1)
+        self.body.setChildrenCollapsible(False)
+        self.timeline.setMinimumHeight(180)
+        self.body.setStretchFactor(0, 2)
+        self.body.setStretchFactor(1, 3)  # the editor and the tables get more room than the strip
+        self.body.setSizes([300, 520])
 
         layout = QVBoxLayout(self)
         layout.addLayout(top)
@@ -574,6 +166,8 @@ class ScenarioView(QWidget):
     def set_project(self, project: Project | None) -> None:
         previous = self.selected_id()
         self.project = project
+        if self._owns_document and (project is not None or not self.document.is_modified()):
+            self.document.reload(project.root if project else None, project)
         ids = sorted(project.scenarios) if project else []
         self.combo.blockSignals(True)
         self.combo.clear()
@@ -606,14 +200,7 @@ class ScenarioView(QWidget):
             sorted(project.modes),
             sorted(set(project.ground_stations) | set(project.targets)),
         )
-        if (
-            self.editor.scenario_id == scenario_id
-            and self.editor.root == project.root
-            and self.editor._original is not None
-        ):
-            self.editor.reload_if_clean(project.root, scenario, modes, sites)
-        else:
-            self.editor.load(project.root, scenario_id, scenario, modes, sites)
+        self.editor.show_scenario(project.root, scenario_id, modes, sites)
 
         run = self.last_run
         if run is None or run.scenario_id != scenario_id:
@@ -639,13 +226,7 @@ class ScenarioView(QWidget):
     def _selected(self, text: str) -> None:
         if self.project is None or text == self.editor.scenario_id:
             return
-        if self.editor.is_modified():
-            if not self.confirm_discard_pending_edit():
-                self.combo.blockSignals(True)  # back to the scenario the edits belong to
-                self.combo.setCurrentText(self.editor.scenario_id)
-                self.combo.blockSignals(False)
-                return
-            self.editor.discard_changes()
+        # unsaved edits of this scenario stay in the document: choosing another does not drop them
         self.last_run = None
         self.set_project(self.project)
 
@@ -781,14 +362,3 @@ class ScenarioView(QWidget):
             )
         provenance = make_provenance(self.project, scenario=self.last_run.scenario_id)
         return write_scenario_outputs(self.last_run, provenance, folder)
-
-    def confirm_discard_pending_edit(self) -> bool:
-        if not self.editor.is_modified():
-            return True
-        answer = QMessageBox.question(
-            self,
-            "Scenario",
-            "The scenario has unsaved edits. Discard them?",
-            QMessageBox.StandardButton.Discard | QMessageBox.StandardButton.Cancel,
-        )
-        return answer == QMessageBox.StandardButton.Discard

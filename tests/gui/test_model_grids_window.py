@@ -55,7 +55,7 @@ def test_a_value_with_a_unit_is_converted_and_saved_in_place(
     assert set_mode_value(window, "camera", "imaging", "avg_power_w", "62500 mW")
     assert set_mode_value(window, "camera", "imaging", "peak_power_w", "85 W")
     assert window.document.is_modified() and window.editors.has_unsaved_changes()
-    assert window.save_grids() is True
+    assert window.save_model() is True
     mode = saved(project).modes[1]
     assert mode.avg_power_w == pytest.approx(62.5) and mode.peak_power_w == pytest.approx(85.0)
     assert not window.document.is_modified()
@@ -75,14 +75,14 @@ def test_the_wrong_kind_of_unit_is_explained_and_nothing_is_written(
     set_mode_value(window, "camera", "imaging", "avg_power_w", "3 dBW")
     text = window.modes_page.problem_label.text()
     assert "avg_power_w" in text and "logarithmic" in text
-    assert window.save_grids() is False
+    assert window.save_model() is False
     assert (project / "units" / "camera.yaml").read_bytes() == before
     assert "need correcting" in window.status_bar.currentMessage()
 
 
 def test_a_decimal_comma_and_an_underscore_are_not_numbers(window: MainWindow) -> None:
     set_mode_value(window, "camera", "imaging", "avg_power_w", "1_0")
-    assert window.modes_page.problem_label.text() and window.save_grids() is False
+    assert window.modes_page.problem_label.text() and window.save_model() is False
     set_mode_value(window, "camera", "imaging", "avg_power_w", "1,5")
     assert "decimal point" in window.modes_page.problem_label.text()
     set_mode_value(window, "camera", "imaging", "avg_power_w", "65")
@@ -92,13 +92,13 @@ def test_a_decimal_comma_and_an_underscore_are_not_numbers(window: MainWindow) -
 def test_a_rule_between_two_fields_is_reported_on_the_cell(window: MainWindow) -> None:
     set_mode_value(window, "camera", "imaging", "peak_power_w", "1 W")  # below the average
     assert "peak" in window.modes_page.problem_label.text().lower()
-    assert window.save_grids() is False
+    assert window.save_model() is False
 
 
 def test_a_duty_cycle_out_of_range_is_reported(window: MainWindow) -> None:
     set_mode_value(window, "camera", "imaging", "duty_cycle_ratio", "1.5")
     assert "duty_cycle_ratio" in window.modes_page.problem_label.text()
-    assert window.save_grids() is False
+    assert window.save_model() is False
 
 
 def test_add_and_remove_modes(window: MainWindow, project: Path) -> None:
@@ -108,10 +108,10 @@ def test_add_and_remove_modes(window: MainWindow, project: Path) -> None:
     page.modes.setData(page.modes.index(row, 1), "standby")
     page.modes.setData(page.modes.index(row, 2), "0.1")
     page.modes.setData(page.modes.index(row, 3), "0.2")
-    assert window.save_grids() is True
+    assert window.save_model() is True
     assert [m.name for m in saved(project).modes] == ["off", "imaging", "standby"]
     page.table.select_cell(page.modes.rows_of("camera")[-1], 1)
-    assert page.remove_mode() and window.save_grids() is True
+    assert page.remove_mode() and window.save_model() is True
     assert [m.name for m in saved(project).modes] == ["off", "imaging"]
 
 
@@ -119,7 +119,7 @@ def test_removing_a_mode_in_use_is_reported_by_the_problems_panel(window: MainWi
     page = window.modes_page
     page.table.select_cell(mode_row(window, "camera", "imaging"), 1)
     assert page.remove_mode()  # 'imaging' is used by the imaging spacecraft mode
-    assert window.save_grids() is True
+    assert window.save_model() is True
     assert "1 error" in window.problems_panel.summary.text()
     assert "REF_UNKNOWN_UNIT_MODE" in set(window.problems_panel.codes())
 
@@ -129,9 +129,9 @@ def test_save_updates_the_budget_and_the_problems(window: MainWindow) -> None:
     row = next(r for r in range(model.rowCount()) if model.data(model.index(r, 0)) == "Imaging")
     before = model.data(model.index(row, 1))
     set_mode_value(window, "camera", "imaging", "avg_power_w", "100")  # above the 80 W peak
-    assert window.save_grids() is False
+    assert window.save_model() is False
     set_mode_value(window, "camera", "imaging", "peak_power_w", "120")
-    assert window.save_grids() is True
+    assert window.save_model() is True
     after_model = window.power_view.table_model("Summary", 0)
     assert float(after_model.data(after_model.index(row, 1))) > float(before)
 
@@ -219,7 +219,7 @@ def test_a_save_over_a_file_changed_on_disk_is_refused_with_a_sentence(
     set_unit_value(window, "radio", "mass_kg", "5.5")
     path = project / "units" / "radio.yaml"
     path.write_text(path.read_text(encoding="utf-8") + "# edited elsewhere\n", encoding="utf-8")
-    assert window.save_grids() is False
+    assert window.save_model() is False
     assert "changed on disk" in window.units_page.feedback_label.text()
     assert "5.5" not in path.read_text(encoding="utf-8")
 
@@ -234,7 +234,7 @@ def test_a_failed_write_leaves_the_file_and_no_temporary_file(
         raise OSError("disk full")
 
     monkeypatch.setattr("budget_core.reports.files.os.replace", refuse)
-    assert window.save_grids() is False
+    assert window.save_model() is False
     assert "could not be written" in window.modes_page.feedback_label.text()
     assert (project / "units/camera.yaml").read_bytes() == before
     assert not [p for p in (project / "units").iterdir() if p.name.endswith(".tmp")]

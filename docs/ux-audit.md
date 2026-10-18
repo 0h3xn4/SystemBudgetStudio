@@ -238,9 +238,9 @@ After step 1 (the shell). *Done* means the finding no longer applies in the wind
 | UX-15 precision | done | fixed decimals per column; the exact value in the tooltip and the editor |
 | UX-16 every button primary | partly | Save is the primary button of a grid, the others are secondary; the other views follow in their steps |
 | UX-17 validation by message box | partly | the grids have none (a cell, a tooltip and a line under the grid); the other views follow |
-| UX-18 no undo | partly | one undo stack for the grids; the scenario editor follows (step 2c) |
+| UX-18 no undo | done | one undo stack for the grids and the scenario editor (D-159, D-160); the YAML text editor keeps Qt's own undo |
 | UX-20 no paste, fill-down, copy | done | Ctrl+C, Ctrl+V with a preview, Ctrl+D, Delete in every grid |
-| UX-21 rules as combo boxes | open | step 2c |
+| UX-21 rules as combo boxes | done | rules and segments as sentences with their controls, Up/Down, and more room for the editor (D-160) |
 | UX-34 Problems panel | done | four classes, icons, filter, grouping, wrapped message (D-151) |
 | UX-38 to UX-40 visual system | done in step 0 (D-150) | |
 | UX-41 keyboard | partly | Ctrl+1 to Ctrl+7, Ctrl+R, F8; Tab no longer trapped in tables; `Ctrl+K` in step 6 |

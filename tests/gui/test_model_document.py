@@ -184,3 +184,39 @@ def test_value_helpers() -> None:
     assert data["a"]["b"][1]["c"] == 5
     set_at(data, ("a", "b", 1, "c"), None)
     assert data["a"]["b"][1] == {}
+
+
+# ---- scenarios -----------------------------------------------------------------------------
+SCENARIO = "scenarios/one_day.yaml"
+
+
+def test_scenarios_are_in_the_document_and_edit_like_the_rest(doc: ModelDocument) -> None:
+    assert SCENARIO in doc.rels("scenarios/")
+    assert doc.set_value(SCENARIO, ("default_mode",), "safe", "Edit scenario: default mode")
+    assert doc.value(SCENARIO, ("default_mode",)) == "safe" and doc.modified_files() == [SCENARIO]
+    doc.undo_stack.undo()
+    assert not doc.is_modified()
+
+
+def test_a_rule_that_names_a_site_the_scenario_does_not_list_is_a_problem(
+    doc: ModelDocument,
+) -> None:
+    rules = doc.value(SCENARIO, ("rules",))
+    index = next(i for i, r in enumerate(rules) if r.get("site"))
+    sites = [s for s in doc.value(SCENARIO, ("sites",)) if s != rules[index]["site"]]
+    doc.set_value(SCENARIO, ("sites",), sites, "Edit scenario: sites")
+    problem = doc.problem_at(SCENARIO, ("rules", index, "site"))
+    assert problem is not None and problem.code == "REF_UNKNOWN_SITE"
+    assert not doc.save().ok
+
+
+def test_a_scenario_edit_is_saved_in_place_with_its_comments(
+    doc: ModelDocument, project: Path
+) -> None:
+    path = project / SCENARIO
+    path.write_text("# Reviewed\n" + path.read_text(encoding="utf-8"), encoding="utf-8")
+    doc.load(project, load_project(project).project)
+    doc.set_value(SCENARIO, ("default_mode",), "safe", "Edit")
+    assert doc.save().written == (SCENARIO,)
+    text = path.read_text(encoding="utf-8")
+    assert text.startswith("# Reviewed") and "default_mode: safe" in text

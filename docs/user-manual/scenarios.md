@@ -76,7 +76,7 @@ segments:                         # hand-built, applied last, must not overlap
   - {start_s: 0, duration_s: 1800, mode: safe}
 ```
 
-`lead_s` and `lag_s` start the mode earlier or end it later around a pass. In the window the **Scenario** tab shows the timeline and lets you edit rules and segments; invalid edits are explained and nothing is written until you save.
+`lead_s` and `lag_s` start the mode earlier or end it later around a pass. In the window the **Scenario** tab shows the timeline and lets you edit rules and segments ([below](#how-do-i-edit-the-rules-in-the-window)); invalid edits are explained and nothing is written until you save.
 
 ## How do I see eclipses, passes and the timeline?
 
@@ -93,5 +93,18 @@ It writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>
 ## How do I use orbit data from SpaceMissionStudio?
 
 Set `environment_source: spacemissionstudio` and `import_dir:` (a folder inside the project) in the scenario. The folder holds CSV files with the orbit, eclipse intervals and passes. The format is an **interim** one, because no real export was available yet: [Environment inputs and the interim format](../ENVIRONMENT_FORMAT.md). Errors name the file and line and never echo content (`ENV_INPUT_INVALID`).
+
+
+## How do I edit the rules in the window?
+
+In **Model → Scenario**, the lower part shows the rules as sentences you can change in place:
+
+![The Scenario tab with the rules as sentences](../images/ux-redesign/step2c-scenario-light.png)
+
+- A rule reads *Downlink during every pass over gs_north*, and for a pass rule *Start it 30 s before the pass and keep it 0 s after it*. Its parts are the controls: the mode, **during every pass over** / **while in eclipse** / **while in sunlight**, the site, and the lead and lag (pass rules only). Changing the kind keeps the rule valid (a pass rule gets a site; the other kinds lose the site, lead and lag).
+- The order matters: **a later rule wins** over an earlier one, so every row has **Up** and **Down**. **Add rule** adds a pass rule with the default mode and the first listed site; **Remove** removes one.
+- **Manual segments** read *Imaging from T+100 s for 300 s*; they are applied last. Shift+drag on the timeline adds one.
+- **Sites**: tick the sites (ground stations and imaging targets) the scenario uses. A rule must name a ticked site, otherwise the line under the editor says so.
+- Every change is one step of **Edit → Undo** (Ctrl+Z); the buttons at the top of the editor (Undo, Redo, Save) are the ones of the grids. **Save** (or Ctrl+S) writes the scenario and any other changed file in place, with its comments. Nothing is saved while the model finds a problem (for example two overlapping segments): the line under the editor says what, and you can correct it or undo. Choosing another scenario keeps your unsaved edits of the first.
 
 Next: [Reports and exports](reports-and-exports.md).
