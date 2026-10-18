@@ -101,6 +101,7 @@ Icons are [Lucide](https://lucide.dev) 0.468.0 (ISC licence). The SVG files in `
 - **Scenario editor** (D-160). Rules and segments are sentences made of their controls (mode, *during every pass over / while in eclipse / while in sunlight*, site, lead and lag); Up and Down order the rules (a later rule wins); the editor edits the shared document, so it has the same undo, Save and dirty marker as the grids. The editor and the tables get more of the page than the timeline strip.
 - **Panels.** The project tree on the left; Inspector, Problems and Provenance as tabs of the right dock. Each has an object name, which is the key of the saved arrangement.
 - **Status bar.** Action messages on the left (they go away); on the right the not-checked link, the project folder, the last run time and the version.
+- **Plot speed** (D-161). A series is summarised once in blocks of 64 samples; the plot window is drawn from the blocks (zoomed out) or from a one-step reduction of the visible samples (zoomed in), a reduced series as one short line per pixel, bands on whole pixels. A week at 1 s pans and zooms in about 20 ms.
 - **Speed.** Updating the window after a load or reload takes about 0.1 s for a project of 200 units: the cells of a budget table are measured from the font, a sheet is built the first time it is shown, and replacing a budget does not build the sheets it uncovers.
 
 ## The layout file

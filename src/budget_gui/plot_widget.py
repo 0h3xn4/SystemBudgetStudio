@@ -15,7 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 import numpy as np
-from PySide6.QtCore import QPointF, QRectF, Qt, Signal
+from PySide6.QtCore import QLineF, QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import (
     QColor,
     QFontMetrics,
@@ -31,11 +31,11 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QSizePolicy, QWidget
 
+from budget_core.plots.envelope import EnvelopeCache
 from budget_core.plots.spec import (
     Panel,
     PlotSpec,
     nice_ticks,
-    plot_points,
     time_axis,
     value_at,
     visible_range,
@@ -80,6 +80,7 @@ class PlotWidget(QWidget):
         self._layer: QPixmap | None = None  # the plot without the cursors, see paintEvent
         self._layer_key: tuple[object, ...] | None = None
         self._ranges: dict[int, tuple[float, float]] = {}  # y range of a panel: data only
+        self._envelopes = EnvelopeCache()  # block summaries of the series, made once per plot
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -94,6 +95,7 @@ class PlotWidget(QWidget):
     def set_spec(self, spec: PlotSpec | None) -> None:
         self._spec = spec
         self._ranges = {}
+        self._envelopes.clear()
         self._layer = None
         if spec is not None:
             self._view = (spec.x_min_s, spec.x_max_s)
@@ -292,15 +294,19 @@ class PlotWidget(QWidget):
         painter.save()
         painter.setClipRect(rect)
         if self._shading:
+            # whole pixels and no antialiasing: a week has hundreds of bands, and blending the
+            # edges of each took 0.1 ms
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, False)
+            top, height = int(rect.top()), int(rect.height())
             for band in spec.bands:
                 colour = theme.plot_colour(t, band.color)
                 colour.setAlpha(t.band_alpha)
                 for a, b in band.intervals:
                     x0, x1 = self.time_to_x(a), self.time_to_x(b)
                     if x1 >= rect.left() and x0 <= rect.right():
-                        painter.fillRect(
-                            QRectF(x0, rect.top(), max(x1 - x0, 1.0), rect.height()), colour
-                        )
+                        left = int(x0)
+                        painter.fillRect(left, top, max(int(x1 + 0.999) - left, 1), height, colour)
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
         painter.setPen(QPen(QColor(t.plot_grid), 1))
         for tick in nice_ticks(lo, hi, 4):
             painter.drawLine(QPointF(rect.left(), sy(tick)), QPointF(rect.right(), sy(tick)))
@@ -310,18 +316,30 @@ class PlotWidget(QWidget):
             painter.drawLine(QPointF(x, rect.top()), QPointF(x, rect.bottom()))
         buckets = max(int(rect.width()), 50)
         for series in panel.series:
-            px, py = plot_points(series, start, end, spec.x_max_s, buckets)
-            if len(px) < 2:
+            drawn = self._envelopes.points(series, start, end, spec.x_max_s, buckets)
+            if len(drawn.x) < 2:
                 continue
+            sx = LEFT + (drawn.x - start) / max(end - start, 1e-9) * self._plot_width()
+            sy_ = rect.bottom() - (drawn.y * panel.y_scale - lo) / (hi - lo) * rect.height()
             painter.setPen(QPen(theme.plot_colour(t, series.color), 1.6))
-            painter.drawPolyline(
-                QPolygonF(
-                    [
-                        QPointF(self.time_to_x(float(a)), sy(float(b) * panel.y_scale))
-                        for a, b in zip(px, py, strict=True)
-                    ]
+            if drawn.pairs:
+                # a reduced series: one short line per bucket (a thick pen along a zigzag as tall
+                # as the panel took 0.4 s per series to stroke)
+                painter.drawLines(
+                    list(
+                        map(
+                            QLineF,
+                            sx[0::2].tolist(),
+                            sy_[0::2].tolist(),
+                            sx[1::2].tolist(),
+                            sy_[1::2].tolist(),
+                        )
+                    )
                 )
-            )
+            else:
+                painter.drawPolyline(
+                    QPolygonF([QPointF(float(a), float(b)) for a, b in zip(sx, sy_, strict=True)])
+                )
         for hline in panel.hlines:
             pen = QPen(theme.plot_colour(t, hline.color), 1.2, Qt.PenStyle.DashLine)
             painter.setPen(pen)
