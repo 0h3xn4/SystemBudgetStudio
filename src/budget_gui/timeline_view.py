@@ -149,6 +149,10 @@ class PowerTimelineView(QWidget):
         self.violations_table = QTableWidget()
         self.orbits_table = QTableWidget()
         self.modes_table = QTableWidget()
+        self.summary_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.violations_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.orbits_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.modes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.tabs = QTabWidget()
         self.tabs.addTab(self.summary_table, "Summary")
         self.tabs.addTab(self.violations_table, "Violations")

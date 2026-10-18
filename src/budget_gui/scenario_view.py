@@ -528,6 +528,9 @@ class ScenarioView(QWidget):
         self.eclipse_table = QTableWidget()
         self.passes_table = QTableWidget()
         self.timeline_table = QTableWidget()
+        self.eclipse_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.passes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.timeline_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         tabs = QTabWidget()
         scroll = (
             QScrollArea()

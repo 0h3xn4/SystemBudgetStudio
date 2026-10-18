@@ -126,6 +126,7 @@ class CompareView(QWidget):
         self.table = QTableWidget(0, len(HEADERS))
         self.table.setHorizontalHeaderLabels(HEADERS)
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.table.setTabKeyNavigation(False)  # Tab leaves a read-only table
 
         row_a = QHBoxLayout()
         row_a.addWidget(QLabel("A: this project, scenario"))

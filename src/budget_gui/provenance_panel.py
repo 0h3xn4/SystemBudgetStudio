@@ -33,6 +33,7 @@ class ProvenancePanel(QWidget):
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setWordWrap(True)
+        self.table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.table.setAlternatingRowColors(True)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 8, 12, 8)

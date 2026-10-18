@@ -59,22 +59,41 @@ def status_of(value: object) -> Status | None:
 class CellDelegate(QStyledItemDelegate):
     """Paints the cells of a table by their state; see the module text."""
 
-    def sizeHint(self, option: QStyleOptionViewItem, index: Index) -> QSize:  # noqa: N802
-        base = super().sizeHint(option, index)
-        if status_of(index.data(STATE_ROLE)) is not None:
-            base.setWidth(base.width() + ICON + 2 * PAD)
-        return QSize(base.width(), max(base.height(), ICON + PAD))
+    def __init__(self, parent: Any = None) -> None:
+        super().__init__(parent)
+        self._widths: dict[tuple[str, bool, Status | None, str], int] = {}
 
-    def _font(self, option: Any, index: Index, status: Status | None) -> QFont:
-        if index.data(NUMERIC_ROLE) and status is not Status.NOT_CHECKED:
+    def sizeHint(self, option: QStyleOptionViewItem, index: Index) -> QSize:  # noqa: N802
+        # Measured from the font directly: the default size hint asks the model for about nine
+        # roles per cell, which made a table of 200 units take a third of a second to size.
+        opt: Any = option
+        text = str(index.data(Qt.ItemDataRole.DisplayRole) or "")
+        status = status_of(index.data(STATE_ROLE))
+        numeric = bool(index.data(NUMERIC_ROLE))
+        base: QFont = opt.font
+        key = (text, numeric, status, base.key())
+        width = self._widths.get(key)
+        if width is None:
+            width = QFontMetrics(self._font_for(base, numeric, status)).horizontalAdvance(text)
+            width += 2 * PAD + (ICON + PAD // 2 if status is not None else 0)
+            self._widths[key] = width
+        height = QFontMetrics(base).height() + PAD
+        return QSize(width, max(height, ICON + PAD))
+
+    @staticmethod
+    def _font_for(base: QFont, numeric: bool, status: Status | None) -> QFont:
+        if numeric and status is not Status.NOT_CHECKED:
             font = theme.mono_font(theme.TYPE_BASE)
         else:
-            font = QFont(option.font)
+            font = QFont(base)
         if status is Status.PLACEHOLDER:
             font.setItalic(True)
         elif status is Status.FAIL:
             font.setWeight(QFont.Weight.DemiBold)
         return font
+
+    def _font(self, option: Any, index: Index, status: Status | None) -> QFont:
+        return self._font_for(option.font, bool(index.data(NUMERIC_ROLE)), status)
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Index) -> None:
         opt: Any = option  # the stubs of QStyleOptionViewItem lack rect, state, font, features

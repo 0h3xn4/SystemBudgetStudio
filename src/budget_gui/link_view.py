@@ -118,6 +118,8 @@ class LinkPassesView(QWidget):
         self.plot = PlotWidget()
         self.passes_table = QTableWidget()
         self.volume_table = QTableWidget()
+        self.passes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.volume_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.tabs = QTabWidget()
         self.tabs.addTab(self.passes_table, "Passes")
         self.tabs.addTab(self.volume_table, "Data volume")

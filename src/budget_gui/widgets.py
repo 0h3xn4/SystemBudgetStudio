@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Any
 
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QFrame,
@@ -17,7 +18,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core.problems import Severity
-from budget_core.reports.document import NA, ReportDocument, Table, format_cell
+from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
 from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE, CellDelegate, tooltip_for
 from budget_gui.theme import Status
 
@@ -76,6 +77,61 @@ class DocTableModel(QAbstractTableModel):
         return None
 
 
+class _SectionPage(QScrollArea):
+    """One sheet of a budget. Its tables are made the first time the page is shown: a project with
+    200 units has tables of 200 rows in every sheet, and making all of them when the project loads
+    (most are never looked at) kept the window busy for a second."""
+
+    def __init__(self, section: Section) -> None:
+        super().__init__()
+        self.section = section
+        self.models: list[DocTableModel] = []
+        self._built = False
+        self.setWidgetResizable(True)
+        self.setFrameShape(QFrame.Shape.NoFrame)
+
+    def showEvent(self, event: QShowEvent) -> None:  # noqa: N802 (Qt naming)
+        super().showEvent(event)
+        self.ensure_built()
+
+    def ensure_built(self) -> None:
+        if self._built:
+            return
+        self._built = True
+        page = QWidget()
+        layout = QVBoxLayout(page)
+        for text in self.section.paragraphs:
+            layout.addWidget(QLabel(text))
+        for table in self.section.tables:
+            title = QLabel(table.title)
+            title.setProperty("role", "section-title")
+            layout.addWidget(title)
+            model = DocTableModel(table)
+            self.models.append(model)
+            view = QTableView()
+            view.setModel(model)
+            view.setItemDelegate(CellDelegate(view))
+            view.verticalHeader().setVisible(False)
+            view.setAlternatingRowColors(True)
+            view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+            view.setTabKeyNavigation(False)  # Tab leaves a read-only table (it is not a form)
+            # the widths come from the first rows only: a table of thousands of rows would
+            # otherwise be measured cell by cell every time the project is loaded
+            view.horizontalHeader().setResizeContentsPrecision(COLUMN_WIDTH_ROWS)
+            view.resizeColumnsToContents()
+            view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            height = view.horizontalHeader().height() + 2 * view.frameWidth() + 18
+            height += sum(view.rowHeight(r) for r in range(len(table.rows)))
+            view.setFixedHeight(max(height, 60))
+            layout.addWidget(view)
+            if table.note:
+                note = QLabel(table.note)
+                note.setWordWrap(True)
+                layout.addWidget(note)
+        layout.addStretch(1)
+        self.setWidget(page)
+
+
 class PowerView(QWidget):
     """Tabs with the same tables the reports contain (Summary, one tab per mode, Assumptions)."""
 
@@ -93,7 +149,7 @@ class PowerView(QWidget):
         layout.addWidget(self.banner)
         layout.addWidget(self.empty_label)
         layout.addWidget(self.tabs)
-        self._models: dict[str, list[DocTableModel]] = {}
+        self._pages: dict[str, _SectionPage] = {}
         self.set_document(None)
 
     def set_empty_text(self, text: str | None) -> None:
@@ -107,15 +163,18 @@ class PowerView(QWidget):
         return self.tabs.tabText(index)
 
     def table_model(self, tab: str, index: int) -> DocTableModel:
-        return self._models[tab][index]
+        page = self._pages[tab]
+        page.ensure_built()
+        return page.models[index]
 
     def set_document(self, document: ReportDocument | None) -> None:
+        self.tabs.setVisible(False)  # a hidden tab bar does not build the pages it uncovers
         while self.tabs.count():  # QTabWidget.clear() keeps the pages alive: delete them
             page = self.tabs.widget(0)
             self.tabs.removeTab(0)
             page.setParent(None)
             page.deleteLater()
-        self._models = {}
+        self._pages = {}
         shown = document is not None
         self.empty_label.setVisible(not shown)
         self.tabs.setVisible(shown)
@@ -126,42 +185,6 @@ class PowerView(QWidget):
         for section in document.sections:
             if section.sheet_name == "Problems":  # shown in the Problems panel instead
                 continue
-            page = QWidget()
-            layout = QVBoxLayout(page)
-            models: list[DocTableModel] = []
-            for text in section.paragraphs:
-                layout.addWidget(QLabel(text))
-            for table in section.tables:
-                title = QLabel(table.title)
-                title.setProperty("role", "section-title")
-                layout.addWidget(title)
-                model = DocTableModel(table)
-                models.append(model)
-                view = QTableView()
-                view.setModel(model)
-                view.setItemDelegate(CellDelegate(view))
-                view.verticalHeader().setVisible(False)
-                view.setAlternatingRowColors(True)
-                view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-                # the widths come from the first rows only: a table of thousands of rows would
-                # otherwise be measured cell by cell every time the project is loaded
-                view.horizontalHeader().setResizeContentsPrecision(COLUMN_WIDTH_ROWS)
-                view.resizeColumnsToContents()
-                view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-                height = view.horizontalHeader().height() + 2 * view.frameWidth() + 18
-                height += sum(view.rowHeight(r) for r in range(len(table.rows)))
-                view.setFixedHeight(max(height, 60))
-                layout.addWidget(view)
-                if table.note:
-                    note = QLabel(table.note)
-                    note.setWordWrap(True)
-                    layout.addWidget(note)
-            layout.addStretch(1)
-            scroll = QScrollArea()
-            scroll.setWidgetResizable(True)
-            scroll.setFrameShape(QFrame.Shape.NoFrame)
-            scroll.setWidget(page)
-            self.tabs.addTab(
-                scroll, section.sheet_name if section.sheet_name != "Summary" else "Summary"
-            )
-            self._models[section.sheet_name] = models
+            page = _SectionPage(section)
+            self.tabs.addTab(page, section.sheet_name)
+            self._pages[section.sheet_name] = page
