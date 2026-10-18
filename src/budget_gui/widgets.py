@@ -162,6 +162,11 @@ class PowerView(QWidget):
     def tabText(self, index: int) -> str:  # noqa: N802 (Qt naming)
         return self.tabs.tabText(index)
 
+    def build_pages(self) -> None:
+        """Make the tables of every sheet now (they are made when a sheet is first shown)."""
+        for page in self._pages.values():
+            page.ensure_built()
+
     def table_model(self, tab: str, index: int) -> DocTableModel:
         page = self._pages[tab]
         page.ensure_built()

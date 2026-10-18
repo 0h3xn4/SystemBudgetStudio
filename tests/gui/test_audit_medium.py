@@ -99,6 +99,7 @@ def test_the_timeline_export_is_built_in_the_worker_thread(
 def test_reloading_does_not_pile_up_table_views(window: MainWindow) -> None:
     def tables() -> int:
         QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+        window.power_view.build_pages()  # the sheets are made when first shown
         return len(window.power_view.findChildren(QTableView))
 
     window.session.reload()
