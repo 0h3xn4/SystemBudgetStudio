@@ -48,18 +48,18 @@ def test_every_dock_has_a_name_for_the_saved_layout(window: MainWindow) -> None:
 
 def test_the_inspector_follows_the_tree(window: MainWindow) -> None:
     assert not window.inspector.details.isHidden() or window.inspector.empty.isHidden() is False
-    item = window.tree.find_item("units/radio.yaml", kind="file")
+    item = window.tree.find_item("units/radio.yaml", kind="unit")
     assert item is not None
     window.tree.setCurrentItem(item)
     inspector = window.inspector
-    assert inspector.title.text() == "radio: S-band transceiver"
+    assert inspector.title.text() == "S-band transceiver  ·  radio"
     assert inspector.file_label.text() == "File: units/radio.yaml"
     assert inspector.problems.count() == 1 and "1 error" in inspector.counts_label.text()
     assert not inspector.empty.isVisibleTo(window)
 
 
 def test_the_inspector_lists_what_is_wrong_and_jumps(window: MainWindow) -> None:
-    item = window.tree.find_item("units/radio.yaml", kind="file")
+    item = window.tree.find_item("units/radio.yaml", kind="unit")
     assert item is not None
     window.tree.setCurrentItem(item)
     window.inspector.problems.setCurrentRow(0)
@@ -78,7 +78,7 @@ def test_the_inspector_open_button_opens_the_node(window: MainWindow) -> None:
 
 
 def test_a_unit_node_offers_its_power_modes(window: MainWindow) -> None:
-    item = window.tree.find_item("units/radio.yaml", kind="file")
+    item = window.tree.find_item("units/radio.yaml", kind="unit")
     assert item is not None
     window.tree.setCurrentItem(item)
     assert not window.inspector.modes_button.isHidden()

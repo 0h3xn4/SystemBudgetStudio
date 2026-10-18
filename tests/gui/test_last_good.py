@@ -53,8 +53,8 @@ def test_the_tree_keeps_the_unit_names_while_the_project_has_an_error(
 ) -> None:
     break_it(project)
     window.session.reload()
-    item = window.tree.find_item("units/radio.yaml", kind="file")
-    assert item is not None and item.text(0) == "radio: S-band transceiver"
+    item = window.tree.find_item("units/radio.yaml", kind="unit")
+    assert item is not None and item.text(0) == "S-band transceiver"
 
 
 def test_nothing_old_can_be_exported(window: MainWindow, project: Path) -> None:

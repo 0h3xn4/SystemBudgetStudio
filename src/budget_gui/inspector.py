@@ -28,7 +28,7 @@ KIND_TEXT = {
     "file": "File",
     "raw_file": "File",
     "field": "Field",
-    "unit_modes": "Power modes of a unit",
+    "unit": "Unit",
     "group": "Group",
 }
 PROBLEM_ROLE = int(Qt.ItemDataRole.UserRole) + 20
@@ -104,8 +104,8 @@ class InspectorPanel(QWidget):
         self.details.setVisible(shown)
         if node is None:
             return
-        self._unit_id = node.unit_id if node.kind == "unit_modes" or node.unit_id else ""
-        self.title.setText(node.label)
+        self._unit_id = node.unit_id
+        self.title.setText(f"{node.label}  ·  {node.ident}" if node.ident else node.label)
         self.kind_label.setText(KIND_TEXT.get(node.kind, "Group"))
         self.file_label.setText(f"File: {node.rel}" if node.rel else "")
         self.file_label.setVisible(bool(node.rel))

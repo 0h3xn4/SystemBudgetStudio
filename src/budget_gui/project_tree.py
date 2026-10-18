@@ -1,16 +1,18 @@
-"""The project tree: the spacecraft model, not the folder listing, with problem badges (D-151).
+"""The project tree: the spacecraft model, not the folder listing, with problem badges (D-158).
 
     Project
-      Spacecraft          units (and their power modes), spacecraft modes, solar array, battery
-      Orbit & ground stations
-      Scenarios
-      Links               each with its transmitter and receiver (the antennas)
+      Spacecraft            the spacecraft file
+      Units                 one row per unit, by name, grouped by subsystem when there are many
+      Spacecraft modes, Expendables, Solar array, Battery
+      Orbits, Ground stations, Imaging targets, Scenarios, Links
       Budget configuration
-      Files               every project file, for the expert who wants the raw list
+      Files                 every project file, for the expert who wants the raw list
 
-A node opens the file that holds it (a field node jumps to the line of the field). Each node
-carries the count of the problems that belong to it, by class, drawn as a small badge with an icon
-and a number, so a placeholder or an error is visible on the node before the node is opened.
+A unit row opens the table of its power modes (the file is in the context menu and the Inspector);
+the other rows open the file that holds them (a field row jumps to the line of the field). A row
+shows a badge only for errors and warnings that belong to it; a folded group shows those of
+everything inside it, so that nothing hides, and shows none once it is open. What is not checked
+because an input is missing is counted in the status bar and the Problems panel, not here.
 The tree is built from the files of the folder and, when the project loads, from its names.
 """
 
@@ -42,13 +44,15 @@ from budget_gui.problem_class import ProblemClass
 FILE_ROLE = int(Qt.ItemDataRole.UserRole)  # relative path of the file the node opens
 UNIT_ROLE = FILE_ROLE + 1  # id of the unit a node belongs to
 PATH_ROLE = FILE_ROLE + 2  # field inside the file ("" for the whole file)
-KIND_ROLE = FILE_ROLE + 3  # "file", "field", "unit_modes" or "group"
-BADGE_ROLE = FILE_ROLE + 4  # tuple of (class value, count)
+KIND_ROLE = FILE_ROLE + 3  # "file", "field", "unit" or "group"
+BADGE_ROLE = FILE_ROLE + 4  # tuple of (class value, count) of everything inside the row
+OWN_BADGE_ROLE = FILE_ROLE + 6  # the same for the row itself only
 NODE_ROLE = FILE_ROLE + 5  # index of the node in the tree's list of nodes
 Index = QModelIndex | QPersistentModelIndex
 
 CONFIG_FOLDER = "config"
-BADGE_CLASSES = (ProblemClass.ERROR, ProblemClass.WARNING, ProblemClass.NOT_CHECKED)
+BADGE_CLASSES = (ProblemClass.ERROR, ProblemClass.WARNING)
+GROUP_UNITS_ABOVE = 8  # more units than this are grouped by subsystem
 
 
 @dataclass
@@ -56,10 +60,11 @@ class Node:
     """One tree row, as data (no widgets), so the structure can be tested on its own."""
 
     label: str
-    kind: str = "group"  # "file", "raw_file", "field", "unit_modes", "group", "project"
+    kind: str = "group"  # "file", "raw_file", "field", "unit", "group", "project"
     rel: str = ""
     path: str = ""
     unit_id: str = ""
+    ident: str = ""  # the id of a unit or link, when the label shows its name
     expanded: bool = False
     own_problems: bool = False  # count the problems of (rel, path) on this node
     children: list[Node] = field(default_factory=list)
@@ -78,10 +83,39 @@ def _yaml_files(root: Path, folder: str) -> list[Path]:
 def _group(title: str, files: list[Path], folder: str) -> Node | None:
     if not files:
         return None
-    group = Node(f"{title} ({len(files)})", expanded=True)
+    group = Node(f"{title} ({len(files)})")
     for path in files:
         group.children.append(Node(path.stem, "file", f"{folder}/{path.name}", own_problems=True))
     return group
+
+
+def _units_group(root: Path, project: Project | None) -> Node | None:
+    """The units, one row each (by name); grouped by subsystem when there are many."""
+    unit_files = _yaml_files(root, "units")
+    if not unit_files:
+        return None
+    rows: list[tuple[str, Node]] = []
+    for path in unit_files:
+        unit = project.units.get(path.stem) if project else None
+        kind = "unit" if unit else "file"
+        node = Node(
+            unit.name if unit else path.stem,
+            kind,
+            f"units/{path.name}",
+            unit_id=path.stem if unit else "",
+            ident=path.stem if unit else "",
+            own_problems=True,
+        )
+        rows.append(((unit.subsystem if unit and unit.subsystem else "Other"), node))
+    units = Node(f"Units ({len(rows)})", expanded=True)
+    subsystems = sorted({subsystem for subsystem, _node in rows})
+    if len(rows) <= GROUP_UNITS_ABOVE or len(subsystems) < 2:
+        units.children = [node for _subsystem, node in rows]
+        return units
+    for subsystem in subsystems:
+        members = [node for name, node in rows if name == subsystem]
+        units.children.append(Node(f"{subsystem} ({len(members)})", children=members))
+    return units
 
 
 def build_nodes(root: Path, project: Project | None) -> Node:
@@ -91,44 +125,22 @@ def build_nodes(root: Path, project: Project | None) -> Node:
     revision = f"  ·  rev {project.meta.revision}" if project else ""
     top = Node(f"{name}{revision}", "project", "project.yaml", expanded=True)
 
-    spacecraft = Node("Spacecraft", "file", "spacecraft.yaml", expanded=True, own_problems=True)
-    if not (root / "spacecraft.yaml").is_file():
-        spacecraft.kind, spacecraft.rel = "group", ""
-    unit_files = _yaml_files(root, "units")
-    if unit_files:
-        units = Node(f"Units ({len(unit_files)})", expanded=True)
-        for path in unit_files:
-            unit = project.units.get(path.stem) if project else None
-            label = f"{path.stem}: {unit.name}" if unit else path.stem
-            node = Node(label, "file", f"units/{path.name}", unit_id=path.stem, own_problems=True)
-            if unit:
-                node.children.append(
-                    Node(
-                        f"Power modes ({len(unit.modes)})",
-                        "unit_modes",
-                        node.rel,
-                        "modes",
-                        unit_id=path.stem,
-                    )
-                )
-            units.children.append(node)
-        spacecraft.children.append(units)
+    if (root / "spacecraft.yaml").is_file():
+        top.children.append(Node("Spacecraft", "file", "spacecraft.yaml", own_problems=True))
+    units = _units_group(root, project)
+    if units:
+        top.children.append(units)
     modes = _group("Spacecraft modes", _yaml_files(root, "modes"), "modes")
     if modes:
-        spacecraft.children.append(modes)
+        top.children.append(modes)
     expendables = _group("Expendables", _yaml_files(root, "expendables"), "expendables")
     if expendables:
-        expendables.expanded = False
-        spacecraft.children.append(expendables)
+        top.children.append(expendables)
     if (root / "config" / "power_system.yaml").is_file():
         for label, key in (("Solar array", "solar_array"), ("Battery", "battery")):
-            spacecraft.children.append(
+            top.children.append(
                 Node(label, "field", "config/power_system.yaml", key, own_problems=True)
             )
-    if spacecraft.children or spacecraft.rel:
-        top.children.append(spacecraft)
-
-    sites = Node("Orbit & ground stations", expanded=True)
     for folder, title in (
         ("orbits", "Orbits"),
         ("ground_stations", "Ground stations"),
@@ -136,9 +148,7 @@ def build_nodes(root: Path, project: Project | None) -> Node:
     ):
         group = _group(title, _yaml_files(root, folder), folder)
         if group:
-            sites.children.append(group)
-    if sites.children:
-        top.children.append(sites)
+            top.children.append(group)
 
     scenarios = _group("Scenarios", _yaml_files(root, "scenarios"), "scenarios")
     if scenarios:
@@ -146,17 +156,18 @@ def build_nodes(root: Path, project: Project | None) -> Node:
 
     link_files = _yaml_files(root, "links")
     if link_files:
-        links = Node(f"Links ({len(link_files)})", expanded=True)
+        links = Node(f"Links ({len(link_files)})")
         for path in link_files:
             link = project.links.get(path.stem) if project else None
-            label = f"{path.stem}: {link.name}" if link else path.stem
-            rel = f"links/{path.name}"
-            node = Node(label, "file", rel, own_problems=True)
-            node.children.append(
-                Node("Transmitter", "field", rel, "transmitter", own_problems=True)
+            links.children.append(
+                Node(
+                    link.name if link else path.stem,
+                    "file",
+                    f"links/{path.name}",
+                    ident=path.stem if link else "",
+                    own_problems=True,
+                )
             )
-            node.children.append(Node("Receiver", "field", rel, "receiver", own_problems=True))
-            links.children.append(node)
         top.children.append(links)
 
     config = _group("Budget configuration", _yaml_files(root, CONFIG_FOLDER), CONFIG_FOLDER)
@@ -196,9 +207,7 @@ def problems_of(node: Node, problems: Iterable[Problem]) -> list[Problem]:
     listed = list(problems)
     if node.kind == "project":
         return listed
-    if node.kind == "unit_modes":
-        return [p for p in listed if p.file == node.rel and p.path.startswith(node.path)]
-    members = [n for n in node.walk() if n.kind != "unit_modes"]
+    members = list(node.walk())
     return [p for p in listed if any(_belongs(p, n) for n in members)]
 
 
@@ -209,21 +218,24 @@ def badge_counts(top: Node, problems: Iterable[Problem]) -> dict[int, dict[Probl
     result: dict[int, dict[ProblemClass, int]] = {}
 
     def count(node: Node) -> dict[ProblemClass, int]:
-        total = pc.counts(p for p in listed if _belongs(p, node))
+        total = own_counts(node, listed)
         for child in node.children:
-            if child.kind == "unit_modes":
-                continue  # its problems are the unit's own
-            for cls, number in count(child).items():
+            counted = count(child)
+            if child.kind == "raw_file":
+                continue  # the raw list repeats every other row: it adds nothing to its group
+            for cls, number in counted.items():
                 total[cls] += number
         result[id(node)] = total
         return total
 
     count(top)
     result[id(top)] = pc.counts(listed)  # the project node: everything, also what has no file
-    for node in top.walk():
-        if node.kind == "unit_modes":
-            result[id(node)] = {cls: 0 for cls in ProblemClass}
     return result
+
+
+def own_counts(node: Node, problems: Iterable[Problem]) -> dict[ProblemClass, int]:
+    """Problems per class of this node alone (not of what is inside it)."""
+    return pc.counts(p for p in problems if _belongs(p, node))
 
 
 class BadgeDelegate(QStyledItemDelegate):
@@ -232,8 +244,9 @@ class BadgeDelegate(QStyledItemDelegate):
     ICON = 14
     GAP = 6
 
-    def _badges(self, index: Index) -> list[tuple[ProblemClass, int]]:
-        raw = index.data(BADGE_ROLE) or ()
+    def _badges(self, index: Index, folded: bool) -> list[tuple[ProblemClass, int]]:
+        """What is inside shows on a folded row; an open row shows only its own problems."""
+        raw = index.data(BADGE_ROLE if folded else OWN_BADGE_ROLE) or ()
         return [(ProblemClass(c), int(n)) for c, n in raw if n]
 
     def _width(self, badges: list[tuple[ProblemClass, int]], option: Any) -> int:
@@ -245,7 +258,8 @@ class BadgeDelegate(QStyledItemDelegate):
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Index) -> None:
         opt: Any = QStyleOptionViewItem(option)
         self.initStyleOption(opt, index)
-        badges = self._badges(index)
+        folded = not (opt.state & QStyle.StateFlag.State_Open)
+        badges = self._badges(index, folded)
         reserved = self._width(badges, opt)
         if reserved:
             room = max(opt.rect.width() - reserved - 24, 20)
@@ -289,13 +303,15 @@ class ProjectTree(QTreeWidget):
         self._top: Node | None = None
         self._nodes: list[Node] = []
         self._items: dict[int, QTreeWidgetItem] = {}
+        self._keys: dict[int, tuple[str, ...]] = {}
+        self._folding: dict[tuple[str, ...], bool] = {}
         self._problems: list[Problem] = []
 
     # ---- activation --------------------------------------------------------------------------
     def _activated(self, item: QTreeWidgetItem, _column: int = 0) -> None:
         kind = item.data(0, KIND_ROLE)
         rel = item.data(0, FILE_ROLE)
-        if kind == "unit_modes":
+        if kind == "unit":
             self.unit_requested.emit(str(item.data(0, UNIT_ROLE)))
         elif kind == "field" and rel:
             self.field_requested.emit(str(rel), str(item.data(0, PATH_ROLE) or ""))
@@ -345,7 +361,7 @@ class ProjectTree(QTreeWidget):
             for i in range(node.childCount()):
                 child = node.child(i)
                 rel = child.data(0, FILE_ROLE)
-                if rel and child.data(0, KIND_ROLE) != "unit_modes":
+                if rel:
                     found.add(str(rel))
                 stack.append(child)
         return len(found)
@@ -367,19 +383,36 @@ class ProjectTree(QTreeWidget):
 
     def set_project(self, root: Path | None, project: Project | None) -> None:
         selected = self._current_key()
+        self._remember_folding()
         self.clear()
         self._items = {}
+        self._keys = {}
         self._nodes = []
         self._top = None
         if root is None:
             return
         self._top = build_nodes(root, project)
-        self._add(self.invisibleRootItem(), self._top)
+        self._add(self.invisibleRootItem(), self._top, ())
         self._apply_badges()
         if selected is not None:
             self._select(selected)
 
-    def _add(self, parent: QTreeWidgetItem, node: Node) -> None:
+    @staticmethod
+    def _key_of(trail: tuple[str, ...], node: Node) -> tuple[str, ...]:
+        """Where a row sits, by the names of its groups (without the counts, which change)."""
+        return (*trail, node.label.split(" (")[0] if node.kind == "group" else node.label)
+
+    def _remember_folding(self) -> None:
+        """Keep open what the user opened, and folded what they folded, across a reload."""
+        if self._top is None:
+            return
+        self._folding = {
+            self._keys[id(node)]: self._items[id(node)].isExpanded()
+            for node in self._top.walk()
+            if node.children and id(node) in self._items and id(node) in self._keys
+        }
+
+    def _add(self, parent: QTreeWidgetItem, node: Node, trail: tuple[str, ...]) -> None:
         item = QTreeWidgetItem([node.label])
         item.setData(0, KIND_ROLE, node.kind)
         item.setData(0, NODE_ROLE, len(self._nodes))
@@ -392,9 +425,11 @@ class ProjectTree(QTreeWidget):
             item.setData(0, UNIT_ROLE, node.unit_id)
         parent.addChild(item)
         self._items[id(node)] = item
+        key = self._key_of(trail, node)
+        self._keys[id(node)] = key
         for child in node.children:
-            self._add(item, child)
-        item.setExpanded(node.expanded)
+            self._add(item, child, key)
+        item.setExpanded(self._folding.get(key, node.expanded))
 
     def _select(self, key: tuple[str, str, str]) -> None:
         stack = [self.invisibleRootItem()]
@@ -428,15 +463,19 @@ class ProjectTree(QTreeWidget):
             by_class = counts.get(id(node), {})
             badges = tuple((c.value, by_class.get(c, 0)) for c in BADGE_CLASSES if by_class.get(c))
             item.setData(0, BADGE_ROLE, badges)
+            own = own_counts(node, self._problems)
+            item.setData(
+                0, OWN_BADGE_ROLE, tuple((c.value, own[c]) for c in BADGE_CLASSES if own[c])
+            )
             item.setToolTip(0, self._tooltip(node, by_class))
         self.viewport().update()
 
     @staticmethod
     def _tooltip(node: Node, by_class: dict[ProblemClass, int]) -> str:
-        lines = [node.rel or node.label]
-        if node.path:
-            lines[0] += f"  ({node.path})"
-        shown = [c for c in BADGE_CLASSES if by_class.get(c)]
+        lines = [f"{node.label}  ({node.ident})" if node.ident else node.label]
+        if node.rel:
+            lines.append(node.rel + (f"  ({node.path})" if node.path else ""))
+        shown = [c for c in pc.ORDER if by_class.get(c)]
         if shown:
             lines.append(", ".join(f"{by_class[c]} {pc.LABELS[c].lower()}" for c in shown))
         return "\n".join(lines)

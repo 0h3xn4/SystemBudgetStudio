@@ -368,7 +368,7 @@ def test_ctrl_s_on_the_scenario_tab_saves_the_scenario(window: MainWindow, proje
 
 
 def test_the_tree_selection_survives_a_reload(window: MainWindow) -> None:
-    item = window.tree.find_item("units/gnss.yaml", kind="file")
+    item = window.tree.find_item("units/gnss.yaml", kind="unit")
     assert item is not None
     window.tree.setCurrentItem(item)
     chosen = window.tree.current_unit_id()
