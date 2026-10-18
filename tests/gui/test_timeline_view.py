@@ -74,11 +74,11 @@ def test_switching_the_case_changes_the_plot_without_recomputing(window: MainWin
 
 
 def test_violations_reach_the_problems_panel_with_a_line(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
-    before = window.problems_panel.table.rowCount()
+    before = len(window.problems_panel.visible_problems)
     compute(window, qtbot)
     panel = window.problems_panel
-    codes = [panel.table.item(r, 1).text() for r in range(panel.table.rowCount())]
-    assert PEAK_POWER_EXCEEDED in codes and panel.table.rowCount() > before
+    codes = panel.codes()
+    assert PEAK_POWER_EXCEEDED in codes and len(panel.visible_problems) > before
     row = codes.index(PEAK_POWER_EXCEEDED)
     panel.activate_row(row)
     editor = window.editors.current_editor()

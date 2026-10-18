@@ -47,7 +47,7 @@ def test_placeholder_examples_show_na_and_the_banner(window: MainWindow) -> None
 def test_a_finding_reaches_the_problems_panel_and_jumps_to_the_unit(window: MainWindow) -> None:
     window.open_project(EXAMPLES / "cubesat_3u_eps")
     panel = window.problems_panel
-    codes = [panel.table.item(r, 1).text() for r in range(panel.table.rowCount())]
+    codes = panel.codes()
     assert "THERMAL_MARGIN_INSUFFICIENT" in codes
     panel.activate_row(codes.index("THERMAL_MARGIN_INSUFFICIENT"))
     editor = window.editors.current_editor()
@@ -60,5 +60,5 @@ def test_editing_a_limit_updates_the_findings(window: MainWindow, tmp_path: Path
     path.write_text(path.read_text().replace("operating_max_k: 335.15", "operating_max_k: 340.0"))
     window.open_project(tmp_path / "p")
     panel = window.problems_panel
-    codes = [panel.table.item(r, 1).text() for r in range(panel.table.rowCount())]
+    codes = panel.codes()
     assert "THERMAL_MARGIN_INSUFFICIENT" not in codes

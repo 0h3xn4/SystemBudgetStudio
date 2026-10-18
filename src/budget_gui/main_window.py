@@ -31,12 +31,13 @@ from budget_gui.layout_settings import LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.privacy import disable_settings_files
+from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.timeline_view import PowerTimelineView
 from budget_gui.unit_editor import UnitEditor
 from budget_gui.unit_table import export_unit_table, import_unit_table
-from budget_gui.widgets import PowerView, ProblemsPanel, ProjectTree
+from budget_gui.widgets import PowerView, ProjectTree
 from budget_gui.worker import ExportWorker
 
 
@@ -420,7 +421,9 @@ class MainWindow(QMainWindow):
             else p
             for p in [*self.session.problems, *extra]
         ]
-        self.problems_panel.set_problems(sort_problems(located))
+        self.problems_panel.set_problems(
+            sort_problems(located), project_open=self.session.path is not None
+        )
         if self.session.project is not None:
             name = self.session.project.meta.name
             self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")

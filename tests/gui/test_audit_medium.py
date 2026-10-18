@@ -17,8 +17,8 @@ from budget_core.power.time_domain import Violation
 from budget_core.problems import Problem, Severity
 from budget_gui import timeline_view as tv
 from budget_gui.main_window import MainWindow
+from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.theme import WHITE, apply_theme, stylesheet
-from budget_gui.widgets import ProblemsPanel
 
 pytestmark = pytest.mark.gui
 
@@ -419,7 +419,7 @@ def test_errors_come_first_in_the_problems_panel(qtbot) -> None:  # type: ignore
             Problem(Severity.ERROR, "E1", "c", file="z.yaml"),
         ]
     )
-    assert [panel.table.item(r, 1).text() for r in range(3)] == ["E1", "W1", "I1"]
+    assert panel.codes() == ["E1", "W1", "I1"]
     emitted: list[tuple[str, int]] = []
     panel.jump_requested.connect(lambda f, line: emitted.append((f, line)))
     panel.activate_row(0)
@@ -430,7 +430,7 @@ def test_the_problems_panel_opens_tall_enough_for_several_rows(window: MainWindo
     window.resize(1400, 860)
     window.show()
     QApplication.processEvents()
-    assert window.problems_panel.table.height() >= 80
+    assert window.problems_panel.view.height() >= 80
 
 
 # ---- GUI-31: a missing comparison folder is named as such ---

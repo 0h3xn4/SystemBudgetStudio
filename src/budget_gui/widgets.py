@@ -1,4 +1,4 @@
-"""Project tree, Problems panel and the power budget view."""
+"""Project tree and the budget view (the Problems panel is in `problems_panel`)."""
 
 from __future__ import annotations
 
@@ -6,17 +6,13 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt, Signal
-from PySide6.QtGui import QBrush, QColor
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QFrame,
-    QHeaderView,
     QLabel,
     QMenu,
     QScrollArea,
     QTableView,
-    QTableWidget,
-    QTableWidgetItem,
     QTabWidget,
     QTreeWidget,
     QTreeWidgetItem,
@@ -25,9 +21,8 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core.model import Project
-from budget_core.problems import Problem, Severity
+from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Table, format_cell
-from budget_gui import theme
 from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE, CellDelegate, tooltip_for
 from budget_gui.theme import Status
 
@@ -81,76 +76,6 @@ class DocTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.ToolTipRole and text == NA:
             return tooltip_for(Status.NOT_CHECKED)
         return None
-
-
-class ProblemsPanel(QWidget):
-    """All problems of the open project; double-click or Enter jumps to the offending line."""
-
-    jump_requested = Signal(str, int)
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.summary = QLabel("No project open")
-        self.table = QTableWidget(0, 4)
-        self.table.setHorizontalHeaderLabels(["Severity", "Code", "Location", "Message"])
-        self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-        self.table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.table.verticalHeader().setVisible(False)
-        self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.setMinimumHeight(48)
-        self.table.itemActivated.connect(lambda item: self.activate_row(item.row()))
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(8, 4, 8, 4)
-        layout.addWidget(self.summary)
-        layout.addWidget(self.table)
-        self._problems: list[Problem] = []
-        theme.manager().changed.connect(self._recolour)
-
-    def set_problems(self, problems: list[Problem]) -> None:
-        # errors first, then warnings, then information; inside a group the given order (file, line)
-        problems = sorted(problems, key=lambda p: SEVERITY_ORDER[p.severity])
-        self._problems = list(problems)
-        errors = sum(p.severity is Severity.ERROR for p in problems)
-        warnings = sum(p.severity is Severity.WARNING for p in problems)
-        infos = len(problems) - errors - warnings
-        self.summary.setText(
-            f"{errors} error{'s' if errors != 1 else ''}, "
-            f"{warnings} warning{'s' if warnings != 1 else ''}"
-            + (f", {infos} info" if infos else "")
-        )
-        self.table.setRowCount(len(problems))
-        for row, problem in enumerate(problems):
-            where = problem.file or "<project>"
-            if problem.line is not None:
-                where += f":{problem.line}"
-            message = problem.message + (f"  {problem.hint}" if problem.hint else "")
-            cells = [problem.severity.value.capitalize(), problem.code, where, message]
-            for column, text in enumerate(cells):
-                item = QTableWidgetItem(text)
-                if column == 0:
-                    item.setForeground(QBrush(self._severity_brush(problem.severity)))
-                item.setToolTip(problem.path)
-                self.table.setItem(row, column, item)
-        self.table.resizeColumnsToContents()
-        self.table.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
-
-    @staticmethod
-    def _severity_brush(severity: Severity) -> QColor:
-        return QColor(theme.severity_colour(theme.tokens(), severity.value))
-
-    def _recolour(self) -> None:
-        """The theme changed: colour the severity column again."""
-        for row, problem in enumerate(self._problems):
-            item = self.table.item(row, 0)
-            if item is not None:
-                item.setForeground(QBrush(self._severity_brush(problem.severity)))
-
-    def activate_row(self, row: int) -> None:
-        if 0 <= row < len(self._problems):
-            problem = self._problems[row]
-            if problem.file:
-                self.jump_requested.emit(problem.file, problem.line or 1)
 
 
 class ProjectTree(QTreeWidget):
