@@ -20,7 +20,7 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
     qtbot.addWidget(w)
     w.resize(1400, 860)
     w.show()
-    w.open_project(EXAMPLES / "cubesat_3u_eps")
+    w.open_project(EXAMPLES / "microsat_250kg_eps")
     return w
 
 
@@ -52,7 +52,7 @@ def test_the_inspector_follows_the_tree(window: MainWindow) -> None:
     assert item is not None
     window.tree.setCurrentItem(item)
     inspector = window.inspector
-    assert inspector.title.text() == "radio: UHF/VHF radio"
+    assert inspector.title.text() == "radio: S-band transceiver"
     assert inspector.file_label.text() == "File: units/radio.yaml"
     assert inspector.problems.count() == 1 and "1 error" in inspector.counts_label.text()
     assert not inspector.empty.isVisibleTo(window)
@@ -161,7 +161,7 @@ def test_the_layout_file_holds_no_project_content(qtbot, tmp_path: Path) -> None
     window = MainWindow(LayoutSettings(path))
     qtbot.addWidget(window)
     window.show()
-    window.open_project(EXAMPLES / "cubesat_3u_eps")
+    window.open_project(EXAMPLES / "microsat_250kg_eps")
     window.close()
     text = path.read_text(encoding="utf-8")
     assert "cubesat" not in text.lower() and str(EXAMPLES) not in text

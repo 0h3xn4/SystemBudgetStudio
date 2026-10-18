@@ -1,5 +1,5 @@
 """Golden tests of the static thermal budget reports: the two-node test project and the complete
-CubeSat example. Numbers are compared to 9 significant digits: a different BLAS build changes the
+250 kg example. Numbers are compared to 9 significant digits: a different BLAS build changes the
 last ones."""
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ def build(name: str):  # type: ignore[no-untyped-def]
     return result, thermal_output(project, result, prov, problems)
 
 
-NAMES = ["two_nodes", "cubesat_3u_eps", "cubesat_3u"]
+NAMES = ["two_nodes", "microsat_250kg_eps", "microsat_250kg"]
 
 
 @pytest.mark.parametrize("name", NAMES)
@@ -75,10 +75,10 @@ def test_json(name: str) -> None:
 
 
 def test_csv_files() -> None:
-    result, out = build("cubesat_3u_eps")
+    result, out = build("microsat_250kg_eps")
     files = dict(out.csv_files)
-    check_golden("thermal_cubesat_3u_eps_hot.csv", stable_floats(files["thermal_case_hot.csv"]))
+    check_golden("thermal_microsat_250kg_eps_hot.csv", stable_floats(files["thermal_case_hot.csv"]))
     check_golden(
-        "thermal_cubesat_3u_eps_imaging.csv", stable_floats(files["thermal_static_imaging.csv"])
+        "thermal_microsat_250kg_eps_imaging.csv", stable_floats(files["thermal_static_imaging.csv"])
     )
     assert files["thermal_case_cold.csv"] == thermal_case_csv(result.cases[0])

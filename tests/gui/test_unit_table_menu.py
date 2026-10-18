@@ -18,7 +18,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -38,7 +38,7 @@ def action(window: MainWindow, text: str):  # type: ignore[no-untyped-def]
     raise AssertionError(f"no menu entry {text!r}")
 
 
-def filled_table(project: Path, tmp_path: Path, avg: str = "2.0 W") -> Path:
+def filled_table(project: Path, tmp_path: Path, avg: str = "30.0 W") -> Path:
     from budget_cli.main import main
 
     path = tmp_path / "table.csv"
@@ -85,11 +85,11 @@ def test_import_previews_then_applies_and_reloads(
         return QMessageBox.StandardButton.Yes
 
     monkeypatch.setattr(QMessageBox, "question", yes)
-    assert radio_downlink_avg(window) == pytest.approx(1.8)
+    assert radio_downlink_avg(window) == pytest.approx(28.0)
     action(window, "Import unit table…").trigger()
     assert len(shown) == 1
     assert "radio" in shown[0] and "downlink" in shown[0] and "avg_power_w" in shown[0]
-    assert radio_downlink_avg(window) == pytest.approx(2.0)  # written and reloaded
+    assert radio_downlink_avg(window) == pytest.approx(30.0)  # written and reloaded
 
 
 def test_cancelling_the_preview_writes_nothing(
@@ -122,7 +122,7 @@ def test_a_table_with_problems_is_explained_and_not_applied(
 def test_a_table_with_no_changes_says_so(
     window: MainWindow, project: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    table = filled_table(project, tmp_path, avg="1.8")
+    table = filled_table(project, tmp_path, avg="28.0")
     told: list[str] = []
     monkeypatch.setattr(QFileDialog, "getOpenFileName", lambda *a, **k: (str(table), ""))
     monkeypatch.setattr(

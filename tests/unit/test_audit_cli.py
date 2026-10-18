@@ -21,7 +21,7 @@ FIXED = ["--user", "Test User", "--date", "2026-01-02T03:04:05Z"]
 
 @pytest.fixture
 def eps(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "eps")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "eps")
     return tmp_path / "eps"
 
 
@@ -33,7 +33,7 @@ def plain(tmp_path: Path) -> Path:
 
 # ---- RC-1 -------------------------------------------------------------------------------------
 def dead_link(root: Path) -> None:
-    edit(root, "links/uhf_down.yaml", "value: 1.0", "value: 1.0e-12")
+    edit(root, "links/sband_down.yaml", "value: 5.0", "value: 1.0e-12")
 
 
 def test_link_passes_fails_when_a_link_closes_at_no_rate(
@@ -158,19 +158,19 @@ def test_export_examples_does_not_replace_existing_projects(
 ) -> None:
     target = tmp_path / "demo"
     assert main(["export-examples", str(target)]) == 0
-    mine = target / "cubesat_3u" / "project.yaml"
+    mine = target / "microsat_250kg" / "project.yaml"
     mine.write_text("# my own edit\n", encoding="utf-8")
     capsys.readouterr()
     assert main(["export-examples", str(target)]) == 1
     out = capsys.readouterr().err
-    assert "--force" in out and "cubesat_3u" in out
+    assert "--force" in out and "microsat_250kg" in out
     assert mine.read_text(encoding="utf-8") == "# my own edit\n"
 
 
 def test_export_examples_force_replaces(tmp_path: Path) -> None:
     target = tmp_path / "demo"
     assert main(["export-examples", str(target)]) == 0
-    mine = target / "cubesat_3u" / "project.yaml"
+    mine = target / "microsat_250kg" / "project.yaml"
     original = mine.read_text(encoding="utf-8")
     mine.write_text("# my own edit\n", encoding="utf-8")
     assert main(["export-examples", str(target), "--force"]) == 0
@@ -306,8 +306,8 @@ def test_guide_schema_and_example_writes_replace_a_link_instead_of_following_it(
     assert not (out / "unit.schema.json").is_symlink()
     assert not (out / "system-budget-studio-guide.html").is_symlink()
     demo = tmp_path / "demo"
-    os.makedirs(demo / "cubesat_3u")
-    os.symlink(victim, demo / "cubesat_3u" / "project.yaml")
+    os.makedirs(demo / "microsat_250kg")
+    os.symlink(victim, demo / "microsat_250kg" / "project.yaml")
     assert main(["export-examples", str(demo), "--force"]) == 0
     assert victim.read_text(encoding="utf-8") == "precious"
 

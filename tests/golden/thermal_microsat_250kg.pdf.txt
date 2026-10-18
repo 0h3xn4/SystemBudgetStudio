@@ -1,0 +1,3869 @@
+pages=23
+## page 1
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 1
+Thermal budget (static): Example 250 kg minisatellite
+INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
+placeholders are replaced with sourced values.
+Summary
+Heat dissipation by spacecraft mode
+Mode
+Average (W)
+Peak (W)
+Charging
+ 49.300
+ 105.300
+Downlink
+ 99.200
+ 169.300
+Imaging
+ 100.700
+ 207.300
+Nominal
+ 52.300
+ 108.300
+Safe
+ 31.850
+ 63.500
+Average = sum of unit power x duty cycle x heat dissipation ratio. Peak uses the unit peak powers. n/a: a unit has no heat dissipation ratio for its power mode.
+Case: cold
+Eclipse with the lowest-power mode.
+Node temperatures, case cold
+Node
+Temperature (K)
+not computed (inputs missing, see Problems)
+ n/a
+Unit temperature limits, case cold (operating)
+Unit
+Node
+Temperature (K)
+Lower limit (K)
+Upper limit (K)
+Headroom to lower (K)
+Headroom to upper (K)
+Status
+adapter
+STRUCT
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+adcs
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+battery
+EPS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+camera
+PL
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+eps
+EPS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+gnss
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+harness
+STRUCT
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+heaters
+THERM
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+magnetorquers
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+obc
+DH
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+pdu_data
+DH
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+radio
+TTC
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+reaction_wheels
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 2
+Unit
+Node
+Temperature (K)
+Lower limit (K)
+Upper limit (K)
+Headroom to lower (K)
+Headroom to upper (K)
+Status
+solar_array
+EPS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+star_tracker
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+structure
+STRUCT
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+sun_sensors
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+xband_tx
+PL
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
+Case: hot
+Sunlight with the highest-power mode.
+Node temperatures, case hot
+Node
+Temperature (K)
+not computed (inputs missing, see Problems)
+ n/a
+Unit temperature limits, case hot (operating)
+Unit
+Node
+Temperature (K)
+Lower limit (K)
+Upper limit (K)
+Headroom to lower (K)
+Headroom to upper (K)
+Status
+adapter
+STRUCT
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+adcs
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+battery
+EPS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+camera
+PL
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+eps
+EPS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+gnss
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+harness
+STRUCT
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+heaters
+THERM
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+magnetorquers
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+obc
+DH
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+pdu_data
+DH
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+radio
+TTC
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+reaction_wheels
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+solar_array
+EPS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+star_tracker
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+structure
+STRUCT
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+sun_sensors
+ADCS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+xband_tx
+PL
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
+Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
+## page 3
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 3
+Mode: Charging
+Units in mode Charging
+Unit
+Name
+Subsystem
+Node
+Power mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+charging
+ 5.000
+ 1.00
+ 5.000
+ 7.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+charging
+ 14.000
+ 1.00
+ 14.000
+ 20.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+charging
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+charging
+ 1.800
+ 1.00
+ 1.800
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+charging
+ 0.200
+ 1.00
+ 0.200
+ 3.000
+obc
+On-board computer
+DH
+DH
+charging
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+pdu_data
+Payload data unit
+DH
+DH
+charging
+ 4.000
+ 1.00
+ 4.000
+ 6.000
+radio
+S-band transceiver
+TTC
+TTC
+charging
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+charging
+ 7.200
+ 1.00
+ 7.200
+ 30.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+charging
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+charging
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 17.500
+ 47.300
+DH
+ 10.000
+ 14.000
+EPS
+ 14.000
+ 20.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 6.000
+ 8.000
+By thermal node
+## page 4
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 4
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 17.500
+ 47.300
+DH
+ 10.000
+ 14.000
+EPS
+ 14.000
+ 20.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 6.000
+ 8.000
+Mode: Downlink
+Units in mode Downlink
+Unit
+Name
+Subsystem
+Node
+Power mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+downlink
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+downlink
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+downlink
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+downlink
+ 1.800
+ 1.00
+ 1.800
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+obc
+On-board computer
+DH
+DH
+downlink
+ 11.000
+ 1.00
+ 11.000
+ 15.000
+pdu_data
+Payload data unit
+DH
+DH
+downlink
+ 9.000
+ 1.00
+ 9.000
+ 14.000
+radio
+S-band transceiver
+TTC
+TTC
+downlink
+ 28.000
+ 0.70
+ 19.600
+ 28.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+downlink
+ 7.200
+ 1.00
+ 7.200
+ 30.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+downlink
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+downlink
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+downlink
+ 55.000
+ 0.50
+ 27.500
+ 35.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.300
+ 45.300
+## page 5
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 5
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+DH
+ 20.000
+ 29.000
+EPS
+ 12.000
+ 16.000
+PL
+ 27.500
+ 35.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 19.600
+ 28.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.300
+ 45.300
+DH
+ 20.000
+ 29.000
+EPS
+ 12.000
+ 16.000
+PL
+ 27.500
+ 35.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 19.600
+ 28.000
+Mode: Imaging
+Units in mode Imaging
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+imaging
+ 7.000
+ 1.00
+ 7.000
+ 10.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+imaging
+ 36.000
+ 1.00
+ 36.000
+ 80.000
+eps
+Power conditioning unit
+EPS
+EPS
+imaging
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+imaging
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+imaging
+ 1.000
+ 1.00
+ 1.000
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+obc
+On-board computer
+DH
+DH
+imaging
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+pdu_data
+Payload data unit
+DH
+DH
+imaging
+ 9.000
+ 1.00
+ 9.000
+ 14.000
+radio
+S-band transceiver
+TTC
+TTC
+imaging
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+imaging
+ 12.600
+ 1.00
+ 12.600
+ 40.000
+## page 6
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 6
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+imaging
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+imaging
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 24.700
+ 57.300
+DH
+ 21.000
+ 30.000
+EPS
+ 12.000
+ 16.000
+PL
+ 36.000
+ 80.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 24.700
+ 57.300
+DH
+ 21.000
+ 30.000
+EPS
+ 12.000
+ 16.000
+PL
+ 36.000
+ 80.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+Mode: Nominal
+Units in mode Nominal
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+nominal
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+## page 7
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 7
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+nominal
+ 12.000
+ 1.00
+ 12.000
+ 16.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+nominal
+ 1.200
+ 1.00
+ 1.200
+ 1.800
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+nominal
+ 1.800
+ 1.00
+ 1.800
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+nominal
+ 0.200
+ 1.00
+ 0.200
+ 3.000
+obc
+On-board computer
+DH
+DH
+nominal
+ 10.000
+ 1.00
+ 10.000
+ 14.000
+pdu_data
+Payload data unit
+DH
+DH
+nominal
+ 4.000
+ 1.00
+ 4.000
+ 6.000
+radio
+S-band transceiver
+TTC
+TTC
+nominal
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+nominal
+ 7.200
+ 1.00
+ 7.200
+ 30.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+nominal
+ 3.500
+ 1.00
+ 3.500
+ 5.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+nominal
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.500
+ 48.300
+DH
+ 14.000
+ 20.000
+EPS
+ 12.000
+ 16.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+TTC
+ 6.000
+ 8.000
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 18.500
+ 48.300
+DH
+ 14.000
+ 20.000
+EPS
+ 12.000
+ 16.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 1.800
+ 16.000
+## page 8
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 8
+Node
+Dissipation (W)
+Peak dissipation (W)
+TTC
+ 6.000
+ 8.000
+Mode: Safe
+Units in mode Safe
+Unit
+Name
+Subsystem
+Node
+Power
+mode
+Effective power
+(W)
+Dissipation
+ratio
+Dissipation
+(W)
+Peak dissipation
+(W)
+adapter
+Separation adapter
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+adcs
+Attitude control electronics
+ADCS
+ADCS
+safe
+ 4.000
+ 1.00
+ 4.000
+ 6.000
+battery
+Battery pack
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+camera
+Camera payload
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+eps
+Power conditioning unit
+EPS
+EPS
+safe
+ 8.000
+ 1.00
+ 8.000
+ 10.000
+gnss
+GNSS receiver
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+harness
+Harness
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+heaters
+Thermal heaters
+THERM
+THERM
+safe
+ 6.000
+ 1.00
+ 6.000
+ 16.000
+magnetorquers
+Magnetorquers
+ADCS
+ADCS
+safe
+ 0.450
+ 1.00
+ 0.450
+ 3.000
+obc
+On-board computer
+DH
+DH
+safe
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+pdu_data
+Payload data unit
+DH
+DH
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+radio
+S-band transceiver
+TTC
+TTC
+safe
+ 6.000
+ 1.00
+ 6.000
+ 8.000
+reaction_wheels
+Reaction wheels
+ADCS
+ADCS
+safe
+ 1.000
+ 1.00
+ 1.000
+ 12.000
+solar_array
+Solar array panels
+EPS
+EPS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+star_tracker
+Star tracker
+ADCS
+ADCS
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+structure
+Primary structure
+STRUCT
+STRUCT
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+sun_sensors
+Coarse sun sensors
+ADCS
+ADCS
+safe
+ 0.400
+ 1.00
+ 0.400
+ 0.500
+xband_tx
+X-band transmitter
+PL
+PL
+off
+ 0.000
+ 1.00
+ 0.000
+ 0.000
+By subsystem
+Subsystem
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 5.850
+ 21.500
+DH
+ 6.000
+ 8.000
+EPS
+ 8.000
+ 10.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 6.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+## page 9
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 9
+By thermal node
+Node
+Dissipation (W)
+Peak dissipation (W)
+ADCS
+ 5.850
+ 21.500
+DH
+ 6.000
+ 8.000
+EPS
+ 8.000
+ 10.000
+PL
+ 0.000
+ 0.000
+STRUCT
+ 0.000
+ 0.000
+THERM
+ 6.000
+ 16.000
+TTC
+ 6.000
+ 8.000
+Assumptions
+Configuration numbers used
+Name
+Value
+Unit
+Source
+Status
+Space temperature
+ n/a
+K
+TBD
+PLACEHOLDER
+Temperature margin
+ n/a
+K
+TBD
+PLACEHOLDER
+Conductance ADCS - DH
+ n/a
+W/K
+TBD
+PLACEHOLDER
+Conductance DH - EPS
+ n/a
+W/K
+TBD
+PLACEHOLDER
+Conductance EPS - PL
+ n/a
+W/K
+TBD
+PLACEHOLDER
+Conductance PL - STRUCT
+ n/a
+W/K
+TBD
+PLACEHOLDER
+Conductance STRUCT - THERM
+ n/a
+W/K
+TBD
+PLACEHOLDER
+Conductance THERM - TTC
+ n/a
+W/K
+TBD
+PLACEHOLDER
+Solar flux, case cold
+ n/a
+W/m2
+TBD
+PLACEHOLDER
+Albedo, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth infrared, case cold
+ n/a
+W/m2
+TBD
+PLACEHOLDER
+Emissivity, ADCS panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Absorptivity, ADCS panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, ADCS panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, ADCS panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Emissivity, DH panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Absorptivity, DH panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, DH panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, DH panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Emissivity, EPS panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Absorptivity, EPS panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+## page 10
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 10
+Name
+Value
+Unit
+Source
+Status
+Solar view, EPS panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, EPS panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Emissivity, PL panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Absorptivity, PL panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, PL panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, PL panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Emissivity, STRUCT panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Absorptivity, STRUCT panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, STRUCT panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, STRUCT panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Emissivity, THERM panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Absorptivity, THERM panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, THERM panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, THERM panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Emissivity, TTC panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Absorptivity, TTC panel
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, TTC panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, TTC panel, case cold
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar flux, case hot
+ n/a
+W/m2
+TBD
+PLACEHOLDER
+Albedo, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth infrared, case hot
+ n/a
+W/m2
+TBD
+PLACEHOLDER
+Solar view, ADCS panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, ADCS panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, DH panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, DH panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, EPS panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, EPS panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, PL panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, PL panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, STRUCT panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, STRUCT panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, THERM panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Earth view, THERM panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Solar view, TTC panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+## page 11
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 11
+Name
+Value
+Unit
+Source
+Status
+Earth view, TTC panel, case hot
+ n/a
+ratio
+TBD
+PLACEHOLDER
+Equations
+ID
+Name
+Formula
+Source
+TH-DISS
+Heat dissipated by a unit
+Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak: P_peak * ratio)
+SOURCE_MISSING
+TH-ABS
+Heat absorbed by a surface
+Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth * E_IR)
+SOURCE_MISSING
+TH-BAL
+Steady-state node heat balance
+sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i
+= 0
+SOURCE_MISSING
+TH-SB
+Stefan-Boltzmann constant
+sigma = 5.670374419e-8 W m^-2 K^-4
+CODATA 2018 / SI 2019 (exact from h, k, c)
+TH-LIMIT
+Unit temperature limit check
+exceeded when T < T_min or T > T_max; margin check when T - T_min or
+T_max - T < temperature_margin_k
+SOURCE_MISSING
+SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
+Problems
+Problems and open items
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/attenuation_table.yaml:8
+entries[0].loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/attenuation_table.yaml:1
+5
+entries[1].loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/attenuation_table.yaml:2
+3
+entries[2].loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/attenuation_table.yaml:3
+1
+entries[3].loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/attenuation_table.yaml:3
+9
+entries[4].loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/ebn0_table.yaml:7
+entries[0].required_ebn0_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/ebn0_table.yaml:13
+entries[1].required_ebn0_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 12
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 12
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:6
+classes.class_a.power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:10
+classes.class_a.mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:15
+classes.class_b.power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:19
+classes.class_b.mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:24
+classes.class_c.power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:28
+classes.class_c.mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:32
+system_power_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/margin_policy.yaml:36
+system_mass_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/mass_limits.yaml:7
+limits[0].limit_kg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_config.yaml:4
+distribution_loss_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_config.yaml:9
+converter_efficiency_ratio.main
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_config.yaml:13
+converter_efficiency_ratio.payload
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:4
+design_life_yr
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:45
+solar_array.solar_irradiance_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 13
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 13
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:49
+solar_array.cell_area_m2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:53
+solar_array.cell_efficiency_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:57
+solar_array.reference_temperature_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:61
+solar_array.cell_temperature_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:65
+solar_array.efficiency_temp_coeff_perk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:69
+solar_array.packing_loss_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:73
+solar_array.harness_loss_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:77
+solar_array.annual_degradation_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:82
+battery.cell_capacity_ah
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:86
+battery.cell_nominal_voltage_v
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:92
+battery.charge_efficiency_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:96
+battery.discharge_efficiency_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:100
+battery.annual_capacity_fade_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:104
+battery.initial_soc_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 14
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 14
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:109
+battery.max_dod_ratio.bol
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:113
+battery.max_dod_ratio.eol
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:117
+battery.max_dod_ratio.launch
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/power_system.yaml:132
+limits.peak_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+cases.cold.albedo_ratio
+The albedo of the case is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+cases.cold.earth_ir_wm2
+The Earth infrared flux of the case is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+cases.cold.solar_flux_wm2
+The solar flux of the case is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+cases.hot.albedo_ratio
+The albedo of the case is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+cases.hot.earth_ir_wm2
+The Earth infrared flux of the case is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+cases.hot.solar_flux_wm2
+The solar flux of the case is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+space_temperature_k
+The space temperature is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_environment.ya
+ml
+temperature_margin_k
+The temperature margin is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:4
+space_temperature_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:8
+temperature_margin_k
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:17
+cases.cold.solar_flux_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:21
+cases.cold.albedo_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 15
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 15
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:25
+cases.cold.earth_ir_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:33
+cases.hot.solar_flux_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:37
+cases.hot.albedo_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_environment.ya
+ml:41
+cases.hot.earth_ir_wm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+conductances[0].conductance_wk
+A conductance is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+conductances[1].conductance_wk
+A conductance is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+conductances[2].conductance_wk
+A conductance is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+conductances[3].conductance_wk
+A conductance is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+conductances[4].conductance_wk
+A conductance is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+conductances[5].conductance_wk
+A conductance is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[0].absorptivity_ratio
+The absorptivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[0].emissivity_ratio
+The emissivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[0].exposure.cold.earth_view_ra
+tio
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[0].exposure.cold.solar_view_rat
+io
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[0].exposure.hot.earth_view_rati
+o
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[0].exposure.hot.solar_view_rati
+o
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[1].absorptivity_ratio
+The absorptivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[1].emissivity_ratio
+The emissivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+## page 16
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 16
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[1].exposure.cold.earth_view_ra
+tio
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[1].exposure.cold.solar_view_rat
+io
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[1].exposure.hot.earth_view_rati
+o
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[1].exposure.hot.solar_view_rati
+o
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[2].absorptivity_ratio
+The absorptivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[2].emissivity_ratio
+The emissivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[2].exposure.cold.earth_view_ra
+tio
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[2].exposure.cold.solar_view_rat
+io
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[2].exposure.hot.earth_view_rati
+o
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[2].exposure.hot.solar_view_rati
+o
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[3].absorptivity_ratio
+The absorptivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[3].emissivity_ratio
+The emissivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[3].exposure.cold.earth_view_ra
+tio
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[3].exposure.cold.solar_view_rat
+io
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[3].exposure.hot.earth_view_rati
+o
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[3].exposure.hot.solar_view_rati
+o
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[4].absorptivity_ratio
+The absorptivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[4].emissivity_ratio
+The emissivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[4].exposure.cold.earth_view_ra
+tio
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[4].exposure.cold.solar_view_rat
+io
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+## page 17
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 17
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[4].exposure.hot.earth_view_rati
+o
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[4].exposure.hot.solar_view_rati
+o
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[5].absorptivity_ratio
+The absorptivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[5].emissivity_ratio
+The emissivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[5].exposure.cold.earth_view_ra
+tio
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[5].exposure.cold.solar_view_rat
+io
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[5].exposure.hot.earth_view_rati
+o
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[5].exposure.hot.solar_view_rati
+o
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[6].absorptivity_ratio
+The absorptivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[6].emissivity_ratio
+The emissivity of the surface is a placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[6].exposure.cold.earth_view_ra
+tio
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[6].exposure.cold.solar_view_rat
+io
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[6].exposure.hot.earth_view_rati
+o
+The Earth view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+RESULT_INCO
+MPLETE
+config/thermal_model.yaml
+surfaces[6].exposure.hot.solar_view_rati
+o
+The solar view ratio of the surface is a
+placeholder.
+Replace the placeholder with a sourced value;
+results that need it show n/a.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:22
+conductances[0].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:28
+conductances[1].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:34
+conductances[2].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:40
+conductances[3].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 18
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 18
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:46
+conductances[4].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:52
+conductances[5].conductance_wk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:60
+surfaces[0].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:64
+surfaces[0].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:70
+surfaces[0].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:74
+surfaces[0].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:79
+surfaces[0].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:83
+surfaces[0].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:90
+surfaces[1].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:94
+surfaces[1].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:100
+surfaces[1].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:104
+surfaces[1].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:109
+surfaces[1].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:113
+surfaces[1].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 19
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 19
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:120
+surfaces[2].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:124
+surfaces[2].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:130
+surfaces[2].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:134
+surfaces[2].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:139
+surfaces[2].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:143
+surfaces[2].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:150
+surfaces[3].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:154
+surfaces[3].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:160
+surfaces[3].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:164
+surfaces[3].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:169
+surfaces[3].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:173
+surfaces[3].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:180
+surfaces[4].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:184
+surfaces[4].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 20
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 20
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:190
+surfaces[4].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:194
+surfaces[4].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:199
+surfaces[4].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:203
+surfaces[4].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:210
+surfaces[5].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:214
+surfaces[5].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:220
+surfaces[5].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:224
+surfaces[5].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:229
+surfaces[5].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:233
+surfaces[5].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:240
+surfaces[6].emissivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:244
+surfaces[6].absorptivity_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:250
+surfaces[6].exposure.cold.solar_view_rat
+io
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:254
+surfaces[6].exposure.cold.earth_view_ra
+tio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 21
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 21
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:259
+surfaces[6].exposure.hot.solar_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/thermal_model.yaml:263
+surfaces[6].exposure.hot.earth_view_rati
+o
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:9
+transmitter.power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:13
+transmitter.line_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:18
+transmitter.antenna.gain_dbi
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:24
+receiver.g_over_t_dbk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:37
+required_margin_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:41
+pointing_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:45
+polarisation_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/sband_down.yaml:49
+implementation_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:9
+transmitter.power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:13
+transmitter.line_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:18
+transmitter.antenna.pattern.source
+The antenna pattern is a placeholder (source
+'TBD').
+Replace it with data-sheet values and cite the
+source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:30
+receiver.g_over_t_dbk
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+## page 22
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 22
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:41
+required_margin_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:45
+pointing_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:49
+polarisation_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+links/xband_down.yaml:53
+implementation_loss_db
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from the data sheet or
+requirement and cite the source.
+warning
+THERMAL_NO_
+LIMITS
+units/adapter.yaml
+temperature_limits
+Unit 'adapter' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/adcs.yaml
+temperature_limits
+Unit 'adcs' has no operating temperature limits;
+it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/battery.yaml
+temperature_limits
+Unit 'battery' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/camera.yaml
+temperature_limits
+Unit 'camera' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/eps.yaml
+temperature_limits
+Unit 'eps' has no operating temperature limits;
+it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/gnss.yaml
+temperature_limits
+Unit 'gnss' has no operating temperature limits;
+it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/harness.yaml
+temperature_limits
+Unit 'harness' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/heaters.yaml
+temperature_limits
+Unit 'heaters' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/magnetorquers.yaml
+temperature_limits
+Unit 'magnetorquers' has no operating
+temperature limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/obc.yaml
+temperature_limits
+Unit 'obc' has no operating temperature limits;
+it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/pdu_data.yaml
+temperature_limits
+Unit 'pdu_data' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/radio.yaml
+temperature_limits
+Unit 'radio' has no operating temperature limits;
+it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/reaction_wheels.yaml
+temperature_limits
+Unit 'reaction_wheels' has no operating
+temperature limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/solar_array.yaml
+temperature_limits
+Unit 'solar_array' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+## page 23
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 23
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+THERMAL_NO_
+LIMITS
+units/star_tracker.yaml
+temperature_limits
+Unit 'star_tracker' has no operating
+temperature limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/structure.yaml
+temperature_limits
+Unit 'structure' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/sun_sensors.yaml
+temperature_limits
+Unit 'sun_sensors' has no operating
+temperature limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+warning
+THERMAL_NO_
+LIMITS
+units/xband_tx.yaml
+temperature_limits
+Unit 'xband_tx' has no operating temperature
+limits; it is not checked.
+Add temperature_limits from the unit's data
+sheet.
+Provenance
+Provenance
+Item
+Value
+Tool
+System Budget Studio 1.0.0
+Python
+3.x
+Libraries
+pinned for-golden-tests
+Project
+Example 250 kg minisatellite
+Project revision
+1
+Scenario
+static (no scenario)
+Generated (UTC)
+2026-01-02T03:04:05Z
+User
+Golden User

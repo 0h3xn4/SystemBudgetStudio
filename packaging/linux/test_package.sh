@@ -58,8 +58,8 @@ budget self-test
 system-budget-studio --self-test
 work="$(mktemp -d)"
 budget export-examples "$work/demo" >/dev/null
-budget validate "$work/demo/cubesat_3u_eps"
-budget run "$work/demo/cubesat_3u_eps" --budget power --report json --out "$work/out" || true
+budget validate "$work/demo/microsat_250kg_eps"
+budget run "$work/demo/microsat_250kg_eps" --budget power --report json --out "$work/out" || true
 [ -s "$work/out/power_static.json" ] || fail "the power budget wrote no file"
 QT_QPA_PLATFORM=offscreen system-budget-studio --smoke
 step "the window on a virtual X server"

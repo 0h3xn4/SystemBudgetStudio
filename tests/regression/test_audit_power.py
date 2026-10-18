@@ -286,7 +286,7 @@ FIXED = ["--user", "Test User", "--date", "2026-01-02T03:04:05Z"]
 
 @pytest.fixture
 def eps(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -309,7 +309,7 @@ def test_cli_and_report_say_not_evaluated_instead_of_no_violations(
     path = eps / "config" / "power_system.yaml"
     text = path.read_text()
     text = text.replace(
-        "value: 7.5\n    source: Synthetic example value; not from a data sheet or a standard.",
+        "value: 180.0\n    source: Synthetic example value; not from a data sheet or a standard.",
         "value: null\n    source: TBD",
     )
     path.write_text(text)

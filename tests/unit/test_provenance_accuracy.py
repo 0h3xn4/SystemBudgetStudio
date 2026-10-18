@@ -62,7 +62,7 @@ def _provenance() -> Provenance:
     from budget_core.io.project_loader import load_project
     from budget_core.provenance import make_provenance
 
-    project = load_project(ROOT / "examples" / "cubesat_3u").project
+    project = load_project(ROOT / "examples" / "microsat_250kg").project
     assert project is not None
     return make_provenance(project, user="u", generated_at=datetime(2026, 1, 1, tzinfo=UTC))
 

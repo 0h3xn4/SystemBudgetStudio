@@ -30,7 +30,7 @@ def _synchronous_loading(monkeypatch: pytest.MonkeyPatch) -> None:  # replaces t
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -203,7 +203,7 @@ def test_column_widths_are_taken_from_the_first_rows_only(qtbot) -> None:  # typ
 
     with TemporaryDirectory() as folder:
         export_examples(Path(folder))
-        w.open_project(Path(folder) / "cubesat_3u")
+        w.open_project(Path(folder) / "microsat_250kg")
         w.power_view.build_pages()  # the sheets are made when first shown
         view = w.power_view.tabs.widget(0).findChildren(widgets.QTableView)[0]  # type: ignore[union-attr]
         assert view.horizontalHeader().resizeContentsPrecision() == COLUMN_WIDTH_ROWS

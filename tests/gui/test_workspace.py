@@ -18,7 +18,7 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
     w = MainWindow()
     qtbot.addWidget(w)
     w.show()
-    w.open_project(EXAMPLES / "cubesat_3u_eps")
+    w.open_project(EXAMPLES / "microsat_250kg_eps")
     return w
 
 

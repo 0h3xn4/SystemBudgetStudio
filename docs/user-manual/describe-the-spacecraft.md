@@ -11,12 +11,15 @@ These live in `spacecraft.yaml`:
 ```yaml
 schema_version: 1
 kind: spacecraft
-name: CubeSat 3U
+name: Minisat 250
 buses:
   - name: main
-    nominal_voltage_v: 5.0
+    nominal_voltage_v: 28.0
+  - name: payload
+    nominal_voltage_v: 12.0
 mission_phases:
   - launch
+  - bol
   - eol
 body_frame: 'Right-handed body frame. Origin: centre of the launch-vehicle interface plane. +Z: along the launch axis, away from the interface. X and Y: in the interface plane. Positions are item centres of mass in metres.'
 ```

@@ -1,0 +1,134 @@
+## sheet Summary rows=13 cols=14
+1: 'Link budget over passes: Example 250 kg minisatellite' |  |  |  |  |  |  |  |  |  |  |  |  | 
+2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  |  |  |  |  |  |  |  |  |  |  |  | 
+4: 'Link budget at the static points' |  |  |  |  |  |  |  |  |  |  |  |  | 
+5: 'Link' | 'Direction' | 'Point' | 'Elevation (deg)' | 'Range (km)' | 'EIRP (dBW)' | 'G/T (dB/K)' | 'Path loss (dB)' | 'Atmospheric (dB)' | 'Other losses (dB)' | 'C/N0 (dBHz)' | 'Required Eb/N0 (dB)' | 'Highest closing rate (kbit/s)' | 'Rate at required margin (kbit/s)'
+6: 'sband_down' | 'downlink' | '5 deg elevation' | 5 | 2200 | 'n/a' | 'n/a' | 166.145 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+7: 'sband_down' | 'downlink' | 'zenith' | 90 | 550 | 'n/a' | 'n/a' | 154.103 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+8: 'xband_down' | 'downlink' | '10 deg elevation' | 10 | 1600 | 'n/a' | 'n/a' | 174.806 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+9: 'xband_down' | 'downlink' | 'zenith' | 90 | 550 | 'n/a' | 'n/a' | 165.531 | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a'
+10: 'Other losses = pointing, polarisation and implementation. A link closes at a rate when its margin is at least the required margin of the link. n/a: an input is a placeholder or missing. Highest closing rate empty (n/a with a result): no listed rate closes.' |  |  |  |  |  |  |  |  |  |  |  |  | 
+12: 'Margin by data rate' |  |  |  |  |  |  |  |  |  |  |  |  | 
+13: 'Link' | 'Point' | 'Data rate (kbit/s)' | 'Eb/N0 (dB)' | 'Margin (dB)' | 'Required margin (dB)' | 'Closes' |  |  |  |  |  |  | 
+## sheet Passes rows=31 cols=8
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  | 
+3: 'Scenario one_day: One day: charging by default, imaging and downlink over passes. Step 10 s, duration 86400 s.' |  |  |  |  |  |  | 
+4: 'Data volume per link' |  |  |  |  |  |  | 
+5: 'Link' | 'Station' | 'Passes' | 'Scenario total (Mbit)' | 'Per day (Mbit)' | 'Per day (MByte)' |  | 
+6: 'sband_down' | 'gs_north' | 11 | 'n/a' | 'n/a' | 'n/a' |  | 
+7: 'xband_down' | 'gs_south' | 4 | 'n/a' | 'n/a' | 'n/a' |  | 
+8: 'From the highest listed rate that closes at each sample while the link is active (its modes, below its tracking limit). Per day = scenario total scaled to 86 400 s.' |  |  |  |  |  |  | 
+10: 'Passes of link sband_down over gs_north' |  |  |  |  |  |  | 
+11: 'Pass' | 'AOS (T+)' | 'AOS (UTC)' | 'Duration (s)' | 'Max elevation (deg)' | 'Usable (s)' | 'Lowest margin (dB)' | 'Volume (Mbit)'
+12: '1' | 'T+00:02:06' | '2026-06-01T00:02:06Z' | 493.218 | 19.2184 | 'n/a' | 'n/a' | 'n/a'
+13: '2' | 'T+01:36:43' | '2026-06-01T01:36:43Z' | 586.597 | 74.8929 | 'n/a' | 'n/a' | 'n/a'
+14: '3' | 'T+03:11:37' | '2026-06-01T03:11:37Z' | 542.61 | 31.1495 | 'n/a' | 'n/a' | 'n/a'
+15: '4' | 'T+04:46:25' | '2026-06-01T04:46:25Z' | 424.837 | 14.0572 | 'n/a' | 'n/a' | 'n/a'
+16: '5' | 'T+06:20:35' | '2026-06-01T06:20:35Z' | 329.249 | 9.49406 | 'n/a' | 'n/a' | 'n/a'
+17: '6' | 'T+07:53:28' | '2026-06-01T07:53:28Z' | 375.853 | 11.3396 | 'n/a' | 'n/a' | 'n/a'
+18: '7' | 'T+09:26:02' | '2026-06-01T09:26:02Z' | 500.344 | 21.6081 | 'n/a' | 'n/a' | 'n/a'
+19: '8' | 'T+10:59:35' | '2026-06-01T10:59:35Z' | 581.669 | 63.7992 | 'n/a' | 'n/a' | 'n/a'
+20: '9' | 'T+12:34:52' | '2026-06-01T12:34:52Z' | 552.388 | 31.9971 | 'n/a' | 'n/a' | 'n/a'
+21: '10' | 'T+14:12:52' | '2026-06-01T14:12:52Z' | 309.598 | 8.56032 | 'n/a' | 'n/a' | 'n/a'
+22: '11' | 'T+23:57:48' | '2026-06-01T23:57:48Z' | 131.001 | 13.7583 | 'n/a' | 'n/a' | 'n/a'
+23: 'Lowest margin is at the lowest listed rate over the active samples.' |  |  |  |  |  |  | 
+25: 'Passes of link xband_down over gs_south' |  |  |  |  |  |  | 
+26: 'Pass' | 'AOS (T+)' | 'AOS (UTC)' | 'Duration (s)' | 'Max elevation (deg)' | 'Usable (s)' | 'Lowest margin (dB)' | 'Volume (Mbit)'
+27: '1' | 'T+02:32:03' | '2026-06-01T02:32:03Z' | 444.429 | 34.052 | 'n/a' | 'n/a' | 'n/a'
+28: '2' | 'T+04:07:10' | '2026-06-01T04:07:10Z' | 373.637 | 21.6654 | 'n/a' | 'n/a' | 'n/a'
+29: '3' | 'T+13:18:57' | '2026-06-01T13:18:57Z' | 406.88 | 26.1526 | 'n/a' | 'n/a' | 'n/a'
+30: '4' | 'T+14:53:30' | '2026-06-01T14:53:30Z' | 419.214 | 27.5604 | 'n/a' | 'n/a' | 'n/a'
+31: 'Lowest margin is at the lowest listed rate over the active samples.' |  |  |  |  |  |  | 
+## sheet Assumptions rows=42 cols=5
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  | 
+3: 'Configuration numbers used' |  |  |  | 
+4: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
+5: 'Transmit power' | 'n/a' | 'W' | 'TBD' | 'PLACEHOLDER'
+6: 'Line loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+7: 'Antenna gain, transmitter' | 'n/a' | 'dBi' | 'TBD' | 'PLACEHOLDER'
+8: 'G/T' | 'n/a' | 'dB/K' | 'TBD' | 'PLACEHOLDER'
+9: 'Required margin' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+10: 'Pointing loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+11: 'Polarisation loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+12: 'Implementation loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+13: 'Required Eb/N0, QPSK rate 1/2' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+14: 'Attenuation gas_s' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+15: 'Transmit power' | 'n/a' | 'W' | 'TBD' | 'PLACEHOLDER'
+16: 'Line loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+17: 'Antenna pattern, transmitter' | 'n/a' | 'dBi' | 'TBD' | 'PLACEHOLDER'
+18: 'G/T' | 'n/a' | 'dB/K' | 'TBD' | 'PLACEHOLDER'
+19: 'Required margin' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+20: 'Pointing loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+21: 'Polarisation loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+22: 'Implementation loss' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+23: 'Attenuation rain_x at 5 deg' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+24: 'Attenuation rain_x at 20 deg' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+25: 'Attenuation rain_x at 90 deg' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+26: 'Attenuation gas_x' | 'n/a' | 'dB' | 'TBD' | 'PLACEHOLDER'
+28: 'Equations' |  |  |  | 
+29: 'ID' | 'Name' | 'Formula' | 'Source' | 
+30: 'ENV-GMST' | 'Greenwich mean sidereal time (IAU-82)' | 'theta = 67310.54841 + (876600 h + 8640184.812866) T + 0.093104 T^2 - 6.2e-6 T^3 s' | 'sgp4 library, sgp4.propagation.gstime (IAU-82 GMST, Vallado)' | 
+31: 'ENV-GEODETIC' | 'WGS-84 geodetic to Earth-fixed coordinates' | 'N = a / sqrt(1 - e2 sin2 phi); x = (N + h) cos phi cos lam; z = (N (1 - e2) + h) sin phi' | 'WGS 84 (NIMA TR8350.2) ellipsoid definition' | 
+32: 'ENV-TOPO' | 'Elevation, azimuth and range from a site' | 'local east-north-up basis at the geodetic latitude and longitude of the site' | 'SOURCE_MISSING' | 
+33: 'LNK-EIRP' | 'Effective isotropic radiated power' | 'EIRP = P_tx - L_line + G_tx  (dBW)' | 'SOURCE_MISSING' | 
+34: 'LNK-FSPL' | 'Free-space path loss' | 'L_fs = 20 log10(4 pi d f / c)  (dB)' | 'SOURCE_MISSING' | 
+35: 'LNK-GT' | 'Receiver figure of merit' | 'G/T = G_rx - L_feed - 10 log10(T_sys)  (dB/K), or given directly' | 'SOURCE_MISSING' | 
+36: 'LNK-CN0' | 'Carrier to noise density' | 'C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10 log10(k)  (dBHz)' | 'SOURCE_MISSING' | 
+37: 'LNK-EBN0' | 'Energy per bit to noise density' | 'Eb/N0 = C/N0 - 10 log10(R_b)  (dB)' | 'SOURCE_MISSING' | 
+38: 'LNK-MARGIN' | 'Link margin' | 'margin = Eb/N0 - Eb/N0_required  (dB); the link closes when margin >= required margin' | 'SOURCE_MISSING' | 
+39: 'LNK-ATT' | 'Atmospheric attenuation' | 'L_atm = sum of the named table entries, linear interpolation by elevation' | 'SOURCE_MISSING' | 
+40: 'LNK-NADIR' | 'Angle from nadir at the spacecraft' | 'sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el)' | 'SOURCE_MISSING' | 
+...
+## sheet Problems rows=159 cols=6
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  | 
+3: 'Problems and open items' |  |  |  |  | 
+4: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+5: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[0].loss_db' | 'The attenuation loss of table entry 1 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+6: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[0].loss_db' | 'The attenuation loss of table entry 1 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+7: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[1].loss_db' | 'The attenuation loss of table entry 2 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+8: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[1].loss_db' | 'The attenuation loss of table entry 2 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+9: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[2].loss_db' | 'The attenuation loss of table entry 3 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+10: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[2].loss_db' | 'The attenuation loss of table entry 3 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+11: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[3].loss_db' | 'The attenuation loss of table entry 4 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+12: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[3].loss_db' | 'The attenuation loss of table entry 4 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+13: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[4].loss_db' | 'The attenuation loss of table entry 5 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+14: 'warning' | 'RESULT_INCOMPLETE' | 'config/attenuation_table.yaml' | 'entries[4].loss_db' | 'The attenuation loss of table entry 5 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+15: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:8' | 'entries[0].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+16: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:15' | 'entries[1].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+17: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:23' | 'entries[2].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+18: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:31' | 'entries[3].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+19: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:39' | 'entries[4].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+20: 'warning' | 'RESULT_INCOMPLETE' | 'config/ebn0_table.yaml' | 'entries[0].required_ebn0_db' | 'The required Eb/N0 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+21: 'warning' | 'RESULT_INCOMPLETE' | 'config/ebn0_table.yaml' | 'entries[0].required_ebn0_db' | 'The required Eb/N0 is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+22: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/ebn0_table.yaml:7' | 'entries[0].required_ebn0_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+23: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/ebn0_table.yaml:13' | 'entries[1].required_ebn0_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+24: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:6' | 'classes.class_a.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+25: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:10' | 'classes.class_a.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+26: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:15' | 'classes.class_b.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+27: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:19' | 'classes.class_b.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+28: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:24' | 'classes.class_c.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+29: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:28' | 'classes.class_c.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+30: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | 'system_power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+31: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:36' | 'system_mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+32: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | 'limits[0].limit_kg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+33: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:4' | 'distribution_loss_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+34: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:9' | 'converter_efficiency_ratio.main' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+35: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:13' | 'converter_efficiency_ratio.payload' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+36: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:4' | 'design_life_yr' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+37: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:45' | 'solar_array.solar_irradiance_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+38: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:49' | 'solar_array.cell_area_m2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+39: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:53' | 'solar_array.cell_efficiency_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+40: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:57' | 'solar_array.reference_temperature_k' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+...
+## sheet Provenance rows=12 cols=2
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
+3: 'Provenance' | 
+4: 'Item' | 'Value'
+5: 'Tool' | 'System Budget Studio 1.0.0'
+6: 'Python' | '3.x'
+7: 'Libraries' | 'pinned for-golden-tests'
+8: 'Project' | 'Example 250 kg minisatellite'
+9: 'Project revision' | '1'
+10: 'Scenario' | 'static (no scenario)'
+11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+12: 'User' | 'Golden User'

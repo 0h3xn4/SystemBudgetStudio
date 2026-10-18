@@ -1,0 +1,15 @@
+schema_version: 1
+kind: ebn0_table
+entries:
+  - modulation: QPSK
+    coding: rate 1/2
+    required_ebn0_db:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+  - modulation: QPSK
+    coding: none
+    required_ebn0_db:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."

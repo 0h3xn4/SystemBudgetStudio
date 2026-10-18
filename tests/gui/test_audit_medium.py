@@ -27,7 +27,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     root = tmp_path / "p"
     path = root / "scenarios/one_day.yaml"
     path.write_text(

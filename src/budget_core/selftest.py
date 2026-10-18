@@ -30,7 +30,7 @@ def run_selftest() -> list[str]:
     try:
         if abs(parse_quantity("2.2 GHz", "freq_hz") - 2.2e9) > 1.0:
             failures.append("unit parsing gave a wrong value")
-        project = EXAMPLES["cubesat_3u"]()
+        project = EXAMPLES["microsat_250kg"]()
         orbit = next(iter(project.orbits.values()))
         scenario = next(iter(project.scenarios.values()))
         from budget_core.scenario.run import grid_for, sites_for
@@ -70,7 +70,7 @@ def _thermal_check() -> list[str]:
     from budget_core.reports.thermal_report import build_thermal_report
     from budget_core.thermal.static_thermal import static_thermal_budget
 
-    project = EXAMPLES["cubesat_3u_eps"]()
+    project = EXAMPLES["microsat_250kg_eps"]()
     result = static_thermal_budget(project)
     failures: list[str] = []
     if not result.cases or not all(c.complete and c.nodes for c in result.cases):
@@ -123,7 +123,7 @@ def _time_domain_check() -> list[str]:
     from budget_core.scenario.run import ScenarioRun, grid_for, sites_for
     from budget_core.scenario.timeline import build_timeline
 
-    project = EXAMPLES["cubesat_3u_eps"]()
+    project = EXAMPLES["microsat_250kg_eps"]()
     orbit = next(iter(project.orbits.values()))
     scenario = project.scenarios["one_day"].model_copy(
         update={"duration_s": 6000.0, "step_s": 30.0}

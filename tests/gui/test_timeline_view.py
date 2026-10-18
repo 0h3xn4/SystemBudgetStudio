@@ -20,7 +20,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -157,8 +157,8 @@ def test_project_changes_mark_the_result_stale(window: MainWindow, project: Path
     edit(
         project,
         "config/power_system.yaml",
-        "peak_power_w:\n    value: 7.5",
-        "peak_power_w:\n    value: 9.0",
+        "peak_power_w:\n    value: 180.0",
+        "peak_power_w:\n    value: 260.0",
     )
     window.session.reload()
     view = window.timeline_view

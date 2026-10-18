@@ -11,7 +11,7 @@ An offline desktop and command-line tool that computes **power, mass, thermal an
 ![Python 3.11 to 3.13](https://img.shields.io/badge/python-3.11%20to%203.13-blue)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
 
-![System Budget Studio showing the power timeline of the example CubeSat: generation, demand and state of charge over one orbit, with eclipse shading and a list of problems](docs/images/power-timeline.png)
+![System Budget Studio showing the power timeline of the 250 kg example satellite: generation, demand and state of charge over one orbit, with eclipse shading and a list of problems](docs/images/power-timeline.png)
 
 ## What is this?
 
@@ -45,9 +45,9 @@ python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv 
 pip install -e .
 budget --version                                       # System Budget Studio 1.0.0
 budget export-examples demo                            # four example projects with invented data
-budget validate demo/cubesat_3u_eps                    # check the project: 0 errors, a few warnings
-budget run demo/cubesat_3u_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
-system-budget-studio demo/cubesat_3u_eps               # open the window
+budget validate demo/microsat_250kg_eps                    # check the project: 0 errors, a few warnings
+budget run demo/microsat_250kg_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
+system-budget-studio demo/microsat_250kg_eps               # open the window
 ```
 
 The reports in `out/` are the first result. [Getting started](docs/getting-started.md) shows what you should see at each step and walks through a first worked example.

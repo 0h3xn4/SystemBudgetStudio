@@ -64,7 +64,7 @@ def test_loader_validation_and_unit_parsing_do_not_use_the_network() -> None:
         assert parse_quantity("2.2 GHz", "freq_hz") == 2.2e9  # forces pint
         with tempfile.TemporaryDirectory() as d:
             export_examples(pathlib.Path(d))
-            assert load_project(pathlib.Path(d) / "cubesat_3u").project is not None
+            assert load_project(pathlib.Path(d) / "microsat_250kg").project is not None
     """)
     assert r.returncode == 0, r.stderr
 
@@ -98,7 +98,7 @@ def test_xlsx_and_json_report_path_is_strictly_offline(tmp_path) -> None:  # typ
         from budget_cli.main import main
         from budget_core.examples import export_examples
         export_examples(pathlib.Path({str(tmp_path)!r}))
-        project = {str(tmp_path / "cubesat_3u")!r}
+        project = {str(tmp_path / "microsat_250kg")!r}
         code = main(["run", project, "--report", "xlsx", "--report", "json",
                      "--report", "csv", "--out", {str(tmp_path / "out")!r}])
         assert code == 0
@@ -118,7 +118,7 @@ def test_pdf_path_imports_only_the_allowed_reportlab_modules_and_never_uses_the_
         from budget_cli.main import main
         from budget_core.examples import export_examples
         export_examples(pathlib.Path({str(tmp_path)!r}))
-        code = main(["run", {str(tmp_path / "cubesat_3u")!r}, "--report", "pdf",
+        code = main(["run", {str(tmp_path / "microsat_250kg")!r}, "--report", "pdf",
                      "--out", {str(tmp_path / "out")!r}])
         assert code == 0 and not called
         from reportlab import rl_config
@@ -157,7 +157,7 @@ def test_scenario_command_is_strictly_offline(tmp_path) -> None:  # type: ignore
         from budget_cli.main import main
         from budget_core.examples import export_examples
         export_examples(pathlib.Path({str(tmp_path)!r}))
-        project = {str(tmp_path / "cubesat_3u")!r}
+        project = {str(tmp_path / "microsat_250kg")!r}
         code = main(["scenario", project, "--out", {str(tmp_path / "out")!r}])
         assert code == 0
     """)
@@ -170,7 +170,7 @@ def test_docx_report_path_is_strictly_offline(tmp_path) -> None:  # type: ignore
         from budget_cli.main import main
         from budget_core.examples import export_examples
         export_examples(pathlib.Path({str(tmp_path)!r}))
-        code = main(["run", {str(tmp_path / "cubesat_3u")!r}, "--report", "docx",
+        code = main(["run", {str(tmp_path / "microsat_250kg")!r}, "--report", "docx",
                      "--out", {str(tmp_path / "out")!r}])
         assert code == 0
     """)
@@ -185,7 +185,7 @@ def test_power_timeline_with_plots_is_strictly_offline(tmp_path) -> None:  # typ
         from budget_cli.main import main
         from budget_core.examples import export_examples
         export_examples(pathlib.Path({str(tmp_path)!r}))
-        code = main(["power-timeline", {str(tmp_path / "cubesat_3u_eps")!r}, "--report", "xlsx",
+        code = main(["power-timeline", {str(tmp_path / "microsat_250kg_eps")!r}, "--report", "xlsx",
                      "--report", "docx", "--report", "json", "--report", "csv",
                      "--out", {str(tmp_path / "out")!r}])
         assert code == 1
@@ -200,7 +200,7 @@ def test_thermal_budget_path_is_strictly_offline(tmp_path) -> None:  # type: ign
         from budget_cli.main import main
         from budget_core.examples import export_examples
         export_examples(pathlib.Path({str(tmp_path)!r}))
-        code = main(["run", {str(tmp_path / "cubesat_3u_eps")!r}, "--budget", "thermal",
+        code = main(["run", {str(tmp_path / "microsat_250kg_eps")!r}, "--budget", "thermal",
                      "--report", "xlsx", "--report", "docx", "--report", "json",
                      "--report", "csv", "--out", {str(tmp_path / "out")!r}])
         assert code == 1  # the example has a margin finding: not a failure of the guard

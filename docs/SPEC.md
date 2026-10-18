@@ -164,7 +164,7 @@ These rules come from two earlier tools built the same way (SpaceMissionStudio o
 
 - Numerical regression tests: at least ten hand-calculated reference cases per solver (e.g. a textbook S-band link at 2 GHz and 1,000 km range; an orbit-average power balance with a known eclipse fraction), with tolerances stated.
 - Property-based tests (Hypothesis) for unit conversion round trips and for monotonic behaviour (more range never increases margin, more array area never reduces generation).
-- Golden-file tests for every report type on three reference projects you create: a minimal 3U CubeSat, a 150 kg microsatellite with two links, and a stress case of 200 units and a one-week scenario at 1 s resolution.
+- Golden-file tests for every report type on three reference projects you create: a minimal 250 kg minisatellite (a 3U CubeSat in the first draft; see D-157), a 150 kg microsatellite with two links, and a stress case of 200 units and a one-week scenario at 1 s resolution.
 - Performance targets: one-week scenario at 1 s resolution solves in under 10 s; GUI stays responsive during runs (worker thread).
 - GUI tests with pytest-qt for the main flows; the offline test runs in CI.
 - A user guide (Markdown bundled as offline HTML or PDF) including an "Equations and sources" chapter generated from the configuration files.

@@ -1,0 +1,129 @@
+## sheet Summary rows=11 cols=3
+1: 'Comparison: Example 250 kg minisatellite, complete power and thermal inputs rev 1 and Example 250 kg minisatellite, complete power and thermal inputs rev 2' |  | 
+2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  | 
+4: 'rev 1 compared with rev 2.' |  | 
+5: '74 value(s) differ out of 3609 compared.' |  | 
+6: 'Values that look equal at the displayed precision are not reported as differences.' |  | 
+7: 'Compared sides' |  | 
+8: 'Item' | 'rev 1' | 'rev 2'
+9: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs' | 'Example 250 kg minisatellite, complete power and thermal inputs'
+10: 'Project revision' | '1' | '2'
+11: 'Scenario' | 'static (no scenario)' | 'static (no scenario)'
+## sheet Differences Static power budget rows=35 cols=7
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  | 
+3: 'Summary — Power by spacecraft mode' |  |  |  |  |  | 
+4: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+5: 'Imaging' | 'Average load (W)' | '100.700' | '102.700' | '+2.000 W' | '+2.0 %' | 'changed'
+6: 'Imaging' | 'Average, unit margins (W)' | '113.170' | '115.370' | '+2.200 W' | '+1.9 %' | 'changed'
+7: 'Imaging' | 'Average, system margin (W)' | '124.487' | '126.907' | '+2.420 W' | '+1.9 %' | 'changed'
+8: 'Imaging' | 'Average at source (W)' | '115.349' | '117.640' | '+2.291 W' | '+2.0 %' | 'changed'
+9: 'Imaging' | 'Average at source, with margins (W)' | '142.597' | '145.369' | '+2.772 W' | '+1.9 %' | 'changed'
+11: 'Mode: Imaging — Units in mode Imaging' |  |  |  |  |  | 
+12: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+13: 'adcs' | 'Average (W)' | '7.000' | '9.000' | '+2.000 W' | '+28.6 %' | 'changed'
+14: 'adcs' | 'Effective (W)' | '7.000' | '9.000' | '+2.000 W' | '+28.6 %' | 'changed'
+15: 'adcs' | 'With margin (W)' | '7.700' | '9.900' | '+2.200 W' | '+28.6 %' | 'changed'
+17: 'Mode: Imaging — By subsystem' |  |  |  |  |  | 
+18: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+19: 'ADCS' | 'Effective (W)' | '24.700' | '26.700' | '+2.000 W' | '+8.1 %' | 'changed'
+20: 'ADCS' | 'With margin (W)' | '27.170' | '29.370' | '+2.200 W' | '+8.1 %' | 'changed'
+22: 'Mode: Imaging — By supply bus' |  |  |  |  |  | 
+23: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+24: 'main' | 'Average load (W)' | '55.700' | '57.700' | '+2.000 W' | '+3.6 %' | 'changed'
+25: 'main' | 'Average load, with margins (W)' | '66.077' | '68.497' | '+2.420 W' | '+3.7 %' | 'changed'
+26: 'main' | 'Average at source (W)' | '63.803' | '66.094' | '+2.291 W' | '+3.6 %' | 'changed'
+27: 'main' | 'Average at source, with margins (W)' | '75.690' | '78.462' | '+2.772 W' | '+3.7 %' | 'changed'
+29: 'Mode: Imaging — Totals' |  |  |  |  |  | 
+30: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+31: 'Load, nominal' | 'Average (W)' | '100.700' | '102.700' | '+2.000 W' | '+2.0 %' | 'changed'
+32: 'Load, with unit margins' | 'Average (W)' | '113.170' | '115.370' | '+2.200 W' | '+1.9 %' | 'changed'
+33: 'Load, with system margin' | 'Average (W)' | '124.487' | '126.907' | '+2.420 W' | '+1.9 %' | 'changed'
+34: 'Source, nominal' | 'Average (W)' | '115.349' | '117.640' | '+2.291 W' | '+2.0 %' | 'changed'
+35: 'Source, with margins' | 'Average (W)' | '142.597' | '145.369' | '+2.772 W' | '+1.9 %' | 'changed'
+## sheet Differences Mass budget rows=3 cols=1
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).'
+3: 'No differences.'
+## sheet Differences Thermal budget rows=74 cols=7
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  | 
+3: 'Summary — Heat dissipation by spacecraft mode' |  |  |  |  |  | 
+4: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+5: 'Imaging' | 'Average (W)' | '100.700' | '102.700' | '+2.000 W' | '+2.0 %' | 'changed'
+7: 'Case: hot — Node temperatures, case hot' |  |  |  |  |  | 
+8: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+9: 'ADCS' | 'Temperature (K)' | '334.75' | '335.24' | '+0.49' | '+0.1 %' | 'changed'
+10: 'ADCS' | 'Temperature (C)' | '61.60' | '62.09' | '+0.49' | '+0.8 %' | 'changed'
+11: 'ADCS' | 'Dissipated (W)' | '24.700' | '26.700' | '+2.000 W' | '+8.1 %' | 'changed'
+12: 'ADCS' | 'Radiated to space (W)' | '302.610' | '304.391' | '+1.781 W' | '+0.6 %' | 'changed'
+13: 'ADCS' | 'Conducted to other nodes (W)' | '0.490' | '0.709' | '+0.219 W' | '+44.6 %' | 'changed'
+14: 'DH' | 'Temperature (K)' | '333.77' | '333.82' | '+0.05' | '+0.01625776261 %' | 'changed'
+15: 'DH' | 'Temperature (C)' | '60.62' | '60.67' | '+0.05' | '+0.1 %' | 'changed'
+16: 'DH' | 'Radiated to space (W)' | '299.081' | '299.275' | '+0.195 W' | '+0.1 %' | 'changed'
+17: 'DH' | 'Conducted to other nodes (W)' | '0.319' | '0.125' | '-0.195 W' | '-61.0 %' | 'changed'
+18: 'EPS' | 'Temperature (K)' | '332.15' | '332.16' | '+0.01' | '+0.001824025935 %' | 'changed'
+19: 'EPS' | 'Temperature (C)' | '59.00' | '59.01' | '+0.01' | '+0.01026846342 %' | 'changed'
+20: 'EPS' | 'Radiated to space (W)' | '293.322' | '293.343' | '+0.021 W' | '+0.007296303415 %' | 'changed'
+21: 'EPS' | 'Conducted to other nodes (W)' | '-2.922' | '-2.943' | '-0.021 W' | '-0.7 %' | 'changed'
+22: 'PL' | 'Radiated to space (W)' | '308.534' | '308.537' | '+0.002 W' | '+0.0007811029464 %' | 'changed'
+23: 'PL' | 'Conducted to other nodes (W)' | '5.866' | '5.863' | '-0.002 W' | '-0.04108529595 %' | 'changed'
+24: 'STRUCT' | 'Radiated to space (W)' | '281.902' | '281.903' | '+0.0002576143509 W' | '+9.138423328e-05 %' | 'changed'
+25: 'STRUCT' | 'Conducted to other nodes (W)' | '-3.502' | '-3.503' | '-0.0002576143508 W' | '-0.007355356994 %' | 'changed'
+27: 'Case: hot — Unit temperature limits, case hot (operating)' |  |  |  |  |  | 
+28: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+29: 'adcs' | 'Temperature (K)' | '334.75' | '335.24' | '+0.49' | '+0.1 %' | 'changed'
+30: 'adcs' | 'Headroom to lower (K)' | '101.60' | '102.09' | '+0.49' | '+0.5 %' | 'changed'
+31: 'adcs' | 'Headroom to upper (K)' | '8.40' | '7.91' | '-0.49' | '-5.9 %' | 'changed'
+32: 'battery' | 'Temperature (K)' | '332.15' | '332.16' | '+0.01' | '+0.001824025935 %' | 'changed'
+33: 'battery' | 'Headroom to lower (K)' | '99.00' | '99.01' | '+0.01' | '+0.006119643269 %' | 'changed'
+34: 'battery' | 'Headroom to upper (K)' | '11.00' | '10.99' | '-0.01' | '-0.1 %' | 'changed'
+35: 'eps' | 'Temperature (K)' | '332.15' | '332.16' | '+0.01' | '+0.001824025935 %' | 'changed'
+36: 'eps' | 'Headroom to lower (K)' | '99.00' | '99.01' | '+0.01' | '+0.006119643269 %' | 'changed'
+37: 'eps' | 'Headroom to upper (K)' | '11.00' | '10.99' | '-0.01' | '-0.1 %' | 'changed'
+38: 'gnss' | 'Temperature (K)' | '334.75' | '335.24' | '+0.49' | '+0.1 %' | 'changed'
+39: 'gnss' | 'Headroom to lower (K)' | '101.60' | '102.09' | '+0.49' | '+0.5 %' | 'changed'
+40: 'gnss' | 'Headroom to upper (K)' | '8.40' | '7.91' | '-0.49' | '-5.9 %' | 'changed'
+41: 'magnetorquers' | 'Temperature (K)' | '334.75' | '335.24' | '+0.49' | '+0.1 %' | 'changed'
+42: 'magnetorquers' | 'Headroom to lower (K)' | '101.60' | '102.09' | '+0.49' | '+0.5 %' | 'changed'
+43: 'magnetorquers' | 'Headroom to upper (K)' | '8.40' | '7.91' | '-0.49' | '-5.9 %' | 'changed'
+44: 'obc' | 'Temperature (K)' | '333.77' | '333.82' | '+0.05' | '+0.01625776261 %' | 'changed'
+45: 'obc' | 'Headroom to lower (K)' | '100.62' | '100.67' | '+0.05' | '+0.1 %' | 'changed'
+46: 'obc' | 'Headroom to upper (K)' | '9.38' | '9.33' | '-0.05' | '-0.6 %' | 'changed'
+47: 'pdu_data' | 'Temperature (K)' | '333.77' | '333.82' | '+0.05' | '+0.01625776261 %' | 'changed'
+48: 'pdu_data' | 'Headroom to lower (K)' | '100.62' | '100.67' | '+0.05' | '+0.1 %' | 'changed'
+49: 'pdu_data' | 'Headroom to upper (K)' | '9.38' | '9.33' | '-0.05' | '-0.6 %' | 'changed'
+50: 'reaction_wheels' | 'Temperature (K)' | '334.75' | '335.24' | '+0.49' | '+0.1 %' | 'changed'
+51: 'reaction_wheels' | 'Headroom to lower (K)' | '101.60' | '102.09' | '+0.49' | '+0.5 %' | 'changed'
+52: 'reaction_wheels' | 'Headroom to upper (K)' | '8.40' | '7.91' | '-0.49' | '-5.9 %' | 'changed'
+53: 'solar_array' | 'Temperature (K)' | '332.15' | '332.16' | '+0.01' | '+0.001824025935 %' | 'changed'
+54: 'solar_array' | 'Headroom to lower (K)' | '99.00' | '99.01' | '+0.01' | '+0.006119643269 %' | 'changed'
+55: 'solar_array' | 'Headroom to upper (K)' | '11.00' | '10.99' | '-0.01' | '-0.1 %' | 'changed'
+56: 'star_tracker' | 'Temperature (K)' | '334.75' | '335.24' | '+0.49' | '+0.1 %' | 'changed'
+57: 'star_tracker' | 'Headroom to lower (K)' | '101.60' | '102.09' | '+0.49' | '+0.5 %' | 'changed'
+58: 'star_tracker' | 'Headroom to upper (K)' | '8.40' | '7.91' | '-0.49' | '-5.9 %' | 'changed'
+59: 'sun_sensors' | 'Temperature (K)' | '334.75' | '335.24' | '+0.49' | '+0.1 %' | 'changed'
+60: 'sun_sensors' | 'Headroom to lower (K)' | '101.60' | '102.09' | '+0.49' | '+0.5 %' | 'changed'
+61: 'sun_sensors' | 'Headroom to upper (K)' | '8.40' | '7.91' | '-0.49' | '-5.9 %' | 'changed'
+63: 'Mode: Imaging — Units in mode Imaging' |  |  |  |  |  | 
+64: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+65: 'adcs' | 'Effective power (W)' | '7.000' | '9.000' | '+2.000 W' | '+28.6 %' | 'changed'
+66: 'adcs' | 'Dissipation (W)' | '7.000' | '9.000' | '+2.000 W' | '+28.6 %' | 'changed'
+68: 'Mode: Imaging — By subsystem' |  |  |  |  |  | 
+69: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+70: 'ADCS' | 'Dissipation (W)' | '24.700' | '26.700' | '+2.000 W' | '+8.1 %' | 'changed'
+72: 'Mode: Imaging — By thermal node' |  |  |  |  |  | 
+73: 'Row' | 'Quantity' | 'rev 1' | 'rev 2' | 'Change' | 'Change (%)' | 'Status'
+74: 'ADCS' | 'Dissipation (W)' | '24.700' | '26.700' | '+2.000 W' | '+8.1 %' | 'changed'
+## sheet Differences Link budget rows=3 cols=1
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).'
+3: 'No differences.'
+## sheet Provenance rows=12 cols=2
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
+3: 'Provenance' | 
+4: 'Item' | 'Value'
+5: 'Tool' | 'System Budget Studio 1.0.0'
+6: 'Python' | '3.x'
+7: 'Libraries' | 'numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests'
+8: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs'
+9: 'Project revision' | '1'
+10: 'Scenario' | 'static vs static'
+11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+12: 'User' | 'Golden User'

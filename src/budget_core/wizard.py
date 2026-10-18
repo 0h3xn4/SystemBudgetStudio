@@ -24,9 +24,11 @@ from budget_core.reports.files import OutputError
 from budget_core.timeutil import MAX_YEAR, MIN_YEAR, end_in_range
 
 SAMPLES = {
-    "cubesat_3u_eps": "3U CubeSat with complete example inputs (all results computed)",
+    "microsat_250kg_eps": "250 kg minisatellite with complete inputs (all results computed)",
     "microsat_150kg": "150 kg microsatellite with two links",
-    "cubesat_3u": "3U CubeSat with placeholder inputs (results stay n/a until you fill them in)",
+    "microsat_250kg": (
+        "250 kg minisatellite with placeholder inputs (results stay n/a until you fill them in)"
+    ),
 }
 ECCENTRICITY_RATIO = 0.001  # near circular, as in the sample orbits
 MAX_STEPS = 8640  # a longer scenario gets a coarser step so the first run stays quick
@@ -51,7 +53,7 @@ class Issue:
 @dataclass(frozen=True)
 class WizardAnswers:
     project_name: str
-    sample: str = "cubesat_3u_eps"
+    sample: str = "microsat_250kg_eps"
     altitude_km: float = 550.0
     inclination_deg: float = 97.6
     raan_deg: float = 100.0

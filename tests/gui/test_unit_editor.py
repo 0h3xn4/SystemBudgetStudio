@@ -20,7 +20,7 @@ AVG, PEAK, DUTY = (COLUMNS.index(c) for c in ("avg_power_w", "peak_power_w", "du
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     return tmp_path / "p"
 
 
@@ -49,7 +49,7 @@ def test_editor_shows_the_unit(window: MainWindow) -> None:
     editor = editor_for(window)
     assert editor.table.rowCount() == 2  # off, imaging
     assert editor.table.item(1, 0).text() == "imaging"
-    assert editor.table.item(1, AVG).text() == "2.4"
+    assert editor.table.item(1, AVG).text() == "60.0"
     assert editor.fields["name"].text() == "Camera payload"
     assert window.editors.currentWidget() is editor
     assert not editor.is_modified() and editor.error_label.text() == ""
@@ -59,14 +59,14 @@ def test_units_can_be_typed_in_cells_and_are_saved_canonically(
     window: MainWindow, project: Path
 ) -> None:
     editor = editor_for(window)
-    set_cell(editor, 1, AVG, "2500 mW")
-    set_cell(editor, 1, PEAK, "4 W")
+    set_cell(editor, 1, AVG, "62500 mW")
+    set_cell(editor, 1, PEAK, "85 W")
     assert editor.is_modified() and editor.error_label.text() == ""
     assert editor.save() is True
     reloaded = load_project(project).project
     assert reloaded is not None
     mode = reloaded.units["camera"].modes[1]
-    assert mode.avg_power_w == pytest.approx(2.5) and mode.peak_power_w == pytest.approx(4.0)
+    assert mode.avg_power_w == pytest.approx(62.5) and mode.peak_power_w == pytest.approx(85.0)
     assert not editor.is_modified()
     assert b"\r" not in (project / "units" / "camera.yaml").read_bytes()
 
@@ -133,9 +133,9 @@ def test_save_updates_budget_and_problems(window: MainWindow) -> None:
     model = window.power_view.table_model("Summary", 0)
     row = next(r for r in range(model.rowCount()) if model.data(model.index(r, 0)) == "Imaging")
     before = model.data(model.index(row, 1))
-    set_cell(editor, 1, AVG, "5")
-    assert editor.save() is False  # 5 W average is above the 3.2 W peak: not written
-    set_cell(editor, 1, PEAK, "6")
+    set_cell(editor, 1, AVG, "100")
+    assert editor.save() is False  # 100 W average is above the 80 W peak: not written
+    set_cell(editor, 1, PEAK, "120")
     assert editor.save() is True
     after_model = window.power_view.table_model("Summary", 0)
     after = after_model.data(after_model.index(row, 1))

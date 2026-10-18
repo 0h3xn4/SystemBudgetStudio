@@ -29,7 +29,7 @@ def test_committed_examples_match_generator(tmp_path: Path) -> None:
 
 
 def test_example_sizes() -> None:
-    assert len(load_project(ROOT / "cubesat_3u").project.units) == 6  # type: ignore[union-attr]
+    assert len(load_project(ROOT / "microsat_250kg").project.units) == 18  # type: ignore[union-attr]
     assert len(load_project(ROOT / "microsat_150kg").project.units) == 17  # type: ignore[union-attr]
     stress = load_project(ROOT / "stress_200_units").project
     assert stress is not None and len(stress.units) == 200 and len(stress.modes) == 5
@@ -43,8 +43,8 @@ def test_every_unit_is_mapped_in_every_mode() -> None:
             assert set(mode.assignments) == set(project.units)
 
 
-COMPLETE_POWER = "cubesat_3u_eps"
-SYNTHETIC_LINKS = {"cubesat_3u_eps", "microsat_150kg"}  # links with invented values
+COMPLETE_POWER = "microsat_250kg_eps"
+SYNTHETIC_LINKS = {"microsat_250kg_eps", "microsat_150kg"}  # links with invented values
 
 
 def test_examples_contain_no_numbers_from_standards() -> None:

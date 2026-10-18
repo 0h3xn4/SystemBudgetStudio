@@ -16,7 +16,7 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 
 def test_a_failing_propagation_is_an_environment_problem(monkeypatch: pytest.MonkeyPatch) -> None:
-    project = load_project(EXAMPLES / "cubesat_3u_eps").project
+    project = load_project(EXAMPLES / "microsat_250kg_eps").project
     assert project is not None
 
     class Decayed:

@@ -73,7 +73,7 @@ The manual pages (task-oriented) and the in-app guide chapters (topic-oriented, 
 lychee --offline --include-fragments --no-progress README.md CONTRIBUTING.md CHANGELOG.md 'docs/**/*.md' 'examples/**/*.md'
 ```
 
-To regenerate the screenshots run the window offscreen (`QT_QPA_PLATFORM=offscreen`), open `examples/cubesat_3u_eps`, show the tab, and save `window.grab()` to `docs/images/`. Run every command in [getting started](../getting-started.md) in a fresh virtual environment now and then; the commands there are the documentation's tests.
+To regenerate the screenshots run the window offscreen (`QT_QPA_PLATFORM=offscreen`), open `examples/microsat_250kg_eps`, show the tab, and save `window.grab()` to `docs/images/`. Run every command in [getting started](../getting-started.md) in a fresh virtual environment now and then; the commands there are the documentation's tests.
 
 ## Build the installers
 

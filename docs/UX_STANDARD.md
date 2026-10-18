@@ -141,7 +141,7 @@ changing any equation, file format or output file (outputs are byte-reproducible
 - Frozen UI while a budget runs.
 
 ## How to work
-1. **Audit first.** Walk the demo `cubesat_3u_eps` through: open → edit a unit → run power →
+1. **Audit first.** Walk the demo `microsat_250kg_eps` through: open → edit a unit → run power →
    fix a problem → compare → export. Write `docs/ux-audit.md` (issue · severity · fix ·
    screenshot). Stop and wait for approval.
 2. **Order:** app shell & tree & Problems panel → model grid & placeholder styling → Power

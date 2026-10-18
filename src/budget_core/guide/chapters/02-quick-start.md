@@ -5,7 +5,7 @@
 Choose **File > New project (guided)** (Ctrl+N). Five short pages ask for:
 
 1. **Project**: a name and the parent folder. The project is stored in a new folder named after the project; an existing folder is never touched.
-2. **Spacecraft**: a sample spacecraft to start from (a 3U CubeSat with complete example inputs, a 150 kg microsatellite with two links, or a 3U CubeSat with placeholder inputs).
+2. **Spacecraft**: a sample spacecraft to start from (a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, or a 250 kg minisatellite with placeholder inputs).
 3. **Orbit**: altitude, inclination and RAAN of a near-circular orbit.
 4. **Scenario**: how long to simulate and when it starts (UTC).
 5. **Review**: Finish creates the project, opens it, and computes the first power timeline.
@@ -16,11 +16,11 @@ With the defaults you only press **Next** four times and **Finish**. The first p
 
 ```
 budget export-examples demo
-budget validate demo/cubesat_3u_eps
-budget run demo/cubesat_3u_eps --out out
-budget power-timeline demo/cubesat_3u_eps --out out
+budget validate demo/microsat_250kg_eps
+budget run demo/microsat_250kg_eps --out out
+budget power-timeline demo/microsat_250kg_eps --out out
 budget link-passes demo/microsat_150kg --out out
-budget compare demo/cubesat_3u_eps demo/cubesat_3u --out out
+budget compare demo/microsat_250kg_eps demo/microsat_250kg --out out
 budget guide --out guide
 ```
 

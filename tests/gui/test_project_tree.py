@@ -23,13 +23,13 @@ def child(node: Node, prefix: str) -> Node:
 
 @pytest.fixture(scope="module")
 def eps() -> tuple[Path, Node]:
-    root = EXAMPLES / "cubesat_3u_eps"
+    root = EXAMPLES / "microsat_250kg_eps"
     return root, build_nodes(root, load_project(root).project)
 
 
 def test_the_tree_follows_the_model(eps: tuple[Path, Node]) -> None:
     _root, top = eps
-    assert "Example 3U CubeSat" in top.label and "rev " in top.label
+    assert "Example 250 kg minisatellite" in top.label and "rev " in top.label
     names = [c.label.split(" (")[0] for c in top.children]
     assert names == [
         "Spacecraft",
@@ -43,12 +43,13 @@ def test_the_tree_follows_the_model(eps: tuple[Path, Node]) -> None:
     assert [c.label.split(" (")[0] for c in spacecraft.children] == [
         "Units",
         "Spacecraft modes",
+        "Expendables",
         "Solar array",
         "Battery",
     ]
     units = child(spacecraft, "Units")
     radio = child(units, "radio")
-    assert radio.label == "radio: UHF/VHF radio" and radio.rel == "units/radio.yaml"
+    assert radio.label == "radio: S-band transceiver" and radio.rel == "units/radio.yaml"
     assert radio.children[0].kind == "unit_modes" and radio.children[0].unit_id == "radio"
 
 
@@ -60,7 +61,7 @@ def test_solar_array_battery_and_antennas_open_their_field(eps: tuple[Path, Node
         "config/power_system.yaml",
         "solar_array",
     )
-    link = child(child(top, "Links"), "uhf_down")
+    link = child(child(top, "Links"), "sband_down")
     assert [(c.label, c.path) for c in link.children] == [
         ("Transmitter", "transmitter"),
         ("Receiver", "receiver"),
@@ -70,7 +71,7 @@ def test_solar_array_battery_and_antennas_open_their_field(eps: tuple[Path, Node
 def test_names_come_from_the_files_when_the_project_does_not_load(tmp_path: Path) -> None:
     import shutil
 
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     top = build_nodes(tmp_path / "p", None)
     radio = child(child(child(top, "Spacecraft"), "Units"), "radio")
     assert radio.label == "radio"  # no name without a loaded project, but the node is there
@@ -117,7 +118,7 @@ def test_a_field_problem_does_not_count_on_its_sibling_field(eps: tuple[Path, No
 def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
     w = MainWindow()
     qtbot.addWidget(w)
-    w.open_project(EXAMPLES / "cubesat_3u_eps")
+    w.open_project(EXAMPLES / "microsat_250kg_eps")
     return w
 
 

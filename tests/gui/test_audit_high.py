@@ -21,8 +21,8 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def project(tmp_path: Path) -> Path:
-    """cubesat_3u with a short step and a second scenario called 'two'."""
-    shutil.copytree(EXAMPLES / "cubesat_3u", tmp_path / "p")
+    """microsat_250kg with a short step and a second scenario called 'two'."""
+    shutil.copytree(EXAMPLES / "microsat_250kg", tmp_path / "p")
     root = tmp_path / "p"
     text = (root / "scenarios/one_day.yaml").read_text(encoding="utf-8")
     text = text.replace("step_s: 10.0", "step_s: 60.0")
@@ -80,15 +80,15 @@ def test_a_text_edit_is_not_reverted_by_the_next_save_in_the_unit_table(
     text = window.editors.current_editor()
     assert text is not None
     document = text.toPlainText()
-    assert "avg_power_w: 2.4" in document
-    text.setPlainText(document.replace("avg_power_w: 2.4", "avg_power_w: 2.6"))
+    assert "avg_power_w: 60.0" in document
+    text.setPlainText(document.replace("avg_power_w: 60.0", "avg_power_w: 62.0"))
     assert window.save_current()  # saves the text tab, the project reloads
-    assert table.table.item(1, 1).text() == "2.6"  # the clean table shows the new file
-    table.table.item(1, 2).setText("3.5")  # now an edit in the table (peak power)
+    assert table.table.item(1, 1).text() == "62.0"  # the clean table shows the new file
+    table.table.item(1, 2).setText("85.0")  # now an edit in the table (peak power)
     window.show_view(table)
     assert window.save_current()
     saved = load_project(project).project.units["camera"]  # type: ignore[union-attr]
-    assert saved.modes[1].avg_power_w == 2.6 and saved.modes[1].peak_power_w == 3.5
+    assert saved.modes[1].avg_power_w == 62.0 and saved.modes[1].peak_power_w == 85.0
 
 
 def test_a_table_with_pending_edits_refuses_to_overwrite_a_newer_file(
@@ -99,12 +99,12 @@ def test_a_table_with_pending_edits_refuses_to_overwrite_a_newer_file(
     table.table.item(0, 0).setText("off2")
     path = project / "units/camera.yaml"
     path.write_text(
-        path.read_text(encoding="utf-8").replace("avg_power_w: 2.4", "avg_power_w: 2.7"),
+        path.read_text(encoding="utf-8").replace("avg_power_w: 60.0", "avg_power_w: 63.0"),
         encoding="utf-8",
     )
     assert not table.save()
     assert "changed on disk" in table.error_label.text()
-    assert "avg_power_w: 2.7" in path.read_text(encoding="utf-8")
+    assert "avg_power_w: 63.0" in path.read_text(encoding="utf-8")
 
 
 # ---- GUI-4: switching the scenario asks before dropping edits ---------------------------------
@@ -254,7 +254,7 @@ def test_a_comparison_cannot_be_exported_after_the_project_changed(
     shutil.copytree(project, other)
     other_unit = other / "units/camera.yaml"
     other_unit.write_text(
-        other_unit.read_text(encoding="utf-8").replace("avg_power_w: 2.4", "avg_power_w: 2.9"),
+        other_unit.read_text(encoding="utf-8").replace("avg_power_w: 60.0", "avg_power_w: 2.9"),
         encoding="utf-8",
     )
     view.set_other_folder(other)

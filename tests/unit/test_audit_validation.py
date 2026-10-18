@@ -282,7 +282,7 @@ def test_a_scenario_phase_without_a_depth_of_discharge_entry_is_warned(tmp_path:
 
     examples = Path(__file__).resolve().parents[2] / "examples"
     dest = tmp_path / "p"
-    shutil.copytree(examples / "cubesat_3u_eps", dest)
+    shutil.copytree(examples / "microsat_250kg_eps", dest)
     assert not of(load_project(dest).problems, "SCENARIO_PHASE_NO_DOD")  # eol has an entry
     edit(
         dest,

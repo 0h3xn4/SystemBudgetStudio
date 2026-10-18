@@ -29,7 +29,7 @@ def test_guide_format_and_project(tmp_path: Path) -> None:
             "--format",
             "html",
             "--project",
-            str(EXAMPLES / "cubesat_3u"),
+            str(EXAMPLES / "microsat_250kg"),
         ]
     )
     assert code == 0

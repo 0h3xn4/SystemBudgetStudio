@@ -2,8 +2,10 @@
 
 Three examples keep every configuration number a placeholder (`source: TBD`) so they exercise the
 Problems list instead of suggesting plausible-looking standards values (spec constraint 15). The
-fourth, `cubesat_3u_eps`, has invented round values for the power inputs (margins, converters,
-array, battery) so the time-domain budget shows results; its mass inputs are still placeholders.
+fourth, `microsat_250kg_eps` (a 250 kg satellite), has invented round values for the power, thermal
+and link inputs (margins, converters, array, battery, nodes, losses) so the time-domain and thermal
+budgets show results; its mass inputs are still placeholders. All of them describe satellites of
+100 to 500 kg.
 """
 
 from __future__ import annotations
@@ -79,30 +81,37 @@ def _val(value: float) -> Sourced:
     return Sourced(value=value, source=SYNTH_VALUE)
 
 
-def _power_system(
+def _face(name: str, normal: tuple[float, float, float], strings: int, cells: int) -> ArrayFace:
+    return ArrayFace(name=name, normal_body=list(normal), strings=strings, cells_per_string=cells)
+
+
+MINISAT_PEAK_POWER_W = 180.0  # invented source limit; the downlink peak exceeds it on purpose
+
+
+def _minisat_power_system(
     filled: bool, phases: list[str], by_mode: dict[str, Pointing] | None = None
 ) -> PowerSystem:
-    """Array and battery of the 3U CubeSat example. The design (faces, cell counts, pointing) is
-    always given; the electrical numbers are placeholders unless `filled`, in which case they are
-    invented round values (the project data of an example, not standards values)."""
+    """Array and battery of the 250 kg examples: two deployed wings (plus and minus X) and body
+    panels on the Y sides and the nadir face; a pack of 8 cells in series and 4 in parallel (about
+    350 Wh). The design is always given; the electrical numbers are placeholders unless `filled`,
+    in which case they are invented round values (project data of an example, not standards)."""
 
     def n(value: float) -> Sourced:
         return _val(value) if filled else _tbd()
 
-    faces = [
-        ArrayFace(name="plus_x", normal_body=[1.0, 0.0, 0.0], strings=2, cells_per_string=3),
-        ArrayFace(name="minus_x", normal_body=[-1.0, 0.0, 0.0], strings=2, cells_per_string=3),
-        ArrayFace(name="plus_y", normal_body=[0.0, 1.0, 0.0], strings=2, cells_per_string=3),
-        ArrayFace(name="minus_y", normal_body=[0.0, -1.0, 0.0], strings=2, cells_per_string=3),
-        ArrayFace(name="minus_z", normal_body=[0.0, 0.0, -1.0], strings=1, cells_per_string=2),
-    ]
     return PowerSystem(
-        design_life_yr=n(2.0),
+        design_life_yr=n(5.0),
         solar_array=SolarArray(
-            faces=faces,
+            faces=[
+                _face("plus_x", (1.0, 0.0, 0.0), 6, 24),
+                _face("minus_x", (-1.0, 0.0, 0.0), 6, 24),
+                _face("plus_y", (0.0, 1.0, 0.0), 3, 16),
+                _face("minus_y", (0.0, -1.0, 0.0), 3, 16),
+                _face("minus_z", (0.0, 0.0, -1.0), 2, 10),
+            ],
             solar_irradiance_wm2=n(1360.0),
             cell_area_m2=n(0.003),
-            cell_efficiency_ratio=n(0.28),
+            cell_efficiency_ratio=n(0.29),
             reference_temperature_k=n(301.0),
             cell_temperature_k=n(318.0),
             efficiency_temp_coeff_perk=n(-0.0020),
@@ -111,13 +120,13 @@ def _power_system(
             annual_degradation_ratio=n(0.03),
         ),
         battery=Battery(
-            cell_capacity_ah=n(2.6),
+            cell_capacity_ah=n(3.0),
             cell_nominal_voltage_v=n(3.6),
-            cells_in_series=2,
-            cells_in_parallel=2,
+            cells_in_series=8,
+            cells_in_parallel=4,
             charge_efficiency_ratio=n(0.95),
             discharge_efficiency_ratio=n(0.95),
-            annual_capacity_fade_ratio=n(0.04),
+            annual_capacity_fade_ratio=n(0.03),
             initial_soc_ratio=n(0.9),
             max_dod_ratio={p: n(0.3) for p in phases},
         ),
@@ -126,7 +135,7 @@ def _power_system(
             by_mode=by_mode or {},
             sun_direction_body=[1.0, 0.0, 0.0],
         ),
-        limits=PowerLimits(peak_power_w=n(7.5)),
+        limits=PowerLimits(peak_power_w=n(MINISAT_PEAK_POWER_W)),
     )
 
 
@@ -210,9 +219,10 @@ RF_RADIATING = {
 EXAMPLE_LIMITS = TemperatureLimits(
     operating_min_k=233.15, operating_max_k=343.15, survival_min_k=218.15, survival_max_k=358.15
 )
-# The radio is the one unit with a tighter upper limit, so the example shows a margin finding.
-RADIO_LIMITS = TemperatureLimits(
-    operating_min_k=233.15, operating_max_k=335.15, survival_min_k=218.15, survival_max_k=358.15
+# The 250 kg satellite's radio has the tighter upper limit (its node reaches about 329 K in the hot
+# case, so it is inside the limit but closer than the required margin).
+MINISAT_RADIO_LIMITS = TemperatureLimits(
+    operating_min_k=233.15, operating_max_k=332.15, survival_min_k=218.15, survival_max_k=358.15
 )
 
 
@@ -259,95 +269,6 @@ def _mode_map(
         out[mid] = SpacecraftMode(name=name, description=description, assignments=assignments)
     return out
 
-
-CUBESAT_UNITS: list[UnitRow] = [
-    (
-        "obc",
-        "On-board computer",
-        "DH",
-        0.12,
-        "main",
-        "class_a",
-        {
-            "safe": (0.3, 0.5, 1.0),
-            "nominal": (0.5, 0.8, 1.0),
-            "imaging": (0.7, 1.0, 1.0),
-            "downlink": (0.6, 0.9, 1.0),
-            "charging": (0.3, 0.5, 1.0),
-        },
-    ),
-    (
-        "eps",
-        "Power board",
-        "EPS",
-        0.25,
-        "main",
-        "class_a",
-        {
-            "safe": (0.1, 0.2, 1.0),
-            "nominal": (0.15, 0.25, 1.0),
-            "imaging": (0.15, 0.25, 1.0),
-            "downlink": (0.15, 0.25, 1.0),
-            "charging": (0.15, 0.25, 1.0),
-        },
-    ),
-    (
-        "radio",
-        "UHF/VHF radio",
-        "TTC",
-        0.09,
-        "main",
-        "class_b",
-        {
-            "off": (0.0, 0.0, 1.0),
-            "safe": (0.2, 0.3, 1.0),
-            "nominal": (0.2, 0.3, 1.0),
-            "imaging": (0.2, 0.3, 1.0),
-            "downlink": (1.8, 4.0, 0.5),
-            "charging": (0.2, 0.3, 1.0),
-        },
-    ),
-    (
-        "adcs",
-        "ADCS module",
-        "ADCS",
-        0.15,
-        "main",
-        "class_b",
-        {
-            "off": (0.0, 0.0, 1.0),
-            "safe": (0.4, 0.6, 1.0),
-            "nominal": (0.9, 1.4, 1.0),
-            "imaging": (1.1, 1.8, 1.0),
-            "downlink": (0.9, 1.4, 1.0),
-            "charging": (0.6, 1.0, 1.0),
-        },
-    ),
-    (
-        "camera",
-        "Camera payload",
-        "PL",
-        0.2,
-        "main",
-        "class_c",
-        {"off": (0.0, 0.0, 1.0), "imaging": (2.4, 3.2, 0.6)},
-    ),
-    (
-        "gnss",
-        "GNSS receiver",
-        "ADCS",
-        0.03,
-        "main",
-        "class_b",
-        {
-            "off": (0.0, 0.0, 1.0),
-            "nominal": (0.25, 0.4, 1.0),
-            "imaging": (0.25, 0.4, 1.0),
-            "downlink": (0.25, 0.4, 1.0),
-            "charging": (0.25, 0.4, 1.0),
-        },
-    ),
-]
 
 MICROSAT_UNITS: list[UnitRow] = [
     (
@@ -535,7 +456,7 @@ MICROSAT_MODES = {
     "survival": ("Survival", "Battery survival, heaters only."),
 }
 
-CUBESAT_MODES = {
+SAT_MODES = {
     "safe": ("Safe", "Detumbled, minimum loads."),
     "nominal": ("Nominal", "Housekeeping."),
     "imaging": ("Imaging", "Camera on."),
@@ -546,17 +467,6 @@ CUBESAT_MODES = {
 STRESS_SUBSYSTEMS = ("DH", "EPS", "AOCS", "TTC", "PL", "THERM", "PL-DATA", "HARNESS")
 STRESS_MODES = ("safe", "nominal", "imaging", "downlink", "charging")
 
-
-# Invented geometry: unit id -> (centre-of-mass position in m, box dimensions in m or None for a
-# point mass). The box formula gives each unit a consistent, physically valid inertia tensor.
-CUBESAT_GEOMETRY: dict[str, Geometry] = {
-    "obc": ((0.0, 0.0, 0.050), (0.09, 0.09, 0.015)),
-    "eps": ((0.0, 0.0, 0.080), (0.09, 0.09, 0.030)),
-    "radio": ((0.0, 0.0, 0.120), (0.09, 0.09, 0.020)),
-    "adcs": ((0.0, 0.0, 0.160), (0.09, 0.09, 0.040)),
-    "camera": ((0.0, 0.0, 0.260), (0.08, 0.08, 0.140)),
-    "gnss": ((0.03, 0.0, 0.330), None),
-}
 
 MICROSAT_GEOMETRY: dict[str, Geometry] = {
     "obc_a": ((0.20, 0.10, 0.40), (0.20, 0.15, 0.08)),
@@ -610,6 +520,211 @@ MICROSAT_UNITS += [
     ),
 ]
 
+# The 250 kg examples (`microsat_250kg`, `microsat_250kg_eps`): invented units that add up to
+# 250 kg at launch with 5 kg of propellant. The six ids obc, eps, radio, adcs, camera and gnss are
+# the ones the documentation and the tests talk about; the rest make it a whole spacecraft.
+_OFF = (0.0, 0.0, 1.0)
+_ModeW = dict[str, tuple[float, float, float]]
+
+
+def _same(modes: tuple[str, ...], avg: float, peak: float, duty: float = 1.0) -> _ModeW:
+    return {m: (avg, peak, duty) for m in modes}
+
+
+_RUN = ("nominal", "imaging", "downlink", "charging")
+MINISAT_UNITS: list[UnitRow] = [
+    (
+        "obc",
+        "On-board computer",
+        "DH",
+        3.0,
+        "main",
+        "class_a",
+        {
+            "safe": (6.0, 8.0, 1.0),
+            "nominal": (10.0, 14.0, 1.0),
+            "imaging": (12.0, 16.0, 1.0),
+            "downlink": (11.0, 15.0, 1.0),
+            "charging": (6.0, 8.0, 1.0),
+        },
+    ),
+    (
+        "pdu_data",
+        "Payload data unit",
+        "DH",
+        6.0,
+        "payload",
+        "class_b",
+        {
+            "off": _OFF,
+            "nominal": (4.0, 6.0, 1.0),
+            "imaging": (9.0, 14.0, 1.0),
+            "downlink": (9.0, 14.0, 1.0),
+            "charging": (4.0, 6.0, 1.0),
+        },
+    ),
+    (
+        "eps",
+        "Power conditioning unit",
+        "EPS",
+        10.0,
+        "main",
+        "class_a",
+        {
+            "safe": (8.0, 10.0, 1.0),
+            **_same(("nominal", "imaging", "downlink"), 12.0, 16.0),
+            "charging": (14.0, 20.0, 1.0),
+        },
+    ),
+    (
+        "radio",
+        "S-band transceiver",
+        "TTC",
+        4.5,
+        "main",
+        "class_b",
+        {
+            "off": _OFF,
+            **_same(("safe", "nominal", "imaging", "charging"), 6.0, 8.0),
+            "downlink": (28.0, 40.0, 1.0),
+        },
+    ),
+    (
+        "xband_tx",
+        "X-band transmitter",
+        "PL",
+        7.0,
+        "payload",
+        "class_b",
+        {"off": _OFF, "downlink": (55.0, 70.0, 1.0)},
+    ),
+    (
+        "adcs",
+        "Attitude control electronics",
+        "ADCS",
+        3.0,
+        "main",
+        "class_b",
+        {
+            "off": _OFF,
+            "safe": (4.0, 6.0, 1.0),
+            "nominal": (6.0, 8.0, 1.0),
+            "imaging": (7.0, 10.0, 1.0),
+            "downlink": (6.0, 8.0, 1.0),
+            "charging": (5.0, 7.0, 1.0),
+        },
+    ),
+    (
+        "star_tracker",
+        "Star tracker",
+        "ADCS",
+        2.0,
+        "main",
+        "class_b",
+        {"off": _OFF, **_same(_RUN, 3.5, 5.0)},
+    ),
+    (
+        "reaction_wheels",
+        "Reaction wheels",
+        "ADCS",
+        14.0,
+        "main",
+        "class_b",
+        {
+            "off": _OFF,
+            "safe": (2.0, 12.0, 0.5),
+            "nominal": (12.0, 30.0, 0.6),
+            "imaging": (18.0, 40.0, 0.7),
+            "downlink": (12.0, 30.0, 0.6),
+            "charging": (12.0, 30.0, 0.6),
+        },
+    ),
+    (
+        "magnetorquers",
+        "Magnetorquers",
+        "ADCS",
+        4.0,
+        "main",
+        "class_b",
+        {
+            "off": _OFF,
+            "safe": (1.5, 3.0, 0.3),
+            "nominal": (1.0, 3.0, 0.2),
+            "charging": (1.0, 3.0, 0.2),
+        },
+    ),
+    (
+        "gnss",
+        "GNSS receiver",
+        "ADCS",
+        0.9,
+        "main",
+        "class_b",
+        {"off": _OFF, **_same(_RUN, 1.2, 1.8)},
+    ),
+    (
+        "sun_sensors",
+        "Coarse sun sensors",
+        "ADCS",
+        0.6,
+        "main",
+        "class_b",
+        _same(("safe", *_RUN), 0.4, 0.5),
+    ),
+    (
+        "camera",
+        "Camera payload",
+        "PL",
+        38.0,
+        "payload",
+        "class_c",
+        {"off": _OFF, "imaging": (60.0, 80.0, 0.6)},
+    ),
+    (
+        "heaters",
+        "Thermal heaters",
+        "THERM",
+        1.5,
+        "main",
+        "class_b",
+        {
+            "safe": (12.0, 16.0, 0.5),
+            "nominal": (6.0, 16.0, 0.3),
+            "imaging": (4.0, 16.0, 0.25),
+            "downlink": (6.0, 16.0, 0.3),
+            "charging": (6.0, 16.0, 0.3),
+        },
+    ),
+    ("harness", "Harness", "STRUCT", 6.0, "main", "class_b", {"off": _OFF}),
+    ("structure", "Primary structure", "STRUCT", 100.5, "main", "class_a", {"off": _OFF}),
+    ("solar_array", "Solar array panels", "EPS", 26.0, "main", "class_b", {"off": _OFF}),
+    ("battery", "Battery pack", "EPS", 14.0, "main", "class_b", {"off": _OFF}),
+    ("adapter", "Separation adapter", "STRUCT", 4.0, "main", "class_a", {"off": _OFF}),
+]
+
+# Invented geometry (centre of mass in m, box dimensions in m or None for a point mass) in a bus
+# of about 1.0 x 1.0 x 1.2 m; the box formula gives each unit a valid inertia tensor.
+MINISAT_GEOMETRY: dict[str, Geometry] = {
+    "obc": ((0.20, 0.10, 0.45), (0.22, 0.16, 0.08)),
+    "pdu_data": ((-0.20, -0.15, 0.55), (0.28, 0.22, 0.10)),
+    "eps": ((-0.20, 0.00, 0.40), (0.32, 0.26, 0.12)),
+    "radio": ((0.20, 0.00, 0.60), (0.20, 0.14, 0.07)),
+    "xband_tx": ((-0.25, 0.20, 0.60), (0.22, 0.16, 0.09)),
+    "adcs": ((0.15, -0.15, 0.45), (0.20, 0.15, 0.06)),
+    "star_tracker": ((0.30, 0.25, 1.05), (0.10, 0.10, 0.16)),
+    "reaction_wheels": ((0.00, 0.00, 0.30), (0.45, 0.45, 0.16)),
+    "magnetorquers": ((0.00, 0.00, 0.70), (0.55, 0.55, 0.05)),
+    "gnss": ((-0.30, -0.25, 1.10), None),
+    "sun_sensors": ((0.25, -0.25, 1.12), None),
+    "camera": ((0.00, 0.00, 0.95), (0.35, 0.35, 0.55)),
+    "heaters": ((0.00, 0.00, 0.55), None),
+    "harness": ((0.00, 0.00, 0.55), None),
+    "structure": ((0.00, 0.00, 0.55), (1.00, 1.00, 1.20)),
+    "solar_array": ((0.00, 0.00, 0.55), (2.40, 1.00, 0.05)),
+    "battery": ((-0.15, 0.10, 0.22), (0.35, 0.25, 0.18)),
+    "adapter": ((0.00, 0.00, -0.04), (0.94, 0.94, 0.08)),
+}
+
 PHASES = ["launch", "bol", "eol"]
 
 # Invented orbit and sites (round numbers; no real stations or customer targets).
@@ -650,50 +765,6 @@ EXAMPLE_TARGETS = {
         min_elevation_deg=45.0,
     ),
 }
-
-
-def _cubesat() -> Project:
-    units = dict(_unit(r, CUBESAT_GEOMETRY.get(r[0])) for r in CUBESAT_UNITS)
-    return Project(
-        root=Path("."),
-        meta=ProjectMeta(name="Example 3U CubeSat", revision="1", description=SYNTHETIC),
-        spacecraft=Spacecraft(
-            name="CubeSat 3U",
-            buses=[Bus(name="main", nominal_voltage_v=5.0)],
-            mission_phases=["launch", "eol"],
-            body_frame=BODY_FRAME,
-        ),
-        units=units,
-        modes=_mode_map(units, CUBESAT_MODES),
-        config=_config(
-            ["main"],
-            _power_system(False, ["launch", "eol"], CUBESAT_POINTING),
-            thermal=_thermal(units, "imaging", "safe", 0.02, False),
-            link_tables=_cubesat_link_tables(False),
-        ),
-        links=_cubesat_links(False),
-        orbits={"leo": EXAMPLE_ORBIT},
-        ground_stations=EXAMPLE_STATIONS,
-        targets=EXAMPLE_TARGETS,
-        scenarios={
-            "one_day": Scenario(
-                name="One day: charging by default, imaging and downlink over passes",
-                orbit="leo",
-                start_utc="2026-06-01T00:00:00Z",
-                duration_s=86400.0,
-                step_s=10.0,
-                sites=["gs_north", "tgt_plains"],
-                default_mode="charging",
-                rules=[
-                    ScenarioRule(kind="in_eclipse", mode="nominal"),
-                    ScenarioRule(
-                        kind="during_pass", site="tgt_plains", mode="imaging", lead_s=30.0
-                    ),
-                    ScenarioRule(kind="during_pass", site="gs_north", mode="downlink"),
-                ],
-            )
-        },
-    )
 
 
 def _thermal(
@@ -803,41 +874,7 @@ def _link(
     )
 
 
-UHF_POINTS = [
-    StaticPoint(name="5 deg elevation", elevation_deg=5.0, range_m=2.2e6),
-    StaticPoint(name="zenith", elevation_deg=90.0, range_m=5.5e5),
-]
-
-
-def _cubesat_links(filled: bool) -> dict[str, Link]:
-    return {
-        "uhf_down": _link(
-            "UHF telemetry downlink",
-            "downlink",
-            "gs_north",
-            4.35e8,
-            [1200.0, 9600.0, 19200.0, 76800.0],
-            "BPSK",
-            "none",
-            UHF_POINTS,
-            filled,
-            tx_w=1.0,
-            tx_gain_dbi=0.0,
-            g_over_t_dbk=-15.0,
-            active_modes=["downlink"],
-        )
-    }
-
-
-def _cubesat_link_tables(filled: bool) -> tuple[Ebn0Table, AttenuationTable]:
-    value = _val(10.0) if filled else _tbd()
-    return (
-        Ebn0Table(entries=[Ebn0Entry(modulation="BPSK", coding="none", required_ebn0_db=value)]),
-        AttenuationTable(),
-    )
-
-
-def _microsat_links() -> dict[str, Link]:
+def _microsat_links(filled: bool = True) -> dict[str, Link]:
     xband_pattern = AntennaPattern(
         source=SYNTH_VALUE, angles_deg=[0.0, 30.0, 60.0], gains_dbi=[10.0, 7.0, 0.0]
     )
@@ -854,7 +891,7 @@ def _microsat_links() -> dict[str, Link]:
                 StaticPoint(name="5 deg elevation", elevation_deg=5.0, range_m=2.2e6),
                 StaticPoint(name="zenith", elevation_deg=90.0, range_m=5.5e5),
             ],
-            True,
+            filled,
             tx_w=5.0,
             tx_gain_dbi=3.0,
             g_over_t_dbk=10.0,
@@ -873,7 +910,7 @@ def _microsat_links() -> dict[str, Link]:
                 StaticPoint(name="10 deg elevation", elevation_deg=10.0, range_m=1.6e6),
                 StaticPoint(name="zenith", elevation_deg=90.0, range_m=5.5e5),
             ],
-            True,
+            filled,
             tx_w=10.0,
             tx_gain_dbi=xband_pattern,
             g_over_t_dbk=20.0,
@@ -883,11 +920,14 @@ def _microsat_links() -> dict[str, Link]:
     }
 
 
-def _microsat_link_tables() -> tuple[Ebn0Table, AttenuationTable]:
+def _microsat_link_tables(filled: bool = True) -> tuple[Ebn0Table, AttenuationTable]:
+    def v(value: float) -> Sourced:
+        return _val(value) if filled else _tbd()
+
     ebn0 = Ebn0Table(
         entries=[
-            Ebn0Entry(modulation="QPSK", coding="rate 1/2", required_ebn0_db=_val(4.0)),
-            Ebn0Entry(modulation="QPSK", coding="none", required_ebn0_db=_val(10.0)),
+            Ebn0Entry(modulation="QPSK", coding="rate 1/2", required_ebn0_db=v(4.0)),
+            Ebn0Entry(modulation="QPSK", coding="none", required_ebn0_db=v(10.0)),
         ]
     )
 
@@ -897,7 +937,7 @@ def _microsat_link_tables() -> tuple[Ebn0Table, AttenuationTable]:
             attenuation_kind=kind,  # type: ignore[arg-type]
             freq_hz=freq,
             elevation_deg=el,
-            loss_db=_val(loss),
+            loss_db=v(loss),
         )
 
     attenuation = AttenuationTable(
@@ -910,52 +950,6 @@ def _microsat_link_tables() -> tuple[Ebn0Table, AttenuationTable]:
         ]
     )
     return ebn0, attenuation
-
-
-CUBESAT_POINTING: dict[str, Pointing] = {
-    "downlink": "nadir",
-    "imaging": "nadir",
-    "nominal": "nadir",
-}
-
-
-def _cubesat_eps() -> Project:
-    """The 3U CubeSat with complete power and thermal inputs (invented values), to show the
-    time-domain and thermal budgets with results instead of n/a."""
-    base = _cubesat()
-    units = dict(
-        _unit(
-            r, CUBESAT_GEOMETRY.get(r[0]), None, RADIO_LIMITS if r[0] == "radio" else EXAMPLE_LIMITS
-        )
-        for r in CUBESAT_UNITS
-    )
-    scenario = base.scenarios["one_day"].model_copy(
-        update={"name": "One day with complete power inputs", "mission_phase": "eol"}
-    )
-    return Project(
-        root=base.root,
-        meta=ProjectMeta(
-            name="Example 3U CubeSat, complete power and thermal inputs",
-            revision="1",
-            description=SYNTHETIC
-            + " Array, battery, power and thermal configuration have invented values.",
-        ),
-        spacecraft=base.spacecraft,
-        units=units,
-        modes=base.modes,
-        config=_config(
-            ["main"],
-            _power_system(True, ["launch", "eol"], CUBESAT_POINTING),
-            filled_power=True,
-            thermal=_thermal(units, "imaging", "safe", 0.02, True),
-            link_tables=_cubesat_link_tables(True),
-        ),
-        links=_cubesat_links(True),
-        orbits=base.orbits,
-        ground_stations=base.ground_stations,
-        targets=base.targets,
-        scenarios={"one_day": scenario},
-    )
 
 
 def _microsat() -> Project:
@@ -986,7 +980,7 @@ def _microsat() -> Project:
         modes=_mode_map(units, MICROSAT_MODES),
         config=_config(
             ["main_28v", "payload_12v"],
-            _power_system(False, PHASES),
+            _minisat_power_system(False, PHASES),
             thermal=_thermal(units, "imaging", "survival", 0.3, False),
             link_tables=_microsat_link_tables(),
         ),
@@ -1013,6 +1007,94 @@ def _microsat() -> Project:
                     ScenarioRule(kind="during_pass", site="gs_south", mode="downlink"),
                 ],
                 segments=[ScenarioSegment(start_s=0.0, duration_s=1800.0, mode="safe")],
+            )
+        },
+    )
+
+
+MINISAT_POINTING: dict[str, Pointing] = {
+    "downlink": "nadir",
+    "imaging": "nadir",
+    "nominal": "nadir",
+}
+
+
+def _minisat(*, complete: bool) -> Project:
+    """The 250 kg satellite. Without `complete` every configuration number is a placeholder (what a
+    project with `n/a` looks like); with it the power, thermal and link inputs have invented round
+    values, so the time-domain and thermal budgets show results. Mass inputs stay placeholders."""
+    units = dict(
+        _unit(
+            r,
+            MINISAT_GEOMETRY.get(r[0]),
+            ["launch"] if r[0] == "adapter" else None,
+            (MINISAT_RADIO_LIMITS if r[0] == "radio" else EXAMPLE_LIMITS) if complete else None,
+        )
+        for r in MINISAT_UNITS
+    )
+    propellant = Expendable(
+        name="Propellant",
+        subsystem="PROP",
+        maturity="class_c",
+        masses_kg={"launch": 5.0, "bol": 4.8, "eol": 0.6},
+        mass_properties=MassProperties(position_m=[0.0, 0.0, 0.40]),
+    )
+    return Project(
+        root=Path("."),
+        meta=ProjectMeta(
+            name="Example 250 kg minisatellite"
+            + (", complete power and thermal inputs" if complete else ""),
+            revision="1",
+            description=SYNTHETIC
+            + (
+                " Array, battery, power, thermal and link configuration have invented values."
+                if complete
+                else ""
+            ),
+        ),
+        spacecraft=Spacecraft(
+            name="Minisat 250",
+            buses=[
+                Bus(name="main", nominal_voltage_v=28.0),
+                Bus(name="payload", nominal_voltage_v=12.0),
+            ],
+            mission_phases=PHASES,
+            body_frame=BODY_FRAME,
+        ),
+        units=units,
+        modes=_mode_map(units, SAT_MODES),
+        config=_config(
+            ["main", "payload"],
+            _minisat_power_system(complete, PHASES, MINISAT_POINTING),
+            filled_power=complete,
+            thermal=_thermal(units, "imaging", "safe", 0.5, complete),
+            link_tables=_microsat_link_tables(complete),
+        ),
+        links=_microsat_links(complete),
+        expendables={"propellant": propellant},
+        orbits={"leo": EXAMPLE_ORBIT},
+        ground_stations=EXAMPLE_STATIONS,
+        targets=EXAMPLE_TARGETS,
+        scenarios={
+            "one_day": Scenario(
+                name="One day with complete power inputs"
+                if complete
+                else "One day: charging by default, imaging and downlink over passes",
+                orbit="leo",
+                start_utc="2026-06-01T00:00:00Z",
+                duration_s=86400.0,
+                step_s=10.0,
+                sites=["gs_north", "gs_south", "tgt_plains"],
+                default_mode="charging",
+                mission_phase="eol" if complete else None,
+                rules=[
+                    ScenarioRule(kind="in_eclipse", mode="nominal"),
+                    ScenarioRule(
+                        kind="during_pass", site="tgt_plains", mode="imaging", lead_s=30.0
+                    ),
+                    ScenarioRule(kind="during_pass", site="gs_north", mode="downlink"),
+                    ScenarioRule(kind="during_pass", site="gs_south", mode="downlink"),
+                ],
             )
         },
     )
@@ -1066,7 +1148,7 @@ def _stress() -> Project:
         modes=_mode_map(units, plan),
         config=_config(
             ["main", "aux"],
-            _power_system(False, ["launch", "eol"]),
+            _minisat_power_system(False, ["launch", "eol"]),
             thermal=_thermal(units, "imaging", "safe", 0.2, False),
         ),
         orbits={"leo": EXAMPLE_ORBIT},
@@ -1095,8 +1177,8 @@ def _stress() -> Project:
 
 
 EXAMPLES: dict[str, Callable[[], Project]] = {
-    "cubesat_3u": _cubesat,
-    "cubesat_3u_eps": _cubesat_eps,
+    "microsat_250kg": lambda: _minisat(complete=False),
+    "microsat_250kg_eps": lambda: _minisat(complete=True),
     "microsat_150kg": _microsat,
     "stress_200_units": _stress,
 }

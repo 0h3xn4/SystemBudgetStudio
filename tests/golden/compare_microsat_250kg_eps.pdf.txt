@@ -1,0 +1,691 @@
+pages=5
+## page 1
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 1
+Comparison: Example 250 kg minisatellite, complete power and thermal inputs rev 1 and Example 250
+kg minisatellite, complete power and thermal inputs rev 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
+placeholders are replaced with sourced values.
+Summary
+rev 1 compared with rev 2.
+74 value(s) differ out of 3609 compared.
+Values that look equal at the displayed precision are not reported as differences.
+Compared sides
+Item
+rev 1
+rev 2
+Project
+Example 250 kg minisatellite, complete power and thermal inputs
+Example 250 kg minisatellite, complete power and thermal inputs
+Project revision
+1
+2
+Scenario
+static (no scenario)
+static (no scenario)
+Differences: Static power budget
+Summary — Power by spacecraft mode
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+Imaging
+Average load (W)
+100.700
+102.700
++2.000 W
++2.0 %
+changed
+Imaging
+Average, unit margins (W)
+113.170
+115.370
++2.200 W
++1.9 %
+changed
+Imaging
+Average, system margin (W)
+124.487
+126.907
++2.420 W
++1.9 %
+changed
+Imaging
+Average at source (W)
+115.349
+117.640
++2.291 W
++2.0 %
+changed
+Imaging
+Average at source, with margins (W)
+142.597
+145.369
++2.772 W
++1.9 %
+changed
+Mode: Imaging — Units in mode Imaging
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+adcs
+Average (W)
+7.000
+9.000
++2.000 W
++28.6 %
+changed
+adcs
+Effective (W)
+7.000
+9.000
++2.000 W
++28.6 %
+changed
+adcs
+With margin (W)
+7.700
+9.900
++2.200 W
++28.6 %
+changed
+Mode: Imaging — By subsystem
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+ADCS
+Effective (W)
+24.700
+26.700
++2.000 W
++8.1 %
+changed
+ADCS
+With margin (W)
+27.170
+29.370
++2.200 W
++8.1 %
+changed
+## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 2
+Mode: Imaging — By supply bus
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+main
+Average load (W)
+55.700
+57.700
++2.000 W
++3.6 %
+changed
+main
+Average load, with margins (W)
+66.077
+68.497
++2.420 W
++3.7 %
+changed
+main
+Average at source (W)
+63.803
+66.094
++2.291 W
++3.6 %
+changed
+main
+Average at source, with margins (W)
+75.690
+78.462
++2.772 W
++3.7 %
+changed
+Mode: Imaging — Totals
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+Load, nominal
+Average (W)
+100.700
+102.700
++2.000 W
++2.0 %
+changed
+Load, with unit margins
+Average (W)
+113.170
+115.370
++2.200 W
++1.9 %
+changed
+Load, with system margin
+Average (W)
+124.487
+126.907
++2.420 W
++1.9 %
+changed
+Source, nominal
+Average (W)
+115.349
+117.640
++2.291 W
++2.0 %
+changed
+Source, with margins
+Average (W)
+142.597
+145.369
++2.772 W
++1.9 %
+changed
+Differences: Mass budget
+No differences.
+Differences: Thermal budget
+Summary — Heat dissipation by spacecraft mode
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+Imaging
+Average (W)
+100.700
+102.700
++2.000 W
++2.0 %
+changed
+Case: hot — Node temperatures, case hot
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+ADCS
+Temperature (K)
+334.75
+335.24
++0.49
++0.1 %
+changed
+ADCS
+Temperature (C)
+61.60
+62.09
++0.49
++0.8 %
+changed
+ADCS
+Dissipated (W)
+24.700
+26.700
++2.000 W
++8.1 %
+changed
+ADCS
+Radiated to space (W)
+302.610
+304.391
++1.781 W
++0.6 %
+changed
+ADCS
+Conducted to other nodes (W)
+0.490
+0.709
++0.219 W
++44.6 %
+changed
+DH
+Temperature (K)
+333.77
+333.82
++0.05
++0.01625776261 %
+changed
+DH
+Temperature (C)
+60.62
+60.67
++0.05
++0.1 %
+changed
+DH
+Radiated to space (W)
+299.081
+299.275
++0.195 W
++0.1 %
+changed
+DH
+Conducted to other nodes (W)
+0.319
+0.125
+-0.195 W
+-61.0 %
+changed
+EPS
+Temperature (K)
+332.15
+332.16
++0.01
++0.001824025935 %
+changed
+## page 3
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 3
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+EPS
+Temperature (C)
+59.00
+59.01
++0.01
++0.01026846342 %
+changed
+EPS
+Radiated to space (W)
+293.322
+293.343
++0.021 W
++0.007296303415 %
+changed
+EPS
+Conducted to other nodes (W)
+-2.922
+-2.943
+-0.021 W
+-0.7 %
+changed
+PL
+Radiated to space (W)
+308.534
+308.537
++0.002 W
++0.0007811029464 %
+changed
+PL
+Conducted to other nodes (W)
+5.866
+5.863
+-0.002 W
+-0.04108529595 %
+changed
+STRUCT
+Radiated to space (W)
+281.902
+281.903
++0.0002576143509 W
++9.138423328e-05 %
+changed
+STRUCT
+Conducted to other nodes (W)
+-3.502
+-3.503
+-0.0002576143508 W
+-0.007355356994 %
+changed
+Case: hot — Unit temperature limits, case hot (operating)
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+adcs
+Temperature (K)
+334.75
+335.24
++0.49
++0.1 %
+changed
+adcs
+Headroom to lower (K)
+101.60
+102.09
++0.49
++0.5 %
+changed
+adcs
+Headroom to upper (K)
+8.40
+7.91
+-0.49
+-5.9 %
+changed
+battery
+Temperature (K)
+332.15
+332.16
++0.01
++0.001824025935 %
+changed
+battery
+Headroom to lower (K)
+99.00
+99.01
++0.01
++0.006119643269 %
+changed
+battery
+Headroom to upper (K)
+11.00
+10.99
+-0.01
+-0.1 %
+changed
+eps
+Temperature (K)
+332.15
+332.16
++0.01
++0.001824025935 %
+changed
+eps
+Headroom to lower (K)
+99.00
+99.01
++0.01
++0.006119643269 %
+changed
+eps
+Headroom to upper (K)
+11.00
+10.99
+-0.01
+-0.1 %
+changed
+gnss
+Temperature (K)
+334.75
+335.24
++0.49
++0.1 %
+changed
+gnss
+Headroom to lower (K)
+101.60
+102.09
++0.49
++0.5 %
+changed
+gnss
+Headroom to upper (K)
+8.40
+7.91
+-0.49
+-5.9 %
+changed
+magnetorquers
+Temperature (K)
+334.75
+335.24
++0.49
++0.1 %
+changed
+magnetorquers
+Headroom to lower (K)
+101.60
+102.09
++0.49
++0.5 %
+changed
+magnetorquers
+Headroom to upper (K)
+8.40
+7.91
+-0.49
+-5.9 %
+changed
+obc
+Temperature (K)
+333.77
+333.82
++0.05
++0.01625776261 %
+changed
+obc
+Headroom to lower (K)
+100.62
+100.67
++0.05
++0.1 %
+changed
+obc
+Headroom to upper (K)
+9.38
+9.33
+-0.05
+-0.6 %
+changed
+pdu_data
+Temperature (K)
+333.77
+333.82
++0.05
++0.01625776261 %
+changed
+pdu_data
+Headroom to lower (K)
+100.62
+100.67
++0.05
++0.1 %
+changed
+pdu_data
+Headroom to upper (K)
+9.38
+9.33
+-0.05
+-0.6 %
+changed
+reaction_wheels
+Temperature (K)
+334.75
+335.24
++0.49
++0.1 %
+changed
+reaction_wheels
+Headroom to lower (K)
+101.60
+102.09
++0.49
++0.5 %
+changed
+reaction_wheels
+Headroom to upper (K)
+8.40
+7.91
+-0.49
+-5.9 %
+changed
+## page 4
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 4
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+solar_array
+Temperature (K)
+332.15
+332.16
++0.01
++0.001824025935 %
+changed
+solar_array
+Headroom to lower (K)
+99.00
+99.01
++0.01
++0.006119643269 %
+changed
+solar_array
+Headroom to upper (K)
+11.00
+10.99
+-0.01
+-0.1 %
+changed
+star_tracker
+Temperature (K)
+334.75
+335.24
++0.49
++0.1 %
+changed
+star_tracker
+Headroom to lower (K)
+101.60
+102.09
++0.49
++0.5 %
+changed
+star_tracker
+Headroom to upper (K)
+8.40
+7.91
+-0.49
+-5.9 %
+changed
+sun_sensors
+Temperature (K)
+334.75
+335.24
++0.49
++0.1 %
+changed
+sun_sensors
+Headroom to lower (K)
+101.60
+102.09
++0.49
++0.5 %
+changed
+sun_sensors
+Headroom to upper (K)
+8.40
+7.91
+-0.49
+-5.9 %
+changed
+Mode: Imaging — Units in mode Imaging
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+adcs
+Effective power (W)
+7.000
+9.000
++2.000 W
++28.6 %
+changed
+adcs
+Dissipation (W)
+7.000
+9.000
++2.000 W
++28.6 %
+changed
+Mode: Imaging — By subsystem
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+ADCS
+Dissipation (W)
+24.700
+26.700
++2.000 W
++8.1 %
+changed
+Mode: Imaging — By thermal node
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
+ADCS
+Dissipation (W)
+24.700
+26.700
++2.000 W
++8.1 %
+changed
+Differences: Link budget
+No differences.
+Provenance
+Provenance
+Item
+Value
+Tool
+System Budget Studio 1.0.0
+Python
+3.x
+Libraries
+numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests,
+reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
+Project
+Example 250 kg minisatellite, complete power and thermal inputs
+## page 5
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 1.0.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 5
+Item
+Value
+Project revision
+1
+Scenario
+static vs static
+Generated (UTC)
+2026-01-02T03:04:05Z
+User
+Golden User

@@ -24,13 +24,13 @@ def load(path: Path) -> Project:
 @pytest.fixture
 def revisions(tmp_path: Path) -> tuple[Path, Path]:
     a, b = tmp_path / "rev1", tmp_path / "rev2"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", a)
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", b)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", a)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", b)
     return a, b
 
 
 def test_default_kinds() -> None:
-    project = load(EXAMPLES / "cubesat_3u_eps")
+    project = load(EXAMPLES / "microsat_250kg_eps")
     a, b = Side(project), Side(project)
     assert default_kinds(a, b, same_project=False) == ("power", "mass", "thermal", "link")
     sa, sb = Side(project, "one_day"), Side(project, "one_day")
@@ -51,7 +51,7 @@ def test_changed_unit_power_shows_in_power_and_mass_untouched(
     revisions: tuple[Path, Path],
 ) -> None:
     a, b = revisions
-    edit(b, "units/adcs.yaml", "avg_power_w: 0.9", "avg_power_w: 1.3")
+    edit(b, "units/adcs.yaml", "avg_power_w: 7.0", "avg_power_w: 9.0")
     edit(b, "project.yaml", "revision: '1'", "revision: '2'")
     out, _ = compare_sides(Side(load(a)), Side(load(b)), ("power", "mass"), **FIXED)
     power, mass = out.result
@@ -62,7 +62,7 @@ def test_changed_unit_power_shows_in_power_and_mass_untouched(
 
 def test_scenario_comparison_within_one_project(tmp_path: Path) -> None:
     root = tmp_path / "p"
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", root)
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", root)
     shutil.copy(root / "scenarios/one_day.yaml", root / "scenarios/variant.yaml")
     edit(root, "scenarios/variant.yaml", "name: One day", "name: Variant of one day")
     project = load(root)
@@ -75,7 +75,7 @@ def test_scenario_comparison_within_one_project(tmp_path: Path) -> None:
 
 def test_missing_links_are_noted_not_hidden(tmp_path: Path) -> None:
     root = tmp_path / "nolinks"
-    shutil.copytree(EXAMPLES / "cubesat_3u", root)
+    shutil.copytree(EXAMPLES / "microsat_250kg", root)
     shutil.rmtree(root / "links")
     project = load(root)
     out, notes = compare_sides(Side(project), Side(project), ("link",), **FIXED)

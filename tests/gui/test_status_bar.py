@@ -20,7 +20,7 @@ def test_the_segments_say_what_they_hold(qtbot) -> None:  # type: ignore[no-unty
     qtbot.addWidget(bar)
     assert bar.path_label.text() == "No project open" and not bar.last_run_label.text()
     assert f"{__version__}" in bar.version_label.text()
-    folder = Path("/work/projects/cubesat")
+    folder = Path("/work/projects/satellite")
     bar.set_project_path(folder)
     assert bar.path_label.text() == str(folder)  # the platform's own separators
     bar.set_last_run(datetime(2026, 10, 13, 14, 2, 11))
@@ -31,9 +31,9 @@ def test_the_segments_say_what_they_hold(qtbot) -> None:  # type: ignore[no-unty
 def test_a_long_path_keeps_its_end_and_the_tooltip_has_all_of_it(qtbot) -> None:  # type: ignore[no-untyped-def]
     bar = AppStatusBar()
     qtbot.addWidget(bar)
-    path = Path("/very/long/" + "folder/" * 20 + "my_cubesat")
+    path = Path("/very/long/" + "folder/" * 20 + "my_satellite")
     bar.set_project_path(path)
-    assert bar.path_label.text().startswith("…") and bar.path_label.text().endswith("my_cubesat")
+    assert bar.path_label.text().startswith("…") and bar.path_label.text().endswith("my_satellite")
     assert bar.path_label.toolTip() == str(path)
 
 
@@ -54,13 +54,13 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
     w = MainWindow()
     qtbot.addWidget(w)
     w.show()
-    w.open_project(EXAMPLES / "cubesat_3u_eps")
+    w.open_project(EXAMPLES / "microsat_250kg_eps")
     return w
 
 
 def test_a_loaded_project_fills_the_segments(window: MainWindow) -> None:
     bar = window.status_bar
-    assert bar.path_label.toolTip() == str(EXAMPLES / "cubesat_3u_eps")
+    assert bar.path_label.toolTip() == str(EXAMPLES / "microsat_250kg_eps")
     assert bar.last_run_label.text().startswith("Last run ")
     assert bar.not_checked.isVisible()
     expected = window.problems_panel.counts()[ProblemClass.NOT_CHECKED]

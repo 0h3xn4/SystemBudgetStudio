@@ -97,10 +97,10 @@ def test_placeholders_warn_but_succeed_unless_strict(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     out = tmp_path / "out"
-    assert run(str(EXAMPLES / "cubesat_3u"), "--out", str(out), *FIXED) == 0
+    assert run(str(EXAMPLES / "microsat_250kg"), "--out", str(out), *FIXED) == 0
     text = capsys.readouterr().out
     assert "INCOMPLETE" in text and "n/a" in text
-    assert run(str(EXAMPLES / "cubesat_3u"), "--out", str(out), "--strict", *FIXED) == 1
+    assert run(str(EXAMPLES / "microsat_250kg"), "--out", str(out), "--strict", *FIXED) == 1
 
 
 def test_invalid_date_is_a_usage_error(root: Path) -> None:

@@ -1,0 +1,23 @@
+schema_version: 1
+kind: spacecraft_mode
+name: Safe
+description: Detumbled, minimum loads.
+assignments:
+  adapter: off
+  adcs: safe
+  battery: off
+  camera: off
+  eps: safe
+  gnss: off
+  harness: off
+  heaters: safe
+  magnetorquers: safe
+  obc: safe
+  pdu_data: off
+  radio: safe
+  reaction_wheels: safe
+  solar_array: off
+  star_tracker: off
+  structure: off
+  sun_sensors: safe
+  xband_tx: off

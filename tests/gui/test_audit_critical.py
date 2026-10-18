@@ -32,8 +32,8 @@ def copy(name: str, tmp_path: Path, as_name: str) -> Path:
 def test_a_scenario_edit_is_saved_into_the_open_project_not_the_previous_one(
     window: MainWindow, tmp_path: Path
 ) -> None:
-    a = copy("cubesat_3u_eps", tmp_path, "projA")
-    b = copy("cubesat_3u", tmp_path, "projB")  # also has a scenario called one_day
+    a = copy("microsat_250kg_eps", tmp_path, "projA")
+    b = copy("microsat_250kg", tmp_path, "projB")  # also has a scenario called one_day
     window.open_project(a)
     window.open_project(b)
     editor = window.scenario_view.editor
@@ -49,8 +49,8 @@ def test_a_scenario_edit_is_saved_into_the_open_project_not_the_previous_one(
 def test_the_editor_root_follows_a_reload_of_another_folder(
     window: MainWindow, tmp_path: Path
 ) -> None:
-    a = copy("cubesat_3u_eps", tmp_path, "projA")
-    b = copy("cubesat_3u", tmp_path, "projB")
+    a = copy("microsat_250kg_eps", tmp_path, "projA")
+    b = copy("microsat_250kg", tmp_path, "projB")
     window.open_project(a)
     window.open_project(b)
     assert window.scenario_view.editor.root == b
@@ -60,7 +60,7 @@ def test_the_editor_root_follows_a_reload_of_another_folder(
 def test_saving_a_unit_without_an_edit_leaves_the_file_byte_identical(
     window: MainWindow, tmp_path: Path
 ) -> None:
-    project = copy("cubesat_3u_eps", tmp_path, "p")
+    project = copy("microsat_250kg_eps", tmp_path, "p")
     window.open_project(project)
     editor = window.open_unit_editor("adcs")
     assert editor is not None
@@ -75,7 +75,7 @@ def test_saving_a_unit_without_an_edit_leaves_the_file_byte_identical(
 def test_a_unit_edit_keeps_heat_dissipation_ratio_of_every_mode(
     window: MainWindow, tmp_path: Path
 ) -> None:
-    project = copy("cubesat_3u_eps", tmp_path, "p")
+    project = copy("microsat_250kg_eps", tmp_path, "p")
     window.open_project(project)
     editor = window.open_unit_editor("adcs")
     assert editor is not None
@@ -91,7 +91,7 @@ def test_a_unit_edit_keeps_heat_dissipation_ratio_of_every_mode(
 def test_the_heat_ratio_of_a_mode_stays_with_its_row_when_a_row_is_removed(
     window: MainWindow, tmp_path: Path
 ) -> None:
-    project = copy("cubesat_3u_eps", tmp_path, "p")
+    project = copy("microsat_250kg_eps", tmp_path, "p")
     path = project / "units/adcs.yaml"
     text = path.read_text(encoding="utf-8")
     path.write_text(

@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.mark.parametrize(
     ("example", "scenario"),
-    [("cubesat_3u", "one_day"), ("microsat_150kg", "commissioning_day")],
+    [("microsat_250kg", "one_day"), ("microsat_150kg", "commissioning_day")],
 )
 def test_example_scenario_results(example: str, scenario: str) -> None:
     project = load_project(ROOT / example).project
@@ -43,8 +43,8 @@ def test_manual_segment_overrides_the_start_of_the_microsat_scenario() -> None:
     )
 
 
-def test_cubesat_layering_charges_in_the_sun_and_runs_nominal_in_eclipse() -> None:
-    project = load_project(ROOT / "cubesat_3u").project
+def test_minisat_layering_charges_in_the_sun_and_runs_nominal_in_eclipse() -> None:
+    project = load_project(ROOT / "microsat_250kg").project
     assert project is not None
     run = run_scenario(project, "one_day")
     for e in run.env.eclipses[:3]:

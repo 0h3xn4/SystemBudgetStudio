@@ -16,11 +16,11 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 
 @pytest.fixture
 def root(tmp_path: Path) -> Path:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     return tmp_path / "p"
 
 
-def edited_table(root: Path, tmp_path: Path, new_avg: str = "2.0 W") -> Path:
+def edited_table(root: Path, tmp_path: Path, new_avg: str = "30.0 W") -> Path:
     assert main(["units-export", str(root), "--out", str(tmp_path / "t.csv")]) == 0
     path = tmp_path / "t.csv"
     rows = list(csv.reader(path.read_text(encoding="utf-8-sig").splitlines()))
@@ -66,7 +66,7 @@ def test_import_shows_the_changes_and_writes_nothing_without_apply(
     assert main(["units-import", str(root), str(table)]) == 0
     out = capsys.readouterr().out
     assert "radio" in out and "downlink" in out and "avg_power_w" in out
-    assert "1.8" in out and "2" in out
+    assert "28" in out and "30" in out
     assert "Nothing was written" in out and "--apply" in out
     assert (root / "units" / "radio.yaml").read_bytes() == before
 
@@ -79,7 +79,9 @@ def test_apply_writes_the_unit_file_and_the_project_still_loads(
     assert main(["units-import", str(root), str(table), "--apply"]) == 0
     assert "units/radio.yaml" in capsys.readouterr().out.replace("\\", "/")
     project = load_project(root).project
-    assert project is not None and project.units["radio"].modes[4].avg_power_w == pytest.approx(2.0)
+    assert project is not None and project.units["radio"].modes[5].avg_power_w == pytest.approx(
+        30.0
+    )
 
 
 def test_an_untouched_template_reports_no_change(

@@ -44,7 +44,7 @@ def test_a_good_run_writes_nothing_to_standard_error(
 def test_findings_that_fail_a_run_go_to_standard_error_and_the_summary_to_standard_output(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    shutil.copytree(EXAMPLES / "cubesat_3u_eps", tmp_path / "p")
+    shutil.copytree(EXAMPLES / "microsat_250kg_eps", tmp_path / "p")
     code = main(
         ["run", str(tmp_path / "p"), "--budget", "thermal", "--out", str(tmp_path / "o"), *FIXED]
     )

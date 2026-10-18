@@ -1,0 +1,534 @@
+## sheet Summary rows=11 cols=3
+1: 'Thermal budget (static): Example 250 kg minisatellite' |  | 
+2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  | 
+4: 'Heat dissipation by spacecraft mode' |  | 
+5: 'Mode' | 'Average (W)' | 'Peak (W)'
+6: 'Charging' | 49.3 | 105.3
+7: 'Downlink' | 99.2 | 169.3
+8: 'Imaging' | 100.7 | 207.3
+9: 'Nominal' | 52.3 | 108.3
+10: 'Safe' | 31.85 | 63.5
+11: 'Average = sum of unit power x duty cycle x heat dissipation ratio. Peak uses the unit peak powers. n/a: a unit has no heat dissipation ratio for its power mode.' |  | 
+## sheet Case cold rows=28 cols=8
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  | 
+3: 'Eclipse with the lowest-power mode.' |  |  |  |  |  |  | 
+4: 'Node temperatures, case cold' |  |  |  |  |  |  | 
+5: 'Node' | 'Temperature (K)' |  |  |  |  |  | 
+6: 'not computed (inputs missing, see Problems)' | 'n/a' |  |  |  |  |  | 
+8: 'Unit temperature limits, case cold (operating)' |  |  |  |  |  |  | 
+9: 'Unit' | 'Node' | 'Temperature (K)' | 'Lower limit (K)' | 'Upper limit (K)' | 'Headroom to lower (K)' | 'Headroom to upper (K)' | 'Status'
+10: 'adapter' | 'STRUCT' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+11: 'adcs' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+12: 'battery' | 'EPS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+13: 'camera' | 'PL' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+14: 'eps' | 'EPS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+15: 'gnss' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+16: 'harness' | 'STRUCT' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+17: 'heaters' | 'THERM' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+18: 'magnetorquers' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+19: 'obc' | 'DH' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+20: 'pdu_data' | 'DH' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+21: 'radio' | 'TTC' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+22: 'reaction_wheels' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+23: 'solar_array' | 'EPS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+24: 'star_tracker' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+25: 'structure' | 'STRUCT' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+26: 'sun_sensors' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+27: 'xband_tx' | 'PL' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+28: 'Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).' |  |  |  |  |  |  | 
+## sheet Case hot rows=28 cols=8
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  | 
+3: 'Sunlight with the highest-power mode.' |  |  |  |  |  |  | 
+4: 'Node temperatures, case hot' |  |  |  |  |  |  | 
+5: 'Node' | 'Temperature (K)' |  |  |  |  |  | 
+6: 'not computed (inputs missing, see Problems)' | 'n/a' |  |  |  |  |  | 
+8: 'Unit temperature limits, case hot (operating)' |  |  |  |  |  |  | 
+9: 'Unit' | 'Node' | 'Temperature (K)' | 'Lower limit (K)' | 'Upper limit (K)' | 'Headroom to lower (K)' | 'Headroom to upper (K)' | 'Status'
+10: 'adapter' | 'STRUCT' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+11: 'adcs' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+12: 'battery' | 'EPS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+13: 'camera' | 'PL' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+14: 'eps' | 'EPS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+15: 'gnss' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+16: 'harness' | 'STRUCT' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+17: 'heaters' | 'THERM' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+18: 'magnetorquers' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+19: 'obc' | 'DH' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+20: 'pdu_data' | 'DH' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+21: 'radio' | 'TTC' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+22: 'reaction_wheels' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+23: 'solar_array' | 'EPS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+24: 'star_tracker' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+25: 'structure' | 'STRUCT' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+26: 'sun_sensors' | 'ADCS' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+27: 'xband_tx' | 'PL' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'n/a' | 'no limits'
+28: 'Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).' |  |  |  |  |  |  | 
+## sheet Mode charging rows=42 cols=9
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  |  | 
+3: 'Units in mode Charging' |  |  |  |  |  |  |  | 
+4: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+5: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+6: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'charging' | 5 | 1 | 5 | 7
+7: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+8: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+9: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'charging' | 14 | 1 | 14 | 20
+10: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'charging' | 1.2 | 1 | 1.2 | 1.8
+11: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+12: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'charging' | 1.8 | 1 | 1.8 | 16
+13: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'charging' | 0.2 | 1 | 0.2 | 3
+14: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'charging' | 6 | 1 | 6 | 8
+15: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'charging' | 4 | 1 | 4 | 6
+16: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'charging' | 6 | 1 | 6 | 8
+17: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'charging' | 7.2 | 1 | 7.2 | 30
+18: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+19: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'charging' | 3.5 | 1 | 3.5 | 5
+20: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+21: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'charging' | 0.4 | 1 | 0.4 | 0.5
+22: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+24: 'By subsystem' |  |  |  |  |  |  |  | 
+25: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+26: 'ADCS' | 17.5 | 47.3 |  |  |  |  |  | 
+27: 'DH' | 10 | 14 |  |  |  |  |  | 
+28: 'EPS' | 14 | 20 |  |  |  |  |  | 
+29: 'PL' | 0 | 0 |  |  |  |  |  | 
+30: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+31: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+32: 'TTC' | 6 | 8 |  |  |  |  |  | 
+34: 'By thermal node' |  |  |  |  |  |  |  | 
+35: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+36: 'ADCS' | 17.5 | 47.3 |  |  |  |  |  | 
+37: 'DH' | 10 | 14 |  |  |  |  |  | 
+38: 'EPS' | 14 | 20 |  |  |  |  |  | 
+39: 'PL' | 0 | 0 |  |  |  |  |  | 
+40: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+41: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+42: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Mode downlink rows=42 cols=9
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  |  | 
+3: 'Units in mode Downlink' |  |  |  |  |  |  |  | 
+4: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+5: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+6: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'downlink' | 6 | 1 | 6 | 8
+7: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+8: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+9: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'downlink' | 12 | 1 | 12 | 16
+10: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'downlink' | 1.2 | 1 | 1.2 | 1.8
+11: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+12: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'downlink' | 1.8 | 1 | 1.8 | 16
+13: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+14: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'downlink' | 11 | 1 | 11 | 15
+15: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'downlink' | 9 | 1 | 9 | 14
+16: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'downlink' | 28 | 0.7 | 19.6 | 28
+17: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'downlink' | 7.2 | 1 | 7.2 | 30
+18: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+19: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'downlink' | 3.5 | 1 | 3.5 | 5
+20: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+21: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'downlink' | 0.4 | 1 | 0.4 | 0.5
+22: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'downlink' | 55 | 0.5 | 27.5 | 35
+24: 'By subsystem' |  |  |  |  |  |  |  | 
+25: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+26: 'ADCS' | 18.3 | 45.3 |  |  |  |  |  | 
+27: 'DH' | 20 | 29 |  |  |  |  |  | 
+28: 'EPS' | 12 | 16 |  |  |  |  |  | 
+29: 'PL' | 27.5 | 35 |  |  |  |  |  | 
+30: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+31: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+32: 'TTC' | 19.6 | 28 |  |  |  |  |  | 
+34: 'By thermal node' |  |  |  |  |  |  |  | 
+35: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+36: 'ADCS' | 18.3 | 45.3 |  |  |  |  |  | 
+37: 'DH' | 20 | 29 |  |  |  |  |  | 
+38: 'EPS' | 12 | 16 |  |  |  |  |  | 
+39: 'PL' | 27.5 | 35 |  |  |  |  |  | 
+40: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+41: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+42: 'TTC' | 19.6 | 28 |  |  |  |  |  | 
+## sheet Mode imaging rows=42 cols=9
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  |  | 
+3: 'Units in mode Imaging' |  |  |  |  |  |  |  | 
+4: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+5: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+6: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'imaging' | 7 | 1 | 7 | 10
+7: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+8: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'imaging' | 36 | 1 | 36 | 80
+9: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'imaging' | 12 | 1 | 12 | 16
+10: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'imaging' | 1.2 | 1 | 1.2 | 1.8
+11: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+12: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'imaging' | 1 | 1 | 1 | 16
+13: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+14: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'imaging' | 12 | 1 | 12 | 16
+15: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'imaging' | 9 | 1 | 9 | 14
+16: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'imaging' | 6 | 1 | 6 | 8
+17: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'imaging' | 12.6 | 1 | 12.6 | 40
+18: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+19: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'imaging' | 3.5 | 1 | 3.5 | 5
+20: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+21: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'imaging' | 0.4 | 1 | 0.4 | 0.5
+22: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+24: 'By subsystem' |  |  |  |  |  |  |  | 
+25: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+26: 'ADCS' | 24.7 | 57.3 |  |  |  |  |  | 
+27: 'DH' | 21 | 30 |  |  |  |  |  | 
+28: 'EPS' | 12 | 16 |  |  |  |  |  | 
+29: 'PL' | 36 | 80 |  |  |  |  |  | 
+30: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+31: 'THERM' | 1 | 16 |  |  |  |  |  | 
+32: 'TTC' | 6 | 8 |  |  |  |  |  | 
+34: 'By thermal node' |  |  |  |  |  |  |  | 
+35: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+36: 'ADCS' | 24.7 | 57.3 |  |  |  |  |  | 
+37: 'DH' | 21 | 30 |  |  |  |  |  | 
+38: 'EPS' | 12 | 16 |  |  |  |  |  | 
+39: 'PL' | 36 | 80 |  |  |  |  |  | 
+40: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+41: 'THERM' | 1 | 16 |  |  |  |  |  | 
+42: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Mode nominal rows=42 cols=9
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  |  | 
+3: 'Units in mode Nominal' |  |  |  |  |  |  |  | 
+4: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+5: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+6: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'nominal' | 6 | 1 | 6 | 8
+7: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+8: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+9: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'nominal' | 12 | 1 | 12 | 16
+10: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'nominal' | 1.2 | 1 | 1.2 | 1.8
+11: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+12: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'nominal' | 1.8 | 1 | 1.8 | 16
+13: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'nominal' | 0.2 | 1 | 0.2 | 3
+14: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'nominal' | 10 | 1 | 10 | 14
+15: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'nominal' | 4 | 1 | 4 | 6
+16: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'nominal' | 6 | 1 | 6 | 8
+17: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'nominal' | 7.2 | 1 | 7.2 | 30
+18: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+19: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'nominal' | 3.5 | 1 | 3.5 | 5
+20: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+21: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'nominal' | 0.4 | 1 | 0.4 | 0.5
+22: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+24: 'By subsystem' |  |  |  |  |  |  |  | 
+25: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+26: 'ADCS' | 18.5 | 48.3 |  |  |  |  |  | 
+27: 'DH' | 14 | 20 |  |  |  |  |  | 
+28: 'EPS' | 12 | 16 |  |  |  |  |  | 
+29: 'PL' | 0 | 0 |  |  |  |  |  | 
+30: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+31: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+32: 'TTC' | 6 | 8 |  |  |  |  |  | 
+34: 'By thermal node' |  |  |  |  |  |  |  | 
+35: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+36: 'ADCS' | 18.5 | 48.3 |  |  |  |  |  | 
+37: 'DH' | 14 | 20 |  |  |  |  |  | 
+38: 'EPS' | 12 | 16 |  |  |  |  |  | 
+39: 'PL' | 0 | 0 |  |  |  |  |  | 
+40: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+41: 'THERM' | 1.8 | 16 |  |  |  |  |  | 
+42: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Mode safe rows=42 cols=9
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  |  | 
+3: 'Units in mode Safe' |  |  |  |  |  |  |  | 
+4: 'Unit' | 'Name' | 'Subsystem' | 'Node' | 'Power mode' | 'Effective power (W)' | 'Dissipation ratio' | 'Dissipation (W)' | 'Peak dissipation (W)'
+5: 'adapter' | 'Separation adapter' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+6: 'adcs' | 'Attitude control electronics' | 'ADCS' | 'ADCS' | 'safe' | 4 | 1 | 4 | 6
+7: 'battery' | 'Battery pack' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+8: 'camera' | 'Camera payload' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+9: 'eps' | 'Power conditioning unit' | 'EPS' | 'EPS' | 'safe' | 8 | 1 | 8 | 10
+10: 'gnss' | 'GNSS receiver' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+11: 'harness' | 'Harness' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+12: 'heaters' | 'Thermal heaters' | 'THERM' | 'THERM' | 'safe' | 6 | 1 | 6 | 16
+13: 'magnetorquers' | 'Magnetorquers' | 'ADCS' | 'ADCS' | 'safe' | 0.45 | 1 | 0.45 | 3
+14: 'obc' | 'On-board computer' | 'DH' | 'DH' | 'safe' | 6 | 1 | 6 | 8
+15: 'pdu_data' | 'Payload data unit' | 'DH' | 'DH' | 'off' | 0 | 1 | 0 | 0
+16: 'radio' | 'S-band transceiver' | 'TTC' | 'TTC' | 'safe' | 6 | 1 | 6 | 8
+17: 'reaction_wheels' | 'Reaction wheels' | 'ADCS' | 'ADCS' | 'safe' | 1 | 1 | 1 | 12
+18: 'solar_array' | 'Solar array panels' | 'EPS' | 'EPS' | 'off' | 0 | 1 | 0 | 0
+19: 'star_tracker' | 'Star tracker' | 'ADCS' | 'ADCS' | 'off' | 0 | 1 | 0 | 0
+20: 'structure' | 'Primary structure' | 'STRUCT' | 'STRUCT' | 'off' | 0 | 1 | 0 | 0
+21: 'sun_sensors' | 'Coarse sun sensors' | 'ADCS' | 'ADCS' | 'safe' | 0.4 | 1 | 0.4 | 0.5
+22: 'xband_tx' | 'X-band transmitter' | 'PL' | 'PL' | 'off' | 0 | 1 | 0 | 0
+24: 'By subsystem' |  |  |  |  |  |  |  | 
+25: 'Subsystem' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+26: 'ADCS' | 5.85 | 21.5 |  |  |  |  |  | 
+27: 'DH' | 6 | 8 |  |  |  |  |  | 
+28: 'EPS' | 8 | 10 |  |  |  |  |  | 
+29: 'PL' | 0 | 0 |  |  |  |  |  | 
+30: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+31: 'THERM' | 6 | 16 |  |  |  |  |  | 
+32: 'TTC' | 6 | 8 |  |  |  |  |  | 
+34: 'By thermal node' |  |  |  |  |  |  |  | 
+35: 'Node' | 'Dissipation (W)' | 'Peak dissipation (W)' |  |  |  |  |  | 
+36: 'ADCS' | 5.85 | 21.5 |  |  |  |  |  | 
+37: 'DH' | 6 | 8 |  |  |  |  |  | 
+38: 'EPS' | 8 | 10 |  |  |  |  |  | 
+39: 'PL' | 0 | 0 |  |  |  |  |  | 
+40: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
+41: 'THERM' | 6 | 16 |  |  |  |  |  | 
+42: 'TTC' | 6 | 8 |  |  |  |  |  | 
+## sheet Assumptions rows=69 cols=5
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  | 
+3: 'Configuration numbers used' |  |  |  | 
+4: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
+5: 'Space temperature' | 'n/a' | 'K' | 'TBD' | 'PLACEHOLDER'
+6: 'Temperature margin' | 'n/a' | 'K' | 'TBD' | 'PLACEHOLDER'
+7: 'Conductance ADCS - DH' | 'n/a' | 'W/K' | 'TBD' | 'PLACEHOLDER'
+8: 'Conductance DH - EPS' | 'n/a' | 'W/K' | 'TBD' | 'PLACEHOLDER'
+9: 'Conductance EPS - PL' | 'n/a' | 'W/K' | 'TBD' | 'PLACEHOLDER'
+10: 'Conductance PL - STRUCT' | 'n/a' | 'W/K' | 'TBD' | 'PLACEHOLDER'
+11: 'Conductance STRUCT - THERM' | 'n/a' | 'W/K' | 'TBD' | 'PLACEHOLDER'
+12: 'Conductance THERM - TTC' | 'n/a' | 'W/K' | 'TBD' | 'PLACEHOLDER'
+13: 'Solar flux, case cold' | 'n/a' | 'W/m2' | 'TBD' | 'PLACEHOLDER'
+14: 'Albedo, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+15: 'Earth infrared, case cold' | 'n/a' | 'W/m2' | 'TBD' | 'PLACEHOLDER'
+16: 'Emissivity, ADCS panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+17: 'Absorptivity, ADCS panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+18: 'Solar view, ADCS panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+19: 'Earth view, ADCS panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+20: 'Emissivity, DH panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+21: 'Absorptivity, DH panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+22: 'Solar view, DH panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+23: 'Earth view, DH panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+24: 'Emissivity, EPS panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+25: 'Absorptivity, EPS panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+26: 'Solar view, EPS panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+27: 'Earth view, EPS panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+28: 'Emissivity, PL panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+29: 'Absorptivity, PL panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+30: 'Solar view, PL panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+31: 'Earth view, PL panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+32: 'Emissivity, STRUCT panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+33: 'Absorptivity, STRUCT panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+34: 'Solar view, STRUCT panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+35: 'Earth view, STRUCT panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+36: 'Emissivity, THERM panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+37: 'Absorptivity, THERM panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+38: 'Solar view, THERM panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+39: 'Earth view, THERM panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+40: 'Emissivity, TTC panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+41: 'Absorptivity, TTC panel' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+42: 'Solar view, TTC panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+43: 'Earth view, TTC panel, case cold' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+44: 'Solar flux, case hot' | 'n/a' | 'W/m2' | 'TBD' | 'PLACEHOLDER'
+45: 'Albedo, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+46: 'Earth infrared, case hot' | 'n/a' | 'W/m2' | 'TBD' | 'PLACEHOLDER'
+47: 'Solar view, ADCS panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+48: 'Earth view, ADCS panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+49: 'Solar view, DH panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+50: 'Earth view, DH panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+51: 'Solar view, EPS panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+52: 'Earth view, EPS panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+53: 'Solar view, PL panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+54: 'Earth view, PL panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+55: 'Solar view, STRUCT panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+56: 'Earth view, STRUCT panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+57: 'Solar view, THERM panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+58: 'Earth view, THERM panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+59: 'Solar view, TTC panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+60: 'Earth view, TTC panel, case hot' | 'n/a' | 'ratio' | 'TBD' | 'PLACEHOLDER'
+62: 'Equations' |  |  |  | 
+63: 'ID' | 'Name' | 'Formula' | 'Source' | 
+64: 'TH-DISS' | 'Heat dissipated by a unit' | 'Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak: P_peak * ratio)' | 'SOURCE_MISSING' | 
+65: 'TH-ABS' | 'Heat absorbed by a surface' | 'Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth * E_IR)' | 'SOURCE_MISSING' | 
+66: 'TH-BAL' | 'Steady-state node heat balance' | 'sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i = 0' | 'SOURCE_MISSING' | 
+67: 'TH-SB' | 'Stefan-Boltzmann constant' | 'sigma = 5.670374419e-8 W m^-2 K^-4' | 'CODATA 2018 / SI 2019 (exact from h, k, c)' | 
+68: 'TH-LIMIT' | 'Unit temperature limit check' | 'exceeded when T < T_min or T > T_max; margin check when T - T_min or T_max - T < temperature_margin_k' | 'SOURCE_MISSING' | 
+69: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
+## sheet Problems rows=189 cols=6
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  | 
+3: 'Problems and open items' |  |  |  |  | 
+4: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
+5: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:8' | 'entries[0].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+6: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:15' | 'entries[1].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+7: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:23' | 'entries[2].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+8: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:31' | 'entries[3].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+9: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/attenuation_table.yaml:39' | 'entries[4].loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+10: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/ebn0_table.yaml:7' | 'entries[0].required_ebn0_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+11: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/ebn0_table.yaml:13' | 'entries[1].required_ebn0_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+12: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:6' | 'classes.class_a.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+13: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:10' | 'classes.class_a.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+14: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:15' | 'classes.class_b.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+15: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:19' | 'classes.class_b.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+16: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:24' | 'classes.class_c.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+17: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:28' | 'classes.class_c.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+18: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | 'system_power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+19: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:36' | 'system_mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+20: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | 'limits[0].limit_kg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+21: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:4' | 'distribution_loss_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+22: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:9' | 'converter_efficiency_ratio.main' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+23: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:13' | 'converter_efficiency_ratio.payload' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+24: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:4' | 'design_life_yr' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+25: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:45' | 'solar_array.solar_irradiance_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+26: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:49' | 'solar_array.cell_area_m2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+27: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:53' | 'solar_array.cell_efficiency_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+28: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:57' | 'solar_array.reference_temperature_k' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+29: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:61' | 'solar_array.cell_temperature_k' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+30: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:65' | 'solar_array.efficiency_temp_coeff_perk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+31: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:69' | 'solar_array.packing_loss_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+32: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:73' | 'solar_array.harness_loss_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+33: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:77' | 'solar_array.annual_degradation_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+34: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:82' | 'battery.cell_capacity_ah' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+35: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:86' | 'battery.cell_nominal_voltage_v' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+36: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:92' | 'battery.charge_efficiency_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+37: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:96' | 'battery.discharge_efficiency_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+38: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:100' | 'battery.annual_capacity_fade_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+39: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:104' | 'battery.initial_soc_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+40: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:109' | 'battery.max_dod_ratio.bol' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+41: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:113' | 'battery.max_dod_ratio.eol' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+42: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:117' | 'battery.max_dod_ratio.launch' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+43: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:132' | 'limits.peak_power_w' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+44: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'cases.cold.albedo_ratio' | 'The albedo of the case is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+45: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'cases.cold.earth_ir_wm2' | 'The Earth infrared flux of the case is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+46: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'cases.cold.solar_flux_wm2' | 'The solar flux of the case is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+47: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'cases.hot.albedo_ratio' | 'The albedo of the case is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+48: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'cases.hot.earth_ir_wm2' | 'The Earth infrared flux of the case is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+49: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'cases.hot.solar_flux_wm2' | 'The solar flux of the case is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+50: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'space_temperature_k' | 'The space temperature is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+51: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_environment.yaml' | 'temperature_margin_k' | 'The temperature margin is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+52: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:4' | 'space_temperature_k' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+53: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:8' | 'temperature_margin_k' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+54: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:17' | 'cases.cold.solar_flux_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+55: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:21' | 'cases.cold.albedo_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+56: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:25' | 'cases.cold.earth_ir_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+57: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:33' | 'cases.hot.solar_flux_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+58: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:37' | 'cases.hot.albedo_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+59: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:41' | 'cases.hot.earth_ir_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+60: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'conductances[0].conductance_wk' | 'A conductance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+61: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'conductances[1].conductance_wk' | 'A conductance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+62: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'conductances[2].conductance_wk' | 'A conductance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+63: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'conductances[3].conductance_wk' | 'A conductance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+64: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'conductances[4].conductance_wk' | 'A conductance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+65: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'conductances[5].conductance_wk' | 'A conductance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+66: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[0].absorptivity_ratio' | 'The absorptivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+67: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[0].emissivity_ratio' | 'The emissivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+68: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[0].exposure.cold.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+69: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[0].exposure.cold.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+70: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[0].exposure.hot.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+71: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[0].exposure.hot.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+72: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[1].absorptivity_ratio' | 'The absorptivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+73: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[1].emissivity_ratio' | 'The emissivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+74: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[1].exposure.cold.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+75: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[1].exposure.cold.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+76: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[1].exposure.hot.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+77: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[1].exposure.hot.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+78: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[2].absorptivity_ratio' | 'The absorptivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+79: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[2].emissivity_ratio' | 'The emissivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+80: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[2].exposure.cold.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+81: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[2].exposure.cold.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+82: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[2].exposure.hot.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+83: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[2].exposure.hot.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+84: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[3].absorptivity_ratio' | 'The absorptivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+85: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[3].emissivity_ratio' | 'The emissivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+86: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[3].exposure.cold.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+87: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[3].exposure.cold.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+88: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[3].exposure.hot.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+89: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[3].exposure.hot.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+90: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[4].absorptivity_ratio' | 'The absorptivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+91: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[4].emissivity_ratio' | 'The emissivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+92: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[4].exposure.cold.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+93: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[4].exposure.cold.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+94: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[4].exposure.hot.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+95: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[4].exposure.hot.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+96: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[5].absorptivity_ratio' | 'The absorptivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+97: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[5].emissivity_ratio' | 'The emissivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+98: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[5].exposure.cold.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+99: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[5].exposure.cold.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+100: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[5].exposure.hot.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+101: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[5].exposure.hot.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+102: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[6].absorptivity_ratio' | 'The absorptivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+103: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[6].emissivity_ratio' | 'The emissivity of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+104: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[6].exposure.cold.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+105: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[6].exposure.cold.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+106: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[6].exposure.hot.earth_view_ratio' | 'The Earth view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+107: 'warning' | 'RESULT_INCOMPLETE' | 'config/thermal_model.yaml' | 'surfaces[6].exposure.hot.solar_view_ratio' | 'The solar view ratio of the surface is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
+108: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:22' | 'conductances[0].conductance_wk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+109: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:28' | 'conductances[1].conductance_wk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+110: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:34' | 'conductances[2].conductance_wk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+111: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:40' | 'conductances[3].conductance_wk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+112: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:46' | 'conductances[4].conductance_wk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+113: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:52' | 'conductances[5].conductance_wk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+114: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:60' | 'surfaces[0].emissivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+115: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:64' | 'surfaces[0].absorptivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+116: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:70' | 'surfaces[0].exposure.cold.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+117: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:74' | 'surfaces[0].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+118: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:79' | 'surfaces[0].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+119: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:83' | 'surfaces[0].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+120: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:90' | 'surfaces[1].emissivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+121: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:94' | 'surfaces[1].absorptivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+122: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:100' | 'surfaces[1].exposure.cold.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+123: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:104' | 'surfaces[1].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+124: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:109' | 'surfaces[1].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+125: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:113' | 'surfaces[1].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+126: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:120' | 'surfaces[2].emissivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+127: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:124' | 'surfaces[2].absorptivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+128: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:130' | 'surfaces[2].exposure.cold.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+129: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:134' | 'surfaces[2].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+130: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:139' | 'surfaces[2].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+131: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:143' | 'surfaces[2].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+132: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:150' | 'surfaces[3].emissivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+133: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:154' | 'surfaces[3].absorptivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+134: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:160' | 'surfaces[3].exposure.cold.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+135: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:164' | 'surfaces[3].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+136: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:169' | 'surfaces[3].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+137: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:173' | 'surfaces[3].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+138: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:180' | 'surfaces[4].emissivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+139: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:184' | 'surfaces[4].absorptivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+140: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:190' | 'surfaces[4].exposure.cold.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+141: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:194' | 'surfaces[4].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+142: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:199' | 'surfaces[4].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+143: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:203' | 'surfaces[4].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+144: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:210' | 'surfaces[5].emissivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+145: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:214' | 'surfaces[5].absorptivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+146: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:220' | 'surfaces[5].exposure.cold.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+147: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:224' | 'surfaces[5].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+148: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:229' | 'surfaces[5].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+149: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:233' | 'surfaces[5].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+150: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:240' | 'surfaces[6].emissivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+151: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:244' | 'surfaces[6].absorptivity_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+152: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:250' | 'surfaces[6].exposure.cold.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+153: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:254' | 'surfaces[6].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+154: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:259' | 'surfaces[6].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+155: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:263' | 'surfaces[6].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+156: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:9' | 'transmitter.power_w' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+157: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:13' | 'transmitter.line_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+158: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:18' | 'transmitter.antenna.gain_dbi' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+159: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:24' | 'receiver.g_over_t_dbk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+160: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:37' | 'required_margin_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+161: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:41' | 'pointing_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+162: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:45' | 'polarisation_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+163: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/sband_down.yaml:49' | 'implementation_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+164: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:9' | 'transmitter.power_w' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+165: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:13' | 'transmitter.line_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+166: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:18' | 'transmitter.antenna.pattern.source' | "The antenna pattern is a placeholder (source 'TBD')." | 'Replace it with data-sheet values and cite the source.'
+167: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:30' | 'receiver.g_over_t_dbk' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+168: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:41' | 'required_margin_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+169: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:45' | 'pointing_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+170: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:49' | 'polarisation_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+171: 'warning' | 'CONFIG_PLACEHOLDER' | 'links/xband_down.yaml:53' | 'implementation_loss_db' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from the data sheet or requirement and cite the source.'
+172: 'warning' | 'THERMAL_NO_LIMITS' | 'units/adapter.yaml' | 'temperature_limits' | "Unit 'adapter' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+173: 'warning' | 'THERMAL_NO_LIMITS' | 'units/adcs.yaml' | 'temperature_limits' | "Unit 'adcs' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+174: 'warning' | 'THERMAL_NO_LIMITS' | 'units/battery.yaml' | 'temperature_limits' | "Unit 'battery' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+175: 'warning' | 'THERMAL_NO_LIMITS' | 'units/camera.yaml' | 'temperature_limits' | "Unit 'camera' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+176: 'warning' | 'THERMAL_NO_LIMITS' | 'units/eps.yaml' | 'temperature_limits' | "Unit 'eps' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+177: 'warning' | 'THERMAL_NO_LIMITS' | 'units/gnss.yaml' | 'temperature_limits' | "Unit 'gnss' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+178: 'warning' | 'THERMAL_NO_LIMITS' | 'units/harness.yaml' | 'temperature_limits' | "Unit 'harness' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+179: 'warning' | 'THERMAL_NO_LIMITS' | 'units/heaters.yaml' | 'temperature_limits' | "Unit 'heaters' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+180: 'warning' | 'THERMAL_NO_LIMITS' | 'units/magnetorquers.yaml' | 'temperature_limits' | "Unit 'magnetorquers' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+181: 'warning' | 'THERMAL_NO_LIMITS' | 'units/obc.yaml' | 'temperature_limits' | "Unit 'obc' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+182: 'warning' | 'THERMAL_NO_LIMITS' | 'units/pdu_data.yaml' | 'temperature_limits' | "Unit 'pdu_data' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+183: 'warning' | 'THERMAL_NO_LIMITS' | 'units/radio.yaml' | 'temperature_limits' | "Unit 'radio' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+184: 'warning' | 'THERMAL_NO_LIMITS' | 'units/reaction_wheels.yaml' | 'temperature_limits' | "Unit 'reaction_wheels' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+185: 'warning' | 'THERMAL_NO_LIMITS' | 'units/solar_array.yaml' | 'temperature_limits' | "Unit 'solar_array' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+186: 'warning' | 'THERMAL_NO_LIMITS' | 'units/star_tracker.yaml' | 'temperature_limits' | "Unit 'star_tracker' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+187: 'warning' | 'THERMAL_NO_LIMITS' | 'units/structure.yaml' | 'temperature_limits' | "Unit 'structure' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+188: 'warning' | 'THERMAL_NO_LIMITS' | 'units/sun_sensors.yaml' | 'temperature_limits' | "Unit 'sun_sensors' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+189: 'warning' | 'THERMAL_NO_LIMITS' | 'units/xband_tx.yaml' | 'temperature_limits' | "Unit 'xband_tx' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
+## sheet Provenance rows=12 cols=2
+1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
+3: 'Provenance' | 
+4: 'Item' | 'Value'
+5: 'Tool' | 'System Budget Studio 1.0.0'
+6: 'Python' | '3.x'
+7: 'Libraries' | 'pinned for-golden-tests'
+8: 'Project' | 'Example 250 kg minisatellite'
+9: 'Project revision' | '1'
+10: 'Scenario' | 'static (no scenario)'
+11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+12: 'User' | 'Golden User'
