@@ -7,6 +7,7 @@ or the default mode only rebuilds the timeline from the existing environment (it
 
 from __future__ import annotations
 
+from collections.abc import Collection, Mapping
 from datetime import timedelta
 from pathlib import Path
 
@@ -28,6 +29,7 @@ from PySide6.QtWidgets import (
 
 from budget_core.model import Project
 from budget_core.provenance import make_provenance
+from budget_core.reports.document import NA
 from budget_core.reports.files import OutputError
 from budget_core.scenario.export import write_scenario_outputs
 from budget_core.scenario.run import (
@@ -38,8 +40,10 @@ from budget_core.scenario.run import (
     run_scenario,
 )
 from budget_core.timeutil import format_utc
+from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE
 from budget_gui.model_document import ModelDocument
 from budget_gui.scenario_editor import ScenarioEditor
+from budget_gui.theme import Status
 from budget_gui.timeline import TimelineWidget
 from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, NOT_COMPUTED_TEXT
 
@@ -67,14 +71,27 @@ class ScenarioWorker(QThread):
             self.failed.emit(f"The scenario could not be computed ({type(exc).__name__}).")
 
 
-def fill_table(table: QTableWidget, headers: list[str], rows: list[list[str]]) -> None:
+def fill_table(
+    table: QTableWidget,
+    headers: list[str],
+    rows: list[list[str]],
+    numeric: Collection[int] = (),
+    states: Mapping[tuple[int, int], Status] | None = None,
+) -> None:
+    """Fill a read-only table. With `numeric` columns (right-aligned figures) and `states` (a cell
+    that is broken, or not computed) a table whose delegate is a `CellDelegate` shows them as the
+    budget tables do; a cell that reads `n/a` is always *not checked*."""
     table.setColumnCount(len(headers))
     table.setHorizontalHeaderLabels(headers)
     table.setRowCount(len(rows))
+    given = states or {}
     for r, row in enumerate(rows):
         for c, text in enumerate(row):
             item = QTableWidgetItem(text)
             item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
+            status = given.get((r, c), Status.NOT_CHECKED if text == NA else None)
+            item.setData(STATE_ROLE, status.value if status else None)
+            item.setData(NUMERIC_ROLE, c in numeric or text == NA)
             table.setItem(r, c, item)
     table.resizeColumnsToContents()
 

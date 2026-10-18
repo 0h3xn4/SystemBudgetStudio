@@ -44,8 +44,10 @@ from budget_core.provenance import make_provenance
 from budget_core.reports.run import BudgetOutput, timeline_output
 from budget_core.scenario.run import ScenarioRun, ScenarioRunError, run_scenario
 from budget_core.timeutil import format_utc
+from budget_gui.delegates import CellDelegate
 from budget_gui.plot_widget import PlotMarker, PlotWidget
 from budget_gui.scenario_view import fill_table
+from budget_gui.theme import Status
 from budget_gui.time_axis import ElapsedAxis, OrbitAxis, TimeAxis, UtcAxis, orbit_period_s
 from budget_gui.validity import (
     CHANGED_WHILE_RUNNING_TEXT,
@@ -180,6 +182,17 @@ class PowerTimelineView(QWidget):
         self.violations_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.orbits_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.modes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        for table in (
+            self.summary_table,
+            self.violations_table,
+            self.orbits_table,
+            self.modes_table,
+        ):
+            table.setItemDelegate(
+                CellDelegate(table)
+            )  # broken limits and n/a look like the budgets
+            table.verticalHeader().setVisible(False)
+            table.setAlternatingRowColors(True)
         self.tabs = QTabWidget()
         self.tabs.addTab(self.summary_table, "Summary")
         self.tabs.addTab(self.violations_table, "Violations")
@@ -508,6 +521,15 @@ class PowerTimelineView(QWidget):
                 "Violations",
             ],
             rows,
+            numeric=range(1, 10),
+            states={
+                **{(r, 9): Status.FAIL for r in range(len(rows)) if rows[r][9] != "0"},
+                **{
+                    (r, 8): Status.FAIL
+                    for r, c in enumerate(result.cases)
+                    if (c.summary.unmet_wh or 0.0) > 0.0
+                },
+            },
         )
         fill_table(
             self.violations_table,
@@ -536,6 +558,8 @@ class PowerTimelineView(QWidget):
                 ]
                 for v in result.violations
             ],
+            numeric=(4, 5, 6),
+            states={(r, 5): Status.FAIL for r in range(len(result.violations))},
         )
         fill_table(
             self.orbits_table,
@@ -560,6 +584,10 @@ class PowerTimelineView(QWidget):
                 ]
                 for b in case.balances
             ],
+            numeric=(0, 2, 3, 4, 5, 6),
+            states={
+                (r, 5): Status.FAIL for r, b in enumerate(case.balances) if (b.balance_wh or 0) < 0
+            },
         )
         total = result.run.scenario.duration_s
         fill_table(
@@ -576,6 +604,7 @@ class PowerTimelineView(QWidget):
                 ]
                 for m in result.modes
             ],
+            numeric=(2, 3, 4, 5),
         )
 
     # ---- violations --------------------------------------------------------------------------
