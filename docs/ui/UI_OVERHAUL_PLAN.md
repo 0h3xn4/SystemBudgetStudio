@@ -411,3 +411,20 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - Accessibility: the audit script lists what a screen reader or the keyboard would miss; 18 findings fixed; the walk is a test in both themes; focus rings for check boxes, tabs and plots (D-181).
 - UI sizes: screenshots of every page at 90, 100, 110 and 125 % in both themes (`docs/ui/screenshots/m6/`) with the smallest window of each size (`minimum-sizes.txt`); found and fixed: the axis title of the plots overlapping the tick labels, unscaled default column widths in the Problems panel, unwrapped lists in Reports. At 125 % the window needs 793 px of height.
 - Docs: `DESIGN.md` has the accessibility and UI-size sections; the manual, the README and the getting-started page show the new window; the install checklist has the 4K or 200 %, UI size and screen-reader items for a person at a real screen.
+
+**Final baseline against section 3** (same machine and script; `docs/ui/screenshots/m6/baseline.txt`; the machine varies by 10 to 30 % between runs, so read the table as a direction)
+
+| What | Before the overhaul | After (M6) | Verdict |
+|---|---|---|---|
+| Start to first interactive window | 1,163 ms | 1,268 ms | **+9 %**: inside the 10 % limit, above the absolute 1.2 s aim (the style sheet and the imports of the new components) |
+| Open `microsat_250kg_eps` | 611 ms | 585 ms | same |
+| Run, a day | 533 ms | 472 ms | same |
+| Tab switch, 18 units | 17 to 61 ms | 15 to 51 ms | same (all under 100 ms) |
+| Open `stress_200_units` | 3,315 ms | 3,090 ms | same |
+| Tab switch, 200 units | 13 to 59 ms | 15 to 42 ms | same |
+| Scroll the 200-unit grid, 40 steps | 2,241 ms (56 ms a step) | 1,218 ms (30 ms a step) | **better, aim met** (33 ms) |
+| Run, a week at 1 s | 10.6 s | 8.1 s | better |
+| Longest stretch without answering events (a week) | 350 ms | 170 to 330 ms (200 ms in this run) | **better, aim not met** (100 ms; see M4 and D-178) |
+| Timeline plot, week at 1 s: zoom step | 45 ms median, 63 worst | 19 ms median, 24 worst | **better, aim met** |
+
+No item is worse than before by more than the 10 % rule except the absolute start-up time, which is 68 ms over the 1.2 s aim.
