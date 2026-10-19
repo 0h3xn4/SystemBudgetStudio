@@ -7,6 +7,8 @@ range and "where used" are built from the model schemas in the step that makes t
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QHBoxLayout,
@@ -34,8 +36,23 @@ KIND_TEXT = {
 PROBLEM_ROLE = int(Qt.ItemDataRole.UserRole) + 20
 
 
+@dataclass(frozen=True)
+class CellInfo:
+    """What is known about the cell of a grid that has the cursor (UX-07)."""
+
+    title: str  # the row: a unit or an input
+    column: str  # the field with its unit, as the column header says
+    rel: str  # the file the value lives in
+    path: str  # the field inside the file
+    value: str  # as shown in the cell
+    state: str  # the words of its state ("Not checked (n/a)", "Limit broken"), or ""
+    message: str  # why the model refuses the value, or ""
+    help: str  # what the column means (its tooltip)
+
+
 class InspectorPanel(QWidget):
     open_requested = Signal()  # open the node (file or field) in an editor
+    open_file_requested = Signal(str)  # open the file of the cell that has the cursor
     modes_requested = Signal(str)  # open the power-mode table of a unit
     jump_requested = Signal(str, int)  # a problem: file and line
 
@@ -85,7 +102,8 @@ class InspectorPanel(QWidget):
             self.problems_title,
         ):
             details.addWidget(widget)
-        details.addWidget(self.problems, 1)
+        details.addWidget(self.problems, 3)
+        details.addStretch(1)  # what is shown stays at the top when there is no list of problems
         details.addLayout(buttons)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(12, 8, 12, 8)
@@ -93,12 +111,56 @@ class InspectorPanel(QWidget):
         layout.addWidget(self.details, 1)
 
         self._unit_id = ""
-        self.open_button.clicked.connect(self.open_requested)
+        self._cell_rel = ""
+        self.open_button.clicked.connect(self._open_clicked)
         self.modes_button.clicked.connect(lambda: self.modes_requested.emit(self._unit_id))
         self.problems.itemActivated.connect(self._problem_activated)
         self.show_node(None, [])
 
+    def _open_clicked(self) -> None:
+        if self._cell_rel:
+            self.open_file_requested.emit(self._cell_rel)
+        else:
+            self.open_requested.emit()
+
+    def show_cell(self, cell: CellInfo) -> None:
+        """Show the cell that has the cursor in a grid: where its value lives, what it is, its
+        state and, when the model refuses it, why."""
+        self.empty.setVisible(False)
+        self.details.setVisible(True)
+        self._unit_id, self._cell_rel = "", cell.rel
+        self.title.setText(cell.title)
+        self.kind_label.setText(f"Cell: {cell.column}")
+        self.file_label.setText(f"File: {cell.rel}")
+        self.file_label.setVisible(True)
+        self.field_label.setText(f"Field: {cell.path}")
+        self.field_label.setVisible(bool(cell.path))
+        lines = [f"Value: {cell.value}"]
+        if cell.state:
+            lines.append(cell.state)
+        if cell.help:
+            lines.append(cell.help)
+        self.counts_label.setText("\n".join(lines))
+        self.counts_label.setWordWrap(True)
+        self.problems.clear()
+        if cell.message:
+            item = QListWidgetItem(
+                icons.icon(pc.ICONS[pc.ProblemClass.ERROR], pc.colour(pc.ProblemClass.ERROR)),
+                cell.message,
+            )
+            item.setFlags(Qt.ItemFlag.ItemIsEnabled)
+            self.problems.addItem(item)
+        self.problems_title.setText("Why this value is refused")
+        self.problems_title.setVisible(bool(cell.message))
+        self.problems.setVisible(bool(cell.message))
+        self.open_button.setText("Open the file")
+        self.open_button.setVisible(True)
+        self.modes_button.setVisible(False)
+
     def show_node(self, node: Node | None, problems: list[Problem]) -> None:
+        self._cell_rel = ""
+        self.problems_title.setText("Problems on this node")
+        self.open_button.setText("Open")
         shown = node is not None
         self.empty.setVisible(not shown)
         self.details.setVisible(shown)

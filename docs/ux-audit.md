@@ -227,12 +227,12 @@ After step 1 (the shell). *Done* means the finding no longer applies in the wind
 | UX-04 dirty marker | partly | top bar and window title; the tab star stays. Not on the tree nodes yet |
 | UX-05 file tree, no badges | done | model tree with badges (D-152); no radio or antenna nodes: the model has none |
 | UX-06 Enter does not open | done | Enter opens a tree row and a problem |
-| UX-07 no inspector | partly | Inspector skeleton (file, field, problems); the unit and source of a field are in the grid columns and tooltips; the Inspector does not follow a grid cell yet |
+| UX-07 no inspector | done | the tree node (file, field, problems) and the grid cell (field, unit, value, state, reason, meaning) (D-166); *where used* needs the core index and is open |
 | UX-08 only the Problems dock | done | Inspector, Problems, Provenance; View menu; Reset layout; the layout is kept (D-154) |
 | UX-09 status bar | done | folder, last run, version, not-checked link |
 | UX-10 one error blanks everything | done | the last good tables stay, with a banner (D-155); the time-domain views are empty with a sentence |
 | UX-11 tab strip | done | seven tabs; files open inside Model |
-| UX-12 empty first screen | open | recent projects and a New button: step 6 |
+| UX-12 empty first screen | done | welcome page with Open, New (guided) and drop a folder; no recent list, by the privacy rule (D-166) |
 | UX-22 static power table | done | headers on two lines, the table fits at 1280 px, totals row emphasised (D-163); no bars on the power table (no limit per mode), bars on the mass limits (D-164) |
 | UX-23 broken limits not in cells | done | timeline tables (D-163); mass limits with a bar, thermal limits, link margins (D-164) |
 | UX-25 timeline gaps | partly | legend hide and solo, violation markers, previous and next violation, UTC and orbit axes (D-162); the BOL/EOL overlay is open |
@@ -249,7 +249,7 @@ After step 1 (the shell). *Done* means the finding no longer applies in the wind
 | UX-21 rules as combo boxes | done | rules and segments as sentences with their controls, Up/Down, and more room for the editor (D-160) |
 | UX-34 Problems panel | done | four classes, icons, filter, grouping, wrapped message (D-151) |
 | UX-38 to UX-40 visual system | done in step 0 (D-150) | |
-| UX-41 keyboard | partly | Ctrl+1 to Ctrl+7, Ctrl+R, F8; Tab no longer trapped in tables; `Ctrl+K` in step 6 |
+| UX-41 keyboard | done | Ctrl+1 to Ctrl+7, Ctrl+R, F8, Ctrl+K palette; Tab walks the window and comes back (tested) (D-166) |
 | UX-43 progress and Cancel | open | step 3 |
 | UX-44 stale banner | partly | the *out of date* run status; a banner for the failed run and for old results after an error |
 | UX-45 toasts | partly | failed-run banner; toasts for success: later |
