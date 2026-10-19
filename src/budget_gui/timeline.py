@@ -246,13 +246,17 @@ class TimelineWidget(QWidget):
         start, end = self._view
         step = nice_tick_step(end - start, int(self._plot_width()))
         painter.setPen(QPen(QColor(theme.tokens().border_strong)))
+        metrics = QFontMetrics(painter.font())
         first = int(start // step) * step
         t = first
         while t <= end + step:
             if t >= start:
                 x = self.time_to_x(t)
+                label = _hms(t)
                 painter.drawLine(QPointF(x, TOP - 8), QPointF(x, TOP - 2))
-                painter.drawText(QPointF(x + 3, TOP - 10), _hms(t))
+                # a label that would run over the right edge is left out, never cut off
+                if x + 3 + metrics.horizontalAdvance(label) <= self.width() - RIGHT // 2:
+                    painter.drawText(QPointF(x + 3, TOP - 10), label)
             t += step
 
     def _draw_overlays(self, painter: QPainter) -> None:

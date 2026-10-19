@@ -1,0 +1,9 @@
+start-up: imports 1128 ms + app and first window 893 ms = 2021 ms (median of 5 fresh processes, after the interpreter)
+open microsat_250kg_eps: 550 ms
+Run (a day, environment + timeline + link passes): 606 ms
+tab switch (ms, median of 3): Model 42, Power 27, Mass 41, Thermal 24, Link 53, Compare 17, Reports 24
+open stress_200_units: 3694 ms
+tab switch, 200 units (ms, median of 3): Model 68, Power 48, Mass 35, Thermal 27, Link 16, Compare 17, Reports 20
+scroll the 200-unit grid, 40 steps: 1607 ms
+Run, a week at 1 s: 10.8 s; longest stretch the window thread did not return to the event loop: 257 ms
+timeline plot, week at 1 s: full repaint 3 ms; wheel zoom step median 35 ms, worst 48 ms

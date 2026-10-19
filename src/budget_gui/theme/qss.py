@@ -135,6 +135,19 @@ def _arrow_url(name: str, t: Tokens) -> str | None:
     return path.as_posix() if path.is_file() else None
 
 
+def _tab_close_rules(t: Tokens) -> str:
+    """The close mark of a tab (a file of the editor): a small x that gets a tint on hover; the
+    style draws its own box without it."""
+    mark = _arrow_url("x", t)
+    rules = [
+        "QTabBar::close-button { subcontrol-position: right; border: none;"
+        f" background: transparent; border-radius: {px(RADIUS_CONTROL)}px;"
+        f" margin: 0 {px(SPACE[0])}px;" + (f' image: url("{mark}");' if mark else "") + " }",
+        f"QTabBar::close-button:hover {{ background: {t.hover}; }}",
+    ]
+    return "\n    ".join(rules)
+
+
 def _drop_down_rules(t: Tokens) -> str:
     """The drop-down of a combo box and the buttons of a spin box: no frame of their own (the
     style draws a dark one), an arrow in the secondary text colour."""
@@ -304,6 +317,7 @@ def stylesheet(t: Tokens) -> str:
         border-top-left-radius: {rc}px; border-top-right-radius: {rc}px; }}
     QTabBar::tab:hover {{ background: {t.hover}; color: {t.text}; }}
     QTabBar::tab:selected {{ color: {t.text}; border-bottom: {ring}px solid {t.accent}; }}
+    {_tab_close_rules(t)}
 
     QTabBar[role="segmented"]::tab {{ background: transparent; color: {t.text_secondary};
         padding: {px(s0 + 2)}px {px(s2)}px; margin-right: {px(2)}px; border: none;

@@ -17,7 +17,7 @@ from typing import Any
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
 
 from budget_core.units.quantity import canonical_unit
-from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE
+from budget_gui.delegates import CELL_ROLE, NUMERIC_ROLE, STATE_ROLE
 from budget_gui.entry import cell_value, has_decimal_comma
 from budget_gui.model_document import ModelDocument, Path_, set_at, value_at
 from budget_gui.theme import Status
@@ -70,6 +70,10 @@ def parse_cell(text: str, column: Column) -> Any:
     if not stripped:
         return None if column.optional else ""
     return cell_value(stripped)
+
+
+_READ_ONLY = Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
+_EDITABLE = _READ_ONLY | Qt.ItemFlag.ItemIsEditable
 
 
 class GridModel(QAbstractTableModel):
@@ -130,10 +134,9 @@ class GridModel(QAbstractTableModel):
         return column.title
 
     def flags(self, index: Index) -> Qt.ItemFlag:
-        flags = Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
         if index.isValid() and self.columns[index.column()].editable:
-            flags |= Qt.ItemFlag.ItemIsEditable
-        return flags
+            return _EDITABLE
+        return _READ_ONLY
 
     def cell(self, row: int, column: int) -> tuple[str, Path_] | None:
         """The file and the path of the value in a cell (None for a column without one)."""
@@ -156,6 +159,24 @@ class GridModel(QAbstractTableModel):
             return Status.NOT_CHECKED
         return None
 
+    def row_has_problem(self, row: int) -> bool:
+        """Whether a cell of the row is wrong: the identifier cell carries the marker, so a
+        problem is seen in its row also when the cell is scrolled out of view (D-176)."""
+        if not self.document.has_problems():
+            return False
+        for column in range(len(self.columns)):
+            found = self.cell(row, column)
+            if found is not None and self.document.problem_at(*found) is not None:
+                return True
+        return False
+
+    def marked_state(self, row: int, column: int) -> Status | None:
+        """The state of a cell, and for the identifier column the problem marker of the row."""
+        state = self.state_of(row, column)
+        if column == 0 and state is None and self.row_has_problem(row):
+            return Status.FAIL
+        return state
+
     def data(self, index: Index, role: int = Qt.ItemDataRole.DisplayRole) -> Any:
         if not index.isValid():
             return None
@@ -165,16 +186,23 @@ class GridModel(QAbstractTableModel):
             return self.display(row, column)
         if role == Qt.ItemDataRole.EditRole:
             return edit_text(self.value_of(row, column))
+        if role == CELL_ROLE:
+            numeric = col.kind == "number" or (not col.key and self.id_is_numeric(column))
+            return (self.display(row, column), self.marked_state(row, column), numeric, False, None)
         if role == NUMERIC_ROLE:
             return col.kind == "number" or (not col.key and self.id_is_numeric(column))
         if role == STATE_ROLE:
-            return self.state_of(row, column)
+            return self.marked_state(row, column)
         if role == PATH_ROLE:
             return self.cell(row, column)
         if role == ROW_ROLE:
             return self._keys[row]
         if role == Qt.ItemDataRole.ToolTipRole:
-            return self.tooltip(row, column)
+            tip = self.tooltip(row, column)
+            if column == 0 and self.row_has_problem(row):
+                note = "A cell of this row needs correcting."
+                return f"{note}\n{tip}" if tip else note
+            return tip
         return None
 
     def message_at(self, found: tuple[str, Path_], hint: bool = False) -> str | None:

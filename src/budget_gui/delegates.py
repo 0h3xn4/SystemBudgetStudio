@@ -16,6 +16,7 @@ text. Colours come from the theme.
 
 from __future__ import annotations
 
+from functools import lru_cache
 from typing import Any
 
 from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRect, QRectF, QSize, Qt
@@ -33,9 +34,19 @@ NUMERIC_ROLE = int(Qt.ItemDataRole.UserRole) + 22  # True: right-aligned figures
 TOTAL_ROLE = int(Qt.ItemDataRole.UserRole) + 23  # True: a totals row (bold, a line above it)
 SOURCE_ROLE = int(Qt.ItemDataRole.UserRole) + 23  # the source text, for the tooltip and the grid
 
+_ALIGN_LEFT = int(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft)
+_ALIGN_RIGHT = int(Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignRight)
+_SELECTED = QStyle.StateFlag.State_Selected.value  # whole numbers: `Flag & Flag` is slow
+_MOUSE_OVER = QStyle.StateFlag.State_MouseOver.value
+
+# (text, state, numeric, total, margin) of a cell in one call: a model that answers it saves the
+# four calls through the proxy and into Python that a repaint makes for every cell (D-177).
+CELL_ROLE = int(Qt.ItemDataRole.UserRole) + 24
+
 PAD = theme.SPACE[1]
 ICON = 14
 BAR_HEIGHT = 3
+CUT_CACHE = 4096  # cut texts kept
 
 TOOLTIPS = {
     Status.PLACEHOLDER: "Placeholder: this number has no source. Results that depend on it "
@@ -46,6 +57,12 @@ TOOLTIPS = {
     Status.NEAR: "Near the limit.",
     Status.FAIL: "The limit is broken.",
 }
+
+
+@lru_cache(maxsize=256)
+def _colour(value: str) -> QColor:
+    """A colour of the theme as a `QColor`, made once (a repaint asks for it for every cell)."""
+    return QColor(value)
 
 
 def status_of(value: object) -> Status | None:
@@ -63,6 +80,8 @@ class CellDelegate(QStyledItemDelegate):
     def __init__(self, parent: Any = None) -> None:
         super().__init__(parent)
         self._widths: dict[tuple[str, bool, Status | None, bool, str], int] = {}
+        self._cuts: dict[tuple[str, int, bool, Status | None, bool, int, int], str] = {}
+        self._fonts: dict[tuple[str, bool, Status | None, bool, int], QFont] = {}
 
     def sizeHint(self, option: QStyleOptionViewItem, index: Index) -> QSize:  # noqa: N802
         # Measured from the font directly: the default size hint asks the model for about nine
@@ -83,50 +102,77 @@ class CellDelegate(QStyledItemDelegate):
         height = QFontMetrics(base).height() + PAD
         return QSize(width, max(height, ICON + PAD))
 
-    @staticmethod
-    def _font_for(base: QFont, numeric: bool, status: Status | None, total: bool = False) -> QFont:
-        if numeric and status is not Status.NOT_CHECKED:
-            font = theme.mono_font(theme.TYPE_BASE)
-        else:
-            font = QFont(base)
-        if status is Status.PLACEHOLDER:
-            font.setItalic(True)
-        elif status is Status.FAIL or total:
-            font.setWeight(QFont.Weight.DemiBold)
+    def _font_for(
+        self, base: QFont, numeric: bool, status: Status | None, total: bool = False
+    ) -> QFont:
+        key = (base.key(), numeric, status, total, theme.scale_percent())
+        font = self._fonts.get(key)
+        if font is None:
+            if numeric and status is not Status.NOT_CHECKED:
+                font = theme.mono_font(theme.TYPE_BASE)
+            else:
+                font = QFont(base)
+            if status is Status.PLACEHOLDER:
+                font.setItalic(True)
+            elif status is Status.FAIL or total:
+                font.setWeight(QFont.Weight.DemiBold)
+            self._fonts[key] = font
         return font
 
-    def _font(self, option: Any, index: Index, status: Status | None) -> QFont:
-        return self._font_for(
-            option.font, bool(index.data(NUMERIC_ROLE)), status, bool(index.data(TOTAL_ROLE))
-        )
+    def _elided(
+        self, font: QFont, text: str, width: int, numeric: bool, status: Status | None, total: bool
+    ) -> str:
+        """`text` cut to `width` in `font`; kept, because a scroll paints the same cells again."""
+        key = (text, width, numeric, status, total, font.pixelSize(), theme.scale_percent())
+        cut = self._cuts.get(key)
+        if cut is None:
+            if len(self._cuts) >= CUT_CACHE:
+                self._cuts.clear()
+            cut = self._cuts[key] = QFontMetrics(font).elidedText(
+                text, Qt.TextElideMode.ElideRight, width
+            )
+        return cut
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Index) -> None:
+        # Every `index.data()` goes through the proxy model into Python (about 15 us each, and a
+        # grid repaints its whole viewport on a scroll step): read each role once, the margin only
+        # for a cell that has a state (D-177).
         opt: Any = option  # the stubs of QStyleOptionViewItem lack rect, state, font, features
         t = theme.tokens()
-        status = status_of(index.data(STATE_ROLE))
-        selected = bool(opt.state & QStyle.StateFlag.State_Selected)
+        bundle = index.data(CELL_ROLE)
+        if bundle is None:  # a model that does not know the bundle: ask role by role
+            bundle = (
+                index.data(Qt.ItemDataRole.DisplayRole),
+                index.data(STATE_ROLE),
+                index.data(NUMERIC_ROLE),
+                index.data(TOTAL_ROLE),
+                index.data(MARGIN_ROLE),
+            )
+        text, raw_state, numeric, total, share = bundle
+        status = status_of(raw_state)
+        text = str(text or "")
+        state = opt.state.value
+        selected = bool(state & _SELECTED)
         rect = QRect(opt.rect)
         painter.save()
         painter.setClipRect(rect)
         if selected:
-            painter.fillRect(rect, QColor(t.selected))
+            painter.fillRect(rect, _colour(t.selected))
         elif status is not None:
-            painter.fillRect(rect, QColor(t.status(status).bg))
-        elif opt.state & QStyle.StateFlag.State_MouseOver:
-            painter.fillRect(rect, QColor(t.hover))
-        text_colour = QColor(t.text)
+            painter.fillRect(rect, _colour(t.status(status).bg))
+        elif state & _MOUSE_OVER:
+            painter.fillRect(rect, _colour(t.hover))
+        text_colour = _colour(t.text)
         if status is not None and not selected:
-            text_colour = QColor(t.status(status).fg)
+            text_colour = _colour(t.status(status).fg)
         left = rect.left() + PAD
         if status is not None:
             pixmap = icons.status_icon(status, t).pixmap(QSize(ICON, ICON))
             painter.drawPixmap(left, rect.center().y() - ICON // 2 + 1, pixmap)
             left += ICON + PAD // 2
-        font = self._font(opt, index, status)
+        font = self._font_for(opt.font, numeric, status, total)
         painter.setFont(font)
         painter.setPen(text_colour)
-        text = str(index.data(Qt.ItemDataRole.DisplayRole) or "")
-        numeric = bool(index.data(NUMERIC_ROLE))
         text_rect = QRect(left, rect.top(), rect.right() + 1 - PAD - left, rect.height())
         flags = Qt.AlignmentFlag.AlignVCenter | (
             Qt.AlignmentFlag.AlignRight if numeric else Qt.AlignmentFlag.AlignLeft
@@ -134,20 +180,20 @@ class CellDelegate(QStyledItemDelegate):
         painter.drawText(
             text_rect,
             int(flags),
-            QFontMetrics(font).elidedText(text, Qt.TextElideMode.ElideRight, text_rect.width()),
+            self._elided(font, text, text_rect.width(), numeric, status, total),
         )
-        if index.data(TOTAL_ROLE):
-            painter.setPen(QPen(QColor(t.border_strong), 1))
+        if total:
+            painter.setPen(QPen(_colour(t.border_strong), 1))
             painter.drawLine(rect.left(), rect.top(), rect.right(), rect.top())
-        if status is Status.PLACEHOLDER:
-            pen = QPen(QColor(t.status(status).fg), 1, Qt.PenStyle.DashLine)
-            painter.setPen(pen)
-            painter.drawRect(rect.adjusted(1, 1, -2, -2))  # whole pixels: crisp dashes
-        share = index.data(MARGIN_ROLE)
-        if isinstance(share, int | float) and status is not None:
-            width = max(0.0, min(float(share), 1.0)) * (rect.width() - 2 * PAD)
-            bar = QRectF(rect.left() + PAD, rect.bottom() - BAR_HEIGHT - 1, width, BAR_HEIGHT)
-            painter.fillRect(bar, QColor(t.status(status).fg))
+        if status is not None:
+            if status is Status.PLACEHOLDER:
+                pen = QPen(_colour(t.status(status).fg), 1, Qt.PenStyle.DashLine)
+                painter.setPen(pen)
+                painter.drawRect(rect.adjusted(1, 1, -2, -2))  # whole pixels: crisp dashes
+            if isinstance(share, int | float):
+                width = max(0.0, min(float(share), 1.0)) * (rect.width() - 2 * PAD)
+                bar = QRectF(rect.left() + PAD, rect.bottom() - BAR_HEIGHT - 1, width, BAR_HEIGHT)
+                painter.fillRect(bar, _colour(t.status(status).fg))
         painter.restore()
 
 

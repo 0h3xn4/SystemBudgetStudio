@@ -26,12 +26,12 @@ from PySide6.QtWidgets import (
     QLabel,
     QListWidget,
     QListWidgetItem,
-    QPushButton,
     QVBoxLayout,
     QWidget,
 )
 
-from budget_gui import icons, theme
+from budget_gui import theme
+from budget_gui.components import Button, icon_button
 from budget_gui.edit_bar import EditBar
 from budget_gui.model_document import ModelDocument, set_at
 
@@ -99,25 +99,19 @@ def _set_combo(box: QComboBox, text: str) -> None:
     box.setCurrentText(text)
 
 
-def _text_button(text: str, tip: str) -> QPushButton:
-    button = QPushButton(text)
-    button.setProperty("kind", "secondary")
-    button.setToolTip(tip)
-    return button
-
-
 class _Row(QFrame):
-    """One rule or segment: a number, the sentence's controls, and Up, Down, Remove."""
+    """One rule or segment: a number, the sentence's controls, and the icons that move it up or
+    down or remove it (each has a tooltip and a name for screen readers)."""
 
     def __init__(self, number: int) -> None:
         super().__init__()
-        self.setFrameShape(QFrame.Shape.StyledPanel)
+        self.setProperty("role", "card")
         self.number = QLabel(f"{number}.")
         self.sentence = QHBoxLayout()
         self.sentence.addWidget(self.number)
-        self.up = _text_button("Up", "Move this earlier: a later rule wins over an earlier one")
-        self.down = _text_button("Down", "Move this later: a later rule wins over an earlier one")
-        self.remove = _text_button("Remove", "Remove this (Undo brings it back)")
+        self.up = icon_button("chevron-up", "Move up: a later rule wins over an earlier one")
+        self.down = icon_button("chevron-down", "Move down: a later rule wins over an earlier one")
+        self.remove = icon_button("trash-2", "Remove (Undo brings it back)")
         buttons = QHBoxLayout()
         for button in (self.up, self.down, self.remove):
             buttons.addWidget(button)
@@ -164,8 +158,12 @@ class _SegmentRow(_Row):
         for part in (self.mode, QLabel("from T+"), self.start, QLabel("for"), self.duration):
             self.sentence.addWidget(part)
         self.sentence.addStretch(1)
-        self.up.setToolTip("Move this earlier in the list (the order does not change the result)")
-        self.down.setToolTip("Move this later in the list (the order does not change the result)")
+        for button, tip in (
+            (self.up, "Move up (the order does not change the result)"),
+            (self.down, "Move down (the order does not change the result)"),
+        ):
+            button.set_tip(tip)
+            button.setAccessibleName(tip)
 
 
 class ScenarioEditor(QWidget):
@@ -196,15 +194,13 @@ class ScenarioEditor(QWidget):
         self.rules_title = QLabel("Rules: in this order, a later rule wins")
         self.rules_title.setProperty("role", "section-title")
         self.rules_box = QVBoxLayout()
-        self.add_rule_button = QPushButton(icons.icon("plus"), "Add rule")
-        self.add_rule_button.setProperty("kind", "secondary")
+        self.add_rule_button = Button("Add rule", icon="plus", compact=True)
         self.segments_title = QLabel(
             "Manual segments: applied last (Shift+drag on the timeline adds one)"
         )
         self.segments_title.setProperty("role", "section-title")
         self.segments_box = QVBoxLayout()
-        self.add_segment_button = QPushButton(icons.icon("plus"), "Add segment")
-        self.add_segment_button.setProperty("kind", "secondary")
+        self.add_segment_button = Button("Add segment", icon="plus", compact=True)
 
         self.error_label = QLabel()
         self.error_label.setWordWrap(True)
