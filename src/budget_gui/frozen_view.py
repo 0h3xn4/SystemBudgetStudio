@@ -9,13 +9,43 @@ model, and the keyboard always belongs to the main view.
 
 from __future__ import annotations
 
-from PySide6.QtCore import QAbstractItemModel, QModelIndex, QPersistentModelIndex, Qt
-from PySide6.QtGui import QMouseEvent, QResizeEvent
-from PySide6.QtWidgets import QAbstractItemDelegate, QAbstractItemView, QTableView, QWidget
+from PySide6.QtCore import (
+    QAbstractItemModel,
+    QModelIndex,
+    QObject,
+    QPersistentModelIndex,
+    QSize,
+    Qt,
+)
+from PySide6.QtGui import QMouseEvent, QPainter, QResizeEvent
+from PySide6.QtWidgets import (
+    QAbstractItemDelegate,
+    QAbstractItemView,
+    QStyledItemDelegate,
+    QStyleOptionViewItem,
+    QTableView,
+    QWidget,
+)
 
 from budget_gui import theme
 
 Index = QModelIndex | QPersistentModelIndex
+
+
+class _Covered(QStyledItemDelegate):
+    """The delegate of column 0 of the main view: the frozen column always covers it (at the left
+    edge, or it is scrolled out of view), so it paints nothing and asks nothing of the model; its
+    size is the real delegate's, for the width of the column."""
+
+    def __init__(self, real: QAbstractItemDelegate, parent: QObject) -> None:
+        super().__init__(parent)
+        self._real = real
+
+    def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Index) -> None:
+        return
+
+    def sizeHint(self, option: QStyleOptionViewItem, index: Index) -> QSize:  # noqa: N802
+        return self._real.sizeHint(option, index)
 
 
 class _FrozenColumn(QTableView):
@@ -72,6 +102,8 @@ class GridView(QTableView):
     def setItemDelegate(self, delegate: QAbstractItemDelegate) -> None:  # noqa: N802
         super().setItemDelegate(delegate)
         self.frozen.setItemDelegate(delegate)
+        self._covered = _Covered(delegate, self)
+        self.setItemDelegateForColumn(0, self._covered)
 
     def _hide_other_columns(self) -> None:
         model = self.model()

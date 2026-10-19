@@ -350,8 +350,8 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 |---|---|---|
 | Phase 1: audit and plan | done | PR #39 |
 | M1 Foundation | done (PR #39) | D-168 to D-172; fonts, `theme/` package, tokens, style sheet, UI scale, reduced motion, `components/`, gallery, tests; Carbon removed from the window |
-| M2 Shell | implemented, awaiting your review | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
-| M3 Model screens | not started | |
+| M2 Shell | done (merged in PR #39) | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
+| M3 Model screens | implemented, awaiting your review | D-176, D-177; toolbar above the grids, frozen identifier column, problem marker in the row, cheaper cell painting (a grid scroll step about 30 ms), scenario icon buttons, tab close mark, tree rows of 26 px |
 | M4 Results screens | not started | |
 | M5 Compare, Reports, dialogs | not started | |
 | M6 Final | not started | |
@@ -375,3 +375,13 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - No sideways scroll of a page at 1366 × 768 apart from tables that are meant to scroll: not measured one page at a time; the screenshot at 1200 px shows none. This is the one criterion I could not close with a number.
 - Tab switch 16 to 62 ms (limit 100); plot zoom 23 ms median; grid scroll 1.6 s for 40 steps (it was 2.2 s); start-up +8 % against the commit before the overhaul (1.29 s to 1.40 s interleaved, limit 10 %); `docs/ui/screenshots/m2/baseline.txt`.
 - Tests: all 561 GUI tests pass (19 new in `tests/gui/test_shell.py`; the full suite was run before the last two test edits, which were run on their own), 1715 core tests unchanged. Tests changed in intent-preserving ways: the dock arrangement and layout keys (`test_docks.py`), the keyboard walk, and a plot test that now waits for the narrow window to settle.
+
+**M3 as built, against its acceptance criteria**
+
+- Toolbar above the grid (filter, the page's tools, Undo, Redo, Cell styles, Save as the one primary button), row height 26, frozen identifier column, problem marker in the row: done (D-176). The frozen column is a second read-only view of the same model and selection over the left edge; the keyboard stays with the main view.
+- Grid scroll at most 33 ms a step on 200 units: **30 ms** (was 40; 20 % less, measured interleaved against the commit before, on a loaded machine; 29 ms on a quiet one). Cost found by profiling: a repaint draws about 155 cells and each asked the model for 4 to 7 roles through the proxy model; one `CELL_ROLE` call, cached fonts, cut texts and colours, and a column 0 that paints nothing under the frozen column (D-177). The test that guards it allows 100 ms so that a slow CI machine does not fail it.
+- Scenario editor: icon buttons with tooltips and accessible names, rules as cards, the label at the right edge of the strips no longer cut (it is left out). Mode colours were already the categorical set (M1). YAML editor: gaps from the spacing scale (its font, gutter and selection colours were done in M1). Project tree: rows of 26 px, badge sizes from the scales. A file tab's close mark is the themed *x* (the style drew an orange box).
+- All grid, undo, paste, fill-down, cell-style and keyboard-walk tests pass unchanged; 12 new tests in `tests/gui/test_model_screens.py`. All 573 GUI tests pass (26 min), core tests: see the PR.
+- No change to core, CLI, file formats or goldens.
+- Baseline (`docs/ui/screenshots/m3/baseline.txt`): the machine was slower than for M2 (start-up 2.0 s against 1.3 s), so only the interleaved comparison above is meaningful; the other items are within noise of M2 (tab switch 16 to 68 ms, plot zoom 35 ms median, the week at 1 s 10.8 s with a 257 ms longest stall).
+- Seen, not fixed: in the dark screenshots of the harness the project panel is squeezed to about 80 px (also in M2's). It looks like a dock width lost after a theme switch in the harness, not the default layout; I will check it on the way into M4 and say if it is real.
