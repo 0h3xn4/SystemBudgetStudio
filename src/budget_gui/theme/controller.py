@@ -11,7 +11,7 @@ from enum import StrEnum
 
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QGuiApplication, QIcon
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QProxyStyle, QStyle
 
 from budget_core.assets import icon_files
 from budget_gui.theme import scale
@@ -34,6 +34,35 @@ def system_is_dark() -> bool:
     return hints is not None and hints.colorScheme() == Qt.ColorScheme.Dark
 
 
+class WindowStyle(QProxyStyle):
+    """Fusion, with the icons of the standard message boxes drawn from the icon set of the window
+    in the colour of their level (D-173): the boxes Qt makes for us look like the rest."""
+
+    _LEVELS = {
+        QStyle.StandardPixmap.SP_MessageBoxQuestion: ("circle-help", "standby"),
+        QStyle.StandardPixmap.SP_MessageBoxInformation: ("info", "standby"),
+        QStyle.StandardPixmap.SP_MessageBoxWarning: ("triangle-alert", "caution"),
+        QStyle.StandardPixmap.SP_MessageBoxCritical: ("circle-x", "critical"),
+    }
+
+    def __init__(self) -> None:
+        super().__init__("Fusion")
+
+    def standardIcon(  # noqa: N802 (Qt naming)
+        self,
+        standard_icon: QStyle.StandardPixmap,
+        option: object = None,
+        widget: object = None,
+    ) -> QIcon:
+        found = self._LEVELS.get(standard_icon)
+        if found is None:
+            return super().standardIcon(standard_icon, option, widget)  # type: ignore[arg-type]
+        from budget_gui import icons  # here: the icons need the theme, which imports this module
+
+        name, level = found
+        return icons.icon(name, getattr(manager().tokens, level).fg)
+
+
 class ThemeManager(QObject):
     """The theme in use. Widgets that paint with `tokens()` connect to `changed` to draw again."""
 
@@ -45,6 +74,7 @@ class ThemeManager(QObject):
         self._tokens = LIGHT
         self._hooked = False
         self._reduce_motion = False
+        self._style: WindowStyle | None = None
 
     @property
     def mode(self) -> Mode:
@@ -63,6 +93,11 @@ class ThemeManager(QObject):
         """True when animations are off: the user asked for it, or there is no screen (the tests
         run offscreen)."""
         return self._reduce_motion or QGuiApplication.platformName() == "offscreen"
+
+    @property
+    def reduce_motion_setting(self) -> bool:
+        """What the user chose (*Reduce motion*), not counting the screenless platform."""
+        return self._reduce_motion
 
     def motion_ms(self, index: int = 0) -> int:
         """The duration of an animation in ms (0 when motion is reduced); `index` 0 is the
@@ -95,7 +130,9 @@ class ThemeManager(QObject):
             if not self._hooked and app.styleHints() is not None:
                 app.styleHints().colorSchemeChanged.connect(self._system_changed)
                 self._hooked = True
-            app.setStyle("Fusion")  # one look on every platform, coloured by the palette
+            if self._style is None:  # one look on every platform, coloured by the palette
+                self._style = WindowStyle()
+                app.setStyle(self._style)
             app.setPalette(palette(self._tokens))
             app.setFont(ui_font())
             app.setStyleSheet(stylesheet(self._tokens))

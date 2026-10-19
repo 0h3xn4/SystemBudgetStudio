@@ -29,6 +29,7 @@ from budget_gui.delegates import (
     tooltip_for,
 )
 from budget_gui.theme import Status
+from budget_gui.workspace import segmented_tabs
 
 SEVERITY_ORDER = {Severity.ERROR: 0, Severity.WARNING: 1, Severity.INFO: 2}
 Index = QModelIndex | QPersistentModelIndex
@@ -209,6 +210,7 @@ class PowerView(QWidget):
         self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabs = QTabWidget()
+        segmented_tabs(self.tabs)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.banner)

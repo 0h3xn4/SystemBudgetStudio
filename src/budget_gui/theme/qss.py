@@ -305,6 +305,28 @@ def stylesheet(t: Tokens) -> str:
     QTabBar::tab:hover {{ background: {t.hover}; color: {t.text}; }}
     QTabBar::tab:selected {{ color: {t.text}; border-bottom: {ring}px solid {t.accent}; }}
 
+    QTabBar[role="segmented"]::tab {{ background: transparent; color: {t.text_secondary};
+        padding: {px(s0 + 2)}px {px(s2)}px; margin-right: {px(2)}px; border: none;
+        border-radius: {rc}px; }}
+    QTabBar[role="segmented"]::tab:hover {{ background: {t.hover}; color: {t.text}; }}
+    QTabBar[role="segmented"]::tab:selected {{ background: {t.selected}; color: {t.text};
+        border: none; }}
+
+    QToolBar {{ background: {t.canvas}; border: none; padding: 0; spacing: 0; }}
+    QFrame[role="rail"] {{ background: {t.canvas}; }}
+    QToolButton[role="rail-button"] {{ background: transparent; color: {t.text_secondary};
+        border: {BORDER}px solid transparent; border-radius: {rc}px; padding: 0 {px(s1)}px;
+        min-height: {h}px; font-weight: 500; text-align: left; }}
+    QToolButton[role="rail-button"]:hover {{ background: {t.hover}; color: {t.text}; }}
+    QToolButton[role="rail-button"]:checked {{ background: {t.selected}; color: {t.text}; }}
+    QToolButton[role="rail-button"][toggle="true"]:checked {{ background: transparent; }}
+    QToolButton[role="rail-button"]:disabled {{ background: transparent; color: {t.text_muted}; }}
+    QToolButton[role="rail-button"]:focus {{ border: {ring}px solid {t.focus};
+        padding: 0 {px(s1 - (ring - BORDER))}px; min-height: {h - 2}px; }}
+    QWidget[role="panel-title"] {{ background: {t.canvas}; }}
+    QWidget[role="panel-title"] QLabel {{ background: transparent; color: {t.text_secondary};
+        font-weight: 600; font-size: {px(TYPE_SMALL)}px; }}
+
     QScrollBar:vertical {{ background: transparent; width: {px(10)}px; margin: 0; }}
     QScrollBar:horizontal {{ background: transparent; height: {px(10)}px; margin: 0; }}
     QScrollBar::handle {{ background: {t.border_strong}; border-radius: {px(3)}px;

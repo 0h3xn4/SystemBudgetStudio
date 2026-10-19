@@ -14,7 +14,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QLabel, QPushButton, QStatusBar
 
 from budget_core import __version__
-from budget_gui import theme
+from budget_gui import icons, theme
 
 
 class AppStatusBar(QStatusBar):
@@ -29,6 +29,14 @@ class AppStatusBar(QStatusBar):
         self.not_checked.setVisible(False)
         self.not_checked.setCursor(Qt.CursorShape.PointingHandCursor)
         self.not_checked.clicked.connect(self.not_checked_requested)
+        self.offline = QLabel(" Offline")
+        self.offline.setProperty("role", "muted")
+        self.offline.setToolTip(
+            "This program makes no network connections: no cloud, no telemetry, no updates."
+        )
+        self._offline_icon = QLabel()
+        theme.manager().changed.connect(self._retint)
+        self._retint()
         self.path_label = QLabel("No project open")
         self.path_label.setFont(theme.mono_font())
         self.path_label.setProperty("role", "muted")
@@ -36,8 +44,21 @@ class AppStatusBar(QStatusBar):
         self.last_run_label.setProperty("role", "muted")
         self.version_label = QLabel(f"Version {__version__}")
         self.version_label.setProperty("role", "muted")
-        for widget in (self.not_checked, self.path_label, self.last_run_label, self.version_label):
+        for widget in (
+            self.not_checked,
+            self._offline_icon,
+            self.offline,
+            self.path_label,
+            self.last_run_label,
+            self.version_label,
+        ):
             self.addPermanentWidget(widget)
+
+    def _retint(self) -> None:
+        size = theme.px(theme.ICON_UI)
+        icon = icons.icon("wifi-off", theme.tokens().text_secondary)
+        self._offline_icon.setPixmap(icon.pixmap(size, size))
+        self._offline_icon.setToolTip(self.offline.toolTip())
 
     def set_project_path(self, path: Path | None) -> None:
         if path is None:

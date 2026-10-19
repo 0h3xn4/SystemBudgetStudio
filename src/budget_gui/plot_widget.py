@@ -48,7 +48,7 @@ from budget_gui import theme
 from budget_gui.time_axis import ElapsedAxis, TimeAxis
 
 LEFT, RIGHT, TOP, BOTTOM, GAP, TITLE = 64, 14, 8, 36, 26, 18
-MIN_PANEL_HEIGHT = 110
+MIN_PANEL_HEIGHT = 88
 
 
 def _hms_full(seconds: float) -> str:

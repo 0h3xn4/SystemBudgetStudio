@@ -31,6 +31,25 @@ class Card(QFrame):
         self.body = layout
 
 
+class PanelTitle(QWidget):
+    """The title row of a dock: the name, and a close button (a ghost icon button)."""
+
+    def __init__(self, title: str, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setProperty("role", "panel-title")
+        self.label = QLabel(title)
+        self.close_button = Button("", "ghost", icon="x", compact=True, tip=f"Hide {title}")
+        self.close_button.setAccessibleName(f"Hide {title}")
+        self.close_button.setFixedSize(
+            theme.px(theme.CONTROL_COMPACT), theme.px(theme.CONTROL_COMPACT)
+        )
+        row = QHBoxLayout(self)
+        row.setContentsMargins(theme.gap(1), 0, 0, 0)
+        row.setSpacing(0)
+        row.addWidget(self.label, 1)
+        row.addWidget(self.close_button)
+
+
 class SectionHeader(QWidget):
     """A title with actions on the right (buttons are added with `add_action`)."""
 

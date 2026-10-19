@@ -68,8 +68,6 @@ class Shots:
 def tour(window: MainWindow, shots: Shots, mode: str, project) -> None:  # noqa: ANN001
     snap = lambda widget, name: shots.save(widget, name, mode)  # noqa: E731
     window.resize(*SIZE)
-    for dock in (window.project_dock, window.inspector_dock, window.problems_dock):
-        dock.show()
     # the whole window, one shot per workspace tab and sub-tab
     for index in range(window.workspace.count()):
         window.workspace.setCurrentIndex(index)
@@ -89,12 +87,24 @@ def tour(window: MainWindow, shots: Shots, mode: str, project) -> None:  # noqa:
                 snap(window, f"{title}-{page.tabText(sub).lower()}")
         else:
             snap(window, title)
-    # the docks, one at a time
-    for dock in (window.inspector_dock, window.problems_dock, window.provenance_dock):
+    # the shell at other widths: wide (the inspector and provenance panels), narrow, tiny
+    window.workspace.setCurrentIndex(1)
+    window.resize(1600, 900)
+    for dock in (window.inspector_dock, window.provenance_dock):
         dock.show()
         dock.raise_()
-        snap(window, f"dock-{dock.objectName().removeprefix('dock-')}")
-    window.workspace.setCurrentIndex(1)
+        snap(window, f"shell-wide-{dock.objectName().removeprefix('dock-')}")
+    window.resize(1200, 720)
+    snap(window, "shell-narrow-1200")
+    window.resize(1000, 680)
+    snap(window, "shell-tiny-1000")
+    window.resize(*SIZE)
+    window.rail.set_folded(True)
+    snap(window, "shell-rail-folded")
+    window.rail.set_folded(False)
+    popover = window.show_settings()
+    snap(popover, "dialog-settings-popover")
+    popover.close()
     # the menus
     for action in window.menuBar().actions():
         menu = action.menu()

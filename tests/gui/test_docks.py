@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QApplication
 
 from budget_gui.layout_settings import LayoutSettings
 from budget_gui.main_window import MainWindow
@@ -24,13 +25,19 @@ def window(qtbot) -> MainWindow:  # type: ignore[no-untyped-def]
     return w
 
 
-def test_inspector_problems_and_provenance_share_the_right_panel(window: MainWindow) -> None:
-    area = Qt.DockWidgetArea.RightDockWidgetArea
-    for dock in (window.inspector_dock, window.problems_dock, window.provenance_dock):
-        assert window.dockWidgetArea(dock) is area
-    tabbed = window.tabifiedDockWidgets(window.inspector_dock)
-    assert window.problems_dock in tabbed and window.provenance_dock in tabbed
+def test_the_inspector_and_provenance_share_the_right_panel_and_problems_runs_along_the_bottom(
+    window: MainWindow,
+) -> None:
+    window.resize(1600, 900)  # the inspector waits below 1520 px
+    QApplication.processEvents()
+    right = Qt.DockWidgetArea.RightDockWidgetArea
+    for dock in (window.inspector_dock, window.provenance_dock):
+        assert window.dockWidgetArea(dock) is right
+    assert window.provenance_dock in window.tabifiedDockWidgets(window.inspector_dock)
+    assert window.dockWidgetArea(window.problems_dock) is Qt.DockWidgetArea.BottomDockWidgetArea
     assert window.dockWidgetArea(window.project_dock) is Qt.DockWidgetArea.LeftDockWidgetArea
+    # the bottom panel runs under the side panels, the full width of the window
+    assert window.problems_dock.width() > window.width() - 2 * window.rail.width()
 
 
 def test_every_dock_has_a_name_for_the_saved_layout(window: MainWindow) -> None:
@@ -169,6 +176,7 @@ def test_the_layout_file_holds_no_project_content(qtbot, tmp_path: Path) -> None
         "geometry",
         "state",
         "problems",
+        "rail",
     }
 
 
@@ -193,4 +201,5 @@ def test_a_broken_layout_file_does_not_stop_the_window(qtbot, tmp_path: Path) ->
     window = MainWindow(LayoutSettings(path))
     qtbot.addWidget(window)
     window.show()
-    assert window.inspector_dock.isVisible() or window.problems_dock.isVisible()
+    window.open_project(EXAMPLES / "microsat_250kg_eps")  # the first screen has no panels
+    assert window.problems_dock.isVisible() and window.project_dock.isVisible()

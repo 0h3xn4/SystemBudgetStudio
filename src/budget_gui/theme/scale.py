@@ -9,6 +9,60 @@ language in `docs/ui/UI_OVERHAUL.md`: a 4 px grid, six type sizes, three weights
 
 from __future__ import annotations
 
+# every name the theme package re-exports; add new constants here (and nowhere else)
+__all__ = [
+    "BORDER",
+    "COLUMN_MIN",
+    "COMBO_MAX_WIDTH",
+    "COMPACT_BUTTON_WIDTH",
+    "CONTROL_COMPACT",
+    "CONTROL_DEFAULT",
+    "DEFAULT_SCALE",
+    "DOCK_WIDTHS",
+    "FOCUS_RING",
+    "GUIDE_SIZE",
+    "ICON_RAIL",
+    "ICON_UI",
+    "LEGEND_MIN",
+    "LIST_MIN_HEIGHT",
+    "MOTION_MS",
+    "PALETTE_SIZE",
+    "PLOT_MIN_HEIGHT",
+    "PROBLEMS_HEIGHT",
+    "SECTION_COLUMN",
+    "PROGRESS_HEIGHT",
+    "PROVENANCE_MAX_HEIGHT",
+    "RADIUS_CONTROL",
+    "RADIUS_PANEL",
+    "RAIL_COLLAPSED",
+    "RAIL_WIDTH",
+    "RESPONSIVE_INSPECTOR",
+    "RESPONSIVE_LABELS",
+    "RESPONSIVE_PROJECT",
+    "RESULTS_MIN_HEIGHT",
+    "ROW_HEIGHT",
+    "SCALES",
+    "SITES_MAX_HEIGHT",
+    "SPACE",
+    "TABLE_MIN_HEIGHT",
+    "TIMELINE_MIN_HEIGHT",
+    "TYPE_BASE",
+    "TYPE_CAPTION",
+    "TYPE_DISPLAY",
+    "TYPE_HEADING",
+    "TYPE_SIZES",
+    "TYPE_SMALL",
+    "TYPE_TITLE",
+    "WEIGHTS",
+    "WINDOW_DEFAULT",
+    "gap",
+    "inset",
+    "px",
+    "scale_percent",
+    "scaled",
+    "set_scale_percent",
+]
+
 SPACE = (4, 8, 12, 16, 24, 32)  # px: the only gaps and paddings (a 4 px grid)
 
 # type sizes in px: caption, small and table, body (the base), section title, page title, display
@@ -72,13 +126,13 @@ def scaled(size: tuple[int, int]) -> tuple[int, int]:
 
 # sizes of windows, panels and views that are not on a scale; (width, height) unless said
 WINDOW_DEFAULT = (1400, 860)
-DOCK_WIDTHS = (280, 420)  # the project panel and the Problems panel
+DOCK_WIDTHS = (264, 320)  # the project panel and the inspector
 PALETTE_SIZE = (560, 420)  # the command palette and the paste preview
 GUIDE_SIZE = (980, 760)
 LEGEND_MIN = (640, 340)
 PLOT_MIN_HEIGHT = 220
 TIMELINE_MIN_HEIGHT = 180
-LIST_MIN_HEIGHT = 48  # the Problems list
+LIST_MIN_HEIGHT = 32  # the Problems list
 COLUMN_MIN = 40  # a table column is never narrower
 TABLE_MIN_HEIGHT = 60  # a table in a page that holds several
 PROVENANCE_MAX_HEIGHT = 170
@@ -87,3 +141,10 @@ SITES_MAX_HEIGHT = 72
 COMBO_MAX_WIDTH = 120
 COMPACT_BUTTON_WIDTH = 36  # the arrows that step through violations
 PROGRESS_HEIGHT = 4
+PROBLEMS_HEIGHT = 200  # the Problems panel at the bottom
+SECTION_COLUMN = 88  # the column of the menu or kind in the command palette
+RAIL_WIDTH = 176  # the navigation rail with its labels
+RAIL_COLLAPSED = 56  # the rail with icons only
+RESPONSIVE_INSPECTOR = 1520  # below this width the inspector waits until there is room
+RESPONSIVE_LABELS = 1280  # below this width the rail shows icons only
+RESPONSIVE_PROJECT = 1100  # below this width the project panel waits, too

@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import time
-from collections.abc import Collection
+from collections.abc import Collection, Iterator
+from contextlib import contextmanager
 from dataclasses import replace
 from datetime import datetime
 from functools import partial
@@ -17,6 +18,7 @@ from PySide6.QtGui import (
     QDragEnterEvent,
     QDropEvent,
     QKeySequence,
+    QResizeEvent,
     QShowEvent,
 )
 from PySide6.QtWidgets import (
@@ -26,6 +28,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMenu,
     QMessageBox,
+    QToolBar,
     QVBoxLayout,
     QWidget,
 )
@@ -39,11 +42,12 @@ from budget_gui import theme
 from budget_gui.banner import Banner
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
+from budget_gui.components import PanelTitle
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
 from budget_gui.inspector import CellInfo, InspectorPanel
-from budget_gui.layout_settings import MOTION, LayoutSettings
+from budget_gui.layout_settings import MOTION, RAIL_STATES, LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.model_document import ModelDocument
@@ -53,10 +57,12 @@ from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.project_tree import ProjectTree
 from budget_gui.provenance_panel import ProvenancePanel
+from budget_gui.rail import NavRail
 from budget_gui.reports_view import ReportItem, ReportsView
 from budget_gui.run_controller import RunController, RunState
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
+from budget_gui.settings_popover import SettingsPopover
 from budget_gui.status_bar import AppStatusBar
 from budget_gui.theme import Status
 from budget_gui.timeline_view import PowerTimelineView
@@ -80,6 +86,9 @@ def _path_tokens(path: str) -> tuple[str | int, ...]:
             if digits.isdigit():
                 tokens.append(int(digits))
     return tuple(tokens)
+
+
+LAYOUT_VERSION = 2  # the arrangement of the docks: a saved layout of another version is ignored
 
 
 class MainWindow(QMainWindow):
@@ -126,17 +135,16 @@ class MainWindow(QMainWindow):
         self.reports_view = ReportsView()
         self.workspace = Workspace()
         self.workspace.add_page("Model", self.editors)
-        self.workspace.add_page(
-            "Power", SubTabs([("Budget", self.power_view), ("Timeline", self.timeline_view)])
-        )
+        self.power_pages = SubTabs([("Budget", self.power_view), ("Timeline", self.timeline_view)])
+        self.link_pages = SubTabs([("Budget", self.link_view), ("Passes", self.link_passes_view)])
+        self.workspace.add_page("Power", self.power_pages)
         self.workspace.add_page("Mass", self.mass_view)
         self.workspace.add_page("Thermal", self.thermal_view)
-        self.workspace.add_page(
-            "Link", SubTabs([("Budget", self.link_view), ("Passes", self.link_passes_view)])
-        )
+        self.workspace.add_page("Link", self.link_pages)
         self.workspace.add_page("Compare", self.compare_view)
         self.workspace.add_page("Reports", self.reports_view)
         self.top_bar = TopBar()
+        self.rail = NavRail()
         self.run_controller = RunController(
             self.scenario_view, self.timeline_view, self.link_passes_view
         )
@@ -167,11 +175,26 @@ class MainWindow(QMainWindow):
         self.problems_dock = self._dock("Problems", "dock-problems", self.problems_panel)
         self.provenance_dock = self._dock("Provenance", "dock-provenance", self.provenance_panel)
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.project_dock)
-        for dock in (self.inspector_dock, self.problems_dock, self.provenance_dock):
+        for dock in (self.inspector_dock, self.provenance_dock):
             self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
-        self.tabifyDockWidget(self.inspector_dock, self.problems_dock)
-        self.tabifyDockWidget(self.problems_dock, self.provenance_dock)
-        self.problems_dock.raise_()
+        self.tabifyDockWidget(self.inspector_dock, self.provenance_dock)
+        self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.problems_dock)
+        # the Problems panel runs under the project panel and the inspector, the full width
+        self.setCorner(Qt.Corner.BottomLeftCorner, Qt.DockWidgetArea.BottomDockWidgetArea)
+        self.setCorner(Qt.Corner.BottomRightCorner, Qt.DockWidgetArea.BottomDockWidgetArea)
+        self.inspector_dock.raise_()
+        self.rail_bar = QToolBar("Navigation", self)
+        self.rail_bar.setObjectName("rail")
+        self.rail_bar.setMovable(False)
+        self.rail_bar.setFloatable(False)
+        self.rail_bar.addWidget(self.rail)
+        self.addToolBar(Qt.ToolBarArea.LeftToolBarArea, self.rail_bar)
+        self.project_dock.toggleViewAction().setShortcut(QKeySequence("Ctrl+B"))
+        self._welcome_hid: dict[QDockWidget, bool] | None = None  # docks hidden by the first screen
+        self._narrow_hid: set[QDockWidget] = set()  # docks hidden because the window is narrow
+        self._regime = "wide"
+        self._folded_by_user = False
+        self._auto_fold = False
         self._sized = False  # the dock widths are set when the window is first shown
         self.status_bar = AppStatusBar()
         self.setStatusBar(self.status_bar)
@@ -179,7 +202,15 @@ class MainWindow(QMainWindow):
             "Offline. File > Open project, or File > New project (guided), starts a budget."
         )
         self.status_bar.not_checked_requested.connect(self.show_not_checked)
-        self._default_state = self.saveState()  # what View > Reset layout goes back to
+        self.rail.destination_chosen.connect(self._go_to_tab)
+        self.rail.find_requested.connect(self.open_command_palette)
+        self.rail.help_requested.connect(self.open_guide)
+        self.rail.settings_requested.connect(self.show_settings)
+        self.rail.project_toggled.connect(self.project_dock.setVisible)
+        self.rail.folded_changed.connect(self._rail_folded)
+        self.project_dock.visibilityChanged.connect(self._project_dock_shown)
+        self.workspace.currentChanged.connect(self._area_changed)
+        self._default_state = self.saveState(LAYOUT_VERSION)  # what Reset layout goes back to
         self._restore_layout()
 
         self._build_menu()
@@ -333,7 +364,7 @@ class MainWindow(QMainWindow):
             self.scale_actions[percent] = action
         self.motion_action = QAction("Reduce &motion", self)
         self.motion_action.setCheckable(True)
-        self.motion_action.setChecked(theme.manager().reduce_motion)
+        self.motion_action.setChecked(theme.manager().reduce_motion_setting)
         self.motion_action.triggered.connect(self.set_reduce_motion)
         view_menu.addAction(self.motion_action)
         view_menu.addSeparator()
@@ -367,12 +398,34 @@ class MainWindow(QMainWindow):
         if page is not None:
             page.setFocus()
 
+    def _area_changed(self, index: int) -> None:
+        """The rail and the title follow the area on show, whoever changed it."""
+        self.rail.set_current(index)
+
+    def _project_dock_shown(self, shown: bool) -> None:
+        if self._welcome_hid is None:  # the first screen hides it without the user asking
+            self.rail.set_project_checked(shown)
+
     def set_theme(self, mode: theme.Mode) -> None:
         """Switch the theme now and keep the choice for the next start."""
         theme.manager().set_mode(mode)
         self.theme_actions[mode].setChecked(True)
         self.layout_settings.set_word("theme/mode", mode.value, tuple(m.value for m in theme.Mode))
         self.layout_settings.sync()
+
+    def show_settings(self) -> SettingsPopover:
+        """The settings card beside the rail: theme, UI size and motion."""
+        popover = SettingsPopover(self)
+        popover.show_current(
+            theme.manager().mode,
+            theme.scale_percent(),
+            theme.manager().reduce_motion_setting,
+        )
+        popover.theme_chosen.connect(lambda value: self.set_theme(theme.Mode(value)))
+        popover.scale_chosen.connect(self.set_scale)
+        popover.motion_reduced.connect(self.set_reduce_motion)
+        popover.open_beside(self.rail.settings_button)
+        return popover
 
     def set_scale(self, percent: int) -> None:
         """Make the window larger or smaller now (90 to 125 %) and keep the choice."""
@@ -386,6 +439,7 @@ class MainWindow(QMainWindow):
     def set_reduce_motion(self, reduced: bool) -> None:
         """Turn animations off (or on again) and keep the choice."""
         theme.manager().set_reduce_motion(reduced)
+        self.motion_action.setChecked(reduced)
         self.layout_settings.set_word("theme/motion", "reduced" if reduced else "full", MOTION)
         self.layout_settings.sync()
 
@@ -517,6 +571,9 @@ class MainWindow(QMainWindow):
         dock = QDockWidget(title, self)
         dock.setObjectName(name)  # the name is the key of the saved layout
         dock.setWidget(widget)
+        panel_title = PanelTitle(title)
+        panel_title.close_button.clicked.connect(dock.close)
+        dock.setTitleBarWidget(panel_title)
         return dock
 
     def _inspect_cell(self) -> None:
@@ -558,14 +615,17 @@ class MainWindow(QMainWindow):
             self.restoreGeometry(geometry)
         state = settings.bytes_value("dock/state")
         if state is not None:
-            self.restoreState(state)
+            self.restoreState(state, LAYOUT_VERSION)  # a layout of another version is ignored
+        self.rail.set_folded(settings.word("window/rail", RAIL_STATES, "open") == "folded")
         self.problems_panel.set_column_widths(settings.int_list("columns/problems"))
 
     def save_layout(self) -> None:
         """Keep the window geometry, the dock arrangement and the widths of the Problems columns."""
         settings = self.layout_settings
         settings.set_bytes("window/geometry", self.saveGeometry())
-        settings.set_bytes("dock/state", self.saveState())
+        with self._docks_as_the_user_left_them():
+            settings.set_bytes("dock/state", self.saveState(LAYOUT_VERSION))
+        settings.set_word("window/rail", "folded" if self.rail.folded else "open", RAIL_STATES)
         settings.set_int_list("columns/problems", self.problems_panel.column_widths())
         settings.sync()
 
@@ -582,17 +642,81 @@ class MainWindow(QMainWindow):
         ):
             dock.setFloating(False)
             dock.show()
-        self.restoreState(self._default_state)
+        self.restoreState(self._default_state, LAYOUT_VERSION)
+        self.rail.set_folded(False)
         self._apply_default_sizes()
         self.problems_panel.set_column_widths([])
         self.resize(*theme.scaled(theme.WINDOW_DEFAULT))
 
     def _apply_default_sizes(self) -> None:
         self.resizeDocks(
-            [self.project_dock, self.problems_dock],
+            [self.project_dock, self.inspector_dock],
             [theme.px(w) for w in theme.DOCK_WIDTHS],
             Qt.Orientation.Horizontal,
         )
+        self.resizeDocks(
+            [self.problems_dock], [theme.px(theme.PROBLEMS_HEIGHT)], Qt.Orientation.Vertical
+        )
+
+    @contextmanager
+    def _docks_as_the_user_left_them(self) -> Iterator[None]:
+        """The docks hidden by the first screen or by a narrow window are shown for a moment, so a
+        saved layout holds what the user chose, not what the size of the window did."""
+        hidden = {
+            dock for dock in (*self._narrow_hid, *(self._welcome_hid or {})) if dock.isHidden()
+        }
+        for dock in hidden:
+            dock.show()
+        try:
+            yield
+        finally:
+            for dock in hidden:
+                dock.hide()
+
+    def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802 (Qt naming)
+        super().resizeEvent(event)
+        self._fit_to_width()
+
+    def _fit_to_width(self) -> None:
+        """Make room on a narrow window: below 1520 px the inspector waits, below 1280 px the rail
+        shows icons only, below 1100 px the project panel waits, too. The docks come back when
+        there is room again; a dock the user hid stays hidden."""
+        if self._welcome_hid is not None:
+            return
+        width = self.width()
+        if width < theme.px(theme.RESPONSIVE_PROJECT):
+            regime = "tiny"
+        elif width < theme.px(theme.RESPONSIVE_LABELS):
+            regime = "narrow"
+        elif width < theme.px(theme.RESPONSIVE_INSPECTOR):
+            regime = "medium"
+        else:
+            regime = "wide"
+        if regime == self._regime:
+            return
+        self._regime = regime
+        waiting: tuple[QDockWidget, ...] = ()
+        if regime != "wide":
+            waiting = (self.inspector_dock, self.provenance_dock)
+        if regime == "tiny":
+            waiting = (*waiting, self.project_dock)
+        for dock in list(self._narrow_hid):
+            if dock not in waiting:
+                self._narrow_hid.discard(dock)
+                dock.show()
+        for dock in waiting:
+            if not dock.isHidden():
+                self._narrow_hid.add(dock)
+                dock.hide()
+        self._auto_fold = True
+        try:
+            self.rail.set_folded(regime in ("narrow", "tiny") or self._folded_by_user)
+        finally:
+            self._auto_fold = False
+
+    def _rail_folded(self, folded: bool) -> None:
+        if not self._auto_fold:
+            self._folded_by_user = folded
 
     def showEvent(self, event: QShowEvent) -> None:  # noqa: N802 (Qt naming)
         super().showEvent(event)
@@ -968,6 +1092,19 @@ class MainWindow(QMainWindow):
         self.welcome.setVisible(empty)
         for part in (self.top_bar, self.workspace):
             part.setVisible(not empty)
+        self.rail.set_enabled_destinations(not empty)
+        docks = (self.project_dock, self.inspector_dock, self.problems_dock, self.provenance_dock)
+        if empty and self._welcome_hid is None:
+            self._welcome_hid = {dock: not dock.isHidden() for dock in docks}
+            for dock in docks:
+                dock.hide()
+        elif not empty and self._welcome_hid is not None:
+            hidden, self._welcome_hid = self._welcome_hid, None
+            for dock, was_shown in hidden.items():
+                if was_shown and dock not in self._narrow_hid:
+                    dock.show()
+            self._regime = ""  # the width may have changed while the first screen was up
+            self._fit_to_width()
 
     def dragEnterEvent(self, event: QDragEnterEvent) -> None:  # noqa: N802 (Qt naming)
         if self._dropped_folder(event.mimeData()) is not None:

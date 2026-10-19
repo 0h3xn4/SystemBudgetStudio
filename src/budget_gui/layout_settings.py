@@ -22,6 +22,7 @@ from PySide6.QtCore import QByteArray, QSettings, QStandardPaths
 FILE_NAME = "layout.ini"
 GROUPS = ("window", "dock", "columns", "theme")  # the only groups of the file
 MOTION = ("full", "reduced")  # the two values of the `theme/motion` word
+RAIL_STATES = ("open", "folded")  # the two values of the `window/rail` word
 _KEY = re.compile(r"^(window|dock|columns|theme)/[A-Za-z0-9_.-]{1,64}$")
 
 

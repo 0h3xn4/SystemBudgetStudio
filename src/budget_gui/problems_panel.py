@@ -167,12 +167,13 @@ class ProblemsPanel(QWidget):
         self._stack.addWidget(self.empty)
 
         controls = QHBoxLayout()
+        controls.setSpacing(theme.gap(1))
+        controls.addWidget(self.summary)
         controls.addWidget(self.filter_box, 1)
         controls.addWidget(self.class_box)
         controls.addWidget(self.group_box)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(*theme.inset(1, 0))
-        layout.addWidget(self.summary)
         layout.addLayout(controls)
         layout.addWidget(self._stack_host, 1)
         self.setFocusProxy(self.view)
@@ -187,8 +188,8 @@ class ProblemsPanel(QWidget):
         theme.manager().changed.connect(self._theme_changed)
 
     # ---- columns (widths and visibility are kept in the layout file) ---------------------------
-    DEFAULT_WIDTHS = (34, 0, 150, 190)  # the problem column stretches
-    DEFAULT_HIDDEN = (FIELD, CODE)  # the narrow dock shows the class icon and the problem
+    DEFAULT_WIDTHS = (56, 0, 180, 170)  # the problem column stretches
+    DEFAULT_HIDDEN = ()  # the panel at the bottom is wide: every column is shown
 
     def column_widths(self) -> list[int]:
         """Width of each column; 0 for a hidden one (the message column is never hidden)."""
