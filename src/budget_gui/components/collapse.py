@@ -20,14 +20,20 @@ class CollapseButton(Button):
         self._splitter = splitter
         self._what = what
         self._kept: list[int] = []
+        self._folded = False
         splitter.setCollapsible(1, True)
-        splitter.splitterMoved.connect(lambda *_a: self._sync())
+        splitter.splitterMoved.connect(self._moved)
         self.clicked.connect(self.toggle)
         self._sync()
 
     def is_folded(self) -> bool:
+        return self._folded
+
+    def _moved(self, *_args: object) -> None:
+        """The user dragged the handle: it may have folded the pane or opened it again."""
         sizes = self._splitter.sizes()
-        return len(sizes) > 1 and sizes[1] == 0
+        self._folded = len(sizes) > 1 and sizes[1] == 0
+        self._sync()
 
     def toggle(self) -> None:
         if self.is_folded():
@@ -37,6 +43,7 @@ class CollapseButton(Button):
         else:
             self._kept = self._splitter.sizes()
             self._splitter.setSizes([sum(self._kept), 0])
+        self._folded = not self._folded
         self._sync()
 
     def _sync(self) -> None:

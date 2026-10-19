@@ -15,7 +15,7 @@ from collections.abc import Callable, Collection
 from datetime import timedelta
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -75,6 +75,9 @@ EMPTY_TEXT = (
     "This project has no scenario. Add a file in scenarios/ to work out the power timeline "
     "and the link passes."
 )
+
+
+COMPUTE_TIP = "Work out the power timeline of this scenario"
 
 
 class TimelineWorker(QThread):
@@ -167,8 +170,10 @@ class PowerTimelineView(QWidget):
             button.setEnabled(False)
             button.setAccessibleName(name)
         self._selected_row: int | None = None  # index into result.violations
-        self.compute_button = Button("Compute", icon="refresh-cw", compact=True)  # Run is primary
-        self.export_button = Button("Export…", icon="file-output", compact=True)
+        self.compute_button = Button("Compute", icon="refresh-cw", compact=True, tip=COMPUTE_TIP)
+        self.export_button = Button(
+            "Export…", icon="file-output", compact=True, tip="Write the results to files"
+        )
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
@@ -375,7 +380,7 @@ class PowerTimelineView(QWidget):
             self._worker.wait(30000)
             self._worker = None
         self.compute_button.setText(COMPUTE_TEXT)
-        self.compute_button.setToolTip("")
+        self.compute_button.setToolTip(COMPUTE_TIP)
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, result: TimeDomainResult) -> None:
@@ -389,7 +394,15 @@ class PowerTimelineView(QWidget):
             return
         self.result = result
         self._result_key = key
-        self._show()
+        # The plot first, the tables in the next turn of the event loop: a week's results are one
+        # long stretch of work otherwise (D-178). `computed` is sent when both are done.
+        self._show(tables=False)
+        QTimer.singleShot(0, self, lambda: self._finish_done(result))
+
+    def _finish_done(self, result: TimeDomainResult) -> None:
+        if self.result is not result:  # another result or none came in the meantime
+            return
+        self._fill_tables(result)
         self.export_button.setEnabled(self.is_valid())
         count = len(result.violations)
         incomplete = any(a.placeholder for a in result.assumptions)
@@ -435,7 +448,7 @@ class PowerTimelineView(QWidget):
         utc = format_utc(result.run.env.grid.start + timedelta(seconds=round(t)))
         return f"{utc}\nMode: {mode}\n{'Eclipse' if eclipse else 'Sunlit'}"
 
-    def _show(self) -> None:
+    def _show(self, tables: bool = True) -> None:
         result = self.result
         self._selected_row = None
         if result is None:
@@ -455,7 +468,8 @@ class PowerTimelineView(QWidget):
         self.plot.set_shading(self.shading.isChecked())
         self._apply_axis()
         self._show_markers()
-        self._fill_tables(result)
+        if tables:
+            self._fill_tables(result)
 
     # ---- axis and markers --------------------------------------------------------------------
     def _axis_for(self, name: str) -> TimeAxis:

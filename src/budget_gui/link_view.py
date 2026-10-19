@@ -62,6 +62,9 @@ from budget_gui.worker import ExportWorker
 EMPTY_TEXT = "No links to show. Add links/*.yaml and a scenario."
 
 
+COMPUTE_TIP = "Work out the passes of this link"
+
+
 class LinkWorker(QThread):
     finished_ok = Signal(object)
     failed = Signal(str)
@@ -113,8 +116,10 @@ class LinkPassesView(QWidget):
 
         self.scenario_combo = QComboBox()
         self.link_combo = QComboBox()
-        self.compute_button = Button("Compute", icon="refresh-cw", compact=True)  # Run is primary
-        self.export_button = Button("Export…", icon="file-output", compact=True)
+        self.compute_button = Button("Compute", icon="refresh-cw", compact=True, tip=COMPUTE_TIP)
+        self.export_button = Button(
+            "Export…", icon="file-output", compact=True, tip="Write the results to files"
+        )
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
@@ -278,7 +283,7 @@ class LinkPassesView(QWidget):
             self._worker.wait(30000)
             self._worker = None
         self.compute_button.setText(COMPUTE_TEXT)
-        self.compute_button.setToolTip("")
+        self.compute_button.setToolTip(COMPUTE_TIP)
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, result: LinkSeriesResult) -> None:
