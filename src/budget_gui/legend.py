@@ -9,7 +9,7 @@ from __future__ import annotations
 from typing import NamedTuple
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QStandardItem, QStandardItemModel
+from PySide6.QtGui import QResizeEvent, QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QDialog,
@@ -94,15 +94,24 @@ class CellStyleLegend(QTableView):
         self.setItemDelegateForColumn(1, CellDelegate(self))
         self.verticalHeader().setVisible(False)
         self.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)  # a legend: Close is what the keyboard reaches
         self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setWordWrap(True)
         header = self.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self._fit_rows()
+
+    def _fit_rows(self) -> None:
+        """A row is as high as its wrapped meaning (and at least a control)."""
         self.resizeRowsToContents()
         for row in range(len(ROWS)):
             self.setRowHeight(row, max(self.rowHeight(row), theme.px(theme.CONTROL_DEFAULT)))
+
+    def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802 (Qt naming)
+        super().resizeEvent(event)
+        self._fit_rows()  # the meaning wraps at the width the table has now
 
 
 class LegendDialog(QDialog):

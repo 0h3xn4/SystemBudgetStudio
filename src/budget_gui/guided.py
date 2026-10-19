@@ -141,17 +141,28 @@ class GuidedWizard(QWizard):
         for spin in (self.altitude, self.inclination, self.raan, self.duration):
             spin.valueChanged.connect(lambda _v: self._changed())
         self.sample_combo.currentIndexChanged.connect(lambda _i: self._changed())
-        # Next and Finish are the one primary action of a page; Back and Cancel are secondary
-        for which in (QWizard.WizardButton.NextButton, QWizard.WizardButton.FinishButton):
-            button = self.button(which)
-            if button is not None:
-                button.setProperty("kind", "primary")
-        for which in (QWizard.WizardButton.BackButton, QWizard.WizardButton.CancelButton):
-            button = self.button(which)
-            if button is not None:
-                button.setProperty("kind", "secondary")
+        self._style_buttons()
+        self.currentIdChanged.connect(lambda _id: self._style_buttons())
         self.resize(*theme.scaled(theme.PALETTE_SIZE))
         self.restart()  # makes the first page current and puts the error label on it
+
+    def _style_buttons(self) -> None:
+        """Next and Finish are the one primary action of a page; Back and Cancel are secondary
+        (the style sheet reads the kind, so the buttons are polished again)."""
+        kinds = {
+            QWizard.WizardButton.NextButton: "primary",
+            QWizard.WizardButton.FinishButton: "primary",
+            QWizard.WizardButton.BackButton: "secondary",
+            QWizard.WizardButton.CancelButton: "secondary",
+        }
+        for which, kind in kinds.items():
+            button = self.button(which)
+            if button is not None:
+                button.setProperty("kind", kind)
+                style = button.style()
+                if style is not None:
+                    style.unpolish(button)
+                    style.polish(button)
 
     @staticmethod
     def _spin(value: float, decimals: int, suffix: str, low: float, high: float) -> QDoubleSpinBox:

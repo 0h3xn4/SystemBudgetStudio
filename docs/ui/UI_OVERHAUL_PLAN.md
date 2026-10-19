@@ -352,8 +352,8 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 | M1 Foundation | done (PR #39) | D-168 to D-172; fonts, `theme/` package, tokens, style sheet, UI scale, reduced motion, `components/`, gallery, tests; Carbon removed from the window |
 | M2 Shell | done (merged in PR #39) | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
 | M3 Model screens | done (merged in PR #40) | D-176, D-177; toolbar above the grids, frozen identifier column, problem marker in the row, cheaper cell painting (a grid scroll step about 30 ms), scenario icon buttons, tab close mark, tree rows of 26 px |
-| M4 Results screens | implemented, awaiting your review | D-178; one inline banner, labelled toolbar, foldable table pane, plot sizes in the theme and at the UI scale, cheaper table fill; the stall is 224 ms, not under 100 |
-| M5 Compare, Reports, dialogs | not started | |
+| M4 Results screens | done (merged in PR #41) | D-178; one inline banner, labelled toolbar, foldable table pane, plot sizes in the theme and at the UI scale, cheaper table fill; the stall is 224 ms, not under 100 |
+| M5 Compare, Reports, dialogs | implemented, awaiting your review | D-180; Compare key columns capped, Reports provenance line and empty list, dialogs with components, Inspector and Provenance details |
 | M6 Final | not started | |
 
 **M1 as built, against its acceptance criteria**
@@ -395,3 +395,12 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - Tests: all existing plot, timeline, thermal, link, cancel, last-good and audit tests pass unchanged; one test that pinned the look (the style sheet names the roles, which listed the old red banner label) now names the three banners; new tests in `tests/gui/test_results_screens.py`. All 579 GUI tests pass (26 min, run serially) and all 1715 core tests pass (10 min).
 - Screenshots in both themes in `docs/ui/screenshots/m4/`. No change to core, CLI, file formats or goldens.
 - The squeezed project panel in the dark screenshots (seen in M2 and M3) was a real defect of M2, not of the harness: a narrow window squeezes the side panels and they stayed so when the window grew. Fixed (D-179) with a test; at the narrowest window (about 1214 px with both panels) the project panel is still a sliver (see D-179). The screenshots of M4 were taken after the fix. The cause was the width of the centre: a toolbar with text on the violation arrows made the centre at least about 1190 px wide; with icon arrows the window minimum is 1041 x 648 (it was 1001 x 648).
+
+**M5 as built, against its acceptance criteria**
+
+- Compare: key columns never push the values out (capped widths and tooltips; at 1400 px A, B and the change are in view), tints from the status tokens (M1), empty state, status line of its own.
+- Reports: the provenance once, as a line with *Show details* (the table behind it is the same and the tests that read it pass unchanged), an empty state for the list of written files.
+- Dialogs: paste preview, cell legend, guide and wizard restyled with the components (margins, one primary button, mono figures); the wizard keeps `QWizard`. The message box and the palette were done in M2.
+- Problems panel, Inspector, Provenance: the Inspector's empty state and buttons; the Provenance values wrap. The Problems panel needed nothing after M2.
+- Tests: the existing compare, reports, wizard and dialog tests pass unchanged (the timed wizard test stays); new tests in `tests/gui/test_secondary_screens.py`. Full runs: see the PR.
+- Screenshots in `docs/ui/screenshots/m5/`; no change to core, CLI, file formats or goldens.

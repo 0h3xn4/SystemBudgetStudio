@@ -140,7 +140,7 @@ WINDOW_DEFAULT = (1400, 860)
 DOCK_WIDTHS = (264, 320)  # the project panel and the inspector
 PALETTE_SIZE = (560, 420)  # the command palette, the paste preview and the wizard
 GUIDE_SIZE = (980, 760)
-LEGEND_MIN = (640, 340)
+LEGEND_MIN = (680, 460)
 PLOT_MIN_HEIGHT = 220
 # the painted plots (budget plots and the scenario strips); base sizes at 100 %, applied with px()
 PLOT_MARGINS = (64, 14, 8, 36)  # left (the value labels), right, top, bottom (the time labels)

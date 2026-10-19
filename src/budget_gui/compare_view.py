@@ -139,6 +139,9 @@ class CompareView(QWidget):
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         self.table.verticalHeader().setVisible(False)
+        header = self.table.horizontalHeader()
+        header.setDefaultAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        header.setTextElideMode(Qt.TextElideMode.ElideRight)  # the long names of A and B are cut
 
         row_a = QHBoxLayout()
         row_a.addWidget(QLabel("A: this project, scenario"))
@@ -320,6 +323,10 @@ class CompareView(QWidget):
             (f"A: {label_a}" if h == "A" else f"B: {label_b}" if h == "B" else h) for h in HEADERS
         ]
         self.table.setHorizontalHeaderLabels(headers)
+        for column, text in enumerate(headers):
+            header_item = self.table.horizontalHeaderItem(column)
+            if header_item is not None:
+                header_item.setToolTip(text)
         self.filter_combo.setEnabled(output is not None)
         self.side_b_label.setText(
             f"B: {results[0].provenance_b.project_name}, revision "
