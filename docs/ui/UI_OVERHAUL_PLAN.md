@@ -349,8 +349,8 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 | Milestone | State | Notes |
 |---|---|---|
 | Phase 1: audit and plan | done | PR #39 |
-| M1 Foundation | implemented, awaiting your review | D-168 to D-172; fonts, `theme/` package, tokens, style sheet, UI scale, reduced motion, `components/`, gallery, tests; Carbon removed from the window |
-| M2 Shell | not started | |
+| M1 Foundation | done (PR #39) | D-168 to D-172; fonts, `theme/` package, tokens, style sheet, UI scale, reduced motion, `components/`, gallery, tests; Carbon removed from the window |
+| M2 Shell | implemented, awaiting your review | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
 | M3 Model screens | not started | |
 | M4 Results screens | not started | |
 | M5 Compare, Reports, dialogs | not started | |
@@ -365,3 +365,13 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - No change to core, CLI, file formats or goldens: yes; nothing under `src/budget_core`, `src/budget_cli`, `tests/golden` or `tests/regression` changed; the only test outside `tests/gui` that changed is the bundle-check test, which now expects the new fonts and arrow images.
 - Performance (`docs/ui/screenshots/m1/baseline.txt`): **start-up is 12 % slower** (1.11 s to 1.25 s, measured interleaved against the commit before; the plan's limit was 10 % and 1.2 s, so this misses it). The cost is the larger style sheet (building the main window takes 55 ms longer) and 50 ms more imports; the fonts load in 9 ms. Tab switches (14 to 97 ms), opening 200 units (3.4 s), the week at 1 s (10.0 s, 290 ms longest stall) and plot zoom (48 ms median) are within noise of the baseline. The start-up cost is carried into M2, where the tab bars the style sheet styles are replaced by the rail.
 - Known limit: the pixel constants inside custom painters (plot margins, timeline rows, cell bars) are named module constants, not yet theme constants; they are redone with their views in M3 and M4 (D-169).
+
+**M2 as built, against its acceptance criteria**
+
+- Every item of the mapping in section 7 is in place except two, both recorded: the breadcrumb (the rail and the segmented control already say where you are, and the name of the project needs the room) and the in-app message dialog for the 19 `QMessageBox` calls (D-174: the same boxes, drawn in the look of the window, so no behaviour and no test changes).
+- `Ctrl+1` to `Ctrl+7`, `Ctrl+K`, `Ctrl+B`, `F1`, `F5` and `Ctrl+R` work; the keyboard-walk test now also visits the rail and comes back.
+- Every area, page and dialog of section 4.1 is reachable and screenshot-tested in both themes; new screenshots in `docs/ui/screenshots/m2/` include the shell at 1600, 1200 and 1000 px, the folded rail and the settings card.
+- Minimum window: the existing test (1200 × 650 for every area) passes after two minimum heights were lowered (a plot panel 110 to 88 px, the Problems list 48 to 32 px).
+- No sideways scroll of a page at 1366 × 768 apart from tables that are meant to scroll: not measured one page at a time; the screenshot at 1200 px shows none. This is the one criterion I could not close with a number.
+- Tab switch 16 to 62 ms (limit 100); plot zoom 23 ms median; grid scroll 1.6 s for 40 steps (it was 2.2 s); start-up +8 % against the commit before the overhaul (1.29 s to 1.40 s interleaved, limit 10 %); `docs/ui/screenshots/m2/baseline.txt`.
+- Tests: all 561 GUI tests pass (19 new in `tests/gui/test_shell.py`; the full suite was run before the last two test edits, which were run on their own), 1715 core tests unchanged. Tests changed in intent-preserving ways: the dock arrangement and layout keys (`test_docks.py`), the keyboard walk, and a plot test that now waits for the narrow window to settle.
