@@ -77,6 +77,8 @@ EMPTY_TEXT = (
 )
 
 
+DETAIL_DELAY_MS = 30  # the tables behind the one in view come after the first paint of the plot
+
 COMPUTE_TIP = "Work out the power timeline of this scenario"
 
 
@@ -399,7 +401,15 @@ class PowerTimelineView(QWidget):
         self._finishing = False
         if self.result is not result:  # another result or none came in the meantime
             return
-        self._fill_tables(result)
+        self._finishing = True
+        self._fill_tables(result, "summary")  # the table in view first, the rest in the next turn
+        QTimer.singleShot(DETAIL_DELAY_MS, self, lambda: self._finish_details(result))
+
+    def _finish_details(self, result: TimeDomainResult) -> None:
+        self._finishing = False
+        if self.result is not result:
+            return
+        self._fill_tables(result, "details")
         self.export_button.setEnabled(self.is_valid())
         count = len(result.violations)
         incomplete = any(a.placeholder for a in result.assumptions)
@@ -545,7 +555,9 @@ class PowerTimelineView(QWidget):
         if 0 <= index < len(rows):
             self.select_violation(rows[index])
 
-    def _fill_tables(self, result: TimeDomainResult) -> None:
+    def _fill_tables(self, result: TimeDomainResult, part: str = "all") -> None:
+        """Fill the tables of a result: all of them, or `summary` (the one in view) or the rest."""
+
         def num(value: float | None, digits: int = 2) -> str:
             return "n/a" if value is None else f"{value:.{digits}f}"
 
@@ -570,31 +582,34 @@ class PowerTimelineView(QWidget):
                     str(result.violation_count(c.case)),
                 ]
             )
-        fill_table(
-            self.summary_table,
-            [
-                "Case",
-                "Capacity (Wh)",
-                "Avg generation (W)",
-                "Avg demand (W)",
-                "Generated (Wh)",
-                "Demanded (Wh)",
-                "Lowest SoC (%)",
-                "Deepest DoD (%)",
-                "Not supplied (Wh)",
-                "Violations",
-            ],
-            rows,
-            numeric=range(1, 10),
-            states={
-                **{(r, 9): Status.FAIL for r in range(len(rows)) if rows[r][9] != "0"},
-                **{
-                    (r, 8): Status.FAIL
-                    for r, c in enumerate(result.cases)
-                    if (c.summary.unmet_wh or 0.0) > 0.0
+        if part != "details":
+            fill_table(
+                self.summary_table,
+                [
+                    "Case",
+                    "Capacity (Wh)",
+                    "Avg generation (W)",
+                    "Avg demand (W)",
+                    "Generated (Wh)",
+                    "Demanded (Wh)",
+                    "Lowest SoC (%)",
+                    "Deepest DoD (%)",
+                    "Not supplied (Wh)",
+                    "Violations",
+                ],
+                rows,
+                numeric=range(1, 10),
+                states={
+                    **{(r, 9): Status.FAIL for r in range(len(rows)) if rows[r][9] != "0"},
+                    **{
+                        (r, 8): Status.FAIL
+                        for r, c in enumerate(result.cases)
+                        if (c.summary.unmet_wh or 0.0) > 0.0
+                    },
                 },
-            },
-        )
+            )
+        if part == "summary":
+            return
         fill_table(
             self.violations_table,
             [
