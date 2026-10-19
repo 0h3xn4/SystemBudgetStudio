@@ -169,6 +169,21 @@ def test_a_rail_the_user_folded_stays_folded_when_the_window_grows(window: MainW
     assert window.rail.folded
 
 
+def test_a_panel_squeezed_by_a_narrow_window_gets_its_width_back(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    usual = theme.px(theme.DOCK_WIDTHS[0])
+    settle(window, theme.px(theme.RESPONSIVE_LABELS) - 80)  # Qt squeezes the side panels here
+    settle(window, 1400)
+    qtbot.waitUntil(
+        lambda: window.project_dock.isVisible() and window.project_dock.width() >= usual * 3 // 4,
+        timeout=3000,
+    )
+    # the inspector is not asserted: how much of 1600 px the centre leaves it depends on the fonts
+    # of the platform (the toolbars decide how narrow the centre can be)
+
+
 def test_the_saved_layout_holds_what_the_user_chose_not_what_the_size_did(
     window: MainWindow,
 ) -> None:

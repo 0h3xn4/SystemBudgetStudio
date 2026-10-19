@@ -7,6 +7,7 @@ list that is empty has an empty state, a confirmation is a toast. Their look is 
 
 from budget_gui.components.badge import StatusBadge
 from budget_gui.components.buttons import KINDS, Button, icon_button
+from budget_gui.components.collapse import CollapseButton
 from budget_gui.components.containers import (
     Card,
     EmptyState,
@@ -22,6 +23,7 @@ __all__ = [
     "KINDS",
     "Button",
     "Card",
+    "CollapseButton",
     "EmptyState",
     "KeyValueList",
     "MessageDialog",

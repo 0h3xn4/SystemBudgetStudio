@@ -294,8 +294,10 @@ def test_the_style_sheet_has_no_unresolved_field_and_names_the_roles() -> None:
         sheet = theme.stylesheet(tokens)
         assert "{t." not in sheet and "{s" not in sheet and "{TYPE" not in sheet
         assert "{px(" not in sheet and "{h" not in sheet and "{r" not in sheet
-        for role in ("error", "banner", "section-title", "muted", "heading", "title", "caption"):
+        for role in ("error", "section-title", "muted", "heading", "title", "caption"):
             assert f'QLabel[role="{role}"]' in sheet
+        for kind in ("stale", "failed", "incomplete"):  # the banners of a page of results (D-178)
+            assert f'QFrame[role="banner-bar"][kind="{kind}"]' in sheet
         for kind in ("primary", "secondary", "ghost", "danger", "link"):
             assert f'kind="{kind}"' in sheet or kind == "secondary"
         assert tokens.surface in sheet and tokens.accent in sheet and tokens.canvas in sheet

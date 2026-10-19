@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
 from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
 from budget_gui import theme
+from budget_gui.banner import Banner
 from budget_gui.delegates import (
     CELL_ROLE,
     MARGIN_ROLE,
@@ -177,7 +178,9 @@ class _SectionPage(QScrollArea):
         page = QWidget()
         layout = QVBoxLayout(page)
         for text in self.section.paragraphs:
-            layout.addWidget(QLabel(text))
+            paragraph = QLabel(text)
+            paragraph.setWordWrap(True)  # a long line (the body frame) wraps instead of running out
+            layout.addWidget(paragraph)
         for table in self.section.tables:
             title = QLabel(table.title)
             title.setProperty("role", "section-title")
@@ -212,9 +215,7 @@ class PowerView(QWidget):
 
     def __init__(self) -> None:
         super().__init__()
-        self.banner = QLabel()
-        self.banner.setWordWrap(True)
-        self.banner.setProperty("role", "banner")
+        self.banner = Banner("incomplete")
         self.empty_label = QLabel(EMPTY_TEXT)
         self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -259,8 +260,10 @@ class PowerView(QWidget):
         shown = document is not None
         self.empty_label.setVisible(not shown)
         self.tabs.setVisible(shown)
-        self.banner.setVisible(bool(document and document.banner))
-        self.banner.setText(document.banner if document else "")
+        if document is not None and document.banner:
+            self.banner.show_message(document.banner)
+        else:
+            self.banner.clear()
         if document is None:
             return
         for section in document.sections:

@@ -23,6 +23,7 @@ from PySide6.QtWidgets import QSizePolicy, QToolTip, QWidget
 from budget_core.scenario.run import ScenarioRun
 from budget_core.timeutil import format_utc
 from budget_gui import theme
+from budget_gui.plot_metrics import STRIPS
 
 TICK_STEPS = (
     1,
@@ -45,7 +46,6 @@ TICK_STEPS = (
     432000,
     864000,
 )
-LEFT, RIGHT, TOP, BOTTOM, ROW, GAP = 150, 12, 30, 8, 24, 4
 
 
 def nice_tick_step(range_s: float, width_px: int, min_px: int = 90) -> float:
@@ -88,7 +88,8 @@ class TimelineWidget(QWidget):
         self._cursor_s: float | None = None
         self.setMouseTracking(True)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        theme.manager().changed.connect(self.update)
+        self.setFont(theme.ui_font(theme.TYPE_SMALL))
+        theme.manager().changed.connect(self._theme_changed)
 
     # ---- data --------------------------------------------------------------------------------
     def set_run(self, run: ScenarioRun | None, all_modes: list[str] | None = None) -> None:
@@ -100,7 +101,7 @@ class TimelineWidget(QWidget):
             self._modes = []
         self._view = (0.0, self._duration)
         shown = max(len(self.rows()), 1)  # an empty widget keeps the height of one row
-        self.setMinimumHeight(TOP + BOTTOM + shown * (ROW + GAP))
+        self.setMinimumHeight(STRIPS.top + STRIPS.bottom + shown * (STRIPS.row + STRIPS.gap))
         self.update()
         self.view_changed.emit()
 
@@ -146,15 +147,15 @@ class TimelineWidget(QWidget):
         self.view_changed.emit()
 
     def _plot_width(self) -> float:
-        return max(self.width() - LEFT - RIGHT, 1)
+        return max(self.width() - STRIPS.left - STRIPS.right, 1)
 
     def time_to_x(self, t: float) -> float:
         start, end = self._view
-        return LEFT + (t - start) / max(end - start, 1e-9) * self._plot_width()
+        return STRIPS.left + (t - start) / max(end - start, 1e-9) * self._plot_width()
 
     def x_to_time(self, x: float) -> float:
         start, end = self._view
-        return start + (x - LEFT) / self._plot_width() * (end - start)
+        return start + (x - STRIPS.left) / self._plot_width() * (end - start)
 
     def select_range(self, a: float, b: float) -> None:
         lo, hi = sorted((a, b))
@@ -184,6 +185,10 @@ class TimelineWidget(QWidget):
                     )
         return "\n".join(lines)
 
+    def _theme_changed(self) -> None:
+        self.setFont(theme.ui_font(theme.TYPE_SMALL))
+        self.update()
+
     # ---- painting ----------------------------------------------------------------------------
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
@@ -197,10 +202,12 @@ class TimelineWidget(QWidget):
         metrics = QFontMetrics(painter.font())
         self._draw_axis(painter)
         for index, name in enumerate(self.rows()):
-            y = TOP + index * (ROW + GAP)
+            y = STRIPS.top + index * (STRIPS.row + STRIPS.gap)
             painter.setPen(QColor(t.plot_ink))
-            painter.drawText(QRectF(6, y, LEFT - 12, ROW), Qt.AlignmentFlag.AlignVCenter, name)
-            track = QRectF(LEFT, y, self._plot_width(), ROW)
+            painter.drawText(
+                QRectF(6, y, STRIPS.left - 12, STRIPS.row), Qt.AlignmentFlag.AlignVCenter, name
+            )
+            track = QRectF(STRIPS.left, y, self._plot_width(), STRIPS.row)
             painter.save()
             painter.setClipRect(track)
             if name == "Sunlight":
@@ -209,7 +216,12 @@ class TimelineWidget(QWidget):
                     self._bar(painter, e.start_s, e.end_s, y, QColor(t.strip_eclipse))
                 for e in run.env.umbras:
                     self._bar(
-                        painter, e.start_s, e.end_s, y + 6, QColor(t.strip_umbra), height=ROW - 12
+                        painter,
+                        e.start_s,
+                        e.end_s,
+                        y + 6,
+                        QColor(t.strip_umbra),
+                        height=STRIPS.row - 12,
                     )
             elif name == "Mode":
                 painter.fillRect(track, QColor(t.strip_track))
@@ -217,13 +229,15 @@ class TimelineWidget(QWidget):
                     self._bar(painter, seg.start_s, seg.end_s, y, self.colour_for(seg.mode))
                     x0 = self.time_to_x(seg.start_s)
                     x1 = self.time_to_x(seg.end_s)
-                    if x1 - x0 > 46 and x1 > LEFT and x0 < self.width():
+                    if x1 - x0 > 46 and x1 > STRIPS.left and x0 < self.width():
                         painter.setPen(theme.readable_text(self.colour_for(seg.mode).name()))
                         label = metrics.elidedText(
                             seg.mode, Qt.TextElideMode.ElideRight, int(x1 - x0 - 6)
                         )
                         painter.drawText(
-                            QRectF(max(x0, LEFT) + 3, y, x1 - max(x0, LEFT), ROW),
+                            QRectF(
+                                max(x0, STRIPS.left) + 3, y, x1 - max(x0, STRIPS.left), STRIPS.row
+                            ),
                             Qt.AlignmentFlag.AlignVCenter,
                             label,
                         )
@@ -235,17 +249,26 @@ class TimelineWidget(QWidget):
         self._draw_overlays(painter)
 
     def _bar(
-        self, painter: QPainter, a: float, b: float, y: float, colour: QColor, height: float = ROW
+        self,
+        painter: QPainter,
+        a: float,
+        b: float,
+        y: float,
+        colour: QColor,
+        height: float | None = None,
     ) -> None:
         x0, x1 = self.time_to_x(a), self.time_to_x(b)
-        if x1 < LEFT or x0 > self.width() - RIGHT:
+        if x1 < STRIPS.left or x0 > self.width() - STRIPS.right:
             return
-        painter.fillRect(QRectF(x0, y, max(x1 - x0, 1.0), height), colour)
+        painter.fillRect(
+            QRectF(x0, y, max(x1 - x0, 1.0), STRIPS.row if height is None else height), colour
+        )
 
     def _draw_axis(self, painter: QPainter) -> None:
         start, end = self._view
         step = nice_tick_step(end - start, int(self._plot_width()))
         painter.setPen(QPen(QColor(theme.tokens().border_strong)))
+        painter.setFont(theme.mono_font(theme.TYPE_SMALL))  # clock times: equal digits
         metrics = QFontMetrics(painter.font())
         first = int(start // step) * step
         t = first
@@ -253,21 +276,22 @@ class TimelineWidget(QWidget):
             if t >= start:
                 x = self.time_to_x(t)
                 label = _hms(t)
-                painter.drawLine(QPointF(x, TOP - 8), QPointF(x, TOP - 2))
+                painter.drawLine(QPointF(x, STRIPS.top - 8), QPointF(x, STRIPS.top - 2))
                 # a label that would run over the right edge is left out, never cut off
-                if x + 3 + metrics.horizontalAdvance(label) <= self.width() - RIGHT // 2:
-                    painter.drawText(QPointF(x + 3, TOP - 10), label)
+                if x + 3 + metrics.horizontalAdvance(label) <= self.width() - STRIPS.right // 2:
+                    painter.drawText(QPointF(x + 3, STRIPS.top - 10), label)
             t += step
+        painter.setFont(self.font())
 
     def _draw_overlays(self, painter: QPainter) -> None:
         if self._cursor_s is not None:
             x = self.time_to_x(self._cursor_s)
             painter.setPen(QPen(QColor(theme.tokens().plot_ink), 1, Qt.PenStyle.DashLine))
-            painter.drawLine(QPointF(x, TOP - 4), QPointF(x, self.height() - BOTTOM))
+            painter.drawLine(QPointF(x, STRIPS.top - 4), QPointF(x, self.height() - STRIPS.bottom))
         if self._select_from is not None and self._select_to is not None:
             x0, x1 = sorted((self.time_to_x(self._select_from), self.time_to_x(self._select_to)))
             painter.fillRect(
-                QRectF(x0, TOP, x1 - x0, self.height() - TOP - BOTTOM),
+                QRectF(x0, STRIPS.top, x1 - x0, self.height() - STRIPS.top - STRIPS.bottom),
                 QColor(*theme.tokens().selection_overlay),
             )
 
@@ -301,7 +325,7 @@ class TimelineWidget(QWidget):
             self.view_changed.emit()
         else:
             t = self.x_to_time(x)
-            self._cursor_s = t if LEFT <= x <= self.width() - RIGHT else None
+            self._cursor_s = t if STRIPS.left <= x <= self.width() - STRIPS.right else None
             if self._cursor_s is not None:
                 QToolTip.showText(event.globalPosition().toPoint(), self.describe_at(t), self)
         self.update()

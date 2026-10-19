@@ -18,7 +18,6 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
     QLabel,
-    QPushButton,
     QSplitter,
     QTableWidget,
     QTabWidget,
@@ -49,6 +48,7 @@ from budget_gui.cancel_support import (
     cancelled_text,
     computing_text,
 )
+from budget_gui.components import Button, CollapseButton
 from budget_gui.plot_widget import PlotWidget
 from budget_gui.scenario_view import fill_table
 from budget_gui.validity import (
@@ -60,6 +60,9 @@ from budget_gui.validity import (
 from budget_gui.worker import ExportWorker
 
 EMPTY_TEXT = "No links to show. Add links/*.yaml and a scenario."
+
+
+COMPUTE_TIP = "Work out the passes of this link"
 
 
 class LinkWorker(QThread):
@@ -113,10 +116,10 @@ class LinkPassesView(QWidget):
 
         self.scenario_combo = QComboBox()
         self.link_combo = QComboBox()
-        self.compute_button = QPushButton("Compute")
-        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
-        self.export_button = QPushButton("Export…")
-        self.export_button.setProperty("kind", "secondary")  # Run is the primary action
+        self.compute_button = Button("Compute", icon="refresh-cw", compact=True, tip=COMPUTE_TIP)
+        self.export_button = Button(
+            "Export…", icon="file-output", compact=True, tip="Write the results to files"
+        )
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
@@ -145,9 +148,11 @@ class LinkPassesView(QWidget):
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.plot)
         self.body.addWidget(self.tabs)
-        self.body.setStretchFactor(0, 3)
-        self.body.setStretchFactor(1, 1)
+        self.body.setStretchFactor(0, 5)  # the table gets enough rows to be read (D-178)
+        self.body.setStretchFactor(1, 3)
 
+        self.fold_button = CollapseButton(self.body)
+        top.addWidget(self.fold_button)
         layout = QVBoxLayout(self)
         layout.addLayout(top)
         layout.addWidget(self.empty_label)
@@ -278,7 +283,7 @@ class LinkPassesView(QWidget):
             self._worker.wait(30000)
             self._worker = None
         self.compute_button.setText(COMPUTE_TEXT)
-        self.compute_button.setToolTip("")
+        self.compute_button.setToolTip(COMPUTE_TIP)
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, result: LinkSeriesResult) -> None:

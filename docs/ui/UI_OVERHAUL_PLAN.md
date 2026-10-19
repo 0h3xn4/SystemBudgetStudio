@@ -351,8 +351,8 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 | Phase 1: audit and plan | done | PR #39 |
 | M1 Foundation | done (PR #39) | D-168 to D-172; fonts, `theme/` package, tokens, style sheet, UI scale, reduced motion, `components/`, gallery, tests; Carbon removed from the window |
 | M2 Shell | done (merged in PR #39) | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
-| M3 Model screens | implemented, awaiting your review | D-176, D-177; toolbar above the grids, frozen identifier column, problem marker in the row, cheaper cell painting (a grid scroll step about 30 ms), scenario icon buttons, tab close mark, tree rows of 26 px |
-| M4 Results screens | not started | |
+| M3 Model screens | done (merged in PR #40) | D-176, D-177; toolbar above the grids, frozen identifier column, problem marker in the row, cheaper cell painting (a grid scroll step about 30 ms), scenario icon buttons, tab close mark, tree rows of 26 px |
+| M4 Results screens | implemented, awaiting your review | D-178; one inline banner, labelled toolbar, foldable table pane, plot sizes in the theme and at the UI scale, cheaper table fill; the stall is 224 ms, not under 100 |
 | M5 Compare, Reports, dialogs | not started | |
 | M6 Final | not started | |
 
@@ -385,3 +385,13 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - No change to core, CLI, file formats or goldens.
 - Baseline (`docs/ui/screenshots/m3/baseline.txt`): the machine was slower than for M2 (start-up 2.0 s against 1.3 s), so only the interleaved comparison above is meaningful; the other items are within noise of M2 (tab switch 16 to 68 ms, plot zoom 35 ms median, the week at 1 s 10.8 s with a 257 ms longest stall).
 - Seen, not fixed: in the dark screenshots of the harness the project panel is squeezed to about 80 px (also in M2's). It looks like a dock width lost after a theme switch in the harness, not the default layout; I will check it on the way into M4 and say if it is real.
+
+**M4 as built, against its acceptance criteria**
+
+- Plots restyled from the tokens: the colours were done in M1; M4 moves the painted sizes (margins, gaps, marker bars, strip rows) into the theme at the UI scale (`plot_metrics.py`), sets the labels in the small type size and the numbers in the mono font. The summary pane is collapsible (the *Table* button, `CollapseButton`) and gets 3/8 of the height by default instead of 1/4. Violation navigation is two icon buttons with tooltips and names.
+- INCOMPLETE banner: the inline banner once per page (Power, Mass, Thermal, Link budget); the long *Body frame* line wraps. The sub-pages (*Phase launch / bol / eol*) were already a segmented control since M2.
+- Zoom and pan at most 50 ms: 24 ms median, 28 ms worst (`docs/ui/screenshots/m4/baseline.txt`). A full repaint is 2 ms.
+- **Not met: the stall of a week's results under 100 ms.** Measured the same way as in M1 to M3, the longest stretch is **224 ms** (257 ms in M3, 290 ms in M1). The work was measured by handler: the scenario view's `_done` is 117 ms before and 53 ms after, the timeline's `_done` 113 ms before and 40 ms after (its tables come in the next turn of the event loop), `fill_table` takes half the time. After a second round the tables of the timeline come in three turns (the plot, the summary, the other three tables 30 ms later) and the runs vary from 170 to 330 ms on this machine. What is left is the first paint of the week's plot (50 to 105 ms: it builds the block summaries of 20 series of 604,800 points on the window thread); fixing that means building them in the worker thread, which is a change of design, not a tweak, so I stopped. The aim of 100 ms stays unmet; say if you want the worker-thread change.
+- Tests: all existing plot, timeline, thermal, link, cancel, last-good and audit tests pass unchanged; one test that pinned the look (the style sheet names the roles, which listed the old red banner label) now names the three banners; new tests in `tests/gui/test_results_screens.py`. All 579 GUI tests pass (26 min, run serially) and all 1715 core tests pass (10 min).
+- Screenshots in both themes in `docs/ui/screenshots/m4/`. No change to core, CLI, file formats or goldens.
+- The squeezed project panel in the dark screenshots (seen in M2 and M3) was a real defect of M2, not of the harness: a narrow window squeezes the side panels and they stayed so when the window grew. Fixed (D-179) with a test; at the narrowest window (about 1214 px with both panels) the project panel is still a sliver (see D-179). The screenshots of M4 were taken after the fix. The cause was the width of the centre: a toolbar with text on the violation arrows made the centre at least about 1190 px wide; with icon arrows the window minimum is 1041 x 648 (it was 1001 x 648).

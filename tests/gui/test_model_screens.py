@@ -188,7 +188,8 @@ def test_a_tick_label_that_would_run_over_the_edge_is_left_out(  # type: ignore[
     qtbot,
 ) -> None:
     from budget_core.scenario.run import run_scenario
-    from budget_gui.timeline import RIGHT, TimelineWidget
+    from budget_gui.plot_metrics import STRIPS
+    from budget_gui.timeline import TimelineWidget
 
     project = load_project(EXAMPLES / "microsat_250kg_eps").project
     assert project is not None
@@ -214,7 +215,7 @@ def test_a_tick_label_that_would_run_over_the_edge_is_left_out(  # type: ignore[
     finally:
         QPainter.drawText = original  # type: ignore[method-assign]
     assert labels
-    assert max(right for _left, right in labels) <= widget.width() - RIGHT // 2
+    assert max(right for _left, right in labels) <= widget.width() - STRIPS.right // 2
 
 
 def test_the_close_mark_of_a_file_tab_is_the_themed_x() -> None:

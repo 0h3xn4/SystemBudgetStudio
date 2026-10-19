@@ -15,14 +15,13 @@ from collections.abc import Callable, Collection
 from datetime import timedelta
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtCore import Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QFileDialog,
     QHBoxLayout,
     QLabel,
-    QPushButton,
     QSplitter,
     QTableWidget,
     QTabWidget,
@@ -45,7 +44,6 @@ from budget_core.provenance import make_provenance
 from budget_core.reports.run import BudgetOutput, timeline_output
 from budget_core.scenario.run import ScenarioRun, ScenarioRunError, run_scenario
 from budget_core.timeutil import format_utc
-from budget_gui import theme
 from budget_gui.cancel_support import (
     CANCEL_TEXT,
     CANCEL_TIP,
@@ -54,6 +52,7 @@ from budget_gui.cancel_support import (
     cancelled_text,
     computing_text,
 )
+from budget_gui.components import Button, CollapseButton, icon_button
 from budget_gui.delegates import CellDelegate
 from budget_gui.plot_widget import PlotMarker, PlotWidget
 from budget_gui.scenario_view import fill_table
@@ -76,6 +75,11 @@ EMPTY_TEXT = (
     "This project has no scenario. Add a file in scenarios/ to work out the power timeline "
     "and the link passes."
 )
+
+
+DETAIL_DELAY_MS = 30  # the tables behind the one in view come after the first paint of the plot
+
+COMPUTE_TIP = "Work out the power timeline of this scenario"
 
 
 class TimelineWorker(QThread):
@@ -134,6 +138,7 @@ class PowerTimelineView(QWidget):
         self.run_provider: Callable[[str], ScenarioRun | None] | None = None
         self._worker: TimelineWorker | None = None
         self._export_worker: ExportWorker | None = None
+        self._finishing = False  # the tables of a result that has just arrived are still to come
 
         self.scenario_combo = QComboBox()
         self.basis_combo = QComboBox()
@@ -149,21 +154,23 @@ class PowerTimelineView(QWidget):
             "Time axis of the plot: elapsed time, UTC clock time, or orbit number "
             "(counted from the spacing of the eclipses)."
         )
-        self.previous_violation = QPushButton("◀")
-        self.next_violation = QPushButton("▶")
-        for button in (self.previous_violation, self.next_violation):
-            button.setProperty("kind", "secondary")
+        self.previous_violation = icon_button(
+            "chevrons-left", "Go to the previous interval that breaks a limit"
+        )
+        self.next_violation = icon_button(
+            "chevrons-right", "Go to the next interval that breaks a limit"
+        )
+        for button, name in (
+            (self.previous_violation, "Previous violation"),
+            (self.next_violation, "Next violation"),
+        ):
             button.setEnabled(False)
-            button.setMaximumWidth(theme.px(theme.COMPACT_BUTTON_WIDTH))
-        self.previous_violation.setToolTip("Go to the previous interval that breaks a limit.")
-        self.previous_violation.setAccessibleName("Previous violation")
-        self.next_violation.setToolTip("Go to the next interval that breaks a limit.")
-        self.next_violation.setAccessibleName("Next violation")
+            button.setAccessibleName(name)
         self._selected_row: int | None = None  # index into result.violations
-        self.compute_button = QPushButton("Compute")
-        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
-        self.export_button = QPushButton("Export…")
-        self.export_button.setProperty("kind", "secondary")  # Run is the primary action
+        self.compute_button = Button("Compute", icon="refresh-cw", compact=True, tip=COMPUTE_TIP)
+        self.export_button = Button(
+            "Export…", icon="file-output", compact=True, tip="Write the results to files"
+        )
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
@@ -219,11 +226,13 @@ class PowerTimelineView(QWidget):
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.plot)
         self.body.addWidget(self.tabs)
-        self.body.setStretchFactor(0, 3)
-        self.body.setStretchFactor(1, 1)
+        self.body.setStretchFactor(0, 5)  # the table gets enough rows to be read (D-178)
+        self.body.setStretchFactor(1, 3)
 
         layout = QVBoxLayout(self)
         layout.addLayout(top)
+        self.fold_button = CollapseButton(self.body)
+        top.addWidget(self.fold_button)  # at the right end of the toolbar
         second = QHBoxLayout()  # its own row: a long message does not squeeze the controls
         second.addWidget(self.shading)
         second.addWidget(self.status, 1)
@@ -368,7 +377,7 @@ class PowerTimelineView(QWidget):
             self._worker.wait(30000)
             self._worker = None
         self.compute_button.setText(COMPUTE_TEXT)
-        self.compute_button.setToolTip("")
+        self.compute_button.setToolTip(COMPUTE_TIP)
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, result: TimeDomainResult) -> None:
@@ -382,7 +391,25 @@ class PowerTimelineView(QWidget):
             return
         self.result = result
         self._result_key = key
-        self._show()
+        # The plot first, the tables in the next turn of the event loop: a week's results are one
+        # long stretch of work otherwise (D-178). `computed` is sent when both are done.
+        self._show(tables=False)
+        self._finishing = True  # busy until the result is complete: the next step waits for it
+        QTimer.singleShot(0, self, lambda: self._finish_done(result))
+
+    def _finish_done(self, result: TimeDomainResult) -> None:
+        self._finishing = False
+        if self.result is not result:  # another result or none came in the meantime
+            return
+        self._finishing = True
+        self._fill_tables(result, "summary")  # the table in view first, the rest in the next turn
+        QTimer.singleShot(DETAIL_DELAY_MS, self, lambda: self._finish_details(result))
+
+    def _finish_details(self, result: TimeDomainResult) -> None:
+        self._finishing = False
+        if self.result is not result:
+            return
+        self._fill_tables(result, "details")
         self.export_button.setEnabled(self.is_valid())
         count = len(result.violations)
         incomplete = any(a.placeholder for a in result.assumptions)
@@ -428,7 +455,7 @@ class PowerTimelineView(QWidget):
         utc = format_utc(result.run.env.grid.start + timedelta(seconds=round(t)))
         return f"{utc}\nMode: {mode}\n{'Eclipse' if eclipse else 'Sunlit'}"
 
-    def _show(self) -> None:
+    def _show(self, tables: bool = True) -> None:
         result = self.result
         self._selected_row = None
         if result is None:
@@ -448,7 +475,8 @@ class PowerTimelineView(QWidget):
         self.plot.set_shading(self.shading.isChecked())
         self._apply_axis()
         self._show_markers()
-        self._fill_tables(result)
+        if tables:
+            self._fill_tables(result)
 
     # ---- axis and markers --------------------------------------------------------------------
     def _axis_for(self, name: str) -> TimeAxis:
@@ -527,7 +555,9 @@ class PowerTimelineView(QWidget):
         if 0 <= index < len(rows):
             self.select_violation(rows[index])
 
-    def _fill_tables(self, result: TimeDomainResult) -> None:
+    def _fill_tables(self, result: TimeDomainResult, part: str = "all") -> None:
+        """Fill the tables of a result: all of them, or `summary` (the one in view) or the rest."""
+
         def num(value: float | None, digits: int = 2) -> str:
             return "n/a" if value is None else f"{value:.{digits}f}"
 
@@ -552,31 +582,34 @@ class PowerTimelineView(QWidget):
                     str(result.violation_count(c.case)),
                 ]
             )
-        fill_table(
-            self.summary_table,
-            [
-                "Case",
-                "Capacity (Wh)",
-                "Avg generation (W)",
-                "Avg demand (W)",
-                "Generated (Wh)",
-                "Demanded (Wh)",
-                "Lowest SoC (%)",
-                "Deepest DoD (%)",
-                "Not supplied (Wh)",
-                "Violations",
-            ],
-            rows,
-            numeric=range(1, 10),
-            states={
-                **{(r, 9): Status.FAIL for r in range(len(rows)) if rows[r][9] != "0"},
-                **{
-                    (r, 8): Status.FAIL
-                    for r, c in enumerate(result.cases)
-                    if (c.summary.unmet_wh or 0.0) > 0.0
+        if part != "details":
+            fill_table(
+                self.summary_table,
+                [
+                    "Case",
+                    "Capacity (Wh)",
+                    "Avg generation (W)",
+                    "Avg demand (W)",
+                    "Generated (Wh)",
+                    "Demanded (Wh)",
+                    "Lowest SoC (%)",
+                    "Deepest DoD (%)",
+                    "Not supplied (Wh)",
+                    "Violations",
+                ],
+                rows,
+                numeric=range(1, 10),
+                states={
+                    **{(r, 9): Status.FAIL for r in range(len(rows)) if rows[r][9] != "0"},
+                    **{
+                        (r, 8): Status.FAIL
+                        for r, c in enumerate(result.cases)
+                        if (c.summary.unmet_wh or 0.0) > 0.0
+                    },
                 },
-            },
-        )
+            )
+        if part == "summary":
+            return
         fill_table(
             self.violations_table,
             [
@@ -738,4 +771,4 @@ class PowerTimelineView(QWidget):
 
     def is_busy(self) -> bool:
         """A computation or an export is running."""
-        return self._worker is not None or self._export_worker is not None
+        return self._worker is not None or self._export_worker is not None or self._finishing

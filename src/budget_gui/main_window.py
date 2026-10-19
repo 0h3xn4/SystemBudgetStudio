@@ -676,6 +676,9 @@ class MainWindow(QMainWindow):
     def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802 (Qt naming)
         super().resizeEvent(event)
         self._fit_to_width()
+        if event.size().width() > event.oldSize().width() > 0:  # it grew: room for the panels
+            QTimer.singleShot(0, self, self._restore_squeezed_docks)
+            QTimer.singleShot(60, self, self._restore_squeezed_docks)  # after the docks settle
 
     def _fit_to_width(self) -> None:
         """Make room on a narrow window: below 1520 px the inspector waits, below 1280 px the rail
@@ -694,6 +697,8 @@ class MainWindow(QMainWindow):
             regime = "wide"
         if regime == self._regime:
             return
+        order = ("tiny", "narrow", "medium", "wide")
+        grew = self._regime in order and order.index(regime) > order.index(self._regime)
         self._regime = regime
         waiting: tuple[QDockWidget, ...] = ()
         if regime != "wide":
@@ -713,6 +718,28 @@ class MainWindow(QMainWindow):
             self.rail.set_folded(regime in ("narrow", "tiny") or self._folded_by_user)
         finally:
             self._auto_fold = False
+        if grew:
+            self._restore_squeezed_docks()  # now, and again once the shown docks are laid out
+            QTimer.singleShot(0, self, self._restore_squeezed_docks)
+            QTimer.singleShot(60, self, self._restore_squeezed_docks)
+
+    def _restore_squeezed_docks(self) -> None:
+        """A narrow window squeezes the side panels to a sliver (Qt gives the centre what it needs)
+        and they stay so when the window grows again: give a panel that is far below its usual
+        width that width back. A width the user chose is not touched unless it is that narrow."""
+        squeezed = [
+            (dock, theme.px(width))
+            for dock, width in zip(
+                (self.project_dock, self.inspector_dock), theme.DOCK_WIDTHS, strict=True
+            )
+            if not dock.isHidden() and dock.width() < theme.px(width) * 3 // 4
+        ]
+        if squeezed:
+            self.resizeDocks(
+                [dock for dock, _w in squeezed],
+                [w for _d, w in squeezed],
+                Qt.Orientation.Horizontal,
+            )
 
     def _rail_folded(self, folded: bool) -> None:
         if not self._auto_fold:
