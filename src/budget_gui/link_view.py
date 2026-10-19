@@ -116,6 +116,8 @@ class LinkPassesView(QWidget):
 
         self.scenario_combo = QComboBox()
         self.link_combo = QComboBox()
+        self.scenario_combo.setAccessibleName("Scenario")
+        self.link_combo.setAccessibleName("Link")
         self.compute_button = Button("Compute", icon="refresh-cw", compact=True, tip=COMPUTE_TIP)
         self.export_button = Button(
             "Export…", icon="file-output", compact=True, tip="Write the results to files"
@@ -138,6 +140,7 @@ class LinkPassesView(QWidget):
         top.addWidget(self.status, 1)
 
         self.plot = PlotWidget()
+        self.plot.setAccessibleName("Link passes plot")
         self.passes_table = QTableWidget()
         self.volume_table = QTableWidget()
         self.passes_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
@@ -145,6 +148,8 @@ class LinkPassesView(QWidget):
         self.tabs = QTabWidget()
         self.tabs.addTab(self.passes_table, "Passes")
         self.tabs.addTab(self.volume_table, "Data volume")
+        for index in range(self.tabs.count()):  # each table is named by its tab
+            self.tabs.widget(index).setAccessibleName(f"{self.tabs.tabText(index)} table")
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.plot)
         self.body.addWidget(self.tabs)

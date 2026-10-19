@@ -34,6 +34,7 @@ class ProvenancePanel(QWidget):
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setWordWrap(True)
+        self.table.setAccessibleName("Provenance")
         self.table.setTextElideMode(Qt.TextElideMode.ElideNone)  # a value wraps, it is not cut
         self.table.horizontalHeader().sectionResized.connect(self._fit_rows)
         self.table.setTabKeyNavigation(False)  # Tab leaves a read-only table

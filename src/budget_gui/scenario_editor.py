@@ -131,6 +131,14 @@ class _RuleRow(_Row):
         self.site = _combo(sites)
         self.lead = _spin()
         self.lag = _spin()
+        for widget, name in (
+            (self.mode, "Mode of the rule"),
+            (self.when, "When the rule applies"),
+            (self.site, "Site of the rule"),
+            (self.lead, "Seconds before the pass"),
+            (self.lag, "Seconds after the pass"),
+        ):
+            widget.setAccessibleName(name)
         for widget in (self.mode, self.when, self.site):
             self.sentence.addWidget(widget)
         self.sentence.addStretch(1)
@@ -155,6 +163,12 @@ class _SegmentRow(_Row):
         self.mode = _combo(modes)
         self.start = _spin()
         self.duration = _spin()
+        for widget, name in (
+            (self.mode, "Mode of the segment"),
+            (self.start, "Start of the segment, seconds after the scenario start"),
+            (self.duration, "Duration of the segment in seconds"),
+        ):
+            widget.setAccessibleName(name)
         for part in (self.mode, QLabel("from T+"), self.start, QLabel("for"), self.duration):
             self.sentence.addWidget(part)
         self.sentence.addStretch(1)
@@ -183,6 +197,8 @@ class ScenarioEditor(QWidget):
 
         self.default_mode = QComboBox()
         self.shadow_model = QComboBox()
+        self.default_mode.setAccessibleName("Default mode")
+        self.shadow_model.setAccessibleName("Shadow model")
         self.shadow_model.addItems(SHADOW_MODELS)
         self.sites_list = QListWidget()
         self.sites_list.setMaximumHeight(theme.px(theme.SITES_MAX_HEIGHT))

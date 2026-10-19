@@ -114,6 +114,7 @@ class ReportsView(QWidget):
 
         self.folder_edit = QLineEdit()
         self.folder_edit.setPlaceholderText("Folder to write the files into")
+        self.folder_edit.setAccessibleName("Folder to write the files into")
         self.folder_edit.textChanged.connect(self._update_button)
         self.browse_button = Button("Browse…", icon="folder-open")
         self.browse_button.clicked.connect(self._browse)

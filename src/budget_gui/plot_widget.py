@@ -23,6 +23,7 @@ import numpy as np
 from PySide6.QtCore import QLineF, QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import (
     QColor,
+    QFocusEvent,
     QFontMetrics,
     QKeyEvent,
     QMouseEvent,
@@ -352,6 +353,24 @@ class PlotWidget(QWidget):
         painter.drawPixmap(0, 0, self._plot_layer(spec))
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self._paint_cursors(painter, self._panel_rects())
+        self._paint_focus(painter)
+
+    def _paint_focus(self, painter: QPainter) -> None:
+        """The focus ring of the window, around a plot that has the keyboard (it is not a
+        control of the style sheet, so it paints its own)."""
+        if not self.hasFocus():
+            return
+        ring = theme.px(theme.FOCUS_RING)
+        painter.setPen(QPen(QColor(theme.tokens().focus), ring))
+        painter.drawRect(self.rect().adjusted(ring // 2, ring // 2, -ring, -ring))
+
+    def focusInEvent(self, event: QFocusEvent) -> None:  # noqa: N802
+        super().focusInEvent(event)
+        self.update()
+
+    def focusOutEvent(self, event: QFocusEvent) -> None:  # noqa: N802
+        super().focusOutEvent(event)
+        self.update()
 
     def _plot_layer(self, spec: PlotSpec) -> QPixmap:
         """The plot without the cursors, drawn again only when something it shows changed."""

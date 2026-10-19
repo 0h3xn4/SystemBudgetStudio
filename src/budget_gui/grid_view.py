@@ -508,6 +508,8 @@ class GridPage(QWidget):
         self.document = document
         self.what = what  # "unit" / "power mode" / "input": the thing a row is
         self.table = GridTable(model)
+        self.table.view.setAccessibleName(f"{what.capitalize()} grid")
+        self.table.view.frozen.setAccessibleName(f"{what.capitalize()} names")
         self.filter = QLineEdit()
         self.filter.setPlaceholderText(filter_hint)
         self.filter.setClearButtonEnabled(True)

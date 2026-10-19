@@ -200,6 +200,7 @@ class PowerTimelineView(QWidget):
         top.addStretch(1)
 
         self.plot = PlotWidget()
+        self.plot.setAccessibleName("Power timeline plot")
         self.summary_table = QTableWidget()
         self.violations_table = QTableWidget()
         self.orbits_table = QTableWidget()
@@ -223,6 +224,8 @@ class PowerTimelineView(QWidget):
         self.tabs.addTab(self.violations_table, "Violations")
         self.tabs.addTab(self.orbits_table, "Orbits")
         self.tabs.addTab(self.modes_table, "Modes")
+        for index in range(self.tabs.count()):  # each table is named by its tab
+            self.tabs.widget(index).setAccessibleName(f"{self.tabs.tabText(index)} table")
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.plot)
         self.body.addWidget(self.tabs)

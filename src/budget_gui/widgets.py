@@ -189,6 +189,7 @@ class _SectionPage(QScrollArea):
             self.models.append(model)
             view = QTableView()
             view.setModel(model)
+            view.setAccessibleName(table.title)
             view.setItemDelegate(CellDelegate(view))
             view.verticalHeader().setVisible(False)
             view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)

@@ -159,6 +159,7 @@ class ScenarioView(QWidget):
         top.addWidget(self.status, 1)
 
         self.timeline = TimelineWidget()
+        self.timeline.setAccessibleName("Scenario strips: eclipses, passes and modes")
         self.editor = ScenarioEditor(self.document)
         self.eclipse_table = QTableWidget()
         self.passes_table = QTableWidget()

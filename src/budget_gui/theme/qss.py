@@ -292,8 +292,9 @@ def stylesheet(t: Tokens) -> str:
         border: {BORDER}px solid {t.border_subtle}; border-radius: {rc}px;
         selection-background-color: {t.selected}; selection-color: {t.text}; }}
     QPlainTextEdit:focus, QTextEdit:focus {{ border: {ring}px solid {t.focus}; }}
-    QCheckBox, QRadioButton {{ background: transparent; spacing: {px(s1)}px; }}
-    QCheckBox:focus, QRadioButton:focus {{ color: {t.text}; }}
+    QCheckBox, QRadioButton {{ background: transparent; spacing: {px(s1)}px;
+        border: {ring}px solid transparent; border-radius: {rc}px; padding: 0 {px(s0)}px; }}
+    QCheckBox:focus, QRadioButton:focus {{ color: {t.text}; border-color: {t.focus}; }}
     QGroupBox {{ border: none; margin: 0; padding: 0; font-weight: 600; }}
 
     {_ITEM_TEXT} {{ background: {t.surface}; color: {t.text}; border: none;
@@ -318,6 +319,8 @@ def stylesheet(t: Tokens) -> str:
         border-top-left-radius: {rc}px; border-top-right-radius: {rc}px; }}
     QTabBar::tab:hover {{ background: {t.hover}; color: {t.text}; }}
     QTabBar::tab:selected {{ color: {t.text}; border-bottom: {ring}px solid {t.accent}; }}
+    QTabBar::tab:focus {{ border: {ring}px solid {t.focus}; }}
+    QTabBar::tab:selected:focus {{ border: {ring}px solid {t.focus}; }}
     {_tab_close_rules(t)}
 
     QTabBar[role="segmented"]::tab {{ background: transparent; color: {t.text_secondary};

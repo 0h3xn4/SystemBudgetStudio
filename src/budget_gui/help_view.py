@@ -31,6 +31,7 @@ class GuideDialog(QDialog):
         self.resize(*theme.scaled(theme.GUIDE_SIZE))
         self.guide = build_guide(project)
         self.browser = QTextBrowser()
+        self.browser.setAccessibleName("User guide")
         self.browser.setOpenLinks(False)
         self.browser.setOpenExternalLinks(False)
         self.browser.anchorClicked.connect(self._anchor)

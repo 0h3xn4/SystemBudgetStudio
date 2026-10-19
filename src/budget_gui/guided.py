@@ -99,6 +99,17 @@ class GuidedWizard(QWizard):
         self.start_edit = QLineEdit("2026-06-01T00:00:00Z")
         self.review = QLabel("")
         self.review.setWordWrap(True)
+        for widget, name in (
+            (self.name_edit, "Project name"),
+            (self.folder_edit, "Parent folder"),
+            (self.sample_combo, "Sample spacecraft"),
+            (self.altitude, "Altitude in kilometres"),
+            (self.inclination, "Inclination in degrees"),
+            (self.raan, "Right ascension of the ascending node in degrees"),
+            (self.duration, "Length in days"),
+            (self.start_edit, "Start time, UTC"),
+        ):
+            widget.setAccessibleName(name)
 
         project = _Page(self, "Project", "Name your project and choose where it is stored.")
         project.form.addRow("Project name", self.name_edit)
