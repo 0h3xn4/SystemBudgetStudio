@@ -20,6 +20,8 @@ EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
 class FakeView(QObject):
     computed = Signal(object)
     compute_failed = Signal(str)
+    stage_changed = Signal(str)
+    cancelled = Signal()
 
     def __init__(self, name: str, log: list[str]) -> None:
         super().__init__()
@@ -39,6 +41,11 @@ class FakeView(QObject):
     def compute(self) -> None:
         self.log.append(self.name)
         self.busy = True
+
+    def cancel(self) -> None:
+        self.log.append(f"cancel {self.name}")
+        self.busy = False
+        self.cancelled.emit()
 
     def finish(self) -> None:
         self.busy = False
@@ -208,9 +215,10 @@ def test_bol_eol_in_the_bar_drives_the_timeline_and_back(window: MainWindow) -> 
 
 def test_run_works_out_every_step_and_the_chip_says_so(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
     assert window.run_all() is True
+    assert window.top_bar.chip.state is RunState.RUNNING
     assert (
-        window.top_bar.chip.state is RunState.RUNNING and not window.top_bar.run_button.isEnabled()
-    )
+        window.top_bar.run_button.text() == "Cancel"
+    )  # a run in progress is cancelled, not restarted
     assert window.wait_for_jobs(180)
     assert window.scenario_view.last_run is not None
     assert window.timeline_view.is_valid() and window.link_passes_view.is_valid()
@@ -245,3 +253,14 @@ def test_unsaved_edits_show_in_the_bar_and_the_title(window: MainWindow) -> None
     window.save_current()
     assert window.top_bar.dirty_label.text() == ""
     assert not window.windowTitle().startswith("● ")
+
+
+def test_cancel_stops_the_run_and_the_steps_that_were_to_follow() -> None:
+    run, (scenario, timeline, passes), log = controller()
+    assert run.run() is True
+    assert log == ["scenario"] and run.is_running()
+    assert run.cancel() is True
+    assert log == ["scenario", "cancel scenario"]  # nothing after it started
+    assert not run.is_running() and run.state() is RunState.NOT_RUN
+    assert run.cancel() is False  # nothing is running now
+    assert not timeline.is_busy() and not passes.is_busy()
