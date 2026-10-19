@@ -74,6 +74,8 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 
 With no project open the window shows a welcome page: **Open a project folder…**, **New project (guided)…**, or drop a project folder on the window. There is no list of recent projects, because the tool does not keep the paths of your projects. In the **Model** grids the **Inspector** (right panel) shows the cell that has the cursor: its row, column and unit, the file and field, the value, its state, what the column means and, when the value is refused, why.
 
+While a run is in progress, **Run** becomes **Cancel** (Ctrl+R is the same button), a thin bar runs under the top bar and the status chip names the step (*Orbit, eclipses and passes*, *Power timeline: battery*, *Link passes*). **Cancel** keeps the results you had on screen and stops the steps that were still to come; it takes effect when the step in progress ends, which can be a few seconds for a week at 1 s. The *Compute* button of the Scenario, Timeline and Passes views is a Cancel button in the same way while it works.
+
 **Tab** moves through the controls of the window and **Shift+Tab** back; it does not stay inside a read-only table. In a grid it moves from cell to cell and leaves the grid after the last one. (On macOS the Ctrl key shortcuts are not tested.)
 
 ## Where does the window keep its layout?

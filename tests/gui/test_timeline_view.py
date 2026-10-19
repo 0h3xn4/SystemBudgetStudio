@@ -145,7 +145,7 @@ def test_computing_does_not_block_the_event_loop(
     timer.timeout.connect(lambda: ticks.append(1))
     timer.start(40)
     window.timeline_view.compute()
-    assert not window.timeline_view.compute_button.isEnabled()
+    assert window.timeline_view.compute_button.text() == "Cancel"  # while it computes
     with qtbot.waitSignal(window.timeline_view.computed, timeout=120000):
         pass
     timer.stop()

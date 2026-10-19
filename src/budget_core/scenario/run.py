@@ -6,6 +6,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 
+from budget_core.control import RunControl, checkpoint, stage
 from budget_core.environment.data import (
     Environment,
     EnvironmentData,
@@ -96,8 +97,11 @@ def environment_for(project: Project, scenario: Scenario) -> Environment:
     return ElementsPropagator(project.orbits[scenario.orbit])
 
 
-def run_scenario(project: Project, scenario_id: str) -> ScenarioRun:
-    """Compute the environment and the mode timeline. The project must be valid."""
+def run_scenario(
+    project: Project, scenario_id: str, control: RunControl | None = None
+) -> ScenarioRun:
+    """Compute the environment and the mode timeline. The project must be valid. A `control`
+    reports the stages and can stop it between them (the environment is one step)."""
     if scenario_id not in project.scenarios:
         known = ", ".join(sorted(project.scenarios)) or "none"
         raise ScenarioRunError(
@@ -110,6 +114,7 @@ def run_scenario(project: Project, scenario_id: str) -> ScenarioRun:
         )
     scenario = project.scenarios[scenario_id]
     adapter = environment_for(project, scenario)
+    stage(control, "Orbit, eclipses and passes")
     try:
         env = adapter.compute(
             grid_for(scenario), sites_for(project, scenario), scenario.shadow_model
@@ -159,6 +164,7 @@ def run_scenario(project: Project, scenario_id: str) -> ScenarioRun:
                 hint="Check the orbit; very low or very eccentric orbits decay.",
             )
         ) from None
+    checkpoint(control)
     notes = tuple(getattr(adapter, "notes", ()))
     problems: list[Problem] = []
     if scenario.environment_source == "elements" and scenario.orbit in project.orbits:

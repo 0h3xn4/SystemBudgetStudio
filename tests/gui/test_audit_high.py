@@ -208,7 +208,7 @@ def test_a_timeline_result_for_another_scenario_is_not_shown_or_exportable(
     view.scenario_combo.setCurrentText("one_day")
     view.compute()
     view.scenario_combo.setCurrentText("two")  # while it runs
-    qtbot.waitUntil(lambda: view.compute_button.isEnabled(), timeout=120000)
+    qtbot.waitUntil(lambda: not view.is_busy(), timeout=120000)
     assert view.output() is None and not view.export_button.isEnabled()
     assert view.result is None or view.result.run.scenario_id == view.selected_id()
 
@@ -220,7 +220,7 @@ def test_a_link_result_for_another_scenario_is_not_shown_or_exportable(
     view.scenario_combo.setCurrentText("one_day")
     view.compute()
     view.scenario_combo.setCurrentText("two")
-    qtbot.waitUntil(lambda: view.compute_button.isEnabled(), timeout=120000)
+    qtbot.waitUntil(lambda: not view.is_busy(), timeout=120000)
     assert view.output() is None and not view.export_button.isEnabled()
     assert view.result is None or view.result.run.scenario_id == view.selected_id()
 
@@ -229,7 +229,7 @@ def test_a_scenario_run_for_another_scenario_is_dropped(window: MainWindow, qtbo
     view = window.scenario_view
     view.compute()
     view.combo.setCurrentText("two")
-    qtbot.waitUntil(lambda: view.compute_button.isEnabled(), timeout=120000)
+    qtbot.waitUntil(lambda: not view.is_busy(), timeout=120000)
     assert view.last_run is None or view.last_run.scenario_id == "two"
 
 

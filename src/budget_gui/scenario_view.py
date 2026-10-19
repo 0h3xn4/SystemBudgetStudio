@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from budget_core.control import Cancelled, RunControl
 from budget_core.model import Project
 from budget_core.provenance import make_provenance
 from budget_core.reports.document import NA
@@ -40,6 +41,14 @@ from budget_core.scenario.run import (
     run_scenario,
 )
 from budget_core.timeutil import format_utc
+from budget_gui.cancel_support import (
+    CANCEL_TEXT,
+    CANCEL_TIP,
+    CANCELLING_TEXT,
+    COMPUTE_TEXT,
+    cancelled_text,
+    computing_text,
+)
 from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE
 from budget_gui.model_document import ModelDocument
 from budget_gui.scenario_editor import ScenarioEditor
@@ -56,6 +65,8 @@ EMPTY_TEXT = (
 class ScenarioWorker(QThread):
     finished_ok = Signal(object)
     failed = Signal(str)
+    stage = Signal(str)
+    cancelled = Signal()
 
     def __init__(self, project: Project, scenario_id: str) -> None:
         super().__init__()
@@ -63,8 +74,11 @@ class ScenarioWorker(QThread):
         self._scenario_id = scenario_id
 
     def run(self) -> None:
+        control = RunControl(self.isInterruptionRequested, self.stage.emit)
         try:
-            self.finished_ok.emit(run_scenario(self._project, self._scenario_id))
+            self.finished_ok.emit(run_scenario(self._project, self._scenario_id, control))
+        except Cancelled:
+            self.cancelled.emit()
         except ScenarioRunError as exc:
             self.failed.emit(exc.problem.format())
         except Exception as exc:  # plain message only, never a traceback or project content
@@ -99,6 +113,8 @@ def fill_table(
 class ScenarioView(QWidget):
     computed = Signal(object)
     compute_failed = Signal(str)
+    stage_changed = Signal(str)  # what a computation in progress is working on
+    cancelled = Signal()  # a computation was stopped at the user's request
 
     def __init__(self, document: ModelDocument | None = None) -> None:
         super().__init__()
@@ -115,7 +131,7 @@ class ScenarioView(QWidget):
         self.combo = QComboBox()
         self.compute_button = QPushButton("Compute")
         self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
-        self.compute_button.clicked.connect(lambda: self.compute())
+        self.compute_button.clicked.connect(self._compute_or_cancel)
         self.status = QLabel("")
         self.status.setWordWrap(True)
         self.empty_label = QLabel(EMPTY_TEXT)
@@ -197,7 +213,7 @@ class ScenarioView(QWidget):
         keep_edits = not shown and self.editor.is_modified()  # never drop edits silently (D-060)
         self.empty_label.setVisible(not shown and not keep_edits)
         self.body.setVisible(shown or keep_edits)
-        self.compute_button.setEnabled(shown and self._worker is None)
+        self.compute_button.setEnabled(shown)  # while it computes the button cancels
         self.combo.setEnabled(shown)
         if not shown or project is None:
             if keep_edits:
@@ -248,15 +264,41 @@ class ScenarioView(QWidget):
         self.set_project(self.project)
 
     # ---- compute -----------------------------------------------------------------------------
+    def _compute_or_cancel(self) -> None:
+        if self._worker is not None:
+            self.cancel()
+        else:
+            self.compute()
+
+    def cancel(self) -> None:
+        """Ask the computation in progress to stop; it stops at its next step."""
+        if self._worker is not None:
+            self._worker.requestInterruption()
+            self.compute_button.setEnabled(False)
+            self.status.setText(CANCELLING_TEXT)
+
+    def _stage(self, text: str) -> None:
+        self.status.setText(computing_text(text))
+        self.stage_changed.emit(text)
+
+    def _cancelled(self) -> None:
+        self._finish_worker()
+        self._computing_for = None
+        self.status.setText(cancelled_text(self.last_run is not None))
+        self.cancelled.emit()
+
     def compute(self) -> None:
         if self.project is None or not self.selected_id() or self._worker is not None:
             return
-        self.compute_button.setEnabled(False)
+        self.compute_button.setText(CANCEL_TEXT)
+        self.compute_button.setToolTip(CANCEL_TIP)
         self.status.setText("Computing…")
         self._computing_for = self.project
         worker = ScenarioWorker(self.project, self.selected_id())
         worker.finished_ok.connect(self._done)
         worker.failed.connect(self._failed)
+        worker.stage.connect(self._stage)
+        worker.cancelled.connect(self._cancelled)
         self._worker = worker
         worker.start()
 
@@ -264,6 +306,8 @@ class ScenarioView(QWidget):
         if self._worker is not None:
             self._worker.wait(10000)
             self._worker = None
+        self.compute_button.setText(COMPUTE_TEXT)
+        self.compute_button.setToolTip("")
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, run: ScenarioRun) -> None:

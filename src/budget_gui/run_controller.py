@@ -34,6 +34,7 @@ STATE_TEXT = {
 
 class RunController(QObject):
     changed = Signal()
+    stage_changed = Signal(str)  # what the run is working on now
 
     def __init__(self, scenario: Any, timeline: Any, passes: Any) -> None:
         super().__init__()
@@ -41,9 +42,13 @@ class RunController(QObject):
         self._queue: list[Any] = []
         self._current: Any = None
         self._failed: str | None = None
+        self._cancelling = False
+        self._stage = ""
         for view in (scenario, timeline, passes):
             view.computed.connect(lambda _result, v=view: self._step_done(v))
             view.compute_failed.connect(lambda message, v=view: self._step_failed(v, message))
+            view.cancelled.connect(lambda v=view: self._step_cancelled(v))
+            view.stage_changed.connect(self._stage_changed)
 
     # ---- what can run ------------------------------------------------------------------------
     def _steps(self) -> list[Any]:
@@ -69,6 +74,7 @@ class RunController(QObject):
         if not self.can_run():
             return False
         self._failed = None
+        self._cancelling = False
         self._queue = self._steps()
         self._advance()
         return True
@@ -82,6 +88,41 @@ class RunController(QObject):
                 self.changed.emit()
                 return
         self._current = None
+        self.changed.emit()
+
+    def cancel(self) -> bool:
+        """Stop the run (or the computation of one view): the step in progress ends at its next
+        point, the steps after it do not start, and the results shown stay as they are."""
+        busy = [v for v in (self.scenario, self.timeline, self.passes) if v.is_busy()]
+        if not busy:
+            return False
+        self._queue = []
+        self._cancelling = True
+        for view in busy:
+            view.cancel()
+        self.changed.emit()
+        return True
+
+    @property
+    def cancelling(self) -> bool:
+        return self._cancelling and self.is_running()
+
+    @property
+    def stage(self) -> str:
+        return self._stage if self.is_running() else ""
+
+    def _stage_changed(self, text: str) -> None:
+        self._stage = text
+        self.stage_changed.emit(text)
+        self.changed.emit()
+
+    def _step_cancelled(self, view: Any) -> None:
+        self._queue = []
+        if view is self._current:
+            self._current = None
+        if not self.is_running():
+            self._cancelling = False
+            self._stage = ""
         self.changed.emit()
 
     def _step_done(self, view: Any) -> None:

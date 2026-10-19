@@ -26,6 +26,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from budget_core.control import Cancelled, RunControl
 from budget_core.link.evaluate import (
     LinkSeries,
     LinkSeriesResult,
@@ -40,6 +41,14 @@ from budget_core.provenance import make_provenance
 from budget_core.reports.run import BudgetOutput, link_output
 from budget_core.scenario.run import ScenarioRun, ScenarioRunError, run_scenario
 from budget_core.timeutil import format_utc
+from budget_gui.cancel_support import (
+    CANCEL_TEXT,
+    CANCEL_TIP,
+    CANCELLING_TEXT,
+    COMPUTE_TEXT,
+    cancelled_text,
+    computing_text,
+)
 from budget_gui.plot_widget import PlotWidget
 from budget_gui.scenario_view import fill_table
 from budget_gui.validity import (
@@ -56,6 +65,8 @@ EMPTY_TEXT = "No links to show. Add links/*.yaml and a scenario."
 class LinkWorker(QThread):
     finished_ok = Signal(object)
     failed = Signal(str)
+    stage = Signal(str)
+    cancelled = Signal()
 
     def __init__(self, project: Project, scenario_id: str, run: ScenarioRun | None) -> None:
         super().__init__()
@@ -63,10 +74,14 @@ class LinkWorker(QThread):
 
     def run(self) -> None:
         project, scenario_id, scenario_run = self._args
+        control = RunControl(self.isInterruptionRequested, self.stage.emit)
         try:
             if scenario_run is None:
-                scenario_run = run_scenario(project, scenario_id)
-            result = link_pass_series(project, scenario_run)
+                scenario_run = run_scenario(project, scenario_id, control)
+            result = link_pass_series(project, scenario_run, control)
+        except Cancelled:
+            self.cancelled.emit()
+            return
         except ScenarioRunError as exc:
             self.failed.emit(exc.problem.format())
             return
@@ -79,6 +94,8 @@ class LinkWorker(QThread):
 class LinkPassesView(QWidget):
     computed = Signal(object)
     compute_failed = Signal(str)
+    stage_changed = Signal(str)  # what a computation in progress is working on
+    cancelled = Signal()  # a computation was stopped at the user's request
     export_finished = Signal(list)
     export_failed = Signal(str)
 
@@ -136,7 +153,7 @@ class LinkPassesView(QWidget):
         layout.addWidget(self.empty_label)
         layout.addWidget(self.body)
 
-        self.compute_button.clicked.connect(lambda: self.compute())
+        self.compute_button.clicked.connect(self._compute_or_cancel)
         self.export_button.clicked.connect(lambda: self._choose_export())
         self.link_combo.currentTextChanged.connect(lambda _t: self._show())
         self.scenario_combo.currentTextChanged.connect(self._scenario_changed)
@@ -199,7 +216,7 @@ class LinkPassesView(QWidget):
         self.body.setVisible(shown)
         for widget in (self.scenario_combo, self.link_combo):
             widget.setEnabled(shown)
-        self.compute_button.setEnabled(shown and self._worker is None)
+        self.compute_button.setEnabled(shown)  # while it computes the button cancels
         if not shown:
             self.result = None
             self._show()
@@ -217,16 +234,42 @@ class LinkPassesView(QWidget):
             self.status.setText(NOT_COMPUTED_TEXT)
 
     # ---- compute -----------------------------------------------------------------------------
+    def _compute_or_cancel(self) -> None:
+        if self._worker is not None:
+            self.cancel()
+        else:
+            self.compute()
+
+    def cancel(self) -> None:
+        """Ask the computation in progress to stop; it stops at its next step."""
+        if self._worker is not None:
+            self._worker.requestInterruption()
+            self.compute_button.setEnabled(False)
+            self.status.setText(CANCELLING_TEXT)
+
+    def _stage(self, text: str) -> None:
+        self.status.setText(computing_text(text))
+        self.stage_changed.emit(text)
+
+    def _cancelled(self) -> None:
+        self._finish_worker()
+        self._computing_key = None
+        self.status.setText(cancelled_text(self.result is not None))
+        self.cancelled.emit()
+
     def compute(self) -> None:
         if self.project is None or not self.selected_id() or self._worker is not None:
             return
-        self.compute_button.setEnabled(False)
+        self.compute_button.setText(CANCEL_TEXT)
+        self.compute_button.setToolTip(CANCEL_TIP)
         self.status.setText("Computing…")
         reused = self.run_provider(self.selected_id()) if self.run_provider else None
         self._computing_key = self.current_key()
         worker = LinkWorker(self.project, self.selected_id(), reused)
         worker.finished_ok.connect(self._done)
         worker.failed.connect(self._failed)
+        worker.stage.connect(self._stage)
+        worker.cancelled.connect(self._cancelled)
         self._worker = worker
         worker.start()
 
@@ -234,6 +277,8 @@ class LinkPassesView(QWidget):
         if self._worker is not None:
             self._worker.wait(30000)
             self._worker = None
+        self.compute_button.setText(COMPUTE_TEXT)
+        self.compute_button.setToolTip("")
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, result: LinkSeriesResult) -> None:

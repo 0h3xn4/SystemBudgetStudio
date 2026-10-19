@@ -31,6 +31,7 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   environment/        Environment interface; SpaceMissionStudioImport; ElementsPropagator (sgp4)
   power/              static_budget.py; time domain: array.py, battery.py, attitude.py, orbits.py,
                       signals.py, time_domain.py (pure functions over NumPy arrays)
+  control.py          RunControl: stages and cancellation of a long computation (D-167); optional, changes no result
   plots/              PlotSpec (neutral), power plot builder, Pillow PNG renderer (reports)
   mass/               static_mass.py (roll-up, margins, limits), mass_properties.py (CG, inertia, phases)
   thermal/            static_thermal.py (dissipation roll-up, cases, limit checks),
