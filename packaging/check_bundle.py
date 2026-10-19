@@ -36,10 +36,14 @@ REQUIRED_FILES = (
 )
 
 
-# the window icon (D-148); the data files are in `_internal` of a PyInstaller bundle
+# the window icon (D-148), the fonts and images of the window (D-169, D-170); the data files are in
+# `_internal` of a PyInstaller bundle
 ICONS = (
     "budget_core/assets/icons/logo-256.png",
     "budget_core/assets/icons/ui/circle-check-24.png",  # the user-interface icons (D-150)
+    "budget_core/assets/icons/ui/theme/chevron-down-light.png",  # arrows of the style sheet
+    "budget_core/assets/fonts/Inter-Regular.ttf",
+    "budget_core/assets/fonts/JetBrainsMono-Regular.ttf",
 )
 EXECUTABLES = ("system-budget-studio", "budget")
 

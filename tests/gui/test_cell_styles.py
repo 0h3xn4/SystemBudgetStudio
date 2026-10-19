@@ -97,16 +97,16 @@ def test_n_a_does_not_look_like_zero_or_like_an_empty_cell(qtbot) -> None:  # ty
 
 def test_a_placeholder_has_a_dashed_border(qtbot) -> None:  # type: ignore[no-untyped-def]
     image = render(qtbot, "12.0", Status.PLACEHOLDER)
-    fg = QColor(LIGHT.s_placeholder.fg).name()
+    fg = QColor(LIGHT.standby.fg).name()
     top = [image.pixelColor(x, 2).name() for x in range(8, image.width() - 8)]
     # a dashed line alternates between the colour of the border and the tint behind it
-    assert fg in top and LIGHT.s_placeholder.bg in top
+    assert fg in top and LIGHT.standby.bg in top
 
 
 def test_a_margin_bar_is_as_long_as_the_share_of_the_limit_used(qtbot) -> None:  # type: ignore[no-untyped-def]
     def bar_length(share: float) -> int:
         image = render(qtbot, "0.2", Status.PASS, share=share)
-        fg = QColor(LIGHT.s_pass.fg).name()
+        fg = QColor(LIGHT.normal.fg).name()
         y = image.height() - 6
         return sum(1 for x in range(image.width()) if image.pixelColor(x, y).name() == fg)
 
@@ -119,8 +119,8 @@ def test_the_cell_follows_the_theme(qtbot) -> None:  # type: ignore[no-untyped-d
     light = render(qtbot, "n/a", Status.NOT_CHECKED, numeric=False)
     theme.manager().set_mode(Mode.DARK)
     dark = render(qtbot, "n/a", Status.NOT_CHECKED, numeric=False)
-    assert DARK.s_not_checked.bg in pixels(dark)
-    assert LIGHT.s_not_checked.bg in pixels(light) and light != dark
+    assert DARK.off.bg in pixels(dark)
+    assert LIGHT.off.bg in pixels(light) and light != dark
 
 
 def test_status_of_and_the_tooltips() -> None:
@@ -161,7 +161,7 @@ def test_the_legend_lists_every_style_with_the_same_delegate(qtbot) -> None:  # 
     assert isinstance(legend.itemDelegateForColumn(1), CellDelegate)
     legend.resize(760, 620)
     legend.show()
-    assert LIGHT.s_placeholder.bg in pixels(legend.grab().toImage())
+    assert LIGHT.standby.bg in pixels(legend.grab().toImage())
 
 
 def test_the_view_menu_opens_the_legend_and_switches_the_theme(qtbot) -> None:  # type: ignore[no-untyped-def]

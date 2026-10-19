@@ -21,6 +21,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from budget_gui import theme
 from budget_gui.delegates import (
     MARGIN_ROLE,
     NUMERIC_ROLE,
@@ -101,14 +102,14 @@ class CellStyleLegend(QTableView):
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
         self.resizeRowsToContents()
         for row in range(len(ROWS)):
-            self.setRowHeight(row, max(self.rowHeight(row), 30))
+            self.setRowHeight(row, max(self.rowHeight(row), theme.px(theme.CONTROL_DEFAULT)))
 
 
 class LegendDialog(QDialog):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.setWindowTitle("Cell styles")
-        self.setMinimumSize(640, 340)
+        self.setMinimumSize(*theme.scaled(theme.LEGEND_MIN))
         intro = QLabel(
             "Every table uses the same styles. A style always has an icon or text "
             "as well as a colour."

@@ -41,6 +41,7 @@ from budget_core.scenario.run import (
     run_scenario,
 )
 from budget_core.timeutil import format_utc
+from budget_gui import theme
 from budget_gui.cancel_support import (
     CANCEL_TEXT,
     CANCEL_TIP,
@@ -169,7 +170,7 @@ class ScenarioView(QWidget):
         self.body.addWidget(self.timeline)
         self.body.addWidget(tabs)
         self.body.setChildrenCollapsible(False)
-        self.timeline.setMinimumHeight(180)
+        self.timeline.setMinimumHeight(theme.px(theme.TIMELINE_MIN_HEIGHT))
         self.body.setStretchFactor(0, 2)
         self.body.setStretchFactor(1, 3)  # the editor and the tables get more room than the strip
         self.body.setSizes([300, 520])

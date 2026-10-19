@@ -1,8 +1,9 @@
 # UI overhaul: audit and plan (Phase 1)
 
-Status: **Phase 1 only. Nothing of the application has been changed.** This page is the audit and the
-plan the brief ([`UI_OVERHAUL.md`](UI_OVERHAUL.md)) asks for. Implementation starts after you have
-answered the questions in [section 10](#10-questions-for-you) and approved the milestones.
+Status: **Phase 1 (this audit and plan) was approved with "use the defaults" for all 12 questions of
+[section 10](#10-questions-for-you); see [section 11](#11-progress) for where the milestones stand.**
+The audit text below is the state of the window *before* the overhaul and is kept as written (the
+"before" screenshots are in `docs/ui/screenshots/before/`). The brief is [`UI_OVERHAUL.md`](UI_OVERHAUL.md).
 
 What Phase 1 added to the repository (documents and two measuring scripts, no code of the window):
 
@@ -339,3 +340,28 @@ Answer by number. Where I wrote a default, I will take it if you reply "use the 
 10. **Version and goldens.** Next minor is 1.2.0; its release PR regenerates the version line in the golden files, as 1.1.0 did (content unchanged). *Default: yes.* Say so if "goldens unchanged" must include that line.
 11. **Order and stopping points.** *Default: M1 → M2 → … in order, one PR each, you review the screenshots after M1, M2 and M5; I stop after each PR and wait for you to merge.*
 12. **Timing against the pending 1.1.0 checks.** Start M1 now on a new branch from `main` while your real-machine checks are pending? *Default: yes; a defect from your checks goes into 1.1.1 first.*
+
+## 11. Progress
+
+All 12 questions were answered "use the defaults". One deviation from the plan's wording: the UI-scale
+steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
+
+| Milestone | State | Notes |
+|---|---|---|
+| Phase 1: audit and plan | done | PR #39 |
+| M1 Foundation | implemented, awaiting your review | D-168 to D-172; fonts, `theme/` package, tokens, style sheet, UI scale, reduced motion, `components/`, gallery, tests; Carbon removed from the window |
+| M2 Shell | not started | |
+| M3 Model screens | not started | |
+| M4 Results screens | not started | |
+| M5 Compare, Reports, dialogs | not started | |
+| M6 Final | not started | |
+
+**M1 as built, against its acceptance criteria**
+
+- Theme package with tokens (dark and light), type, space, radius, control-height and motion scales, bundled Inter and JetBrains Mono, the style sheet generated at the UI scale, live theme switching: done (`src/budget_gui/theme/`).
+- Carbon removed from the window: done; IBM Plex remains for exported files only (D-168).
+- Components with a gallery: done (`src/budget_gui/components/`, `scripts/ui_gallery.py`, screenshots in `docs/ui/screenshots/m1/`).
+- Tests: contrast over every token pair, colour-vision distance, no colour, font family or pixel size outside the theme package, smoke test of every screen and dialog in four theme and scale combinations: done. The four old tests that pinned the look (question 3) were rewritten with the same intent.
+- No change to core, CLI, file formats or goldens: yes; `git diff main -- src/budget_core tests/golden tests/regression tests/unit` shows only the bundle-check test, which gained the new font files.
+- Start-up and tab-switch numbers: see `docs/ui/screenshots/m1/baseline.txt`.
+- Known limit: the pixel constants inside custom painters (plot margins, timeline rows, cell bars) are named module constants, not yet theme constants; they are redone with their views in M3 and M4 (D-169).

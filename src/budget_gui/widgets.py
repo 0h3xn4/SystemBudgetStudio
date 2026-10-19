@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 
 from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
+from budget_gui import theme
 from budget_gui.delegates import (
     MARGIN_ROLE,
     NUMERIC_ROLE,
@@ -177,7 +178,6 @@ class _SectionPage(QScrollArea):
             view.setModel(model)
             view.setItemDelegate(CellDelegate(view))
             view.verticalHeader().setVisible(False)
-            view.setAlternatingRowColors(True)
             view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
             view.setTabKeyNavigation(False)  # Tab leaves a read-only table (it is not a form)
             # the widths come from the first rows only: a table of thousands of rows would
@@ -187,7 +187,7 @@ class _SectionPage(QScrollArea):
             view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             height = view.horizontalHeader().height() + 2 * view.frameWidth() + 18
             height += sum(view.rowHeight(r) for r in range(len(table.rows)))
-            view.setFixedHeight(max(height, 60))
+            view.setFixedHeight(max(height, theme.px(theme.TABLE_MIN_HEIGHT)))
             layout.addWidget(view)
             if table.note:
                 note = QLabel(table.note)

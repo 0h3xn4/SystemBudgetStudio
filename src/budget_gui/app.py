@@ -9,7 +9,8 @@ from pathlib import Path
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from budget_core import APP_NAME
-from budget_gui.layout_settings import LayoutSettings
+from budget_gui import theme
+from budget_gui.layout_settings import MOTION, LayoutSettings
 from budget_gui.main_window import MainWindow
 from budget_gui.privacy import disable_settings_files
 from budget_gui.theme import Mode, app_icon, apply_theme
@@ -40,7 +41,11 @@ def create_app(argv: Sequence[str]) -> QApplication:
     assert isinstance(app, QApplication)
     app.setApplicationName(APP_NAME)
     app.setDesktopFileName("system-budget-studio")  # the Linux menu entry (Icon=, D-148)
-    saved = LayoutSettings.default().word("theme/mode", tuple(m.value for m in Mode), Mode.SYSTEM)
+    layout = LayoutSettings.default()
+    saved = layout.word("theme/mode", tuple(m.value for m in Mode), Mode.SYSTEM)
+    scales = tuple(str(s) for s in theme.SCALES)
+    theme.set_scale_percent(int(layout.word("theme/scale", scales, str(theme.DEFAULT_SCALE))))
+    theme.manager().set_reduce_motion(layout.word("theme/motion", MOTION, "full") == "reduced")
     apply_theme(app, Mode(saved))  # light, dark, or whatever the system uses (D-150)
     app.setWindowIcon(app_icon())  # every window and dialog, the task bar included (D-148)
     return app

@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **UI overhaul, milestone 1: the foundation (D-168 to D-172; plan in [docs/ui/UI_OVERHAUL_PLAN.md](docs/ui/UI_OVERHAUL_PLAN.md)).** The window has a new look: Inter for text and JetBrains Mono for numbers (both bundled, replacing IBM Plex in the window), a neutral palette with one accent in a light and a dark theme that follow the system and switch live, rounded controls of 28 and 32 px, a quieter table style (no zebra, a hover row, thin scroll bars) and eight plot and mode colours that stay apart for colour-blind users. Buttons are neutral unless they are the one primary action of a view. *View > UI size* (90 to 125 %) and *View > Reduce motion* are new. Under the surface: `budget_gui/theme/` (tokens, scales, fonts, style sheet) and `budget_gui/components/` (buttons, badges, segmented control, empty state, toast, message dialog), a gallery script, contrast and colour-vision tests, and a test that fails when a colour, a font or a pixel size is set outside the theme. IBM Carbon is gone from the window. **No change to any computation, file format, command-line option or exported file** (the exports keep IBM Plex and their colours, so the golden files are unchanged).
+
 ## [1.1.0] - 2026-10-19
 
 The window was redesigned (UX steps 0 to 6, [the audit](docs/ux-audit.md) and [the design notes](docs/DESIGN.md)), the examples are now a satellite of 250 kg, and plots of a long run are fast. **No equation, file format, report layout or command-line behaviour changed**: the same project gives the same numbers and the same files as 1.0.0 (the tool version in the provenance rows and the examples differ).

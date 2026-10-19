@@ -75,7 +75,6 @@ class InspectorPanel(QWidget):
         self.problems_title.setProperty("role", "section-title")
         self.problems = QListWidget()
         self.problems.setWordWrap(True)
-        self.problems.setAlternatingRowColors(True)
         self.empty = QLabel(
             "Select a node in the project tree to see where it lives and what is wrong with it."
         )
@@ -106,7 +105,7 @@ class InspectorPanel(QWidget):
         details.addStretch(1)  # what is shown stays at the top when there is no list of problems
         details.addLayout(buttons)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(12, 8, 12, 8)
+        layout.setContentsMargins(*theme.inset(2, 1))
         layout.addWidget(self.empty)
         layout.addWidget(self.details, 1)
 

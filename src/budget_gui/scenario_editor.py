@@ -31,7 +31,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from budget_gui import icons
+from budget_gui import icons, theme
 from budget_gui.edit_bar import EditBar
 from budget_gui.model_document import ModelDocument, set_at
 
@@ -88,7 +88,7 @@ def _spin(maximum: float = MAX_SECONDS) -> QDoubleSpinBox:
     box.setSuffix(" s")
     box.setButtonSymbols(QDoubleSpinBox.ButtonSymbols.NoButtons)
     box.setKeyboardTracking(False)
-    box.setMaximumWidth(120)
+    box.setMaximumWidth(theme.px(theme.COMBO_MAX_WIDTH))
     return box
 
 
@@ -125,7 +125,7 @@ class _Row(QFrame):
         top.addLayout(self.sentence, 1)
         top.addLayout(buttons)
         self.layout_ = QVBoxLayout(self)
-        self.layout_.setContentsMargins(6, 4, 6, 4)
+        self.layout_.setContentsMargins(*theme.inset(1, 0))
         self.layout_.addLayout(top)
 
 
@@ -142,7 +142,7 @@ class _RuleRow(_Row):
         self.sentence.addStretch(1)
         self.timing = QWidget()
         timing = QHBoxLayout(self.timing)
-        timing.setContentsMargins(24, 0, 0, 0)
+        timing.setContentsMargins(theme.gap(4), 0, 0, 0)
         for part in (
             QLabel("Start it"),
             self.lead,
@@ -187,7 +187,7 @@ class ScenarioEditor(QWidget):
         self.shadow_model = QComboBox()
         self.shadow_model.addItems(SHADOW_MODELS)
         self.sites_list = QListWidget()
-        self.sites_list.setMaximumHeight(72)
+        self.sites_list.setMaximumHeight(theme.px(theme.SITES_MAX_HEIGHT))
         form = QFormLayout()
         form.addRow("Default mode", self.default_mode)
         form.addRow("Shadow model", self.shadow_model)

@@ -43,7 +43,7 @@ from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
 from budget_gui.inspector import CellInfo, InspectorPanel
-from budget_gui.layout_settings import LayoutSettings
+from budget_gui.layout_settings import MOTION, LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.model_document import ModelDocument
@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         disable_settings_files()  # also when the window is made without create_app
         self.setWindowTitle(APP_NAME)
-        self.resize(1400, 860)
+        self.resize(*theme.scaled(theme.WINDOW_DEFAULT))
         self.session = ProjectSession()
         self.layout_settings = layout if layout is not None else LayoutSettings.default()
         self.tree = ProjectTree()
@@ -319,6 +319,23 @@ class MainWindow(QMainWindow):
             group.addAction(action)
             theme_menu.addAction(action)
             self.theme_actions[mode] = action
+        scale_menu = view_menu.addMenu("UI si&ze")
+        scale_group = QActionGroup(self)
+        scale_group.setExclusive(True)
+        self.scale_actions: dict[int, QAction] = {}
+        for percent in theme.SCALES:
+            action = QAction(f"{percent} %", self)
+            action.setCheckable(True)
+            action.setChecked(theme.scale_percent() == percent)
+            action.triggered.connect(lambda _checked=False, p=percent: self.set_scale(p))
+            scale_group.addAction(action)
+            scale_menu.addAction(action)
+            self.scale_actions[percent] = action
+        self.motion_action = QAction("Reduce &motion", self)
+        self.motion_action.setCheckable(True)
+        self.motion_action.setChecked(theme.manager().reduce_motion)
+        self.motion_action.triggered.connect(self.set_reduce_motion)
+        view_menu.addAction(self.motion_action)
         view_menu.addSeparator()
         for dock in (
             self.project_dock,
@@ -355,6 +372,21 @@ class MainWindow(QMainWindow):
         theme.manager().set_mode(mode)
         self.theme_actions[mode].setChecked(True)
         self.layout_settings.set_word("theme/mode", mode.value, tuple(m.value for m in theme.Mode))
+        self.layout_settings.sync()
+
+    def set_scale(self, percent: int) -> None:
+        """Make the window larger or smaller now (90 to 125 %) and keep the choice."""
+        theme.manager().set_scale(percent)
+        self.scale_actions[theme.scale_percent()].setChecked(True)
+        self.layout_settings.set_word(
+            "theme/scale", str(theme.scale_percent()), tuple(str(s) for s in theme.SCALES)
+        )
+        self.layout_settings.sync()
+
+    def set_reduce_motion(self, reduced: bool) -> None:
+        """Turn animations off (or on again) and keep the choice."""
+        theme.manager().set_reduce_motion(reduced)
+        self.layout_settings.set_word("theme/motion", "reduced" if reduced else "full", MOTION)
         self.layout_settings.sync()
 
     def show_cell_styles(self) -> LegendDialog:
@@ -553,11 +585,13 @@ class MainWindow(QMainWindow):
         self.restoreState(self._default_state)
         self._apply_default_sizes()
         self.problems_panel.set_column_widths([])
-        self.resize(1400, 860)
+        self.resize(*theme.scaled(theme.WINDOW_DEFAULT))
 
     def _apply_default_sizes(self) -> None:
         self.resizeDocks(
-            [self.project_dock, self.problems_dock], [280, 420], Qt.Orientation.Horizontal
+            [self.project_dock, self.problems_dock],
+            [theme.px(w) for w in theme.DOCK_WIDTHS],
+            Qt.Orientation.Horizontal,
         )
 
     def showEvent(self, event: QShowEvent) -> None:  # noqa: N802 (Qt naming)

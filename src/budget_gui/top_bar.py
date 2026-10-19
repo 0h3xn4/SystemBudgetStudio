@@ -80,8 +80,8 @@ class StatusChip(QFrame):
         self._icon.setFixedSize(QSize(self.ICON, self.ICON))
         self._text = QLabel()
         layout = QHBoxLayout(self)
-        layout.setContentsMargins(8, 2, 10, 2)
-        layout.setSpacing(4)
+        layout.setContentsMargins(theme.gap(1), theme.gap(0), theme.gap(2), theme.gap(0))
+        layout.setSpacing(theme.gap(0))
         layout.addWidget(self._icon)
         layout.addWidget(self._text)
         self._state = RunState.NOT_RUN
@@ -156,6 +156,7 @@ class TopBar(QWidget):
         self.case_buttons["BOL"].setChecked(True)
 
         self.run_button = QPushButton("Run")
+        self.run_button.setProperty("kind", "primary")
         self.run_button.setIcon(icons.icon("play", theme.tokens().text_on_accent))
         self.run_button.setToolTip(RUN_TIP)
         self.run_button.setEnabled(False)
@@ -164,14 +165,14 @@ class TopBar(QWidget):
         self.progress = QProgressBar()
         self.progress.setRange(0, 0)  # busy: how long it takes is not known
         self.progress.setTextVisible(False)
-        self.progress.setFixedHeight(3)
+        self.progress.setFixedHeight(theme.px(theme.PROGRESS_HEIGHT))
         self.progress.hide()
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.setSpacing(0)
         layout = QHBoxLayout()
-        layout.setContentsMargins(12, 8, 12, 8)
-        layout.setSpacing(8)
+        layout.setContentsMargins(*theme.inset(2, 1))
+        layout.setSpacing(theme.gap(1))
         outer.addLayout(layout)
         outer.addWidget(self.progress)
         layout.addWidget(self.name_label)
@@ -248,7 +249,7 @@ class TopBar(QWidget):
         self.chip.set_state(state, detail, tip)
         running = state is RunState.RUNNING
         self.progress.setVisible(running)
-        self.run_button.setProperty("kind", "secondary" if running else "")
+        self.run_button.setProperty("kind", "secondary" if running else "primary")
         self.run_button.setText(("Cancelling…" if cancelling else "Cancel") if running else "Run")
         self.run_button.setToolTip(
             "Stop the run. The results shown now stay as they are (Ctrl+R)." if running else RUN_TIP

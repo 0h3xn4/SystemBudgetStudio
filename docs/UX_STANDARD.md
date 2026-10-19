@@ -19,7 +19,7 @@ changing any equation, file format or output file (outputs are byte-reproducible
 - Also: comparison of two revisions or scenarios, guided wizard, unit-table CSV/XLSX
   round-trip with import preview, reports (XLSX/PDF/DOCX/CSV/JSON) with provenance.
 - Known issue: panning a week at 1 s with many series is slow.
-- Stack: PySide6, IBM Plex fonts already shipped.
+- Stack: PySide6 (when this standard was written the window used IBM Plex; see D-168).
 
 ## Non-negotiable principles
 1. **Numbers are sacred.** Unit in every column header; fixed precision per column; tabular
@@ -125,8 +125,8 @@ changing any equation, file format or output file (outputs are byte-reproducible
 ## Visual system
 - One theme module generating `QPalette` + QSS; no scattered `setStyleSheet`, no hard-coded
   colours. Light and dark themes, OS default.
-- IBM Plex Sans (UI) and IBM Plex Mono (numbers, IDs, file paths); tabular figures.
-- Type scale 12/13/16/20 px; spacing 4/8/12/16/24/32 px.
+- Inter (UI) and JetBrains Mono (numbers, IDs, file paths); tabular figures (D-170).
+- Type scale 11/12/13/15/18/22 px; spacing 4/8/12/16/24/32 px (D-169).
 - Status colours (pass / near-limit / fail / not-checked / placeholder) defined once,
   colour-blind safe, always paired with an icon or text. One accent for the primary action.
 - SVG icon set (Lucide/Tabler), tooltips on every icon button.

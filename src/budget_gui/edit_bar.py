@@ -22,7 +22,8 @@ class EditBar(QWidget):
         self._icon_names: dict[QPushButton, str] = {}
         self.undo_button = self.make_button("Undo", "undo-2", "Undo the last edit (Ctrl+Z)")
         self.redo_button = self.make_button("Redo", "redo-2", "Redo (Ctrl+Shift+Z)")
-        self.save_button = QPushButton(icons.icon("save"), "Save")
+        self.save_button = QPushButton(icons.icon("save", theme.tokens().text_on_accent), "Save")
+        self.save_button.setProperty("kind", "primary")
         self.save_button.setToolTip("Write the changed files (Ctrl+S)")
         self._icon_names[self.save_button] = "save"
         self.legend_button = self.make_button(
@@ -72,5 +73,6 @@ class EditBar(QWidget):
 
     def _retint(self) -> None:
         """Icons are tinted when they are made: make them again for the theme now in use."""
+        on_accent = theme.tokens().text_on_accent
         for button, name in self._icon_names.items():
-            button.setIcon(icons.icon(name))
+            button.setIcon(icons.icon(name, on_accent if button is self.save_button else None))

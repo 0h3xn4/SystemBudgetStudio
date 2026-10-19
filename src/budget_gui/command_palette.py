@@ -15,6 +15,8 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import QDialog, QLabel, QLineEdit, QListWidget, QListWidgetItem, QVBoxLayout
 
+from budget_gui import theme
+
 MAX_SHOWN = 60
 
 
@@ -47,7 +49,7 @@ class CommandPalette(QDialog):
         super().__init__(parent)  # type: ignore[arg-type]
         self.setWindowTitle("Find a command")
         self.setModal(True)
-        self.resize(560, 420)
+        self.resize(*theme.scaled(theme.PALETTE_SIZE))
         self._commands = list(commands)
         self._shown: list[Command] = []
         self.field = QLineEdit()
