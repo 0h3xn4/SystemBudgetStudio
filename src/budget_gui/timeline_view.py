@@ -136,6 +136,7 @@ class PowerTimelineView(QWidget):
         self.run_provider: Callable[[str], ScenarioRun | None] | None = None
         self._worker: TimelineWorker | None = None
         self._export_worker: ExportWorker | None = None
+        self._finishing = False  # the tables of a result that has just arrived are still to come
 
         self.scenario_combo = QComboBox()
         self.basis_combo = QComboBox()
@@ -235,10 +236,10 @@ class PowerTimelineView(QWidget):
         layout = QVBoxLayout(self)
         layout.addLayout(top)
         self.fold_button = CollapseButton(self.body)
+        top.addWidget(self.fold_button)  # at the right end of the toolbar
         second = QHBoxLayout()  # its own row: a long message does not squeeze the controls
         second.addWidget(self.shading)
         second.addWidget(self.status, 1)
-        second.addWidget(self.fold_button)
         layout.addLayout(second)
         layout.addWidget(self.empty_label)
         layout.addWidget(self.body)
@@ -397,9 +398,11 @@ class PowerTimelineView(QWidget):
         # The plot first, the tables in the next turn of the event loop: a week's results are one
         # long stretch of work otherwise (D-178). `computed` is sent when both are done.
         self._show(tables=False)
+        self._finishing = True  # busy until the result is complete: the next step waits for it
         QTimer.singleShot(0, self, lambda: self._finish_done(result))
 
     def _finish_done(self, result: TimeDomainResult) -> None:
+        self._finishing = False
         if self.result is not result:  # another result or none came in the meantime
             return
         self._fill_tables(result)
@@ -759,4 +762,4 @@ class PowerTimelineView(QWidget):
 
     def is_busy(self) -> bool:
         """A computation or an export is running."""
-        return self._worker is not None or self._export_worker is not None
+        return self._worker is not None or self._export_worker is not None or self._finishing
