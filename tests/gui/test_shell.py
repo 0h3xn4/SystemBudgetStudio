@@ -169,15 +169,22 @@ def test_a_rail_the_user_folded_stays_folded_when_the_window_grows(window: MainW
     assert window.rail.folded
 
 
-def test_a_panel_squeezed_by_a_narrow_window_gets_its_width_back(window: MainWindow) -> None:
+def test_a_panel_squeezed_by_a_narrow_window_gets_its_width_back(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
     usual = theme.px(theme.DOCK_WIDTHS[0])
     settle(window, theme.px(theme.RESPONSIVE_LABELS) - 80)  # Qt squeezes the side panels here
     settle(window, 1400)
-    QApplication.processEvents()
-    assert window.project_dock.isVisible() and window.project_dock.width() >= usual * 3 // 4
+    qtbot.waitUntil(
+        lambda: window.project_dock.isVisible() and window.project_dock.width() >= usual * 3 // 4,
+        timeout=3000,
+    )
     settle(window, 1600)
-    QApplication.processEvents()
-    assert window.inspector_dock.width() >= theme.px(theme.DOCK_WIDTHS[1]) * 3 // 4
+    qtbot.waitUntil(
+        lambda: window.inspector_dock.width() >= theme.px(theme.DOCK_WIDTHS[1]) * 3 // 4,
+        timeout=3000,
+    )
 
 
 def test_the_saved_layout_holds_what_the_user_chose_not_what_the_size_did(
