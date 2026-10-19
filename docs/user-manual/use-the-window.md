@@ -25,7 +25,7 @@ system-budget-studio path/to/project       # open a project at start
 ## How do I run the scenario, the timeline and the passes?
 
 The static budgets (power, mass, thermal, link) are worked out whenever the project loads, so their tables are always up to date. **Run** (**Ctrl+R**) works out, for the selected scenario, the scenario (eclipses, passes, mode timeline), the power timeline and the link passes, in that order, in a background thread: the window stays usable. The buttons **Compute** in *Model → Scenario*, *Power → Timeline* and *Link → Passes* do the same for one view. A result is the same either way.
-On *Power → Timeline* and *Link → Passes* the table under the plots can be folded away with **Hide table** (and brought back with **Show table**) when you want the plots to have all the room; **Previous** and **Next** step through the intervals that break a limit. When some inputs are placeholders, a banner at the top of the budget pages says so once: entries marked *n/a* depend on them and are not computed.
+On *Power → Timeline* and *Link → Passes* the table under the plots can be folded away with the **Table** button (press it again to bring the table back) when you want the plots to have all the room; the two arrows after *Violation* step through the intervals that break a limit. When some inputs are placeholders, a banner at the top of the budget pages says so once: entries marked *n/a* depend on them and are not computed.
 
 
 The chip next to **Run** says where the results stand, with an icon and a word: **Not run**, **Running…**, **Up to date** (and the time), **Out of date** or **Run failed**. A failed run also shows a banner under the top bar with the reason and **Run again**.

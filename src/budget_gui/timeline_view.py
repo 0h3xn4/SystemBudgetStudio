@@ -52,7 +52,7 @@ from budget_gui.cancel_support import (
     cancelled_text,
     computing_text,
 )
-from budget_gui.components import Button, CollapseButton
+from budget_gui.components import Button, CollapseButton, icon_button
 from budget_gui.delegates import CellDelegate
 from budget_gui.plot_widget import PlotMarker, PlotWidget
 from budget_gui.scenario_view import fill_table
@@ -152,17 +152,11 @@ class PowerTimelineView(QWidget):
             "Time axis of the plot: elapsed time, UTC clock time, or orbit number "
             "(counted from the spacing of the eclipses)."
         )
-        self.previous_violation = Button(
-            "Previous",
-            icon="chevrons-left",
-            compact=True,
-            tip="Go to the previous interval that breaks a limit",
+        self.previous_violation = icon_button(
+            "chevrons-left", "Go to the previous interval that breaks a limit"
         )
-        self.next_violation = Button(
-            "Next",
-            icon="chevrons-right",
-            compact=True,
-            tip="Go to the next interval that breaks a limit",
+        self.next_violation = icon_button(
+            "chevrons-right", "Go to the next interval that breaks a limit"
         )
         for button, name in (
             (self.previous_violation, "Previous violation"),

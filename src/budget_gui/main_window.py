@@ -676,6 +676,8 @@ class MainWindow(QMainWindow):
     def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802 (Qt naming)
         super().resizeEvent(event)
         self._fit_to_width()
+        if event.size().width() > event.oldSize().width() > 0:  # it grew: room for the panels
+            QTimer.singleShot(0, self, self._restore_squeezed_docks)
 
     def _fit_to_width(self) -> None:
         """Make room on a narrow window: below 1520 px the inspector waits, below 1280 px the rail

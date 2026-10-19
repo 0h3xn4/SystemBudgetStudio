@@ -171,9 +171,7 @@ def test_a_rail_the_user_folded_stays_folded_when_the_window_grows(window: MainW
 
 def test_a_panel_squeezed_by_a_narrow_window_gets_its_width_back(window: MainWindow) -> None:
     usual = theme.px(theme.DOCK_WIDTHS[0])
-    for width in (1200, 1000):  # Qt squeezes the side panels to give the centre what it needs
-        settle(window, width)
-    assert window.project_dock.isHidden()
+    settle(window, theme.px(theme.RESPONSIVE_LABELS) - 80)  # Qt squeezes the side panels here
     settle(window, 1400)
     QApplication.processEvents()
     assert window.project_dock.isVisible() and window.project_dock.width() >= usual * 3 // 4

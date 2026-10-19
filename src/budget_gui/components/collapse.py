@@ -48,7 +48,7 @@ class CollapseButton(Button):
 
     def _sync(self) -> None:
         folded = self.is_folded()
-        self.setText(f"Show {self._what}" if folded else f"Hide {self._what}")
+        self.setText(self._what.capitalize())  # the icon and the tooltip say which way it folds
         self._icon_name = "chevron-up" if folded else "chevron-down"
         self._retint()
         self.set_tip(f"{'Show' if folded else 'Hide'} the {self._what} under the plot")

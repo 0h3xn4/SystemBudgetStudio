@@ -47,13 +47,17 @@ def test_the_plot_sizes_follow_the_ui_scale() -> None:
 def test_the_toolbar_of_the_timeline_is_labelled_and_has_names(window: MainWindow) -> None:
     view = window.timeline_view
     for button, text in (
-        (view.previous_violation, "Previous"),
-        (view.next_violation, "Next"),
+        (
+            view.previous_violation,
+            "",
+        ),  # an icon with a tooltip and a name, after the word *Violation*
+        (view.next_violation, ""),
         (view.compute_button, "Compute"),
         (view.export_button, "Export…"),
     ):
         assert button.text() == text and button.toolTip() and not button.icon().isNull()
     assert view.previous_violation.accessibleName() == "Previous violation"
+    assert view.next_violation.accessibleName() == "Next violation"
     assert view.compute_button.kind == "secondary"  # Run is the one primary action
 
 
@@ -63,12 +67,12 @@ def test_the_table_pane_folds_away_and_comes_back(window: MainWindow) -> None:
         QApplication.processEvents()
         splitter = view.body
         assert isinstance(splitter, QSplitter) and isinstance(view.fold_button, CollapseButton)
-        assert not view.fold_button.is_folded() and view.fold_button.text() == "Hide table"
+        assert not view.fold_button.is_folded() and "Hide" in view.fold_button.toolTip()
         before = splitter.sizes()
         assert before[1] > 0
         view.fold_button.click()
         assert view.fold_button.is_folded() and splitter.sizes()[1] == 0
-        assert view.fold_button.text() == "Show table"
+        assert "Show" in view.fold_button.toolTip()
         view.fold_button.click()
         assert not view.fold_button.is_folded() and splitter.sizes()[1] > 0
 
