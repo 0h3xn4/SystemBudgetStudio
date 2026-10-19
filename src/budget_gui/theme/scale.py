@@ -27,7 +27,16 @@ __all__ = [
     "LIST_MIN_HEIGHT",
     "MOTION_MS",
     "PALETTE_SIZE",
+    "PLOT_GAP",
+    "PLOT_MARGINS",
     "PLOT_MIN_HEIGHT",
+    "PLOT_MIN_PANEL",
+    "PLOT_TITLE",
+    "MARKER_BAR",
+    "MARKER_HIT",
+    "STRIP_GAP",
+    "STRIP_MARGINS",
+    "STRIP_ROW",
     "PROBLEMS_HEIGHT",
     "SECTION_COLUMN",
     "PROGRESS_HEIGHT",
@@ -131,6 +140,16 @@ PALETTE_SIZE = (560, 420)  # the command palette and the paste preview
 GUIDE_SIZE = (980, 760)
 LEGEND_MIN = (640, 340)
 PLOT_MIN_HEIGHT = 220
+# the painted plots (budget plots and the scenario strips); base sizes at 100 %, applied with px()
+PLOT_MARGINS = (64, 14, 8, 36)  # left (the value labels), right, top, bottom (the time labels)
+PLOT_GAP = 26  # between two panels
+PLOT_TITLE = 18  # the height of a panel's title and legend line
+PLOT_MIN_PANEL = 88  # a panel is never lower than this
+MARKER_BAR = 4  # height of a violation marker at the top of a panel
+MARKER_HIT = 8  # a click this close to the top of a panel is a click on a marker
+STRIP_MARGINS = (150, 12, 30, 8)  # left (the names of the rows), right, top (the axis), bottom
+STRIP_ROW = 24  # a strip of the scenario view
+STRIP_GAP = 4  # between two strips
 TIMELINE_MIN_HEIGHT = 180
 LIST_MIN_HEIGHT = 32  # the Problems list
 COLUMN_MIN = 40  # a table column is never narrower

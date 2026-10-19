@@ -1,8 +1,10 @@
 """A banner under the top bar: a state of the results that must not go unnoticed.
 
-Two are used: *stale* (the tables show the last results that worked, from before an error) and
-*failed* (the last run did not finish). A banner has an icon, a sentence and one action, and it
-stays until the state is gone; it is not a dialog and it does not go away by itself.
+Three are used: *stale* (the tables show the last results that worked, from before an error),
+*failed* (the last run did not finish) and *incomplete* (some inputs are placeholders, so entries
+marked n/a are not computed; a page of results shows it once, at the top, D-178). A banner has an
+icon, a sentence and one action, and it stays until the state is gone; it is not a dialog and it
+does not go away by itself.
 """
 
 from __future__ import annotations
@@ -12,7 +14,7 @@ from PySide6.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton
 
 from budget_gui import icons, theme
 
-ICON = {"stale": "triangle-alert", "failed": "circle-x"}
+ICON = {"stale": "triangle-alert", "failed": "circle-x", "incomplete": "triangle-alert"}
 
 
 class Banner(QFrame):
@@ -46,6 +48,9 @@ class Banner(QFrame):
         self.action_button.setVisible(bool(action))
         self._retint()
         self.setVisible(True)
+
+    def text(self) -> str:
+        return self.text_label.text()
 
     def clear(self) -> None:
         self.setVisible(False)

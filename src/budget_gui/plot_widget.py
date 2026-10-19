@@ -45,10 +45,8 @@ from budget_core.plots.spec import (
     visible_range,
 )
 from budget_gui import theme
+from budget_gui.plot_metrics import PLOT
 from budget_gui.time_axis import ElapsedAxis, TimeAxis
-
-LEFT, RIGHT, TOP, BOTTOM, GAP, TITLE = 64, 14, 8, 36, 26, 18
-MIN_PANEL_HEIGHT = 88
 
 
 def _hms_full(seconds: float) -> str:
@@ -68,8 +66,6 @@ def _number(value: float) -> str:
     return f"{value:.3f}".rstrip("0").rstrip(".") or "0"
 
 
-MARKER_BAR = 4  # height of a marker bar at the top of a panel, in pixels
-MARKER_HIT = 8  # a click this close to the top of a panel (or less) is a click on a marker
 MARKER_MIN_WIDTH = 3.0
 
 
@@ -118,9 +114,11 @@ class PlotWidget(QWidget):
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setMinimumHeight(theme.px(theme.PLOT_MIN_HEIGHT))
+        self.setFont(theme.ui_font(theme.TYPE_SMALL))  # labels and legends: the small type size
         theme.manager().changed.connect(self._theme_changed)
 
     def _theme_changed(self) -> None:
+        self.setFont(theme.ui_font(theme.TYPE_SMALL))
         self._layer = None
         self.update()
 
@@ -134,7 +132,9 @@ class PlotWidget(QWidget):
         self._markers, self._selected = [], None
         if spec is not None:
             self._view = (spec.x_min_s, spec.x_max_s)
-            self.setMinimumHeight(TOP + BOTTOM + len(spec.panels) * (MIN_PANEL_HEIGHT + GAP) - GAP)
+            self.setMinimumHeight(
+                PLOT.top + PLOT.bottom + len(spec.panels) * (PLOT.min_panel + PLOT.gap) - PLOT.gap
+            )
         self._cursor = self._pinned = None
         self.update()
         self.view_changed.emit()
@@ -272,27 +272,27 @@ class PlotWidget(QWidget):
         self.set_view(*self._limits())
 
     def _plot_width(self) -> float:
-        return max(self.width() - LEFT - RIGHT, 1)
+        return max(self.width() - PLOT.left - PLOT.right, 1)
 
     def time_to_x(self, t: float) -> float:
         start, end = self._view
-        return LEFT + (t - start) / max(end - start, 1e-9) * self._plot_width()
+        return PLOT.left + (t - start) / max(end - start, 1e-9) * self._plot_width()
 
     def x_to_time(self, x: float) -> float:
         start, end = self._view
-        return start + (x - LEFT) / self._plot_width() * (end - start)
+        return start + (x - PLOT.left) / self._plot_width() * (end - start)
 
     def _panel_rects(self) -> list[QRectF]:
         count = len(self._spec.panels) if self._spec else 0
         if count == 0:
             return []
-        height = (self.height() - TOP - BOTTOM - (GAP * (count - 1))) / count
+        height = (self.height() - PLOT.top - PLOT.bottom - (PLOT.gap * (count - 1))) / count
         return [
             QRectF(
-                LEFT,
-                TOP + i * (height + GAP) + TITLE,
+                PLOT.left,
+                PLOT.top + i * (height + PLOT.gap) + PLOT.title,
                 self._plot_width(),
-                height - TITLE,
+                height - PLOT.title,
             )
             for i in range(count)
         ]
@@ -454,7 +454,7 @@ class PlotWidget(QWidget):
             drawn = self._envelopes.points(series, start, end, spec.x_max_s, buckets)
             if len(drawn.x) < 2:
                 continue
-            sx = LEFT + (drawn.x - start) / max(end - start, 1e-9) * self._plot_width()
+            sx = PLOT.left + (drawn.x - start) / max(end - start, 1e-9) * self._plot_width()
             sy_ = rect.bottom() - (drawn.y * panel.y_scale - lo) / (hi - lo) * rect.height()
             painter.setPen(QPen(theme.plot_colour(t, series.color), 1.6))
             if drawn.pairs:
@@ -487,12 +487,15 @@ class PlotWidget(QWidget):
 
         painter.setPen(QPen(QColor(t.plot_ink), 1))
         painter.drawRect(rect)
+        text_font = painter.font()
+        painter.setFont(theme.mono_font(theme.TYPE_SMALL))  # numbers have equal digits (D-178)
         for tick in nice_ticks(lo, hi, 4):
             painter.drawText(
-                QRectF(0, sy(tick) - 9, LEFT - 6, 18),
+                QRectF(0, sy(tick) - 9, PLOT.left - 6, 18),
                 Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter,
                 _number(tick),
             )
+        painter.setFont(text_font)
         painter.setPen(QColor(t.plot_ink))
         title_y = rect.top() - 5
         painter.drawText(QPointF(rect.left(), title_y), panel.y_label)
@@ -546,7 +549,7 @@ class PlotWidget(QWidget):
             width = max(int(x1 + 0.999) - left, int(MARKER_MIN_WIDTH))
             if index == self._selected:
                 painter.fillRect(left, top, width, height, shade)
-            painter.fillRect(left, top, width, MARKER_BAR, fail)
+            painter.fillRect(left, top, width, PLOT.marker_bar, fail)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing, True)
 
     def _paint_cursors(self, painter: QPainter, rects: list[QRectF]) -> None:
@@ -567,13 +570,14 @@ class PlotWidget(QWidget):
         if self._cursor is None:
             return
         lines = self.readout_lines(self._cursor)
+        painter.setFont(theme.mono_font(theme.TYPE_SMALL))
         metrics = QFontMetrics(painter.font())
         width = max(metrics.horizontalAdvance(t) for t in lines) + 16
         height = len(lines) * metrics.height() + 10
         x = self.time_to_x(self._cursor) + 12
-        if x + width > self.width() - RIGHT:
+        if x + width > self.width() - PLOT.right:
             x = self.time_to_x(self._cursor) - width - 12
-        box = QRectF(max(x, LEFT + 2), top + 4, width, height)
+        box = QRectF(max(x, PLOT.left + 2), top + 4, width, height)
         painter.fillRect(box, QColor(tk.plot_readout_bg))
         painter.setPen(QPen(QColor(tk.border_strong), 1))
         painter.drawRect(box)
@@ -607,7 +611,8 @@ class PlotWidget(QWidget):
                         self.toggle_series(entry.panel, entry.label)
                     return
             if self._markers and any(
-                r.top() - 1 <= position.y() <= r.top() + MARKER_HIT for r in self._panel_rects()
+                r.top() - 1 <= position.y() <= r.top() + PLOT.marker_hit
+                for r in self._panel_rects()
             ):
                 hit = self._marker_at(position.x())
                 if hit is not None:
@@ -628,13 +633,13 @@ class PlotWidget(QWidget):
                 shift = -(x - x0) / self._plot_width() * (end - start)
                 self.set_view(start + shift, end + shift)
             return
-        inside = LEFT <= x <= self.width() - RIGHT
+        inside = PLOT.left <= x <= self.width() - PLOT.right
         self.set_cursor(self.x_to_time(x) if inside else None)
 
     def mouseReleaseEvent(self, event: QMouseEvent) -> None:  # noqa: N802
         if self._drag is not None and not self._moved and self._spec is not None:
             x = event.position().x()
-            if LEFT <= x <= self.width() - RIGHT:
+            if PLOT.left <= x <= self.width() - PLOT.right:
                 self.pin_cursor(self.x_to_time(x))
         self._drag = None
 

@@ -86,6 +86,10 @@ class ScenarioWorker(QThread):
             self.failed.emit(f"The scenario could not be computed ({type(exc).__name__}).")
 
 
+_READ_ONLY = Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
+SIZED_ROWS = 60  # rows measured to size the columns
+
+
 def fill_table(
     table: QTableWidget,
     headers: list[str],
@@ -96,19 +100,27 @@ def fill_table(
     """Fill a read-only table. With `numeric` columns (right-aligned figures) and `states` (a cell
     that is broken, or not computed) a table whose delegate is a `CellDelegate` shows them as the
     budget tables do; a cell that reads `n/a` is always *not checked*."""
-    table.setColumnCount(len(headers))
-    table.setHorizontalHeaderLabels(headers)
-    table.setRowCount(len(rows))
-    given = states or {}
-    for r, row in enumerate(rows):
-        for c, text in enumerate(row):
-            item = QTableWidgetItem(text)
-            item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
-            status = given.get((r, c), Status.NOT_CHECKED if text == NA else None)
-            item.setData(STATE_ROLE, status.value if status else None)
-            item.setData(NUMERIC_ROLE, c in numeric or text == NA)
-            table.setItem(r, c, item)
-    table.resizeColumnsToContents()
+    table.setUpdatesEnabled(False)  # one layout and one paint at the end, not one per cell
+    try:
+        table.setColumnCount(len(headers))
+        table.setHorizontalHeaderLabels(headers)
+        table.setRowCount(len(rows))
+        given = states or {}
+        for r, row in enumerate(rows):
+            for c, text in enumerate(row):
+                item = QTableWidgetItem(text)
+                item.setFlags(_READ_ONLY)
+                status = given.get((r, c), Status.NOT_CHECKED if text == NA else None)
+                if status is not None:  # a cell without a state or a number needs no data at all
+                    item.setData(STATE_ROLE, status.value)
+                if c in numeric or text == NA:
+                    item.setData(NUMERIC_ROLE, True)
+                table.setItem(r, c, item)
+        # the widths come from a sample of the rows: a week of passes is hundreds of rows (D-178)
+        table.horizontalHeader().setResizeContentsPrecision(SIZED_ROWS)
+        table.resizeColumnsToContents()
+    finally:
+        table.setUpdatesEnabled(True)
 
 
 class ScenarioView(QWidget):

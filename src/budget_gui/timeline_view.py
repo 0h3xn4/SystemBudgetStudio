@@ -22,7 +22,6 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
     QLabel,
-    QPushButton,
     QSplitter,
     QTableWidget,
     QTabWidget,
@@ -45,7 +44,6 @@ from budget_core.provenance import make_provenance
 from budget_core.reports.run import BudgetOutput, timeline_output
 from budget_core.scenario.run import ScenarioRun, ScenarioRunError, run_scenario
 from budget_core.timeutil import format_utc
-from budget_gui import theme
 from budget_gui.cancel_support import (
     CANCEL_TEXT,
     CANCEL_TIP,
@@ -54,6 +52,7 @@ from budget_gui.cancel_support import (
     cancelled_text,
     computing_text,
 )
+from budget_gui.components import Button, CollapseButton
 from budget_gui.delegates import CellDelegate
 from budget_gui.plot_widget import PlotMarker, PlotWidget
 from budget_gui.scenario_view import fill_table
@@ -149,21 +148,27 @@ class PowerTimelineView(QWidget):
             "Time axis of the plot: elapsed time, UTC clock time, or orbit number "
             "(counted from the spacing of the eclipses)."
         )
-        self.previous_violation = QPushButton("◀")
-        self.next_violation = QPushButton("▶")
-        for button in (self.previous_violation, self.next_violation):
-            button.setProperty("kind", "secondary")
+        self.previous_violation = Button(
+            "Previous",
+            icon="chevrons-left",
+            compact=True,
+            tip="Go to the previous interval that breaks a limit",
+        )
+        self.next_violation = Button(
+            "Next",
+            icon="chevrons-right",
+            compact=True,
+            tip="Go to the next interval that breaks a limit",
+        )
+        for button, name in (
+            (self.previous_violation, "Previous violation"),
+            (self.next_violation, "Next violation"),
+        ):
             button.setEnabled(False)
-            button.setMaximumWidth(theme.px(theme.COMPACT_BUTTON_WIDTH))
-        self.previous_violation.setToolTip("Go to the previous interval that breaks a limit.")
-        self.previous_violation.setAccessibleName("Previous violation")
-        self.next_violation.setToolTip("Go to the next interval that breaks a limit.")
-        self.next_violation.setAccessibleName("Next violation")
+            button.setAccessibleName(name)
         self._selected_row: int | None = None  # index into result.violations
-        self.compute_button = QPushButton("Compute")
-        self.compute_button.setProperty("kind", "secondary")  # Run is the primary action
-        self.export_button = QPushButton("Export…")
-        self.export_button.setProperty("kind", "secondary")  # Run is the primary action
+        self.compute_button = Button("Compute", icon="refresh-cw", compact=True)  # Run is primary
+        self.export_button = Button("Export…", icon="file-output", compact=True)
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
@@ -219,14 +224,16 @@ class PowerTimelineView(QWidget):
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.plot)
         self.body.addWidget(self.tabs)
-        self.body.setStretchFactor(0, 3)
-        self.body.setStretchFactor(1, 1)
+        self.body.setStretchFactor(0, 5)  # the table gets enough rows to be read (D-178)
+        self.body.setStretchFactor(1, 3)
 
         layout = QVBoxLayout(self)
         layout.addLayout(top)
+        self.fold_button = CollapseButton(self.body)
         second = QHBoxLayout()  # its own row: a long message does not squeeze the controls
         second.addWidget(self.shading)
         second.addWidget(self.status, 1)
+        second.addWidget(self.fold_button)
         layout.addLayout(second)
         layout.addWidget(self.empty_label)
         layout.addWidget(self.body)

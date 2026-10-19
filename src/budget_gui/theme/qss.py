@@ -85,7 +85,8 @@ def chip_colours(t: Tokens, state: str) -> tuple[str, str]:
 
 
 def banner_colours(t: Tokens, kind: str) -> tuple[str, str]:
-    """(text and icon colour, tint) of a banner: `stale` is a caution, `failed` a failure."""
+    """(text and icon colour, tint) of a banner: `stale` and `incomplete` are cautions, `failed` is
+    a failure."""
     style = t.critical if kind == "failed" else t.caution
     return (style.fg, style.bg)
 
@@ -104,7 +105,7 @@ def _chip_rules(t: Tokens) -> str:
 
 def _banner_rules(t: Tokens) -> str:
     rules = []
-    for kind in ("stale", "failed"):
+    for kind in ("stale", "failed", "incomplete"):
         fg, bg = banner_colours(t, kind)
         rules.append(
             f'QFrame[role="banner-bar"][kind="{kind}"] {{ background: {bg}; }}\n'
@@ -370,7 +371,6 @@ def stylesheet(t: Tokens) -> str:
     QFrame[role="segmented"] QPushButton:focus {{ border: {ring}px solid {t.focus}; }}
     QLabel {{ background: transparent; }}
     QLabel[role="error"] {{ color: {t.critical.fg}; }}
-    QLabel[role="banner"] {{ color: {t.critical.fg}; font-weight: 600; padding: {px(s0)}px; }}
     QLabel[role="section-title"] {{ font-weight: 600; font-size: {px(TYPE_TITLE)}px;
         padding-top: {px(s1 - 2)}px; }}
     QLabel[role="muted"] {{ color: {t.text_secondary}; }}
