@@ -11,7 +11,7 @@ An offline desktop and command-line tool that computes **power, mass, thermal an
 ![Python 3.11 to 3.13](https://img.shields.io/badge/python-3.11%20to%203.13-blue)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
 
-![System Budget Studio showing the power timeline of the 250 kg example satellite: generation, demand and state of charge over one orbit, with eclipse shading and a list of problems](docs/images/power-timeline.png)
+![System Budget Studio showing the power timeline of the 250 kg example satellite: generation, demand and state of charge over one orbit, with eclipse shading and a list of problems](docs/images/ui-overhaul/power-timeline-light.png)
 
 ## What is this?
 

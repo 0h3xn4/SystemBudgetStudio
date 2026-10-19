@@ -51,7 +51,9 @@ The 1.1.0 window was built and tested on a virtual (offscreen) display, which ha
 - [ ] **Ctrl+K** finds a unit and a command; the Inspector follows the cell with the cursor. (Manual.)
 - [ ] **View > Theme > Dark** and back: no unreadable text or white patches in the plots, grids or dialogs. (Manual.)
 - [ ] **View > UI size > 125 %** and back to 100 %: the text, the buttons and the tables grow and shrink together and nothing is cut off. (Manual.)
-- [ ] Tab from the project tree reaches the top bar, the tabs and the Problems panel and comes round again. (Manual; a test covers it offscreen.)
+- [ ] Tab from the project tree reaches the top bar, the tabs and the Problems panel and comes round again; the control that has the keyboard always shows a 2 px ring (check a check box, a tab and the plot too). (Manual; a test covers the walk offscreen.)
+- [ ] On a **4K or 200 % display** (and, if you have one, a laptop at 150 %): the rail, the grids, the plots and the dialogs are sharp, the plot's axis title does not touch its tick labels, and *View > UI size* at 90 % and 125 % (after a restart) changes the size of everything together. At 125 % the smallest window is 1093 x 793: it needs a screen at least 800 px high. (Manual; the screenshots of every size are in `docs/ui/screenshots/m6/`.)
+- [ ] With a screen reader (Narrator on Windows, Orca on Linux): the rail buttons, the *Previous* and *Next* violation arrows, the grids and the plots are read by name, not as *button* or *unknown*. (Manual; a test checks that the names exist.)
 
 ## Licences and integrity (all platforms)
 

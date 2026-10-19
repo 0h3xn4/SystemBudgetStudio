@@ -207,7 +207,8 @@ class ProblemsPanel(QWidget):
             if usable:
                 hidden, width = widths[column] == 0, widths[column]
             else:
-                hidden, width = column in self.DEFAULT_HIDDEN, self.DEFAULT_WIDTHS[column]
+                hidden = column in self.DEFAULT_HIDDEN
+                width = theme.px(self.DEFAULT_WIDTHS[column])  # follows the UI size
             self.view.setColumnHidden(column, hidden)
             if not hidden:
                 self.view.setColumnWidth(column, max(int(width), theme.px(theme.COLUMN_MIN)))

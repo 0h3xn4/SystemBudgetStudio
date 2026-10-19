@@ -1,0 +1,4 @@
+ 90 %: smallest window 967 x 593  (fits 1366 x 768)
+100 %: smallest window 1041 x 648  (fits 1366 x 768)
+110 %: smallest window 981 x 702  (fits 1366 x 768)
+125 %: smallest window 1093 x 793  (needs a larger screen than 1366 x 768)

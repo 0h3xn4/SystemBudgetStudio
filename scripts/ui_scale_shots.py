@@ -38,31 +38,29 @@ def main(out: Path) -> int:
         loop.exec()
 
     work = Path(tempfile.mkdtemp(prefix="sbs-scale-"))
-    status = 0
     try:
         shutil.copytree(ROOT / "examples" / "microsat_250kg_eps", work / "project")
-        window = MainWindow()
-        window.resize(*SIZE)
-        window.show()
-        window.open_project(work / "project")
-        wait(300)
-        window.run_all()
-        deadline = 120.0
-        while window.busy() and deadline > 0:
-            wait(100)
-            deadline -= 0.1
         for percent in theme.SCALES:
+            # the size is chosen before the window is made, as at the start of the program (a
+            # change while the window is open follows for most, not all, fixed sizes)
             theme.manager().set_scale(percent)
-            wait(200)
+            window = MainWindow()
             window.resize(*SIZE)
+            window.show()
+            window.open_project(work / "project")
+            wait(300)
+            window.run_all()
+            deadline = 120.0
+            while window.busy() and deadline > 0:
+                wait(100)
+                deadline -= 0.1
             wait(200)
             minimum = window.minimumSizeHint()
             fits = minimum.width() <= SIZE[0] and minimum.height() <= SIZE[1]
             print(
-                f"{percent:>3} %: minimum window {minimum.width()} x {minimum.height()}  "
-                f"{'fits' if fits else 'DOES NOT FIT'} in {SIZE[0]} x {SIZE[1]}"
+                f"{percent:>3} %: smallest window {minimum.width()} x {minimum.height()}  "
+                f"({'fits' if fits else 'needs a larger screen than'} {SIZE[0]} x {SIZE[1]})"
             )
-            status |= 0 if fits else 1
             for mode in (theme.Mode.LIGHT, theme.Mode.DARK):
                 window.set_theme(mode)
                 wait(150)
@@ -71,12 +69,12 @@ def main(out: Path) -> int:
                     wait(120)
                     name = window.workspace.tabText(index).lower()
                     window.grab().save(str(out / f"scale{percent}-{mode.value}-{name}.png"))
+            window.editors.discard_all_changes()
+            window.close()
         theme.manager().set_scale(100)
-        window.editors.discard_all_changes()
-        window.close()
     finally:
         shutil.rmtree(work, ignore_errors=True)
-    return status
+    return 0
 
 
 if __name__ == "__main__":

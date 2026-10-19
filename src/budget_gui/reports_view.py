@@ -115,6 +115,7 @@ class ReportsView(QWidget):
         self.folder_edit = QLineEdit()
         self.folder_edit.setPlaceholderText("Folder to write the files into")
         self.folder_edit.setAccessibleName("Folder to write the files into")
+        self.folder_edit.setMinimumWidth(theme.px(theme.COLUMN_MIN * 3))
         self.folder_edit.textChanged.connect(self._update_button)
         self.browse_button = Button("Browse…", icon="folder-open")
         self.browse_button.clicked.connect(self._browse)
@@ -249,7 +250,9 @@ class ReportsView(QWidget):
             box.toggled.connect(lambda on, key=item.key: self._ticked(key, on))
             detail = QLabel(item.detail)
             detail.setProperty("role", "muted")
+            detail.setWordWrap(True)  # a narrow window or a big UI size wraps it, nothing is cut
             mark, text = QLabel(), QLabel()
+            text.setWordWrap(True)
             holder = QWidget()
             holder_layout = QHBoxLayout(holder)
             holder_layout.setContentsMargins(0, 0, 0, 0)

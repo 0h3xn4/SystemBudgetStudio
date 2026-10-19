@@ -353,8 +353,8 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 | M2 Shell | done (merged in PR #39) | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
 | M3 Model screens | done (merged in PR #40) | D-176, D-177; toolbar above the grids, frozen identifier column, problem marker in the row, cheaper cell painting (a grid scroll step about 30 ms), scenario icon buttons, tab close mark, tree rows of 26 px |
 | M4 Results screens | done (merged in PR #41) | D-178; one inline banner, labelled toolbar, foldable table pane, plot sizes in the theme and at the UI scale, cheaper table fill; the stall is 224 ms, not under 100 |
-| M5 Compare, Reports, dialogs | implemented, awaiting your review | D-180; Compare key columns capped, Reports provenance line and empty list, dialogs with components, Inspector and Provenance details |
-| M6 Final | not started | |
+| M5 Compare, Reports, dialogs | PR #42 open | D-180; Compare key columns capped, Reports provenance line and empty list, dialogs with components, Inspector and Provenance details |
+| M6 Final | in progress | D-181; accessibility pass, UI size screenshots and fixes, DESIGN, manual screenshots, checklist; then the release preparation (1.2.0) |
 
 **M1 as built, against its acceptance criteria**
 
@@ -405,3 +405,9 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - Tests: the existing compare, reports, wizard and dialog tests pass unchanged (the timed wizard test stays); 8 new tests in `tests/gui/test_secondary_screens.py`. All 587 GUI tests pass (26 min, run serially) and all 1715 core tests pass (10 min).
 - Baseline (`docs/ui/screenshots/m5/baseline.txt`): zoom and pan 27 ms median; the stall of a week's results measured 384 ms in this run, inside the 170 to 384 ms range seen since M4 (it is noise-dominated and still not under 100 ms, see M4); the other items are within noise of M4.
 - Screenshots in `docs/ui/screenshots/m5/`; no change to core, CLI, file formats or goldens.
+
+**M6 as built (so far)**
+
+- Accessibility: the audit script lists what a screen reader or the keyboard would miss; 18 findings fixed; the walk is a test in both themes; focus rings for check boxes, tabs and plots (D-181).
+- UI sizes: screenshots of every page at 90, 100, 110 and 125 % in both themes (`docs/ui/screenshots/m6/`) with the smallest window of each size (`minimum-sizes.txt`); found and fixed: the axis title of the plots overlapping the tick labels, unscaled default column widths in the Problems panel, unwrapped lists in Reports. At 125 % the window needs 793 px of height.
+- Docs: `DESIGN.md` has the accessibility and UI-size sections; the manual, the README and the getting-started page show the new window; the install checklist has the 4K or 200 %, UI size and screen-reader items for a person at a real screen.

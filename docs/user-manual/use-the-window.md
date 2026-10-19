@@ -11,7 +11,7 @@ system-budget-studio                       # then File → Open project
 system-budget-studio path/to/project       # open a project at start
 ```
 
-![The window with the 250 kg example: the navigation rail and the project panel on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the Power timeline, and the Problems panel along the bottom](../images/ui-overhaul/m2-power-timeline-light.png)
+![The window with the 250 kg example: the navigation rail and the project panel on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the Power timeline, and the Problems panel along the bottom](../images/ui-overhaul/power-timeline-light.png)
 
 ## What is where?
 
@@ -96,11 +96,19 @@ Press Enter (or double-click) on it in the tree. It opens as text in a tab of th
 
 In **Model → Scenario**, rules and segments are sentences you edit in place ([scenarios](scenarios.md#how-do-i-edit-the-rules-in-the-window)); the grids and the scenario share one undo (Ctrl+Z) and one **Save** button and Ctrl+S ([below](#how-do-i-edit-in-the-grids)), and Save writes every changed file at once. Saving and undo change only what you edited: comments, the order of the keys and fields the grid does not show stay in the file, and saving without a change leaves the file untouched. Only if a file is in an older layout that cannot be patched is it rewritten whole.
 
+## How do I make the window easier to read or to use with the keyboard?
+
+- **UI size.** *View > UI size* (or *Settings* in the rail) is 90, 100, 110 or 125 %: text, buttons and tables grow and shrink together. The window is laid out completely at the size you start with; a size changed while the window is open reaches the text and most controls at once and a few fixed sizes at the next start. At 125 % the smallest window is 1093 x 793, so use 110 % or less on a 1366 x 768 screen.
+- **Theme.** *View > Theme*: light, dark, or the system's, which switches live.
+- **Reduce motion.** *View > Reduce motion* (or in *Settings*) turns off every transition.
+- **Keyboard.** Tab visits every control and Shift+Tab goes back; the control that has the keyboard shows a 2 px ring. Every frequent action has a shortcut that its tooltip and its menu entry show (the [shortcuts above](#shortcuts)), and **Ctrl+K** finds any command by its name.
+- **Screen readers.** Every button that shows only an icon, every grid, table and plot, and every input has a name (for example *Units grid*, *Power timeline plot*, *Folder to write the files into*).
+
 ## How do I edit in the grids?
 
 **Model → Units** has one row per unit: name, subsystem, bus, maturity, mass and the four temperature limits. **Power modes** has one row per power mode of every unit: average and peak power, duty cycle, heat ratio and durations, with the effective average (average times duty) beside them. **Inputs** has one row per sourced number of the configuration and the links: value, unit, source and note. The unit is in every column header; numbers show a fixed number of decimals, and the tooltip and the editor have the exact value.
 
-![The Power modes grid filtered to the radio, with a wrong cell marked and explained under the grid](../images/ux-redesign/step2-modes-light.png)
+![The Power modes grid filtered to the radio, with a wrong cell marked and explained under the grid](../images/ui-overhaul/model-power-modes-light.png)
 
 - **Type or paste.** Double-click a cell, press F2 or start typing. A value with a unit is converted (`2500 mW` is 2.5 W). **Enter** accepts and moves down, **Esc** cancels, **Tab** accepts and moves right. Copy a range from a spreadsheet and press **Ctrl+V**: the block goes in from the current cell (one value goes into every selected cell). More than one cell shows you a preview, old and new, first. Cells that cannot be edited (the unit id, the computed average) are left out and counted.
 - **Fill down and clear.** Select a cell and the cells below it and press **Ctrl+D**. **Delete** empties the cells that may be empty (an optional field); a field the model needs keeps its value.
