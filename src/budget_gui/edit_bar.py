@@ -3,15 +3,17 @@
 from __future__ import annotations
 
 from PySide6.QtCore import Signal
-from PySide6.QtWidgets import QHBoxLayout, QPushButton, QWidget
+from PySide6.QtWidgets import QHBoxLayout, QWidget
 
-from budget_gui import icons, theme
+from budget_gui import theme
+from budget_gui.components import Button
 from budget_gui.model_document import ModelDocument
 
 
 class EditBar(QWidget):
-    """Undo and Redo of the shared document (their tooltips name the step), Save, and, when the
-    page shows cells, the legend. Icons are made again when the theme changes."""
+    """Undo and Redo of the shared document (their tooltips name the step), the legend of the cell
+    styles when the page shows cells, and Save, the one primary action of the page (D-176). It
+    sits in the toolbar above the content."""
 
     save_requested = Signal()
     legend_requested = Signal()
@@ -19,13 +21,16 @@ class EditBar(QWidget):
     def __init__(self, document: ModelDocument, *, legend: bool = True) -> None:
         super().__init__()
         self.document = document
-        self._icon_names: dict[QPushButton, str] = {}
-        self.undo_button = self.make_button("Undo", "undo-2", "Undo the last edit (Ctrl+Z)")
-        self.redo_button = self.make_button("Redo", "redo-2", "Redo (Ctrl+Shift+Z)")
-        self.save_button = QPushButton(icons.icon("save", theme.tokens().text_on_accent), "Save")
-        self.save_button.setProperty("kind", "primary")
-        self.save_button.setToolTip("Write the changed files (Ctrl+S)")
-        self._icon_names[self.save_button] = "save"
+        self.undo_button = self.make_button("Undo", "undo-2", "Undo the last edit", "Ctrl+Z")
+        self.redo_button = self.make_button("Redo", "redo-2", "Redo", "Ctrl+Shift+Z")
+        self.save_button = Button(
+            "Save",
+            "primary",
+            icon="save",
+            compact=True,
+            tip="Write the changed files",
+            shortcut="Ctrl+S",
+        )
         self.legend_button = self.make_button(
             "Cell styles", "circle-help", "What the cell styles mean"
         )
@@ -36,6 +41,7 @@ class EditBar(QWidget):
         self.legend_button.clicked.connect(self.legend_requested)
         row = QHBoxLayout(self)
         row.setContentsMargins(0, 0, 0, 0)
+        row.setSpacing(theme.gap(0))
         for button in (self.undo_button, self.redo_button, self.legend_button, self.save_button):
             row.addWidget(button)
         stack = document.undo_stack
@@ -46,15 +52,12 @@ class EditBar(QWidget):
             stack.redoTextChanged,
         ):
             signal.connect(self.refresh)
-        theme.manager().changed.connect(self._retint)
         self.refresh()
 
-    def make_button(self, text: str, icon: str, tip: str) -> QPushButton:
-        button = QPushButton(icons.icon(icon), text)
-        button.setProperty("kind", "secondary")
-        button.setToolTip(tip)
-        self._icon_names[button] = icon
-        return button
+    @staticmethod
+    def make_button(text: str, icon: str, tip: str, shortcut: str = "") -> Button:
+        """A compact secondary button of the toolbar; its icon follows the theme."""
+        return Button(text, "secondary", icon=icon, compact=True, tip=tip, shortcut=shortcut)
 
     def refresh(self, *_args: object) -> None:
         stack = self.document.undo_stack
@@ -64,15 +67,9 @@ class EditBar(QWidget):
             return
         self.undo_button.setEnabled(can_undo)
         self.redo_button.setEnabled(can_redo)
-        self.undo_button.setToolTip(
-            f"Undo: {stack.undoText()} (Ctrl+Z)" if can_undo else "Nothing to undo"
+        self.undo_button.set_tip(
+            f"Undo: {stack.undoText()}" if can_undo else "Nothing to undo", "Ctrl+Z"
         )
-        self.redo_button.setToolTip(
-            f"Redo: {stack.redoText()} (Ctrl+Shift+Z)" if can_redo else "Nothing to redo"
+        self.redo_button.set_tip(
+            f"Redo: {stack.redoText()}" if can_redo else "Nothing to redo", "Ctrl+Shift+Z"
         )
-
-    def _retint(self) -> None:
-        """Icons are tinted when they are made: make them again for the theme now in use."""
-        on_accent = theme.tokens().text_on_accent
-        for button, name in self._icon_names.items():
-            button.setIcon(icons.icon(name, on_accent if button is self.save_button else None))

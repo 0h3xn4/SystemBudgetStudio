@@ -43,6 +43,7 @@ from PySide6.QtWidgets import (
 from budget_gui import icons, theme
 from budget_gui.delegates import CellDelegate
 from budget_gui.edit_bar import EditBar
+from budget_gui.frozen_view import GridView
 from budget_gui.grid_models import GridModel
 from budget_gui.model_document import ModelDocument
 
@@ -126,15 +127,13 @@ class GridTable(QWidget):
 
     def __init__(self, model: GridModel, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        from PySide6.QtWidgets import QTableView
-
         self.model = model
         self._fit_pending = True
         self.proxy = GridProxy(self)
         self.proxy.setSourceModel(model)
         self.proxy.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         self.proxy.setFilterKeyColumn(-1)
-        self.view = QTableView()
+        self.view = GridView()
         self.view.setModel(self.proxy)
         self.delegate = CellDelegate(self.view)
         self.delegate.closeEditor.connect(self._editor_closed)
@@ -154,6 +153,12 @@ class GridTable(QWidget):
         )  # sample, do not measure all
         self.view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.view.customContextMenuRequested.connect(self._context_menu)
+        frozen = self.view.frozen
+        frozen.customContextMenuRequested.connect(
+            lambda pos: self._context_menu(
+                self.view.viewport().mapFromGlobal(frozen.viewport().mapToGlobal(pos))
+            )
+        )
         self.view.installEventFilter(self)
         self.view.selectionModel().selectionChanged.connect(
             lambda *_a: self.selection_changed.emit()
@@ -467,8 +472,8 @@ class GridTable(QWidget):
 
 
 class GridPage(QWidget):
-    """A grid with a filter above it and, below it, the line of what is shown or wrong, the line
-    of feedback, and Undo, Redo, Save and the legend."""
+    """A grid under its toolbar (the filter, the page's own tools, Undo, Redo, the cell styles and
+    Save) and above the lines of what is shown or wrong and of feedback (D-176)."""
 
     save_requested = Signal()
     legend_requested = Signal()
@@ -492,8 +497,10 @@ class GridPage(QWidget):
         self.filter.setAccessibleName(filter_hint)
         self.filter.textChanged.connect(self._filter_changed)
         self.tools = QHBoxLayout()
+        self.tools.setSpacing(theme.gap(1))
         self.tools.addWidget(self.filter, 1)
         self.tools_extra = QHBoxLayout()
+        self.tools_extra.setSpacing(theme.gap(0))
         self.tools.addLayout(self.tools_extra)
         self.bar = EditBar(document)
         self.undo_button, self.redo_button = self.bar.undo_button, self.bar.redo_button
@@ -507,15 +514,13 @@ class GridPage(QWidget):
         self.problem_label.setProperty("role", "error")
         self.feedback_label = QLabel()
         self.feedback_label.setWordWrap(True)
-        bottom = QHBoxLayout()
-        bottom.addWidget(self.count_label, 1)
-        bottom.addWidget(self.bar)
+        self.tools.addWidget(self.bar)
         layout = QVBoxLayout(self)
         layout.addLayout(self.tools)
         layout.addWidget(self.table, 1)
         layout.addWidget(self.problem_label)
         layout.addWidget(self.feedback_label)
-        layout.addLayout(bottom)
+        layout.addWidget(self.count_label)
         self.table.message.connect(self.show_message)
         document.changed.connect(self._refresh)
         self.model.modelReset.connect(self.table.request_fit)

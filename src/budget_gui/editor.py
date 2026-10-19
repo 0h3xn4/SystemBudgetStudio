@@ -134,7 +134,7 @@ class YamlEditor(QPlainTextEdit):
     # ---- line number gutter ------------------------------------------------------------------
     def gutter_width(self) -> int:
         digits = len(str(max(1, self.blockCount())))
-        return 12 + self.fontMetrics().horizontalAdvance("9") * digits
+        return theme.gap(2) + self.fontMetrics().horizontalAdvance("9") * digits
 
     def _update_margin(self) -> None:
         self.setViewportMargins(self.gutter_width(), 0, 0, 0)
@@ -166,7 +166,7 @@ class YamlEditor(QPlainTextEdit):
                 painter.drawText(
                     0,
                     top,
-                    self._gutter.width() - 6,
+                    self._gutter.width() - theme.gap(1),
                     self.fontMetrics().height(),
                     Qt.AlignmentFlag.AlignRight,
                     str(number + 1),

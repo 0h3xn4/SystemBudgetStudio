@@ -23,7 +23,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRect, Qt, Signal
+from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRect, QSize, Qt, Signal
 from PySide6.QtGui import QColor, QPainter
 from PySide6.QtWidgets import (
     QApplication,
@@ -37,7 +37,7 @@ from PySide6.QtWidgets import (
 
 from budget_core.model import Project
 from budget_core.problems import Problem
-from budget_gui import icons
+from budget_gui import icons, theme
 from budget_gui import problem_class as pc
 from budget_gui.problem_class import ProblemClass
 
@@ -241,8 +241,19 @@ def own_counts(node: Node, problems: Iterable[Problem]) -> dict[ProblemClass, in
 class BadgeDelegate(QStyledItemDelegate):
     """Draws the row, then the problem badges (icon and number) at its right edge."""
 
-    ICON = 14
-    GAP = 6
+    @property
+    def ICON(self) -> int:  # noqa: N802 (it was a constant)
+        return theme.px(theme.ICON_UI)
+
+    @property
+    def GAP(self) -> int:  # noqa: N802
+        return theme.gap(1) - theme.gap(0) // 2
+
+    def sizeHint(self, option: QStyleOptionViewItem, index: Index) -> QSize:  # noqa: N802
+        """A row is as high as a row of a table, the same everywhere."""
+        size = super().sizeHint(option, index)
+        size.setHeight(max(size.height(), theme.px(theme.ROW_HEIGHT)))
+        return size
 
     def _badges(self, index: Index, folded: bool) -> list[tuple[ProblemClass, int]]:
         """What is inside shows on a folded row; an open row shows only its own problems."""
@@ -252,7 +263,12 @@ class BadgeDelegate(QStyledItemDelegate):
     def _width(self, badges: list[tuple[ProblemClass, int]], option: Any) -> int:
         width = 0
         for _cls, number in badges:
-            width += self.ICON + 2 + option.fontMetrics.horizontalAdvance(str(number)) + self.GAP
+            width += (
+                self.ICON
+                + theme.gap(0) // 2
+                + option.fontMetrics.horizontalAdvance(str(number))
+                + self.GAP
+            )
         return width
 
     def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: Index) -> None:
@@ -262,7 +278,7 @@ class BadgeDelegate(QStyledItemDelegate):
         badges = self._badges(index, folded)
         reserved = self._width(badges, opt)
         if reserved:
-            room = max(opt.rect.width() - reserved - 24, 20)
+            room = max(opt.rect.width() - reserved - theme.gap(4), theme.gap(3))
             opt.text = opt.fontMetrics.elidedText(opt.text, Qt.TextElideMode.ElideRight, room)
         style = opt.widget.style() if opt.widget else QApplication.style()
         style.drawControl(QStyle.ControlElement.CE_ItemViewItem, opt, painter, opt.widget)
@@ -273,7 +289,7 @@ class BadgeDelegate(QStyledItemDelegate):
             top = opt.rect.top() + (opt.rect.height() - self.ICON) // 2
             pixmap = icons.icon(pc.ICONS[cls], colour).pixmap(self.ICON, self.ICON)
             painter.drawPixmap(x, top, pixmap)
-            x += self.ICON + 2
+            x += self.ICON + theme.gap(0) // 2
             text_width = opt.fontMetrics.horizontalAdvance(str(number))
             painter.save()
             painter.setPen(colour)

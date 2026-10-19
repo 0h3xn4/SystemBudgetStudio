@@ -21,6 +21,7 @@ from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
 from budget_gui import theme
 from budget_gui.delegates import (
+    CELL_ROLE,
     MARGIN_ROLE,
     NUMERIC_ROLE,
     STATE_ROLE,
@@ -125,6 +126,14 @@ class DocTableModel(QAbstractTableModel):
             numeric = column.kind != "text" or value is None
             horizontal = Qt.AlignmentFlag.AlignRight if numeric else Qt.AlignmentFlag.AlignLeft
             return int(horizontal | Qt.AlignmentFlag.AlignVCenter)
+        if role == CELL_ROLE:
+            return (
+                text,
+                self.data(index, STATE_ROLE),
+                self.data(index, NUMERIC_ROLE),
+                self.data(index, TOTAL_ROLE),
+                self.data(index, MARGIN_ROLE),
+            )
         if role == STATE_ROLE:
             row_state = self._row_state(index.row(), index.column())
             if row_state is not None:

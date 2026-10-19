@@ -22,7 +22,7 @@ from PySide6.QtSvg import QSvgRenderer
 from budget_gui.theme.tokens import THEMES
 
 ICONS = Path(__file__).resolve().parent.parent / "assets" / "icons" / "ui"
-ARROWS = ("chevron-down", "chevron-up")
+ARROWS = ("chevron-down", "chevron-up", "x")  # the arrows of drop-downs and the tab close mark
 SIZE = 12  # px at 1x
 
 
