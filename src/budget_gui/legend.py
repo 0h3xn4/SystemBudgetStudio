@@ -13,7 +13,6 @@ from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QDialog,
-    QDialogButtonBox,
     QHeaderView,
     QLabel,
     QTableView,
@@ -22,6 +21,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_gui import theme
+from budget_gui.components import Button
 from budget_gui.delegates import (
     MARGIN_ROLE,
     NUMERIC_ROLE,
@@ -117,10 +117,12 @@ class LegendDialog(QDialog):
         intro.setProperty("role", "muted")
         intro.setWordWrap(True)
         self.legend = CellStyleLegend()
-        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        buttons.rejected.connect(self.reject)
-        buttons.button(QDialogButtonBox.StandardButton.Close).setProperty("kind", "secondary")
+        close = Button("Close", "primary")  # the one action of a dialog that only informs
+        close.setDefault(True)
+        close.clicked.connect(self.reject)
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(*theme.inset(3))
+        layout.setSpacing(theme.gap(2))
         layout.addWidget(intro)
         layout.addWidget(self.legend, 1)
-        layout.addWidget(buttons, 0, Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(close, 0, Qt.AlignmentFlag.AlignRight)

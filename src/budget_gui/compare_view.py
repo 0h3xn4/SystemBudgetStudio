@@ -18,7 +18,6 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QPushButton,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -32,9 +31,11 @@ from budget_core.problems import Severity
 from budget_core.reports.run import REPORT_KINDS, BudgetOutput
 from budget_core.scenario.run import ScenarioRunError
 from budget_gui import theme
+from budget_gui.components import Button, EmptyState
 from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, STALE_TEXT, ResultKey
 from budget_gui.worker import ExportWorker
 
+FIT_ROWS = 80  # rows measured to size the columns
 NO_SCENARIO = "(none)"
 ALL = "All differences"
 HEADERS = ["Budget", "Section", "Row", "Quantity", "A", "B", "Change", "Change (%)", "Status"]
@@ -115,14 +116,14 @@ class CompareView(QWidget):
         self.other_edit.setPlaceholderText(
             "Other project folder (leave empty to compare scenarios)"
         )
-        self.browse_button = QPushButton("Browse…")
+        self.browse_button = Button("Browse…", icon="folder-open", compact=True)
         self.scenario_b = QComboBox()
-        self.compare_button = QPushButton("Compare")
-        self.compare_button.setProperty("kind", "primary")
-        self.export_button = QPushButton("Export…")
+        self.compare_button = Button("Compare", "primary", icon="git-compare", compact=True)
+        self.export_button = Button("Export…", icon="file-output", compact=True)
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
+        self.status.setProperty("role", "muted")
         self.side_a_label = QLabel("")
         self.side_a_label.setProperty("role", "muted")
         self.side_b_label = QLabel("")
@@ -155,11 +156,17 @@ class CompareView(QWidget):
         row_c.addWidget(self.export_button)
         row_c.addWidget(QLabel("Show"))
         row_c.addWidget(self.filter_combo)
-        row_c.addWidget(self.status, 1)
+        row_c.addStretch(1)
+        self.empty_state = EmptyState(  # no button: Compare above is the one primary action
+            "Choose another project folder, or two scenarios, then press Compare.",
+            icon="git-compare",
+        )
         layout = QVBoxLayout(self)
         for row in (row_a, row_b, row_c):
             layout.addLayout(row)
+        layout.addWidget(self.status)  # a line of its own: a long sentence wraps under the buttons
         layout.addWidget(self.table, 1)
+        layout.addWidget(self.empty_state, 1)
 
         self.scenario_a.currentTextChanged.connect(lambda _t: self._update_validity())
         self.scenario_a.currentTextChanged.connect(lambda _t: self._update_side_a())
@@ -336,6 +343,8 @@ class CompareView(QWidget):
             ]
             for column, text in enumerate(texts):
                 item = QTableWidgetItem(text)
+                if column < len(theme.COMPARE_KEY_WIDTHS):
+                    item.setToolTip(text)  # a long name is cut in its column
                 tokens = theme.tokens()
                 item.setBackground(QBrush(QColor(getattr(tokens, TINTS[d.status]))))
                 item.setForeground(QBrush(QColor(tokens.text)))
@@ -345,9 +354,26 @@ class CompareView(QWidget):
                         Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
                     )
                 self.table.setItem(i, column, item)
-        self.table.resizeColumnsToContents()
+        self._fit_columns()
+        self.table.setVisible(output is not None)
+        self.empty_state.setVisible(output is None)
         if output is None:
             self.export_button.setEnabled(False)
+
+    def _fit_columns(self) -> None:
+        """The values are what the page is for: the four columns that say where a difference is
+        never take more than their share (the full text is in the tooltip), so A, B and the
+        change are in view without scrolling sideways (D-180)."""
+        self.table.horizontalHeader().setResizeContentsPrecision(FIT_ROWS)
+        self.table.resizeColumnsToContents()
+        header = self.table.horizontalHeader()
+        for column in range(self.table.columnCount()):
+            cap = (
+                theme.px(theme.COMPARE_KEY_WIDTHS[column])
+                if column < len(theme.COMPARE_KEY_WIDTHS)
+                else theme.px(theme.COMPARE_VALUE_MAX)
+            )
+            header.resizeSection(column, min(header.sectionSize(column), cap))
 
     # ---- export ------------------------------------------------------------------------------
     def _choose_export(self) -> None:

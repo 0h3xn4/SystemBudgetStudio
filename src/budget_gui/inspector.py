@@ -15,7 +15,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QListWidget,
     QListWidgetItem,
-    QPushButton,
     QVBoxLayout,
     QWidget,
 )
@@ -23,6 +22,7 @@ from PySide6.QtWidgets import (
 from budget_core.problems import Problem
 from budget_gui import icons, theme
 from budget_gui import problem_class as pc
+from budget_gui.components import Button, EmptyState
 from budget_gui.project_tree import Node
 
 KIND_TEXT = {
@@ -75,17 +75,16 @@ class InspectorPanel(QWidget):
         self.problems_title.setProperty("role", "section-title")
         self.problems = QListWidget()
         self.problems.setWordWrap(True)
-        self.empty = QLabel(
-            "Select a node in the project tree to see where it lives and what is wrong with it."
+        self.empty = EmptyState(
+            "Select a node of the project tree, or a cell of a grid, to see where it lives and "
+            "what is wrong with it.",
+            icon="info",
         )
-        self.empty.setWordWrap(True)
-        self.empty.setProperty("role", "muted")
-        self.open_button = QPushButton("Open")
-        self.open_button.setProperty("kind", "secondary")
-        self.modes_button = QPushButton("Edit power modes…")
-        self.modes_button.setProperty("kind", "secondary")
+        self.open_button = Button("Open", compact=True)
+        self.modes_button = Button("Edit power modes…", compact=True)
 
         buttons = QHBoxLayout()
+        buttons.setSpacing(theme.gap(1))
         buttons.addWidget(self.open_button)
         buttons.addWidget(self.modes_button)
         buttons.addStretch(1)

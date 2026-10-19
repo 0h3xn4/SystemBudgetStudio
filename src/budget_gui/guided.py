@@ -18,7 +18,6 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QPushButton,
     QVBoxLayout,
     QWidget,
     QWizard,
@@ -35,6 +34,8 @@ from budget_core.wizard import (
     create_project,
     folder_name,
 )
+from budget_gui import theme
+from budget_gui.components import Button
 
 PAGES = {
     "Project": ("project_name",),
@@ -52,6 +53,10 @@ class _Page(QWizardPage):
         self.setSubTitle(intro)
         self.form = QFormLayout()
         outer = QVBoxLayout(self)
+        outer.setContentsMargins(*theme.inset(3, 2))
+        outer.setSpacing(theme.gap(2))
+        self.form.setHorizontalSpacing(theme.gap(2))
+        self.form.setVerticalSpacing(theme.gap(1))
         outer.addLayout(self.form)
 
     def isComplete(self) -> bool:  # noqa: N802 (Qt naming)
@@ -77,9 +82,10 @@ class GuidedWizard(QWizard):
 
         self.name_edit = QLineEdit("My first satellite")
         self.folder_edit = QLineEdit(str(self.parent_folder))
-        browse = QPushButton("Browse…")
+        browse = Button("Browse…", icon="folder-open")
         browse.clicked.connect(self._browse)
         folder_row = QHBoxLayout()
+        folder_row.setSpacing(theme.gap(1))
         folder_row.addWidget(self.folder_edit, 1)
         folder_row.addWidget(browse)
 
@@ -135,6 +141,16 @@ class GuidedWizard(QWizard):
         for spin in (self.altitude, self.inclination, self.raan, self.duration):
             spin.valueChanged.connect(lambda _v: self._changed())
         self.sample_combo.currentIndexChanged.connect(lambda _i: self._changed())
+        # Next and Finish are the one primary action of a page; Back and Cancel are secondary
+        for which in (QWizard.WizardButton.NextButton, QWizard.WizardButton.FinishButton):
+            button = self.button(which)
+            if button is not None:
+                button.setProperty("kind", "primary")
+        for which in (QWizard.WizardButton.BackButton, QWizard.WizardButton.CancelButton):
+            button = self.button(which)
+            if button is not None:
+                button.setProperty("kind", "secondary")
+        self.resize(*theme.scaled(theme.PALETTE_SIZE))
         self.restart()  # makes the first page current and puts the error label on it
 
     @staticmethod

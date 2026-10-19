@@ -24,7 +24,6 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QProgressBar,
-    QPushButton,
     QScrollArea,
     QTableWidget,
     QTableWidgetItem,
@@ -35,6 +34,7 @@ from PySide6.QtWidgets import (
 from budget_core.provenance import Provenance
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui import icons, theme
+from budget_gui.components import Button, EmptyState
 from budget_gui.theme import Status
 
 FORMAT_TIPS = {
@@ -82,16 +82,25 @@ class ReportsView(QWidget):
         intro.setWordWrap(True)
         intro.setProperty("role", "muted")
 
+        # The provenance is the one of the Provenance panel: a line says it, the rows are one
+        # click away and are not repeated in a table that is always open (D-180).
+        self.provenance_summary = QLabel("")
+        self.provenance_summary.setWordWrap(True)
+        self.provenance_summary.setFont(theme.mono_font(theme.TYPE_SMALL))
+        self.provenance_summary.setProperty("role", "muted")
+        self.provenance_toggle = Button("Show details", "ghost", compact=True)
+        self.provenance_toggle.clicked.connect(self._toggle_provenance)
         self.provenance_table = QTableWidget(0, 2)
         self.provenance_table.setHorizontalHeaderLabels(["Item", "Value"])
         self.provenance_table.verticalHeader().setVisible(False)
         self.provenance_table.horizontalHeader().setStretchLastSection(True)
         self.provenance_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.provenance_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
-        self.provenance_table.setMaximumHeight(theme.px(theme.PROVENANCE_MAX_HEIGHT))
+        self.provenance_table.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.provenance_table.hide()
 
         self.items_grid = QGridLayout()
-        self.items_grid.setHorizontalSpacing(16)
+        self.items_grid.setHorizontalSpacing(theme.gap(3))
         self.format_boxes: dict[str, QCheckBox] = {}
         formats = QHBoxLayout()
         for kind in REPORT_KINDS:
@@ -106,11 +115,9 @@ class ReportsView(QWidget):
         self.folder_edit = QLineEdit()
         self.folder_edit.setPlaceholderText("Folder to write the files into")
         self.folder_edit.textChanged.connect(self._update_button)
-        self.browse_button = QPushButton("Browse…")
-        self.browse_button.setProperty("kind", "secondary")
+        self.browse_button = Button("Browse…", icon="folder-open")
         self.browse_button.clicked.connect(self._browse)
-        self.export_button = QPushButton("Export")
-        self.export_button.setProperty("kind", "primary")
+        self.export_button = Button("Export", "primary", icon="file-output")
         self.export_button.clicked.connect(self._export)
         folder_row = QHBoxLayout()
         folder_row.addWidget(self.folder_edit, 1)
@@ -131,10 +138,15 @@ class ReportsView(QWidget):
         self.results.horizontalHeader().setStretchLastSection(True)
         self.results.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.results.setTabKeyNavigation(False)
-        self.reveal_button = QPushButton("Show the folder")
-        self.reveal_button.setProperty("kind", "secondary")
+        self.reveal_button = Button("Show the folder", icon="folder-open")
         self.reveal_button.setEnabled(False)
         self.reveal_button.clicked.connect(self.reveal)
+        self.results_empty = EmptyState(  # nothing written yet: a line, not an empty table
+            "Nothing written yet. Choose what to export and a folder, then press Export.",
+            icon="file-output",
+        )
+        self.results.hide()
+        self.reveal_button.hide()
 
         page = QWidget()  # in a scroll area, so a low window can still show the whole page
         layout = QVBoxLayout(page)
@@ -142,7 +154,11 @@ class ReportsView(QWidget):
         layout.setSpacing(theme.gap(2))
         layout.addWidget(title)
         layout.addWidget(intro)
-        layout.addWidget(self._heading("Provenance (written into every file)"))
+        provenance_row = QHBoxLayout()
+        provenance_row.addWidget(self._heading("Provenance (written into every file)"), 1)
+        provenance_row.addWidget(self.provenance_toggle)
+        layout.addLayout(provenance_row)
+        layout.addWidget(self.provenance_summary)
         layout.addWidget(self.provenance_table)
         layout.addWidget(self._heading("What to export"))
         layout.addLayout(self.items_grid)
@@ -153,7 +169,8 @@ class ReportsView(QWidget):
         layout.addWidget(self.progress)
         layout.addWidget(self.status)
         layout.addWidget(self.results, 1)
-        layout.addWidget(self.reveal_button)
+        layout.addWidget(self.results_empty, 1)
+        layout.addWidget(self.reveal_button, 0, Qt.AlignmentFlag.AlignLeft)
         self.results.setMinimumHeight(theme.px(theme.RESULTS_MIN_HEIGHT))
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -186,7 +203,33 @@ class ReportsView(QWidget):
                     item.setFont(theme.mono_font())
                 self.provenance_table.setItem(i, column, item)
         self.provenance_table.resizeRowsToContents()
-        self.provenance_table.setVisible(bool(rows))
+        height = self.provenance_table.horizontalHeader().height() + 2 * theme.px(theme.BORDER)
+        height += sum(self.provenance_table.rowHeight(r) for r in range(len(rows)))
+        self.provenance_table.setFixedHeight(height)  # all rows, no scroll bar of its own
+        values = dict(rows)
+        revision = f"revision {values['Project revision']}" if "Project revision" in values else ""
+        self.provenance_summary.setText(
+            " · ".join(
+                v
+                for v in (
+                    values.get("Tool"),
+                    values.get("Project"),
+                    revision,
+                    values.get("Scenario"),
+                )
+                if v
+            )
+            or "Open a project to see the provenance every file will carry."
+        )
+        self.provenance_toggle.setEnabled(bool(rows))
+        if not rows:
+            self.provenance_table.hide()
+            self.provenance_toggle.setText("Show details")
+
+    def _toggle_provenance(self) -> None:
+        show = self.provenance_table.isHidden()
+        self.provenance_table.setVisible(show)
+        self.provenance_toggle.setText("Hide details" if show else "Show details")
 
     def set_items(self, items: list[ReportItem]) -> None:
         """Show what can be exported. What the user ticked or unticked is remembered; an item that
@@ -299,6 +342,7 @@ class ReportsView(QWidget):
             self.results.setRowCount(0)
             self._written = []
             self.reveal_button.setEnabled(False)
+            self._show_results_table(False)
         self._update_button()
 
     def show_results(self, paths: list[str]) -> None:
@@ -314,9 +358,15 @@ class ReportsView(QWidget):
                 self.results.setItem(i, column, item)
         self.results.resizeColumnToContents(0)
         self.reveal_button.setEnabled(bool(paths))
+        self._show_results_table(bool(paths))
         self.status.setText(
             f"Wrote {len(paths)} file{'s' if len(paths) != 1 else ''}." if paths else "No files."
         )
+
+    def _show_results_table(self, shown: bool) -> None:
+        self.results.setVisible(shown)
+        self.reveal_button.setVisible(shown)
+        self.results_empty.setVisible(not shown)
 
     def show_failure(self, message: str) -> None:
         self.status.setText(message)
