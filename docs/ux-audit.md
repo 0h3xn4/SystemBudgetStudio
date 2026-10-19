@@ -238,6 +238,7 @@ After step 1 (the shell). *Done* means the finding no longer applies in the wind
 | UX-25 timeline gaps | partly | legend hide and solo, violation markers, previous and next violation, UTC and orbit axes (D-162); the BOL/EOL overlay is open |
 | UX-35 Compare is a bare table | partly | columns named after the revisions, the sides stated, a filter, mono figures (D-165); the input diff, *changed because of…* and overlays need a core index and are open |
 | UX-36 no Reports page | done | provenance first, what and state, formats, folder, progress, result list, show the folder (D-165) |
+| UX-43 no progress, no Cancel | done | step named while it runs, a bar, Run and Compute become Cancel, results kept; takes effect at the next step (D-167) |
 | UX-26 slow plot | done | zoom or pan of a week at 1 s about 20 ms, full redraw about 50 ms (D-161) |
 | UX-13 one tab per unit | done | the Units and Power modes grids across all units (D-159) |
 | UX-14 no source column, no placeholder styling | partly | placeholders, source and unit in the Inputs grid (every sourced number of the configuration and the links); unit values have no source in the file format |

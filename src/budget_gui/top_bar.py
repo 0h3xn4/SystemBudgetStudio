@@ -17,7 +17,9 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QProgressBar,
     QPushButton,
+    QVBoxLayout,
     QWidget,
 )
 
@@ -25,6 +27,10 @@ from budget_gui import icons, theme
 from budget_gui.run_controller import STATE_TEXT, RunState
 
 CASES = ("BOL", "EOL")
+RUN_TIP = (
+    "Work out the scenario, the power timeline and the link passes of the selected "
+    "scenario (Ctrl+R). The static budgets are always up to date."
+)
 CHIP_ICON = {
     RunState.NOT_RUN: "circle-minus",
     RunState.RUNNING: "refresh-cw",
@@ -110,6 +116,7 @@ class TopBar(QWidget):
     scenario_chosen = Signal(str)
     case_chosen = Signal(str)
     run_requested = Signal()
+    cancel_requested = Signal()  # Run was pressed while a run is in progress
 
     def __init__(self) -> None:
         super().__init__()
@@ -150,16 +157,23 @@ class TopBar(QWidget):
 
         self.run_button = QPushButton("Run")
         self.run_button.setIcon(icons.icon("play", theme.tokens().text_on_accent))
-        self.run_button.setToolTip(
-            "Work out the scenario, the power timeline and the link passes of the selected "
-            "scenario (Ctrl+R). The static budgets are always up to date."
-        )
+        self.run_button.setToolTip(RUN_TIP)
         self.run_button.setEnabled(False)
         self.chip = StatusChip()
 
-        layout = QHBoxLayout(self)
+        self.progress = QProgressBar()
+        self.progress.setRange(0, 0)  # busy: how long it takes is not known
+        self.progress.setTextVisible(False)
+        self.progress.setFixedHeight(3)
+        self.progress.hide()
+        outer = QVBoxLayout(self)
+        outer.setContentsMargins(0, 0, 0, 0)
+        outer.setSpacing(0)
+        layout = QHBoxLayout()
         layout.setContentsMargins(12, 8, 12, 8)
         layout.setSpacing(8)
+        outer.addLayout(layout)
+        outer.addWidget(self.progress)
         layout.addWidget(self.name_label)
         layout.addWidget(self.revision_label)
         layout.addWidget(self.dirty_label)
@@ -176,7 +190,7 @@ class TopBar(QWidget):
         self.scenario_combo.activated.connect(
             lambda _i: self.scenario_chosen.emit(self.scenario_combo.currentText())
         )
-        self.run_button.clicked.connect(self.run_requested)
+        self.run_button.clicked.connect(self._run_clicked)
         theme.manager().changed.connect(self._retint)
 
     # ---- state -------------------------------------------------------------------------------
@@ -215,11 +229,37 @@ class TopBar(QWidget):
     def case(self) -> str:
         return next(c for c, b in self.case_buttons.items() if b.isChecked())
 
+    def _run_clicked(self) -> None:
+        if self.chip.state is RunState.RUNNING:
+            self.cancel_requested.emit()
+        else:
+            self.run_requested.emit()
+
     def set_run_state(
-        self, state: RunState, can_run: bool, detail: str = "", tip: str = ""
+        self,
+        state: RunState,
+        can_run: bool,
+        detail: str = "",
+        tip: str = "",
+        cancelling: bool = False,
     ) -> None:
+        """While a run is in progress the Run button is Cancel (and a thin bar runs under the top
+        bar); it waits, disabled, once the cancel has been asked for."""
         self.chip.set_state(state, detail, tip)
-        self.run_button.setEnabled(can_run)
+        running = state is RunState.RUNNING
+        self.progress.setVisible(running)
+        self.run_button.setProperty("kind", "secondary" if running else "")
+        self.run_button.setText(("Cancelling…" if cancelling else "Cancel") if running else "Run")
+        self.run_button.setToolTip(
+            "Stop the run. The results shown now stay as they are (Ctrl+R)." if running else RUN_TIP
+        )
+        self.run_button.setEnabled(not cancelling if running else can_run)
+        self._retint()
+        self.run_button.style().unpolish(self.run_button)
+        self.run_button.style().polish(self.run_button)
 
     def _retint(self) -> None:
+        if self.chip.state is RunState.RUNNING:
+            self.run_button.setIcon(icons.icon("circle-x", theme.tokens().text))
+            return
         self.run_button.setIcon(icons.icon("play", theme.tokens().text_on_accent))

@@ -16,6 +16,7 @@ from typing import Any, Literal
 import numpy as np
 
 from budget_core.assumptions import Assumption, incomplete, missing_from
+from budget_core.control import RunControl, checkpoint, stage
 from budget_core.environment.intervals import Interval, merge_intervals
 from budget_core.model import Project, Sourced
 from budget_core.model.power_system import PowerSystem
@@ -358,13 +359,16 @@ def time_domain_budget(
     load_basis: LoadBasis = "nominal",
     cases: tuple[str, ...] = CASES,
     mission_phase: str | None = None,
+    control: RunControl | None = None,
 ) -> TimeDomainResult:
-    """Solve the scenario. The project must be valid; `run` is its computed scenario."""
+    """Solve the scenario. The project must be valid; `run` is its computed scenario. A `control`
+    reports the stages and can stop it between them (D-167); it changes no result."""
     if any(name not in CASES for name in cases):
         raise ValueError("a power case must be 'bol' or 'eol'")
     scenario = run.scenario
     env = run.env
     system: PowerSystem | None = project.config.power_system
+    stage(control, "Power timeline: loads and array")
     static = static_power_budget(project)
     col = _Collector(file_present=system is not None)
     for assumption in static.assumptions:
@@ -474,7 +478,9 @@ def time_domain_budget(
     # constant power leaves the solution before and after it unchanged.
     setups = tuple(_case_setup(name, battery_inputs, life, annual) for name in cases)
     traces: list[BatteryTrace | None] = []
+    stage(control, "Power timeline: battery")
     for _ in range(MAX_REFINE_ROUNDS):
+        checkpoint(control)
         traces = [_integrate(setup, battery_inputs, prepared) for setup in setups]
         g = prepared.grid
         extra = [
@@ -488,6 +494,7 @@ def time_domain_budget(
         if len(finer) == len(g.redges):
             break
         prepared = prepare(finer, _Collector(file_present=system is not None))
+    stage(control, "Power timeline: violations and orbit balance")
     case_results = tuple(
         _solve_case(setup, prepared, battery_inputs, trace, phase, windows, run)
         for setup, trace in zip(setups, traces, strict=True)

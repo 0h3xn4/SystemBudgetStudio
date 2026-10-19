@@ -191,6 +191,7 @@ class MainWindow(QMainWindow):
         self.top_bar.case_chosen.connect(self.timeline_view.case_combo.setCurrentText)
         self.timeline_view.case_combo.currentTextChanged.connect(self.top_bar.set_case)
         self.top_bar.run_requested.connect(self.run_all)
+        self.top_bar.cancel_requested.connect(self.run_controller.cancel)
         self.stale_banner.action_requested.connect(self.show_first_error)
         self.failed_banner.action_requested.connect(self.run_all)
         self.run_controller.changed.connect(self._update_run_state)
@@ -661,7 +662,11 @@ class MainWindow(QMainWindow):
         detail = ""
         if state is RunState.OK and self._last_run is not None:
             detail = f"{self._last_run:%H:%M:%S}"
-        self.top_bar.set_run_state(state, controller.can_run(), detail, tips[state])
+        elif state is RunState.RUNNING:
+            detail = "cancelling" if controller.cancelling else controller.stage
+        self.top_bar.set_run_state(
+            state, controller.can_run(), detail, tips[state], cancelling=controller.cancelling
+        )
         if state is RunState.FAILED:
             self.failed_banner.show_message(
                 f"The last run did not finish: {controller.failure}", "Run again"

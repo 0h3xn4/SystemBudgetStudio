@@ -16,6 +16,7 @@ from typing import Any
 import numpy as np
 
 from budget_core.assumptions import Assumption, incomplete
+from budget_core.control import RunControl, checkpoint, stage
 from budget_core.io.paths import resolve_inside
 from budget_core.link import budget as lb
 from budget_core.model import Antenna, Link, Project, Sourced
@@ -670,15 +671,20 @@ def link_static_budget(project: Project) -> StaticLinkResult:
 # ---- pass time series -----------------------------------------------------------------------
 
 
-def link_pass_series(project: Project, run: ScenarioRun) -> LinkSeriesResult:
-    """Margin, selected data rate and data volume over every pass of each link's peer station."""
+def link_pass_series(
+    project: Project, run: ScenarioRun, control: RunControl | None = None
+) -> LinkSeriesResult:
+    """Margin, selected data rate and data volume over every pass of each link's peer station.
+    A `control` reports the stage and can stop it between links (D-167)."""
     notes = _Notes()
     env = run.env
     grid_t = env.grid.times_s
     step = env.grid.step_s
     duration = env.grid.duration_s
     series: list[LinkSeries] = []
+    stage(control, "Link passes")
     for link_id in sorted(project.links):
+        checkpoint(control)
         link = project.links[link_id]
         file = f"links/{link_id}.yaml"
         if link.peer is None:
