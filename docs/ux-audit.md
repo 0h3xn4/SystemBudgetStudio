@@ -233,8 +233,8 @@ After step 1 (the shell). *Done* means the finding no longer applies in the wind
 | UX-10 one error blanks everything | done | the last good tables stay, with a banner (D-155); the time-domain views are empty with a sentence |
 | UX-11 tab strip | done | seven tabs; files open inside Model |
 | UX-12 empty first screen | open | recent projects and a New button: step 6 |
-| UX-22 static power table | partly | headers on two lines, the table fits at 1280 px, totals row emphasised (D-163); margin bars wait for the tables that have a limit per row (Mass, Thermal, Link) |
-| UX-23 broken limits not in cells | partly | timeline tables mark them; the budget tables follow with their views (D-163) |
+| UX-22 static power table | done | headers on two lines, the table fits at 1280 px, totals row emphasised (D-163); no bars on the power table (no limit per mode), bars on the mass limits (D-164) |
+| UX-23 broken limits not in cells | done | timeline tables (D-163); mass limits with a bar, thermal limits, link margins (D-164) |
 | UX-25 timeline gaps | partly | legend hide and solo, violation markers, previous and next violation, UTC and orbit axes (D-162); the BOL/EOL overlay is open |
 | UX-26 slow plot | done | zoom or pan of a week at 1 s about 20 ms, full redraw about 50 ms (D-161) |
 | UX-13 one tab per unit | done | the Units and Power modes grids across all units (D-159) |

@@ -140,6 +140,8 @@ def _check_table(c: CaseThermal) -> Table:
         tuple(rows),
         note="Status: ok; margin = within the limits but closer than the required temperature "
         "margin; exceeded; no limits = the unit has no limits for this set (not checked).",
+        status_column=7,
+        status_marks=(2,),
     )
 
 

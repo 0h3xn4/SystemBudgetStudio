@@ -104,6 +104,8 @@ def _rate_table(result: StaticLinkResult) -> Table:
         ),
         tuple(rows),
         key_columns=(0, 1, 2),  # link, point and rate
+        status_column=6,
+        status_marks=(4,),
     )
 
 

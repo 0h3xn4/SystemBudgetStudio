@@ -71,6 +71,9 @@ def _limits(result: StaticMassResult) -> Table:
             Column("Status"),
         ),
         tuple(rows),
+        status_column=5,
+        status_marks=(3, 4),
+        bar=(3, 2),
     )
 
 
