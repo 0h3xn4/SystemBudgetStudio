@@ -402,5 +402,6 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - Reports: the provenance once, as a line with *Show details* (the table behind it is the same and the tests that read it pass unchanged), an empty state for the list of written files.
 - Dialogs: paste preview, cell legend, guide and wizard restyled with the components (margins, one primary button, mono figures); the wizard keeps `QWizard`. The message box and the palette were done in M2.
 - Problems panel, Inspector, Provenance: the Inspector's empty state and buttons; the Provenance values wrap. The Problems panel needed nothing after M2.
-- Tests: the existing compare, reports, wizard and dialog tests pass unchanged (the timed wizard test stays); new tests in `tests/gui/test_secondary_screens.py`. Full runs: see the PR.
+- Tests: the existing compare, reports, wizard and dialog tests pass unchanged (the timed wizard test stays); 8 new tests in `tests/gui/test_secondary_screens.py`. All 587 GUI tests pass (26 min, run serially) and all 1715 core tests pass (10 min).
+- Baseline (`docs/ui/screenshots/m5/baseline.txt`): zoom and pan 27 ms median; the stall of a week's results measured 384 ms in this run, inside the 170 to 384 ms range seen since M4 (it is noise-dominated and still not under 100 ms, see M4); the other items are within noise of M4.
 - Screenshots in `docs/ui/screenshots/m5/`; no change to core, CLI, file formats or goldens.
