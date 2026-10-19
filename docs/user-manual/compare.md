@@ -33,7 +33,7 @@ Giving scenarios also compares the **power timeline** and the **link passes**. `
 
 ## How do I compare in the window?
 
-Open the **Compare** tab. Side A is the open project (with an optional scenario). For side B enter or browse to another project folder, or leave it empty and choose a second scenario. **Compare** runs in the background and lists, budget by budget, every value that differs. **Export…** writes the files above.
+Open the **Compare** tab. Side A is the open project (with an optional scenario). For side B enter or browse to another project folder, or leave it empty and choose a second scenario. **Compare** runs in the background and lists, budget by budget, every value that differs. The columns are named after what differs between the sides (for example *A: rev 1* and *B: rev 2*), the line beside each side says which project and revision it is, and **Show** limits the list to one kind of difference (changed, added, removed, now computed, now n/a). **Export…** writes the files above.
 
 ## How do I read the comparison?
 

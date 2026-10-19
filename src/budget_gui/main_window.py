@@ -42,11 +42,12 @@ from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.project_tree import ProjectTree
 from budget_gui.provenance_panel import ProvenancePanel
-from budget_gui.reports_view import ReportsView
+from budget_gui.reports_view import ReportItem, ReportsView
 from budget_gui.run_controller import RunController, RunState
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.status_bar import AppStatusBar
+from budget_gui.theme import Status
 from budget_gui.timeline_view import PowerTimelineView
 from budget_gui.top_bar import TopBar
 from budget_gui.unit_table import export_unit_table, import_unit_table
@@ -177,9 +178,11 @@ class MainWindow(QMainWindow):
         self.failed_banner.action_requested.connect(self.run_all)
         self.run_controller.changed.connect(self._update_run_state)
         self.editors.dirty_changed.connect(self._update_dirty)
-        self.reports_view.reports_requested.connect(self._choose_export)
-        self.reports_view.timeline_requested.connect(self._choose_timeline_export)
-        self.reports_view.scenario_requested.connect(self._choose_scenario_export)
+        self.reports_view.export_requested.connect(self._export_selected)
+        self.workspace.currentChanged.connect(lambda _i: self.update_reports_page())
+        for source in (self.scenario_view, self.timeline_view):
+            source.computed.connect(lambda _result: self.update_reports_page())
+            source.compute_failed.connect(lambda _message: self.update_reports_page())
         self.tree.file_requested.connect(self._tree_file)
         self.tree.field_requested.connect(self.jump_to_input)
         self.tree.currentItemChanged.connect(lambda _current, _previous: self._inspect())
@@ -189,6 +192,11 @@ class MainWindow(QMainWindow):
         self.tree.unit_requested.connect(lambda unit_id: self.show_unit(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self._export_folder = Path()
+        self._queue: list[str] = []  # what the Reports page asked for and is still to be written
+        self._queue_paths: list[str] = []
+        self._queue_formats: set[str] = set()
+        self._queue_folder = Path()
+        self._queue_active = False
         self.timeline_view.computed.connect(lambda _result: self._update_problems())
         self.link_passes_view.computed.connect(lambda _result: self._update_problems())
         for computing in (self.scenario_view, self.timeline_view, self.link_passes_view):
@@ -197,6 +205,11 @@ class MainWindow(QMainWindow):
         for view in (self.timeline_view, self.link_passes_view, self.compare_view):
             view.export_finished.connect(self._view_export_done)
             view.export_failed.connect(self._view_export_failed)
+        # after the slots above, so the message of a queued export is the last one shown
+        self.export_finished.connect(self._queue_step_done)
+        self.export_failed.connect(self._queue_step_failed)
+        self.timeline_view.export_finished.connect(self._queue_step_done)
+        self.timeline_view.export_failed.connect(self._queue_step_failed)
         self._closing = False  # a close was asked for while a job runs
         self._last_run: datetime | None = None
 
@@ -762,6 +775,7 @@ class MainWindow(QMainWindow):
         self.status_bar.set_project_path(session.path)
         self.status_bar.set_last_run(self._last_run)
         self.provenance_panel.set_provenance(session.provenance)
+        self.update_reports_page()
         self._update_banners()
         self._inspect()
         self._update_dirty()
@@ -790,6 +804,123 @@ class MainWindow(QMainWindow):
         if self.session.project is not None:
             name = self.session.project.meta.name
             self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
+
+    # ---- the Reports page --------------------------------------------------------------------
+    def update_reports_page(self) -> None:
+        """What can be exported now and where each part stands."""
+        session = self.session
+        items: list[ReportItem] = []
+        outputs = session.outputs
+        if outputs:
+            incomplete = any(o.incomplete for o in outputs)
+            items.append(
+                ReportItem(
+                    "budgets",
+                    "Budgets: power, mass, thermal, link",
+                    ", ".join(o.prefix for o in outputs),
+                    Status.NEAR if incomplete else Status.PASS,
+                    "Ready, with n/a where inputs are placeholders" if incomplete else "Ready",
+                    True,
+                )
+            )
+        else:
+            text = "Fix the errors first" if session.path is not None else "Open a project"
+            items.append(
+                ReportItem(
+                    "budgets", "Budgets: power, mass, thermal, link", "", Status.FAIL, text, False
+                )
+            )
+        timeline, scenario = self.timeline_view, self.scenario_view
+        items.append(
+            self._time_item(
+                "timeline",
+                "Power timeline",
+                "power_time_<scenario> (series per case, orbits, violations)",
+                timeline.result is not None,
+                timeline.is_valid(),
+            )
+        )
+        items.append(
+            self._time_item(
+                "scenario",
+                "Scenario results",
+                "environment, eclipses, passes, timeline (CSV, JSON)",
+                scenario.last_run is not None,
+                scenario.last_run is not None
+                and not scenario.is_stale
+                and scenario.last_run.scenario_id == scenario.selected_id(),
+                formats=False,
+            )
+        )
+        self.reports_view.set_items(items)
+        self.reports_view.set_provenance(session.provenance)
+
+    @staticmethod
+    def _time_item(
+        key: str, title: str, detail: str, computed: bool, valid: bool, formats: bool = True
+    ) -> ReportItem:
+        if valid:
+            return ReportItem(key, title, detail, Status.PASS, "Ready", True, formats)
+        if computed:
+            return ReportItem(
+                key, title, detail, Status.NEAR, "Out of date: press Run", False, formats
+            )
+        return ReportItem(
+            key, title, detail, Status.NOT_CHECKED, "Not worked out: press Run", False, formats
+        )
+
+    def _export_selected(self, keys: set[str], formats: set[str], folder: str) -> None:
+        """Write what the Reports page asked for, one part after the other."""
+        if self._queue_active:
+            return
+        order: list[str] = [k for k in ("budgets", "timeline", "scenario") if k in keys]
+        if not order:
+            return
+        self._queue, self._queue_paths = order, []
+        self._queue_formats, self._queue_folder = set(formats), Path(folder).expanduser()
+        self._queue_active = True
+        self.reports_view.set_busy(True)
+        self._queue_next()
+
+    def _queue_next(self) -> None:
+        if not self._queue:
+            paths, self._queue_active = self._queue_paths, False
+            self.reports_view.set_busy(False)
+            self.reports_view.show_results(paths)
+            where = f" to {self._queue_folder}" if paths else ""
+            self.statusBar().showMessage(f"Exported {len(paths)} file(s){where}.")
+            return
+        key = self._queue.pop(0)
+        folder, formats = self._queue_folder, self._queue_formats
+        if key == "budgets":
+            self.export_to(folder, formats)
+        elif key == "timeline":
+            self.timeline_view.export_to(folder, formats)
+        else:
+            try:
+                written = self.scenario_view.export_to(folder)
+            except (OutputError, OSError) as exc:
+                # OutputError texts are plain by construction; an OSError is described, not echoed
+                self._queue_step_failed(
+                    str(exc)
+                    if isinstance(exc, OutputError)
+                    else "The files could not be written. Check that you may write to the folder."
+                )
+                return
+            self._queue_step_done([str(p) for p in written])
+
+    def _queue_step_done(self, paths: list[str]) -> None:
+        if self._queue_active:
+            self._queue_paths.extend(paths)
+            self._queue_next()
+
+    def _queue_step_failed(self, message: str) -> None:
+        if not self._queue_active:
+            return
+        paths, self._queue, self._queue_active = self._queue_paths, [], False
+        self.reports_view.set_busy(False)
+        self.reports_view.show_results(paths)
+        self.reports_view.show_failure(message)
 
     # ---- export ------------------------------------------------------------------------------
     def export_to(self, folder: Path, kinds: Collection[str]) -> None:

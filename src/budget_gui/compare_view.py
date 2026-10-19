@@ -36,6 +36,7 @@ from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, STALE_TEXT, ResultKe
 from budget_gui.worker import ExportWorker
 
 NO_SCENARIO = "(none)"
+ALL = "All differences"
 HEADERS = ["Budget", "Section", "Row", "Quantity", "A", "B", "Change", "Change (%)", "Status"]
 TINTS = {  # the status of a row -> the token of its background
     "changed": "diff_changed",
@@ -121,26 +122,38 @@ class CompareView(QWidget):
         self.export_button.setEnabled(False)
         self.status = QLabel("")
         self.status.setWordWrap(True)
+        self.side_a_label = QLabel("")
+        self.side_a_label.setProperty("role", "muted")
+        self.side_b_label = QLabel("")
+        self.side_b_label.setProperty("role", "muted")
+        self.filter_combo = QComboBox()
+        self.filter_combo.addItems([ALL, *TINTS])
+        self.filter_combo.setToolTip("Show only the differences of one kind.")
+        self.filter_combo.setEnabled(False)
         self._shown: BudgetOutput | None = None
         theme.manager().changed.connect(self._theme_changed)
         self.table = QTableWidget(0, len(HEADERS))
         self.table.setHorizontalHeaderLabels(HEADERS)
         self.table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self.table.verticalHeader().setVisible(False)
 
         row_a = QHBoxLayout()
         row_a.addWidget(QLabel("A: this project, scenario"))
         row_a.addWidget(self.scenario_a)
-        row_a.addStretch(1)
+        row_a.addWidget(self.side_a_label, 1)
         row_b = QHBoxLayout()
         row_b.addWidget(QLabel("B:"))
         row_b.addWidget(self.other_edit, 1)
         row_b.addWidget(self.browse_button)
         row_b.addWidget(QLabel("scenario"))
         row_b.addWidget(self.scenario_b)
+        row_b.addWidget(self.side_b_label)
         row_c = QHBoxLayout()
         row_c.addWidget(self.compare_button)
         row_c.addWidget(self.export_button)
+        row_c.addWidget(QLabel("Show"))
+        row_c.addWidget(self.filter_combo)
         row_c.addWidget(self.status, 1)
         layout = QVBoxLayout(self)
         for row in (row_a, row_b, row_c):
@@ -148,6 +161,8 @@ class CompareView(QWidget):
         layout.addWidget(self.table, 1)
 
         self.scenario_a.currentTextChanged.connect(lambda _t: self._update_validity())
+        self.scenario_a.currentTextChanged.connect(lambda _t: self._update_side_a())
+        self.filter_combo.currentTextChanged.connect(lambda _t: self._show(self._shown))
         self.scenario_b.currentTextChanged.connect(lambda _t: self._update_validity())
         self.other_edit.textChanged.connect(lambda _t: self._update_validity())
         self.browse_button.clicked.connect(lambda: self._browse())
@@ -192,11 +207,22 @@ class CompareView(QWidget):
                 combo.setCurrentText(previous)
             combo.blockSignals(False)
         self.compare_button.setEnabled(project is not None and self._worker is None)
+        self._update_side_a()
         if project is None:
             self._show(None)
             self.status.setText("Open a project to compare it with another revision.")
         elif self.output is not None:
             self._update_validity()
+
+    def _update_side_a(self) -> None:
+        """Say which project, revision and scenario side A is (it is the open project)."""
+        project = self.project
+        if project is None:
+            self.side_a_label.setText("")
+            return
+        scenario = self._scenario(self.scenario_a)
+        text = f"{project.meta.name}, revision {project.meta.revision}"
+        self.side_a_label.setText(text + (f", scenario {scenario}" if scenario else ""))
 
     def set_other_folder(self, folder: Path) -> None:
         self.other_edit.setText(str(folder))
@@ -277,7 +303,23 @@ class CompareView(QWidget):
 
     def _show(self, output: BudgetOutput | None) -> None:
         self._shown = output
-        rows = [(r.name, d) for r in (output.result if output else ()) for d in r.differences]
+        results = output.result if output else ()
+        wanted = self.filter_combo.currentText()
+        rows = [(r.name, d) for r in results for d in r.differences if wanted in (ALL, d.status)]
+        label_a = results[0].label_a if results else "A"
+        label_b = results[0].label_b if results else "B"
+        headers = [
+            (f"A: {label_a}" if h == "A" else f"B: {label_b}" if h == "B" else h) for h in HEADERS
+        ]
+        self.table.setHorizontalHeaderLabels(headers)
+        self.filter_combo.setEnabled(output is not None)
+        self.side_b_label.setText(
+            f"B: {results[0].provenance_b.project_name}, revision "
+            f"{results[0].provenance_b.project_revision}"
+            if results
+            else ""
+        )
+        mono = theme.mono_font()
         self.table.setRowCount(len(rows))
         for i, (name, d) in enumerate(rows):
             texts = [
@@ -297,6 +339,7 @@ class CompareView(QWidget):
                 item.setBackground(QBrush(QColor(getattr(tokens, TINTS[d.status]))))
                 item.setForeground(QBrush(QColor(tokens.text)))
                 if column in (4, 5, 6, 7):
+                    item.setFont(mono)
                     item.setTextAlignment(
                         Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
                     )
