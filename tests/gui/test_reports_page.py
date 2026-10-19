@@ -159,4 +159,4 @@ def test_reveal_opens_the_folder_of_the_files(
     view.export_button.click()
     wait_idle(qtbot, window)
     view.reveal_button.click()
-    assert opened == [str(out)]
+    assert [Path(p) for p in opened] == [out]  # Qt gives forward slashes, also on Windows
