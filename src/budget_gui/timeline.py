@@ -60,8 +60,7 @@ def nice_tick_step(range_s: float, width_px: int, min_px: int = 90) -> float:
 def mode_colour(mode: str, modes: list[str]) -> QColor:
     """Stable colour of a mode: the palette entry at the mode's place in the sorted mode list."""
     ordered = sorted(set(modes) | {mode})
-    palette = theme.tokens().categorical
-    return QColor(palette[ordered.index(mode) % len(palette)])
+    return theme.series_colour(theme.tokens(), ordered.index(mode))
 
 
 def _hms(seconds: float) -> str:
@@ -100,7 +99,8 @@ class TimelineWidget(QWidget):
         else:
             self._modes = []
         self._view = (0.0, self._duration)
-        self.setMinimumHeight(TOP + BOTTOM + max(len(self.rows()), 1) * (ROW + GAP))
+        shown = max(len(self.rows()), 1)  # an empty widget keeps the height of one row
+        self.setMinimumHeight(TOP + BOTTOM + shown * (ROW + GAP))
         self.update()
         self.view_changed.emit()
 
@@ -191,7 +191,7 @@ class TimelineWidget(QWidget):
         painter.fillRect(self.rect(), QColor(t.plot_bg))
         run = self._run
         if run is None:
-            painter.setPen(QColor(t.text_disabled))
+            painter.setPen(QColor(t.text_muted))
             painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, "No scenario computed")
             return
         metrics = QFontMetrics(painter.font())

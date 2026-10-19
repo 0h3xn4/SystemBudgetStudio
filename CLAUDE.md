@@ -21,3 +21,12 @@ Docs index: `docs/README.md` (change the docs with the code: `docs/developer/REA
 - Example projects: invented data only.
 - Problems/messages never contain values read from project files (field names, ids and units only).
 - File format: `docs/FILE_FORMAT.md`. Schema changes need a version bump and a migration.
+
+## UI design rules (the window; full text in `docs/DESIGN.md`, brief in `docs/ui/UI_OVERHAUL.md`)
+- Colours, fonts and pixel sizes live in `budget_gui/theme/` only (a test fails on a hex colour, a font family, a pixel size in a Qt size call or `setStyleSheet` anywhere else). Take sizes from the scales (`theme.gap(i)`, `theme.inset(h, v)`, `theme.px(theme.CONSTANT)`), fonts from `theme.ui_font()` / `theme.mono_font()`, colours from `theme.tokens()`; widgets that paint themselves connect to `theme.manager().changed`.
+- Inter for text, JetBrains Mono for numbers, identifiers, paths and code. Type 11/12/13/15/18/22 px, weights 400/500/600, spacing 4/8/12/16/24/32 px, radii 6 (controls) and 8 (panels), controls 28/32 px, table rows 26 px, focus ring 2 px, motion 120 to 180 ms (never on data or plots, off with *Reduce motion*).
+- Colour means something: neutral surfaces, one accent for the one primary action per view (`kind="primary"`), status colours only for status; a status always has an icon or text too; text 4.5 : 1 and icons/focus 3 : 1 in both themes (tests compute it). Separate areas with surfaces, not lines; no box in a box.
+- Build views from `budget_gui/components/` (`Button`, `StatusBadge`, `SegmentedControl`, `Card`, `EmptyState`, `Toast`, `MessageDialog`...); every empty list has an `EmptyState`; success is a toast, a problem is in the Problems panel, a modal dialog only confirms something destructive or runs a wizard; an icon-only button has a tooltip and an accessible name.
+- Keyboard first: every frequent action has a shortcut shown in its tooltip and menu entry, and an entry in the Ctrl+K palette; focus is always visible.
+- Nothing longer than about 50 ms on the GUI thread; use model/view (not `QTableWidget`) for anything that can be large.
+- Carbon and IBM Plex are gone from the window (D-168); IBM Plex stays only for exported files.

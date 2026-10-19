@@ -88,8 +88,7 @@ class ReportsView(QWidget):
         self.provenance_table.horizontalHeader().setStretchLastSection(True)
         self.provenance_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.provenance_table.setTabKeyNavigation(False)  # Tab leaves a read-only table
-        self.provenance_table.setAlternatingRowColors(True)
-        self.provenance_table.setMaximumHeight(170)
+        self.provenance_table.setMaximumHeight(theme.px(theme.PROVENANCE_MAX_HEIGHT))
 
         self.items_grid = QGridLayout()
         self.items_grid.setHorizontalSpacing(16)
@@ -111,6 +110,7 @@ class ReportsView(QWidget):
         self.browse_button.setProperty("kind", "secondary")
         self.browse_button.clicked.connect(self._browse)
         self.export_button = QPushButton("Export")
+        self.export_button.setProperty("kind", "primary")
         self.export_button.clicked.connect(self._export)
         folder_row = QHBoxLayout()
         folder_row.addWidget(self.folder_edit, 1)
@@ -119,7 +119,7 @@ class ReportsView(QWidget):
 
         self.progress = QProgressBar()
         self.progress.setRange(0, 0)  # busy: the time it takes is not known
-        self.progress.setMaximumHeight(8)
+        self.progress.setMaximumHeight(theme.px(theme.PROGRESS_HEIGHT))
         self.progress.setTextVisible(False)
         self.progress.hide()
         self.status = QLabel("")
@@ -131,7 +131,6 @@ class ReportsView(QWidget):
         self.results.horizontalHeader().setStretchLastSection(True)
         self.results.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.results.setTabKeyNavigation(False)
-        self.results.setAlternatingRowColors(True)
         self.reveal_button = QPushButton("Show the folder")
         self.reveal_button.setProperty("kind", "secondary")
         self.reveal_button.setEnabled(False)
@@ -139,8 +138,8 @@ class ReportsView(QWidget):
 
         page = QWidget()  # in a scroll area, so a low window can still show the whole page
         layout = QVBoxLayout(page)
-        layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(10)
+        layout.setContentsMargins(*theme.inset(3))
+        layout.setSpacing(theme.gap(2))
         layout.addWidget(title)
         layout.addWidget(intro)
         layout.addWidget(self._heading("Provenance (written into every file)"))
@@ -155,7 +154,7 @@ class ReportsView(QWidget):
         layout.addWidget(self.status)
         layout.addWidget(self.results, 1)
         layout.addWidget(self.reveal_button)
-        self.results.setMinimumHeight(140)
+        self.results.setMinimumHeight(theme.px(theme.RESULTS_MIN_HEIGHT))
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setFrameShape(QFrame.Shape.NoFrame)
@@ -210,7 +209,7 @@ class ReportsView(QWidget):
             holder = QWidget()
             holder_layout = QHBoxLayout(holder)
             holder_layout.setContentsMargins(0, 0, 0, 0)
-            holder_layout.setSpacing(6)
+            holder_layout.setSpacing(theme.gap(1))
             holder_layout.addWidget(mark)
             holder_layout.addWidget(text, 1)
             self._boxes[item.key] = box

@@ -76,5 +76,6 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [UX_STANDARD.md](UX_STANDARD.md) | The UX/UI standard the window is redesigned to (the owner's brief) |
 | [DESIGN.md](DESIGN.md) | The design system of the window: colour tokens, status styles, cell styles, icons, layout file (generated tables, kept true by a test) |
 | [ux-audit.md](ux-audit.md) | The UX audit of the current window: findings, screenshots, measurements, decisions needed |
+| [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md) | UI overhaul, phase 1: audit, baseline, information architecture, milestones and open questions (brief: [ui/UI_OVERHAUL.md](ui/UI_OVERHAUL.md)) |
 
 Next: [Getting started](getting-started.md).

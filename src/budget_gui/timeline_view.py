@@ -45,6 +45,7 @@ from budget_core.provenance import make_provenance
 from budget_core.reports.run import BudgetOutput, timeline_output
 from budget_core.scenario.run import ScenarioRun, ScenarioRunError, run_scenario
 from budget_core.timeutil import format_utc
+from budget_gui import theme
 from budget_gui.cancel_support import (
     CANCEL_TEXT,
     CANCEL_TIP,
@@ -153,7 +154,7 @@ class PowerTimelineView(QWidget):
         for button in (self.previous_violation, self.next_violation):
             button.setProperty("kind", "secondary")
             button.setEnabled(False)
-            button.setMaximumWidth(36)
+            button.setMaximumWidth(theme.px(theme.COMPACT_BUTTON_WIDTH))
         self.previous_violation.setToolTip("Go to the previous interval that breaks a limit.")
         self.previous_violation.setAccessibleName("Previous violation")
         self.next_violation.setToolTip("Go to the next interval that breaks a limit.")
@@ -210,7 +211,6 @@ class PowerTimelineView(QWidget):
                 CellDelegate(table)
             )  # broken limits and n/a look like the budgets
             table.verticalHeader().setVisible(False)
-            table.setAlternatingRowColors(True)
         self.tabs = QTabWidget()
         self.tabs.addTab(self.summary_table, "Summary")
         self.tabs.addTab(self.violations_table, "Violations")

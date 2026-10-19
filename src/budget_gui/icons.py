@@ -46,6 +46,23 @@ def icon(name: str, colour: str | QColor | None = None) -> QIcon:
     return result
 
 
+def toggle_icon(name: str, off: str | QColor, on: str | QColor) -> QIcon:
+    """The icon `name` of a checkable button: in `off` when unchecked, in `on` when checked."""
+    key = (f"{name}|toggle", QColor(off).rgba() ^ (QColor(on).rgba() << 1))
+    cached = _CACHE.get(key)
+    if cached is not None:
+        return cached
+    result = QIcon()
+    for path in ui_icon_files(name).values():
+        for colour, state in ((off, QIcon.State.Off), (on, QIcon.State.On)):
+            tinted = _tinted(str(path), QColor(colour))
+            if not tinted.isNull():
+                result.addPixmap(tinted, QIcon.Mode.Normal, state)
+                result.addPixmap(tinted, QIcon.Mode.Active, state)
+    _CACHE[key] = result
+    return result
+
+
 def status_icon(status: Status, tokens: theme.Tokens | None = None) -> QIcon:
     """The icon of a status in the colour of that status."""
     t = tokens or theme.tokens()

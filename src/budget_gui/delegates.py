@@ -2,7 +2,7 @@
 
 One delegate paints every cell of every table, so the same state always looks the same:
 
-* a **number** is right-aligned in IBM Plex Mono with the same digits in every row;
+* a **number** is right-aligned in JetBrains Mono with the same digits in every row;
 * a **placeholder** (an input without a source) is italic, has a dashed border and a hollow
   marker; its tooltip says that results depending on it show `n/a`;
 * **n/a** (a result that could not be computed, a limit that could not be checked) has its own
@@ -109,12 +109,12 @@ class CellDelegate(QStyledItemDelegate):
         painter.save()
         painter.setClipRect(rect)
         if selected:
-            painter.fillRect(rect, QColor(t.selection_bg))
+            painter.fillRect(rect, QColor(t.selected))
         elif status is not None:
             painter.fillRect(rect, QColor(t.status(status).bg))
-        elif opt.features & QStyleOptionViewItem.ViewItemFeature.Alternate:
-            painter.fillRect(rect, QColor(t.layer))
-        text_colour = QColor(t.selection_text if selected else t.text)
+        elif opt.state & QStyle.StateFlag.State_MouseOver:
+            painter.fillRect(rect, QColor(t.hover))
+        text_colour = QColor(t.text)
         if status is not None and not selected:
             text_colour = QColor(t.status(status).fg)
         left = rect.left() + PAD

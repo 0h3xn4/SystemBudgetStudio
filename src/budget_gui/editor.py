@@ -8,7 +8,6 @@ from typing import Any
 from PySide6.QtCore import QRect, QSize, Qt, Signal
 from PySide6.QtGui import (
     QColor,
-    QFont,
     QPainter,
     QPaintEvent,
     QResizeEvent,
@@ -58,7 +57,7 @@ class YamlEditor(QPlainTextEdit):
         self._stamp: str | None = None  # the file as this editor last read or wrote it
         self._bom = False  # kept when saving
         self._crlf = False
-        self.setFont(QFont("IBM Plex Mono", 10))
+        self.setFont(theme.mono_font(theme.TYPE_SMALL))
         self.setLineWrapMode(QPlainTextEdit.LineWrapMode.NoWrap)
         self._gutter = _Gutter(self)
         self.blockCountChanged.connect(self._update_margin)

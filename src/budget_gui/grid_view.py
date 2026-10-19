@@ -40,7 +40,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from budget_gui import icons
+from budget_gui import icons, theme
 from budget_gui.delegates import CellDelegate
 from budget_gui.edit_bar import EditBar
 from budget_gui.grid_models import GridModel
@@ -99,7 +99,7 @@ class PastePreview(QDialog):
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
-        self.resize(560, 420)
+        self.resize(*theme.scaled(theme.PALETTE_SIZE))
 
 
 class GridProxy(QSortFilterProxyModel):
@@ -146,9 +146,8 @@ class GridTable(QWidget):
             | QAbstractItemView.EditTrigger.EditKeyPressed
             | QAbstractItemView.EditTrigger.AnyKeyPressed
         )
-        self.view.setAlternatingRowColors(True)
         self.view.setTabKeyNavigation(True)
-        self.view.verticalHeader().setDefaultSectionSize(26)
+        self.view.verticalHeader().setDefaultSectionSize(theme.px(theme.ROW_HEIGHT))
         self.view.horizontalHeader().setStretchLastSection(False)
         self.view.horizontalHeader().setResizeContentsPrecision(
             FIT_ROWS

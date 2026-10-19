@@ -92,7 +92,7 @@ Not in version 1: data-storage budgets, transient thermal simulation, interferen
 
 ## Licence and status
 
-Released under the [MIT licence](LICENSE) (decision D-140). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/OFL-IBM-Plex.txt)).
+Released under the [MIT licence](LICENSE) (decision D-140). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
 
 Status: version 1.1.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 

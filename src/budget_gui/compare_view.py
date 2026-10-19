@@ -118,6 +118,7 @@ class CompareView(QWidget):
         self.browse_button = QPushButton("Browse…")
         self.scenario_b = QComboBox()
         self.compare_button = QPushButton("Compare")
+        self.compare_button.setProperty("kind", "primary")
         self.export_button = QPushButton("Export…")
         self.export_button.setEnabled(False)
         self.status = QLabel("")

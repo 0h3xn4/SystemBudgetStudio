@@ -80,7 +80,7 @@ These rules come from two earlier tools built the same way (SpaceMissionStudio o
 
 ### Design system and UX
 
-18. Use **IBM Carbon** as the design system, with IBM Plex fonts bundled, for data-dense tables, forms, notifications and a Problems panel. Match the look of SpaceMissionStudio and Harness Design Studio so the tools feel like one family.
+18. Use **IBM Carbon** as the design system, with IBM Plex fonts bundled, for data-dense tables, forms, notifications and a Problems panel. Match the look of SpaceMissionStudio and Harness Design Studio so the tools feel like one family. *(Superseded for the window by D-168 and D-169: the window follows the design language of `docs/ui/UI_OVERHAUL.md` (Inter, JetBrains Mono, its own tokens); IBM Plex remains in exported files.)*
 19. Every output (report, plot, CSV) carries provenance: tool version, library versions, project revision, scenario name, generation date and the user's name.
 20. Errors speak the user's language: what is wrong, where, and what to do, with a link that jumps to the offending input. Never show raw tracebacks in the GUI.
 21. If the Monaco editor or any web component is used, package it with the tool; it loads from a CDN by default.

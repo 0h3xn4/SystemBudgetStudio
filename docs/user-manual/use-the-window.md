@@ -11,15 +11,16 @@ system-budget-studio                       # then File → Open project
 system-budget-studio path/to/project       # open a project at start
 ```
 
-![The window with the 250 kg example: the project tree with problem badges on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the seven tabs, the Power budget table with n/a cells, and the Problems panel on the right](../images/ux-redesign/step1-power-light.png)
+![The window with the 250 kg example: the navigation rail and the project panel on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the Power timeline, and the Problems panel along the bottom](../images/ui-overhaul/m2-power-timeline-light.png)
 
 ## What is where?
 
 - **Top bar**: the project name and revision, a marker when something is unsaved, the **scenario** every tab shows, the **BOL / EOL** switch (beginning or end of life, for the power timeline), the **Run** button and the **run status** (not run, running, up to date, out of date, failed).
 - **Project tree** (left): the spacecraft model, not the folder listing. It lists the **Spacecraft** file, the **Units** (one row each, by name; with many units they are grouped by subsystem, and the groups start folded), the spacecraft modes, expendables, the solar array and the battery, then the orbits, ground stations, imaging targets, scenarios and links, **Budget configuration**, and **Files**, the plain list of every project file. The id of a unit or link is in its tooltip and in the Inspector. A row with a number next to an icon has an **error** or a **warning** on it (see [the Problems panel](#the-problems-panel)); a folded group shows those of the rows inside it, so that nothing is hidden, and an open one shows only its own. Placeholders (*not checked*) are not counted in the tree: the status bar and the Problems panel count them. **Enter** or a double-click opens a row: a unit opens the table of its power modes (the right-click menu has *Open the file*), a field (the solar array, the battery) opens its file at the line of the field, and any other row opens its file as text. What you fold or open stays that way when the project reloads.
-- **Tabs** (centre): **Model** (the **Units**, **Power modes** and **Inputs** grids, the scenario, and every file you open), **Power** (*Budget* tables and the *Timeline*), **Mass**, **Thermal**, **Link** (*Budget* and *Passes*), **Compare** and **Reports** (the exports). **Ctrl+1** to **Ctrl+7** go to a tab. Opening a file never adds a tab to the budgets; the files open inside **Model**.
-- **Right panel**: **Inspector** (what is known about the selected tree row: its file and field, and its problems), **Problems** and **Provenance** (the rows that every report and export carries: tool, versions, project, revision, time, user). Drag a tab out of the panel to move it; **View → Reset layout** puts everything back.
-- **Status bar**: the project folder, when something was last worked out, the program version, and **N not checked**, a link that lists the placeholders in the Problems panel.
+- **Navigation rail** (far left): the seven areas, each with an icon and a name: **Model** (the **Units**, **Power modes** and **Inputs** grids, the scenario, and every file you open), **Power** (*Budget* tables and the *Timeline*), **Mass**, **Thermal**, **Link** (*Budget* and *Passes*), **Compare** and **Reports** (the exports). Click one, or press **Ctrl+1** to **Ctrl+7**. The pages of an area (for example *Budget* and *Timeline*) are a small segmented control at the top of the area. Opening a file never adds an area; the files open inside **Model**. At the bottom of the rail: **Find** (Ctrl+K), **Settings** (theme, UI size, reduce motion), **Help** (F1) and **Fold**, which shows only the icons. The top button shows or hides the project panel (**Ctrl+B**).
+- **Right panel**: **Inspector** (what is known about the selected tree row: its file and field, and its problems) and **Provenance** (the rows that every report and export carries: tool, versions, project, revision, time, user). It needs room: below 1520 px of window width it is hidden until the window grows (or open it from the **View** menu). Below 1280 px the rail shows icons only; below 1100 px the project panel waits too. A panel you closed yourself stays closed.
+- **Problems panel** (bottom, the full width): every finding with its class, message, field and code; see [the Problems panel](#the-problems-panel). Drag its top edge to make it taller, or close it with its ×; **View → Problems** brings it back.
+- **Status bar**: **N not checked** (a link that lists the placeholders in the Problems panel), *Offline* (the program makes no network connections), the project folder, when something was last worked out, and the program version.
 
 ## How do I run the scenario, the timeline and the passes?
 
@@ -46,7 +47,7 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | **Not checked** | circle with a bar | A result could not be worked out because an input is a placeholder or missing (`n/a`). Neither a pass nor a fail |
 | **Info** | circle with an i | Nothing to fix |
 
-*Not checked* is kept apart from warnings so that a project with a hundred placeholders does not hide its few real warnings. The **filter box** matches the message, file, field and code; the **class** selector shows one class; the third selector groups by class or by file. Double-click or **Enter** on a row opens the file at the line; **F8** and **Shift+F8** go to the next and the previous problem. Right-click the header to show the *Field* and *Code* columns. The summary above the list counts the classes, and says how many are shown when a filter is on.
+*Not checked* is kept apart from warnings so that a project with a hundred placeholders does not hide its few real warnings. The **filter box** matches the message, file, field and code; the **class** selector shows one class; the third selector groups by class or by file. Double-click or **Enter** on a row opens the file at the line; **F8** and **Shift+F8** go to the next and the previous problem. Right-click the header to hide the *Field* and *Code* columns. The summary beside the filter counts the classes, and says how many are shown when a filter is on.
 
 ## Shortcuts
 
@@ -54,14 +55,15 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 |---|---|
 | Ctrl+N | New project (guided wizard) |
 | Ctrl+O | Open project (or drop a project folder on the window) |
-| Ctrl+K | Find a command: type a few words to run a menu command or go to a unit, a file, a scenario or a problem; Up and Down choose, Enter runs, Esc closes |
+| Ctrl+K | Find a command: a card over the window. Type a few words to run a menu command (its menu, its name and its key are shown apart) or go to a unit, a file, a scenario or a problem; Up and Down choose, Enter runs, Esc closes |
+| Ctrl+B | Show or hide the project panel |
 | Ctrl+S | Save what you are editing (a text tab, the grids of *Units*, *Power modes* and *Inputs*, or the scenario); it acts only while the **Model** tab is in front |
 | Ctrl+Z / Ctrl+Shift+Z | Undo / redo an edit of the grids or the scenario (the Edit menu names the step); a text editor keeps its own undo while it has the keyboard |
 | Ctrl+C / Ctrl+V | In a grid: copy the selected cells as text with tabs; paste a block (from this or any spreadsheet) |
 | Ctrl+D / Delete | In a grid: fill the selection down from its top cell / empty the optional cells of the selection |
 | F5 | Reload the project from disk (the window stays usable while it loads; the status bar says so) |
 | Ctrl+R | Run: the scenario, the power timeline and the link passes |
-| Ctrl+1 … Ctrl+7 | Go to the tab Model, Power, Mass, Thermal, Link, Compare, Reports |
+| Ctrl+1 … Ctrl+7 | Go to the area Model, Power, Mass, Thermal, Link, Compare, Reports |
 | Enter | Open the selected row of the project tree or of the Problems panel |
 | F8 / Shift+F8 | Next / previous problem (opens its file at the line) |
 | Ctrl+M | Show the selected unit's power modes in the **Power modes** grid |
@@ -69,7 +71,7 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | Ctrl+Shift+E | Export the power timeline |
 | (menu only) | File → Export unit table / Import unit table: the unit power modes as a CSV or XLSX table, imported with a preview ([unit tables](unit-tables.md)) |
 | (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
-| (menu only) | View → Theme (light, dark, same as the system), Cell styles (what every cell style means), the panel toggles, Reset layout |
+| (menu only) | View → Theme (light, dark, same as the system), UI size (90, 100, 110 or 125 %), Reduce motion, Cell styles (what every cell style means), the panel toggles, Reset layout |
 | F1 | Open the user guide |
 
 With no project open the window shows a welcome page: **Open a project folder…**, **New project (guided)…**, or drop a project folder on the window. There is no list of recent projects, because the tool does not keep the paths of your projects. In the **Model** grids the **Inspector** (right panel) shows the cell that has the cursor: its row, column and unit, the file and field, the value, its state, what the column means and, when the value is refused, why.
@@ -80,7 +82,7 @@ While a run is in progress, **Run** becomes **Cancel** (Ctrl+R is the same butto
 
 ## Where does the window keep its layout?
 
-The window remembers its size and position, which panels are where and how wide the Problems columns are, and the theme, in one small file of its own, `layout.ini`, in your configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`). It contains no project name, path or value. **View → Reset layout** deletes what it remembered and restores the first layout; deleting the file does the same. See [the design page](../DESIGN.md#the-layout-file).
+The window remembers its size and position, which panels are where, whether the rail is folded, how wide the Problems columns are, and the theme, the UI size and *Reduce motion*, in one small file of its own, `layout.ini`, in your configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`). It contains no project name, path or value. **View → Reset layout** deletes what it remembered and restores the first layout; deleting the file does the same. See [the design page](../DESIGN.md#the-layout-file).
 
 ## How do I use a plot?
 

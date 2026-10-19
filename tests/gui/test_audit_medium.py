@@ -18,7 +18,7 @@ from budget_core.problems import Problem, Severity
 from budget_gui import timeline_view as tv
 from budget_gui.main_window import MainWindow
 from budget_gui.problems_panel import ProblemsPanel
-from budget_gui.theme import WHITE, apply_theme, stylesheet
+from budget_gui.theme import LIGHT, apply_theme, stylesheet
 from tests.gui_helpers import set_mode_value
 
 pytestmark = pytest.mark.gui
@@ -309,7 +309,7 @@ def test_the_minimum_window_size_fits_a_1366_by_768_screen(
 
 # ---- GUI-25: disabled and focused controls look different ---
 def test_a_disabled_button_does_not_look_like_an_enabled_one(qtbot) -> None:  # type: ignore[no-untyped-def]
-    sheet = stylesheet(WHITE)
+    sheet = stylesheet(LIGHT)
     assert "QPushButton:disabled" in sheet and ":focus" in sheet
     button = QPushButton("Export")
     qtbot.addWidget(button)
@@ -443,22 +443,24 @@ def test_a_missing_comparison_folder_gets_its_own_message(
 
 
 # ---- GUI-32: contrast and a missing assets folder ---
-def test_severity_colours_are_readable_on_the_layer_of_both_themes() -> None:
-    from budget_gui.theme import DARK, WHITE, contrast_ratio, severity_colour
+def test_severity_colours_are_readable_on_the_surfaces_of_both_themes() -> None:
+    from budget_gui.theme import DARK, LIGHT, contrast_ratio, severity_colour
 
-    for tokens in (WHITE, DARK):
+    for tokens in (LIGHT, DARK):
         for severity in (Severity.ERROR, Severity.WARNING, Severity.INFO):
             colour = severity_colour(tokens, severity.value)
-            assert contrast_ratio(colour, tokens.layer) >= 4.5, (tokens.name, severity)
+            for surface in (tokens.surface, tokens.canvas):
+                assert contrast_ratio(colour, surface) >= 4.5, (tokens.name, severity)
 
 
 def test_missing_fonts_do_not_stop_the_start(monkeypatch: pytest.MonkeyPatch) -> None:
     from budget_gui import theme
+    from budget_gui.theme import fonts
 
     def missing() -> Path:
         raise FileNotFoundError("assets")
 
-    monkeypatch.setattr(theme, "assets_dir", missing)
+    monkeypatch.setattr(fonts, "assets_dir", missing)
     assert theme.load_fonts() == []
 
 

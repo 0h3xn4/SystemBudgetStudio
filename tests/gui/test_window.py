@@ -15,8 +15,9 @@ def test_window_title_and_status(qtbot) -> None:  # type: ignore[no-untyped-def]
     assert "Offline" in window.statusBar().currentMessage()
 
 
-def test_plex_fonts_bundled(qtbot) -> None:  # type: ignore[no-untyped-def]
+def test_the_bundled_fonts_load(qtbot) -> None:  # type: ignore[no-untyped-def]
     families = load_fonts()
-    assert "IBM Plex Sans" in families
-    assert "IBM Plex Mono" in families
-    assert "IBM Plex Sans" in QFontDatabase.families()
+    assert "Inter" in families
+    assert "JetBrains Mono" in families
+    assert "Inter" in QFontDatabase.families()
+    assert "JetBrains Mono" in QFontDatabase.families()

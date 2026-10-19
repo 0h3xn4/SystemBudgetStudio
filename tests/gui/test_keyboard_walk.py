@@ -33,6 +33,7 @@ def area_of(window: MainWindow, widget: QWidget | None) -> str:
     if widget is None:
         return "none"
     for name, part in (
+        ("rail", window.rail),
         ("tree", window.tree),
         ("problems", window.problems_panel),
         ("inspector", window.inspector),
@@ -58,5 +59,5 @@ def test_tab_visits_every_part_of_the_window_and_comes_back(window: MainWindow) 
         if step > 3 and focus is first:
             returned = True
             break
-    assert {"tree", "top bar", "workspace", "problems"} <= set(visited), visited
+    assert {"tree", "top bar", "workspace", "problems", "rail"} <= set(visited), visited
     assert returned, "Tab never came back to where it started: it is stuck or goes round without"

@@ -11,6 +11,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from budget_core import APP_NAME
+from budget_gui import theme
 
 
 class WelcomePage(QWidget):
@@ -30,6 +31,7 @@ class WelcomePage(QWidget):
         lead.setAlignment(Qt.AlignmentFlag.AlignCenter)
         lead.setWordWrap(True)
         self.open_button = QPushButton("Open a project folder…")
+        self.open_button.setProperty("kind", "primary")
         self.new_button = QPushButton("New project (guided)…")
         self.new_button.setProperty("kind", "secondary")
         self.open_button.clicked.connect(self.open_requested)
@@ -46,8 +48,8 @@ class WelcomePage(QWidget):
         buttons.addWidget(self.new_button)
         buttons.addStretch(1)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(32, 32, 32, 32)
-        layout.setSpacing(14)
+        layout.setContentsMargins(*theme.inset(5))
+        layout.setSpacing(theme.gap(2))
         layout.addStretch(2)
         layout.addWidget(title)
         layout.addWidget(lead)

@@ -7,7 +7,7 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 ## Windows 10 or 11 (standard user)
 
 - [ ] Run `system-budget-studio-<version>-windows-x64-setup.exe` as a standard user: no elevation prompt appears; it installs to `%LOCALAPPDATA%\Programs\System Budget Studio`. (CI: silent install with `/CURRENTUSER`.)
-- [ ] The Start menu has *System Budget Studio*; it starts and shows the window with the IBM Plex font. (Manual.)
+- [ ] The Start menu has *System Budget Studio*; it starts and shows the window in the Inter font (text) and JetBrains Mono (numbers). (Manual.)
 - [ ] `budget --version` and `budget self-test` pass in a new terminal (after ticking the PATH task, or with the full path). (CI.)
 - [ ] File > New project (guided): finish with the defaults; the first power timeline appears. (Manual; the automated wizard test covers the logic.)
 - [ ] File > Export reports writes XLSX, PDF and DOCX that open in Excel, a PDF reader and Word. (Manual.)
@@ -18,7 +18,7 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 ## RHEL or Rocky Linux 8 (ordinary user)
 
 - [ ] `tar xzf` the bundle and run `./install.sh` without sudo: it installs to `~/.local/opt/system-budget-studio` and prints *Self-test passed.* (CI: in a rockylinux:8 container as an unprivileged user.)
-- [ ] The window starts on a graphical session (X11 or Wayland with XWayland) and shows the Carbon theme. (Manual: needs the desktop libraries listed in the guide.)
+- [ ] The window starts on a graphical session (X11 or Wayland with XWayland) and shows the window in the system's colour scheme (light or dark; *View > Theme* switches it live). (Manual: needs the desktop libraries listed in the guide.)
 - [ ] `budget run`, `budget power-timeline` and `budget compare` on the example projects write their files. (Manual; the CI runs `budget self-test`.)
 - [ ] `~/.local/opt/system-budget-studio/uninstall.sh` removes the program, the links and the menu entry. (CI.)
 
@@ -50,6 +50,7 @@ The 1.1.0 window was built and tested on a virtual (offscreen) display, which ha
 - [ ] **Reports**: choose a folder, export XLSX, PDF and DOCX; the list shows the files and *Show the folder* opens it. (Manual.)
 - [ ] **Ctrl+K** finds a unit and a command; the Inspector follows the cell with the cursor. (Manual.)
 - [ ] **View > Theme > Dark** and back: no unreadable text or white patches in the plots, grids or dialogs. (Manual.)
+- [ ] **View > UI size > 125 %** and back to 100 %: the text, the buttons and the tables grow and shrink together and nothing is cut off. (Manual.)
 - [ ] Tab from the project tree reaches the top bar, the tabs and the Problems panel and comes round again. (Manual; a test covers it offscreen.)
 
 ## Licences and integrity (all platforms)

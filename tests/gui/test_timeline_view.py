@@ -251,6 +251,7 @@ def test_plot_widget_cursor_pin_and_paint(window: MainWindow, qtbot) -> None:  #
     window.show()
     plot = window.timeline_view.plot
     qtbot.waitExposed(window)
+    qtbot.wait(100)  # a narrow window gives up its panels once it is shown: the plot grows
     x = int(plot.time_to_x(30000.0))
     qtbot.mouseMove(plot, QPoint(x, 100))
     qtbot.mouseClick(plot, Qt.MouseButton.LeftButton, pos=QPoint(x, 100))

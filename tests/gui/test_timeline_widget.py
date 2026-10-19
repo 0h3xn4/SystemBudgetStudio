@@ -9,6 +9,7 @@ from PySide6.QtGui import QColor
 
 from budget_core.io.project_loader import load_project
 from budget_core.scenario.run import ScenarioRun, run_scenario
+from budget_gui import theme
 from budget_gui.timeline import TimelineWidget, mode_colour, nice_tick_step
 
 pytestmark = pytest.mark.gui
@@ -119,7 +120,7 @@ def test_painting_shows_eclipses_passes_and_several_mode_colours(widget: Timelin
         for x in range(0, image.width(), 3)
         for y in range(0, image.height(), 3)
     }
-    assert QColor("#525252").name() in colours  # eclipse shading
-    assert QColor("#0f62fe").name() in colours  # pass bars
+    assert QColor(theme.tokens().strip_eclipse).name() in colours  # eclipse shading
+    assert QColor(theme.tokens().strip_pass).name() in colours  # pass bars
     used = {widget.colour_for(m).name() for m in ("charging", "nominal", "downlink")}
     assert len(used) == 3 and used <= colours

@@ -121,8 +121,11 @@ NOTES = """
   next to the program; `packaging/check_bundle.py` fails a build that lacks them. Do not modify Qt.
 - **Permissive licences** (MIT, BSD, Apache, PSF, HPND/MIT-CMU): keep the copyright notices; the
   bundle ships them with the package metadata.
-- **IBM Plex fonts** (`assets/fonts`): SIL Open Font License 1.1, the licence text is bundled in
-  `assets/fonts/OFL-IBM-Plex.txt`. The fonts are not sold on their own.
+- **Fonts** (`assets/fonts`, SIL Open Font License 1.1, the licence texts are bundled next to the
+  files; the fonts are not sold on their own): **Inter** and **JetBrains Mono** for the window
+  (`OFL-Inter.txt`, `OFL-JetBrains-Mono.txt`) and **IBM Plex** for the exported PDF, DOCX, XLSX
+  and PNG files and the user guide (`OFL-IBM-Plex.txt`).
+- **Icons** (`assets/icons/ui`): Lucide, ISC licence (`LICENSE-Lucide.txt`).
 - **Development tools** (pytest, mypy, ruff, PyInstaller, hypothesis, pip-licenses,
   cyclonedx-bom and others) are in the `dev` extra only and are not part of the installed tool.
   PyInstaller is GPL-2.0 with an exception that allows distributing the bundles it builds.

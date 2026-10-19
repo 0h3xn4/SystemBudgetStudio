@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 
 from budget_core.problems import Severity
 from budget_core.reports.document import NA, ReportDocument, Section, Table, format_cell
+from budget_gui import theme
 from budget_gui.delegates import (
     MARGIN_ROLE,
     NUMERIC_ROLE,
@@ -28,6 +29,7 @@ from budget_gui.delegates import (
     tooltip_for,
 )
 from budget_gui.theme import Status
+from budget_gui.workspace import segmented_tabs
 
 SEVERITY_ORDER = {Severity.ERROR: 0, Severity.WARNING: 1, Severity.INFO: 2}
 Index = QModelIndex | QPersistentModelIndex
@@ -177,7 +179,6 @@ class _SectionPage(QScrollArea):
             view.setModel(model)
             view.setItemDelegate(CellDelegate(view))
             view.verticalHeader().setVisible(False)
-            view.setAlternatingRowColors(True)
             view.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
             view.setTabKeyNavigation(False)  # Tab leaves a read-only table (it is not a form)
             # the widths come from the first rows only: a table of thousands of rows would
@@ -187,7 +188,7 @@ class _SectionPage(QScrollArea):
             view.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             height = view.horizontalHeader().height() + 2 * view.frameWidth() + 18
             height += sum(view.rowHeight(r) for r in range(len(table.rows)))
-            view.setFixedHeight(max(height, 60))
+            view.setFixedHeight(max(height, theme.px(theme.TABLE_MIN_HEIGHT)))
             layout.addWidget(view)
             if table.note:
                 note = QLabel(table.note)
@@ -209,6 +210,7 @@ class PowerView(QWidget):
         self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.tabs = QTabWidget()
+        segmented_tabs(self.tabs)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
         layout.addWidget(self.banner)

@@ -31,6 +31,8 @@ def _light_theme_again():  # type: ignore[no-untyped-def]
 
     if QApplication.instance() is not None and theme.manager().mode is not theme.Mode.LIGHT:
         theme.manager().set_mode(theme.Mode.LIGHT)
+    if QApplication.instance() is not None and theme.scale_percent() != theme.DEFAULT_SCALE:
+        theme.manager().set_scale(theme.DEFAULT_SCALE)
 
 
 @pytest.fixture(autouse=True)

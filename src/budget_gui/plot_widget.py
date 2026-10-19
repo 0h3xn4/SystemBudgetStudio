@@ -48,7 +48,7 @@ from budget_gui import theme
 from budget_gui.time_axis import ElapsedAxis, TimeAxis
 
 LEFT, RIGHT, TOP, BOTTOM, GAP, TITLE = 64, 14, 8, 36, 26, 18
-MIN_PANEL_HEIGHT = 110
+MIN_PANEL_HEIGHT = 88
 
 
 def _hms_full(seconds: float) -> str:
@@ -117,7 +117,7 @@ class PlotWidget(QWidget):
         self.setMouseTracking(True)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.setMinimumHeight(220)
+        self.setMinimumHeight(theme.px(theme.PLOT_MIN_HEIGHT))
         theme.manager().changed.connect(self._theme_changed)
 
     def _theme_changed(self) -> None:
@@ -346,7 +346,7 @@ class PlotWidget(QWidget):
         if spec is None:
             t = theme.tokens()
             painter.fillRect(self.rect(), QColor(t.plot_bg))
-            painter.setPen(QColor(t.text_disabled))
+            painter.setPen(QColor(t.text_muted))
             painter.drawText(self.rect(), Qt.AlignmentFlag.AlignCenter, "No results to show")
             return
         painter.drawPixmap(0, 0, self._plot_layer(spec))
@@ -502,7 +502,7 @@ class PlotWidget(QWidget):
             colour = theme.plot_colour(t, entry.colour)
             if entry.hidden:
                 colour = QColor(t.plot_grid)
-                faded = QColor(t.text_disabled)
+                faded = QColor(t.text_muted)
             painter.setPen(QPen(colour, 3))
             painter.drawLine(QPointF(x, line_y), QPointF(x + 16, line_y))
             font = painter.font()

@@ -140,8 +140,7 @@ class ProblemsPanel(QWidget):
         self.view.setUniformRowHeights(False)
         self.view.setWordWrap(True)
         self.view.setAllColumnsShowFocus(True)
-        self.view.setAlternatingRowColors(True)
-        self.view.setMinimumHeight(48)
+        self.view.setMinimumHeight(theme.px(theme.LIST_MIN_HEIGHT))
         self.view.setTextElideMode(Qt.TextElideMode.ElideNone)  # long messages wrap
         header = self.view.header()
         header.setStretchLastSection(False)
@@ -154,7 +153,7 @@ class ProblemsPanel(QWidget):
             "Class: error, warning, not checked or info",
             Qt.ItemDataRole.ToolTipRole,
         )
-        header.setMinimumSectionSize(40)
+        header.setMinimumSectionSize(theme.px(theme.COLUMN_MIN))
         header.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         header.customContextMenuRequested.connect(self._header_menu)
         self.set_column_widths([])
@@ -168,12 +167,13 @@ class ProblemsPanel(QWidget):
         self._stack.addWidget(self.empty)
 
         controls = QHBoxLayout()
+        controls.setSpacing(theme.gap(1))
+        controls.addWidget(self.summary)
         controls.addWidget(self.filter_box, 1)
         controls.addWidget(self.class_box)
         controls.addWidget(self.group_box)
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(8, 4, 8, 4)
-        layout.addWidget(self.summary)
+        layout.setContentsMargins(*theme.inset(1, 0))
         layout.addLayout(controls)
         layout.addWidget(self._stack_host, 1)
         self.setFocusProxy(self.view)
@@ -188,8 +188,8 @@ class ProblemsPanel(QWidget):
         theme.manager().changed.connect(self._theme_changed)
 
     # ---- columns (widths and visibility are kept in the layout file) ---------------------------
-    DEFAULT_WIDTHS = (34, 0, 150, 190)  # the problem column stretches
-    DEFAULT_HIDDEN = (FIELD, CODE)  # the narrow dock shows the class icon and the problem
+    DEFAULT_WIDTHS = (56, 0, 180, 170)  # the problem column stretches
+    DEFAULT_HIDDEN = ()  # the panel at the bottom is wide: every column is shown
 
     def column_widths(self) -> list[int]:
         """Width of each column; 0 for a hidden one (the message column is never hidden)."""
@@ -210,7 +210,7 @@ class ProblemsPanel(QWidget):
                 hidden, width = column in self.DEFAULT_HIDDEN, self.DEFAULT_WIDTHS[column]
             self.view.setColumnHidden(column, hidden)
             if not hidden:
-                self.view.setColumnWidth(column, max(int(width), 40))
+                self.view.setColumnWidth(column, max(int(width), theme.px(theme.COLUMN_MIN)))
 
     def _header_menu(self, pos: QPoint) -> None:
         menu = QMenu(self)
