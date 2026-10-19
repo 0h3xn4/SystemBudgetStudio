@@ -6,7 +6,9 @@ import shutil
 from pathlib import Path
 
 import pytest
+from PySide6.QtCore import Qt
 
+from budget_gui import theme
 from budget_gui.main_window import MainWindow
 from tests.helpers import edit
 
@@ -118,3 +120,53 @@ def test_export_writes_the_comparison(
     with qtbot.waitSignal(window.compare_view.export_finished, timeout=60000):
         window.compare_view.export_to(tmp_path / "out", {"csv", "json"})
     assert (tmp_path / "out" / "compare_differences.csv").is_file()
+
+
+def test_the_sides_say_their_revision_and_the_columns_are_named_after_them(
+    window: MainWindow,
+    revisions: tuple[Path, Path],
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    a, b = revisions
+    window.open_project(a)
+    view = window.compare_view
+    assert "revision 1" in view.side_a_label.text()
+    view.set_other_folder(b)
+    run_compare(window, qtbot)
+    assert "revision 2" in view.side_b_label.text()
+    headers = [view.table.horizontalHeaderItem(c).text() for c in (4, 5)]
+    assert headers == ["A: rev 1", "B: rev 2"]
+
+
+def test_the_filter_shows_one_kind_of_difference(
+    window: MainWindow,
+    revisions: tuple[Path, Path],
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    a, b = revisions
+    window.open_project(a)
+    view = window.compare_view
+    assert not view.filter_combo.isEnabled()
+    view.set_other_folder(b)
+    run_compare(window, qtbot)
+    assert view.filter_combo.isEnabled()
+    everything = view.table.rowCount()
+    view.filter_combo.setCurrentText("added")
+    assert view.table.rowCount() < everything
+    assert {view.table.item(r, 8).text() for r in range(view.table.rowCount())} <= {"added"}
+    view.filter_combo.setCurrentText("All differences")
+    assert view.table.rowCount() == everything
+
+
+def test_the_figures_are_right_aligned_in_the_mono_font(
+    window: MainWindow,
+    revisions: tuple[Path, Path],
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    a, b = revisions
+    window.open_project(a)
+    window.compare_view.set_other_folder(b)
+    run_compare(window, qtbot)
+    item = window.compare_view.table.item(0, 4)
+    assert item.textAlignment() & Qt.AlignmentFlag.AlignRight
+    assert item.font().family() == theme.mono_font().family()

@@ -53,7 +53,8 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | Shortcut | Action |
 |---|---|
 | Ctrl+N | New project (guided wizard) |
-| Ctrl+O | Open project |
+| Ctrl+O | Open project (or drop a project folder on the window) |
+| Ctrl+K | Find a command: type a few words to run a menu command or go to a unit, a file, a scenario or a problem; Up and Down choose, Enter runs, Esc closes |
 | Ctrl+S | Save what you are editing (a text tab, the grids of *Units*, *Power modes* and *Inputs*, or the scenario); it acts only while the **Model** tab is in front |
 | Ctrl+Z / Ctrl+Shift+Z | Undo / redo an edit of the grids or the scenario (the Edit menu names the step); a text editor keeps its own undo while it has the keyboard |
 | Ctrl+C / Ctrl+V | In a grid: copy the selected cells as text with tabs; paste a block (from this or any spreadsheet) |
@@ -70,6 +71,8 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
 | (menu only) | View → Theme (light, dark, same as the system), Cell styles (what every cell style means), the panel toggles, Reset layout |
 | F1 | Open the user guide |
+
+With no project open the window shows a welcome page: **Open a project folder…**, **New project (guided)…**, or drop a project folder on the window. There is no list of recent projects, because the tool does not keep the paths of your projects. In the **Model** grids the **Inspector** (right panel) shows the cell that has the cursor: its row, column and unit, the file and field, the value, its state, what the column means and, when the value is refused, why.
 
 **Tab** moves through the controls of the window and **Shift+Tab** back; it does not stay inside a read-only table. In a grid it moves from cell to cell and leaves the grid after the last one. (On macOS the Ctrl key shortcuts are not tested.)
 

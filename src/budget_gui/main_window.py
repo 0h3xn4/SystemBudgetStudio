@@ -6,15 +6,25 @@ import time
 from collections.abc import Collection
 from dataclasses import replace
 from datetime import datetime
+from functools import partial
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, QTimer, Signal
-from PySide6.QtGui import QAction, QActionGroup, QCloseEvent, QKeySequence, QShowEvent
+from PySide6.QtCore import QMimeData, Qt, QThread, QTimer, Signal
+from PySide6.QtGui import (
+    QAction,
+    QActionGroup,
+    QCloseEvent,
+    QDragEnterEvent,
+    QDropEvent,
+    QKeySequence,
+    QShowEvent,
+)
 from PySide6.QtWidgets import (
     QApplication,
     QDockWidget,
     QFileDialog,
     QMainWindow,
+    QMenu,
     QMessageBox,
     QVBoxLayout,
     QWidget,
@@ -27,11 +37,12 @@ from budget_core.reports.run import REPORT_KINDS
 from budget_gui import problem_class as pc
 from budget_gui import theme
 from budget_gui.banner import Banner
+from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
-from budget_gui.inspector import InspectorPanel
+from budget_gui.inspector import CellInfo, InspectorPanel
 from budget_gui.layout_settings import LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
@@ -42,14 +53,16 @@ from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.project_tree import ProjectTree
 from budget_gui.provenance_panel import ProvenancePanel
-from budget_gui.reports_view import ReportsView
+from budget_gui.reports_view import ReportItem, ReportsView
 from budget_gui.run_controller import RunController, RunState
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.status_bar import AppStatusBar
+from budget_gui.theme import Status
 from budget_gui.timeline_view import PowerTimelineView
 from budget_gui.top_bar import TopBar
 from budget_gui.unit_table import export_unit_table, import_unit_table
+from budget_gui.welcome import WelcomePage
 from budget_gui.widgets import PowerView
 from budget_gui.worker import ExportWorker
 from budget_gui.workspace import TABS, SubTabs, Workspace
@@ -140,7 +153,12 @@ class MainWindow(QMainWindow):
         stack.addWidget(self.stale_banner)
         stack.addWidget(self.failed_banner)
         stack.addWidget(self.workspace, 1)
+        self.welcome = WelcomePage()
+        self.welcome.open_requested.connect(self._choose_project)
+        self.welcome.new_requested.connect(self.open_guided_wizard)
+        stack.addWidget(self.welcome, 1)
         self.setCentralWidget(central)
+        self.setAcceptDrops(True)  # a project folder dropped on the window opens
         self.workspace.setCurrentIndex(1)  # Power: a project opens on its budgets
         self._worker: ExportWorker | None = None
 
@@ -177,18 +195,28 @@ class MainWindow(QMainWindow):
         self.failed_banner.action_requested.connect(self.run_all)
         self.run_controller.changed.connect(self._update_run_state)
         self.editors.dirty_changed.connect(self._update_dirty)
-        self.reports_view.reports_requested.connect(self._choose_export)
-        self.reports_view.timeline_requested.connect(self._choose_timeline_export)
-        self.reports_view.scenario_requested.connect(self._choose_scenario_export)
+        self.reports_view.export_requested.connect(self._export_selected)
+        self.workspace.currentChanged.connect(lambda _i: self.update_reports_page())
+        for source in (self.scenario_view, self.timeline_view):
+            source.computed.connect(lambda _result: self.update_reports_page())
+            source.compute_failed.connect(lambda _message: self.update_reports_page())
         self.tree.file_requested.connect(self._tree_file)
         self.tree.field_requested.connect(self.jump_to_input)
         self.tree.currentItemChanged.connect(lambda _current, _previous: self._inspect())
+        for page in (self.units_page, self.modes_page, self.inputs_page):
+            page.table.selection_changed.connect(self._inspect_cell)
+        self.inspector.open_file_requested.connect(lambda rel: self.open_file(rel))
         self.inspector.open_requested.connect(self.tree.activate_current)
         self.inspector.modes_requested.connect(lambda unit_id: self.show_unit(unit_id))
         self.inspector.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self.tree.unit_requested.connect(lambda unit_id: self.show_unit(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self._export_folder = Path()
+        self._queue: list[str] = []  # what the Reports page asked for and is still to be written
+        self._queue_paths: list[str] = []
+        self._queue_formats: set[str] = set()
+        self._queue_folder = Path()
+        self._queue_active = False
         self.timeline_view.computed.connect(lambda _result: self._update_problems())
         self.link_passes_view.computed.connect(lambda _result: self._update_problems())
         for computing in (self.scenario_view, self.timeline_view, self.link_passes_view):
@@ -197,8 +225,14 @@ class MainWindow(QMainWindow):
         for view in (self.timeline_view, self.link_passes_view, self.compare_view):
             view.export_finished.connect(self._view_export_done)
             view.export_failed.connect(self._view_export_failed)
+        # after the slots above, so the message of a queued export is the last one shown
+        self.export_finished.connect(self._queue_step_done)
+        self.export_failed.connect(self._queue_step_failed)
+        self.timeline_view.export_finished.connect(self._queue_step_done)
+        self.timeline_view.export_failed.connect(self._queue_step_failed)
         self._closing = False  # a close was asked for while a job runs
         self._last_run: datetime | None = None
+        self._show_welcome()
 
     # ---- actions -----------------------------------------------------------------------------
     def _build_menu(self) -> None:
@@ -257,6 +291,11 @@ class MainWindow(QMainWindow):
 
     def _build_view_menu(self) -> None:
         view_menu = self.view_menu = self.menuBar().addMenu("&View")
+        palette = QAction("&Find a command…", self)
+        palette.setShortcut(QKeySequence("Ctrl+K"))
+        palette.triggered.connect(self.open_command_palette)
+        view_menu.addAction(palette)
+        view_menu.addSeparator()
         for number, title in enumerate(TABS, start=1):
             action = QAction(f"Go to {title}", self)
             action.setShortcut(QKeySequence(f"Ctrl+{number}"))
@@ -446,6 +485,34 @@ class MainWindow(QMainWindow):
         dock.setObjectName(name)  # the name is the key of the saved layout
         dock.setWidget(widget)
         return dock
+
+    def _inspect_cell(self) -> None:
+        """The Inspector follows the cell that has the cursor in a grid of the Model tab."""
+        page = self.editors.currentWidget()
+        if page not in (self.units_page, self.modes_page, self.inputs_page):
+            return
+        grid = page.table
+        current = grid.current_cell()
+        if current is None:
+            return
+        row, column = current
+        model = grid.model
+        found = model.cell(row, column)
+        if found is None:
+            return
+        state = model.state_of(row, column)
+        self.inspector.show_cell(
+            CellInfo(
+                title=model.label_of(model.row_keys()[row]),
+                column=model.columns[column].title,
+                rel=found[0],
+                path=".".join(str(part) for part in found[1]),
+                value=model.display(row, column),
+                state=theme.STATUS_LABELS[state] if state is not None else "",
+                message=model.message_at(found, hint=True) or "",
+                help=model.column_tip(model.columns[column]),
+            )
+        )
 
     def _inspect(self) -> None:
         """The Inspector follows the selected node of the tree."""
@@ -762,6 +829,8 @@ class MainWindow(QMainWindow):
         self.status_bar.set_project_path(session.path)
         self.status_bar.set_last_run(self._last_run)
         self.provenance_panel.set_provenance(session.provenance)
+        self.update_reports_page()
+        self._show_welcome()
         self._update_banners()
         self._inspect()
         self._update_dirty()
@@ -790,6 +859,212 @@ class MainWindow(QMainWindow):
         if self.session.project is not None:
             name = self.session.project.meta.name
             self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
+
+    # ---- the command palette -----------------------------------------------------------------
+    def palette_commands(self) -> list[Command]:
+        """Everything the palette offers now: the commands of the menus that are available, the
+        units, files and scenarios of the open project and its errors and warnings."""
+        commands: list[Command] = []
+
+        def walk(menu: QMenu, trail: str) -> None:
+            for action in menu.actions():
+                submenu = action.menu()
+                if isinstance(submenu, QMenu):
+                    walk(submenu, f"{trail} > {action.text().replace('&', '')}")
+                elif action.text() and action.isEnabled() and not action.isSeparator():
+                    name = f"{trail} > {action.text().replace('&', '')}"
+                    shortcut = action.shortcut().toString(QKeySequence.SequenceFormat.NativeText)
+                    commands.append(
+                        Command(name.removesuffix("…"), action.trigger, shortcut or "menu")
+                    )
+
+        for top in self.menuBar().actions():
+            menu = top.menu()
+            if isinstance(menu, QMenu):
+                walk(menu, top.text().replace("&", ""))
+        project = self.session.project
+        if project is not None:
+            for unit_id, unit in sorted(project.units.items()):
+                commands.append(
+                    Command(
+                        f"Open unit {unit.name} ({unit_id})",
+                        partial(self.show_unit, unit_id),
+                        "unit",
+                    )
+                )
+            for scenario_id in sorted(project.scenarios):
+                commands.append(
+                    Command(
+                        f"Select scenario {scenario_id}",
+                        partial(self.select_scenario, scenario_id),
+                        "scenario",
+                    )
+                )
+        root = self.session.path
+        if root is not None:
+            for path in sorted(root.rglob("*.yaml"))[:400]:
+                rel = path.relative_to(root).as_posix()
+                if not rel.startswith("."):
+                    commands.append(
+                        Command(f"Open file {rel}", partial(self.open_file, rel), "file")
+                    )
+        for problem in self.session.problems:
+            if pc.classify(problem) in (ProblemClass.ERROR, ProblemClass.WARNING) and problem.file:
+                commands.append(
+                    Command(
+                        f"Go to problem: {problem.message[:90]}",
+                        partial(self.open_file, problem.file, problem.line or 1),
+                        "problem",
+                    )
+                )
+        return commands
+
+    def open_command_palette(self) -> None:
+        CommandPalette(self.palette_commands(), self).exec()
+
+    # ---- the first screen --------------------------------------------------------------------
+    def _show_welcome(self) -> None:
+        """The welcome page while no project is open; the tabs once one is."""
+        empty = self.session.path is None
+        self.welcome.setVisible(empty)
+        for part in (self.top_bar, self.workspace):
+            part.setVisible(not empty)
+
+    def dragEnterEvent(self, event: QDragEnterEvent) -> None:  # noqa: N802 (Qt naming)
+        if self._dropped_folder(event.mimeData()) is not None:
+            event.acceptProposedAction()
+
+    def dropEvent(self, event: QDropEvent) -> None:  # noqa: N802 (Qt naming)
+        folder = self._dropped_folder(event.mimeData())
+        if folder is not None:
+            event.acceptProposedAction()
+            self.open_project(folder, background=True)
+
+    @staticmethod
+    def _dropped_folder(mime: QMimeData) -> Path | None:
+        """The one local folder in a drop (a file or several items are not a project)."""
+        urls = mime.urls()
+        if len(urls) != 1 or not urls[0].isLocalFile():
+            return None
+        path = Path(urls[0].toLocalFile())
+        return path if path.is_dir() else None
+
+    # ---- the Reports page --------------------------------------------------------------------
+    def update_reports_page(self) -> None:
+        """What can be exported now and where each part stands."""
+        session = self.session
+        items: list[ReportItem] = []
+        outputs = session.outputs
+        if outputs:
+            incomplete = any(o.incomplete for o in outputs)
+            items.append(
+                ReportItem(
+                    "budgets",
+                    "Budgets: power, mass, thermal, link",
+                    ", ".join(o.prefix for o in outputs),
+                    Status.NEAR if incomplete else Status.PASS,
+                    "Ready, with n/a where inputs are placeholders" if incomplete else "Ready",
+                    True,
+                )
+            )
+        else:
+            text = "Fix the errors first" if session.path is not None else "Open a project"
+            items.append(
+                ReportItem(
+                    "budgets", "Budgets: power, mass, thermal, link", "", Status.FAIL, text, False
+                )
+            )
+        timeline, scenario = self.timeline_view, self.scenario_view
+        items.append(
+            self._time_item(
+                "timeline",
+                "Power timeline",
+                "power_time_<scenario> (series per case, orbits, violations)",
+                timeline.result is not None,
+                timeline.is_valid(),
+            )
+        )
+        items.append(
+            self._time_item(
+                "scenario",
+                "Scenario results",
+                "environment, eclipses, passes, timeline (CSV, JSON)",
+                scenario.last_run is not None,
+                scenario.last_run is not None
+                and not scenario.is_stale
+                and scenario.last_run.scenario_id == scenario.selected_id(),
+                formats=False,
+            )
+        )
+        self.reports_view.set_items(items)
+        self.reports_view.set_provenance(session.provenance)
+
+    @staticmethod
+    def _time_item(
+        key: str, title: str, detail: str, computed: bool, valid: bool, formats: bool = True
+    ) -> ReportItem:
+        if valid:
+            return ReportItem(key, title, detail, Status.PASS, "Ready", True, formats)
+        if computed:
+            return ReportItem(
+                key, title, detail, Status.NEAR, "Out of date: press Run", False, formats
+            )
+        return ReportItem(
+            key, title, detail, Status.NOT_CHECKED, "Not worked out: press Run", False, formats
+        )
+
+    def _export_selected(self, keys: set[str], formats: set[str], folder: str) -> None:
+        """Write what the Reports page asked for, one part after the other."""
+        if self._queue_active:
+            return
+        order: list[str] = [k for k in ("budgets", "timeline", "scenario") if k in keys]
+        if not order:
+            return
+        self._queue, self._queue_paths = order, []
+        self._queue_formats, self._queue_folder = set(formats), Path(folder).expanduser()
+        self._queue_active = True
+        self.reports_view.set_busy(True)
+        self._queue_next()
+
+    def _queue_next(self) -> None:
+        if not self._queue:
+            paths, self._queue_active = self._queue_paths, False
+            self.reports_view.set_busy(False)
+            self.reports_view.show_results(paths)
+            where = f" to {self._queue_folder}" if paths else ""
+            self.statusBar().showMessage(f"Exported {len(paths)} file(s){where}.")
+            return
+        key = self._queue.pop(0)
+        folder, formats = self._queue_folder, self._queue_formats
+        if key == "budgets":
+            self.export_to(folder, formats)
+        elif key == "timeline":
+            self.timeline_view.export_to(folder, formats)
+        else:
+            try:
+                written = self.scenario_view.export_to(folder)
+            except (OutputError, OSError) as exc:
+                # OutputError texts are plain by construction; an OSError is described, not echoed
+                self._queue_step_failed(
+                    str(exc)
+                    if isinstance(exc, OutputError)
+                    else "The files could not be written. Check that you may write to the folder."
+                )
+                return
+            self._queue_step_done([str(p) for p in written])
+
+    def _queue_step_done(self, paths: list[str]) -> None:
+        if self._queue_active:
+            self._queue_paths.extend(paths)
+            self._queue_next()
+
+    def _queue_step_failed(self, message: str) -> None:
+        if not self._queue_active:
+            return
+        paths, self._queue, self._queue_active = self._queue_paths, [], False
+        self.reports_view.set_busy(False)
+        self.reports_view.show_results(paths)
+        self.reports_view.show_failure(message)
 
     # ---- export ------------------------------------------------------------------------------
     def export_to(self, folder: Path, kinds: Collection[str]) -> None:

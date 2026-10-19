@@ -94,19 +94,3 @@ def test_save_only_acts_on_the_model_tab(window: MainWindow) -> None:
     window.open_file("units/obc.yaml")
     window.show_view(window.mass_view)
     assert window.save_current() is False  # the text tab is not in front: nothing is written
-
-
-def test_the_reports_tab_offers_the_exports(window: MainWindow, qtbot, monkeypatch) -> None:  # type: ignore[no-untyped-def]
-    from PySide6.QtWidgets import QFileDialog
-
-    monkeypatch.setattr(QFileDialog, "getExistingDirectory", lambda *_a, **_k: "")  # Cancel
-    view = window.reports_view
-    assert [
-        b.text() for b in (view.reports_button, view.timeline_button, view.scenario_button)
-    ] == [
-        "Export budget reports…",
-        "Export power timeline…",
-        "Export scenario results…",
-    ]
-    with qtbot.waitSignal(view.reports_requested, timeout=1000):
-        view.reports_button.click()
