@@ -7,6 +7,7 @@ import importlib.util
 from pathlib import Path
 
 import pytest
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
 
 from budget_gui import theme
@@ -88,3 +89,35 @@ def test_a_plot_that_has_the_keyboard_draws_the_focus_ring(  # type: ignore[no-u
     corner = (1, plot.height() // 2)
     assert focused.pixelColor(*corner).name() == theme.tokens().focus.lower()
     assert without.pixelColor(*corner).name() != theme.tokens().focus.lower()
+
+
+def test_a_check_box_that_has_the_keyboard_is_ringed_by_the_style(qtbot) -> None:  # type: ignore[no-untyped-def]
+    from PySide6.QtGui import QColor
+    from PySide6.QtWidgets import QCheckBox, QLineEdit, QWidget
+
+    host = QWidget()
+    QLineEdit(host).move(150, 10)  # the first control of a window takes the keyboard when shown
+    box = QCheckBox("Shade eclipses and passes", host)
+    box.move(10, 10)
+    qtbot.addWidget(host)
+    host.resize(420, 60)
+    host.show()
+    QApplication.processEvents()
+    want = QColor(theme.tokens().focus).name()
+
+    def has_ring() -> bool:
+        image = box.grab().toImage()  # the check box alone: a focused line edit has a ring too
+        return any(
+            image.pixelColor(x, y).name() == want
+            for x in range(image.width())
+            for y in range(image.height())
+        )
+
+    host.findChild(QLineEdit).setFocus()  # type: ignore[union-attr]
+    QApplication.processEvents()
+    assert not has_ring()
+    box.setFocus(Qt.FocusReason.TabFocusReason)
+    QApplication.processEvents()
+    if not box.hasFocus():
+        pytest.skip("the offscreen window does not give the check box the keyboard")
+    assert has_ring()

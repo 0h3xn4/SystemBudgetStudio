@@ -292,9 +292,8 @@ def stylesheet(t: Tokens) -> str:
         border: {BORDER}px solid {t.border_subtle}; border-radius: {rc}px;
         selection-background-color: {t.selected}; selection-color: {t.text}; }}
     QPlainTextEdit:focus, QTextEdit:focus {{ border: {ring}px solid {t.focus}; }}
-    QCheckBox, QRadioButton {{ background: transparent; spacing: {px(s1)}px;
-        border: {ring}px solid transparent; border-radius: {rc}px; padding: 0 {px(s0)}px; }}
-    QCheckBox:focus, QRadioButton:focus {{ color: {t.text}; border-color: {t.focus}; }}
+    QCheckBox, QRadioButton {{ background: transparent; spacing: {px(s1)}px; }}
+    QCheckBox:focus, QRadioButton:focus {{ color: {t.text}; }}
     QGroupBox {{ border: none; margin: 0; padding: 0; font-weight: 600; }}
 
     {_ITEM_TEXT} {{ background: {t.surface}; color: {t.text}; border: none;
