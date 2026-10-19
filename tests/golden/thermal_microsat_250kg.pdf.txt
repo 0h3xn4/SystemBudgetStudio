@@ -1,7 +1,7 @@
 pages=23
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Thermal budget (static): Example 250 kg minisatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
@@ -149,7 +149,7 @@ ADCS
 no limits
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Unit
 Node
@@ -363,7 +363,7 @@ no limits
 Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Mode: Charging
 Units in mode Charging
@@ -570,7 +570,7 @@ TTC
 By thermal node
 ## page 4
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Node
 Dissipation (W)
@@ -782,7 +782,7 @@ ADCS
  45.300
 ## page 5
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Subsystem
 Dissipation (W)
@@ -965,7 +965,7 @@ imaging
  40.000
 ## page 6
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Unit
 Name
@@ -1121,7 +1121,7 @@ off
  0.000
 ## page 7
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Unit
 Name
@@ -1321,7 +1321,7 @@ THERM
  16.000
 ## page 8
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 Node
 Dissipation (W)
@@ -1534,7 +1534,7 @@ TTC
  8.000
 ## page 9
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
 By thermal node
 Node
@@ -1675,7 +1675,7 @@ TBD
 PLACEHOLDER
 ## page 10
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 10
 Name
 Value
@@ -1854,7 +1854,7 @@ TBD
 PLACEHOLDER
 ## page 11
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 11
 Name
 Value
@@ -1978,7 +1978,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 12
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 12
 Severity
 Code
@@ -2128,7 +2128,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 13
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 13
 Severity
 Code
@@ -2278,7 +2278,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 14
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 14
 Severity
 Code
@@ -2446,7 +2446,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 15
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 15
 Severity
 Code
@@ -2620,7 +2620,7 @@ Replace the placeholder with a sourced value;
 results that need it show n/a.
 ## page 16
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 16
 Severity
 Code
@@ -2818,7 +2818,7 @@ Replace the placeholder with a sourced value;
 results that need it show n/a.
 ## page 17
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 17
 Severity
 Code
@@ -3000,7 +3000,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 18
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 18
 Severity
 Code
@@ -3158,7 +3158,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 19
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 19
 Severity
 Code
@@ -3316,7 +3316,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 20
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 20
 Severity
 Code
@@ -3476,7 +3476,7 @@ Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 21
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 21
 Severity
 Code
@@ -3627,7 +3627,7 @@ Replace it with a value from the data sheet or
 requirement and cite the source.
 ## page 22
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 22
 Severity
 Code
@@ -3803,7 +3803,7 @@ Add temperature_limits from the unit's data
 sheet.
 ## page 23
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 23
 Severity
 Code
@@ -3852,7 +3852,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 1.0.0
+System Budget Studio 1.1.0
 Python
 3.x
 Libraries

@@ -39,6 +39,19 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 - [ ] The menu entry is there with the logo, and the window starts from it. (Manual; CI starts the window on a virtual X server.)
 - [ ] `sudo dnf remove system-budget-studio` takes away everything the package installed. (CI.)
 
+## The window, on a real screen (new in 1.1.0; Windows, Rocky 8 and Ubuntu)
+
+The 1.1.0 window was built and tested on a virtual (offscreen) display, which has a pixel ratio of 1. These steps need a person at a real screen; at least one of them on a 4K or 200 % display.
+
+- [ ] With no project open the **welcome page** shows *Open a project folder…* and *New project (guided)…*; dropping the example folder on the window opens it. (Manual.)
+- [ ] Open the complete 250 kg example. The project tree is quiet (one row per unit, badges only for errors and warnings). The text in the tree, the grids, the Problems panel and the top bar is sharp and not too small at 200 %; nothing is cut off or overlaps at 1280 x 720. (Manual; UX-47.)
+- [ ] **Model > Power modes**: change a number, Ctrl+Z undoes it, a wrong value is explained under the grid, **Save** writes the file and keeps its comments. (Manual.)
+- [ ] **Run** (Ctrl+R): the bar and the step name appear; **Cancel** keeps the earlier results; a second **Run** completes. **Power > Timeline**: click a legend entry, step through the violations, change the axis to UTC. Zooming and panning stay smooth on a week at 1 s (copy the example and set the duration to 604800 and the step to 1). (Manual.)
+- [ ] **Reports**: choose a folder, export XLSX, PDF and DOCX; the list shows the files and *Show the folder* opens it. (Manual.)
+- [ ] **Ctrl+K** finds a unit and a command; the Inspector follows the cell with the cursor. (Manual.)
+- [ ] **View > Theme > Dark** and back: no unreadable text or white patches in the plots, grids or dialogs. (Manual.)
+- [ ] Tab from the project tree reaches the top bar, the tabs and the Problems panel and comes round again. (Manual; a test covers it offscreen.)
+
 ## Licences and integrity (all platforms)
 
 - [ ] The program folder contains `licences/`, `licences.md` and `sbom.cdx.json`; the SBOM lists only the tool's runtime packages (about 21), no test or build tools. (CI: `packaging/check_bundle.py`.)

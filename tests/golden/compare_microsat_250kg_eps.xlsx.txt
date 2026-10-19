@@ -119,7 +119,7 @@
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
-5: 'Tool' | 'System Budget Studio 1.0.0'
+5: 'Tool' | 'System Budget Studio 1.1.0'
 6: 'Python' | '3.x'
 7: 'Libraries' | 'numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests'
 8: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs'
