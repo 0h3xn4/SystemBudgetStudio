@@ -61,7 +61,7 @@ def test_the_main_window_shows_the_icon(qtbot, tmp_path: Path) -> None:  # type:
 def test_missing_icon_files_leave_an_empty_icon_and_the_window_still_opens(
     monkeypatch: pytest.MonkeyPatch, qtbot
 ) -> None:  # type: ignore[no-untyped-def]
-    monkeypatch.setattr("budget_gui.theme.icon_files", lambda: [])
+    monkeypatch.setattr("budget_gui.theme.controller.icon_files", lambda: [])
     assert app_icon().isNull()
     assert isinstance(app_icon(), QIcon)
     window = MainWindow()

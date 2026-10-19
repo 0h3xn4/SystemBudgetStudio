@@ -1,0 +1,15 @@
+Baseline after milestone 1 (same machine and script as the plan's section 3: scripts/ui_baseline.py)
+start-up: imports 848 ms + app and first window 584 ms = 1432 ms (median of 5 fresh processes, after the interpreter)
+open microsat_250kg_eps: 634 ms
+Run (a day, environment + timeline + link passes): 759 ms
+tab switch (ms, median of 3): Model 83, Power 43, Mass 48, Thermal 30, Link 97, Compare 22, Reports 30
+open stress_200_units: 3408 ms
+tab switch, 200 units (ms, median of 3): Model 80, Power 35, Mass 31, Thermal 32, Link 15, Compare 15, Reports 20
+scroll the 200-unit grid, 40 steps: 2383 ms
+Run, a week at 1 s: 10.0 s; longest stretch the window thread did not return to the event loop: 290 ms
+timeline plot, week at 1 s: full repaint 4 ms; wheel zoom step median 48 ms, worst 95 ms
+
+Start-up measured against the commit before the overhaul, three rounds of three fresh processes, interleaved (median):
+  before: imports 720 ms + window 392 ms = 1112 ms
+  after:  imports 773 ms + window 472 ms = 1249 ms (+12 %)
+  MainWindow() alone: 315 ms before, 373 ms after (a larger style sheet; fonts load in 9 ms)
