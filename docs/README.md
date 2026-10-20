@@ -44,7 +44,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [ENVIRONMENT_FORMAT.md](ENVIRONMENT_FORMAT.md) | Scenario files, orbits, and the interim SpaceMissionStudio format |
 | [THERMAL_SOURCES.md](THERMAL_SOURCES.md) | Candidate reference sources for the numbers a thermal engineer must supply |
 | [LICENCES.md](LICENCES.md) | Licences of every runtime dependency |
-| [SPEC.md](SPEC.md) | The original requirements (written as a brief to the implementer; authoritative) |
+| [SPEC.md](SPEC.md) | The original requirements (written as a brief to the implementer; authoritative). Its design-system item (IBM Carbon, item 18) was replaced for the window by [decision D-168](DECISIONS.md) and [DESIGN.md](DESIGN.md) |
 
 ## Examples
 
@@ -69,13 +69,13 @@ This page is the map of everything written about System Budget Studio. If you ar
 |---|---|
 | [DECISIONS.md](DECISIONS.md) | Every design decision with its reason (numbers `D-001`…) |
 | [DEVIATIONS.md](DEVIATIONS.md) | Every simplification of the physics (`DV-…`) |
-| [PLAN.md](PLAN.md) | The milestones M0 to M6 |
+| [PLAN.md](PLAN.md) | The milestones M0 to M6 (the window redesign and the UI overhaul that followed are in the changelog and in [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md)) |
 | [../CHANGELOG.md](../CHANGELOG.md) | What changed |
 | [demo/](demo/M0.md) | One short note per milestone (historical: written when each milestone was finished): [M0](demo/M0.md) · [M1](demo/M1.md) · [M2a](demo/M2a.md) · [M2b](demo/M2b.md) · [M3a](demo/M3a.md) · [M3b](demo/M3b.md) · [M4](demo/M4.md) · [M4b](demo/M4b.md) · [M5](demo/M5.md) · [M6](demo/M6.md) |
 | [DOCS_AUDIT.md](DOCS_AUDIT.md) | The audit behind this documentation structure |
-| [UX_STANDARD.md](UX_STANDARD.md) | The UX/UI standard the window is redesigned to (the owner's brief) |
-| [DESIGN.md](DESIGN.md) | The design system of the window: colour tokens, status styles, cell styles, icons, layout file (generated tables, kept true by a test) |
-| [ux-audit.md](ux-audit.md) | The UX audit of the current window: findings, screenshots, measurements, decisions needed |
-| [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md) | UI overhaul, phase 1: audit, baseline, information architecture, milestones and open questions (brief: [ui/UI_OVERHAUL.md](ui/UI_OVERHAUL.md)) |
+| [UX_STANDARD.md](UX_STANDARD.md) | The UX/UI standard the window was redesigned to (the owner's brief; the design system itself is [DESIGN.md](DESIGN.md)) |
+| [DESIGN.md](DESIGN.md) | The design system of the window: colour tokens, status styles, cell styles, type and spacing, components, icons, the shell, the layout file, shortcuts, accessibility, UI sizes, responsiveness (generated tables, kept true by a test) |
+| [ux-audit.md](ux-audit.md) | The UX audit of the 1.0.0 window: findings, screenshots, measurements, decisions needed (historical; the window has been redesigned since) |
+| [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md) | The UI overhaul (1.2.0): audit, baseline, information architecture, the milestones M1 to M6 as built and the final measurements against the baseline (brief: [ui/UI_OVERHAUL.md](ui/UI_OVERHAUL.md); screenshots and baselines per milestone in `ui/screenshots/`) |
 
 Next: [Getting started](getting-started.md).

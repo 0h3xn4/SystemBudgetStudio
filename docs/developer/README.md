@@ -9,9 +9,10 @@ This page is for people who change System Budget Studio: how the repository is l
 ```text
 src/budget_core/   the headless core: model, units, environment, power, mass, thermal, link, reports, guide
 src/budget_cli/    the `budget` command (depends only on the core)
-src/budget_gui/    the PySide6 window (depends only on the core)
+src/budget_gui/    the PySide6 window (depends only on the core): theme/ (tokens, fonts, style sheet, the only place for colours and sizes), components/ (buttons, badges, cards ...), one module per view
 tests/             unit, regression, golden, gui, offline
-docs/              this documentation; docs/demo = milestone notes
+scripts/           measuring and screenshot tools for the window (ui_screenshots.py, ui_baseline.py, ui_access_audit.py, ui_scale_shots.py, ui_gallery.py)
+docs/              this documentation; docs/demo = milestone notes; docs/ui = the plan and the screenshots of the UI overhaul
 examples/          the four example projects (generated; invented data)
 packaging/         PyInstaller spec, Linux and Windows installers, licence and bundle checks
 assets/            bundled fonts, licence texts and the application icon (assets/icons)
@@ -23,8 +24,8 @@ The [architecture overview](../ARCHITECTURE.md) explains the design: pure solver
 
 ```bash
 pip install -e ".[dev]"
-QT_QPA_PLATFORM=offscreen pytest                 # everything (about 6 minutes)
-QT_QPA_PLATFORM=offscreen pytest tests/unit      # one folder
+QT_QPA_PLATFORM=offscreen pytest                 # everything (about 30 minutes in one process: the core tests about 8, the window tests about 22)
+QT_QPA_PLATFORM=offscreen pytest tests/unit      # one folder; the quick loop while you work
 pytest tests/offline                             # the no-network test
 ruff check . && ruff format --check . && mypy    # lint, format, strict types
 ```
@@ -32,6 +33,16 @@ ruff check . && ruff format --check . && mypy    # lint, format, strict types
 Tests are in five groups: `unit`, `regression` (hand-calculated reference cases, with the working in comments), `golden` (stored expected reports), `gui` (pytest-qt, offscreen) and `offline`. Properties are checked with Hypothesis. Tests marked `perf` time the one-week stress case and how long a worker thread may keep the window thread waiting (D-183); they fail only above three times the target (`tests/perf_limits.py`).
 
 CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) runs ruff, mypy and pytest on Ubuntu and Windows with Python 3.11 and 3.13, and checks that a runtime-only install (`pip install -e .`) gives a runnable `budget`. Actions are pinned to commit SHAs.
+
+## Working on the window
+
+The rules are in [DESIGN.md](../DESIGN.md) and [CLAUDE.md](../../CLAUDE.md). The ones that bite:
+
+- **Colours, fonts and sizes live in `budget_gui/theme/` only.** Take sizes from `theme.gap()`, `theme.inset()` and `theme.px()`, fonts from `theme.ui_font()` and `theme.mono_font()`, colours from `theme.tokens()`. A test fails on a hex colour, a font family or a pixel size anywhere else.
+- **Nothing longer than about 50 ms on the window thread.** Computations run in a `QThread` worker; a worker that makes the plot also prepares it (`plot_prepare.py`, D-182). A long NumPy or SGP4 call in the core goes in slices (`budget_core/slices.py`) so that the window can have the interpreter lock between them; `create_app` shortens the switch interval for the same reason (D-183). `tests/unit/test_worker_responsiveness.py` guards it.
+- **A view that can be large uses model and view**, not `QTableWidget`. The small result tables of the scenario, the timeline and the link passes are `QTableWidget`s, filled in turns so that no turn is long.
+- **Every control that shows only an icon has a tooltip and an accessible name**; `scripts/ui_access_audit.py` lists what is missing and `tests/gui/test_accessibility.py` fails on it.
+- **Measure before you tune.** `scripts/ui_baseline.py` measures start-up, tab switches and the heaviest interactions; for a stall, a heartbeat timer on the window thread plus `faulthandler.dump_traceback_later` on the worker shows who holds the interpreter lock (D-183).
 
 ## Generated files
 
@@ -64,7 +75,9 @@ When behaviour changes, change these in the same pull request:
 | the file format | [FILE_FORMAT.md](../FILE_FORMAT.md), the schema version and a migration, the matching [user manual](../user-manual/README.md) page and the **in-app guide chapter** ([`src/budget_core/guide/chapters/`](../../src/budget_core/guide/chapters/)) |
 | a problem code | [FILE_FORMAT.md](../FILE_FORMAT.md) code list, guide chapter 11, [read and fix problems](../user-manual/read-and-fix-problems.md) |
 | an example project | [examples/README.md](../../examples/README.md): its expected output |
-| a menu, tab or shortcut | [use the window](../user-manual/use-the-window.md), the screenshots in [`docs/images/`](../images/) |
+| a menu, an area of the window or a shortcut | [use the window](../user-manual/use-the-window.md), the screenshots in [`docs/images/`](../images/), the in-app guide chapter *Quick start* |
+| a colour, a font, a size or a component of the window | `budget_gui/theme/` and [DESIGN.md](../DESIGN.md) (its tables are checked by a test; a colour, a font family or a pixel size anywhere else in `budget_gui/` fails the build) |
+| anything the window keeps or writes outside a project folder | [use the window](../user-manual/use-the-window.md#where-does-the-window-keep-its-layout), the in-app guide chapter *Installing and uninstalling*, the install checklist |
 | any decision or simplification | [DECISIONS.md](../DECISIONS.md) / [DEVIATIONS.md](../DEVIATIONS.md) and the [CHANGELOG](../../CHANGELOG.md) |
 
 The manual pages (task-oriented) and the in-app guide chapters (topic-oriented, shipped with the tool) overlap on purpose; change both. Check links before you push, with [lychee](https://github.com/lycheeverse/lychee):
@@ -73,7 +86,7 @@ The manual pages (task-oriented) and the in-app guide chapters (topic-oriented, 
 lychee --offline --include-fragments --no-progress README.md CONTRIBUTING.md CHANGELOG.md 'docs/**/*.md' 'examples/**/*.md'
 ```
 
-To regenerate the screenshots run the window offscreen (`QT_QPA_PLATFORM=offscreen`), open `examples/microsat_250kg_eps`, show the tab, and save `window.grab()` to `docs/images/`. Run every command in [getting started](../getting-started.md) in a fresh virtual environment now and then; the commands there are the documentation's tests.
+To regenerate the screenshots run the window offscreen (`QT_QPA_PLATFORM=offscreen`), open `examples/microsat_250kg_eps`, show the area, and save `window.grab()` to `docs/images/ui-overhaul/`. `scripts/ui_screenshots.py DIR` saves every page and dialog in both themes, and `scripts/ui_scale_shots.py DIR` every page at 90 to 125 %. Run every command in [getting started](../getting-started.md) in a fresh virtual environment now and then; the commands there are the documentation's tests.
 
 ## Build the installers
 

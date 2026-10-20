@@ -18,8 +18,9 @@ You get one row per **power mode** of every unit:
 
 ```text
 unit_id,unit_name,subsystem,power_mode,avg_power_w,peak_power_w,duty_cycle_ratio,heat_dissipation_ratio,min_duration_s,max_duration_s
-adcs,ADCS module,ADCS,off,0.0,0.0,1.0,1.0,,
-adcs,ADCS module,ADCS,safe,0.4,0.6,1.0,1.0,,
+adapter,Separation adapter,STRUCT,off,0.0,0.0,1.0,1.0,,
+adcs,Attitude control electronics,ADCS,off,0.0,0.0,1.0,1.0,,
+adcs,Attitude control electronics,ADCS,safe,4.0,6.0,1.0,1.0,,
 ```
 
 Without `--out` the file is `<project>/results/unit_power_modes.csv`. A `.xlsx` file has one sheet of values (**Unit power modes**) and a second sheet with instructions. The CSV starts with a byte order mark so that Excel reads the characters correctly. Open it in a spreadsheet program.

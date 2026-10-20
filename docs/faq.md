@@ -70,6 +70,10 @@ Yes, power-mode data: `budget units-export` writes the units' power modes as a C
 
 Same project folder (a checkout of that revision), same `--user`, same `--date`: [reports](user-manual/reports-and-exports.md#how-do-i-regenerate-a-report-exactly).
 
+### The text is too small or the window does not fit my screen
+
+*View → UI size* sets 90, 100, 110 or 125 % and *View → Theme* light or dark ([make the window easier to read](user-manual/use-the-window.md#how-do-i-make-the-window-easier-to-read-or-to-use-with-the-keyboard)). The smallest window at 100 % is 1041 x 648, so a 1366 x 768 screen fits every size up to 110 %.
+
 ### The window and the command line give different answers?
 
 They should not: both call the same core. If they do, that is a bug; save the project state and report it.
@@ -78,7 +82,7 @@ They should not: both call the same core. If they do, that is a bug; save the pr
 
 ### Where are my files? Does the tool keep settings or logs?
 
-Your projects and reports are in folders you choose. The tool keeps no settings, caches, logs or crash dumps outside your project folders, and never writes project content to logs or temporary files elsewhere.
+Your projects and reports are in folders you choose. The only file the tool keeps elsewhere is the window's `layout.ini` in your configuration folder (the window size and position, the panels, the theme, the UI size and *Reduce motion*; it never holds a project name, a path or a value, and the command line does not write it). There are no other settings, caches, logs or crash dumps, and project content never goes to logs or temporary files. Delete `layout.ini` to forget the layout, or set `BUDGET_NO_LAYOUT=1` to keep nothing ([the layout file](user-manual/use-the-window.md#where-does-the-window-keep-its-layout)).
 
 ### Can several people work on one project?
 

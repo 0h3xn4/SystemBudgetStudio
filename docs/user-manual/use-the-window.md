@@ -59,7 +59,7 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | Ctrl+O | Open project (or drop a project folder on the window) |
 | Ctrl+K | Find a command: a card over the window. Type a few words to run a menu command (its menu, its name and its key are shown apart) or go to a unit, a file, a scenario or a problem; Up and Down choose, Enter runs, Esc closes |
 | Ctrl+B | Show or hide the project panel |
-| Ctrl+S | Save what you are editing (a text tab, the grids of *Units*, *Power modes* and *Inputs*, or the scenario); it acts only while the **Model** tab is in front |
+| Ctrl+S | Save what you are editing (a text tab, the grids of *Units*, *Power modes* and *Inputs*, or the scenario); it acts only while the **Model** area is in front |
 | Ctrl+Z / Ctrl+Shift+Z | Undo / redo an edit of the grids or the scenario (the Edit menu names the step); a text editor keeps its own undo while it has the keyboard |
 | Ctrl+C / Ctrl+V | In a grid: copy the selected cells as text with tabs; paste a block (from this or any spreadsheet) |
 | Ctrl+D / Delete | In a grid: fill the selection down from its top cell / empty the optional cells of the selection |
@@ -121,6 +121,6 @@ In **Model → Scenario**, rules and segments are sentences you edit in place ([
 
 A unit in the project tree opens its power modes in this grid (Enter, double-click, or **Ctrl+M**).
 
-The file dialogs do not remember the last folder you used: the program keeps no settings outside your project folders.
+The file dialogs do not remember the last folder you used: the only file the window keeps outside your project folders is `layout.ini` ([above](#where-does-the-window-keep-its-layout)).
 
 Next: [Command-line reference](command-line.md) · [Tips](../tips.md).

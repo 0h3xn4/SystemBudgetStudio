@@ -84,8 +84,8 @@ Expected from `link-passes` (a Link passes report per scenario, XLSX/PDF/DOCX/JS
 
 ```text
 sband_down: 11 pass(es) over gs_north, 4438.17 MByte in the scenario (4438.17 MByte per day).
-xband_down: 4 pass(es) over gs_south, 2718.97 MByte in the scenario (2718.97 MByte per day).
-0 errors, 0 warnings.
+xband_down: 4 pass(es) over gs_south, 2714.57 MByte in the scenario (2714.57 MByte per day).
+0 errors, 95 warnings.
 ```
 
 For each pass the report gives the lowest margin, the time with a rate that closes and the data volume, from the highest listed data rate whose margin meets the required margin at each step. `budget run … --budget link` writes the static table: EIRP, path loss, G/T, C/N0, Eb/N0 and margin per listed data rate at chosen elevations. In the window use the **Link budget** and **Link passes** tabs.

@@ -9,7 +9,7 @@ git clone https://github.com/0h3xn4/systembudgetstudio.git
 cd systembudgetstudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
-QT_QPA_PLATFORM=offscreen pytest                       # about 6 minutes; Windows PowerShell: $env:QT_QPA_PLATFORM="offscreen"; pytest
+QT_QPA_PLATFORM=offscreen pytest                       # about 30 minutes (core 8, window 22); quick loop: pytest tests/unit. Windows PowerShell: $env:QT_QPA_PLATFORM="offscreen"; pytest
 ruff check . && ruff format --check . && mypy
 ```
 
@@ -26,6 +26,7 @@ These are enforced by tests and review (the full list is in [CLAUDE.md](CLAUDE.m
 - **Units are in the field names** (`power_w`, `freq_hz`, `gain_dbi`).
 - **No project content in logs, temp files, crash dumps or messages**: messages name fields, ids and units only.
 - **Example projects contain invented data only.**
+- **The window follows [DESIGN.md](docs/DESIGN.md)**: colours, fonts and sizes live in `budget_gui/theme/` only (a test fails otherwise), a status always has an icon or text as well as a colour, and nothing runs for longer than about 50 ms on the window thread.
 - **Runtime dependencies only in `[project.dependencies]`**; all tooling in the `dev` extra.
 - **Record decisions** in [DECISIONS.md](docs/DECISIONS.md) and physics simplifications in [DEVIATIONS.md](docs/DEVIATIONS.md). A change to the file format needs a schema version bump and a migration ([FILE_FORMAT.md](docs/FILE_FORMAT.md)).
 

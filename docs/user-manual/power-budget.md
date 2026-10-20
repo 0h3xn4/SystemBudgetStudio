@@ -42,8 +42,8 @@ Pointing is `sun` (the Sun is at a fixed direction in the body frame) or `nadir`
 ## How do I read the result?
 
 ```text
-BOL: generated 99.7 Wh, lowest state of charge 89.3 %, 0 violation(s).
-EOL: generated 93.8 Wh, lowest state of charge 89.0 %, 0 violation(s).
+BOL: generated 2399.2 Wh, lowest state of charge 82.7 %, 0 violation(s).
+EOL: generated 2060.3 Wh, lowest state of charge 79.7 %, 0 violation(s).
 ```
 
 A check that could not run is never reported as passed. If the peak power limit, the allowed depth of discharge (a placeholder, or no mission phase) or an array or battery input is missing, or the scenario has no complete orbit, the command adds a line `Not evaluated: ...`, the Violations table says `Not evaluated: ...` instead of "No violations found", and the violation count of a case includes the findings that do not depend on the case (the peak power).

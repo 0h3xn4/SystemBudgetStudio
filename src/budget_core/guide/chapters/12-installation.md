@@ -8,7 +8,7 @@ Run `system-budget-studio-<version>-windows-x64-setup.exe`. It installs to `%LOC
 
 For a silent install: `setup.exe /VERYSILENT /CURRENTUSER /DIR="C:\Tools\SBS"`.
 
-A portable alternative is `system-budget-studio-<version>-windows-x64-portable.zip`: extract it anywhere and start `system-budget-studio.exe`. Nothing is written outside the folder.
+A portable alternative is `system-budget-studio-<version>-windows-x64-portable.zip`: extract it anywhere and start `system-budget-studio.exe`. Nothing is installed and no registry entry is made. The window still keeps its layout file (see *Your files* below); set the environment variable `BUDGET_NO_LAYOUT=1` before you start it to keep nothing, or `BUDGET_CONFIG_DIR` to a folder of your choice to keep the file there.
 
 To uninstall use *Apps and features*, or run `unins000.exe` in the install folder.
 
@@ -39,7 +39,7 @@ The package manager also installs the system libraries the window needs. On RHEL
 
 ## Your files
 
-Projects, reports and exports live in folders you choose. Neither installing, upgrading nor uninstalling touches them. The tool keeps no settings, caches, logs or crash dumps outside your project folders.
+Projects, reports and exports live in folders you choose. Neither installing, upgrading nor uninstalling touches them. The only thing the tool keeps outside them is the window's layout file, `layout.ini`, in your user configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`): the window size and position, the panels, the theme and the UI size. It never holds a project name, a path or a value, and the command-line tool does not write it. The installers and uninstallers do not touch it; delete it by hand to forget the layout. There are no other settings, caches, logs or crash dumps.
 
 ## Licences and checksums
 

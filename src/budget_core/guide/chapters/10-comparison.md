@@ -7,7 +7,7 @@ The comparison shows what changed between two sides:
 
 ## In the window
 
-Open the **Compare** tab. Side A is the open project (with an optional scenario). For side B enter or browse to another project folder, or leave it empty and choose a second scenario. **Compare** runs in the background and lists, budget by budget, every value that differs, with the change, the change in percent and a status:
+Go to the **Compare** area (Ctrl+6). Side A is the open project (with an optional scenario). For side B enter or browse to another project folder, or leave it empty and choose a second scenario. **Compare** runs in the background and lists, budget by budget, every value that differs, with the change, the change in percent and a status:
 
 | Status | Meaning |
 |---|---|
