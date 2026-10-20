@@ -420,8 +420,8 @@ class PowerTimelineView(QWidget):
         QTimer.singleShot(DETAIL_DELAY_MS, self, lambda: self._finish_details(result))
 
     def _finish_details(self, result: TimeDomainResult) -> None:
-        self._finishing = False
         if self.result is not result:
+            self._finishing = False
             return
         self._fill_tables(result, "details")
         self.export_button.setEnabled(self.is_valid())
@@ -435,6 +435,13 @@ class PowerTimelineView(QWidget):
         if self.is_stale:
             text = CHANGED_WHILE_RUNNING_TEXT
         self.status.setText(text if self.is_stale else text + ".")
+        # the listeners (Problems, Reports page) get a turn of their own
+        QTimer.singleShot(0, self, lambda: self._announce(result))
+
+    def _announce(self, result: TimeDomainResult) -> None:
+        self._finishing = False
+        if self.result is not result:
+            return
         self.computed.emit(result)
 
     def _failed(self, message: str) -> None:

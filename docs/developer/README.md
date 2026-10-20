@@ -29,7 +29,7 @@ pytest tests/offline                             # the no-network test
 ruff check . && ruff format --check . && mypy    # lint, format, strict types
 ```
 
-Tests are in five groups: `unit`, `regression` (hand-calculated reference cases, with the working in comments), `golden` (stored expected reports), `gui` (pytest-qt, offscreen) and `offline`. Properties are checked with Hypothesis. Tests marked `perf` time the one-week stress case; they fail only above three times the target (`tests/perf_limits.py`).
+Tests are in five groups: `unit`, `regression` (hand-calculated reference cases, with the working in comments), `golden` (stored expected reports), `gui` (pytest-qt, offscreen) and `offline`. Properties are checked with Hypothesis. Tests marked `perf` time the one-week stress case and how long a worker thread may keep the window thread waiting (D-183); they fail only above three times the target (`tests/perf_limits.py`).
 
 CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) runs ruff, mypy and pytest on Ubuntu and Windows with Python 3.11 and 3.13, and checks that a runtime-only install (`pip install -e .`) gives a runnable `budget`. Actions are pinned to commit SHAs.
 

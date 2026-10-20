@@ -28,6 +28,7 @@ from budget_core.environment.intervals import BoolArray, Interval, bisect_edge, 
 from budget_core.model import Orbit
 from budget_core.model.environment import DETECTION_STEP_S, tle_epoch
 from budget_core.problems import Problem, Severity
+from budget_core.slices import SLICE
 from budget_core.timeutil import parse_utc
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
@@ -122,10 +123,16 @@ class ElementsPropagator:
         """TEME positions (N, 3) in m and the Julian dates (N,) of a set of times."""
         jd0, fr0 = geo.julian_date_parts(start)
         fractions = fr0 + times_s / 86400.0
-        error, pos, _ = SatrecArray([self.sat]).sgp4(np.full(len(times_s), jd0), fractions)
-        if np.any(error):
-            raise PropagationError("the orbit cannot be propagated over the whole scenario")
-        return np.asarray(pos[0]) * 1000.0, jd0 + fractions
+        satellites = SatrecArray([self.sat])
+        parts = []
+        for first in range(0, len(times_s), SLICE):  # one call over a week holds the lock 0.4 s
+            part = fractions[first : first + SLICE]
+            error, pos, _ = satellites.sgp4(np.full(len(part), jd0), part)
+            if np.any(error):
+                raise PropagationError("the orbit cannot be propagated over the whole scenario")
+            parts.append(np.asarray(pos[0]))
+        positions = np.concatenate(parts) if parts else np.empty((0, 3))
+        return positions * 1000.0, jd0 + fractions
 
     # ---- environment ---------------------------------------------------------------------------
     def compute(

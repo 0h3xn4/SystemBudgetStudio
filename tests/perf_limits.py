@@ -9,3 +9,8 @@ for hostile inputs that must be refused quickly instead of hanging: the point is
 TARGET_S = 10.0
 LIMIT_S = 3 * TARGET_S
 REFUSE_S = 10.0
+
+# The longest time a worker thread may keep the window thread waiting for the interpreter lock (a
+# long NumPy or SGP4 call). The aim for the whole window is 100 ms, and its own work comes on top.
+HOLD_TARGET_S = 0.05
+HOLD_LIMIT_S = 3 * HOLD_TARGET_S
