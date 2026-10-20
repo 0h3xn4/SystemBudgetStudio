@@ -6,9 +6,9 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 
 ## Windows 10 or 11 (standard user)
 
-- [ ] Run `system-budget-studio-<version>-windows-x64-setup.exe` as a standard user: no elevation prompt appears; it installs to `%LOCALAPPDATA%\Programs\System Budget Studio`. (CI: silent install with `/CURRENTUSER`.)
+- [ ] Run `system-budget-studio-<version>-windows-x64-setup.exe` as a standard user: no elevation prompt appears; it installs to `%LOCALAPPDATA%\Programs\System Budget Studio`; it asks no question except the folder, and needs no Python. (CI: silent install with `/CURRENTUSER`.)
 - [ ] The Start menu has *System Budget Studio*; it starts and shows the window in the Inter font (text) and JetBrains Mono (numbers). (Manual.)
-- [ ] `budget --version` and `budget self-test` pass in a new terminal (after ticking the PATH task, or with the full path). (CI.)
+- [ ] `budget --version` and `budget self-test` pass in a new terminal (the setup has added its folder to your PATH; no question is asked). (CI.)
 - [ ] File > New project (guided): finish with the defaults; the first power timeline appears. (Manual; the automated wizard test covers the logic.)
 - [ ] File > Export reports writes XLSX, PDF and DOCX that open in Excel, a PDF reader and Word. (Manual.)
 - [ ] With the network cable out or Wi-Fi off, everything above still works. (Manual; the offline test covers the code.)
