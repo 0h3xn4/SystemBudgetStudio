@@ -10,7 +10,6 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHBoxLayout,
     QLabel,
-    QPushButton,
     QTextBrowser,
     QVBoxLayout,
     QWidget,
@@ -20,6 +19,7 @@ from budget_core.guide.build import build_guide
 from budget_core.guide.html import render_html
 from budget_core.model import Project
 from budget_gui import theme
+from budget_gui.components import Button
 
 STEM = "system-budget-studio-guide"
 
@@ -31,6 +31,7 @@ class GuideDialog(QDialog):
         self.resize(*theme.scaled(theme.GUIDE_SIZE))
         self.guide = build_guide(project)
         self.browser = QTextBrowser()
+        self.browser.setAccessibleName("User guide")
         self.browser.setOpenLinks(False)
         self.browser.setOpenExternalLinks(False)
         self.browser.anchorClicked.connect(self._anchor)
@@ -38,12 +39,16 @@ class GuideDialog(QDialog):
         self._show_page()
         theme.manager().changed.connect(self._show_page)
         self.status = QLabel("")
-        save = QPushButton("Save as HTML and PDF…")
+        self.status.setProperty("role", "muted")
+        save = Button("Save as HTML and PDF…", icon="download")
         save.clicked.connect(lambda: self._choose_folder())
         row = QHBoxLayout()
+        row.setSpacing(theme.gap(2))
         row.addWidget(save)
         row.addWidget(self.status, 1)
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(*theme.inset(3))
+        layout.setSpacing(theme.gap(2))
         layout.addWidget(self.browser, 1)
         layout.addLayout(row)
 

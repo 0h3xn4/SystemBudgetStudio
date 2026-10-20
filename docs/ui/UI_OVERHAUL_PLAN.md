@@ -352,9 +352,9 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 | M1 Foundation | done (PR #39) | D-168 to D-172; fonts, `theme/` package, tokens, style sheet, UI scale, reduced motion, `components/`, gallery, tests; Carbon removed from the window |
 | M2 Shell | done (merged in PR #39) | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
 | M3 Model screens | done (merged in PR #40) | D-176, D-177; toolbar above the grids, frozen identifier column, problem marker in the row, cheaper cell painting (a grid scroll step about 30 ms), scenario icon buttons, tab close mark, tree rows of 26 px |
-| M4 Results screens | implemented, awaiting your review | D-178; one inline banner, labelled toolbar, foldable table pane, plot sizes in the theme and at the UI scale, cheaper table fill; the stall is 224 ms, not under 100 |
-| M5 Compare, Reports, dialogs | not started | |
-| M6 Final | not started | |
+| M4 Results screens | done (merged in PR #41) | D-178; one inline banner, labelled toolbar, foldable table pane, plot sizes in the theme and at the UI scale, cheaper table fill; the stall is 224 ms, not under 100 |
+| M5 Compare, Reports, dialogs | PR #42 open | D-180; Compare key columns capped, Reports provenance line and empty list, dialogs with components, Inspector and Provenance details |
+| M6 Final | in progress | D-181; accessibility pass, UI size screenshots and fixes, DESIGN, manual screenshots, checklist; then the release preparation (1.2.0) |
 
 **M1 as built, against its acceptance criteria**
 
@@ -395,3 +395,36 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 - Tests: all existing plot, timeline, thermal, link, cancel, last-good and audit tests pass unchanged; one test that pinned the look (the style sheet names the roles, which listed the old red banner label) now names the three banners; new tests in `tests/gui/test_results_screens.py`. All 579 GUI tests pass (26 min, run serially) and all 1715 core tests pass (10 min).
 - Screenshots in both themes in `docs/ui/screenshots/m4/`. No change to core, CLI, file formats or goldens.
 - The squeezed project panel in the dark screenshots (seen in M2 and M3) was a real defect of M2, not of the harness: a narrow window squeezes the side panels and they stayed so when the window grew. Fixed (D-179) with a test; at the narrowest window (about 1214 px with both panels) the project panel is still a sliver (see D-179). The screenshots of M4 were taken after the fix. The cause was the width of the centre: a toolbar with text on the violation arrows made the centre at least about 1190 px wide; with icon arrows the window minimum is 1041 x 648 (it was 1001 x 648).
+
+**M5 as built, against its acceptance criteria**
+
+- Compare: key columns never push the values out (capped widths and tooltips; at 1400 px A, B and the change are in view), tints from the status tokens (M1), empty state, status line of its own.
+- Reports: the provenance once, as a line with *Show details* (the table behind it is the same and the tests that read it pass unchanged), an empty state for the list of written files.
+- Dialogs: paste preview, cell legend, guide and wizard restyled with the components (margins, one primary button, mono figures); the wizard keeps `QWizard`. The message box and the palette were done in M2.
+- Problems panel, Inspector, Provenance: the Inspector's empty state and buttons; the Provenance values wrap. The Problems panel needed nothing after M2.
+- Tests: the existing compare, reports, wizard and dialog tests pass unchanged (the timed wizard test stays); 8 new tests in `tests/gui/test_secondary_screens.py`. All 587 GUI tests pass (26 min, run serially) and all 1715 core tests pass (10 min).
+- Baseline (`docs/ui/screenshots/m5/baseline.txt`): zoom and pan 27 ms median; the stall of a week's results measured 384 ms in this run, inside the 170 to 384 ms range seen since M4 (it is noise-dominated and still not under 100 ms, see M4); the other items are within noise of M4.
+- Screenshots in `docs/ui/screenshots/m5/`; no change to core, CLI, file formats or goldens.
+
+**M6 as built (so far)**
+
+- Accessibility: the audit script lists what a screen reader or the keyboard would miss; 18 findings fixed; the walk is a test in both themes; focus rings for check boxes, tabs and plots (D-181).
+- UI sizes: screenshots of every page at 90, 100, 110 and 125 % in both themes (`docs/ui/screenshots/m6/`) with the smallest window of each size (`minimum-sizes.txt`); found and fixed: the axis title of the plots overlapping the tick labels, unscaled default column widths in the Problems panel, unwrapped lists in Reports. At 125 % the window needs 793 px of height.
+- Docs: `DESIGN.md` has the accessibility and UI-size sections; the manual, the README and the getting-started page show the new window; the install checklist has the 4K or 200 %, UI size and screen-reader items for a person at a real screen.
+
+**Final baseline against section 3** (same machine and script; `docs/ui/screenshots/m6/baseline.txt`; the machine varies by 10 to 30 % between runs, so read the table as a direction)
+
+| What | Before the overhaul | After (M6) | Verdict |
+|---|---|---|---|
+| Start to first interactive window | 1,163 ms | 1,268 ms | **+9 %**: inside the 10 % limit, above the absolute 1.2 s aim (the style sheet and the imports of the new components) |
+| Open `microsat_250kg_eps` | 611 ms | 585 ms | same |
+| Run, a day | 533 ms | 472 ms | same |
+| Tab switch, 18 units | 17 to 61 ms | 15 to 51 ms | same (all under 100 ms) |
+| Open `stress_200_units` | 3,315 ms | 3,090 ms | same |
+| Tab switch, 200 units | 13 to 59 ms | 15 to 42 ms | same |
+| Scroll the 200-unit grid, 40 steps | 2,241 ms (56 ms a step) | 1,218 ms (30 ms a step) | **better, aim met** (33 ms) |
+| Run, a week at 1 s | 10.6 s | 8.1 s | better |
+| Longest stretch without answering events (a week) | 350 ms | 170 to 330 ms (200 ms in this run) | **better, aim not met** (100 ms; see M4 and D-178) |
+| Timeline plot, week at 1 s: zoom step | 45 ms median, 63 worst | 19 ms median, 24 worst | **better, aim met** |
+
+No item is worse than before by more than the 10 % rule except the absolute start-up time, which is 68 ms over the 1.2 s aim.

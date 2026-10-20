@@ -9,11 +9,10 @@ from __future__ import annotations
 from typing import NamedTuple
 
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QStandardItem, QStandardItemModel
+from PySide6.QtGui import QResizeEvent, QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QDialog,
-    QDialogButtonBox,
     QHeaderView,
     QLabel,
     QTableView,
@@ -22,6 +21,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_gui import theme
+from budget_gui.components import Button
 from budget_gui.delegates import (
     MARGIN_ROLE,
     NUMERIC_ROLE,
@@ -94,15 +94,24 @@ class CellStyleLegend(QTableView):
         self.setItemDelegateForColumn(1, CellDelegate(self))
         self.verticalHeader().setVisible(False)
         self.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)  # a legend: Close is what the keyboard reaches
         self.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setWordWrap(True)
         header = self.horizontalHeader()
         header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+        self._fit_rows()
+
+    def _fit_rows(self) -> None:
+        """A row is as high as its wrapped meaning (and at least a control)."""
         self.resizeRowsToContents()
         for row in range(len(ROWS)):
             self.setRowHeight(row, max(self.rowHeight(row), theme.px(theme.CONTROL_DEFAULT)))
+
+    def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802 (Qt naming)
+        super().resizeEvent(event)
+        self._fit_rows()  # the meaning wraps at the width the table has now
 
 
 class LegendDialog(QDialog):
@@ -117,10 +126,12 @@ class LegendDialog(QDialog):
         intro.setProperty("role", "muted")
         intro.setWordWrap(True)
         self.legend = CellStyleLegend()
-        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Close)
-        buttons.rejected.connect(self.reject)
-        buttons.button(QDialogButtonBox.StandardButton.Close).setProperty("kind", "secondary")
+        close = Button("Close", "primary")  # the one action of a dialog that only informs
+        close.setDefault(True)
+        close.clicked.connect(self.reject)
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(*theme.inset(3))
+        layout.setSpacing(theme.gap(2))
         layout.addWidget(intro)
         layout.addWidget(self.legend, 1)
-        layout.addWidget(buttons, 0, Qt.AlignmentFlag.AlignRight)
+        layout.addWidget(close, 0, Qt.AlignmentFlag.AlignRight)

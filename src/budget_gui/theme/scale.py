@@ -14,6 +14,8 @@ __all__ = [
     "BORDER",
     "COLUMN_MIN",
     "COMBO_MAX_WIDTH",
+    "COMPARE_KEY_WIDTHS",
+    "COMPARE_VALUE_MAX",
     "COMPACT_BUTTON_WIDTH",
     "CONTROL_COMPACT",
     "CONTROL_DEFAULT",
@@ -136,9 +138,9 @@ def scaled(size: tuple[int, int]) -> tuple[int, int]:
 # sizes of windows, panels and views that are not on a scale; (width, height) unless said
 WINDOW_DEFAULT = (1400, 860)
 DOCK_WIDTHS = (264, 320)  # the project panel and the inspector
-PALETTE_SIZE = (560, 420)  # the command palette and the paste preview
+PALETTE_SIZE = (560, 420)  # the command palette, the paste preview and the wizard
 GUIDE_SIZE = (980, 760)
-LEGEND_MIN = (640, 340)
+LEGEND_MIN = (680, 460)
 PLOT_MIN_HEIGHT = 220
 # the painted plots (budget plots and the scenario strips); base sizes at 100 %, applied with px()
 PLOT_MARGINS = (64, 14, 8, 36)  # left (the value labels), right, top, bottom (the time labels)
@@ -160,6 +162,8 @@ SITES_MAX_HEIGHT = 72
 COMBO_MAX_WIDTH = 120
 COMPACT_BUTTON_WIDTH = 36  # the arrows that step through violations
 PROGRESS_HEIGHT = 4
+COMPARE_KEY_WIDTHS = (120, 90, 110, 180)  # Budget, Section, Row, Quantity: never wider than this
+COMPARE_VALUE_MAX = 200  # a value column of the comparison
 PROBLEMS_HEIGHT = 200  # the Problems panel at the bottom
 SECTION_COLUMN = 88  # the column of the menu or kind in the command palette
 RAIL_WIDTH = 176  # the navigation rail with its labels

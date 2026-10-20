@@ -7,6 +7,7 @@ The dock shows the provenance of the budgets that were worked out when the proje
 from __future__ import annotations
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QResizeEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QLabel,
@@ -33,12 +34,23 @@ class ProvenancePanel(QWidget):
         self.table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         self.table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table.setWordWrap(True)
+        self.table.setAccessibleName("Provenance")
+        self.table.setTextElideMode(Qt.TextElideMode.ElideNone)  # a value wraps, it is not cut
+        self.table.horizontalHeader().sectionResized.connect(self._fit_rows)
         self.table.setTabKeyNavigation(False)  # Tab leaves a read-only table
         layout = QVBoxLayout(self)
         layout.setContentsMargins(*theme.inset(2, 1))
         layout.addWidget(self.note)
         layout.addWidget(self.table, 1)
         self.set_provenance(None)
+
+    def _fit_rows(self, *_args: object) -> None:
+        """A narrow panel wraps the values onto more lines: the rows follow the width."""
+        self.table.resizeRowsToContents()
+
+    def resizeEvent(self, event: QResizeEvent) -> None:  # noqa: N802 (Qt naming)
+        super().resizeEvent(event)
+        self._fit_rows()
 
     def set_provenance(self, provenance: Provenance | None) -> None:
         rows = provenance.rows() if provenance else []

@@ -23,6 +23,7 @@ import numpy as np
 from PySide6.QtCore import QLineF, QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import (
     QColor,
+    QFocusEvent,
     QFontMetrics,
     QKeyEvent,
     QMouseEvent,
@@ -173,20 +174,25 @@ class PlotWidget(QWidget):
         metrics = QFontMetrics(self.font())
         found: list[LegendEntry] = []
         for index, (panel, rect) in enumerate(zip(spec.panels, self._panel_rects(), strict=True)):
-            title_y = rect.top() - 5
-            x = rect.left() + metrics.horizontalAdvance(panel.y_label) + 24
+            title_y = rect.top() - theme.px(5)
+            x = rect.left() + metrics.horizontalAdvance(panel.y_label) + theme.px(24)
             for label, colour in self._panel_entries(panel).items():
-                width = 21 + metrics.horizontalAdvance(label)
+                width = theme.px(21) + metrics.horizontalAdvance(label)
                 found.append(
                     LegendEntry(
                         index,
                         label,
                         colour,
                         (index, label) in self._hidden,
-                        QRectF(x - 2, title_y - 13, width + 4, 16),
+                        QRectF(
+                            x - theme.px(2),
+                            title_y - theme.px(13),
+                            width + theme.px(4),
+                            theme.px(16),
+                        ),
                     )
                 )
-                x += width + 18
+                x += width + theme.px(18)
         return found
 
     @staticmethod
@@ -352,6 +358,24 @@ class PlotWidget(QWidget):
         painter.drawPixmap(0, 0, self._plot_layer(spec))
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         self._paint_cursors(painter, self._panel_rects())
+        self._paint_focus(painter)
+
+    def _paint_focus(self, painter: QPainter) -> None:
+        """The focus ring of the window, around a plot that has the keyboard (it is not a
+        control of the style sheet, so it paints its own)."""
+        if not self.hasFocus():
+            return
+        ring = theme.px(theme.FOCUS_RING)
+        painter.setPen(QPen(QColor(theme.tokens().focus), ring))
+        painter.drawRect(self.rect().adjusted(ring // 2, ring // 2, -ring, -ring))
+
+    def focusInEvent(self, event: QFocusEvent) -> None:  # noqa: N802
+        super().focusInEvent(event)
+        self.update()
+
+    def focusOutEvent(self, event: QFocusEvent) -> None:  # noqa: N802
+        super().focusOutEvent(event)
+        self.update()
 
     def _plot_layer(self, spec: PlotSpec) -> QPixmap:
         """The plot without the cursors, drawn again only when something it shows changed."""
@@ -491,42 +515,45 @@ class PlotWidget(QWidget):
         painter.setFont(theme.mono_font(theme.TYPE_SMALL))  # numbers have equal digits (D-178)
         for tick in nice_ticks(lo, hi, 4):
             painter.drawText(
-                QRectF(0, sy(tick) - 9, PLOT.left - 6, 18),
+                QRectF(0, sy(tick) - theme.px(9), PLOT.left - theme.px(6), theme.px(18)),
                 Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter,
                 _number(tick),
             )
         painter.setFont(text_font)
         painter.setPen(QColor(t.plot_ink))
-        title_y = rect.top() - 5
+        title_y = rect.top() - theme.px(5)
         painter.drawText(QPointF(rect.left(), title_y), panel.y_label)
         for entry in (e for e in self.legend_entries() if e.panel == index):
-            x, line_y = entry.rect.left() + 2, entry.rect.center().y()
+            x, line_y = entry.rect.left() + theme.px(2), entry.rect.center().y()
             faded = QColor(t.plot_muted)
             colour = theme.plot_colour(t, entry.colour)
             if entry.hidden:
                 colour = QColor(t.plot_grid)
                 faded = QColor(t.text_muted)
             painter.setPen(QPen(colour, 3))
-            painter.drawLine(QPointF(x, line_y), QPointF(x + 16, line_y))
+            painter.drawLine(QPointF(x, line_y), QPointF(x + theme.px(16), line_y))
             font = painter.font()
             font.setStrikeOut(entry.hidden)
             painter.setFont(font)
             painter.setPen(faded)
-            painter.drawText(QPointF(x + 21, title_y), entry.label)
+            painter.drawText(QPointF(x + theme.px(21), title_y), entry.label)
             font.setStrikeOut(False)
             painter.setFont(font)
         if last:
             painter.setPen(QColor(t.plot_ink))
+            row = QFontMetrics(painter.font()).height()  # the label rows follow the font size
+            label_top = rect.bottom() + theme.px(4)
+            half = theme.px(30)
             for tick, label in ticks:
                 x_tick = self.time_to_x(tick)
-                if rect.left() - 1 <= x_tick <= rect.right() + 1 and x_tick + 30 <= self.width():
+                if rect.left() - 1 <= x_tick <= rect.right() + 1 and x_tick + half <= self.width():
                     painter.drawText(
-                        QRectF(x_tick - 30, rect.bottom() + 4, 60, 16),
+                        QRectF(x_tick - half, label_top, 2 * half, row),
                         Qt.AlignmentFlag.AlignHCenter,
                         label,
                     )
             painter.drawText(
-                QRectF(rect.left(), rect.bottom() + 18, rect.width(), 16),
+                QRectF(rect.left(), label_top + row, rect.width(), row),
                 Qt.AlignmentFlag.AlignHCenter,
                 self._axis.title(start, end),
             )

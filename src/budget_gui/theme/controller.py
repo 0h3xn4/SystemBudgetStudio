@@ -8,10 +8,11 @@ the timeline strips) to draw again with `changed`. Switching is live: no restart
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Any
 
 from PySide6.QtCore import QObject, Qt, Signal
-from PySide6.QtGui import QGuiApplication, QIcon
-from PySide6.QtWidgets import QApplication, QProxyStyle, QStyle
+from PySide6.QtGui import QColor, QGuiApplication, QIcon, QPainter, QPen
+from PySide6.QtWidgets import QApplication, QProxyStyle, QStyle, QStyleOption, QWidget
 
 from budget_core.assets import icon_files
 from budget_gui.theme import scale
@@ -47,6 +48,32 @@ class WindowStyle(QProxyStyle):
 
     def __init__(self) -> None:
         super().__init__("Fusion")
+
+    def drawPrimitive(  # noqa: N802 (Qt naming)
+        self,
+        element: QStyle.PrimitiveElement,
+        option: QStyleOption,
+        painter: QPainter,
+        widget: QWidget | None = None,
+    ) -> None:
+        """The focus rectangle of a check box, a radio button or a header is the focus ring of
+        the window (2 px, the focus colour), not Fusion's dotted line. A ring painted over the
+        control does not change its size, which a border of the style sheet would (D-181)."""
+        if element == QStyle.PrimitiveElement.PE_FrameFocusRect:
+            box: Any = option  # the stubs of QStyleOption lack rect
+            ring = scale.px(scale.FOCUS_RING)
+            painter.save()
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+            painter.setPen(QPen(QColor(manager().tokens.focus), ring))
+            painter.setBrush(Qt.BrushStyle.NoBrush)
+            painter.drawRoundedRect(
+                box.rect.adjusted(ring // 2, ring // 2, -ring, -ring),
+                scale.px(scale.RADIUS_CONTROL),
+                scale.px(scale.RADIUS_CONTROL),
+            )
+            painter.restore()
+            return
+        super().drawPrimitive(element, option, painter, widget)
 
     def standardIcon(  # noqa: N802 (Qt naming)
         self,

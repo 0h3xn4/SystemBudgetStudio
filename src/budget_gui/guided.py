@@ -18,7 +18,6 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QPushButton,
     QVBoxLayout,
     QWidget,
     QWizard,
@@ -35,6 +34,8 @@ from budget_core.wizard import (
     create_project,
     folder_name,
 )
+from budget_gui import theme
+from budget_gui.components import Button
 
 PAGES = {
     "Project": ("project_name",),
@@ -52,6 +53,10 @@ class _Page(QWizardPage):
         self.setSubTitle(intro)
         self.form = QFormLayout()
         outer = QVBoxLayout(self)
+        outer.setContentsMargins(*theme.inset(3, 2))
+        outer.setSpacing(theme.gap(2))
+        self.form.setHorizontalSpacing(theme.gap(2))
+        self.form.setVerticalSpacing(theme.gap(1))
         outer.addLayout(self.form)
 
     def isComplete(self) -> bool:  # noqa: N802 (Qt naming)
@@ -77,9 +82,10 @@ class GuidedWizard(QWizard):
 
         self.name_edit = QLineEdit("My first satellite")
         self.folder_edit = QLineEdit(str(self.parent_folder))
-        browse = QPushButton("Browse…")
+        browse = Button("Browse…", icon="folder-open")
         browse.clicked.connect(self._browse)
         folder_row = QHBoxLayout()
+        folder_row.setSpacing(theme.gap(1))
         folder_row.addWidget(self.folder_edit, 1)
         folder_row.addWidget(browse)
 
@@ -93,6 +99,17 @@ class GuidedWizard(QWizard):
         self.start_edit = QLineEdit("2026-06-01T00:00:00Z")
         self.review = QLabel("")
         self.review.setWordWrap(True)
+        for widget, name in (
+            (self.name_edit, "Project name"),
+            (self.folder_edit, "Parent folder"),
+            (self.sample_combo, "Sample spacecraft"),
+            (self.altitude, "Altitude in kilometres"),
+            (self.inclination, "Inclination in degrees"),
+            (self.raan, "Right ascension of the ascending node in degrees"),
+            (self.duration, "Length in days"),
+            (self.start_edit, "Start time, UTC"),
+        ):
+            widget.setAccessibleName(name)
 
         project = _Page(self, "Project", "Name your project and choose where it is stored.")
         project.form.addRow("Project name", self.name_edit)
@@ -135,7 +152,28 @@ class GuidedWizard(QWizard):
         for spin in (self.altitude, self.inclination, self.raan, self.duration):
             spin.valueChanged.connect(lambda _v: self._changed())
         self.sample_combo.currentIndexChanged.connect(lambda _i: self._changed())
+        self._style_buttons()
+        self.currentIdChanged.connect(lambda _id: self._style_buttons())
+        self.resize(*theme.scaled(theme.PALETTE_SIZE))
         self.restart()  # makes the first page current and puts the error label on it
+
+    def _style_buttons(self) -> None:
+        """Next and Finish are the one primary action of a page; Back and Cancel are secondary
+        (the style sheet reads the kind, so the buttons are polished again)."""
+        kinds = {
+            QWizard.WizardButton.NextButton: "primary",
+            QWizard.WizardButton.FinishButton: "primary",
+            QWizard.WizardButton.BackButton: "secondary",
+            QWizard.WizardButton.CancelButton: "secondary",
+        }
+        for which, kind in kinds.items():
+            button = self.button(which)
+            if button is not None:
+                button.setProperty("kind", kind)
+                style = button.style()
+                if style is not None:
+                    style.unpolish(button)
+                    style.polish(button)
 
     @staticmethod
     def _spin(value: float, decimals: int, suffix: str, low: float, high: float) -> QDoubleSpinBox:

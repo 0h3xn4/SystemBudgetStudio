@@ -29,7 +29,6 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QApplication,
     QDialog,
-    QDialogButtonBox,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -41,6 +40,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_gui import icons, theme
+from budget_gui.components import Button
 from budget_gui.delegates import CellDelegate
 from budget_gui.edit_bar import EditBar
 from budget_gui.frozen_view import GridView
@@ -79,27 +79,44 @@ class PastePreview(QDialog):
         super().__init__(parent)
         self.setWindowTitle("Paste")
         layout = QVBoxLayout(self)
-        layout.addWidget(
-            QLabel(f"{total} cell{'s' if total != 1 else ''} would change. You can undo the paste.")
+        layout.setContentsMargins(*theme.inset(3))
+        layout.setSpacing(theme.gap(2))
+        message = QLabel(
+            f"{total} cell{'s' if total != 1 else ''} would change. You can undo the paste."
         )
+        message.setWordWrap(True)
+        layout.addWidget(message)
         table = QTableWidget(len(rows), 3)
         table.setHorizontalHeaderLabels(["Cell", "Now", "Pasted"])
+        table.verticalHeader().setVisible(False)
+        table.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        table.setFocusPolicy(Qt.FocusPolicy.NoFocus)  # a preview: the buttons are what to reach
+        mono = theme.mono_font()
         for r, row in enumerate(rows):
             for c, text in enumerate(row):
                 item = QTableWidgetItem(text)
                 item.setFlags(Qt.ItemFlag.ItemIsEnabled)
+                if c:  # the old and the new value: figures in the mono font
+                    item.setFont(mono)
                 table.setItem(r, c, item)
         table.resizeColumnsToContents()
+        table.horizontalHeader().setStretchLastSection(True)
         layout.addWidget(table, 1)
         if total > len(rows):
-            layout.addWidget(QLabel(f"… and {total - len(rows)} more"))
-        buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Cancel)
-        self.apply_button = buttons.addButton(
-            f"Paste {total} cells", QDialogButtonBox.ButtonRole.AcceptRole
-        )
-        buttons.accepted.connect(self.accept)
-        buttons.rejected.connect(self.reject)
-        layout.addWidget(buttons)
+            more = QLabel(f"… and {total - len(rows)} more")
+            more.setProperty("role", "muted")
+            layout.addWidget(more)
+        self.apply_button = Button(f"Paste {total} cells", "primary")
+        cancel = Button("Cancel")
+        self.apply_button.setDefault(True)
+        self.apply_button.clicked.connect(self.accept)
+        cancel.clicked.connect(self.reject)
+        buttons = QHBoxLayout()
+        buttons.setSpacing(theme.gap(1))
+        buttons.addStretch(1)
+        buttons.addWidget(cancel)
+        buttons.addWidget(self.apply_button)
+        layout.addLayout(buttons)
         self.resize(*theme.scaled(theme.PALETTE_SIZE))
 
 
@@ -491,6 +508,8 @@ class GridPage(QWidget):
         self.document = document
         self.what = what  # "unit" / "power mode" / "input": the thing a row is
         self.table = GridTable(model)
+        self.table.view.setAccessibleName(f"{what.capitalize()} grid")
+        self.table.view.frozen.setAccessibleName(f"{what.capitalize()} names")
         self.filter = QLineEdit()
         self.filter.setPlaceholderText(filter_hint)
         self.filter.setClearButtonEnabled(True)

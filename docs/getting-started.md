@@ -185,7 +185,7 @@ system-budget-studio demo/microsat_250kg_eps
 
 You should see the window below: the **top bar** (project, revision, scenario, BOL and EOL, **Run** and the run status), the **project tree** on the left, seven **tabs** (Model, Power, Mass, Thermal, Link, Compare, Reports), and on the right the **Inspector**, **Problems** and **Provenance** panels.
 
-![The Power budget tab of the 250 kg example satellite: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/power-budget.png)
+![The Power budget tab of the 250 kg example satellite: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/ui-overhaul/power-budget-light.png)
 
 - **Power → Budget** is the table you saw in the XLSX file; **Mass**, **Thermal** and **Link → Budget** are the other static budgets. Cells with `n/a` have a marker and a tooltip that says which kind of input is missing.
 - Press **Run** (Ctrl+R) to work out the scenario you ran above, the power timeline and the link passes in one go; the chip next to it says when they are up to date. In **Power → Timeline**, hover over a plot to read the values at that time; the wheel zooms, dragging pans, a double-click shows everything again, a click pins a second cursor (the readout then shows differences) and Escape unpins it. The shaded bands are eclipses and passes. Click a row of the **Violations** table to zoom to that interval.

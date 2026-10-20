@@ -99,7 +99,7 @@ Set `environment_source: spacemissionstudio` and `import_dir:` (a folder inside 
 
 In **Model → Scenario**, the lower part shows the rules as sentences you can change in place:
 
-![The Scenario tab with the rules as sentences](../images/ux-redesign/step2c-scenario-light.png)
+![The Scenario tab with the rules as sentences](../images/ui-overhaul/model-scenario-light.png)
 
 - A rule reads *Downlink during every pass over gs_north*, and for a pass rule *Start it 30 s before the pass and keep it 0 s after it*. Its parts are the controls: the mode, **during every pass over** / **while in eclipse** / **while in sunlight**, the site, and the lead and lag (pass rules only). Changing the kind keeps the rule valid (a pass rule gets a site; the other kinds lose the site, lead and lag).
 - The order matters: **a later rule wins** over an earlier one, so every row has an **up** and a **down** arrow (hover for the tooltip). **Add rule** adds a pass rule with the default mode and the first listed site; the **bin** removes one.

@@ -318,6 +318,8 @@ def stylesheet(t: Tokens) -> str:
         border-top-left-radius: {rc}px; border-top-right-radius: {rc}px; }}
     QTabBar::tab:hover {{ background: {t.hover}; color: {t.text}; }}
     QTabBar::tab:selected {{ color: {t.text}; border-bottom: {ring}px solid {t.accent}; }}
+    QTabBar::tab:focus {{ border: {ring}px solid {t.focus}; }}
+    QTabBar::tab:selected:focus {{ border: {ring}px solid {t.focus}; }}
     {_tab_close_rules(t)}
 
     QTabBar[role="segmented"]::tab {{ background: transparent; color: {t.text_secondary};

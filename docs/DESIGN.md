@@ -2,7 +2,7 @@
 
 This page is the reference for how the window looks and why. The numbers in it are checked by tests against `src/budget_gui/theme/` (a colour changed in the code and not here fails the build), so it stays true. The brief it follows is [ui/UI_OVERHAUL.md](ui/UI_OVERHAUL.md) (the plan is [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md)); the standard before it is [UX_STANDARD.md](UX_STANDARD.md); what was wrong with the first window is in [ux-audit.md](ux-audit.md); the decisions are D-150 to D-156 and D-168 to D-172 in [DECISIONS.md](DECISIONS.md).
 
-**Contents:** [Rules](#rules) · [Theme](#theme) · [Status colours](#status-colours) · [Plot and series colours](#plot-and-series-colours) · [Cell styles](#cell-styles) · [Type, spacing and shape](#type-spacing-and-shape) · [Components](#components) · [Icons](#icons) · [The shell](#the-shell) · [The layout file](#the-layout-file) · [Shortcuts](#shortcuts) · [Acceptance per view](#acceptance-per-view)
+**Contents:** [Rules](#rules) · [Theme](#theme) · [Status colours](#status-colours) · [Plot and series colours](#plot-and-series-colours) · [Cell styles](#cell-styles) · [Type, spacing and shape](#type-spacing-and-shape) · [Components](#components) · [Icons](#icons) · [The shell](#the-shell) · [The layout file](#the-layout-file) · [Shortcuts](#shortcuts) · [Accessibility](#accessibility) · [UI size and window size](#ui-size-and-window-size) · [Acceptance per view](#acceptance-per-view)
 
 ## Rules
 
@@ -146,6 +146,7 @@ Icons are [Lucide](https://lucide.dev) 0.468.0 (ISC licence). The SVG files in `
 - **Timeline plot** (D-162). Legend entries are buttons (click hides, Shift-click solos; a hidden entry is struck through); violations are bars in the *fail* colour along the top of every panel with the selected one shaded; the time axis is an object (elapsed, UTC, orbit number) that the plot asks for ticks and a title.
 - **Budget tables** (D-163). A header longer than 14 characters breaks into two lines; the totals row (`emphasise_last_row` of the report table) is semibold with a line above; the timeline tables use the cell delegate with `fill_table(numeric=…, states=…)`.
 - **Limits in budget tables** (D-164). `Table.status_column`, `status_marks` and `bar` (window only) give a row its state and a (value, limit) pair its bar; the words of the status column map to pass, near, fail or not checked.
+- **Compare, Reports and the dialogs** (D-180). The key columns of Compare are capped (`COMPARE_KEY_WIDTHS`), so the values stay in view; an empty result is an `EmptyState`. Reports shows the provenance as one line with the rows behind *Show details*. Dialogs have the margins of the scale and components for their buttons, with one primary button (the wizard's *Next* and *Finish*, *Paste N cells*, *Close*).
 - **Reports page and Compare** (D-165). The Reports page reads what can be exported from the views (`ReportItem`: key, state, ready) and hands the choice (parts, formats, folder) to the window, which writes the parts one after the other with the existing export code; Compare names its columns from the comparison result.
 - **First screen, palette, Inspector** (D-166). `WelcomePage` stands in for the tabs while `session.path` is None; `CommandPalette` (a frameless card over the window, D-175) ranks `Command(text, run, hint)` entries gathered by `MainWindow.palette_commands()` and shows the menu, the name and the key of each apart; `InspectorPanel.show_cell(CellInfo)` is fed by the grids' `selection_changed`.
 - **Progress and Cancel** (D-167). While a run is in progress the Run button is *Cancel* (secondary style, then *Cancelling…* disabled), a 4 px busy bar sits under the top bar and the status chip names the step; each view's Compute button turns into Cancel and its status line names the step. `budget_gui/cancel_support.py` holds the texts.
@@ -177,6 +178,27 @@ The window keeps no Qt settings file (D-105): Qt's dialogs would write the folde
 | `Ctrl+C` / `Ctrl+V` | In a grid: copy the cells as text with tabs / paste a block, with a preview for more than one cell | in the window |
 | `Ctrl+D` / `Delete` | In a grid: fill down / empty the optional cells | in the window |
 | `Enter` / `Tab` / `Esc` | In a grid: accept and move down / accept and move right (leaves the grid after the last cell) / cancel | in the window |
+
+## Accessibility
+
+What a screen reader reads, and what a keyboard user can reach (D-181; `scripts/ui_access_audit.py` lists the gaps, `tests/gui/test_accessibility.py` fails on any):
+
+- **Names.** A control that shows only an icon has an accessible name and a tooltip (`components.icon_button` sets both). A grid, a table, the plots and the strips have a name of what they are ("Units grid", "Power timeline plot"); an input has a name, or a tooltip that says what it is; the fields of a rule and of the wizard are named by what they hold.
+- **Focus ring.** Everything that takes the keyboard shows the 2 px ring in the focus colour (3 : 1 against its surface in both themes): buttons, inputs, tables, text editors and tabs through the style sheet; check boxes and radio buttons through the style (`WindowStyle.drawPrimitive`, painted over the control so it does not change its size); the plots paint their own. A table that is only read (the paste preview, the cell-style legend) is not in the tab order: its dialog's button is.
+- **Keyboard.** Tab visits every control (a test walks from the project tree, through the rail, the top bar, the pages and the Problems panel, and back); every frequent action has a shortcut that its tooltip and menu entry show, and an entry in the palette (`Ctrl+K`).
+- **Motion.** *View > Reduce motion* (and a screen that cannot animate) turns off every transition; plots and data never animate.
+- **Colour.** A status always has an icon or words as well as its colour (rule 3); contrast is tested over every token pair.
+
+## UI size and window size
+
+*View > UI size* is 90, 100, 110 or 125 % (the setting card has the same choice). The text, the style sheet and every size from `theme.px()` follow, and so do the sizes the plots and the strips paint with (`plot_metrics`). The size is read at the start of the program, so the window is laid out completely at it; a change while the window is open reaches the text and most controls at once and a few fixed sizes at the next start. The smallest window the layout allows (`scripts/ui_scale_shots.py` measures it, and keeps the screenshots of every page in both themes at every size, in `docs/ui/screenshots/m6/`):
+
+| UI size | Smallest window (width x height) | On a 1366 x 768 screen |
+|---|---|---|
+| 90 % | 967 x 593 | fits |
+| 100 % | 1041 x 648 | fits |
+| 110 % | 981 x 702 | fits |
+| 125 % | 1093 x 793 | needs a screen at least 800 px high |
 
 ## Acceptance per view
 
