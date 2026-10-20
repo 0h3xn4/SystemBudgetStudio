@@ -4,6 +4,10 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-20
+
+The window stays responsive while a long scenario (a week at 1 s) is computed in the background. **No equation, file format, report layout or command-line behaviour changed**: the same project gives the same numbers and the same files as 1.2.0 (the tool version in the provenance rows and the examples differ).
+
 - **A week of results no longer freezes the window (D-182, D-183).** While a long scenario is computed in the background, the window used to stop for 140 to 200 ms at a time, and for up to half a second when a run started; it now stops for about 90 ms at most (the aim is 100 ms). The cause was not the drawing of the plot: the background computation kept the Python interpreter lock in single long NumPy and orbit-propagation (SGP4) calls, and the window needs that lock for every paint. The long calls now run in slices of 2048 samples, the application asks for the lock after 0.5 ms instead of 5 ms, and the plots of both cases and of every link are prepared by the background thread instead of at the first paint. **No equation, file format, report layout or command-line behaviour changed**: the numbers and the files are the same, bit for bit.
 
 ## [1.2.0] - 2026-10-20
