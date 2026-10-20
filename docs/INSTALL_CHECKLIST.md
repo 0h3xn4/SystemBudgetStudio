@@ -13,7 +13,7 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 - [ ] File > Export reports writes XLSX, PDF and DOCX that open in Excel, a PDF reader and Word. (Manual.)
 - [ ] With the network cable out or Wi-Fi off, everything above still works. (Manual; the offline test covers the code.)
 - [ ] Uninstall from *Apps and features*: the program folder and the Start menu entry are gone, your project folder is untouched. (CI: silent uninstall.)
-- [ ] The portable zip starts from a USB stick or a folder and writes nothing outside it. (Manual.)
+- [ ] The portable zip starts from a USB stick or a folder, installs nothing and makes no registry entry; the only file the window writes outside it is `layout.ini` in `%APPDATA%\System Budget Studio\`, and nothing at all with `BUDGET_NO_LAYOUT=1`. (Manual.)
 
 ## RHEL or Rocky Linux 8 (ordinary user)
 
@@ -51,7 +51,7 @@ The window (redesigned in 1.1.0 and 1.2.0) was built and tested on a virtual (of
 - [ ] **Ctrl+K** finds a unit and a command; the Inspector follows the cell with the cursor. (Manual.)
 - [ ] **View > Theme > Dark** and back: no unreadable text or white patches in the plots, grids or dialogs. (Manual.)
 - [ ] **View > UI size > 125 %** and back to 100 %: the text, the buttons and the tables grow and shrink together and nothing is cut off. (Manual.)
-- [ ] Tab from the project tree reaches the top bar, the tabs and the Problems panel and comes round again; the control that has the keyboard always shows a 2 px ring (check a check box, a tab and the plot too). (Manual; a test covers the walk offscreen.)
+- [ ] Tab from the project panel reaches the navigation rail, the top bar, the page and the Problems panel and comes round again; the control that has the keyboard always shows a 2 px ring (check a check box, a tab and the plot too). (Manual; a test covers the walk offscreen.)
 - [ ] On a **4K or 200 % display** (and, if you have one, a laptop at 150 %): the rail, the grids, the plots and the dialogs are sharp, the plot's axis title does not touch its tick labels, and *View > UI size* at 90 % and 125 % (after a restart) changes the size of everything together. At 125 % the smallest window is 1093 x 793: it needs a screen at least 800 px high. (Manual; the screenshots of every size are in `docs/ui/screenshots/m6/`.)
 - [ ] With a screen reader (Narrator on Windows, Orca on Linux): the rail buttons, the *Previous* and *Next* violation arrows, the grids and the plots are read by name, not as *button* or *unknown*. (Manual; a test checks that the names exist.)
 

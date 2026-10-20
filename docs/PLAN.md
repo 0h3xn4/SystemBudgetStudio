@@ -1,13 +1,13 @@
 # System Budget Studio — Plan
 
-Status: milestones M0 to M6 are done (see the [changelog](../CHANGELOG.md)); this file keeps the plan as it was agreed, with each milestone marked. For using the tool see the [user manual](user-manual/README.md).
+Status: milestones M0 to M6 are done (see the [changelog](../CHANGELOG.md)); this file keeps the plan as it was agreed, with each milestone marked. Work after M6 was planned elsewhere: the window redesign (1.1.0, [the audit](ux-audit.md)), the UI overhaul (1.2.0, [its plan](ui/UI_OVERHAUL_PLAN.md)) and the responsive window (1.3.0, D-182 and D-183). For using the tool see the [user manual](user-manual/README.md).
 
 **Contents:** [M0 Foundation (M)](#m0-foundation-m) · [M1 Model and units (M)](#m1-model-and-units-m) · [M2 Static budgets: power and mass (L, two PRs)](#m2-static-budgets-power-and-mass-l-two-prs) · [M3 Environment (L, two PRs: M3a core and CLI, done; M3b GUI timeline editor, done)](#m3-environment-l-two-prs-m3a-core-and-cli-done-m3b-gui-timeline-editor-done) · [M4 Time-domain power budget (L, done)](#m4-time-domain-power-budget-l-done) · [M4b Thermal budget (L, done)](#m4b-thermal-budget-l-done) · [M5 Link budget (L, done)](#m5-link-budget-l-done) · [M6 Polish (M, done)](#m6-polish-m-done) · [Critical path / external inputs](#critical-path--external-inputs)
 
 Rules for every milestone: tests first; ruff + mypy strict clean; no network; each ends with a demo note in `docs/demo/Mx.md`. Estimates are relative (S/M/L).
 
 ## M0 Foundation (M)
-Scope: repo setup per SPEC §Repository setup; Carbon-styled empty window ("System Budget Studio"); PyInstaller build of the empty app on Windows and Linux; offline test; lock files; CI.
+Scope: repo setup per SPEC §Repository setup; Carbon-styled empty window (the window was restyled by the UI overhaul, D-168) ("System Budget Studio"); PyInstaller build of the empty app on Windows and Linux; offline test; lock files; CI.
 Acceptance: (1) `pip install -e .` launches the empty window; (2) `pip install -e ".[dev]" && pytest` passes; (3) setup PR green on {win, linux}×{3.11, 3.13}; (4) offline test fails when a socket is opened (negative test proves it); (5) installer/portable build launches on a clean machine without admin rights; (6) SBOM and licence report generated from the dev extra only; (7) `pip install -e .` pulls no dev tooling.
 Needs from you: confirm repo is private; apply branch protection (list provided).
 

@@ -1,6 +1,6 @@
 # System Budget Studio — Architecture
 
-Status: built (milestones M0 to M6). This document began as the architecture proposal and has been corrected to match the code; where a decision changed it, the decision number (`D-0xx`, see [DECISIONS.md](DECISIONS.md)) is given. For using the tool see the [user manual](user-manual/README.md); for the file format see [FILE_FORMAT.md](FILE_FORMAT.md), which is authoritative.
+Status: built (milestones M0 to M6, the window redesign of 1.1.0, the UI overhaul of 1.2.0 and the responsive window of 1.3.0). This document began as the architecture proposal and has been corrected to match the code; where a decision changed it, the decision number (`D-0xx`, see [DECISIONS.md](DECISIONS.md)) is given. For using the tool see the [user manual](user-manual/README.md); for the file format see [FILE_FORMAT.md](FILE_FORMAT.md), which is authoritative.
 
 **Contents:** [1. Technology stack](#1-technology-stack) · [2. Package structure](#2-package-structure) · [3. Core design rules](#3-core-design-rules) · [4. Data model and files](#4-data-model-and-files) · [5. Environment adapters](#5-environment-adapters) · [6. Solvers (summary)](#6-solvers-summary) · [6a. Mass budget (added by D-033)](#6a-mass-budget-added-by-d-033) · [6b. Thermal budget (added by D-036; implemented in M4b, D-071 to D-076)](#6b-thermal-budget-added-by-d-036-implemented-in-m4b-d-071-to-d-076) · [7. GUI](#7-gui) · [8. Packaging, CI, supply chain](#8-packaging-ci-supply-chain) · [9. Testing strategy](#9-testing-strategy) · [10. Risks](#10-risks)
 
@@ -32,7 +32,8 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   power/              static_budget.py; time domain: array.py, battery.py, attitude.py, orbits.py,
                       signals.py, time_domain.py (pure functions over NumPy arrays)
   control.py          RunControl: stages and cancellation of a long computation (D-167); optional, changes no result
-  plots/              PlotSpec (neutral), power plot builder, Pillow PNG renderer (reports)
+  plots/              PlotSpec (neutral), power plot builder, Pillow PNG renderer (reports), envelope.py (block summaries the window draws long series from, D-161)
+  slices.py           long NumPy / SGP4 calls in slices, so a worker thread gives the interpreter lock away (D-183)
   mass/               static_mass.py (roll-up, margins, limits), mass_properties.py (CG, inertia, phases)
   thermal/            static_thermal.py (dissipation roll-up, cases, limit checks),
                       steady_state.py (nodal heat balance, pure function)
@@ -42,10 +43,14 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   problems/           Problem(severity, code, message, location) — shared by validate/solvers
   reports/            xlsx, docx, pdf, csv, json; provenance block; figures
   provenance.py       tool/library versions, project revision, scenario, date, user
-src/budget_cli/       `budget validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | export-schemas | export-examples`
-src/budget_gui/       PySide6; theme/ (tokens, fonts, style sheet), components/; worker threads; no logic beyond presentation
-                      (theme.py colours, main_window.py shell, top_bar.py, workspace.py tabs, project_tree.py,
-                       problems_panel.py, inspector.py, run_controller.py; docs/DESIGN.md)
+src/budget_cli/       `budget validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | export-schemas | units-export | units-import | export-examples`
+src/budget_gui/       PySide6; no logic beyond presentation; docs/DESIGN.md
+                      theme/ (tokens, fonts, style sheet, scale: the only place for colours and sizes), components/ (Button, StatusBadge, Card ...)
+                      shell: main_window.py, rail.py (navigation), top_bar.py, workspace.py (the seven areas), project_tree.py, problems_panel.py,
+                      inspector.py, provenance_panel.py, status_bar.py, settings_popover.py, command_palette.py, run_controller.py
+                      model editing: model_document.py (one undo stack), grid_models.py, grid_view.py, frozen_view.py, delegates.py, scenario_editor.py
+                      results: timeline_view.py, link_view.py, scenario_view.py, compare_view.py, reports_view.py, plot_widget.py,
+                      plot_metrics.py, plot_prepare.py, timeline.py, time_axis.py (long computations in QThread workers)
 ```
 
 Dependency direction: the GUI and the CLI both depend only on `budget_core`. Nothing depends on the GUI.
@@ -58,7 +63,7 @@ Dependency direction: the GUI and the CLI both depend only on `budget_core`. Not
 - **Equation registry**: each solver function is registered with an ID, name, source citation (or `SOURCE_MISSING`); the "Equations and sources" chapter is generated from the registry plus config files.
 - **Determinism**: stable sorting, fixed float formatting (`repr`-round-trip or fixed precision per column), no timestamps inside content except the provenance header, so the same inputs plus the same generation time and user give the same bytes: `--date` (or `SOURCE_DATE_EPOCH`) and `--user` (or `BUDGET_USER`) fix the two values that vary.
 - **Privacy**: no logging of project content; temp files only inside the project folder; no crash dumps; error text includes file/path but never values.
-- **Offline**: `tests/offline/test_offline.py` runs the CLI and the offscreen window in a fresh interpreter with sockets blocked and fails if a networking module (`http.client`, `urllib.request`, `ssl`, `requests`, `PySide6.QtNetwork`, …) is imported. No download feature exists in version 1.0.0. If one is added (reference data such as TLEs or tables), it must live in one module that is imported only on explicit user action, verify a checksum, keep a rollback copy and offer a manual-import alternative (spec constraint 2); the offline test would whitelist only that module.
+- **Offline**: `tests/offline/test_offline.py` runs the CLI and the offscreen window in a fresh interpreter with sockets blocked and fails if a networking module (`http.client`, `urllib.request`, `ssl`, `requests`, `PySide6.QtNetwork`, …) is imported. No download feature exists in the tool. If one is added (reference data such as TLEs or tables), it must live in one module that is imported only on explicit user action, verify a checksum, keep a rollback copy and offer a manual-import alternative (spec constraint 2); the offline test would whitelist only that module.
 
 ## 4. Data model and files
 
@@ -112,7 +117,7 @@ Solvers are pure functions: dissipation roll-up, then a steady-state nodal heat 
 
 ## 7. GUI
 
-Dark and light themes generated from the tokens of `budget_gui/theme/` (Inter and JetBrains Mono bundled; D-169, D-170), a small component library in `budget_gui/components/`; main window = navigation rail (`rail.py`) choosing one of seven areas (Model with the editors; Power, Mass, Thermal, Link, Compare, Reports; `workspace.py`, a hidden-tab-bar `QTabWidget`), top bar, project tree (left), Inspector / Provenance (right), Problems panel (bottom, full width), settings card (`settings_popover.py`), narrow-window rules in `MainWindow._fit_to_width` (D-173); grids over one editable model document (`model_document.py`: one `QUndoStack`, validation by the model on every edit, explicit in-place Save; D-159) with unit-aware cells, timeline editor, result plots (a QPainter widget, cursors, eclipse/pass shading; D-068), bottom Problems panel (double-click jumps to the offending editor cell). Runs execute in a `QThread` worker with cancel and progress; the worker also prepares the plots (`plot_prepare.py`, D-182) and gives the interpreter lock away between slices of the long NumPy and SGP4 calls (`budget_core/slices.py`, D-183) so that the window stays responsive; the GUI only touches `budget_core` public API and `Problem` objects. Guided mode = wizard over the same API (`budget_core.wizard` builds the project, `budget_gui.guided` is the QWizard; D-086). The Compare tab runs `budget_core.compare_run` in a worker thread (D-084, D-085); Help > User guide shows `budget_core.guide` (D-087). Tracebacks are caught at the top level and replaced by a message and a "save diagnostic (no project content)" option.
+Dark and light themes generated from the tokens of `budget_gui/theme/` (Inter and JetBrains Mono bundled; D-169, D-170), a small component library in `budget_gui/components/`; main window = navigation rail (`rail.py`) choosing one of seven areas (Model with the editors; Power, Mass, Thermal, Link, Compare, Reports; `workspace.py`, a hidden-tab-bar `QTabWidget`), top bar, project tree (left), Inspector / Provenance (right), Problems panel (bottom, full width), settings card (`settings_popover.py`), narrow-window rules in `MainWindow._fit_to_width` (D-173); grids over one editable model document (`model_document.py`: one `QUndoStack`, validation by the model on every edit, explicit in-place Save; D-159) with unit-aware cells, timeline editor, result plots (a QPainter widget, cursors, eclipse/pass shading; D-068), bottom Problems panel (double-click jumps to the offending editor cell). Runs execute in a `QThread` worker with cancel and progress; the worker also prepares the plots (`plot_prepare.py`, D-182) and gives the interpreter lock away between slices of the long NumPy and SGP4 calls (`budget_core/slices.py`, D-183) so that the window stays responsive; the GUI only touches `budget_core` public API and `Problem` objects. Guided mode = wizard over the same API (`budget_core.wizard` builds the project, `budget_gui.guided` is the QWizard; D-086). The Compare area runs `budget_core.compare_run` in a worker thread (D-084, D-085); Help > User guide shows `budget_core.guide` (D-087). Tracebacks are caught at the top level and replaced by a message and a "save diagnostic (no project content)" option.
 
 ## 8. Packaging, CI, supply chain
 
@@ -123,7 +128,7 @@ Dark and light themes generated from the tokens of `budget_gui/theme/` (Inter an
 
 ## 9. Testing strategy
 
-Tests first per milestone. Per solver ≥ 10 hand-calculated regression cases with stated tolerances (the hand calculation is written out in comments in the test file, with the stated tolerance). Hypothesis properties: unit round-trips; margin monotonic in range; generation monotonic in array area. Golden files for each report type on the synthetic reference projects (3U, 150 kg micro, 200-unit week stress). pytest-qt for main flows. Performance test marks (`@pytest.mark.perf`) assert the 10 s target on CI reference runner with generous headroom reported rather than flaky-failed.
+Tests first per milestone. Per solver ≥ 10 hand-calculated regression cases with stated tolerances (the hand calculation is written out in comments in the test file, with the stated tolerance). Hypothesis properties: unit round-trips; margin monotonic in range; generation monotonic in array area. Golden files for each report type on the synthetic reference projects (250 kg microsat, 150 kg micro, 200-unit stress; D-157). pytest-qt for main flows. Performance test marks (`@pytest.mark.perf`) assert the 10 s target on CI reference runner with generous headroom reported rather than flaky-failed.
 
 ## 10. Risks
 

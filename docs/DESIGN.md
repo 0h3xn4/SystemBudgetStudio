@@ -2,11 +2,11 @@
 
 This page is the reference for how the window looks and why. The numbers in it are checked by tests against `src/budget_gui/theme/` (a colour changed in the code and not here fails the build), so it stays true. The brief it follows is [ui/UI_OVERHAUL.md](ui/UI_OVERHAUL.md) (the plan is [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md)); the standard before it is [UX_STANDARD.md](UX_STANDARD.md); what was wrong with the first window is in [ux-audit.md](ux-audit.md); the decisions are D-150 to D-156 and D-168 to D-172 in [DECISIONS.md](DECISIONS.md).
 
-**Contents:** [Rules](#rules) · [Theme](#theme) · [Status colours](#status-colours) · [Plot and series colours](#plot-and-series-colours) · [Cell styles](#cell-styles) · [Type, spacing and shape](#type-spacing-and-shape) · [Components](#components) · [Icons](#icons) · [The shell](#the-shell) · [The layout file](#the-layout-file) · [Shortcuts](#shortcuts) · [Accessibility](#accessibility) · [UI size and window size](#ui-size-and-window-size) · [Acceptance per view](#acceptance-per-view)
+**Contents:** [Rules](#rules) · [Theme](#theme) · [Status colours](#status-colours) · [Plot and series colours](#plot-and-series-colours) · [Cell styles](#cell-styles) · [Type, spacing and shape](#type-spacing-and-shape) · [Components](#components) · [Icons](#icons) · [The shell](#the-shell) · [The layout file](#the-layout-file) · [Shortcuts](#shortcuts) · [Accessibility](#accessibility) · [UI size and window size](#ui-size-and-window-size) · [Responsiveness](#responsiveness) · [Acceptance per view](#acceptance-per-view)
 
 ## Rules
 
-1. **Colours, fonts and sizes live in `budget_gui/theme/` and nowhere else.** No other module of the window holds a colour literal, a font family or a pixel size, or calls `setStyleSheet` (tests enforce it; custom painting uses named constants of its module until its view is redone). A widget that paints itself asks `theme.tokens()` and connects to `theme.manager().changed` to draw again.
+1. **Colours, fonts and sizes live in `budget_gui/theme/` and nowhere else.** No other module of the window holds a colour literal, a font family or a pixel size, or calls `setStyleSheet` (tests enforce it in every module; the sizes that plots and strips paint with are in `plot_metrics`, which takes them from the theme). A widget that paints itself asks `theme.tokens()` and connects to `theme.manager().changed` to draw again.
 2. **Colour means something.** The interface is neutral. The accent is for the primary action, selection and the focus ring; status colours are for status. An abnormal value is the only coloured thing on a screen.
 3. **A status is never told by colour alone.** Every status has an icon and text as well as a colour.
 4. **Text reaches a contrast of 4.5 : 1** on every surface it is used on, in both themes; icons, plot lines and the focus ring 3 : 1 (a test computes both over every token pair).
@@ -199,6 +199,16 @@ What a screen reader reads, and what a keyboard user can reach (D-181; `scripts/
 | 100 % | 1041 x 648 | fits |
 | 110 % | 981 x 702 | fits |
 | 125 % | 1093 x 793 | needs a screen at least 800 px high |
+
+## Responsiveness
+
+Nothing runs for longer than about 50 ms on the window thread, and the window keeps answering while a week at 1 s is worked out (D-182, D-183). The long computations run in `QThread` workers. Three things keep the window thread free:
+
+- **The worker gives the interpreter lock away.** A NumPy or SGP4 call over 600,000 samples held the lock for 50 to 440 ms, and the window, which needs the lock for every paint, waited. Such calls run in slices of 2048 elements (`budget_core/slices.py`; the numbers are identical bit for bit) and `create_app` sets a 0.5 ms switch interval. `tests/unit/test_worker_responsiveness.py` fails when a worker keeps another thread waiting for more than 0.15 s.
+- **The worker prepares the plot** (the y ranges and the block summaries, `plot_prepare.py`), so the first paint only draws.
+- **A result arrives in turns**: the plot first, then the table in view, then the others, then the `computed` signal, so that no turn is long.
+
+Measured on the one-week example (the longest stretch the window thread did not come back to its event loop while a whole run is delivered): 140 to 200 ms with outliers of 430 to 540 ms before 1.3.0, 73 to 118 ms after (median about 92 ms; the aim is 100 ms). `scripts/ui_baseline.py` prints the stretch for your machine.
 
 ## Acceptance per view
 

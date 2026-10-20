@@ -62,10 +62,10 @@ budget --version
 budget self-test
 ```
 
-You should see:
+You should see (the first line carries the version you installed):
 
 ```text
-System Budget Studio 1.0.0
+System Budget Studio 1.3.0
 Self-test passed.
 ```
 
@@ -183,14 +183,15 @@ Exit code 0: the violation is gone (the radio's thermal finding is a separate ch
 system-budget-studio demo/microsat_250kg_eps
 ```
 
-You should see the window below: the **top bar** (project, revision, scenario, BOL and EOL, **Run** and the run status), the **project tree** on the left, seven **tabs** (Model, Power, Mass, Thermal, Link, Compare, Reports), and on the right the **Inspector**, **Problems** and **Provenance** panels.
+You should see the window below: the **navigation rail** on the far left with the seven areas (Model, Power, Mass, Thermal, Link, Compare, Reports), the **project panel** beside it with the project tree, the **top bar** (project, revision, scenario, BOL and EOL, **Run** and the run status), the **Problems** panel along the bottom, and, when the window is wide enough, the **Inspector** and **Provenance** on the right.
 
-![The Power budget tab of the 250 kg example satellite: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/ui-overhaul/power-budget-light.png)
+![The Power budget of the 250 kg example satellite: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/ui-overhaul/power-budget-light.png)
 
 - **Power → Budget** is the table you saw in the XLSX file; **Mass**, **Thermal** and **Link → Budget** are the other static budgets. Cells with `n/a` have a marker and a tooltip that says which kind of input is missing.
 - Press **Run** (Ctrl+R) to work out the scenario you ran above, the power timeline and the link passes in one go; the chip next to it says when they are up to date. In **Power → Timeline**, hover over a plot to read the values at that time; the wheel zooms, dragging pans, a double-click shows everything again, a click pins a second cursor (the readout then shows differences) and Escape unpins it. The shaded bands are eclipses and passes. Click a row of the **Violations** table to zoom to that interval.
 - Double-click (or Enter on) a row of the **Problems** panel to jump to the file and line it names; **F8** goes to the next problem. Press Enter on a file in the tree to edit it; **Ctrl+S** saves, and the budgets update. If you make a mistake the tables keep the last results that worked, with a yellow banner that says so.
-- **File → Export reports** (Ctrl+E), or the **Reports** tab, writes the same files as the command line.
+- **File → Export reports** (Ctrl+E), or the **Reports** area, writes the same files as the command line.
+- **Ctrl+K** finds any command, unit, file or scenario by a few letters of its name. **Settings** at the bottom of the rail changes the theme (light, dark or the system's), the UI size and reduce-motion; the [window page](user-manual/use-the-window.md) lists the shortcuts.
 - **File → New project (guided)** (Ctrl+N) builds a new project from a sample spacecraft in five short pages.
 
 On Linux without a display (a server, a container) set `QT_QPA_PLATFORM=offscreen` to run the window without showing it. That is only useful for tests: `system-budget-studio --smoke` creates the window and exits.

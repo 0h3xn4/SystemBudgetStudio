@@ -78,10 +78,11 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 - **Comparison**: two project revisions, or two scenarios, side by side with the differences listed.
 - **Guided mode**: a wizard from an orbit to a first budget with a sample spacecraft; an offline user guide (HTML and PDF) with a generated *Equations and sources* chapter.
 - **Plain-language problems**: every message names the file and field, says what is wrong and what to change; a double-click jumps to it.
+- **A calm window**: a navigation rail with seven areas (Model, Power, Mass, Thermal, Link, Compare, Reports), grids with undo and an explicit Save, a command palette (Ctrl+K), light and dark themes, a UI size of 90 to 125 %, and the whole window usable with the keyboard, with names for screen readers on every control. Long computations run in the background; the window keeps answering while a week at 1 s is worked out ([use the window](docs/user-manual/use-the-window.md)).
 
 Unit power modes can be exported to a CSV or XLSX table, filled in a spreadsheet and imported back with a preview ([unit tables](docs/user-manual/unit-tables.md)).
 
-Not in version 1: data-storage budgets, transient thermal simulation, interference analysis, a separate expert mode. See [decision D-099](docs/DECISIONS.md).
+Not included (out of scope so far): data-storage budgets, transient thermal simulation, interference analysis, a separate expert mode. See [decision D-099](docs/DECISIONS.md).
 
 ## Requirements
 
@@ -100,7 +101,7 @@ Known limits, stated plainly:
 
 - The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 8 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
-- Zooming or panning a plot of a week at 1 s resolution with many series takes a second or two (hovering is quick).
+- The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 8.
 - The XLSX files were not opened in Excel.
 
 ## Related tools

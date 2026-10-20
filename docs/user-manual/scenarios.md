@@ -76,7 +76,7 @@ segments:                         # hand-built, applied last, must not overlap
   - {start_s: 0, duration_s: 1800, mode: safe}
 ```
 
-`lead_s` and `lag_s` start the mode earlier or end it later around a pass. In the window the **Scenario** tab shows the timeline and lets you edit rules and segments ([below](#how-do-i-edit-the-rules-in-the-window)); invalid edits are explained and nothing is written until you save.
+`lead_s` and `lag_s` start the mode earlier or end it later around a pass. In the window **Model → Scenario** shows the timeline and lets you edit rules and segments ([below](#how-do-i-edit-the-rules-in-the-window)); invalid edits are explained and nothing is written until you save.
 
 ## How do I see eclipses, passes and the timeline?
 
@@ -85,7 +85,7 @@ budget scenario my_satellite --out out
 ```
 
 ```text
-Scenario one_day (elements): 15 eclipse(s); passes: gs_north 11, tgt_plains 1; 54 timeline segment(s).
+Scenario one_day (elements): 15 eclipse(s); passes: gs_north 11, gs_south 4, tgt_plains 1; 62 timeline segment(s).
 ```
 
 It writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>_timeline.csv` and a provenance file. Passes and eclipses are detected on a fixed 20 s grid (a pass of a few seconds between two samples is found from the elevation maximum, and an eclipse of a few seconds from the maximum of how far inside the shadow the satellite is) and their edges are refined to about 1 ms, so they do not depend on `step_s`. The window's **Scenario** tab shows the same tables after **Compute**; to write the same files from the window use **File → Export scenario results**.
@@ -99,7 +99,7 @@ Set `environment_source: spacemissionstudio` and `import_dir:` (a folder inside 
 
 In **Model → Scenario**, the lower part shows the rules as sentences you can change in place:
 
-![The Scenario tab with the rules as sentences](../images/ui-overhaul/model-scenario-light.png)
+![Model → Scenario with the rules as sentences](../images/ui-overhaul/model-scenario-light.png)
 
 - A rule reads *Downlink during every pass over gs_north*, and for a pass rule *Start it 30 s before the pass and keep it 0 s after it*. Its parts are the controls: the mode, **during every pass over** / **while in eclipse** / **while in sunlight**, the site, and the lead and lag (pass rules only). Changing the kind keeps the rule valid (a pass rule gets a site; the other kinds lose the site, lead and lag).
 - The order matters: **a later rule wins** over an earlier one, so every row has an **up** and a **down** arrow (hover for the tooltip). **Add rule** adds a pass rule with the default mode and the first listed site; the **bin** removes one.
