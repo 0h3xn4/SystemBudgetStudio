@@ -373,7 +373,7 @@ Provenance
 Provenance
 ## table
 Item | Value
-Tool | System Budget Studio 1.1.0
+Tool | System Budget Studio 1.2.0
 Python | 3.x
 Libraries | pinned for-golden-tests
 Project | Example 250 kg minisatellite, complete power and thermal inputs

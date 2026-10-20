@@ -1,7 +1,7 @@
 pages=14
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Link budget over passes: Example 250 kg minisatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
@@ -171,7 +171,7 @@ T+04:46:25
  n/a
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Pass
 AOS (T+)
@@ -359,7 +359,7 @@ TBD
 PLACEHOLDER
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Name
 Value
