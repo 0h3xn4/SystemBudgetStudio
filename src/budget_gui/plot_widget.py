@@ -19,7 +19,6 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-import numpy as np
 from PySide6.QtCore import QLineF, QPointF, QRectF, Qt, Signal
 from PySide6.QtGui import (
     QColor,
@@ -43,10 +42,10 @@ from budget_core.plots.spec import (
     PlotSpec,
     nice_ticks,
     value_at,
-    visible_range,
 )
 from budget_gui import theme
 from budget_gui.plot_metrics import PLOT
+from budget_gui.plot_prepare import PreparedPlot, panel_y_range
 from budget_gui.time_axis import ElapsedAxis, TimeAxis
 
 
@@ -124,10 +123,17 @@ class PlotWidget(QWidget):
         self.update()
 
     # ---- data --------------------------------------------------------------------------------
-    def set_spec(self, spec: PlotSpec | None) -> None:
+    def set_spec(self, spec: PlotSpec | None, prepared: PreparedPlot | None = None) -> None:
+        """Show a plot. `prepared` (made in a worker thread, see `plot_prepare`) holds the y ranges
+        and summaries of this same spec; the widget takes them over instead of working them out
+        on the first paint."""
         self._spec = spec
-        self._ranges = {}
-        self._envelopes.clear()
+        if prepared is not None and prepared.spec is spec:
+            self._ranges = dict(prepared.ranges)
+            self._envelopes = prepared.envelopes
+        else:
+            self._ranges = {}
+            self._envelopes = EnvelopeCache()
         self._layer = None
         self._hidden = set()
         self._markers, self._selected = [], None
@@ -421,15 +427,7 @@ class PlotWidget(QWidget):
         out once per plot: scaling and scanning 600,000 points per series is the slow part."""
         cached = self._ranges.get(id(panel))
         if cached is None:
-            lo, hi = visible_range(
-                [s.y * panel.y_scale for s in panel.series]
-                + [np.array([h.y * panel.y_scale]) for h in panel.hlines],
-                None if panel.y_min is None else panel.y_min * panel.y_scale,
-                None if panel.y_max is None else panel.y_max * panel.y_scale,
-            )
-            if hi - lo <= 0.0:  # equal fixed limits would divide by zero below
-                hi = lo + 1.0
-            cached = self._ranges[id(panel)] = (lo, hi)
+            cached = self._ranges[id(panel)] = panel_y_range(panel)
         return cached
 
     def _paint_panel(
