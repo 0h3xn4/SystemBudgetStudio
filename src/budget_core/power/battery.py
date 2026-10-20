@@ -14,6 +14,8 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.slices import array_from, list_from, release
+
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
 
 
@@ -61,9 +63,9 @@ def integrate_battery(
     if capacity_wh < 0.0 or not 0.0 <= initial_energy_wh <= capacity_wh * (1.0 + 1e-12):
         raise ValueError("the initial energy must lie between 0 and the capacity")
     n = len(dt_s)
-    steps = np.asarray(dt_s, dtype=np.float64).tolist()
+    steps = list_from(np.asarray(dt_s, dtype=np.float64))
     net = np.asarray(generation_w, dtype=np.float64) - np.asarray(demand_w, dtype=np.float64)
-    net_list = net.tolist()
+    net_list = list_from(net)
     energy = [0.0] * (n + 1)
     battery = [0.0] * n
     unmet = [0.0] * n
@@ -100,10 +102,12 @@ def integrate_battery(
             battery[i] = -supplied / hours
             unmet[i] = (needed - supplied) / hours
         energy[i + 1] = e
+    release(steps)  # the lists are freed in slices too: all at once holds the lock for 50 ms
+    release(net_list)
     return BatteryTrace(
-        np.array(energy),
-        np.array(battery),
-        np.array(unmet),
-        np.array(curtailed),
-        np.array(saturation),
+        array_from(energy, release_list=True),
+        array_from(battery, release_list=True),
+        array_from(unmet, release_list=True),
+        array_from(curtailed, release_list=True),
+        array_from(saturation, release_list=True),
     )

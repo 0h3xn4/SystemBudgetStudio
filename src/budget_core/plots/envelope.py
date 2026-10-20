@@ -83,6 +83,15 @@ class EnvelopeCache:
     def clear(self) -> None:
         self._entries.clear()
 
+    def warm(self, series: Series) -> None:
+        """Make the summary of a series now (the GUI does this in a worker thread, so the first
+        paint finds it)."""
+        self._entry(series)
+
+    def is_summarised(self, series: Series) -> bool:
+        found = self._entries.get(id(series))
+        return found is not None and found[0] is series
+
     def _entry(self, series: Series) -> tuple[bool, Blocks | None]:
         found = self._entries.get(id(series))
         if found is not None and found[0] is series:

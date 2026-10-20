@@ -271,3 +271,20 @@ def test_the_boxes_qt_makes_use_the_icons_of_the_window(qtbot) -> None:  # type:
             if image.pixelColor(x, y).alpha() == 255
         }
         assert opaque == {QColor(level.fg).name()}, kind
+
+
+def test_the_app_asks_for_the_interpreter_lock_early(qtbot) -> None:  # type: ignore[no-untyped-def]
+    """While a worker computes, the window thread hands over the lock within a millisecond
+    instead of the default five (D-183)."""
+    import sys
+
+    from budget_gui.app import SWITCH_INTERVAL_S, create_app
+
+    before = sys.getswitchinterval()
+    try:
+        sys.setswitchinterval(0.005)
+        create_app([])
+        assert sys.getswitchinterval() == pytest.approx(SWITCH_INTERVAL_S)
+        assert SWITCH_INTERVAL_S <= 0.001
+    finally:
+        sys.setswitchinterval(before)

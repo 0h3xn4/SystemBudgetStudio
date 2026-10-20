@@ -33,6 +33,7 @@ from budget_core.control import Cancelled, RunControl
 from budget_core.model import Project
 from budget_core.plots.power import power_plot
 from budget_core.power.time_domain import (
+    CASES,
     CODES_TEXT,
     TimeDomainResult,
     format_offset,
@@ -54,6 +55,7 @@ from budget_gui.cancel_support import (
 )
 from budget_gui.components import Button, CollapseButton, icon_button
 from budget_gui.delegates import CellDelegate
+from budget_gui.plot_prepare import PreparedPlot, prepare
 from budget_gui.plot_widget import PlotMarker, PlotWidget
 from budget_gui.scenario_view import fill_table
 from budget_gui.theme import Status
@@ -93,6 +95,7 @@ class TimelineWorker(QThread):
     ) -> None:
         super().__init__()
         self._args = (project, scenario_id, basis, run)
+        self.plots: dict[str, PreparedPlot] = {}  # the plot of each case, ready to draw (D-182)
 
     def run(self) -> None:
         project, scenario_id, basis, scenario_run = self._args
@@ -115,6 +118,10 @@ class TimelineWorker(QThread):
         except Exception as exc:  # plain message only, never a traceback or project content
             self.failed.emit(f"The power budget could not be computed ({type(exc).__name__}).")
             return
+        try:  # the first paint of a week's plot is work for this thread, not the window thread
+            self.plots = {case: prepare(power_plot(result, case)) for case in CASES}
+        except Exception:  # the view makes the plot itself
+            self.plots = {}
         self.finished_ok.emit(result)
 
 
@@ -139,6 +146,8 @@ class PowerTimelineView(QWidget):
         self._worker: TimelineWorker | None = None
         self._export_worker: ExportWorker | None = None
         self._finishing = False  # the tables of a result that has just arrived are still to come
+        self._prepared: dict[str, PreparedPlot] = {}  # plots made in the worker, by case
+        self._prepared_for: TimeDomainResult | None = None  # the result they belong to
 
         self.scenario_combo = QComboBox()
         self.basis_combo = QComboBox()
@@ -384,6 +393,7 @@ class PowerTimelineView(QWidget):
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, result: TimeDomainResult) -> None:
+        plots = self._worker.plots if self._worker is not None else {}
         self._finish_worker()
         key, self._computing_key = self._computing_key, None
         if key is not None and key.scenario != self.selected_id():
@@ -394,6 +404,7 @@ class PowerTimelineView(QWidget):
             return
         self.result = result
         self._result_key = key
+        self._prepared, self._prepared_for = plots, result
         # The plot first, the tables in the next turn of the event loop: a week's results are one
         # long stretch of work otherwise (D-178). `computed` is sent when both are done.
         self._show(tables=False)
@@ -409,8 +420,8 @@ class PowerTimelineView(QWidget):
         QTimer.singleShot(DETAIL_DELAY_MS, self, lambda: self._finish_details(result))
 
     def _finish_details(self, result: TimeDomainResult) -> None:
-        self._finishing = False
         if self.result is not result:
+            self._finishing = False
             return
         self._fill_tables(result, "details")
         self.export_button.setEnabled(self.is_valid())
@@ -424,6 +435,13 @@ class PowerTimelineView(QWidget):
         if self.is_stale:
             text = CHANGED_WHILE_RUNNING_TEXT
         self.status.setText(text if self.is_stale else text + ".")
+        # the listeners (Problems, Reports page) get a turn of their own
+        QTimer.singleShot(0, self, lambda: self._announce(result))
+
+    def _announce(self, result: TimeDomainResult) -> None:
+        self._finishing = False
+        if self.result is not result:
+            return
         self.computed.emit(result)
 
     def _failed(self, message: str) -> None:
@@ -474,7 +492,11 @@ class PowerTimelineView(QWidget):
                 table.setColumnCount(0)
             self.export_button.setEnabled(False)
             return
-        self.plot.set_spec(power_plot(result, self.current_case()))
+        prepared = self._prepared.get(self.current_case()) if self._prepared_for is result else None
+        if prepared is None:  # a result that did not come from a worker
+            self.plot.set_spec(power_plot(result, self.current_case()))
+        else:
+            self.plot.set_spec(prepared.spec, prepared)
         self.plot.set_shading(self.shading.isChecked())
         self._apply_axis()
         self._show_markers()

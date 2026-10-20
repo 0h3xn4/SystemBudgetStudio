@@ -34,8 +34,14 @@ def _excepthook(exc_type: type[BaseException], exc: BaseException, _tb: object) 
         box.exec()
 
 
+SWITCH_INTERVAL_S = 0.0005  # how long a thread may keep the interpreter lock when another waits
+
+
 def create_app(argv: Sequence[str]) -> QApplication:
     sys.excepthook = _excepthook  # no raw tracebacks in a window or a crash dialog
+    # The window thread needs the lock for every paint and every slot; the default 5 ms wait per
+    # hand-over turns a burst of them into a visible stall while a worker computes (D-183).
+    sys.setswitchinterval(SWITCH_INTERVAL_S)
     disable_settings_files()  # Qt's file dialogs would write ~/.config/QtProject.conf (D-105)
     app = QApplication.instance() or QApplication(list(argv))
     assert isinstance(app, QApplication)

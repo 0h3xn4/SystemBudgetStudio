@@ -49,6 +49,7 @@ from budget_gui.cancel_support import (
     computing_text,
 )
 from budget_gui.components import Button, CollapseButton
+from budget_gui.plot_prepare import PreparedPlot, prepare
 from budget_gui.plot_widget import PlotWidget
 from budget_gui.scenario_view import fill_table
 from budget_gui.validity import (
@@ -74,6 +75,7 @@ class LinkWorker(QThread):
     def __init__(self, project: Project, scenario_id: str, run: ScenarioRun | None) -> None:
         super().__init__()
         self._args = (project, scenario_id, run)
+        self.plots: dict[str, PreparedPlot] = {}  # the plot of each link, ready to draw (D-182)
 
     def run(self) -> None:
         project, scenario_id, scenario_run = self._args
@@ -91,6 +93,11 @@ class LinkWorker(QThread):
         except Exception as exc:  # plain message only, never a traceback or project content
             self.failed.emit(f"The link budget could not be computed ({type(exc).__name__}).")
             return
+        try:  # the plots are work for this thread, not the window thread
+            duration_s = result.run.env.grid.duration_s
+            self.plots = {s.link_id: prepare(link_plot(s, duration_s)) for s in result.series}
+        except Exception:  # the view makes the plot itself
+            self.plots = {}
         self.finished_ok.emit(result)
 
 
@@ -113,6 +120,8 @@ class LinkPassesView(QWidget):
         self.run_provider: Callable[[str], ScenarioRun | None] | None = None
         self._worker: LinkWorker | None = None
         self._export_worker: ExportWorker | None = None
+        self._prepared: dict[str, PreparedPlot] = {}  # plots made in the worker, by link
+        self._prepared_for: LinkSeriesResult | None = None  # the result they belong to
 
         self.scenario_combo = QComboBox()
         self.link_combo = QComboBox()
@@ -292,6 +301,7 @@ class LinkPassesView(QWidget):
         self.compute_button.setEnabled(self.project is not None and bool(self.selected_id()))
 
     def _done(self, result: LinkSeriesResult) -> None:
+        plots = self._worker.plots if self._worker is not None else {}
         self._finish_worker()
         key, self._computing_key = self._computing_key, None
         if key is not None and key.scenario != self.selected_id():
@@ -302,6 +312,7 @@ class LinkPassesView(QWidget):
             return
         self.result = result
         self._result_key = key
+        self._prepared, self._prepared_for = plots, result
         previous = self.link_combo.currentText()
         self.link_combo.blockSignals(True)
         self.link_combo.clear()
@@ -359,7 +370,11 @@ class LinkPassesView(QWidget):
             if result is None:
                 self.export_button.setEnabled(False)
             return
-        self.plot.set_spec(link_plot(series, result.run.env.grid.duration_s))
+        prepared = self._prepared.get(series.link_id) if self._prepared_for is result else None
+        if prepared is None:  # a result that did not come from a worker
+            self.plot.set_spec(link_plot(series, result.run.env.grid.duration_s))
+        else:
+            self.plot.set_spec(prepared.spec, prepared)
 
         def num(value: float | None, digits: int = 2) -> str:
             return "n/a" if value is None else f"{value:.{digits}f}"
