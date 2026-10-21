@@ -30,7 +30,7 @@ The commands that compute reports (`run`, `scenario`, `power-timeline`, `link-pa
 
 ## The window
 
-- The **navigation rail** on the left chooses the area: **Model** (the Units, Power modes and Inputs grids, the Scenario and the files you open), **Power** (the budget and the timeline), **Mass**, **Thermal**, **Link** (the budget and the passes), **Compare** and **Reports**. Press Ctrl+1 to Ctrl+7, or Ctrl+K to find any command, unit or file by a few letters of its name.
+- The **navigation rail** on the left chooses the area: **Model** (the Units, Power modes and Inputs grids, the Scenario and the files you open; **Add unit** and **Remove unit** on the Units grid add and remove units), **Power** (the budget and the timeline), **Mass**, **Thermal**, **Link** (the budget and the passes), **Compare** and **Reports**. Press Ctrl+1 to Ctrl+7, or Ctrl+K to find any command, unit or file by a few letters of its name.
 - The **project panel** (Ctrl+B) lists spacecraft, units, modes, scenarios, links and configuration files. Double-click a file to edit it; double-click a unit to edit its power modes in a table.
 - **Run** (Ctrl+R) works out the scenario, the power timeline and the link passes; the chip beside it says whether the results are up to date. The static budgets are always up to date.
 - The **Problems** panel along the bottom lists errors, warnings and open items. Double-click a row to jump to the file and line.

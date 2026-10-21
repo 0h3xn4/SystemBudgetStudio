@@ -353,8 +353,8 @@ steps are the brief's 90, 100, 110 and 125 % (the plan said 100 to 150 %).
 | M2 Shell | done (merged in PR #39) | D-173 to D-175; rail, bottom Problems panel, narrow-window rules, settings card, palette overlay, offline segment; one change to the plan: the message boxes stay Qt's, themed through the style (D-174) |
 | M3 Model screens | done (merged in PR #40) | D-176, D-177; toolbar above the grids, frozen identifier column, problem marker in the row, cheaper cell painting (a grid scroll step about 30 ms), scenario icon buttons, tab close mark, tree rows of 26 px |
 | M4 Results screens | done (merged in PR #41) | D-178; one inline banner, labelled toolbar, foldable table pane, plot sizes in the theme and at the UI scale, cheaper table fill; the stall is 224 ms, not under 100 |
-| M5 Compare, Reports, dialogs | PR #42 open | D-180; Compare key columns capped, Reports provenance line and empty list, dialogs with components, Inspector and Provenance details |
-| M6 Final | in progress | D-181; accessibility pass, UI size screenshots and fixes, DESIGN, manual screenshots, checklist; then the release preparation (1.2.0) |
+| M5 Compare, Reports, dialogs | done (merged in PR #42) | D-180; Compare key columns capped, Reports provenance line and empty list, dialogs with components, Inspector and Provenance details |
+| M6 Final | done (merged in PR #42; released as 1.2.0, PR #43) | D-181; accessibility pass, UI size screenshots and fixes, DESIGN, manual screenshots, checklist |
 
 **M1 as built, against its acceptance criteria**
 

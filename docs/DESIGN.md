@@ -174,7 +174,7 @@ The window keeps no Qt settings file (D-105): Qt's dialogs would write the folde
 | `Ctrl+E` / `Ctrl+Shift+E` | Export reports / export the power timeline | in the window |
 | `F1` | User guide | in the window |
 | `Ctrl+K` | Command palette | in the window |
-| `Ctrl+Z` / `Ctrl+Shift+Z` | Undo / redo the edits of the grids | in the window |
+| `Ctrl+Z` / `Ctrl+Y` (or `Ctrl+Shift+Z`) | Undo / redo the edits of the grids | in the window |
 | `Ctrl+C` / `Ctrl+V` | In a grid: copy the cells as text with tabs / paste a block, with a preview for more than one cell | in the window |
 | `Ctrl+D` / `Delete` | In a grid: fill down / empty the optional cells | in the window |
 | `Enter` / `Tab` / `Esc` | In a grid: accept and move down / accept and move right (leaves the grid after the last cell) / cancel | in the window |

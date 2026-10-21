@@ -64,7 +64,7 @@ Yes: exit codes, `--strict`, `--format json` and no network use are made for tha
 
 ### Can I import my units from a spreadsheet?
 
-Yes, power-mode data: `budget units-export` writes the units' power modes as a CSV or XLSX table, you fill it in a spreadsheet, and `budget units-import` shows what would change and, with `--apply`, writes it ([unit tables](user-manual/unit-tables.md)). Creating whole units from a table is not supported; add the unit file first. You can read every result *out* as XLSX, CSV or JSON.
+Yes, power-mode data: `budget units-export` writes the units' power modes as a CSV or XLSX table, you fill it in a spreadsheet, and `budget units-import` shows what would change and, with `--apply`, writes it ([unit tables](user-manual/unit-tables.md)). Creating whole units from a table is not supported; add the unit first (**Add unit** in *Model → Units*, or a file). You can read every result *out* as XLSX, CSV or JSON.
 
 ### How do I regenerate last month's report byte for byte?
 

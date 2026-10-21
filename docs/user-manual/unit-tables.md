@@ -70,7 +70,7 @@ The unit files are edited **in place**: your comments and the order of the keys 
 ## The rules of an import
 
 - **Empty means unchanged**, never zero.
-- Only power modes of units that **already exist** are touched. An import creates no units (a unit also needs a mass, a bus and a maturity class: use the [unit file](describe-the-spacecraft.md#how-do-i-add-a-unit)) and deletes nothing: a mode or a unit missing from the table stays as it is.
+- Only power modes of units that **already exist** are touched. An import creates no units (a unit also needs a mass, a bus and a maturity class: add the unit first, with **Add unit** in the window or as a [unit file](describe-the-spacecraft.md#how-do-i-add-a-unit)) and deletes nothing: a mode or a unit missing from the table stays as it is.
 - Every value is checked with the same rules as in the YAML files (peak power not below average power, a ratio between 0 and 1, a matching unit). A dBW value in a watt column is refused.
 - **One problem stops everything**: if any row is wrong, nothing is written, so a half-imported table cannot happen.
 - A spreadsheet **formula is never calculated**. If a cell holds a formula and the file has no stored result, the cell counts as empty; type the value instead.

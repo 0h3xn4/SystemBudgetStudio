@@ -32,7 +32,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `--out DIR` | Output folder (default: `<project>/results`) |
 | `--user NAME` | User name for the provenance block (default: `BUDGET_USER`, then your login name). Accepted by `run`, `scenario`, `power-timeline`, `link-passes` and `compare` |
 | `--date ISO8601` | Generation time, years 1950 to 2100 (default: `SOURCE_DATE_EPOCH`, then the clock); with `--user` it makes a report reproducible. Accepted by the same commands as `--user` |
-| `--strict` | Treat warnings as failures (exit code 1) |
+| `--strict` | Treat warnings as failures (exit code 1). Accepted by `validate`, `run`, `power-timeline` and `link-passes` |
 
 ## Exit codes
 

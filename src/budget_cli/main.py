@@ -1,4 +1,5 @@
-"""`budget` command: new, validate, run, scenario, power-timeline, link-passes, schemas."""
+"""`budget` command: new, validate, run, scenario, power-timeline, link-passes, compare, guide,
+self-test, export-schemas, units-export, units-import, export-examples."""
 
 from __future__ import annotations
 

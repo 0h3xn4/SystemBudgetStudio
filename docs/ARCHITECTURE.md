@@ -1,6 +1,6 @@
 # System Budget Studio — Architecture
 
-Status: built (milestones M0 to M6, the window redesign of 1.1.0, the UI overhaul of 1.2.0 and the responsive window of 1.3.0). This document began as the architecture proposal and has been corrected to match the code; where a decision changed it, the decision number (`D-0xx`, see [DECISIONS.md](DECISIONS.md)) is given. For using the tool see the [user manual](user-manual/README.md); for the file format see [FILE_FORMAT.md](FILE_FORMAT.md), which is authoritative.
+Status: built (milestones M0 to M6, the window redesign of 1.1.0, the UI overhaul of 1.2.0, the responsive window of 1.3.0 and the blank project and adding units of 1.4.0). This document began as the architecture proposal and has been corrected to match the code; where a decision changed it, the decision number (`D-0xx`, see [DECISIONS.md](DECISIONS.md)) is given. For using the tool see the [user manual](user-manual/README.md); for the file format see [FILE_FORMAT.md](FILE_FORMAT.md), which is authoritative.
 
 **Contents:** [1. Technology stack](#1-technology-stack) · [2. Package structure](#2-package-structure) · [3. Core design rules](#3-core-design-rules) · [4. Data model and files](#4-data-model-and-files) · [5. Environment adapters](#5-environment-adapters) · [6. Solvers (summary)](#6-solvers-summary) · [6a. Mass budget (added by D-033)](#6a-mass-budget-added-by-d-033) · [6b. Thermal budget (added by D-036; implemented in M4b, D-071 to D-076)](#6b-thermal-budget-added-by-d-036-implemented-in-m4b-d-071-to-d-076) · [7. GUI](#7-gui) · [8. Packaging, CI, supply chain](#8-packaging-ci-supply-chain) · [9. Testing strategy](#9-testing-strategy) · [10. Risks](#10-risks)
 
@@ -27,7 +27,7 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
                       Scenario, Array, Battery, Link, Transmitter, Receiver, GroundStation
   io/                 YAML load/save, schema versioning + migrations, unit table import and export (`unit_table.py`, D-102)
   units/              suffix conventions, pint parse/format, dB helpers
-  config/             schemas (*.schema.json) and loaders; every number carries `source`
+  schemas/            the generated JSON Schemas (*.schema.json), written by `budget export-schemas`; schemas.py builds them
   environment/        Environment interface; SpaceMissionStudioImport; ElementsPropagator (sgp4)
   power/              static_budget.py; time domain: array.py, battery.py, attitude.py, orbits.py,
                       signals.py, time_domain.py (pure functions over NumPy arrays)
@@ -40,15 +40,21 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   link/               budget.py (equations, pure functions), evaluate.py (static table, pass series,
                       data volume), constants.py (c, k with sources)
   scenario/           timeline model, rule-based generation (downlink-on-pass, ...)
-  problems/           Problem(severity, code, message, location) — shared by validate/solvers
+  problems.py         Problem(severity, code, message, location) — shared by validate/solvers
   reports/            xlsx, docx, pdf, csv, json; provenance block; figures
   provenance.py       tool/library versions, project revision, scenario, date, user
+  wizard.py           the guided project: a sample spacecraft with an orbit and a scenario (D-086); write_new_project() writes any new project folder
+  blank.py            the blank project: one bus, placeholder configuration, no units (D-185); used by `budget new` and the wizard
+  new_unit.py         the file of a new unit from the answers of the Add unit form (D-187)
+  compare.py, compare_run.py   comparison of two revisions or scenarios (D-084, D-085)
+  equations.py, assumptions.py, examples.py, selftest.py   the equation registry, the placeholder list behind INCOMPLETE, the four example projects, `budget self-test`
 src/budget_cli/       `budget new | validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | export-schemas | units-export | units-import | export-examples`
 src/budget_gui/       PySide6; no logic beyond presentation; docs/DESIGN.md
                       theme/ (tokens, fonts, style sheet, scale: the only place for colours and sizes), components/ (Button, StatusBadge, Card ...)
                       shell: main_window.py, rail.py (navigation), top_bar.py, workspace.py (the seven areas), project_tree.py, problems_panel.py,
                       inspector.py, provenance_panel.py, status_bar.py, settings_popover.py, command_palette.py, run_controller.py
-                      model editing: model_document.py (one undo stack), grid_models.py, grid_view.py, frozen_view.py, delegates.py, scenario_editor.py
+                      model editing: model_document.py (one undo stack; adds and removes files), model_pages.py (the Units, Power modes and Inputs pages),
+                      add_unit_dialog.py (the Add unit form), grid_models.py, grid_view.py, frozen_view.py, delegates.py, scenario_editor.py, guided.py (the project wizard)
                       results: timeline_view.py, link_view.py, scenario_view.py, compare_view.py, reports_view.py, plot_widget.py,
                       plot_metrics.py, plot_prepare.py, timeline.py, time_axis.py (long computations in QThread workers)
 ```
@@ -117,7 +123,7 @@ Solvers are pure functions: dissipation roll-up, then a steady-state nodal heat 
 
 ## 7. GUI
 
-Dark and light themes generated from the tokens of `budget_gui/theme/` (Inter and JetBrains Mono bundled; D-169, D-170), a small component library in `budget_gui/components/`; main window = navigation rail (`rail.py`) choosing one of seven areas (Model with the editors; Power, Mass, Thermal, Link, Compare, Reports; `workspace.py`, a hidden-tab-bar `QTabWidget`), top bar, project tree (left), Inspector / Provenance (right), Problems panel (bottom, full width), settings card (`settings_popover.py`), narrow-window rules in `MainWindow._fit_to_width` (D-173); grids over one editable model document (`model_document.py`: one `QUndoStack`, validation by the model on every edit, explicit in-place Save; D-159) with unit-aware cells, timeline editor, result plots (a QPainter widget, cursors, eclipse/pass shading; D-068), bottom Problems panel (double-click jumps to the offending editor cell). Runs execute in a `QThread` worker with cancel and progress; the worker also prepares the plots (`plot_prepare.py`, D-182) and gives the interpreter lock away between slices of the long NumPy and SGP4 calls (`budget_core/slices.py`, D-183) so that the window stays responsive; the GUI only touches `budget_core` public API and `Problem` objects. Guided mode = wizard over the same API (`budget_core.wizard` builds the project, `budget_gui.guided` is the QWizard; D-086). The Compare area runs `budget_core.compare_run` in a worker thread (D-084, D-085); Help > User guide shows `budget_core.guide` (D-087). Tracebacks are caught at the top level and replaced by a message and a "save diagnostic (no project content)" option.
+Dark and light themes generated from the tokens of `budget_gui/theme/` (Inter and JetBrains Mono bundled; D-169, D-170), a small component library in `budget_gui/components/`; main window = navigation rail (`rail.py`) choosing one of seven areas (Model with the editors; Power, Mass, Thermal, Link, Compare, Reports; `workspace.py`, a hidden-tab-bar `QTabWidget`), top bar, project tree (left), Inspector / Provenance (right), Problems panel (bottom, full width), settings card (`settings_popover.py`), narrow-window rules in `MainWindow._fit_to_width` (D-173); grids over one editable model document (`model_document.py`: one `QUndoStack`, validation by the model on every edit, explicit in-place Save; D-159; it also creates the file of an added unit and deletes the file of a removed one, on Save, D-187) with unit-aware cells, timeline editor, result plots (a QPainter widget, cursors, eclipse/pass shading; D-068), bottom Problems panel (double-click jumps to the offending editor cell). Runs execute in a `QThread` worker with cancel and progress; the worker also prepares the plots (`plot_prepare.py`, D-182) and gives the interpreter lock away between slices of the long NumPy and SGP4 calls (`budget_core/slices.py`, D-183) so that the window stays responsive; the GUI only touches `budget_core` public API and `Problem` objects. Guided mode = wizard over the same API (`budget_core.wizard` builds the project, `budget_gui.guided` is the QWizard; D-086); its Blank project choice uses `budget_core.blank` (D-185). **Add unit** on the Units page asks a form (`add_unit_dialog.py`) and builds the unit with `budget_core.new_unit` (D-187). The Compare area runs `budget_core.compare_run` in a worker thread (D-084, D-085); Help > User guide shows `budget_core.guide` (D-087). Tracebacks are caught at the top level and replaced by a message and a "save diagnostic (no project content)" option.
 
 ## 8. Packaging, CI, supply chain
 
