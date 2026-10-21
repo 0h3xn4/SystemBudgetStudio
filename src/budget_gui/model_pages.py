@@ -45,12 +45,16 @@ class UnitsPage(GridPage):
             self.units, document, what="unit", filter_hint="Filter units (name, subsystem, bus…)"
         )
         self.add_button = self.bar.make_button(
-            "Add unit", "plus", "Add a unit: a form asks for its mass and first power mode"
+            "Add unit",
+            "plus",
+            "Add a unit: a form asks for its mass and first power mode",
+            "Ctrl+Shift+N",
         )
         self.remove_button = self.bar.make_button(
             "Remove unit",
             "trash-2",
             "Remove the selected unit (Undo brings it back; Save deletes its file)",
+            "Ctrl+Shift+Delete",
         )
         self.add_button.clicked.connect(self.add_unit)
         self.remove_button.clicked.connect(self.remove_unit)

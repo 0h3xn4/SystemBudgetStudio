@@ -71,7 +71,7 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | Ctrl+M | Show the selected unit's power modes in the **Power modes** grid |
 | Ctrl+E | Export reports of the static budgets |
 | Ctrl+Shift+E | Export the power timeline |
-| (buttons only) | **Add unit** and **Remove unit** on *Model → Units* (also in the right-click menu of the grid): [add a unit](describe-the-spacecraft.md#how-do-i-add-a-unit) |
+| Ctrl+Shift+N / Ctrl+Shift+Delete | **Edit → Add unit** / **Remove unit**, from any area: they bring *Model → Units* to the front ([add a unit](describe-the-spacecraft.md#how-do-i-add-a-unit)). Remove takes the unit with the cursor in the grid, or the unit selected in the project tree |
 | (menu only) | File → Export unit table / Import unit table: the unit power modes as a CSV or XLSX table, imported with a preview ([unit tables](unit-tables.md)) |
 | (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
 | (menu only) | View → Theme (light, dark, same as the system), UI size (90, 100, 110 or 125 %), Reduce motion, Cell styles (what every cell style means), the panel toggles, Reset layout |
@@ -107,7 +107,7 @@ In **Model → Scenario**, rules and segments are sentences you edit in place ([
 
 ## How do I edit in the grids?
 
-**Model → Units** has one row per unit: name, subsystem, bus, maturity, mass and the four temperature limits; **Add unit** and **Remove unit** (also in the right-click menu) add and remove units ([how](describe-the-spacecraft.md#how-do-i-add-a-unit)). **Power modes** has one row per power mode of every unit: average and peak power, duty cycle, heat ratio and durations, with the effective average (average times duty) beside them. **Inputs** has one row per sourced number of the configuration and the links: value, unit, source and note. The unit is in every column header; numbers show a fixed number of decimals, and the tooltip and the editor have the exact value.
+**Model → Units** has one row per unit: name, subsystem, bus, maturity, mass and the four temperature limits; **Add unit** and **Remove unit** (also in the right-click menu, in the Edit menu and in Ctrl+K) add and remove units ([how](describe-the-spacecraft.md#how-do-i-add-a-unit)). **Power modes** has one row per power mode of every unit: average and peak power, duty cycle, heat ratio and durations, with the effective average (average times duty) beside them. **Inputs** has one row per sourced number of the configuration and the links: value, unit, source and note. The unit is in every column header; numbers show a fixed number of decimals, and the tooltip and the editor have the exact value.
 
 ![The Power modes grid filtered to the radio, with a wrong cell marked and explained under the grid](../images/ui-overhaul/model-power-modes-light.png)
 
