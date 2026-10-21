@@ -106,7 +106,7 @@ In **Model → Scenario**, rules and segments are sentences you edit in place ([
 
 ## How do I edit in the grids?
 
-**Model → Units** has one row per unit: name, subsystem, bus, maturity, mass and the four temperature limits. **Power modes** has one row per power mode of every unit: average and peak power, duty cycle, heat ratio and durations, with the effective average (average times duty) beside them. **Inputs** has one row per sourced number of the configuration and the links: value, unit, source and note. The unit is in every column header; numbers show a fixed number of decimals, and the tooltip and the editor have the exact value.
+**Model → Units** has one row per unit: name, subsystem, bus, maturity, mass and the four temperature limits; **Add unit** and **Remove unit** (also in the right-click menu) add and remove units ([how](describe-the-spacecraft.md#how-do-i-add-a-unit)). **Power modes** has one row per power mode of every unit: average and peak power, duty cycle, heat ratio and durations, with the effective average (average times duty) beside them. **Inputs** has one row per sourced number of the configuration and the links: value, unit, source and note. The unit is in every column header; numbers show a fixed number of decimals, and the tooltip and the editor have the exact value.
 
 ![The Power modes grid filtered to the radio, with a wrong cell marked and explained under the grid](../images/ui-overhaul/model-power-modes-light.png)
 

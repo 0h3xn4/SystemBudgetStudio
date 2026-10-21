@@ -30,7 +30,18 @@ body_frame: 'Right-handed body frame. Origin: centre of the launch-vehicle inter
 
 ## How do I add a unit?
 
-A *unit* is one piece of equipment (the on-board computer, a radio, a camera). Create `units/<id>.yaml`; the file name (without `.yaml`) is the unit's id, used everywhere else:
+A *unit* is one piece of equipment (the on-board computer, a radio, a camera).
+
+**In the window:** open **Model → Units** and press **Add unit** (or right-click a row → *Add a unit…*). A form asks for the name, the id (suggested from the name; it becomes the file name `units/<id>.yaml`), the subsystem, the bus, the maturity class, the **mass** and the **first power mode** (its name and its average and peak power). None of the numbers has a default: the form does not accept an empty one, so a unit never gets a made-up mass or power. Then:
+
+- the unit is in the grid at once, and **Save** (Ctrl+S) writes its file; **Undo** takes it back before that;
+- **it is put in every spacecraft mode** with the power mode you just gave, because every spacecraft mode has to say what every unit does (without that the project would have errors). Change the assignment where it is wrong: `modes/<name>.yaml` (open it from the project tree), for example set a camera to `off` in the safe mode;
+- with a thermal model in the project, the **subsystem must be the name of one of its nodes** (the form suggests them; a unit's thermal node is its subsystem unless it says otherwise), or add the node to `config/thermal_model.yaml` first;
+- more power modes, limits and the rest are edited in the grids afterwards (**Power modes → Add mode**).
+
+**Remove unit** takes the selected unit out of the grid and out of every spacecraft mode in one undo step; **Save** then asks before it deletes the file. A unit that is the only one of a spacecraft mode is not removed (a mode needs at least one unit).
+
+**By file:** create `units/<id>.yaml`; the file name (without `.yaml`) is the unit's id, used everywhere else:
 
 ```yaml
 schema_version: 2
