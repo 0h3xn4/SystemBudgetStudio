@@ -2,23 +2,46 @@
 
 A project is a folder of plain-text YAML files that describe one spacecraft; this page shows how to start one and what the folder holds.
 
-**Contents:** [With the wizard](#how-do-i-start-a-project-with-the-wizard) · [From an example](#how-do-i-start-a-project-from-an-example-on-the-command-line) · [The folder](#what-is-in-a-project-folder) · [Revisions](#how-do-i-keep-revisions)
+**Contents:** [With the wizard](#how-do-i-start-a-project-with-the-wizard) · [A blank project](#how-do-i-start-a-blank-project) · [From an example](#how-do-i-start-a-project-from-an-example-on-the-command-line) · [The folder](#what-is-in-a-project-folder) · [Revisions](#how-do-i-keep-revisions)
 
 ## How do I start a project with the wizard?
 
 1. Start the window: `system-budget-studio`.
 2. Choose **File → New project (guided)** (Ctrl+N). Five short pages follow:
    1. **Project**: a name and the parent folder. The project goes into a new folder named after the project; an existing folder is never touched.
-   2. **Spacecraft**: a sample to start from: a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, or a 250 kg minisatellite with placeholder inputs.
+   2. **Spacecraft**: a sample to start from: a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a [blank project](#how-do-i-start-a-blank-project).
    3. **Orbit**: altitude (160 to 2000 km), inclination and RAAN of a near-circular orbit.
    4. **Scenario**: how long to simulate (up to 30 days) and when it starts (UTC).
    5. **Review**: **Finish** creates the project, opens it and computes the first power timeline.
 
 With the defaults you press **Next** four times and **Finish**. The result is a *sample* project with **invented** numbers (its description says so). Replace them with your own sourced numbers; the Problems panel lists what is still open.
 
+## How do I start a blank project?
+
+A blank project is a spacecraft you describe yourself: no sample, no invented numbers.
+
+**In the window:** choose **File → New project (guided)**, and on the **Spacecraft** page pick **Blank project**. Two more fields appear: the name of the bus (default `main`) and its **nominal voltage in volts**, which has no default because it is your design value. The orbit and scenario pages are skipped (there is no unit to simulate yet), the **Review** page follows, and **Finish** creates the project and opens it on the **Units** page.
+
+**On the command line:**
+
+```bash
+budget new my_satellite --bus-voltage-v 28
+```
+
+The folder must not exist; the project name defaults to the folder name (`--name`, `--bus-name` and `--spacecraft-name` change the names). The command writes the folder and prints what to do next; it never touches an existing folder.
+
+What a blank project contains:
+
+- `project.yaml` and `spacecraft.yaml` with one bus (the name and voltage you gave) and no mission phases,
+- `config/`: the margin policy (three maturity classes `class_a`, `class_b` and `class_c`, which are only labels you can rename), the power configuration and a bus efficiency, all marked `source: TBD`, and empty Eb/N0, attenuation and mass-limit tables.
+
+There are no units, spacecraft modes, orbits, scenarios or links, and no number except the voltage. `budget validate` reports **0 errors**, and a few warnings that are your to-do list: each placeholder (`CONFIG_PLACEHOLDER`) and each empty table (`CONFIG_EMPTY_TABLE`). Reports computed from it say **INCOMPLETE** until you fill them in.
+
+Then build it up: add the units, their power modes and the spacecraft modes ([Describe the spacecraft](describe-the-spacecraft.md)), then an orbit and a scenario, and replace each placeholder with a sourced number ([placeholders and sources](placeholders-and-sources.md)). Adding a *unit* is done with a file for now (`units/<id>.yaml`); the grids of the window edit the units and power modes that exist.
+
 ## How do I start a project from an example on the command line?
 
-There is no `new` command. Copy an example and edit it:
+Copy an example and edit it (or start [blank](#how-do-i-start-a-blank-project)):
 
 ```bash
 budget export-examples demo

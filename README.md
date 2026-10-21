@@ -76,7 +76,7 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 - **Scenarios**: eclipses and passes from a two-line element set (TLE) or orbital elements, a mode timeline built from rules (for example "downlink during every pass") and segments; orbits can also be imported from [SpaceMissionStudio](docs/ENVIRONMENT_FORMAT.md).
 - **Reports**: XLSX, PDF and DOCX in classic review layouts, CSV for every table and series, JSON for other tools. Every output carries provenance (tool and library versions, project revision, scenario, time, user) and is reproducible byte for byte.
 - **Comparison**: two project revisions, or two scenarios, side by side with the differences listed.
-- **Guided mode**: a wizard from an orbit to a first budget with a sample spacecraft; an offline user guide (HTML and PDF) with a generated *Equations and sources* chapter.
+- **Guided mode**: a wizard from an orbit to a first budget with a sample spacecraft, or a blank project (also `budget new`) to describe your own; an offline user guide (HTML and PDF) with a generated *Equations and sources* chapter.
 - **Plain-language problems**: every message names the file and field, says what is wrong and what to change; a double-click jumps to it.
 - **A calm window**: a navigation rail with seven areas (Model, Power, Mass, Thermal, Link, Compare, Reports), grids with undo and an explicit Save, a command palette (Ctrl+K), light and dark themes, a UI size of 90 to 125 %, and the whole window usable with the keyboard, with names for screen readers on every control. Long computations run in the background; the window keeps answering while a week at 1 s is worked out ([use the window](docs/user-manual/use-the-window.md)).
 

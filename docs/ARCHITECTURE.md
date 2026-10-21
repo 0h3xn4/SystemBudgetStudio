@@ -43,7 +43,7 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   problems/           Problem(severity, code, message, location) — shared by validate/solvers
   reports/            xlsx, docx, pdf, csv, json; provenance block; figures
   provenance.py       tool/library versions, project revision, scenario, date, user
-src/budget_cli/       `budget validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | export-schemas | units-export | units-import | export-examples`
+src/budget_cli/       `budget new | validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | export-schemas | units-export | units-import | export-examples`
 src/budget_gui/       PySide6; no logic beyond presentation; docs/DESIGN.md
                       theme/ (tokens, fonts, style sheet, scale: the only place for colours and sizes), components/ (Button, StatusBadge, Card ...)
                       shell: main_window.py, rail.py (navigation), top_bar.py, workspace.py (the seven areas), project_tree.py, problems_panel.py,

@@ -48,7 +48,7 @@ The tool never converts between them for you: a `dBW` value in a watt field is a
 
 ### How do I start a new project?
 
-With the wizard (File → New project) or by copying an example: [create a project](user-manual/create-a-project.md).
+With the wizard (File → New project; pick *Blank project* to start from nothing), with `budget new FOLDER --bus-voltage-v 28`, or by copying an example: [create a project](user-manual/create-a-project.md).
 
 ### Why is my power timeline `n/a`?
 

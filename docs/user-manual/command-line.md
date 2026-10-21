@@ -8,6 +8,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 
 | Command | What it does |
 |---|---|
+| `budget new FOLDER --bus-voltage-v VOLTS [--name TEXT] [--bus-name TEXT] [--spacecraft-name TEXT]` | Create a blank project: one bus, placeholder configuration, no units ([create a project](create-a-project.md#how-do-i-start-a-blank-project)); the folder must not exist |
 | `budget validate PROJECT [--format text\|json] [--strict]` | Check a project folder and list problems |
 | `budget run PROJECT [--budget power\|mass\|thermal\|link\|all] [--report …] [--out DIR]` | Compute the static budgets and write reports (default: all budgets, all report kinds) |
 | `budget scenario PROJECT [--scenario ID] [--out DIR]` | Compute a scenario's eclipses, passes and mode timeline |

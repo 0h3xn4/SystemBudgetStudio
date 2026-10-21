@@ -473,6 +473,14 @@ class MainWindow(QMainWindow):
                 f"The new project was created in {folder}. Open it with File > Open project."
             )
             return
+        project = self.session.project
+        if project is not None and not project.scenarios:
+            # a blank project: nothing to simulate yet; start where the spacecraft is described
+            self.show_view(self.units_page)
+            self.statusBar().showMessage(
+                "The blank project is open. The Problems panel lists what is still to fill in."
+            )
+            return
         self.show_view(self.timeline_view)
         self.timeline_view.compute()
 

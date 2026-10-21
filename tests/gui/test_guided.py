@@ -65,9 +65,10 @@ def test_name_page_rejects_an_existing_folder(qtbot, tmp_path: Path) -> None:  #
 def test_every_sample_is_offered(qtbot, tmp_path: Path) -> None:  # type: ignore[no-untyped-def]
     wizard = GuidedWizard(tmp_path)
     qtbot.addWidget(wizard)
-    assert [wizard.sample_combo.itemData(i) for i in range(wizard.sample_combo.count())] == list(
-        SAMPLES
-    )
+    assert [wizard.sample_combo.itemData(i) for i in range(wizard.sample_combo.count())] == [
+        *SAMPLES,
+        "blank",
+    ]
 
 
 def test_orbit_to_first_budget_is_far_inside_ten_minutes(
