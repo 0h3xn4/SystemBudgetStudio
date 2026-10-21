@@ -222,7 +222,7 @@ class GuidedWizard(QWizard):
         )
 
     def is_blank(self) -> bool:
-        return self.sample_combo.currentData() == BLANK
+        return bool(self.sample_combo.currentData() == BLANK)
 
     def blank_answers(self) -> BlankAnswers:
         voltage = self.bus_voltage.value()
