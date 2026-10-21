@@ -105,13 +105,13 @@ sudo packaging/linux/test_package.sh deb dist/*.deb                       # inst
 
 ## Cut a release
 
-1. Decide the version `X.Y.Z`. Set it in **both** `pyproject.toml` (`version`) and `src/budget_core/__init__.py` (`__version__`): a test checks they agree.
+1. Decide the version `X.Y.Z` and set it everywhere it is written: `pyproject.toml` (`version`) and `src/budget_core/__init__.py` (`__version__`; a test checks that these two agree), the comment with the version in `packaging/linux/system-budget-studio.spec` and in `packaging/windows/system_budget_studio.iss`, and the sample output of `budget --version` and the status line in `README.md` and `docs/getting-started.md`. `git grep` for the old version finds them; leave the mentions in `CHANGELOG.md`, `DECISIONS.md` and the historical pages alone. Then regenerate the golden files with `UPDATE_GOLDEN=1 pytest tests/golden` and read the diff: only the version line (`System Budget Studio X.Y.Z | …`, `tool_version`) and the one hash that covers it may change.
 2. If dependencies changed run `packaging/lock.sh` and `python packaging/licence_check.py --markdown docs/LICENCES.md`.
 3. Update [CHANGELOG.md](../../CHANGELOG.md): move *Unreleased* under the new version with the date.
 4. Merge to `main` through a pull request with CI green.
 5. Tag and push: `git tag vX.Y.Z && git push origin vX.Y.Z` (or create the release on GitHub with a new tag `vX.Y.Z` on `main`). The **Installers** workflow runs: it refuses a tag that differs from the `pyproject.toml` version, builds the Linux bundle on Rocky 8 and the Windows installer and portable zip, installs and uninstalls each as an ordinary user, makes the `.deb` and the `.rpm` of the Linux bundle and installs and removes them on clean Ubuntu 22.04 and 24.04, Debian 12 and Rocky 8 and 9 containers (`packaging/linux/test_package.sh`, with the window started on a virtual X server), and uploads the artefacts: the installers, the `.deb` and `.rpm`, `SHA256SUMS.txt`, `sbom.cdx.json` and `licences.md`. Its last job (`publish`, D-144) then checks every file against the checksum lists and attaches the files to the release of the tag with `packaging/attach_release.sh`; a release that does not exist yet is created as a **draft**, so nothing becomes public by itself.
 6. Download the artefacts and carry out the manual steps of the [clean-machine checklist](../INSTALL_CHECKLIST.md) on a clean Windows and a clean Rocky 8 machine.
-7. Publish: write the description of the release and press **Publish** (the files are attached already). To attach the files of an earlier run to a release, start **Actions > Attach release files** with the run id and the tag.
+7. Publish: write the description of the release (a release made from a tag has an empty one; say what changed, the download table and the known limits) and press **Publish** (the files are attached already). To attach the files of an earlier run to a release, start **Actions > Attach release files** with the run id and the tag.
 
 ## Upstream documents
 

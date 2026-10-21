@@ -16,7 +16,11 @@ Your system Python refuses installs outside a virtual environment. Create one (`
 
 ### `budget: command not found` (or `'budget' is not recognized`)
 
-The virtual environment is not active in this terminal. Activate it from the repository folder: `source .venv/bin/activate` (Windows: `.venv\Scripts\Activate.ps1`). Your prompt then starts with `(.venv)`.
+If you installed from source, the virtual environment is not active in this terminal. Activate it from the repository folder: `source .venv/bin/activate` (Windows: `.venv\Scripts\Activate.ps1`). Your prompt then starts with `(.venv)`.
+
+If you used the **Windows setup** (1.3.1 or newer), it has put its folder on your user PATH, but a terminal that was already open does not see that: open a new one. If you used the portable zip, or a setup older than 1.3.1 where the PATH option was not ticked, run `budget.exe` by its full path, or add the folder to your PATH yourself.
+
+If you used the **Linux tarball**, `install.sh` links `budget` into `~/.local/bin`; make sure that folder is on your `PATH`, and add it to your shell's start-up file if your distribution does not. The `.deb` and `.rpm` link it into `/usr/bin`.
 
 ### PowerShell: "running scripts is disabled on this system"
 
