@@ -3099,7 +3099,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "1.3.1",
+    "tool_version": "1.4.0",
     "user": "Golden User"
   }
 }
