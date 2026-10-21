@@ -1,4 +1,5 @@
-"""The three grid pages of the Model tab: units, power modes and sourced inputs (D-159)."""
+"""The grid pages of the Model tab: units, power modes, spacecraft modes and sourced inputs
+(D-159, D-187, D-188)."""
 
 from __future__ import annotations
 
@@ -8,11 +9,13 @@ from typing import Any
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QCheckBox, QDialog, QMenu
 
-from budget_core.model import Unit
+from budget_core.model import SpacecraftMode, Unit
+from budget_core.new_mode import ModeAnswers, mode_data, scenarios_using, starting_assignments
 from budget_core.new_unit import UnitAnswers, unit_data
 from budget_gui import icons
+from budget_gui.add_mode_dialog import AddModeDialog
 from budget_gui.add_unit_dialog import AddUnitDialog
-from budget_gui.grid_models import PowerModesModel, SourcedModel, UnitsModel
+from budget_gui.grid_models import ModeAssignmentsModel, PowerModesModel, SourcedModel, UnitsModel
 from budget_gui.grid_view import GridPage
 from budget_gui.model_document import ModelDocument
 
@@ -259,6 +262,147 @@ class PowerModesPage(GridPage):
             self.show_message("A unit needs at least one power mode: it was not removed.")
             return False
         self.show_message(f"Removed {label}. Undo with Ctrl+Z.")
+        return True
+
+
+class SpacecraftModesPage(GridPage):
+    """One row per unit in every spacecraft mode: the power mode the unit is in. Add a spacecraft
+    mode (a form for its name and where the assignments start from) and remove one (D-188)."""
+
+    def __init__(self, document: ModelDocument) -> None:
+        self.assignments = ModeAssignmentsModel(document)
+        super().__init__(
+            self.assignments,
+            document,
+            what="spacecraft mode",
+            filter_hint="Filter (spacecraft mode, unit or power mode…)",
+        )
+        self.assignments.refused.connect(self.show_message)
+        self.add_button = self.bar.make_button(
+            "Add mode",
+            "plus",
+            "Add a spacecraft mode: it starts from a copy of another mode or with every unit off",
+            "Ctrl+Shift+M",
+        )
+        self.remove_button = self.bar.make_button(
+            "Remove mode",
+            "trash-2",
+            "Remove the spacecraft mode of the selected row (Undo brings it back; Save deletes "
+            "its file)",
+            "Ctrl+Shift+Backspace",
+        )
+        self.add_button.clicked.connect(self.add_mode)
+        self.remove_button.clicked.connect(self.remove_mode)
+        self.add_tool(self.add_button)
+        self.add_tool(self.remove_button)
+        self.table.extra_actions.append(self._menu)
+
+    def _menu(self, menu: QMenu, row: int) -> None:
+        menu.addSeparator()
+        add = QAction(icons.icon("plus"), "Add a spacecraft mode…", menu)
+        add.triggered.connect(self.add_mode)
+        remove = QAction(icons.icon("trash-2"), "Remove this spacecraft mode", menu)
+        remove.setEnabled(row >= 0)
+        remove.triggered.connect(self.remove_mode)
+        menu.addAction(add)
+        menu.addAction(remove)
+
+    def unit_power_modes(self) -> dict[str, list[str]]:
+        """Every unit and the names of its power modes, in the order of the file."""
+        found: dict[str, list[str]] = {}
+        for rel in self.document.rels("units/"):
+            unit_id = rel.removeprefix("units/").removesuffix(".yaml")
+            names = self.assignments.power_modes_of(unit_id)
+            if names:
+                found[unit_id] = names
+        return found
+
+    def mode_ids(self) -> list[str]:
+        return [
+            rel.removeprefix("modes/").removesuffix(".yaml") for rel in self.document.rels("modes/")
+        ]
+
+    def select_mode(self, mode_id: str) -> bool:
+        self.filter.clear()
+        rows = self.assignments.rows_of(mode_id)
+        return bool(rows) and self.table.select_cell(rows[0], 2)
+
+    def _ask(self, existing: list[str], unit_ids: list[str]) -> ModeAnswers | None:
+        """The form; the tests put their own answers here."""
+        dialog = AddModeDialog(existing, unit_ids, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.answers()
+
+    def add_mode(self) -> bool:
+        units = self.unit_power_modes()
+        if not units:
+            self.show_message(
+                "The project has no unit yet. A spacecraft mode says what every unit is doing: "
+                "add a unit first."
+            )
+            return False
+        existing = self.mode_ids()
+        answers = self._ask(existing, sorted(units))
+        if answers is None:
+            return False
+        mode_id = answers.mode_id
+        copied: dict[str, str] | None = None
+        source = answers.copy_of
+        if source:
+            found = self.document.value(f"modes/{source}.yaml", ("assignments",))
+            copied = dict(found) if isinstance(found, dict) else None
+        assignments, first_mode = starting_assignments(units, copied)
+        try:
+            data = mode_data(answers.name, answers.description, assignments)
+        except ValueError:
+            self.show_message("The answers do not make a valid spacecraft mode.")
+            return False
+        rel = f"modes/{mode_id}.yaml"
+        if not self.document.add_file(rel, SpacecraftMode, data, f"Add spacecraft mode {mode_id}"):
+            self.show_message(
+                f"There is already a file for {mode_id} (removed in this session? Undo it, or "
+                "Save first)."
+            )
+            return False
+        self.select_mode(mode_id)
+        start = f"a copy of {source}" if source else "every unit off"
+        note = (
+            f" {len(first_mode)} unit{'s have' if len(first_mode) != 1 else ' has'} no power "
+            f"mode to start from and {'are' if len(first_mode) != 1 else 'is'} in the first "
+            "one: check the grid."
+            if first_mode
+            else ""
+        )
+        self.show_message(
+            f"Added {mode_id} ({start}).{note} Set the power mode of each unit in the grid. "
+            f"Save (Ctrl+S) writes {rel}; Undo with Ctrl+Z."
+        )
+        return True
+
+    def remove_mode(self) -> bool:
+        current = self.table.current_cell()
+        if current is None:
+            self.show_message("Select a row of the spacecraft mode to remove first.")
+            return False
+        key = self.assignments._keys[current[0]]
+        rel, mode_id = key[0], self.assignments.mode_of(key)
+        scenarios = {
+            s.removeprefix("scenarios/").removesuffix(".yaml"): self.document.data(s)
+            for s in self.document.rels("scenarios/")
+        }
+        users = scenarios_using(mode_id, scenarios)
+        if users:
+            self.show_message(
+                f"{mode_id} is used by the scenario(s) {', '.join(users)}: change them first "
+                "(Model > Scenario). It was not removed."
+            )
+            return False
+        if not self.document.remove_file(rel, f"Remove spacecraft mode {mode_id}"):
+            return False
+        self.show_message(
+            f"Removed {mode_id}. Save (Ctrl+S) deletes {rel}; Undo with Ctrl+Z brings it back."
+        )
         return True
 
 

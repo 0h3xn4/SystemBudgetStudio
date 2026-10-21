@@ -80,7 +80,7 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 - **Plain-language problems**: every message names the file and field, says what is wrong and what to change; a double-click jumps to it.
 - **A calm window**: a navigation rail with seven areas (Model, Power, Mass, Thermal, Link, Compare, Reports), grids with undo and an explicit Save, a command palette (Ctrl+K), light and dark themes, a UI size of 90 to 125 %, and the whole window usable with the keyboard, with names for screen readers on every control. Long computations run in the background; the window keeps answering while a week at 1 s is worked out ([use the window](docs/user-manual/use-the-window.md)).
 
-Units are added and removed in the window (**Model → Units**); unit power modes can be exported to a CSV or XLSX table, filled in a spreadsheet and imported back with a preview ([unit tables](docs/user-manual/unit-tables.md)).
+Units and spacecraft modes are added and removed in the window (**Model → Units**, **Model → Spacecraft modes**); unit power modes can be exported to a CSV or XLSX table, filled in a spreadsheet and imported back with a preview ([unit tables](docs/user-manual/unit-tables.md)).
 
 Not included (out of scope so far): data-storage budgets, transient thermal simulation, interference analysis, a separate expert mode. See [decision D-099](docs/DECISIONS.md).
 

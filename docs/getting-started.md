@@ -192,7 +192,7 @@ You should see the window below: the **navigation rail** on the far left with th
 - Double-click (or Enter on) a row of the **Problems** panel to jump to the file and line it names; **F8** goes to the next problem. Press Enter on a file in the tree to edit it; **Ctrl+S** saves, and the budgets update. If you make a mistake the tables keep the last results that worked, with a yellow banner that says so.
 - **File → Export reports** (Ctrl+E), or the **Reports** area, writes the same files as the command line.
 - **Ctrl+K** finds any command, unit, file or scenario by a few letters of its name. **Settings** at the bottom of the rail changes the theme (light, dark or the system's), the UI size and reduce-motion; the [window page](user-manual/use-the-window.md) lists the shortcuts.
-- **File → New project (guided)** (Ctrl+N) builds a new project in five short pages, from a sample spacecraft or as a blank project of your own; **Model → Units** has **Add unit** and **Remove unit**.
+- **File → New project (guided)** (Ctrl+N) builds a new project in five short pages, from a sample spacecraft or as a blank project of your own; **Model → Units** has **Add unit** and **Remove unit**, and **Model → Spacecraft modes** has **Add mode** and **Remove mode**.
 
 On Linux without a display (a server, a container) set `QT_QPA_PLATFORM=offscreen` to run the window without showing it. That is only useful for tests: `system-budget-studio --smoke` creates the window and exits.
 

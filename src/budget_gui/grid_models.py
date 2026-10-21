@@ -14,7 +14,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt, Signal
 
 from budget_core.units.quantity import canonical_unit
 from budget_gui.delegates import CELL_ROLE, NUMERIC_ROLE, STATE_ROLE
@@ -473,6 +473,91 @@ class PowerModesModel(GridModel):
             del data["modes"][index]
 
         return self.document.edit([(rel, apply)], f"Remove mode {label}")
+
+
+# ---- spacecraft modes -----------------------------------------------------------------------
+class ModeAssignmentsModel(GridModel):
+    """One row per unit in every spacecraft mode: the power mode the unit is in. A name the unit
+    has no power mode of is refused (with a reason), not written, so a typing error cannot turn
+    into an unknown-mode error at the next load (D-188)."""
+
+    refused = Signal(str)  # why an edit was not made
+
+    columns = (
+        Column("spacecraft mode", "", "id"),
+        Column("unit", "", "id"),
+        Column("power mode", "power_mode", "text"),
+    )
+
+    def row_keys(self) -> list[tuple[str, int]]:
+        keys: list[tuple[str, int]] = []
+        for rel in self.document.rels("modes/"):
+            assignments = self.document.value(rel, ("assignments",))
+            if isinstance(assignments, dict):
+                keys.extend((rel, index) for index in range(len(assignments)))
+        return keys
+
+    def unit_of(self, key: tuple[str, int]) -> str:
+        assignments = self.document.value(key[0], ("assignments",))
+        names = sorted(assignments) if isinstance(assignments, dict) else []
+        return str(names[key[1]]) if key[1] < len(names) else ""
+
+    def mode_of(self, key: tuple[str, int]) -> str:
+        return key[0].removeprefix("modes/").removesuffix(".yaml")
+
+    def path_of(self, key: tuple[str, int], column: Column) -> Path_ | None:
+        return ("assignments", self.unit_of(key)) if column.key else None
+
+    def label_of(self, key: tuple[str, int]) -> str:
+        return f"{self.mode_of(key)} / {self.unit_of(key)}"
+
+    def id_text(self, row: int, column: int) -> str:
+        key = self._keys[row]
+        return self.mode_of(key) if column == 0 else self.unit_of(key)
+
+    def id_tip(self, row: int, column: int) -> str | None:
+        key = self._keys[row]
+        if column == 0:
+            name = self.document.value(key[0], ("name",))
+            return f"{key[0]}\n{name}" if isinstance(name, str) and name else key[0]
+        return f"units/{self.unit_of(key)}.yaml"
+
+    def rows_of(self, mode_id: str) -> list[int]:
+        rel = f"modes/{mode_id}.yaml"
+        return [row for row, key in enumerate(self._keys) if key[0] == rel]
+
+    def power_modes_of(self, unit_id: str) -> list[str]:
+        modes = (
+            self.document.value(f"units/{unit_id}.yaml", ("modes",))
+            if self.document.has(f"units/{unit_id}.yaml")
+            else None
+        )
+        if not isinstance(modes, list):
+            return []
+        return [str(m["name"]) for m in modes if isinstance(m, dict) and "name" in m]
+
+    def column_tip(self, column: Column) -> str:
+        if column.key == "power_mode":
+            return "The power mode the unit is in while the spacecraft is in this mode."
+        return column.title
+
+    def change_for(
+        self, row: int, column: int, text: str
+    ) -> tuple[str, Callable[[dict[str, Any]], None], str] | None:
+        if column == 2:
+            key = self._keys[row]
+            unit = self.unit_of(key)
+            wanted = text.strip()
+            names = self.power_modes_of(unit)
+            if wanted not in names:
+                listing = ", ".join(names) if names else "none"
+                self.refused.emit(
+                    f"{unit} has no power mode of that name, so it was not changed. "
+                    f"Its power modes: {listing}."
+                )
+                return None
+            return super().change_for(row, column, wanted)
+        return super().change_for(row, column, text)
 
 
 # ---- sourced inputs -------------------------------------------------------------------------
