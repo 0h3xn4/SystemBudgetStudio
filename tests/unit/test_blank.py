@@ -4,18 +4,23 @@ no invented number."""
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
-import yaml
 
 from budget_core import blank
 from budget_core.blank import BlankAnswers, check_blank, create_blank_in, create_blank_project
 from budget_core.io.project_loader import load_project
+from budget_core.io.yamlio import load_yaml_text
 from budget_core.link.evaluate import link_static_budget
 from budget_core.mass.static_mass import static_mass_budget
 from budget_core.power.static_budget import static_power_budget
 from budget_core.problems import Severity
 from budget_core.wizard import WizardError
+
+
+def read_yaml(text: str) -> Any:
+    return load_yaml_text(text).data
 
 
 def answers(**kw: object) -> BlankAnswers:
@@ -70,7 +75,7 @@ def test_the_only_warnings_are_the_things_still_to_fill_in(tmp_path: Path) -> No
 def test_every_configuration_number_is_a_placeholder(tmp_path: Path) -> None:
     folder = create_blank_project(answers(), tmp_path / "sat")
     for name in ("margin_policy", "power_config"):
-        data = yaml.safe_load((folder / "config" / f"{name}.yaml").read_text(encoding="utf-8"))
+        data = read_yaml((folder / "config" / f"{name}.yaml").read_text(encoding="utf-8"))
         sourced: list[dict[str, object]] = []
 
         def walk(node: object, found: list[dict[str, object]] = sourced) -> None:
@@ -103,7 +108,7 @@ def test_no_number_is_invented(tmp_path: Path) -> None:
             numbers.append(float(node))
 
     for name in ("project.yaml", "spacecraft.yaml"):
-        walk(yaml.safe_load((folder / name).read_text(encoding="utf-8")))
+        walk(read_yaml((folder / name).read_text(encoding="utf-8")))
     assert numbers == [42.5]
 
 

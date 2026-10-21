@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
-import yaml
 
 from budget_cli.main import main
+from budget_core.io.yamlio import load_yaml_text
+
+
+def read_yaml(text: str) -> Any:
+    return load_yaml_text(text).data
 
 
 def test_it_creates_a_project_that_validates(
@@ -36,9 +41,9 @@ def test_the_name_defaults_to_the_folder_and_can_be_given(tmp_path: Path) -> Non
         "Beta FM",
     ]
     assert main(given) == 0
-    alpha = yaml.safe_load((tmp_path / "alpha" / "project.yaml").read_text(encoding="utf-8"))
-    beta = yaml.safe_load((tmp_path / "beta" / "project.yaml").read_text(encoding="utf-8"))
-    craft = yaml.safe_load((tmp_path / "beta" / "spacecraft.yaml").read_text(encoding="utf-8"))
+    alpha = read_yaml((tmp_path / "alpha" / "project.yaml").read_text(encoding="utf-8"))
+    beta = read_yaml((tmp_path / "beta" / "project.yaml").read_text(encoding="utf-8"))
+    craft = read_yaml((tmp_path / "beta" / "spacecraft.yaml").read_text(encoding="utf-8"))
     assert alpha["name"] == "alpha" and beta["name"] == "Beta sat"
     assert craft["name"] == "Beta FM"
     assert craft["buses"] == [{"name": "power", "nominal_voltage_v": 12.5}]
