@@ -12,7 +12,7 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 - [ ] File > New project (guided): finish with the defaults; the first power timeline appears. (Manual; the automated wizard test covers the logic.)
 - [ ] File > Export reports writes XLSX, PDF and DOCX that open in Excel, a PDF reader and Word. (Manual.)
 - [ ] With the network cable out or Wi-Fi off, everything above still works. (Manual; the offline test covers the code.)
-- [ ] Uninstall from *Apps and features*: the program folder and the Start menu entry are gone, your project folder is untouched. (CI: silent uninstall.)
+- [ ] Uninstall from *Apps and features*: the program folder, the Start menu entry and the PATH entry are gone (check *Environment Variables* for your user), your project folder is untouched. (CI: silent uninstall and the PATH entry.)
 - [ ] The portable zip starts from a USB stick or a folder, installs nothing and makes no registry entry; the only file the window writes outside it is `layout.ini` in `%APPDATA%\System Budget Studio\`, and nothing at all with `BUDGET_NO_LAYOUT=1`. (Manual.)
 
 ## RHEL or Rocky Linux 8 (ordinary user)

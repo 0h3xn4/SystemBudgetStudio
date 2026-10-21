@@ -1,8 +1,10 @@
 # Changelog
 
-All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Version 1.0.0 is released ([how to cut a release](docs/developer/README.md#cut-a-release)).
+All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Every version below is released ([how to cut a release](docs/developer/README.md#cut-a-release)).
 
 ## [Unreleased]
+
+- **Documentation after 1.3.1.** The troubleshooting page says what to do when `budget` is not found after the Windows setup (open a new terminal), the portable zip, the Linux tarball (`~/.local/bin`) and the packages. The README and *Getting started* say what the Windows setup does with the PATH. The install checklist checks that uninstalling removes the PATH entry. The developer page's *Cut a release* lists every place a version is written and the golden-file step (it named two of seven). The changelog no longer says that only 1.0.0 is released. No program behaviour changed.
 
 ## [1.3.1] - 2026-10-21
 
