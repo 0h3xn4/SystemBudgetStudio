@@ -312,7 +312,7 @@ class MainWindow(QMainWindow):
         edit_menu.addAction(self.redo_action)
         edit_menu.addSeparator()
         # Add unit and Remove unit work from any area: they bring the Units grid to the front
-        self.add_unit_action = QAction("Add &unit…", self)
+        self.add_unit_action = QAction("&Add unit…", self)
         self.add_unit_action.setShortcut(QKeySequence("Ctrl+Shift+N"))
         self.add_unit_action.triggered.connect(self.add_unit)
         self.remove_unit_action = QAction("Re&move unit", self)
