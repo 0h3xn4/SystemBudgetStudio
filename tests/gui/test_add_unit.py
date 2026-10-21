@@ -15,6 +15,7 @@ from budget_gui.add_unit_dialog import AddUnitDialog
 from budget_gui.main_window import MainWindow
 from budget_gui.model_document import ModelDocument
 from budget_gui.model_pages import UnitsPage
+from budget_gui.project_tree import UNIT_ROLE
 
 pytestmark = pytest.mark.gui
 
@@ -275,3 +276,79 @@ def test_saving_a_removed_unit_asks_before_deleting_its_file(
     monkeypatch.setattr(QMessageBox, "question", lambda *_a, **_k: QMessageBox.StandardButton.Yes)
     assert window.save_model()
     assert not (example / "units" / "star_tracker.yaml").exists()
+
+
+# ---- keyboard first: menu entries, shortcuts, the palette -------------------------------------
+def _action(window: MainWindow, text: str):  # type: ignore[no-untyped-def]
+    for top in window.menuBar().actions():
+        menu = top.menu()
+        if menu is not None:
+            for action in menu.actions():
+                if action.text().replace("&", "") == text:
+                    return action
+    raise AssertionError(f"no menu entry {text!r}")
+
+
+def test_add_and_remove_unit_are_in_the_edit_menu_with_shortcuts(qtbot) -> None:  # type: ignore[no-untyped-def]
+    window = MainWindow()
+    qtbot.addWidget(window)
+    add, remove = _action(window, "Add unit…"), _action(window, "Remove unit")
+    assert add.shortcut().toString() == "Ctrl+Shift+N"
+    assert remove.shortcut().toString() == "Ctrl+Shift+Del"
+    assert not add.isEnabled() and not remove.isEnabled()  # no project yet
+    assert window.add_unit() is False and window.remove_unit() is False  # and no crash
+    assert "Ctrl+Shift+N" in window.units_page.add_button.toolTip()
+    assert "Ctrl+Shift+Delete" in window.units_page.remove_button.toolTip()
+
+
+def test_the_palette_offers_add_and_remove_unit_once_a_project_is_open(
+    example: Path,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    window = MainWindow()
+    qtbot.addWidget(window, before_close_func=lambda w: w.editors.discard_all_changes())
+    assert not [c for c in window.palette_commands() if "Add unit" in c.text]
+    window.open_project(example)
+    assert _action(window, "Add unit…").isEnabled() and _action(window, "Remove unit").isEnabled()
+    names = {c.text: c.hint for c in window.palette_commands()}
+    assert names["Edit > Add unit"] == "Ctrl+Shift+N"
+    assert "Edit > Remove unit" in names
+
+
+def test_add_unit_from_another_area_brings_the_units_grid_to_the_front(
+    example: Path,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    window = MainWindow()
+    qtbot.addWidget(window, before_close_func=lambda w: w.editors.discard_all_changes())
+    window.open_project(example)
+    window.show_view(window.mass_view)
+    window.units_page._ask = lambda *_a: answers()  # type: ignore[method-assign]
+    _action(window, "Add unit…").trigger()
+    assert window.workspace.currentWidget() is window.editors
+    assert window.editors.currentWidget() is window.units_page
+    assert "units/camera2.yaml" in window.document.rels("units/")
+
+
+def test_remove_unit_takes_the_unit_selected_in_the_tree_from_another_area(
+    example: Path,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    from PySide6.QtWidgets import QTreeWidgetItemIterator
+
+    window = MainWindow()
+    qtbot.addWidget(window, before_close_func=lambda w: w.editors.discard_all_changes())
+    window.open_project(example)
+    window.show_view(window.mass_view)
+    iterator = QTreeWidgetItemIterator(window.tree)
+    while iterator.value() is not None:
+        item = iterator.value()
+        if item.data(0, UNIT_ROLE) == "star_tracker":
+            window.tree.setCurrentItem(item)
+            break
+        iterator += 1
+    assert window.tree.current_unit_id() == "star_tracker"
+    _action(window, "Remove unit").trigger()
+    assert window.editors.currentWidget() is window.units_page
+    assert "units/star_tracker.yaml" not in window.document.rels("units/")
+    assert "units/star_tracker.yaml" in window.document.deleted_files()

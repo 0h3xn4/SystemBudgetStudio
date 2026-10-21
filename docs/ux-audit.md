@@ -1,6 +1,6 @@
 # UX audit of the current window
 
-Status: **approved; being implemented.** The owner approved the eight decisions and the five conventions ("as recommended"). Step 0 (foundation, D-150) and step 1 (the shell, D-151 to D-156) are done; [the status of each finding](#status-of-the-findings) is at the end. This page is kept as it was written; the table at the end says what changed.
+Status: **historical; implemented.** The owner approved the eight decisions and the five conventions ("as recommended"), and they were built in the redesigned window of 1.1.0 (steps 0 to 6, D-150 to D-167); the window was then redone again in 1.2.0 ([the UI overhaul](ui/UI_OVERHAUL_PLAN.md)). This page is kept as it was written, about the 1.0.0 window. [The status table](#status-of-the-findings) at the end is as it stood after step 1 and was not updated afterwards: for the window as it is now, read [Use the window](user-manual/use-the-window.md) and [DESIGN.md](DESIGN.md).
 
 **Contents:** [How this was done](#how-this-was-done) · [Verdict](#verdict) · [What to keep](#what-to-keep) · [Findings](#findings) · [Screenshots](#screenshots) · [Measurements](#measurements) · [Standard against the window](#the-standard-against-the-window) · [Conflicts with project rules](#where-the-standard-meets-the-project-rules-decisions-needed) · [Questions about conventions](#questions-about-conventions) · [Plan](#plan) · [Status of the findings](#status-of-the-findings)
 

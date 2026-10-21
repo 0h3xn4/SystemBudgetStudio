@@ -16,6 +16,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 
 ## B
 
+<a id="blank-project"></a>
+**Blank project**: a project with one bus, every configuration number a [placeholder](#placeholder), empty tables and no units, modes, orbits, scenarios or links: a spacecraft you describe yourself instead of a copy of a sample. Made by `budget new` or by the *Blank project* choice of the guided wizard. See [create a project](user-manual/create-a-project.md#how-do-i-start-a-blank-project).
+
 <a id="bol-eol"></a>
 **BOL and EOL**: beginning of life (new solar array and battery) and end of life (after the design life: the array has degraded and the battery lost capacity). The time-domain power budget computes both. See [power budget](user-manual/power-budget.md).
 

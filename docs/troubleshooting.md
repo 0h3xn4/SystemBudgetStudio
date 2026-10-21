@@ -68,6 +68,10 @@ The folder exists but is not a project (for example an empty folder), or a file 
 
 Two units, links, phases or cases have names that become the same file name (file names keep only letters, digits, `.`, `-`, `_`). Rename one.
 
+### `budget new`: `The folder 'x' already exists.` or `the following arguments are required: --bus-voltage-v`
+
+`budget new` never touches an existing folder: give a folder that does not exist yet. The bus voltage has no default, because it is your design value: give it in volts (`--bus-voltage-v 28`; it must be between 1 and 1000). See [a blank project](user-manual/create-a-project.md#how-do-i-start-a-blank-project).
+
 ### `<project>: error SCENARIO_UNKNOWN: Scenario 'x' does not exist.`
 
 The `--scenario` id is wrong. The message ends with the list of scenarios the project has (`Defined scenarios: one_day.`); the id is the file name in `scenarios/` without `.yaml`.
@@ -137,6 +141,14 @@ The project has an error since you last saved. The budget tables are kept from b
 ### A panel is missing or the window looks wrong
 
 **View → Reset layout** restores the panels, their sizes and the Problems columns. The panels can also be switched on in the **View** menu. The window layout is kept in `layout.ini` (see [use the window](user-manual/use-the-window.md#where-does-the-window-keep-its-layout)); deleting that file does the same.
+
+### Add unit says "The spacecraft has no bus", or the form will not accept the subsystem
+
+A unit needs a bus, so add one in `spacecraft.yaml` first (a project made with `budget new` or the wizard has one). With a thermal model in the project, the **subsystem** must be the name of one of its nodes (the form suggests them), or add the node to `config/thermal_model.yaml` first. The mass and the powers have no default: the form refuses an empty one. See [add a unit](user-manual/describe-the-spacecraft.md#how-do-i-add-a-unit).
+
+### Save asks "Saving deletes 1 file from the project folder"
+
+You removed a unit with **Remove unit**. Saving deletes its file (`units/<id>.yaml`) and takes it out of every spacecraft mode. Answer **No** to keep the file, then **Undo** (Ctrl+Z) the removal. A deleted file is not in the undo history any more.
 
 ### "The file ... changed on disk after it was opened in this tab"
 

@@ -310,6 +310,17 @@ class MainWindow(QMainWindow):
         self.redo_action.setShortcut(QKeySequence.StandardKey.Redo)
         edit_menu.addAction(self.undo_action)
         edit_menu.addAction(self.redo_action)
+        edit_menu.addSeparator()
+        # Add unit and Remove unit work from any area: they bring the Units grid to the front
+        self.add_unit_action = QAction("&Add unit…", self)
+        self.add_unit_action.setShortcut(QKeySequence("Ctrl+Shift+N"))
+        self.add_unit_action.triggered.connect(self.add_unit)
+        self.remove_unit_action = QAction("Re&move unit", self)
+        self.remove_unit_action.setShortcut(QKeySequence("Ctrl+Shift+Delete"))
+        self.remove_unit_action.triggered.connect(self.remove_unit)
+        for action in (self.add_unit_action, self.remove_unit_action):
+            action.setEnabled(False)  # until a project is open that loads
+            edit_menu.addAction(action)
 
     def _build_run_menu(self) -> None:
         run_menu = self.menuBar().addMenu("&Run")
@@ -540,6 +551,27 @@ class MainWindow(QMainWindow):
         unit_id = self.tree.current_unit_id()
         if unit_id:
             self.show_unit(unit_id)
+
+    def add_unit(self) -> bool:
+        """Edit > Add unit: the form of the Units grid, from whichever area is in front."""
+        if self.session.project is None:
+            return False
+        self.show_view(self.units_page)
+        return self.units_page.add_unit()
+
+    def remove_unit(self) -> bool:
+        """Edit > Remove unit: the unit with the cursor in the Units grid, or else the unit selected
+        in the project tree."""
+        if self.session.project is None:
+            return False
+        tree_unit = self.tree.current_unit_id()
+        in_front = self.workspace.currentWidget() is self.editors and (
+            self.editors.currentWidget() is self.units_page
+        )
+        self.show_view(self.units_page)
+        if tree_unit and not (in_front and self.units_page.table.current_cell() is not None):
+            self.units_page.select_unit(tree_unit)
+        return self.units_page.remove_unit()
 
     def _choose_export(self) -> None:
         if not self.session.outputs:
@@ -1043,6 +1075,8 @@ class MainWindow(QMainWindow):
         self.status_bar.set_project_path(session.path)
         self.status_bar.set_last_run(self._last_run)
         self.provenance_panel.set_provenance(session.provenance)
+        for action in (self.add_unit_action, self.remove_unit_action):
+            action.setEnabled(project is not None)
         self.update_reports_page()
         self._show_welcome()
         self._update_banners()

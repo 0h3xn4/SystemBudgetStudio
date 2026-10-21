@@ -1,4 +1,5 @@
-"""Location of the bundled assets (IBM Plex fonts, licences, application icons).
+"""Location of the bundled assets (the fonts of the window and of exported files, licences,
+application icons).
 
 No network, no downloads."""
 
