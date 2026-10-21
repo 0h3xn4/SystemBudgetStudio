@@ -20,7 +20,7 @@ Severity: **high** = a newcomer is blocked or misled; **medium** = wrong or miss
 
 | # | File | Problem | Sev. | Planned fix | Status |
 |---|---|---|---|---|---|
-| A1 | `README.md` | Install block starts at `pip install -e .` with no `git clone`, no `cd`, no virtual environment. It fails outside the repository root; nothing says the package is not on PyPI. | high | New README quick start and `docs/getting-started.md` with clone + venv for Windows, macOS, Linux. | fixed |
+| A1 | `README.md` | Install block starts at `pip install -e .` with no `git clone`, no `cd`, no virtual environment. It fails outside the repository root; nothing says the package is not on PyPI. | high | New README quick start and `docs/getting-started.md` with clone + venv for Windows and Linux. | fixed |
 | A2 | `README.md`, guide ch. 2 | `budget compare demo/cubesat_3u_eps other_revision`: there is no `other_revision` folder, so the command fails (`FILE_NOT_FOUND`) as written. | medium | Use two folders that exist (`cubesat_3u_eps` and `cubesat_3u`) and show how to make a second revision. | fixed |
 | A3 | `README.md` | Two listed commands (`budget run … --budget thermal`, `budget power-timeline …`) end with exit code 1 on the example. That is by design (a thermal-margin finding on the radio; peak power above the limit) but it is not explained, so it looks like a failure. | medium | Explain exit codes in getting-started and the examples page, with the real output. | fixed |
 | A4 | `README.md` | "Status" is a single paragraph naming milestones M0 to M6 ("M6 Polish on top of M5 on top of …"); a newcomer cannot tell what the tool does. | high | Replace with "What is this?" and a Features list; milestone history moves to `CHANGELOG.md`. | fixed |

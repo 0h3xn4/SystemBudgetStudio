@@ -232,7 +232,7 @@ shows every component in both themes, used for screenshots and smoke tests.
 
 ```
 ┌ menu bar (kept: File Edit Run View Help; every item also in the palette) ───────────────────────┐
-├ top bar ─ project · revision · scenario ▾ · BOL|EOL · [Run / Cancel + progress] · chip · ⌘K  ────┤
+├ top bar ─ project · revision · scenario ▾ · BOL|EOL · [Run / Cancel + progress] · chip · Ctrl+K ─┤
 │ rail │ side panel   │ workspace (one page at a time)                     │ inspector (right)     │
 │ 56px │ (Project     │  page header: title · segmented sub-pages · actions │ Inspector | Provenance│
 │      │  tree, toggle│                                                     │ (collapsible, 320 px) │
@@ -253,7 +253,7 @@ Mapping of every current element:
 | Project tree dock (left) | Side panel next to the rail, toggled by the rail's top button and Ctrl+B; open by default on Model | Keeps unit selection and badges. |
 | Inspector, Provenance docks (right) | One right panel with two pages; toggle in the top bar | Selection-driven, as now (`show_cell`). |
 | Problems dock (right) | **Bottom panel** (full width, one line per problem), filter + grouping kept, jump to file/line kept; the status bar's "10 not checked" link opens it filtered | Fixes S2. |
-| Top bar | Same contents; project name gets the space it needs; ⌘K field replaces the unlabeled shortcut | Run/Cancel unchanged (D-167). |
+| Top bar | Same contents; project name gets the space it needs; Ctrl+K field replaces the unlabeled shortcut | Run/Cancel unchanged (D-167). |
 | Banners (stale, failed) | Inline banner component under the top bar, same texts | |
 | Status bar | Same segments (path, last run, version, project state) | |
 | Welcome page | The workspace with no project: same content, no empty panels | |

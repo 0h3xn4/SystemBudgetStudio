@@ -346,7 +346,9 @@ def _id_problems(folder: str, names: list[str]) -> tuple[list[Problem], set[str]
                 "Another file in this folder has an id that differs only in capital letters or in "
                 "the way an accent is encoded.",
                 file=_safe_text(f"{folder}/{name}"),
-                hint="On Windows and macOS such names are the same file; rename one of them.",
+                hint=(
+                    "On some file systems, Windows among them, such names are one file; rename one."
+                ),
             )
         )
     return problems, unusable

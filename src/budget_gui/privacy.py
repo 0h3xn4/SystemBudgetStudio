@@ -1,7 +1,7 @@
 """Keep Qt from writing settings outside the project (decision D-105).
 
 Qt's own file dialog remembers the folders it was last used in. It stores them in
-`~/.config/QtProject.conf` (Linux, macOS) or the registry (Windows): state outside the project
+`~/.config/QtProject.conf` (Linux) or the registry (Windows): state outside the project
 folder that names folders of the user's projects. The tool keeps no such state, so the place Qt
 writes its settings to is moved to a path that cannot exist and the registry format is not used.
 Qt then fails to write quietly; the dialogs just do not remember the last folder.

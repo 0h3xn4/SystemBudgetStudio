@@ -47,7 +47,7 @@ ICONS = (
 )
 EXECUTABLES = ("system-budget-studio", "budget")
 # the private Python of the bundle: the installers need no Python on the machine (D-184)
-INTERPRETER_PATTERNS = ("libpython3*.so*", "python3*.dll", "libpython3*.dylib")
+INTERPRETER_PATTERNS = ("libpython3*.so*", "python3*.dll")
 
 
 def has_executable(bundle: Path, name: str) -> bool:

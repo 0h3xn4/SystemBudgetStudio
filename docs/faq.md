@@ -16,7 +16,7 @@ No, never while running. There is no telemetry, no update check and no online he
 
 ### Which systems does it run on?
 
-Windows 10/11 and Linux (RHEL/Rocky 8 or newer, Ubuntu LTS), Python 3.11 to 3.13. macOS is not tested.
+Windows 10/11 and Linux (RHEL/Rocky 8 or newer, Ubuntu LTS), Python 3.11 to 3.13.
 
 ### Is it free to use? What is the licence?
 

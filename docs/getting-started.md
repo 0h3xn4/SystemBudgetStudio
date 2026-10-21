@@ -10,7 +10,7 @@ This page takes you from nothing to a first result: install the tool, run a budg
 |---|---|---|
 | Python 3.11, 3.12 or 3.13 | `python3 --version` (Windows: `py -3 --version`) | 3.14 and newer are not supported yet. |
 | git | `git --version` | Only to download the source. You can also download a ZIP from GitHub. |
-| A terminal | | Windows: PowerShell. Linux/macOS: any shell. |
+| A terminal | | Windows: PowerShell. Linux: any shell. |
 
 **Linux only: one system library for the window.** The Qt window needs `libxcb-cursor0`. Without it the window does not open and you see *"Could not load the Qt platform plugin xcb"* (see [troubleshooting](troubleshooting.md#the-window-does-not-open-on-linux)). The command-line tool does not need it.
 
@@ -20,13 +20,11 @@ sudo apt install libxcb-cursor0          # Ubuntu / Debian
 
 On RHEL or Rocky the window needs the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)), and `xcb-util-cursor`, which is not in their own repositories but in EPEL: `sudo dnf install epel-release` (on RHEL itself: the `epel-release` package from the Fedora project's EPEL page), then `sudo dnf install xcb-util-cursor`.
 
-**macOS** is not tested. The tool should run from source (Python and Qt are cross-platform), but nobody has checked it.
-
 ## 2. Install
 
 Use a virtual environment so the tool's libraries stay out of your system Python.
 
-Linux and macOS:
+Linux:
 
 ```bash
 git clone https://github.com/0h3xn4/systembudgetstudio.git
