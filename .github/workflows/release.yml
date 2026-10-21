@@ -122,17 +122,17 @@ jobs:
           if ($smoke.ExitCode -ne 0) { throw "GUI smoke test failed (the window could not be created)" }
           Start-Process -Wait -FilePath "$target\unins000.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES"
           if (Test-Path "$target\budget.exe") { throw "uninstall left the program behind" }
-      - name: The PATH option adds and removes exactly one entry, and an upgrade leaves no stale file
+      - name: The setup adds and removes exactly one PATH entry, and an upgrade leaves no stale file
         shell: pwsh
         run: |
           $setup = Get-ChildItem dist\*-setup.exe | Select-Object -First 1
           $target = Join-Path $env:RUNNER_TEMP "sbs-path"
           $before = (Get-ItemProperty -Path HKCU:\Environment -Name Path -ErrorAction SilentlyContinue).Path
-          Start-Process -Wait -FilePath $setup.FullName -ArgumentList "/VERYSILENT","/CURRENTUSER","/SUPPRESSMSGBOXES","/TASKS=addtopath","/DIR=$target"
+          Start-Process -Wait -FilePath $setup.FullName -ArgumentList "/VERYSILENT","/CURRENTUSER","/SUPPRESSMSGBOXES","/DIR=$target"
           $during = (Get-ItemProperty -Path HKCU:\Environment -Name Path).Path
-          if (($during -split ";") -notcontains $target) { throw "the PATH task did not add the folder" }
+          if (($during -split ";") -notcontains $target) { throw "the setup did not add the folder to PATH" }
           New-Item -ItemType File -Force -Path "$target\_internal\stale-from-an-old-version.txt" | Out-Null
-          Start-Process -Wait -FilePath $setup.FullName -ArgumentList "/VERYSILENT","/CURRENTUSER","/SUPPRESSMSGBOXES","/TASKS=addtopath","/DIR=$target"
+          Start-Process -Wait -FilePath $setup.FullName -ArgumentList "/VERYSILENT","/CURRENTUSER","/SUPPRESSMSGBOXES","/DIR=$target"
           if (Test-Path "$target\_internal\stale-from-an-old-version.txt") { throw "the upgrade left a stale file behind" }
           if ((($(Get-ItemProperty -Path HKCU:\Environment -Name Path).Path) -split ";" | Where-Object { $_ -eq $target }).Count -ne 1) { throw "the upgrade duplicated the PATH entry" }
           Start-Process -Wait -FilePath "$target\unins000.exe" -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES"

@@ -46,6 +46,8 @@ ICONS = (
     "budget_core/assets/fonts/JetBrainsMono-Regular.ttf",
 )
 EXECUTABLES = ("system-budget-studio", "budget")
+# the private Python of the bundle: the installers need no Python on the machine (D-184)
+INTERPRETER_PATTERNS = ("libpython3*.so*", "python3*.dll", "libpython3*.dylib")
 
 
 def has_executable(bundle: Path, name: str) -> bool:
@@ -71,6 +73,8 @@ def check(bundle: Path) -> list[str]:
     for exe in EXECUTABLES:
         if not has_executable(bundle, exe):
             problems.append(f"missing executable: {exe}")
+    if not any(list(root.glob(pattern)) for root in roots for pattern in INTERPRETER_PATTERNS):
+        problems.append("the bundle holds no Python of its own")
     return problems
 
 

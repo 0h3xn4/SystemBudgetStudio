@@ -4,6 +4,12 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-10-21
+
+The Windows setup asks no question about the PATH, and the documentation matches the program. **No equation, file format, report layout or command-line behaviour changed**: the same project gives the same numbers and the same files as 1.3.0 (the tool version in the provenance rows and the examples differ).
+
+- **The Windows setup no longer asks about the PATH (D-184).** The installers already carried their own Python (nothing else has to be installed); the one remaining question, *Add the command-line tool budget to my PATH* (unticked by default), is gone. The setup now always adds its folder to your user PATH (no administrator rights; the uninstaller removes exactly that entry), so `budget` works in every new terminal. The bundle check also fails the build if a bundle holds no Python of its own. No program behaviour changed.
+
 - **Documentation brought up to date with the program as built.** Pages that still described the old window (a row of tabs, a Problems tab on the right) now describe the navigation rail, the areas and the bottom Problems panel, in the manual, *Getting started*, the tips and the in-app guide. The expected output of `budget --version` in *Getting started* is current. The statement that the tool keeps no settings outside the project folders (FAQ, window page, in-app guide, install checklist) now names the one file the window keeps, `layout.ini`, and how to avoid it, which matters for the portable zip (`BUDGET_NO_LAYOUT=1`, or `BUDGET_CONFIG_DIR` to put it in a folder of your choice). The README no longer says that zooming a week-long plot takes seconds (it takes about 25 ms). The architecture and developer pages list the real modules and commands and the real test times, and have a section on working on the window; the design page has a *Responsiveness* section (D-182, D-183). No program behaviour changed.
 
 ## [1.3.0] - 2026-10-20

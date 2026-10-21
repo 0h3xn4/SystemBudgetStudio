@@ -1,5 +1,5 @@
 ; Inno Setup script: per-user installer for System Budget Studio, no administrator rights.
-; Build:  iscc /DAppVersion=1.3.0 /DBundleDir=dist\system-budget-studio /DOutputDir=dist packaging\windows\system_budget_studio.iss
+; Build:  iscc /DAppVersion=1.3.1 /DBundleDir=dist\system-budget-studio /DOutputDir=dist packaging\windows\system_budget_studio.iss
 ; Silent install:    setup.exe /VERYSILENT /CURRENTUSER /DIR="C:\Some\Folder"
 ; Silent uninstall:  "<folder>\unins000.exe" /VERYSILENT
 #ifndef AppVersion
@@ -47,13 +47,11 @@ Source: "{#BundleDir}\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdi
 [Icons]
 Name: "{autoprograms}\System Budget Studio"; Filename: "{app}\system-budget-studio.exe"
 
-[Tasks]
-Name: "addtopath"; Description: "Add the command-line tool &budget to my PATH"; Flags: unchecked
-
 [Registry]
-; per-user PATH entry (HKCU), only when the task is ticked; removed again on uninstall
+; per-user PATH entry (HKCU), always, so that `budget` works in every new terminal; removed again
+; on uninstall. The setup asks no question about it (D-184).
 Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; \
-    ValueData: "{olddata};{app}"; Tasks: addtopath; Check: NeedsPath(ExpandConstant('{app}'))
+    ValueData: "{olddata};{app}"; Check: NeedsPath(ExpandConstant('{app}'))
 
 [Code]
 function NeedsPath(Dir: string): Boolean;

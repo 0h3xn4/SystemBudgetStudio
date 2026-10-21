@@ -4,7 +4,7 @@ System Budget Studio installs for one user and needs no administrator rights. Th
 
 ## Windows 10 and 11
 
-Run `system-budget-studio-<version>-windows-x64-setup.exe`. It installs to `%LOCALAPPDATA%\Programs\System Budget Studio` and adds a Start menu entry. Tick *Add the command-line tool budget to my PATH* if you want `budget` in every terminal.
+Run `system-budget-studio-<version>-windows-x64-setup.exe`. It installs to `%LOCALAPPDATA%\Programs\System Budget Studio` and adds a Start menu entry. The setup holds its own Python and every library, so nothing else has to be installed, and it adds its folder to your user PATH, so `budget` works in every new terminal (the uninstaller removes that entry again).
 
 For a silent install: `setup.exe /VERYSILENT /CURRENTUSER /DIR="C:\Tools\SBS"`.
 

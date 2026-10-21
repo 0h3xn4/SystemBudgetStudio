@@ -101,7 +101,7 @@ packaging/linux/make_rpm.sh dist/system-budget-studio dist                # only
 sudo packaging/linux/test_package.sh deb dist/*.deb                       # install, check, remove (use a container)
 ```
 
-`packaging/check_bundle.py` fails the build if development code is bundled, or licence material is missing. `system-budget-studio --smoke` creates the window and exits; CI runs it on every platform. See the decisions D-088, D-089, D-095 and D-096.
+`packaging/check_bundle.py` fails the build if development code is bundled, licence material is missing or the bundle holds no Python of its own (the installers need none on the machine; the Windows setup always adds its folder to the user PATH, D-184). `system-budget-studio --smoke` creates the window and exits; CI runs it on every platform. See the decisions D-088, D-089, D-095, D-096 and D-184.
 
 ## Cut a release
 
