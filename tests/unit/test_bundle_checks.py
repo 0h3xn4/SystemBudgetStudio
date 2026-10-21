@@ -103,7 +103,7 @@ def test_missing_licence_material_is_reported(tmp_path: Path, missing: str) -> N
     assert any(missing.split("/")[-1] in p for p in problems)
 
 
-@pytest.mark.parametrize("name", ["libpython3.13.so.1.0", "python313.dll", "libpython3.13.dylib"])
+@pytest.mark.parametrize("name", ["libpython3.13.so.1.0", "python313.dll"])
 def test_the_private_python_of_the_bundle_may_have_any_platform_name(
     tmp_path: Path, name: str
 ) -> None:

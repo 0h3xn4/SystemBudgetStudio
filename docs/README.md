@@ -9,7 +9,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | Page | What it is for |
 |---|---|
 | [../README.md](../README.md) | What the tool is and a ten-line quick start |
-| [getting-started.md](getting-started.md) | Prerequisites, install on Windows, macOS and Linux, a first budget, a worked example, the window |
+| [getting-started.md](getting-started.md) | Prerequisites, install on Windows and Linux, a first budget, a worked example, the window |
 | [glossary.md](glossary.md) | Every term and abbreviation (BOL, EIRP, Eb/N0, placeholder, …) |
 
 ## User guides

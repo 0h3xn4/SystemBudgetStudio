@@ -59,7 +59,7 @@ These rules come from two earlier tools built the same way (SpaceMissionStudio o
 
 ### Environment and packaging
 
-6. Runs on locked-down workstations without admin rights. Deliver a self-contained installer or portable build for Windows 10/11 and Linux (RHEL/Rocky 8+ and Ubuntu LTS). Treat macOS as optional.
+6. Runs on locked-down workstations without admin rights. Deliver a self-contained installer or portable build for Windows 10/11 and Linux (RHEL/Rocky 8+ and Ubuntu LTS).
 7. Only permissively licensed or LGPL dependencies that allow closed internal use. Pin all versions, make builds reproducible from a vendored or mirrored package set, and produce an SBOM (CycloneDX) and licence report with every release.
 8. **Keep release and dev tooling out of the runtime dependencies.** In Harness Design Studio, `cyclonedx-bom` in the install set pulled in `lxml`, which had no wheel for the newest Python and broke `pip install` for the whole app. Put pytest, mypy, ruff, pyinstaller, cyclonedx-bom, pip-licenses, pip-audit and similar under `[project.optional-dependencies] dev`, and make sure `pip install -e .` alone yields a runnable GUI.
 9. State the supported Python versions explicitly (currently 3.11 to 3.13) and test the install on the newest one, since brand-new interpreters often lack prebuilt wheels for C extensions.
@@ -191,7 +191,7 @@ Answered: "defaults for all" (see DECISIONS.md D-003 to D-017 for the concrete d
 - [x] **Eb/N0 and attenuation tables:** empty tables with `source: TBD`, manual import, no bundled third-party data.
 - [x] **Units library:** suffix convention in core, `pint` at the I/O boundary only.
 - [x] **Frequency bands:** band-agnostic model; UHF, S, X, Ka as data; no optical in v1.
-- [x] **Operating systems:** Windows 10/11 and Linux; macOS untested.
+- [x] **Operating systems:** Windows 10/11 and Linux.
 - [x] **Catalogue:** per-project in v1; `catalogue_ref` reserved.
 - [x] **Licence and ownership:** MIT, public repository (D-140; first decided as internal only).
 - [x] **Security accreditation:** CycloneDX JSON, unsigned, signing hooks reserved.

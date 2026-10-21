@@ -46,7 +46,7 @@ def safe_name(name: str) -> str:
 
 
 def same_name_key(name: str) -> str:
-    """What a case-insensitive, normalising file system (Windows, macOS) treats as one name."""
+    """What a case-insensitive, normalising file system (Windows among them) treats as one name."""
     return unicodedata.normalize("NFC", name).casefold()
 
 

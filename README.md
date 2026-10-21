@@ -87,7 +87,7 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 ## Requirements
 
 - Python 3.11, 3.12 or 3.13 (checked in CI on Windows and Ubuntu with 3.11 and 3.13).
-- Windows 10/11 or Linux (RHEL/Rocky 8 or newer, Ubuntu LTS). macOS is not tested.
+- Windows 10/11 or Linux (RHEL/Rocky 8 or newer, Ubuntu LTS).
 - No administrator rights and no internet access are needed after the install. For an air-gapped machine see [offline install](docs/getting-started.md#offline-install).
 - The installers above are self-contained; Python is needed only to install from source.
 

@@ -80,7 +80,7 @@ With no project open the window shows a welcome page: **Open a project folder…
 
 While a run is in progress, **Run** becomes **Cancel** (Ctrl+R is the same button), a thin bar runs under the top bar and the status chip names the step (*Orbit, eclipses and passes*, *Power timeline: battery*, *Link passes*). **Cancel** keeps the results you had on screen and stops the steps that were still to come; it takes effect when the step in progress ends, which can be a few seconds for a week at 1 s. The *Compute* button of the Scenario, Timeline and Passes views is a Cancel button in the same way while it works.
 
-**Tab** moves through the controls of the window and **Shift+Tab** back; it does not stay inside a read-only table. In a grid it moves from cell to cell and leaves the grid after the last one. (On macOS the Ctrl key shortcuts are not tested.)
+**Tab** moves through the controls of the window and **Shift+Tab** back; it does not stay inside a read-only table. In a grid it moves from cell to cell and leaves the grid after the last one.
 
 ## Where does the window keep its layout?
 
