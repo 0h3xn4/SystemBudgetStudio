@@ -238,8 +238,8 @@ class MainWindow(QMainWindow):
         self.tree.file_requested.connect(self._tree_file)
         self.tree.field_requested.connect(self.jump_to_input)
         self.tree.currentItemChanged.connect(lambda _current, _previous: self._inspect())
-        for page in self.grid_pages():
-            page.table.selection_changed.connect(self._inspect_cell)
+        for grid_page in self.grid_pages():
+            grid_page.table.selection_changed.connect(self._inspect_cell)
         self.inspector.open_file_requested.connect(lambda rel: self.open_file(rel))
         self.inspector.open_requested.connect(self.tree.activate_current)
         self.inspector.modes_requested.connect(lambda unit_id: self.show_unit(unit_id))

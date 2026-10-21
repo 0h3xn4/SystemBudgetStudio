@@ -148,7 +148,10 @@ def test_remove_mode_deletes_the_file_on_save_after_asking(
     assert page.add_mode()
     assert window.save_model()
     assert (example / "modes" / "detumble.yaml").is_file()
-    qtbot.waitUntil(lambda: "detumble" in window.session.project.modes, timeout=20000)
+    qtbot.waitUntil(
+        lambda: window.session.project is not None and "detumble" in window.session.project.modes,
+        timeout=20000,
+    )
 
     page.table.select_cell(page.assignments.rows_of("detumble")[0], 2)
     assert page.remove_mode()
