@@ -128,7 +128,7 @@ Provenance
 Provenance
 ## table
 Item | Value
-Tool | System Budget Studio 1.3.0
+Tool | System Budget Studio 1.3.1
 Python | 3.x
 Libraries | numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
 Project | Example 250 kg minisatellite, complete power and thermal inputs
