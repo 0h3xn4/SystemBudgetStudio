@@ -12,6 +12,7 @@ import math
 import re
 import shutil
 import unicodedata
+from collections.abc import Callable
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -148,6 +149,13 @@ def create_project(answers: WizardAnswers, parent: Path) -> Path:
     if issues:
         raise WizardError(issues[0].message)
     folder = Path(parent) / folder_name(answers.project_name)
+    return write_new_project(folder, lambda: _build(answers, folder))
+
+
+def write_new_project(folder: Path, build: Callable[[], Project]) -> Path:
+    """Build a project and write it into `folder`, which must not exist yet (it is never touched
+    if it does). A failure becomes a WizardError; a folder that could not be written completely
+    is removed again. Shared by the guided samples and the blank project."""
     try:
         exists = folder.exists()
     except OSError:
@@ -157,7 +165,7 @@ def create_project(answers: WizardAnswers, parent: Path) -> Path:
             f"The folder '{folder.name}' already exists. Choose another project name or folder."
         )
     try:
-        project = _build(answers, folder)
+        project = build()
     except (ValueError, OverflowError) as exc:  # includes pydantic's ValidationError
         raise WizardError(
             "The answers do not make a valid project (check the dates, the length and the orbit)."

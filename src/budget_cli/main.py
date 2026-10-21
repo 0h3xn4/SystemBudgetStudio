@@ -1,4 +1,4 @@
-"""`budget` command: validate, run (static budgets), scenario, power-timeline, schemas, examples."""
+"""`budget` command: new, validate, run, scenario, power-timeline, link-passes, schemas."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 from budget_core import APP_NAME, __version__
+from budget_core.blank import BlankAnswers, create_blank_project
 from budget_core.compare_run import ALL_KINDS, Side, compare_sides, default_kinds
 from budget_core.examples import ExportRefusedError, export_examples
 from budget_core.io.project_loader import LoadResult, load_project
@@ -46,6 +47,7 @@ from budget_core.schemas import export_schemas
 from budget_core.selftest import run_selftest
 from budget_core.thermal.static_thermal import static_thermal_budget
 from budget_core.timeutil import MAX_YEAR, MIN_YEAR
+from budget_core.wizard import WizardError
 
 REPORTS = REPORT_KINDS
 COMPARE_KINDS = ALL_KINDS
@@ -101,6 +103,32 @@ def build_parser() -> argparse.ArgumentParser:
     parser = _Parser(prog="budget", description=f"{APP_NAME} command line.")
     parser.add_argument("--version", action="version", version=f"{APP_NAME} {__version__}")
     sub = parser.add_subparsers(dest="command", parser_class=_Parser)
+
+    new = sub.add_parser(
+        "new",
+        help="Create a blank project: a spacecraft with one bus, placeholder configuration, "
+        "no units.",
+    )
+    new.add_argument("folder", type=_folder, help="The project folder to create (must not exist).")
+    new.add_argument(
+        "--bus-voltage-v",
+        type=float,
+        required=True,
+        metavar="VOLTS",
+        help="Nominal voltage of the main bus, in volts (no default: it is your design value).",
+    )
+    new.add_argument(
+        "--name", help="Project name (default: the name of the folder).", metavar="TEXT"
+    )
+    new.add_argument(
+        "--bus-name", default="main", metavar="TEXT", help="Name of the bus (default: main)."
+    )
+    new.add_argument(
+        "--spacecraft-name",
+        default="",
+        metavar="TEXT",
+        help="Spacecraft name (default: the project name).",
+    )
 
     val = sub.add_parser("validate", help="Check a project folder and list problems.")
     val.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
@@ -698,9 +726,29 @@ def _guide(args: argparse.Namespace) -> int:
     return 0
 
 
+def _new(args: argparse.Namespace) -> int:
+    folder: Path = args.folder
+    answers = BlankAnswers(
+        project_name=args.name if args.name is not None else folder.resolve().name,
+        bus_voltage_v=args.bus_voltage_v,
+        bus_name=args.bus_name,
+        spacecraft_name=args.spacecraft_name,
+    )
+    try:
+        created = create_blank_project(answers, folder)
+    except WizardError as exc:
+        _fail(str(exc))
+        return 1
+    print(f"Created the blank project {created}")
+    print(f"Next: add units, an orbit and a scenario, then run 'budget validate {created}'.")
+    return 0
+
+
 def _dispatch(
     args: argparse.Namespace, parser: argparse.ArgumentParser, argv: Sequence[str] | None
 ) -> int:
+    if args.command == "new":
+        return _new(args)
     if args.command == "validate":
         return _validate(args)
     if args.command == "scenario":
