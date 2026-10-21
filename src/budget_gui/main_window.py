@@ -952,9 +952,25 @@ class MainWindow(QMainWindow):
         self.reload_project()
         return True
 
+    def _confirm_deletion(self, files: list[str]) -> bool:
+        """Saving deletes the files of the units that were removed: ask first (a deleted file is
+        not in the undo history any more)."""
+        answer = QMessageBox.question(
+            self,
+            APP_NAME,
+            f"Saving deletes {len(files)} file{'s' if len(files) != 1 else ''} from the project "
+            f"folder:\n\n{chr(10).join(files)}\n\nDelete {'them' if len(files) != 1 else 'it'}?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        return answer == QMessageBox.StandardButton.Yes
+
     def save_model(self) -> bool:
         """Write the files the grids and the scenario editor changed (nothing while a cell is
         wrong or a file moved on disk)."""
+        deleted = self.document.deleted_files()
+        if deleted and not self._confirm_deletion(deleted):
+            return False
         report = self.document.save()
         page = self.editors.currentWidget()
         grid = page if page in (self.units_page, self.modes_page, self.inputs_page) else None

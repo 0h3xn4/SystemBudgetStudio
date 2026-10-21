@@ -1,13 +1,16 @@
 """The editable model: the files behind the grids, with one undo stack and an explicit Save (D-159).
 
 The grids of the Model tab do not write files. They edit this document, which holds the data of
-every unit file, of every configuration file and of every link file, as the model would write it
-(`model_to_data`). One edit (a cell, a paste of many cells, a fill-down, an added mode) is one
-undo step. Every edit is checked by the model at once: a cell that makes its file invalid is kept
-(so that the user sees and corrects it) and is reported with the field it concerns, in words, with
-no value from the file in the message. **Save** writes the files that changed, in place, keeping
-comments and key order (`save_edited_data`, D-103), and only when every changed file is valid and
-none changed on disk since it was loaded.
+the spacecraft, every unit file, the spacecraft modes, the configuration, link and scenario files,
+as the model would write it (`model_to_data`). One edit (a cell, a paste of many cells, a
+fill-down, an added mode) is one undo step. Every edit is checked by the model at once: a cell
+that makes its file invalid is kept (so that the user sees and corrects it) and is reported with
+the field it concerns, in words, with no value from the file in the message. **Save** writes the
+files that changed, in place, keeping comments and key order (`save_edited_data`, D-103), and only
+when every changed file is valid and none changed on disk since it was loaded.
+
+A file can also be **added** (a new unit) and **removed**: both are undo steps, nothing is written
+or deleted before Save, and Save refuses when the file appeared (or changed) on disk meanwhile.
 """
 
 from __future__ import annotations
@@ -42,10 +45,12 @@ class FileState:
     current: dict[str, Any]  # as edited
     stamp: str | None  # the file as it was when `original` was read
     problems: list[Problem] = field(default_factory=list)  # of `current`; empty when valid
+    new: bool = False  # added in the window, not written yet (there is no file)
+    deleted: bool = False  # removed in the window, the file is deleted by Save
 
     @property
     def modified(self) -> bool:
-        return self.current != self.original
+        return self.deleted or self.current != self.original
 
 
 @dataclass(frozen=True)
@@ -75,6 +80,47 @@ class EditFiles(QUndoCommand):
 
     def undo(self) -> None:
         self._document._apply(self._before)
+
+
+class AddFile(QUndoCommand):
+    """One undo step: a new file (a unit added in the window)."""
+
+    def __init__(
+        self,
+        document: ModelDocument,
+        rel: str,
+        cls: type[BudgetModel],
+        data: dict[str, Any],
+        text: str,
+    ) -> None:
+        super().__init__(text)
+        self._document = document
+        self._rel = rel
+        self._cls = cls
+        self._data = data
+
+    def redo(self) -> None:
+        self._document._insert(self._rel, self._cls, self._data)
+
+    def undo(self) -> None:
+        self._document._drop(self._rel)
+
+
+class RemoveFile(QUndoCommand):
+    """One undo step: a file removed. A file on disk is marked for deletion (Save deletes it); a
+    file that was only added in the window just goes."""
+
+    def __init__(self, document: ModelDocument, rel: str, text: str) -> None:
+        super().__init__(text)
+        self._document = document
+        self._rel = rel
+        self._added: FileState | None = None
+
+    def redo(self) -> None:
+        self._added = self._document._remove(self._rel)
+
+    def undo(self) -> None:
+        self._document._unremove(self._rel, self._added)
 
 
 def value_at(data: Any, path: Path_) -> Any:
@@ -176,10 +222,24 @@ class ModelDocument(QObject):
 
     # ---- reading -----------------------------------------------------------------------------
     def rels(self, prefix: str = "") -> list[str]:
-        return sorted(rel for rel in self._files if rel.startswith(prefix))
+        """The files shown: those removed in the window are not."""
+        return sorted(
+            rel
+            for rel, state in self._files.items()
+            if rel.startswith(prefix) and not state.deleted
+        )
 
     def has(self, rel: str) -> bool:
-        return rel in self._files
+        state = self._files.get(rel)
+        return state is not None and not state.deleted
+
+    def is_new(self, rel: str) -> bool:
+        state = self._files.get(rel)
+        return state is not None and state.new and not state.deleted
+
+    def deleted_files(self) -> list[str]:
+        """The files that Save would delete (a unit that was only added and removed is not one)."""
+        return sorted(rel for rel, state in self._files.items() if state.deleted)
 
     def data(self, rel: str) -> dict[str, Any]:
         return self._files[rel].current
@@ -192,11 +252,11 @@ class ModelDocument(QObject):
 
     def problems(self, rel: str | None = None) -> list[Problem]:
         if rel is not None:
-            return list(self._files[rel].problems) if rel in self._files else []
-        return [p for state in self._files.values() for p in state.problems]
+            return list(self._files[rel].problems) if self.has(rel) else []
+        return [p for state in self._files.values() if not state.deleted for p in state.problems]
 
     def has_problems(self) -> bool:
-        return any(state.problems for state in self._files.values())
+        return any(state.problems for state in self._files.values() if not state.deleted)
 
     def problem_at(self, rel: str, path: Path_) -> Problem | None:
         """The problem that concerns exactly this value (its field), if there is one."""
@@ -207,7 +267,7 @@ class ModelDocument(QObject):
         return None
 
     def is_modified(self) -> bool:
-        return any(state.modified for state in self._files.values())
+        return bool(self.modified_files())
 
     def modified_files(self) -> list[str]:
         return sorted(rel for rel, state in self._files.items() if state.modified)
@@ -239,6 +299,48 @@ class ModelDocument(QObject):
     def set_value(self, rel: str, path: Path_, value: Any, text: str) -> bool:
         return self.edit([(rel, lambda data: set_at(data, path, value))], text)
 
+    def add_file(self, rel: str, cls: type[BudgetModel], data: dict[str, Any], text: str) -> bool:
+        """One undo step: a new file. False when the document already has a file of that name (also
+        one removed in this session: undo the removal, or Save, first)."""
+        if rel in self._files:
+            return False
+        self.undo_stack.push(AddFile(self, rel, cls, data, text))
+        return True
+
+    def remove_file(self, rel: str, text: str) -> bool:
+        """One undo step: mark a file for deletion (Save deletes it)."""
+        if not self.has(rel):
+            return False
+        self.undo_stack.push(RemoveFile(self, rel, text))
+        return True
+
+    def _insert(self, rel: str, cls: type[BudgetModel], data: dict[str, Any]) -> None:
+        normal = _normalise(cls, copy.deepcopy(data))
+        self._files[rel] = FileState(rel, cls, {}, normal, None, new=True)
+        self._after_change([rel])
+
+    def _drop(self, rel: str) -> None:
+        self._files.pop(rel, None)
+        self._after_change()
+
+    def _remove(self, rel: str) -> FileState | None:
+        """Take a file out of the grids. Returns the state of a file that was only added."""
+        state = self._files.get(rel)
+        added: FileState | None = None
+        if state is not None and state.new:
+            added = self._files.pop(rel)
+        elif state is not None:
+            state.deleted = True
+        self._after_change()
+        return added
+
+    def _unremove(self, rel: str, added: FileState | None) -> None:
+        if added is not None:
+            self._files[rel] = added
+        elif rel in self._files:
+            self._files[rel].deleted = False
+        self._after_change([rel])
+
     def _apply(self, data_by_file: dict[str, dict[str, Any]]) -> None:
         for rel, data in data_by_file.items():
             state = self._files.get(rel)
@@ -264,7 +366,10 @@ class ModelDocument(QObject):
     def discard(self) -> None:
         """Forget every edit (the files were not touched)."""
         touched = self.modified_files()
+        for rel in [rel for rel, state in self._files.items() if state.new]:
+            del self._files[rel]
         for state in self._files.values():
+            state.deleted = False
             state.current = copy.deepcopy(state.original)
         self.undo_stack.clear()
         self._after_change(touched)
@@ -280,7 +385,9 @@ class ModelDocument(QObject):
         changed = self.modified_files()
         if root is None or not changed:
             return SaveReport(True)
-        invalid = [rel for rel in changed if self._files[rel].problems]
+        invalid = [
+            rel for rel in changed if self._files[rel].problems and not self._files[rel].deleted
+        ]
         if invalid:
             n = sum(len(self._files[rel].problems) for rel in invalid)
             return SaveReport(
@@ -298,6 +405,18 @@ class ModelDocument(QObject):
         written: list[str] = []
         for rel in changed:
             state = self._files[rel]
+            if state.deleted:
+                try:
+                    (root / rel).unlink(missing_ok=True)
+                except OSError:
+                    return SaveReport(
+                        False,
+                        tuple(written),
+                        f"Not saved: {rel} could not be deleted. Check the folder permissions.",
+                    )
+                del self._files[rel]
+                written.append(rel)
+                continue
             try:
                 save_edited_data(root / rel, state.original, state.current, _checker(state.cls))
             except (OSError, OutputError, UnicodeDecodeError):
@@ -308,6 +427,7 @@ class ModelDocument(QObject):
                 )
             state.original = copy.deepcopy(state.current)
             state.stamp = file_stamp(root / rel)
+            state.new = False
             written.append(rel)
         self._after_change()
         self.saved.emit()
@@ -316,8 +436,11 @@ class ModelDocument(QObject):
 
 # ---- helpers --------------------------------------------------------------------------------
 def _models_of(project: Project) -> Iterable[tuple[str, BudgetModel]]:
+    yield "spacecraft.yaml", project.spacecraft
     for unit_id, unit in project.units.items():
         yield f"units/{unit_id}.yaml", unit
+    for mode_id, mode in project.modes.items():
+        yield f"modes/{mode_id}.yaml", mode
     for scenario_id, scenario in project.scenarios.items():
         yield f"scenarios/{scenario_id}.yaml", scenario
     for link_id, link in project.links.items():

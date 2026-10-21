@@ -37,7 +37,7 @@ What a blank project contains:
 
 There are no units, spacecraft modes, orbits, scenarios or links, and no number except the voltage. `budget validate` reports **0 errors**, and a few warnings that are your to-do list: each placeholder (`CONFIG_PLACEHOLDER`) and each empty table (`CONFIG_EMPTY_TABLE`). Reports computed from it say **INCOMPLETE** until you fill them in.
 
-Then build it up: add the units, their power modes and the spacecraft modes ([Describe the spacecraft](describe-the-spacecraft.md)), then an orbit and a scenario, and replace each placeholder with a sourced number ([placeholders and sources](placeholders-and-sources.md)). Adding a *unit* is done with a file for now (`units/<id>.yaml`); the grids of the window edit the units and power modes that exist.
+Then build it up: add the units, their power modes and the spacecraft modes ([Describe the spacecraft](describe-the-spacecraft.md)), then an orbit and a scenario, and replace each placeholder with a sourced number ([placeholders and sources](placeholders-and-sources.md)). Add the first unit with **Add unit** in **Model → Units**: it asks for the mass and the first power mode ([how](describe-the-spacecraft.md#how-do-i-add-a-unit)). Spacecraft modes, orbits and scenarios are still files (or the scenario editor for scenarios that exist); the manual pages say how.
 
 ## How do I start a project from an example on the command line?
 
