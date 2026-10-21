@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **A blank project (D-185).** `budget new FOLDER --bus-voltage-v VOLTS` and a *Blank project* choice on the Spacecraft page of **File → New project (guided)** start a spacecraft of your own instead of a copy of a sample: one bus (the voltage has no default), every configuration number a placeholder (`source: TBD`), empty tables, and no units, modes, orbits, scenarios or links. It opens, validates with 0 errors and computes to *n/a* (INCOMPLETE); the Problems panel lists what is still to fill in. In the wizard the orbit and scenario pages are skipped and the window opens the Units page. Adding a unit is still done with a file (`units/<id>.yaml`); adding units in the grid is the next change. Nothing existing changed: the default wizard path, the files and the reports are the same.
+
 - **Documentation after 1.3.1.** The troubleshooting page says what to do when `budget` is not found after the Windows setup (open a new terminal), the portable zip, the Linux tarball (`~/.local/bin`) and the packages. The README and *Getting started* say what the Windows setup does with the PATH. The install checklist checks that uninstalling removes the PATH entry. The developer page's *Cut a release* lists every place a version is written and the golden-file step (it named two of seven). The changelog no longer says that only 1.0.0 is released. No program behaviour changed.
 
 ## [1.3.1] - 2026-10-21

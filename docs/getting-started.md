@@ -73,6 +73,8 @@ Self-test passed.
 
 ## 4. Your first budget
 
+*Starting your own spacecraft instead?* `budget new my_satellite --bus-voltage-v 28` creates a blank project ([how](user-manual/create-a-project.md#how-do-i-start-a-blank-project)). To see a complete budget first, use the examples below.
+
 The tool ships four example projects with **invented data**. Copy them somewhere you can write:
 
 ```bash

@@ -5,7 +5,7 @@
 Choose **File > New project (guided)** (Ctrl+N). Five short pages ask for:
 
 1. **Project**: a name and the parent folder. The project is stored in a new folder named after the project; an existing folder is never touched.
-2. **Spacecraft**: a sample spacecraft to start from (a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, or a 250 kg minisatellite with placeholder inputs).
+2. **Spacecraft**: a sample spacecraft to start from (a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a **blank project** with no units and no invented number, which asks for the bus voltage and skips the orbit and the scenario).
 3. **Orbit**: altitude, inclination and RAAN of a near-circular orbit.
 4. **Scenario**: how long to simulate and when it starts (UTC).
 5. **Review**: Finish creates the project, opens it, and computes the first power timeline.
@@ -13,6 +13,8 @@ Choose **File > New project (guided)** (Ctrl+N). Five short pages ask for:
 With the defaults you only press **Next** four times and **Finish**. The first power timeline appears in well under a minute. Everything in the new project is *sample data with invented numbers*; the project description says so. Replace the numbers with your own sourced values, and the Problems panel and the INCOMPLETE banners show what is still open.
 
 ## From the command line
+
+To start a spacecraft of your own: `budget new my_satellite --bus-voltage-v 28` writes a blank project (one bus, placeholder configuration, no units; the folder must not exist). To look at examples:
 
 ```
 budget export-examples demo
