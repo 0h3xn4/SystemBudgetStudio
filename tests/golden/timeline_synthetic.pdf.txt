@@ -1,6 +1,6 @@
 pages=7
 ## page 1
-System Budget Studio 1.3.1 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.4.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Power budget over time: Time-domain test
 Summary
@@ -130,19 +130,19 @@ T+03:20:00
 ratio
 battery.max_dod_ratio.eol
 ## page 2
-System Budget Studio 1.3.1 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.4.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Plots, BOL
 Power over time, BOL
 Generation, demand, state of charge and margin with eclipses and passes shaded.
 ## page 3
-System Budget Studio 1.3.1 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.4.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Plots, EOL
 Power over time, EOL
 Generation, demand, state of charge and margin with eclipses and passes shaded.
 ## page 4
-System Budget Studio 1.3.1 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.4.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Modes and orbits
 Spacecraft modes in the scenario
@@ -281,7 +281,7 @@ ratio
 test fixture
 sourced
 ## page 5
-System Budget Studio 1.3.1 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.4.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Name
 Value
@@ -430,7 +430,7 @@ Sun incidence on a face
 cos theta = n_face . s_body (unit vectors), zero on the back side
 SOURCE_MISSING
 ## page 6
-System Budget Studio 1.3.1 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.4.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 6
 ID
 Name
@@ -516,7 +516,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 1.3.1
+System Budget Studio 1.4.0
 Python
 3.x
 Libraries
@@ -528,7 +528,7 @@ r1
 Scenario
 synthetic
 ## page 7
-System Budget Studio 1.3.1 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.4.0 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Item
 Value

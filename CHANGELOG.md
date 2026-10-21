@@ -4,6 +4,10 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-10-21
+
+A project can be started blank and units can be added in the window; macOS is no longer mentioned. **No equation, report layout or existing file format changed**: the same project gives the same numbers and the same files as 1.3.1 (the tool version in the provenance rows and the examples differ).
+
 - **Add and remove units in the window (D-187).** **Model → Units** has **Add unit** and **Remove unit**. *Add unit* opens a form for the name, id, subsystem, bus, maturity class, mass and the first power mode; the numbers have no default and an empty one is refused, so a unit never gets a made-up mass or power. The unit is put in every spacecraft mode with that power mode (every mode has to say what every unit does; the message says so, and you change it in `modes/` where it is wrong), and with a thermal model its subsystem must be one of the model's nodes. Adding is one undo step, and **Save** writes the new file. *Remove unit* takes the unit out of the grid and out of every spacecraft mode in one undo step; **Save asks before it deletes the file**. A blank project can now be built from the window: add units here; spacecraft modes, orbits and scenarios are still files. Nothing existing changed.
 
 - **macOS is no longer mentioned (D-186).** The tool supports Windows 10/11 and Linux, and the documents now say only that (README, FAQ, Getting started, the docs index, the SPEC and the decision log, the user manual, the UI plan). The check that a bundle holds its own Python no longer looks for a macOS library, and the hint of the id-collision warning (`ID_COLLISION`) says "on some file systems, Windows among them" instead of naming macOS; the check itself is unchanged. No other behaviour changed.
