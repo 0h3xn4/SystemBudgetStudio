@@ -146,6 +146,10 @@ The project has an error since you last saved. The budget tables are kept from b
 
 A unit needs a bus, so add one in `spacecraft.yaml` first (a project made with `budget new` or the wizard has one). With a thermal model in the project, the **subsystem** must be the name of one of its nodes (the form suggests them), or add the node to `config/thermal_model.yaml` first. The mass and the powers have no default: the form refuses an empty one. See [add a unit](user-manual/describe-the-spacecraft.md#how-do-i-add-a-unit).
 
+### A spacecraft mode: "The project has no unit yet", "has no power mode of that name", or "is used by the scenario(s)"
+
+A spacecraft mode says what every unit is doing, so **Add spacecraft mode** needs at least one unit: add it first. In the *Spacecraft modes* grid a cell takes only a power mode the unit has (the message lists them); add the power mode to the unit in *Power modes* first. **Remove spacecraft mode** is refused while a scenario names the mode, as its default mode, in a rule or in a segment: change the scenario (*Model → Scenario*) and remove the mode afterwards. See [add a spacecraft mode](user-manual/describe-the-spacecraft.md#how-do-i-add-a-spacecraft-mode).
+
 ### Save asks "Saving deletes 1 file from the project folder"
 
 You removed a unit with **Remove unit**. Saving deletes its file (`units/<id>.yaml`) and takes it out of every spacecraft mode. Answer **No** to keep the file, then **Undo** (Ctrl+Z) the removal. A deleted file is not in the undo history any more.

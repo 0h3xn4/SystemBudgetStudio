@@ -87,7 +87,13 @@ Capitals matter in units, as everywhere (`mW` is not `MW`): write logarithmic un
 
 ## How do I add a spacecraft mode?
 
-A [**spacecraft mode**](../glossary.md#spacecraft-mode) (safe, nominal, imaging, downlink, charging) says which power mode each unit is in. Create `modes/<id>.yaml`:
+A [**spacecraft mode**](../glossary.md#spacecraft-mode) (safe, nominal, imaging, downlink, charging) says which power mode each unit is in.
+
+**In the window:** press **Ctrl+Shift+M** (**Edit → Add spacecraft mode**, or *Add spacecraft mode* in Ctrl+K), or open **Model → Spacecraft modes** and press **Add mode**. The project needs at least one unit first. A form asks for the name, the id (suggested from the name; it becomes the file name `modes/<id>.yaml`), an optional description and **where the assignments start from**: *every unit off* (a unit with no power mode called `off` starts in its first one, and the message says how many did) or *a copy of* another mode. Then set the power mode of each unit in the grid, one row per unit: type the name of one of that unit's power modes, or paste a column from a spreadsheet; a name the unit does not have is refused with the list of the ones it has. **Save** (Ctrl+S) writes the file; adding is one undo step.
+
+**Remove spacecraft mode** (**Ctrl+Shift+Backspace**, **Edit → Remove spacecraft mode**, or the button) removes the mode of the row with the cursor. It is refused while a scenario names the mode (as its default mode, in a rule or in a segment): change the scenario first. Save asks before it deletes the file.
+
+**By file:** create `modes/<id>.yaml`:
 
 ```yaml
 schema_version: 1
@@ -101,7 +107,7 @@ assignments:
   radio: downlink
 ```
 
-Keys are unit ids, values are power-mode names of that unit. Every unit must appear in every spacecraft mode, otherwise you get `UNIT_NOT_MAPPED` naming the unit. A scenario then says [which spacecraft mode is active when](scenarios.md).
+Keys are unit ids, values are power-mode names of that unit. Every unit must appear in every spacecraft mode, otherwise you get `UNIT_NOT_MAPPED` naming the unit (adding a unit in the window puts it in every mode for you). A scenario then says [which spacecraft mode is active when](scenarios.md).
 
 ## How do I get supplier data in from a spreadsheet?
 

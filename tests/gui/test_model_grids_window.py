@@ -44,7 +44,7 @@ def saved(project: Path, unit: str = "camera"):  # type: ignore[no-untyped-def]
 
 def test_the_model_tab_opens_on_the_grids_before_the_scenario(window: MainWindow) -> None:
     tabs = [window.editors.tabText(i) for i in range(window.editors.count())]
-    assert tabs[:4] == ["Units", "Power modes", "Inputs", "Scenario"]
+    assert tabs[:5] == ["Units", "Power modes", "Spacecraft modes", "Inputs", "Scenario"]
     assert window.units_page.model.rowCount() == 18
     assert window.modes_page.model.rowCount() > 18 and window.inputs_page.model.rowCount() > 40
 

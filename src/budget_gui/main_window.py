@@ -44,6 +44,7 @@ from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
 from budget_gui.components import PanelTitle
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
+from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
 from budget_gui.inspector import CellInfo, InspectorPanel
@@ -51,7 +52,7 @@ from budget_gui.layout_settings import MOTION, RAIL_STATES, LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.model_document import ModelDocument
-from budget_gui.model_pages import InputsPage, PowerModesPage, UnitsPage
+from budget_gui.model_pages import InputsPage, PowerModesPage, SpacecraftModesPage, UnitsPage
 from budget_gui.privacy import disable_settings_files
 from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
@@ -114,10 +115,12 @@ class MainWindow(QMainWindow):
         self.document = ModelDocument()  # what the grids and the scenario edit: one undo stack
         self.units_page = UnitsPage(self.document)
         self.modes_page = PowerModesPage(self.document)
+        self.spacecraft_modes_page = SpacecraftModesPage(self.document)
         self.inputs_page = InputsPage(self.document)
         for title, page in (
             ("Units", self.units_page),
             ("Power modes", self.modes_page),
+            ("Spacecraft modes", self.spacecraft_modes_page),
             ("Inputs", self.inputs_page),
         ):
             self.editors.add_fixed(page, title)
@@ -235,8 +238,8 @@ class MainWindow(QMainWindow):
         self.tree.file_requested.connect(self._tree_file)
         self.tree.field_requested.connect(self.jump_to_input)
         self.tree.currentItemChanged.connect(lambda _current, _previous: self._inspect())
-        for page in (self.units_page, self.modes_page, self.inputs_page):
-            page.table.selection_changed.connect(self._inspect_cell)
+        for grid_page in self.grid_pages():
+            grid_page.table.selection_changed.connect(self._inspect_cell)
         self.inspector.open_file_requested.connect(lambda rel: self.open_file(rel))
         self.inspector.open_requested.connect(self.tree.activate_current)
         self.inspector.modes_requested.connect(lambda unit_id: self.show_unit(unit_id))
@@ -318,9 +321,19 @@ class MainWindow(QMainWindow):
         self.remove_unit_action = QAction("Re&move unit", self)
         self.remove_unit_action.setShortcut(QKeySequence("Ctrl+Shift+Delete"))
         self.remove_unit_action.triggered.connect(self.remove_unit)
-        for action in (self.add_unit_action, self.remove_unit_action):
+        edit_menu.addAction(self.add_unit_action)
+        edit_menu.addAction(self.remove_unit_action)
+        edit_menu.addSeparator()
+        self.add_mode_action = QAction("Add spacecraft mo&de…", self)
+        self.add_mode_action.setShortcut(QKeySequence("Ctrl+Shift+M"))
+        self.add_mode_action.triggered.connect(self.add_spacecraft_mode)
+        self.remove_mode_action = QAction("Remove spacecraft m&ode", self)
+        self.remove_mode_action.setShortcut(QKeySequence("Ctrl+Shift+Backspace"))
+        self.remove_mode_action.triggered.connect(self.remove_spacecraft_mode)
+        edit_menu.addAction(self.add_mode_action)
+        edit_menu.addAction(self.remove_mode_action)
+        for action in self.model_edit_actions():
             action.setEnabled(False)  # until a project is open that loads
-            edit_menu.addAction(action)
 
     def _build_run_menu(self) -> None:
         run_menu = self.menuBar().addMenu("&Run")
@@ -552,6 +565,28 @@ class MainWindow(QMainWindow):
         if unit_id:
             self.show_unit(unit_id)
 
+    def model_edit_actions(self) -> tuple[QAction, ...]:
+        return (
+            self.add_unit_action,
+            self.remove_unit_action,
+            self.add_mode_action,
+            self.remove_mode_action,
+        )
+
+    def add_spacecraft_mode(self) -> bool:
+        """Edit > Add spacecraft mode: the form of the Spacecraft modes grid, from any area."""
+        if self.session.project is None:
+            return False
+        self.show_view(self.spacecraft_modes_page)
+        return self.spacecraft_modes_page.add_mode()
+
+    def remove_spacecraft_mode(self) -> bool:
+        """Edit > Remove spacecraft mode: the mode of the row with the cursor."""
+        if self.session.project is None:
+            return False
+        self.show_view(self.spacecraft_modes_page)
+        return self.spacecraft_modes_page.remove_mode()
+
     def add_unit(self) -> bool:
         """Edit > Add unit: the form of the Units grid, from whichever area is in front."""
         if self.session.project is None:
@@ -616,10 +651,14 @@ class MainWindow(QMainWindow):
         dock.setTitleBarWidget(panel_title)
         return dock
 
+    def grid_pages(self) -> tuple[GridPage, ...]:
+        """The grids of the Model tab, in the order of their tabs."""
+        return (self.units_page, self.modes_page, self.spacecraft_modes_page, self.inputs_page)
+
     def _inspect_cell(self) -> None:
         """The Inspector follows the cell that has the cursor in a grid of the Model tab."""
         page = self.editors.currentWidget()
-        if page not in (self.units_page, self.modes_page, self.inputs_page):
+        if page not in self.grid_pages():
             return
         grid = page.table
         current = grid.current_cell()
@@ -970,9 +1009,7 @@ class MainWindow(QMainWindow):
         if self.workspace.currentWidget() is not self.editors:
             return False  # Save belongs to the editors of the Model tab
         if self.editors.currentWidget() in (
-            self.units_page,
-            self.modes_page,
-            self.inputs_page,
+            *self.grid_pages(),
             self.scenario_view,
         ):
             return self.save_model()
@@ -1005,7 +1042,7 @@ class MainWindow(QMainWindow):
             return False
         report = self.document.save()
         page = self.editors.currentWidget()
-        grid = page if page in (self.units_page, self.modes_page, self.inputs_page) else None
+        grid = page if page in self.grid_pages() else None
         if report.ok:
             n = len(report.written)
             text = (
@@ -1016,7 +1053,7 @@ class MainWindow(QMainWindow):
                 grid.show_message(text)
         else:
             self.status_bar.showMessage(report.message)
-            for candidate in (self.units_page, self.modes_page, self.inputs_page):
+            for candidate in self.grid_pages():
                 candidate.show_message(report.message)
             self.scenario_view.editor.note_label.setText(report.message)
         return report.ok
@@ -1075,7 +1112,7 @@ class MainWindow(QMainWindow):
         self.status_bar.set_project_path(session.path)
         self.status_bar.set_last_run(self._last_run)
         self.provenance_panel.set_provenance(session.provenance)
-        for action in (self.add_unit_action, self.remove_unit_action):
+        for action in self.model_edit_actions():
             action.setEnabled(project is not None)
         self.update_reports_page()
         self._show_welcome()

@@ -44,7 +44,7 @@ def test_a_file_tab_does_not_push_a_budget_out_of_view(window: MainWindow) -> No
         window.open_file(rel)
     assert window.workspace.count() == 7  # editors live inside the Model tab
     assert window.workspace.currentWidget() is window.editors
-    assert window.editors.count() == 3 + 1 + 3  # three grids, the scenario and three files
+    assert window.editors.count() == 4 + 1 + 3  # four grids, the scenario and three files
 
 
 def test_power_and_link_have_a_page_for_the_time_domain_results(window: MainWindow) -> None:
