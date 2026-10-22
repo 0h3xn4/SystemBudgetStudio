@@ -366,8 +366,9 @@ def stylesheet(t: Tokens) -> str:
     QFrame[role="empty"] {{ background: transparent; }}
     QFrame[role="segmented"] {{ background: {t.hover}; border: none; border-radius: {rc}px;
         padding: {px(2)}px; }}
-    QFrame[role="segmented"] QPushButton {{ background: transparent; border: none;
-        border-radius: {rc - px(2)}px; padding: 0 {px(s1)}px; color: {t.text_secondary}; }}
+    QFrame[role="segmented"] QPushButton {{ background: transparent;
+        border: {ring}px solid transparent; border-radius: {rc - px(2)}px;
+        padding: 0 {px(s1 - ring)}px; min-height: {hc - 2 * ring}px; color: {t.text_secondary}; }}
     QFrame[role="segmented"] QPushButton:hover {{ color: {t.text}; }}
     QFrame[role="segmented"] QPushButton:checked {{ background: {t.surface}; color: {t.text}; }}
     QFrame[role="segmented"] QPushButton:focus {{ border: {ring}px solid {t.focus}; }}

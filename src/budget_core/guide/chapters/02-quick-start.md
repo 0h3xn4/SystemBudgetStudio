@@ -14,7 +14,7 @@ With the defaults you only press **Next** four times and **Finish**. The first p
 
 ## From the command line
 
-To start a spacecraft of your own: `budget new my_satellite --bus-voltage-v 28` writes a blank project (one bus, placeholder configuration, no units; the folder must not exist). To look at examples:
+To start a spacecraft of your own: `budget new my_satellite --bus-voltage-v 28` writes a blank project (one bus, placeholder configuration, no units; the folder must not exist). In the window, a project that is not finished shows a **Start here** card with four steps (a unit, a spacecraft mode, an orbit and a scenario, save and run) and a button for the one to do now; **Help → Start here** shows it again. To look at examples:
 
 ```
 budget export-examples demo

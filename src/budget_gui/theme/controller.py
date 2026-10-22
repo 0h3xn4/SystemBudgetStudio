@@ -12,7 +12,15 @@ from typing import Any
 
 from PySide6.QtCore import QObject, Qt, Signal
 from PySide6.QtGui import QColor, QGuiApplication, QIcon, QPainter, QPen
-from PySide6.QtWidgets import QApplication, QProxyStyle, QStyle, QStyleOption, QWidget
+from PySide6.QtWidgets import (
+    QApplication,
+    QProxyStyle,
+    QPushButton,
+    QStyle,
+    QStyleOption,
+    QToolButton,
+    QWidget,
+)
 
 from budget_core.assets import icon_files
 from budget_gui.theme import scale
@@ -60,6 +68,8 @@ class WindowStyle(QProxyStyle):
         the window (2 px, the focus colour), not Fusion's dotted line. A ring painted over the
         control does not change its size, which a border of the style sheet would (D-181)."""
         if element == QStyle.PrimitiveElement.PE_FrameFocusRect:
+            if isinstance(widget, QPushButton | QToolButton):
+                return  # their style sheet draws the ring: a second one is a box in a box
             box: Any = option  # the stubs of QStyleOption lack rect
             ring = scale.px(scale.FOCUS_RING)
             painter.save()

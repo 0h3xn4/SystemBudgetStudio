@@ -20,7 +20,7 @@ With the defaults you press **Next** four times and **Finish**. The result is a 
 
 A blank project is a spacecraft you describe yourself: no sample, no invented numbers.
 
-**In the window:** choose **File → New project (guided)**, and on the **Spacecraft** page pick **Blank project**. Two more fields appear: the name of the bus (default `main`) and its **nominal voltage in volts**, which has no default because it is your design value. The orbit and scenario pages are skipped (there is no unit to simulate yet), the **Review** page follows, and **Finish** creates the project and opens it on the **Units** page.
+**In the window:** choose **File → New project (guided)**, and on the **Spacecraft** page pick **Blank project**. Two more fields appear: the name of the bus (default `main`) and its **nominal voltage in volts**, which has no default because it is your design value. The orbit and scenario pages are skipped (there is no unit to simulate yet), the **Review** page follows, and **Finish** creates the project and opens it on the **Units** page, with a **Start here** card above the work area that lists what is left to do: add a unit, add a spacecraft mode, add an orbit and a scenario, save and run. Its buttons are the same as **Edit → Add unit**, **Add spacecraft mode** and **Add scenario**; **Help → Start here** shows the card again after you hide it.
 
 **On the command line:**
 
