@@ -51,7 +51,19 @@ def _paint(
         if seg.end_s > end + EPS:
             out.append(TimelineSegment(end, seg.end_s, seg.mode))
     out.append(TimelineSegment(start, end, mode))
-    return sorted(out, key=lambda s: s.start_s)
+    return _contiguous(sorted(out, key=lambda s: s.start_s))
+
+
+def _contiguous(segments: list[TimelineSegment]) -> list[TimelineSegment]:
+    """Make each segment start exactly where the one before it ends. The snapping above tolerates
+    EPS, so two boundaries that differ by a rounding error (an eclipse that ends one ulp after a
+    pass) would otherwise leave the segments overlapping by that much."""
+    out: list[TimelineSegment] = []
+    for seg in segments:
+        if out and out[-1].end_s != seg.start_s and abs(out[-1].end_s - seg.start_s) <= EPS:
+            seg = TimelineSegment(out[-1].end_s, seg.end_s, seg.mode)
+        out.append(seg)
+    return out
 
 
 def _merge(segments: list[TimelineSegment]) -> tuple[TimelineSegment, ...]:

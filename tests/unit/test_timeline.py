@@ -167,6 +167,25 @@ def test_mode_index_on_the_grid() -> None:
     assert list(idx) == [1, 1, 0, 0, 0, 1, 1]  # segments are [start, end); the last includes D
 
 
+def test_boundaries_that_differ_by_a_rounding_error_leave_no_overlap() -> None:
+    # found by the property test below: an eclipse ends 1 ulp after a pass, and the snapping to a
+    # nearby boundary used to leave the two segments overlapping by that much
+    sc = scenario(
+        sites=["gs"],
+        rules=[
+            {"kind": "during_pass", "site": "gs", "mode": "m1"},
+            {"kind": "in_eclipse", "mode": "m1"},
+            {"kind": "in_sunlight", "mode": "m2"},
+        ],
+    )
+    t = build_timeline(
+        sc, fake_env(eclipses=[(0.0, 0.10000000000000002)], passes={"gs": [(0.0, 0.1)]})
+    )
+    assert t[0].start_s == 0.0 and t[-1].end_s == D
+    for first, second in zip(t, t[1:], strict=False):
+        assert first.end_s == second.start_s
+
+
 times_ = st.floats(min_value=-100.0, max_value=1100.0, allow_nan=False)
 interval = st.tuples(times_, st.floats(min_value=0.1, max_value=300.0)).map(
     lambda p: (p[0], p[0] + p[1])
