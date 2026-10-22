@@ -168,9 +168,9 @@ class ProblemsPanel(QWidget):
         self._stack.addWidget(self.view)
         self._stack.addWidget(self.empty)
 
+        self._expanded = True
         self.toggle_button = Button("", "ghost", icon="chevron-up", compact=True)
         self.toggle_button.clicked.connect(lambda: self.set_expanded(not self._expanded))
-        self._expanded = True
         controls = self._controls = QHBoxLayout()
         controls.setSpacing(theme.gap(1))
         controls.addWidget(self.summary)
