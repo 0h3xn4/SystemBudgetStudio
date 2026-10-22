@@ -12,7 +12,6 @@ from __future__ import annotations
 from PySide6.QtCore import QSize, Qt, Signal
 from PySide6.QtGui import QPainter, QPaintEvent, QPalette
 from PySide6.QtWidgets import (
-    QButtonGroup,
     QComboBox,
     QFrame,
     QHBoxLayout,
@@ -24,6 +23,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_gui import icons, theme
+from budget_gui.components import SegmentedControl
 from budget_gui.run_controller import STATE_TEXT, RunState
 
 CASES = ("BOL", "EOL")
@@ -137,23 +137,19 @@ class TopBar(QWidget):
         self.scenario_combo.setToolTip(
             "The scenario every tab shows (Model > Scenario, Power > Timeline, Link > Passes)."
         )
+        # one pill with the chosen case raised in it (the shared component)
+        self.case_control = SegmentedControl([(case, case) for case in CASES], current="BOL")
         self.case_buttons: dict[str, QPushButton] = {}
-        group = QButtonGroup(self)
-        group.setExclusive(True)
         for case in CASES:
-            button = QPushButton(case)
-            button.setCheckable(True)
-            button.setProperty("kind", "secondary")
+            button = self.case_control.button(case)
             button.setToolTip(
                 {
                     "BOL": "Beginning of life: the solar array and battery as new.",
                     "EOL": "End of life: with the degradation over the design life.",
                 }[case]
             )
-            group.addButton(button)
             self.case_buttons[case] = button
             button.clicked.connect(lambda _checked=False, c=case: self.case_chosen.emit(c))
-        self.case_buttons["BOL"].setChecked(True)
 
         self.run_button = QPushButton("Run")
         self.run_button.setProperty("kind", "primary")
@@ -181,11 +177,7 @@ class TopBar(QWidget):
         layout.addStretch(1)
         layout.addWidget(QLabel("Scenario"))
         layout.addWidget(self.scenario_combo)
-        case_row = QHBoxLayout()
-        case_row.setSpacing(0)
-        for button in self.case_buttons.values():
-            case_row.addWidget(button)
-        layout.addLayout(case_row)
+        layout.addWidget(self.case_control)
         layout.addWidget(self.run_button)
         layout.addWidget(self.chip)
         self.scenario_combo.activated.connect(
