@@ -13,8 +13,8 @@ from __future__ import annotations
 from collections.abc import Collection
 from dataclasses import dataclass
 
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QWidget
+from PySide6.QtCore import QSize, Signal
+from PySide6.QtWidgets import QHBoxLayout, QLabel, QSizePolicy
 
 from budget_gui import icons, theme
 from budget_gui.components import Button, Card, icon_button
@@ -26,6 +26,7 @@ UNIT, MODE, SCENARIO, RUN = "unit", "mode", "scenario", "run"
 class StepText:
     key: str
     title: str
+    chip: str  # the short name on the step's small button
     hint: str
     button: str
     shortcut: str
@@ -36,6 +37,7 @@ STEP_TEXTS: tuple[StepText, ...] = (
     StepText(
         UNIT,
         "Add a unit",
+        "Unit",
         "A unit is one piece of hardware on the spacecraft, for example a transmitter or a "
         "battery.",
         "Add unit…",
@@ -45,6 +47,7 @@ STEP_TEXTS: tuple[StepText, ...] = (
     StepText(
         MODE,
         "Add a spacecraft mode",
+        "Spacecraft mode",
         "A spacecraft mode says what every unit is doing at a time, for example safe or science.",
         "Add mode…",
         "Ctrl+Shift+M",
@@ -53,6 +56,7 @@ STEP_TEXTS: tuple[StepText, ...] = (
     StepText(
         SCENARIO,
         "Add an orbit and a scenario",
+        "Orbit and scenario",
         "A scenario is a stretch of time on an orbit. It gives the eclipses and the power "
         "timeline.",
         "Add scenario…",
@@ -61,6 +65,7 @@ STEP_TEXTS: tuple[StepText, ...] = (
     ),
     StepText(
         RUN,
+        "Save and run",
         "Save and run",
         "Saving writes the files of the project. Run works out the budgets from them.",
         "Save and run",
@@ -114,7 +119,11 @@ def progress(*, units: int, modes: int, scenarios: int, saved: bool, ran: bool) 
 
 
 class StartHerePanel(Card):
-    """The card above the work area. It only draws and says which button was pressed."""
+    """The card above the work area. It only draws and says which button was pressed.
+
+    Two lines: the four steps as small buttons with their state, and under them what the step to
+    do now means, with its one primary button. It can be squeezed to nothing (a short window gives
+    its room to the work area), so it never raises the minimum size of the window."""
 
     step_requested = Signal(str)
     hide_requested = Signal()
@@ -122,90 +131,84 @@ class StartHerePanel(Card):
     def __init__(self) -> None:
         super().__init__()
         self.setAccessibleName("Start here")
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         self.title = QLabel("Start here")
         self.title.setProperty("role", "title")
-        self.lead = QLabel("Four steps take a new project to its first result.")
-        self.lead.setProperty("role", "muted")
         self.hide_button = icon_button("x", "Hide this panel (Help > Start here shows it again)")
         self.hide_button.clicked.connect(self.hide_requested)
         top = QHBoxLayout()
         top.setContentsMargins(0, 0, 0, 0)
         top.setSpacing(theme.gap(1))
         top.addWidget(self.title)
-        top.addWidget(self.lead, 1)
+        top.addSpacing(theme.gap(1))
+        self.buttons: dict[str, Button] = {}
+        for number, text in enumerate(STEP_TEXTS, start=1):
+            chip = Button(f"{number}  {text.chip}", "ghost", icon="circle-dashed")
+            chip.clicked.connect(lambda _checked=False, key=text.key: self.step_requested.emit(key))
+            top.addWidget(chip)
+            self.buttons[text.key] = chip
+        top.addStretch(1)
         top.addWidget(self.hide_button)
         self.body.addLayout(top)
-        self._icons: dict[str, QLabel] = {}
-        self._labels: dict[str, QLabel] = {}
-        self._hints: dict[str, QLabel] = {}
-        self.buttons: dict[str, Button] = {}
-        steps = QWidget()
-        grid = QGridLayout(steps)
-        grid.setContentsMargins(0, 0, 0, 0)
-        grid.setHorizontalSpacing(theme.gap(2))
-        grid.setVerticalSpacing(theme.gap(1))
-        grid.setColumnStretch(2, 1)  # the hint takes the room; icon, title and button align
-        for row, text in enumerate(STEP_TEXTS):
-            icon = QLabel()
-            label = QLabel(f"{row + 1}. {text.title}")
-            hint = QLabel(text.hint)
-            hint.setProperty("role", "muted")
-            hint.setWordWrap(True)
-            button = Button(text.button, "secondary", shortcut=text.shortcut)
-            button.setAccessibleName(f"{text.title}: {text.button}")
-            button.clicked.connect(
-                lambda _checked=False, key=text.key: self.step_requested.emit(key)
-            )
-            grid.addWidget(icon, row, 0)
-            grid.addWidget(label, row, 1)
-            grid.addWidget(hint, row, 2)
-            grid.addWidget(button, row, 3)
-            self._icons[text.key] = icon
-            self._labels[text.key] = label
-            self._hints[text.key] = hint
-            self.buttons[text.key] = button
-        self.body.addWidget(steps)
+        self.hint = QLabel()
+        self.hint.setProperty("role", "muted")
+        self.hint.setWordWrap(True)
+        self.next_button = Button("", "primary")
+        self.next_button.clicked.connect(self._next_clicked)
+        bottom = QHBoxLayout()
+        bottom.setContentsMargins(0, 0, 0, 0)
+        bottom.setSpacing(theme.gap(2))
+        bottom.addWidget(self.hint, 1)
+        bottom.addWidget(self.next_button)
+        self.body.addLayout(bottom)
         self._done: frozenset[str] = frozenset()
+        self._current: str | None = UNIT
         theme.manager().changed.connect(self._retint)
         self.set_progress(Progress(frozenset()))
 
+    def minimumSizeHint(self) -> QSize:  # noqa: N802 (Qt naming)
+        return QSize(super().minimumSizeHint().width(), 0)
+
+    def _next_clicked(self) -> None:
+        if self._current is not None:
+            self.step_requested.emit(self._current)
+
     def set_progress(self, state: Progress) -> None:
         self._done = state.done
-        current = state.current
+        current = self._current = state.current
         self.title.setText("Start here" if current is not None else "Start here: all done")
-        self.lead.setText(
-            "Four steps take a new project to its first result."
-            if current is not None
-            else "Everything is set up. Edit the model, press Run again, or hide this panel."
-        )
         for text in STEP_TEXTS:
             key = text.key
-            done = key in state.done
-            # only the step to do now explains itself: the others are one line
-            self._hints[key].setVisible(key == current)
-            button = self.buttons[key]
-            button.setVisible(not done or key == RUN and current is None)
             can = state.can_start(key)
+            button = self.buttons[key]
             button.setEnabled(can)
-            button.set_kind("primary" if key == current else "secondary")
-            button.set_tip(text.needs if not can else "", "" if not can else text.shortcut)
-            word = "done" if done else "to do"
-            self._icons[key].setAccessibleName(word)
-            self._labels[key].setAccessibleName(f"{text.title}, {word}")
+            word = "done" if key in state.done else "to do"
+            button.setAccessibleName(f"{text.title}, {word}")
+            button.set_tip(text.hint if can else text.needs, text.shortcut if can else "")
+        step = next((t for t in STEP_TEXTS if t.key == current), None)
+        if step is None:
+            self.hint.setText(
+                "Everything is set up. Edit the model, press Run again, or hide this panel."
+            )
+            self.next_button.hide()
+        else:
+            self.hint.setText(f"{step.title}. {step.hint}")
+            self.next_button.setText(step.button)
+            self.next_button.setAccessibleName(f"{step.title}: {step.button}")
+            self.next_button.set_tip("", step.shortcut)
+            self.next_button.show()
         self._retint()
 
     def _retint(self) -> None:
         tokens = theme.tokens()
-        size = theme.px(theme.ICON_UI)
-        for key, label in self._icons.items():
+        for key, button in self.buttons.items():
             done = key in self._done
             name = "circle-check" if done else "circle-dashed"
-            colour = tokens.status(theme.Status.PASS).fg if done else tokens.text_muted
-            label.setPixmap(icons.icon(name, colour).pixmap(size, size))
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            colour = tokens.status(theme.Status.PASS).fg if done else tokens.text_secondary
+            button.setIcon(icons.icon(name, colour))
 
     def step_keys(self) -> tuple[str, ...]:
-        return tuple(self._icons)
+        return tuple(self.buttons)
 
     def done_keys(self) -> Collection[str]:
         return self._done

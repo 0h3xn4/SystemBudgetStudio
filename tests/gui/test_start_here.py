@@ -77,12 +77,23 @@ def test_a_blank_project_shows_the_panel_with_the_first_step_to_do(
     window = _window(qtbot, _blank(tmp_path))
     panel = window.start_here
     assert not panel.isHidden()
-    assert panel.buttons[UNIT].kind == "primary" and panel.buttons[UNIT].isEnabled()
-    assert panel.buttons[MODE].kind == "secondary" and not panel.buttons[MODE].isEnabled()
+    assert panel.next_button.kind == "primary" and panel.next_button.text() == "Add unit…"
+    assert "Add a unit" in panel.hint.text() and "piece of hardware" in panel.hint.text()
+    assert panel.buttons[UNIT].isEnabled() and not panel.buttons[MODE].isEnabled()
     assert "Add a unit first" in panel.buttons[MODE].toolTip()
     assert not panel.buttons[SCENARIO].isEnabled() and not panel.buttons[RUN].isEnabled()
     for key in panel.step_keys():
-        assert panel.buttons[key].accessibleName()
+        assert panel.buttons[key].accessibleName().endswith("to do")
+    assert panel.buttons[UNIT].accessibleName() == "Add a unit, to do"
+
+
+def test_the_panel_never_raises_the_minimum_size_of_the_window(
+    tmp_path: Path,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    window = _window(qtbot, _blank(tmp_path))
+    assert not window.start_here.isHidden()
+    assert window.start_here.minimumSizeHint().height() == 0
 
 
 def test_the_panel_is_not_there_before_a_project_is_open(qtbot) -> None:  # type: ignore[no-untyped-def]
@@ -109,14 +120,15 @@ def test_the_steps_tick_as_the_model_is_built_and_the_panel_goes_when_all_are_do
         avg_power_w=1.0,
         peak_power_w=2.0,
     )
-    panel.buttons[UNIT].click()  # the button does what Edit > Add unit does
+    panel.next_button.click()  # the button does what Edit > Add unit does
     assert UNIT in panel.done_keys() and panel.buttons[MODE].isEnabled()
-    assert panel.buttons[MODE].kind == "primary" and panel.buttons[UNIT].isHidden()
+    assert panel.next_button.text() == "Add mode…"
+    assert panel.buttons[UNIT].accessibleName() == "Add a unit, done"
 
     window.spacecraft_modes_page._ask = lambda *_a: ModeAnswers(  # type: ignore[method-assign]
         "nominal", "Nominal", "", ""
     )
-    panel.buttons[MODE].click()
+    panel.buttons[MODE].click()  # a step's own small button works too
     assert MODE in panel.done_keys() and panel.buttons[SCENARIO].isEnabled()
 
     window._ask_scenario = lambda *_a: ScenarioAnswers(  # type: ignore[method-assign]
@@ -124,10 +136,10 @@ def test_the_steps_tick_as_the_model_is_built_and_the_panel_goes_when_all_are_do
     )
     panel.buttons[SCENARIO].click()
     assert SCENARIO in panel.done_keys() and RUN not in panel.done_keys()
-    assert panel.buttons[RUN].isEnabled() and panel.buttons[RUN].kind == "primary"
+    assert panel.buttons[RUN].isEnabled() and panel.next_button.text() == "Save and run"
 
     # Save and run: the files are written, the project loads again and the run follows
-    panel.buttons[RUN].click()
+    panel.next_button.click()
     qtbot.waitUntil(lambda: window.start_here.isHidden(), timeout=90000)
     assert (tmp_path / "blank" / "scenarios" / "first.yaml").is_file()
     assert window.scenario_view.last_run is not None
