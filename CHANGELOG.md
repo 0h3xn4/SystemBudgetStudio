@@ -4,8 +4,6 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
-- **The mode timeline never overlaps itself by a rounding error.** When a pass and an eclipse ended one floating-point step apart (for example 0.1 s and 0.10000000000000002 s), snapping the boundaries to each other left two segments overlapping by about 1e-17 s. Each segment now starts exactly where the one before it ends. A randomized test found it; no real scenario was known to be affected, and the outputs of the examples are unchanged.
-
 ## [1.5.0] - 2026-10-22
 
 A blank project can now be built up to its first result in the window, and the window opens calmer. **No equation, report layout or existing file format changed**: the same project gives the same numbers and the same files as 1.4.0 (the tool version in the provenance rows and the examples differ). The new forms write ordinary project files and no number has a default in them.
@@ -21,6 +19,8 @@ A blank project can now be built up to its first result in the window, and the w
 - **Add unit and Remove unit have a menu entry, a shortcut and an entry in Ctrl+K (D-187).** They were buttons and a right-click entry on *Model → Units* only. Now **Edit → Add unit** (Ctrl+Shift+N) and **Edit → Remove unit** (Ctrl+Shift+Delete) work from any area: they bring the Units grid to the front, and Remove takes the unit with the cursor in the grid or else the unit selected in the project tree. They are off until a project is open that loads, the tooltips of the two buttons name the keys, and Ctrl+K lists both. Nothing else changed: adding is still one undo step, and Save still asks before it deletes a file.
 
 - **Documentation after 1.4.0.** Every page was checked against the program as built (the commands against `--help`, the examples against their expected output, the links and anchors, the shortcuts against the menus). What changed: the architecture page lists the new modules (`blank.py`, `new_unit.py`, `wizard.py`, the Add unit form) and says what the model document does on Save; the window page names Ctrl+Y as well as Ctrl+Shift+Z for redo and says where Add unit and Remove unit are; the FAQ, the tips, the unit-table page and the manual index no longer say that a unit can only be added as a file; the troubleshooting page has entries for `budget new`, for the Add unit form and for the question before a unit's file is deleted; the glossary has *Blank project*; the install checklist has a manual check of the blank project and Add unit; the in-app guide mentions Add unit; the `--strict` row of the command-line page says which commands accept it; the developer page says to tag the merge commit of the release pull request, and how to make the release in the GitHub web page; the UX audit and UI overhaul plan no longer say "being implemented" or "in progress". The docstrings of `budget_cli.main` (it listed seven of thirteen commands) and `budget_core.assets` were brought up to date. No program behaviour changed.
+
+- **The mode timeline never overlaps itself by a rounding error.** When a pass and an eclipse ended one floating-point step apart (for example 0.1 s and 0.10000000000000002 s), snapping the boundaries to each other left two segments overlapping by about 1e-17 s. Each segment now starts exactly where the one before it ends. A randomized test found it; no real scenario was known to be affected, and the outputs of the examples are unchanged.
 
 ## [1.4.0] - 2026-10-21
 
