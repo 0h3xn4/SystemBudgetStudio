@@ -81,6 +81,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="file-kind"></a>
 **`kind` and schema version**: the first two lines of every project file. `kind` says what the file is (`unit`, `link`…); the [schema version](#schema-version) says which version of the format it uses.
 
+**Focused view**: the way the window opens: the problems as one line of counts, no Inspector or Provenance panel and only the main columns of the grids. **View → Focused view** (Ctrl+Shift+F) shows everything. A view only: files, checks and results do not depend on it. See [use the window](user-manual/use-the-window.md#what-is-where).
+
 ## G
 
 <a id="gt"></a>
@@ -134,6 +136,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 ## O
 
 <a id="orbit-balance"></a>
+**Optional columns**: the columns of a grid that a row may leave empty (the temperature limits of a unit, the heat dissipation and minimum duration of a power mode). Hidden in the [focused view](#f); the **Optional columns** button above the grid shows them.
+
 **Orbit balance**: energy generated minus energy demanded over one complete orbit. Negative means the battery drains a little more every orbit.
 
 ## P
@@ -193,6 +197,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **SpaceMissionStudio**: a sibling tool that computes orbits, eclipses and passes. This tool can read its exported files (an interim format, see [scenarios](user-manual/scenarios.md#how-do-i-use-orbit-data-from-spacemissionstudio)).
 
 <a id="static-budget"></a>
+**Start here**: the card under the top bar of a project that is not finished: four steps (a unit, a spacecraft mode, an orbit and a scenario, save and run), one button for the step to do now. It can be hidden and comes back with *Help → Start here*. See [use the window](user-manual/use-the-window.md#what-is-where).
+
 **Static budget**: a budget per mode without an orbit: the classic table for early design. Compare **time-domain budget**: over a scenario.
 
 <a id="steady-state"></a>

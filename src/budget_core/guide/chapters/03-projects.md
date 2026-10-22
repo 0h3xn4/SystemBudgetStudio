@@ -38,7 +38,7 @@ The id of a unit, mode, site, scenario or link is its file name without `.yaml`.
 
 ## Older files
 
-Files written by earlier versions are upgraded in memory when they are loaded (the Problems panel shows `FILE_MIGRATED`). They are written back in the new format only when you save them.
+Files written by earlier versions are upgraded in memory when they are loaded (the Problems panel shows `FILE_MIGRATED`; in the focused view press **Show problems** to see the list). They are written back in the new format only when you save them.
 
 ## Validating
 

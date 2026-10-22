@@ -48,7 +48,7 @@ The tool never converts between them for you: a `dBW` value in a watt field is a
 
 ### How do I start a new project?
 
-With the wizard (File → New project; pick *Blank project* to start from nothing), with `budget new FOLDER --bus-voltage-v 28`, or by copying an example: [create a project](user-manual/create-a-project.md).
+With the wizard (File → New project; pick *Blank project* to start from nothing, and the **Start here** card then takes you through a unit, a spacecraft mode, an orbit and a scenario), with `budget new FOLDER --bus-voltage-v 28`, or by copying an example: [create a project](user-manual/create-a-project.md).
 
 ### Why is my power timeline `n/a`?
 
@@ -69,6 +69,10 @@ Yes, power-mode data: `budget units-export` writes the units' power modes as a C
 ### How do I regenerate last month's report byte for byte?
 
 Same project folder (a checkout of that revision), same `--user`, same `--date`: [reports](user-manual/reports-and-exports.md#how-do-i-regenerate-a-report-exactly).
+
+### Where did the Inspector and the list of problems go?
+
+The window opens in the *focused view*, which keeps what you work with and hides the rest: the problems are one line of counts with a **Show problems** button, the Inspector and Provenance panels are hidden, and the grids show their main columns. **View → Focused view** (Ctrl+Shift+F) shows everything; the files, the checks and the results are the same in both ([use the window](user-manual/use-the-window.md#what-is-where)).
 
 ### The text is too small or the window does not fit my screen
 

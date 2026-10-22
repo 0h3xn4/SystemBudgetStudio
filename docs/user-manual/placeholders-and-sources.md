@@ -35,7 +35,7 @@ Do not copy a number from a standard unless you have the text and can cite it. T
 
 - `budget validate <project>` lists every placeholder (`CONFIG_PLACEHOLDER`) and empty table (`CONFIG_EMPTY_TABLE`).
 - Every report ends with a **Configuration numbers used** table: each number with its value, source and status (`sourced` or `PLACEHOLDER`).
-- In the window, the **Problems** panel lists them; double-click to jump to the field.
+- In the window, the **Problems** panel lists them (**Show problems** opens the list in the focused view, or click the *not checked* link in the status bar); double-click to jump to the field.
 - When no placeholder is left that a result needs, the INCOMPLETE banner disappears.
 
 ## Which numbers need a source?

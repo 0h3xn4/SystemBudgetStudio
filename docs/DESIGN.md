@@ -134,6 +134,8 @@ Icons are [Lucide](https://lucide.dev) 0.468.0 (ISC licence). The SVG files in `
 └───────┴──────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+The diagram is the full view. In the focused view (the default, below) the inspector and provenance column is absent and the Problems panel is a single line.
+
 - **Top bar.** The project name (it ends in an ellipsis before it widens the window; the tooltip has all of it), `rev`, a *● Unsaved changes* marker, the scenario selector, the BOL/EOL switch, **Run** and the run status. The scenario and the case are chosen here once; the tabs keep no selector of their own. **Run** is the one filled accent button of the window; **Compute** and **Export…** in the views are secondary.
 - **Run status chip** (icon, word, tint from the status palette): *Not run* (not checked), *Running…* (accent text on the selected tint), *Up to date · time* (pass), *Out of date* (near), *Run failed* (fail).
 - **Banners** (icon, sentence, one action; tint from the status palette): *stale* (near) when the tables show the last results that worked, from before an error, with **Show the first error**; *failed* (fail) when a run did not finish, with **Run again**.

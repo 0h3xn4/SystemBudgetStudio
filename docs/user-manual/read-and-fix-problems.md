@@ -27,7 +27,7 @@ The window shows four classes, not three: the placeholders and the results that 
 
 ## How do I jump to the cause?
 
-In the window, double-click (or press Enter on) a row of the **Problems** panel, or press **F8** for the next problem: the file opens at the line. The filter box and the class and grouping selectors narrow the list. On the command line, open the named file and go to the line or field.
+In the window, double-click (or press Enter on) a row of the **Problems** panel, or press **F8** for the next problem: the file opens at the line. (The window starts in the *focused view*, where the panel is one line of counts: **Show problems**, **F8**, the *not checked* link in the status bar and **Show the first error** open the list.) The filter box and the class and grouping selectors narrow the list. On the command line, open the named file and go to the line or field.
 
 ## Common problems and fixes
 
