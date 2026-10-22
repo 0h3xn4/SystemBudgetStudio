@@ -54,7 +54,8 @@ src/budget_cli/       `budget new | validate | run | scenario | power-timeline |
 src/budget_gui/       PySide6; no logic beyond presentation; docs/DESIGN.md
                       theme/ (tokens, fonts, style sheet, scale: the only place for colours and sizes), components/ (Button, StatusBadge, Card ...)
                       shell: main_window.py, rail.py (navigation), top_bar.py, workspace.py (the seven areas), project_tree.py, problems_panel.py,
-                      inspector.py, provenance_panel.py, status_bar.py, settings_popover.py, command_palette.py, run_controller.py
+                      inspector.py, provenance_panel.py, status_bar.py, settings_popover.py, command_palette.py, run_controller.py,
+                      start_here.py (the Start here card: four steps to a first result, D-190)
                       model editing: model_document.py (one undo stack; adds and removes files), model_pages.py (the Units, Power modes and Inputs pages),
                       add_unit_dialog.py (the Add unit form), add_mode_dialog.py (the Add spacecraft mode form), add_scenario_dialog.py (the Add orbit and scenario form), grid_models.py, grid_view.py, frozen_view.py, delegates.py, scenario_editor.py, guided.py (the project wizard)
                       results: timeline_view.py, link_view.py, scenario_view.py, compare_view.py, reports_view.py, plot_widget.py,

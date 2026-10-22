@@ -52,7 +52,7 @@ from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
 from budget_gui.inspector import CellInfo, InspectorPanel
-from budget_gui.layout_settings import MOTION, RAIL_STATES, LayoutSettings
+from budget_gui.layout_settings import MOTION, RAIL_STATES, START_STATES, LayoutSettings
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.model_document import ModelDocument
@@ -68,6 +68,7 @@ from budget_gui.run_controller import RunController, RunState
 from budget_gui.scenario_view import ScenarioView
 from budget_gui.session import ProjectSession
 from budget_gui.settings_popover import SettingsPopover
+from budget_gui.start_here import MODE, RUN, SCENARIO, UNIT, Progress, StartHerePanel, progress
 from budget_gui.status_bar import AppStatusBar
 from budget_gui.theme import Status
 from budget_gui.timeline_view import PowerTimelineView
@@ -106,6 +107,9 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(APP_NAME)
         self.resize(*theme.scaled(theme.WINDOW_DEFAULT))
         self.session = ProjectSession()
+        self._start_hidden = False  # the person hid the Start here panel (kept in layout.ini)
+        self._start_forced = False  # Help > Start here: shown even when every step is done
+        self._run_after_load = False  # Save and run: the run waits for the project to load again
         self.layout_settings = layout if layout is not None else LayoutSettings.default()
         self.tree = ProjectTree()
         self.problems_panel = ProblemsPanel()
@@ -167,6 +171,9 @@ class MainWindow(QMainWindow):
         stack.addWidget(self.top_bar)
         stack.addWidget(self.stale_banner)
         stack.addWidget(self.failed_banner)
+        self.start_here = StartHerePanel()
+        self.start_here.hide()
+        stack.addWidget(self.start_here)
         stack.addWidget(self.workspace, 1)
         self.welcome = WelcomePage()
         self.welcome.open_requested.connect(self._choose_project)
@@ -230,6 +237,9 @@ class MainWindow(QMainWindow):
         self.timeline_view.case_combo.currentTextChanged.connect(self.top_bar.set_case)
         self.top_bar.run_requested.connect(self.run_all)
         self.top_bar.cancel_requested.connect(self.run_controller.cancel)
+        self.start_here.step_requested.connect(self._start_step)
+        self.start_here.hide_requested.connect(self.hide_start_here)
+        self.document.undo_stack.indexChanged.connect(lambda _i: self._update_start_here())
         self.stale_banner.action_requested.connect(self.show_first_error)
         self.failed_banner.action_requested.connect(self.run_all)
         self.run_controller.changed.connect(self._update_run_state)
@@ -302,6 +312,10 @@ class MainWindow(QMainWindow):
         self._build_run_menu()
         self._build_view_menu()
         help_menu = self.menuBar().addMenu("&Help")
+        self.start_here_action = QAction("&Start here", self)
+        self.start_here_action.setEnabled(False)  # until a project is open
+        self.start_here_action.triggered.connect(self.show_start_here)
+        help_menu.addAction(self.start_here_action)
         guide = QAction("&User guide", self)
         guide.setShortcut(QKeySequence.StandardKey.HelpContents)
         guide.triggered.connect(lambda: self.open_guide())
@@ -764,6 +778,7 @@ class MainWindow(QMainWindow):
         if state is not None:
             self.restoreState(state, LAYOUT_VERSION)  # a layout of another version is ignored
         self.rail.set_folded(settings.word("window/rail", RAIL_STATES, "open") == "folded")
+        self._start_hidden = settings.word("window/start_here", START_STATES, "shown") == "hidden"
         self.problems_panel.set_column_widths(settings.int_list("columns/problems"))
 
     def save_layout(self) -> None:
@@ -773,6 +788,9 @@ class MainWindow(QMainWindow):
         with self._docks_as_the_user_left_them():
             settings.set_bytes("dock/state", self.saveState(LAYOUT_VERSION))
         settings.set_word("window/rail", "folded" if self.rail.folded else "open", RAIL_STATES)
+        settings.set_word(
+            "window/start_here", "hidden" if self._start_hidden else "shown", START_STATES
+        )
         settings.set_int_list("columns/problems", self.problems_panel.column_widths())
         settings.sync()
 
@@ -1006,6 +1024,7 @@ class MainWindow(QMainWindow):
         else:
             self.failed_banner.clear()
         self.run_action.setEnabled(controller.can_run())
+        self._update_start_here()
 
     def _update_dirty(self) -> None:
         dirty = self.editors.has_unsaved_changes()
@@ -1014,6 +1033,71 @@ class MainWindow(QMainWindow):
         has_project = self.session.project is not None or self.session.path is not None
         if has_project and name:
             self.setWindowTitle(f"{'● ' if dirty else ''}{name} — {APP_NAME}")
+        self._update_start_here()
+
+    # ---- the Start here panel ----------------------------------------------------------------
+    def start_progress(self) -> Progress:
+        """Which of the four steps are done, from the files on screen (edits included)."""
+        document = self.document
+        return progress(
+            units=len(document.rels("units/")),
+            modes=len(document.rels("modes/")),
+            scenarios=len(document.rels("scenarios/")),
+            saved=not self.editors.has_unsaved_changes(),
+            ran=self.run_controller.state() is RunState.OK,
+        )
+
+    def _update_start_here(self) -> None:
+        state = self.start_progress()
+        self.start_here.set_progress(state)
+        shown = self.session.project is not None and (
+            self._start_forced or (not self._start_hidden and not state.finished)
+        )
+        self.start_here.setVisible(shown)
+        self.start_here_action.setEnabled(self.session.project is not None)
+
+    def show_start_here(self) -> None:
+        """Help > Start here: show the panel again (also when every step is done)."""
+        if self.session.project is None:
+            return
+        self._start_hidden = False
+        self._start_forced = True
+        self._update_start_here()
+        self.save_layout()
+
+    def hide_start_here(self) -> None:
+        self._start_hidden = True
+        self._start_forced = False
+        self._update_start_here()
+        self.status_bar.showMessage("Start here is hidden. Help > Start here shows it again.")
+        self.save_layout()
+
+    def _start_step(self, key: str) -> None:
+        """A button of the panel: the same action as the menu entry of that step."""
+        if key == UNIT:
+            self.add_unit()
+        elif key == MODE:
+            self.add_spacecraft_mode()
+        elif key == SCENARIO:
+            self.add_scenario()
+        elif key == RUN:
+            self.save_and_run()
+
+    def save_and_run(self) -> bool:
+        """Save what was edited, then run. The project loads again after a save, so the run waits
+        for that (`_refresh`) and works on the files that were just written."""
+        if self.session.project is None:
+            return False
+        if self.document.is_modified():
+            self._run_after_load = True
+            if not self.save_model():
+                self._run_after_load = False
+                return False
+            return True
+        if self.editors.has_unsaved_changes():
+            self.status_bar.showMessage("Save the open file tabs first (Ctrl+S), then run.")
+            return False
+        return self.run_all()
 
     def _mark_run(self) -> None:
         """Something was worked out just now: say so in the status bar."""
@@ -1188,6 +1272,11 @@ class MainWindow(QMainWindow):
         self._inspect()
         self._update_dirty()
         self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
+        self._update_start_here()
+        if self._run_after_load:
+            self._run_after_load = False
+            if project is not None:
+                self.run_all()
 
     def _update_problems(self) -> None:
         """Project problems plus the findings of the last power timeline (violations, gaps), each
