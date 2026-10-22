@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **The mode timeline never overlaps itself by a rounding error.** When a pass and an eclipse ended one floating-point step apart (for example 0.1 s and 0.10000000000000002 s), snapping the boundaries to each other left two segments overlapping by about 1e-17 s. Each segment now starts exactly where the one before it ends. A randomized test found it; no real scenario was known to be affected, and the outputs of the examples are unchanged.
+
 ## [1.5.0] - 2026-10-22
 
 A blank project can now be built up to its first result in the window, and the window opens calmer. **No equation, report layout or existing file format changed**: the same project gives the same numbers and the same files as 1.4.0 (the tool version in the provenance rows and the examples differ). The new forms write ordinary project files and no number has a default in them.
