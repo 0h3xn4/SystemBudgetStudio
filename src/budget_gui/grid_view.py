@@ -218,6 +218,18 @@ class GridTable(QWidget):
     def visible_rows(self) -> int:
         return self.proxy.rowCount()
 
+    def has_optional_columns(self) -> bool:
+        return any(column.optional for column in self.model.columns)
+
+    def set_optional_columns_shown(self, shown: bool) -> None:
+        """Show or hide the columns a row may leave empty (the temperature limits of a unit, the
+        heat dissipation of a power mode). Hidden is a view: the files and the checks are the
+        same, and a project that has a value there still shows it once the columns are shown."""
+        for index, column in enumerate(self.model.columns):
+            if column.optional:
+                self.view.setColumnHidden(index, not shown)
+        self.request_fit()
+
     # ---- positions ---------------------------------------------------------------------------
     def _source(self, index: QModelIndex) -> tuple[int, int]:
         mapped = self.proxy.mapToSource(index)
@@ -533,6 +545,16 @@ class GridPage(QWidget):
         self.problem_label.setProperty("role", "error")
         self.feedback_label = QLabel()
         self.feedback_label.setWordWrap(True)
+        self.columns_button = Button("Optional columns", "ghost", compact=True)
+        self.columns_button.setCheckable(True)
+        self.columns_button.setChecked(True)
+        self.columns_button.setAccessibleName("Optional columns")
+        self.columns_button.set_tip(
+            "Show or hide the columns a row may leave empty (the view only; the files are the same)"
+        )
+        self.columns_button.setVisible(self.table.has_optional_columns())
+        self.columns_button.toggled.connect(self.table.set_optional_columns_shown)
+        self.tools.addWidget(self.columns_button)
         self.tools.addWidget(self.bar)
         layout = QVBoxLayout(self)
         layout.addLayout(self.tools)
@@ -552,6 +574,10 @@ class GridPage(QWidget):
 
     def add_tool(self, widget: QWidget) -> None:
         self.tools_extra.addWidget(widget)
+
+    def set_optional_columns(self, shown: bool) -> None:
+        """The optional columns on or off (the button follows, so it shows the state)."""
+        self.columns_button.setChecked(shown)
 
     def _filter_changed(self, text: str) -> None:
         self.table.set_filter(text)

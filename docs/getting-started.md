@@ -183,7 +183,7 @@ Exit code 0: the violation is gone (the radio's thermal finding is a separate ch
 system-budget-studio demo/microsat_250kg_eps
 ```
 
-You should see the window below: the **navigation rail** on the far left with the seven areas (Model, Power, Mass, Thermal, Link, Compare, Reports), the **project panel** beside it with the project tree, the **top bar** (project, revision, scenario, BOL and EOL, **Run** and the run status), the **Problems** panel along the bottom, and, when the window is wide enough, the **Inspector** and **Provenance** on the right.
+You should see the window below: the **navigation rail** on the far left with the seven areas (Model, Power, Mass, Thermal, Link, Compare, Reports), the **project panel** beside it with the project tree, the **top bar** (project, revision, scenario, BOL and EOL, **Run** and the run status), the **Problems** panel along the bottom, and, when the window is wide enough, the **Inspector** and **Provenance** on the right. A new window starts in the **focused view**, which shows the Problems panel as one line of counts and keeps the Inspector and Provenance hidden: **View → Focused view** (Ctrl+Shift+F) turns it off to show everything, and the screenshots in this guide show that full window.
 
 ![The Power budget of the 250 kg example satellite: a table of average and peak power for each spacecraft mode, with the project tree on the left and the Problems panel below](images/ui-overhaul/power-budget-light.png)
 
