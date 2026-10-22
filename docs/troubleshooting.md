@@ -150,6 +150,10 @@ A unit needs a bus, so add one in `spacecraft.yaml` first (a project made with `
 
 A spacecraft mode says what every unit is doing, so **Add spacecraft mode** needs at least one unit: add it first. In the *Spacecraft modes* grid a cell takes only a power mode the unit has (the message lists them); add the power mode to the unit in *Power modes* first. **Remove spacecraft mode** is refused while a scenario names the mode, as its default mode, in a rule or in a segment: change the scenario (*Model → Scenario*) and remove the mode afterwards. See [add a spacecraft mode](user-manual/describe-the-spacecraft.md#how-do-i-add-a-spacecraft-mode).
 
+### Add scenario: "add a spacecraft mode first", or a number is refused
+
+A scenario says which spacecraft mode is active, so **Add scenario** needs one: add it first (Edit → Add spacecraft mode). The form takes an altitude of 160 to 2000 km, an inclination of 0 to 180 degrees, a RAAN of 0 up to (not including) 360 degrees, a start in UTC with a trailing Z and no offset (`2026-06-01T00:00:00Z`) and a length above 0 and at most 30 days; the line under the form says which answer is wrong. See [add an orbit and a scenario](user-manual/scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window).
+
 ### Save asks "Saving deletes 1 file from the project folder"
 
 You removed a unit with **Remove unit**. Saving deletes its file (`units/<id>.yaml`) and takes it out of every spacecraft mode. Answer **No** to keep the file, then **Undo** (Ctrl+Z) the removal. A deleted file is not in the undo history any more.

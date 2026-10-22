@@ -23,6 +23,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QApplication,
+    QDialog,
     QDockWidget,
     QFileDialog,
     QMainWindow,
@@ -34,11 +35,14 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
+from budget_core.model import Orbit, Scenario
+from budget_core.new_scenario import ScenarioAnswers, scenario_data
 from budget_core.problems import sort_problems
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui import problem_class as pc
 from budget_gui import theme
+from budget_gui.add_scenario_dialog import AddScenarioDialog
 from budget_gui.banner import Banner
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
@@ -235,6 +239,7 @@ class MainWindow(QMainWindow):
         for source in (self.scenario_view, self.timeline_view):
             source.computed.connect(lambda _result: self.update_reports_page())
             source.compute_failed.connect(lambda _message: self.update_reports_page())
+        self.scenario_view.add_scenario_requested.connect(self.add_scenario)
         self.tree.file_requested.connect(self._tree_file)
         self.tree.field_requested.connect(self.jump_to_input)
         self.tree.currentItemChanged.connect(lambda _current, _previous: self._inspect())
@@ -332,6 +337,11 @@ class MainWindow(QMainWindow):
         self.remove_mode_action.triggered.connect(self.remove_spacecraft_mode)
         edit_menu.addAction(self.add_mode_action)
         edit_menu.addAction(self.remove_mode_action)
+        edit_menu.addSeparator()
+        self.add_scenario_action = QAction("Add &scenario…", self)
+        self.add_scenario_action.setShortcut(QKeySequence("Ctrl+Shift+O"))
+        self.add_scenario_action.triggered.connect(self.add_scenario)
+        edit_menu.addAction(self.add_scenario_action)
         for action in self.model_edit_actions():
             action.setEnabled(False)  # until a project is open that loads
 
@@ -571,7 +581,65 @@ class MainWindow(QMainWindow):
             self.remove_unit_action,
             self.add_mode_action,
             self.remove_mode_action,
+            self.add_scenario_action,
         )
+
+    def _ask_scenario(
+        self, scenarios: list[str], orbits: list[str], modes: list[str]
+    ) -> ScenarioAnswers | None:
+        """The form; the tests put their own answers here."""
+        dialog = AddScenarioDialog(scenarios, orbits, modes, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.answers()
+
+    def add_scenario(self) -> bool:
+        """Edit > Add scenario: an orbit and a scenario from a form, from any area. The orbit file
+        and the scenario file are added in one undo step; Save writes them."""
+        project = self.session.project
+        if project is None:
+            return False
+        document = self.document
+
+        def ids(prefix: str) -> list[str]:
+            return [r.removeprefix(prefix).removesuffix(".yaml") for r in document.rels(prefix)]
+
+        modes = ids("modes/")
+        self.show_view(self.scenario_view)
+        if not modes:
+            self.statusBar().showMessage(
+                "A scenario says which spacecraft mode is active: add a spacecraft mode first "
+                "(Edit > Add spacecraft mode)."
+            )
+            return False
+        answers = self._ask_scenario(ids("scenarios/"), sorted(project.orbits), modes)
+        if answers is None:
+            return False
+        try:
+            orbit_data, scenario_data_ = scenario_data(answers)
+        except ValueError:
+            self.statusBar().showMessage("The answers do not make a valid scenario.")
+            return False
+        name = answers.scenario_id
+        orbit_rel, scenario_rel = f"orbits/{name}.yaml", f"scenarios/{name}.yaml"
+        document.undo_stack.beginMacro(f"Add orbit and scenario {name}")
+        try:
+            added = document.add_file(
+                orbit_rel, Orbit, orbit_data, f"Add orbit {name}"
+            ) and document.add_file(scenario_rel, Scenario, scenario_data_, f"Add scenario {name}")
+        finally:
+            document.undo_stack.endMacro()
+        if not added:
+            self.statusBar().showMessage(
+                f"There is already a file for {name} (removed in this session? Undo it, or Save "
+                "first)."
+            )
+            return False
+        self.statusBar().showMessage(
+            f"Added the scenario {name} and its orbit. Save (Ctrl+S) writes {scenario_rel} and "
+            f"{orbit_rel}; then press Run. Undo with Ctrl+Z."
+        )
+        return True
 
     def add_spacecraft_mode(self) -> bool:
         """Edit > Add spacecraft mode: the form of the Spacecraft modes grid, from any area."""

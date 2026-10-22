@@ -4,6 +4,10 @@ This page shows how to place the spacecraft in an orbit for a span of time and d
 
 **Contents:** [Orbit](#how-do-i-define-an-orbit) · [Ground stations and targets](#how-do-i-add-a-ground-station-or-an-imaging-target) · [The scenario file](#how-do-i-write-a-scenario) · [Mode rules](#how-do-i-switch-modes-automatically) · [Compute and look](#how-do-i-see-eclipses-passes-and-the-timeline) · [SpaceMissionStudio](#how-do-i-use-orbit-data-from-spacemissionstudio)
 
+## How do I add an orbit and a scenario in the window?
+
+Press **Ctrl+Shift+O** (**Edit → Add scenario**, or *Add scenario* in Ctrl+K), or open **Model → Scenario** and press **Add orbit and scenario…** (the page offers it when the project has no scenario). The project needs a spacecraft mode first. A form asks for the name, the id (suggested from the name; it becomes the file names `scenarios/<id>.yaml` and `orbits/<id>.yaml`), the **altitude**, **inclination** and **RAAN** of a near-circular orbit, the **start** (UTC, for example `2026-06-01T00:00:00Z`), the **length** in days (up to 30) and the **spacecraft mode** that is active the whole time. None of the numbers has a default, and the form does not accept an empty one. The orbit has an eccentricity of 0.001 (the scenario's description says so); the time step is 10 s, or coarser for a long scenario so that a run has at most 8,640 steps. There are no ground stations and no rules yet, so the first run has eclipses but no passes: add them below (a ground station is a file; the rules are sentences in the editor on this page). Both files are added in one undo step and **Save** (Ctrl+S) writes them; then press **Run**.
+
 ## How do I define an orbit?
 
 `orbits/<id>.yaml` takes either a two-line element set (a [**TLE**](../glossary.md#tle): two 69-character lines, checksums verified) or mean orbital elements:

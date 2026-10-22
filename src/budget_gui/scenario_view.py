@@ -50,6 +50,7 @@ from budget_gui.cancel_support import (
     cancelled_text,
     computing_text,
 )
+from budget_gui.components import Button
 from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE
 from budget_gui.model_document import ModelDocument
 from budget_gui.scenario_editor import ScenarioEditor
@@ -58,8 +59,8 @@ from budget_gui.timeline import TimelineWidget
 from budget_gui.validity import CHANGED_WHILE_RUNNING_TEXT, NOT_COMPUTED_TEXT
 
 EMPTY_TEXT = (
-    "This project has no scenario. Add a file in scenarios/ to work out the power timeline "
-    "and the link passes."
+    "This project has no scenario yet. A scenario is a stretch of time on an orbit: it gives "
+    "the eclipses, the power timeline and the link passes."
 )
 
 
@@ -128,6 +129,7 @@ class ScenarioView(QWidget):
     compute_failed = Signal(str)
     stage_changed = Signal(str)  # what a computation in progress is working on
     cancelled = Signal()  # a computation was stopped at the user's request
+    add_scenario_requested = Signal()  # the button of the empty page or of the top row
 
     def __init__(self, document: ModelDocument | None = None) -> None:
         super().__init__()
@@ -150,12 +152,25 @@ class ScenarioView(QWidget):
         self.empty_label = QLabel(EMPTY_TEXT)
         self.empty_label.setWordWrap(True)
         self.empty_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.add_button = Button("Add orbit and scenario…", "primary", icon="plus")
+        self.add_button.setAccessibleName("Add orbit and scenario")
+        self.add_button.clicked.connect(self.add_scenario_requested)
+        self.add_more_button = Button(
+            "Add scenario…",
+            "secondary",
+            icon="plus",
+            compact=True,
+            tip="Add an orbit and a scenario",
+            shortcut="Ctrl+Shift+O",
+        )
+        self.add_more_button.clicked.connect(self.add_scenario_requested)
 
         self.scenario_label = QLabel("Scenario")
         top = QHBoxLayout()
         top.addWidget(self.scenario_label)
         top.addWidget(self.combo)
         top.addWidget(self.compute_button)
+        top.addWidget(self.add_more_button)
         top.addWidget(self.status, 1)
 
         self.timeline = TimelineWidget()
@@ -191,6 +206,7 @@ class ScenarioView(QWidget):
         layout = QVBoxLayout(self)
         layout.addLayout(top)
         layout.addWidget(self.empty_label)
+        layout.addWidget(self.add_button, 0, Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.body)
 
         self.combo.currentTextChanged.connect(self._selected)
@@ -226,6 +242,7 @@ class ScenarioView(QWidget):
         shown = bool(ids)
         keep_edits = not shown and self.editor.is_modified()  # never drop edits silently (D-060)
         self.empty_label.setVisible(not shown and not keep_edits)
+        self.add_button.setVisible(not shown and not keep_edits and project is not None)
         self.body.setVisible(shown or keep_edits)
         self.compute_button.setEnabled(shown)  # while it computes the button cancels
         self.combo.setEnabled(shown)

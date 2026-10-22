@@ -73,6 +73,7 @@ Every finding of the project, in one list, errors first. Each row has an **icon*
 | Ctrl+Shift+E | Export the power timeline |
 | Ctrl+Shift+N / Ctrl+Shift+Delete | **Edit → Add unit** / **Remove unit**, from any area: they bring *Model → Units* to the front ([add a unit](describe-the-spacecraft.md#how-do-i-add-a-unit)). Remove takes the unit with the cursor in the grid, or the unit selected in the project tree |
 | Ctrl+Shift+M / Ctrl+Shift+Backspace | **Edit → Add spacecraft mode** / **Remove spacecraft mode**, from any area: they bring *Model → Spacecraft modes* to the front ([add a spacecraft mode](describe-the-spacecraft.md#how-do-i-add-a-spacecraft-mode)) |
+| Ctrl+Shift+O | **Edit → Add scenario**, from any area: an orbit and a scenario from a form; it brings *Model → Scenario* to the front ([add an orbit and a scenario](scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window)) |
 | (menu only) | File → Export unit table / Import unit table: the unit power modes as a CSV or XLSX table, imported with a preview ([unit tables](unit-tables.md)) |
 | (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
 | (menu only) | View → Theme (light, dark, same as the system), UI size (90, 100, 110 or 125 %), Reduce motion, Cell styles (what every cell style means), the panel toggles, Reset layout |
