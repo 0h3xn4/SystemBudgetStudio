@@ -52,7 +52,13 @@ from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
 from budget_gui.inspector import CellInfo, InspectorPanel
-from budget_gui.layout_settings import MOTION, RAIL_STATES, START_STATES, LayoutSettings
+from budget_gui.layout_settings import (
+    MOTION,
+    RAIL_STATES,
+    START_STATES,
+    VIEW_STATES,
+    LayoutSettings,
+)
 from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.model_document import ModelDocument
@@ -94,6 +100,7 @@ def _path_tokens(path: str) -> tuple[str | int, ...]:
     return tuple(tokens)
 
 
+DEFAULT_VIEW = "focused"  # what a window with no saved layout starts in (D-191)
 LAYOUT_VERSION = 2  # the arrangement of the docks: a saved layout of another version is ignored
 
 
@@ -110,6 +117,8 @@ class MainWindow(QMainWindow):
         self._start_hidden = False  # the person hid the Start here panel (kept in layout.ini)
         self._start_forced = False  # Help > Start here: shown even when every step is done
         self._run_after_load = False  # Save and run: the run waits for the project to load again
+        self._focused = True  # the focused view (D-191); the full view shows every panel and column
+        self._problems_height = 0  # the height of the Problems panel while its list was open
         self.layout_settings = layout if layout is not None else LayoutSettings.default()
         self.tree = ProjectTree()
         self.problems_panel = ProblemsPanel()
@@ -237,6 +246,7 @@ class MainWindow(QMainWindow):
         self.timeline_view.case_combo.currentTextChanged.connect(self.top_bar.set_case)
         self.top_bar.run_requested.connect(self.run_all)
         self.top_bar.cancel_requested.connect(self.run_controller.cancel)
+        self.problems_panel.expanded_changed.connect(self._problems_expanded)
         self.start_here.step_requested.connect(self._start_step)
         self.start_here.hide_requested.connect(self.hide_start_here)
         self.document.undo_stack.indexChanged.connect(lambda _i: self._update_start_here())
@@ -282,6 +292,7 @@ class MainWindow(QMainWindow):
         self.timeline_view.export_failed.connect(self._queue_step_failed)
         self._closing = False  # a close was asked for while a job runs
         self._last_run: datetime | None = None
+        self.set_view_mode(self._focused)  # before the first screen notes which docks to give back
         self._show_welcome()
 
     # ---- actions -----------------------------------------------------------------------------
@@ -416,6 +427,16 @@ class MainWindow(QMainWindow):
         self.motion_action.triggered.connect(self.set_reduce_motion)
         view_menu.addAction(self.motion_action)
         view_menu.addSeparator()
+        self.view_action = QAction("Focused &view", self)
+        self.view_action.setCheckable(True)
+        self.view_action.setChecked(self._focused)
+        self.view_action.setShortcut(QKeySequence("Ctrl+Shift+F"))
+        self.view_action.setToolTip(
+            "Focused: the problems as one line of counts, no Inspector or Provenance panel, only "
+            "the main columns. Off: every panel and column."
+        )
+        self.view_action.toggled.connect(self.set_view_mode)
+        view_menu.addAction(self.view_action)
         for dock in (
             self.project_dock,
             self.inspector_dock,
@@ -779,6 +800,7 @@ class MainWindow(QMainWindow):
             self.restoreState(state, LAYOUT_VERSION)  # a layout of another version is ignored
         self.rail.set_folded(settings.word("window/rail", RAIL_STATES, "open") == "folded")
         self._start_hidden = settings.word("window/start_here", START_STATES, "shown") == "hidden"
+        self._focused = settings.word("window/view", VIEW_STATES, DEFAULT_VIEW) == "focused"
         self.problems_panel.set_column_widths(settings.int_list("columns/problems"))
 
     def save_layout(self) -> None:
@@ -791,6 +813,7 @@ class MainWindow(QMainWindow):
         settings.set_word(
             "window/start_here", "hidden" if self._start_hidden else "shown", START_STATES
         )
+        settings.set_word("window/view", "focused" if self._focused else "full", VIEW_STATES)
         settings.set_int_list("columns/problems", self.problems_panel.column_widths())
         settings.sync()
 
@@ -809,9 +832,11 @@ class MainWindow(QMainWindow):
             dock.show()
         self.restoreState(self._default_state, LAYOUT_VERSION)
         self.rail.set_folded(False)
-        self._apply_default_sizes()
         self.problems_panel.set_column_widths([])
         self.resize(*theme.scaled(theme.WINDOW_DEFAULT))
+        self.view_action.setChecked(True)  # the first arrangement is the focused view
+        self.set_view_mode(True)
+        self._apply_default_sizes()
 
     def _apply_default_sizes(self) -> None:
         self.resizeDocks(
@@ -819,9 +844,58 @@ class MainWindow(QMainWindow):
             [theme.px(w) for w in theme.DOCK_WIDTHS],
             Qt.Orientation.Horizontal,
         )
-        self.resizeDocks(
-            [self.problems_dock], [theme.px(theme.PROBLEMS_HEIGHT)], Qt.Orientation.Vertical
-        )
+        self._size_problems_dock()
+
+    # ---- the focused view (D-191) ------------------------------------------------------------
+    def set_view_mode(self, focused: bool) -> None:
+        """The focused view shows the counts of the problems as one line, no Inspector and no
+        Provenance panel, and only the main columns of the grids. The full view shows everything.
+        Panels and columns can still be opened one by one (View menu, the buttons)."""
+        self._focused = focused
+        if self.view_action.isChecked() != focused:
+            self.view_action.setChecked(focused)
+            return  # the toggle calls this again
+        for page in self.grid_pages():
+            page.set_optional_columns(not focused)
+        side = (self.inspector_dock, self.provenance_dock)
+        if self._welcome_hid is not None:
+            for dock in side:
+                self._welcome_hid[dock] = not focused  # what the first screen gives back
+        else:
+            for dock in side:
+                self._narrow_hid.discard(dock)
+                dock.setVisible(not focused and self._regime == "wide")
+        self.problems_panel.set_expanded(not focused)
+        self.problems_dock.show()
+
+    def reveal_problems(self) -> None:
+        """Bring the Problems panel to the front with its list open (a jump to a problem, the
+        'not checked' link of the status bar, F8)."""
+        self.problems_dock.show()
+        self.problems_dock.raise_()
+        self.problems_panel.set_expanded(True)
+
+    def _problems_expanded(self, expanded: bool) -> None:
+        height = self.problems_dock.height()
+        if not expanded and self.isVisible() and height >= theme.px(theme.PROBLEMS_HEIGHT) // 2:
+            self._problems_height = height  # what the list had, to give back when it is opened
+        self._size_problems_dock()
+
+    def _size_problems_dock(self) -> None:
+        """The height of the Problems dock: one line of counts, or what it had with the list. The
+        layout has not seen the widgets show or hide yet, so it is done again once it has."""
+        self._set_problems_height()
+        QTimer.singleShot(0, self, self._set_problems_height)
+
+    def _set_problems_height(self) -> None:
+        if self.problems_panel.is_expanded():
+            height = self._problems_height or theme.px(theme.PROBLEMS_HEIGHT)
+        else:
+            title = self.problems_dock.titleBarWidget()
+            height = self.problems_panel.sizeHint().height() + (
+                title.sizeHint().height() if title is not None else 0
+            )
+        self.resizeDocks([self.problems_dock], [height], Qt.Orientation.Vertical)
 
     @contextmanager
     def _docks_as_the_user_left_them(self) -> Iterator[None]:
@@ -920,8 +994,7 @@ class MainWindow(QMainWindow):
     def next_problem(self, step: int = 1) -> None:
         """Select the next (or previous) problem and open its file at the line."""
         problem = self.problems_panel.select_next(step)
-        self.problems_dock.show()
-        self.problems_dock.raise_()
+        self.reveal_problems()
         if problem is not None and problem.file:
             self.open_file(problem.file, problem.line or 1)
 
@@ -992,8 +1065,7 @@ class MainWindow(QMainWindow):
         for position, problem in enumerate(panel.visible_problems):
             if pc.classify(problem) is ProblemClass.ERROR:
                 panel.select_row(position)
-                self.problems_dock.show()
-                self.problems_dock.raise_()
+                self.reveal_problems()
                 if problem.file:
                     self.open_file(problem.file, problem.line or 1)
                 return
@@ -1108,8 +1180,7 @@ class MainWindow(QMainWindow):
     def show_not_checked(self) -> None:
         """List the 'not checked' findings (the link in the status bar)."""
         self.problems_panel.set_class_filter(ProblemClass.NOT_CHECKED)
-        self.problems_dock.show()
-        self.problems_dock.raise_()
+        self.reveal_problems()
         self.problems_panel.setFocus()
 
     def _loading_changed(self, loading: bool) -> None:

@@ -39,6 +39,7 @@ from PySide6.QtWidgets import (
 from budget_core.problems import Problem
 from budget_gui import icons, theme
 from budget_gui import problem_class as pc
+from budget_gui.components import Button
 from budget_gui.problem_class import ProblemClass
 
 PROBLEM_ROLE = int(Qt.ItemDataRole.UserRole) + 10  # index into the list of shown problems
@@ -111,6 +112,7 @@ class ProblemsPanel(QWidget):
 
     jump_requested = Signal(str, int)
     changed = Signal()  # the list, the filter or the grouping changed
+    expanded_changed = Signal(bool)  # the list was opened or folded away (the strip stays)
 
     def __init__(self) -> None:
         super().__init__()
@@ -166,12 +168,16 @@ class ProblemsPanel(QWidget):
         self._stack.addWidget(self.view)
         self._stack.addWidget(self.empty)
 
-        controls = QHBoxLayout()
+        self.toggle_button = Button("", "ghost", icon="chevron-up", compact=True)
+        self.toggle_button.clicked.connect(lambda: self.set_expanded(not self._expanded))
+        self._expanded = True
+        controls = self._controls = QHBoxLayout()
         controls.setSpacing(theme.gap(1))
         controls.addWidget(self.summary)
         controls.addWidget(self.filter_box, 1)
         controls.addWidget(self.class_box)
         controls.addWidget(self.group_box)
+        controls.addWidget(self.toggle_button)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(*theme.inset(1, 0))
         layout.addLayout(controls)
@@ -186,6 +192,32 @@ class ProblemsPanel(QWidget):
         self.group_box.currentIndexChanged.connect(lambda _i: self._rebuild())
         self.view.activated.connect(self._activated)
         theme.manager().changed.connect(self._theme_changed)
+        self._sync_toggle()
+
+    # ---- folding the list away (the calm view shows the counts only) -------------------------
+    def is_expanded(self) -> bool:
+        return self._expanded
+
+    def set_expanded(self, expanded: bool) -> None:
+        """Show the list with its filter, or only the line with the counts."""
+        if expanded == self._expanded:
+            return
+        self._expanded = expanded
+        self._controls.setStretchFactor(
+            self.summary, 0 if expanded else 1
+        )  # the button stays right
+        for widget in (self.filter_box, self.class_box, self.group_box, self._stack_host):
+            widget.setVisible(expanded)
+        self._sync_toggle()
+        self.expanded_changed.emit(expanded)
+
+    def _sync_toggle(self) -> None:
+        verb = "Hide" if self._expanded else "Show"
+        self.toggle_button.setText(f"{verb} problems")
+        self.toggle_button._icon_name = "chevron-down" if self._expanded else "chevron-up"
+        self.toggle_button._retint()
+        self.toggle_button.set_tip(f"{verb} the list of problems (the counts stay on this line)")
+        self.toggle_button.setAccessibleName(f"{verb} problems")
 
     # ---- columns (widths and visibility are kept in the layout file) ---------------------------
     DEFAULT_WIDTHS = (56, 0, 180, 170)  # the problem column stretches

@@ -18,6 +18,16 @@ def _synchronous_loading(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
+def _full_view_unless_a_test_asks(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A new window starts in the focused view (D-191); most window tests look at the Inspector,
+    the Provenance panel, the Problems list or the optional columns, so they start in the full
+    view. `test_focused_view.py` puts the default back and tests it."""
+    from budget_gui import main_window
+
+    monkeypatch.setattr(main_window, "DEFAULT_VIEW", "full")
+
+
+@pytest.fixture(autouse=True)
 def _no_layout_file(monkeypatch: pytest.MonkeyPatch) -> None:
     """A test never reads or writes the user's layout file (D-150)."""
     monkeypatch.setenv("BUDGET_NO_LAYOUT", "1")
