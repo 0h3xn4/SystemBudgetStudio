@@ -74,8 +74,8 @@ AXES = ("Elapsed", "UTC", "Orbit")
 
 
 EMPTY_TEXT = (
-    "This project has no scenario. Add a file in scenarios/ to work out the power timeline "
-    "and the link passes."
+    "This project has no scenario yet. Add one with Edit > Add scenario (Ctrl+Shift+O) to work "
+    "out the power timeline and the link passes."
 )
 
 
