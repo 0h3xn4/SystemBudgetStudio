@@ -140,7 +140,7 @@ The project has an error since you last saved. The budget tables are kept from b
 
 ### A panel is missing or the window looks wrong
 
-**View → Reset layout** restores the panels, their sizes and the Problems columns. The panels can also be switched on in the **View** menu. The window layout is kept in `layout.ini` (see [use the window](user-manual/use-the-window.md#where-does-the-window-keep-its-layout)); deleting that file does the same.
+A new window starts in the **focused view**: the Problems panel is one line of counts (press **Show problems** for the list), the Inspector and Provenance panels are hidden and the grids hide their optional columns (the **Optional columns** button shows them). **View → Focused view** (Ctrl+Shift+F) turns it off and shows everything. If something else is missing, **View → Reset layout** restores the panels, their sizes and the Problems columns. The panels can also be switched on in the **View** menu. The window layout is kept in `layout.ini` (see [use the window](user-manual/use-the-window.md#where-does-the-window-keep-its-layout)); deleting that file does the same.
 
 ### Add unit says "The spacecraft has no bus", or the form will not accept the subsystem
 

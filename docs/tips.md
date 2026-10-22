@@ -6,7 +6,8 @@ Shortcuts, working habits and ways to connect System Budget Studio to your other
 
 ## Faster work
 
-- **Shortcuts in the window**: Ctrl+N new project, Ctrl+O open, Ctrl+S save, F5 reload, Ctrl+M edit a unit's power modes, Ctrl+E export reports, Ctrl+Shift+E export the power timeline, F1 guide ([all of them](user-manual/use-the-window.md#shortcuts)).
+- **Shortcuts in the window**: Ctrl+N new project, Ctrl+O open, Ctrl+S save, F5 reload, Ctrl+M edit a unit's power modes, Ctrl+E export reports, Ctrl+Shift+E export the power timeline, Ctrl+Shift+N / Ctrl+Shift+M / Ctrl+Shift+O add a unit / a spacecraft mode / a scenario, Ctrl+Shift+F focused view on or off, F1 guide ([all of them](user-manual/use-the-window.md#shortcuts)).
+- **Switch the focused view off for the whole picture**: the window opens with the problems as one line, no Inspector or Provenance panel and only the main columns of the grids. *View → Focused view* (Ctrl+Shift+F) shows everything; the choice is remembered.
 - **Pin a second cursor** on a plot with a click to read the difference between two times; Escape removes it.
 - **Give a plot the whole page**: on *Power → Timeline* and *Link → Passes* the **Table** button folds the table under the plots away.
 - **Make the window easier to read**: *View → UI size* (90 to 125 %), *View → Theme*, *View → Reduce motion*; a small laptop screen (1366 x 768) fits every size up to 110 %.
@@ -15,7 +16,7 @@ Shortcuts, working habits and ways to connect System Budget Studio to your other
 - **Run only what you need**: `--budget power`, `--report csv`, `--no-plots` make a run much faster.
 - **Start from an example or a blank project**, not from an empty folder: copy the closest one from [`examples/`](../examples/README.md) and replace the numbers, or `budget new` and add your units.
 - **Use the guided wizard** (Ctrl+N) to get a working orbit and scenario in a minute, then replace its sample spacecraft with yours, or pick *Blank project* (or run `budget new`) to start with no sample at all.
-- **Jump from a problem to the cause** by double-clicking it in the Problems panel, or with **F8** and **Shift+F8**. Ctrl+1 to Ctrl+7 go to the areas of the window, Ctrl+K finds any command, unit or file by a few letters, Ctrl+B shows or hides the project panel, and Ctrl+R runs the scenario, the timeline and the passes.
+- **Jump from a problem to the cause** by double-clicking it in the Problems panel (the window starts in the focused view: **Show problems** opens the list, and **F8** does it too), or with **F8** and **Shift+F8**. Ctrl+1 to Ctrl+7 go to the areas of the window, Ctrl+K finds any command, unit or file by a few letters, Ctrl+B shows or hides the project panel, and Ctrl+R runs the scenario, the timeline and the passes.
 
 ## Keep projects healthy
 

@@ -29,7 +29,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [user-manual/reports-and-exports.md](user-manual/reports-and-exports.md) | Files written, reproducible reports, the guide |
 | [user-manual/compare.md](user-manual/compare.md) | Differences between revisions or scenarios |
 | [user-manual/read-and-fix-problems.md](user-manual/read-and-fix-problems.md) | What messages mean and how to fix them |
-| [user-manual/use-the-window.md](user-manual/use-the-window.md) | The GUI tour and shortcuts |
+| [user-manual/use-the-window.md](user-manual/use-the-window.md) | The GUI tour: the focused view, the Start here card, the grids, shortcuts |
 | [user-manual/command-line.md](user-manual/command-line.md) | Every command, option, exit code |
 | [tips.md](tips.md) | Shortcuts, habits, scripting, links to the other tools |
 | [faq.md](faq.md) | Short answers to common questions |

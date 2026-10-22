@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Documentation after 1.5.0.** Every page that describes the window was checked against the program as built: the focused view (the default) and the Start here card are in the window page, the README, getting started, the FAQ, the tips, the glossary, troubleshooting, the in-app guide and the install checklist; the shortcut tables match the menus (Ctrl+Shift+F, Help → Start here); the places that said the Problems list or the Inspector are always on screen now say how to open them; two screenshots show the focused view and a blank project with its Start here card; the architecture, design and developer pages name the new modules and the rule that the window tests start in the full view; the release recipe says what the tag lands on when `main` has moved. No program behaviour changed.
+
 ## [1.5.0] - 2026-10-22
 
 A blank project can now be built up to its first result in the window, and the window opens calmer. **No equation, report layout or existing file format changed**: the same project gives the same numbers and the same files as 1.4.0 (the tool version in the provenance rows and the examples differ). The new forms write ordinary project files and no number has a default in them.

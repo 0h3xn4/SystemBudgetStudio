@@ -12,11 +12,11 @@ This is the task-by-task manual for System Budget Studio: each page answers a fe
 | [Mass budget](mass-budget.md) | How do I get mass, centre of gravity and inertia, per phase, against a limit? |
 | [Thermal budget](thermal-budget.md) | How do I get heat dissipation and unit temperatures for a hot and a cold case? |
 | [Link budget](link-budget.md) | How do I get link margin at a chosen range, and data volume over the passes? |
-| [Scenarios](scenarios.md) | How do I define an orbit, ground stations, and which mode runs when? How do I use SpaceMissionStudio data? |
+| [Scenarios](scenarios.md) | How do I add an orbit and a scenario in the window? How do I define ground stations, and which mode runs when? How do I use SpaceMissionStudio data? |
 | [Reports and exports](reports-and-exports.md) | Which files do I get, and how do I regenerate a report exactly? |
 | [Compare](compare.md) | How do I see what changed between two revisions or two scenarios? |
 | [Read and fix problems](read-and-fix-problems.md) | What do the messages mean, and how do I jump to the cause? |
-| [Use the window](use-the-window.md) | Where is everything in the GUI, and what are the shortcuts? |
+| [Use the window](use-the-window.md) | Where is everything in the GUI? What are the focused view and the Start here card? What are the shortcuts? |
 | [Command-line reference](command-line.md) | What does each `budget` command and option do? What are the exit codes? |
 
 The same material, organised by topic, is in the **user guide** that ships inside the tool (*Help → User guide*, or `budget guide --out guide` for HTML and PDF). The guide chapters live in [`src/budget_core/guide/chapters/`](../../src/budget_core/guide/chapters/); the manual pages here link to them for the details.
