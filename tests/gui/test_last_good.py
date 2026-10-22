@@ -110,7 +110,9 @@ def test_a_project_without_a_scenario_says_what_to_add(window: MainWindow, proje
     shutil.rmtree(project / "scenarios")
     window.session.reload()
     assert "no scenario" in window.timeline_view.empty_label.text()
-    assert "scenarios/" in window.scenario_view.empty_label.text()
+    assert "Add scenario" in window.timeline_view.empty_label.text()
+    assert "no scenario yet" in window.scenario_view.empty_label.text()
+    assert not window.scenario_view.add_button.isHidden()  # the page offers the way to add one
 
 
 def test_a_failed_run_stays_visible_until_it_is_run_again(window: MainWindow) -> None:
