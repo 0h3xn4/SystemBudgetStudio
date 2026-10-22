@@ -103,7 +103,7 @@ Provenance
 Provenance
 ## table
 Item | Value
-Tool | System Budget Studio 1.4.0
+Tool | System Budget Studio 1.5.0
 Python | 3.x
 Libraries | pinned for-golden-tests
 Project | Thermal test
