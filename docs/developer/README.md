@@ -81,6 +81,8 @@ When behaviour changes, change these in the same pull request:
 | anything the window keeps or writes outside a project folder | [use the window](../user-manual/use-the-window.md#where-does-the-window-keep-its-layout), the in-app guide chapter *Installing and uninstalling*, the install checklist |
 | any decision or simplification | [DECISIONS.md](../DECISIONS.md) / [DEVIATIONS.md](../DEVIATIONS.md) and the [CHANGELOG](../../CHANGELOG.md) |
 
+A test holds part of this in place (`tests/unit/test_docs_match_program.py`): every `budget ...` command shown in a code block must be accepted by the real parser, every option must be in the command-line reference, every field of every JSON Schema must be named in a file-format page, and every page must be linked from another page. It runs with the unit tests, in a second.
+
 The manual pages (task-oriented) and the in-app guide chapters (topic-oriented, shipped with the tool) overlap on purpose; change both. Check links before you push, with [lychee](https://github.com/lycheeverse/lychee):
 
 ```bash

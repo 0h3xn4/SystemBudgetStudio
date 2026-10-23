@@ -7,7 +7,7 @@ A project is a folder of YAML files (LF line endings). Every file starts with `s
 ```
 project.yaml            kind: project            name, revision, description
 spacecraft.yaml         kind: spacecraft         name, buses[{name, nominal_voltage_v}], mission_phases[], body_frame
-units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, maturity, modes[], mass_properties?, phases[]?, thermal_node?, temperature_limits?
+units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, maturity, modes[], mass_properties?, phases[]?, thermal_node?, temperature_limits?, catalogue_ref?
 orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...}   (see ENVIRONMENT_FORMAT.md)
 ground_stations/<id>.yaml kind: ground_station   name, latitude_deg, longitude_deg, altitude_m, min_elevation_deg
 targets/<id>.yaml       kind: target             same fields as a ground station (imaging target)
@@ -18,12 +18,14 @@ config/margin_policy.yaml      kind: margin_policy (v2)  classes{name: {power_ma
 config/mass_limits.yaml        kind: mass_limits         limits[{name, phase?, limit_kg}]
 config/power_config.yaml       kind: power_config        distribution_loss_ratio, converter_efficiency_ratio{bus}
 config/power_system.yaml       kind: power_system        design_life_yr, solar_array{faces[], ...}, battery{...}, attitude{...}, limits{peak_power_w}   (optional)
-config/thermal_model.yaml      kind: thermal_model       nodes{id: {name}}, conductances[{first_node, second_node, conductance_wk}], surfaces[...]   (optional)
+config/thermal_model.yaml      kind: thermal_model       nodes{id: {name, heat_capacity_jperk?}}, conductances[{first_node, second_node, conductance_wk}], surfaces[...]   (optional)
 config/thermal_environment.yaml kind: thermal_environment space_temperature_k, temperature_margin_k, cases{name: {...}}   (optional)
 links/<id>.yaml         kind: link               name, direction, peer?, frequency_hz, transmitter{}, receiver{}, modulation, coding, data_rates_bps[], required_margin_db, ..._loss_db, attenuation[], active_modes[], max_elevation_deg?, static_points[]
 config/ebn0_table.yaml         kind: ebn0_table          entries[{modulation, coding, required_ebn0_db}]
 config/attenuation_table.yaml  kind: attenuation_table   entries[{name, attenuation_kind, freq_hz, elevation_deg, loss_db}]
 ```
+
+`catalogue_ref` (a unit, optional text) is **reserved** for a shared equipment catalogue (decision D-009): it is read and written back unchanged and no computation uses it.
 
 Power mode: `name`, `avg_power_w`, `peak_power_w` (>= average), `duty_cycle_ratio` (0..1, default 1), `heat_dissipation_ratio` (0..1, optional, see Thermal), optional `min_duration_s`, `max_duration_s`. Effective average power = `avg_power_w * duty_cycle_ratio` (D-024).
 
@@ -129,6 +131,7 @@ cases:
     earth_ir_wm2: {value: ..., source: ...}
 ```
 
+- A node may carry `heat_capacity_jperk` (optional, above 0). It is **reserved** for a transient thermal model: the tool computes steady state only (DV-T1), so nothing reads it.
 - Results per case: node temperatures, heat absorbed, radiated and conducted, and a check of every unit against its limits (`ok`, `margin`, `exceeded`, `no limits`).
 
 ## Links (decisions D-077 to D-083)
