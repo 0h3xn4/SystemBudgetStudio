@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from budget_core.io.project_loader import load_project
+from budget_core.io.yamlio import dump_yaml
 from budget_core.new_expendable import ExpendableAnswers, check_expendable, expendable_data
 
 PHASES = ("launch", "bol", "eol")
@@ -95,9 +96,7 @@ def test_a_second_expendable_makes_a_project_that_loads_and_counts_both(tmp_path
         )
         == []
     )
-    import yaml
-
-    (folder / "expendables" / "oxidizer.yaml").write_text(yaml.safe_dump(data), encoding="utf-8")
+    (folder / "expendables" / "oxidizer.yaml").write_text(dump_yaml(data), encoding="utf-8")
     again = load_project(folder)
     assert again.project is not None
     assert set(again.project.expendables) == {"propellant", "oxidizer"}
