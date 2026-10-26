@@ -54,6 +54,7 @@ from budget_gui.help_view import GuideDialog
 from budget_gui.inspector import CellInfo, InspectorPanel
 from budget_gui.layout_settings import (
     MOTION,
+    OPEN_STATES,
     RAIL_STATES,
     START_STATES,
     VIEW_STATES,
@@ -431,6 +432,16 @@ class MainWindow(QMainWindow):
         self.motion_action.setChecked(theme.manager().reduce_motion_setting)
         self.motion_action.triggered.connect(self.set_reduce_motion)
         view_menu.addAction(self.motion_action)
+        self.single_click_action = QAction("Open with a &single click", self)
+        self.single_click_action.setCheckable(True)
+        self.single_click_action.setChecked(self.single_click)
+        self.single_click_action.setToolTip(
+            "A click on a node of the project tree opens it and a click on a selected cell of a "
+            "grid edits it. Off: a double-click, Enter or F2."
+        )
+        self.single_click_action.triggered.connect(self.set_single_click)
+        view_menu.addAction(self.single_click_action)
+        self._apply_single_click()
         view_menu.addSeparator()
         self.view_action = QAction("Focused &view", self)
         self.view_action.setCheckable(True)
@@ -494,10 +505,12 @@ class MainWindow(QMainWindow):
             theme.manager().mode,
             theme.scale_percent(),
             theme.manager().reduce_motion_setting,
+            self.single_click,
         )
         popover.theme_chosen.connect(lambda value: self.set_theme(theme.Mode(value)))
         popover.scale_chosen.connect(self.set_scale)
         popover.motion_reduced.connect(self.set_reduce_motion)
+        popover.single_click_chosen.connect(self.set_single_click)
         popover.open_beside(self.rail.settings_button)
         return popover
 
@@ -509,6 +522,22 @@ class MainWindow(QMainWindow):
             "theme/scale", str(theme.scale_percent()), tuple(str(s) for s in theme.SCALES)
         )
         self.layout_settings.sync()
+
+    def set_single_click(self, on: bool) -> None:
+        """Open nodes of the project tree and edit selected cells with one click (or not), and
+        keep the choice."""
+        self.single_click = bool(on)
+        self.single_click_action.setChecked(self.single_click)
+        self._apply_single_click()
+        self.layout_settings.set_word(
+            "window/open_with", "single" if self.single_click else "double", OPEN_STATES
+        )
+        self.layout_settings.sync()
+
+    def _apply_single_click(self) -> None:
+        self.tree.set_single_click(self.single_click)
+        for page in self.grid_pages():
+            page.table.set_single_click(self.single_click)
 
     def set_reduce_motion(self, reduced: bool) -> None:
         """Turn animations off (or on again) and keep the choice."""
@@ -806,6 +835,7 @@ class MainWindow(QMainWindow):
         self.rail.set_folded(settings.word("window/rail", RAIL_STATES, "open") == "folded")
         self._start_hidden = settings.word("window/start_here", START_STATES, "shown") == "hidden"
         self._focused = settings.word("window/view", VIEW_STATES, DEFAULT_VIEW) == "focused"
+        self.single_click = settings.word("window/open_with", OPEN_STATES, "double") == "single"
         self.problems_panel.set_column_widths(settings.int_list("columns/problems"))
 
     def save_layout(self) -> None:

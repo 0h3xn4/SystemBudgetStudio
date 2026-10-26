@@ -142,6 +142,18 @@ class GridTable(QWidget):
     message = Signal(str)  # non-modal feedback for the line under the grid
     selection_changed = Signal()
 
+    def set_single_click(self, on: bool) -> None:
+        """A click on a cell that is already selected starts editing it (besides a double-click, F2
+        and typing)."""
+        triggers = (
+            QAbstractItemView.EditTrigger.DoubleClicked
+            | QAbstractItemView.EditTrigger.EditKeyPressed
+            | QAbstractItemView.EditTrigger.AnyKeyPressed
+        )
+        if on:
+            triggers |= QAbstractItemView.EditTrigger.SelectedClicked
+        self.view.setEditTriggers(triggers)
+
     def __init__(self, model: GridModel, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self.model = model

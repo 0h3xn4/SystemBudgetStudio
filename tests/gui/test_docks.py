@@ -179,6 +179,7 @@ def test_the_layout_file_holds_no_project_content(qtbot, tmp_path: Path) -> None
         "rail",
         "start_here",
         "view",
+        "open_with",
     }
 
 
