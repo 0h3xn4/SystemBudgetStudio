@@ -1,5 +1,5 @@
-"""The form of *Add orbit and scenario* (D-189): a name, an id, a near-circular orbit, a start, a
-length and the spacecraft mode that is active.
+"""The form of *Add orbit and scenario* (D-189, D-196): a name, an id, a near-circular or an
+elliptical orbit, a start, a length (up to 180 days) and the spacecraft mode that is active.
 
 The numbers (altitude, inclination, RAAN, start, length) start empty and the form does not accept
 an empty one: an orbit with a made-up altitude would look like data. The checks are those of
@@ -34,6 +34,15 @@ def _number(text: str) -> float | None:
         return None
 
 
+def _optional_number(text: str) -> float | None:
+    """Empty is None (the answer is left out); text that is not a number is NaN, which the checks
+    refuse, so a typing error is not taken for an empty answer."""
+    if not text.strip():
+        return None
+    number = _number(text)
+    return float("nan") if number is None else number
+
+
 class AddScenarioDialog(QDialog):
     """Asks for the id, the name, the orbit, the start, the length and the default mode; *Add*
     stays off until every answer passes the checks."""
@@ -60,6 +69,11 @@ class AddScenarioDialog(QDialog):
         self.inclination_edit.setPlaceholderText("degrees, 0 to 180")
         self.raan_edit = QLineEdit()
         self.raan_edit.setPlaceholderText("degrees, 0 to 360")
+        self.apogee_edit = QLineEdit()
+        self.apogee_edit.setPlaceholderText("km, optional: empty for a near-circular orbit")
+        self.arg_perigee_edit = QLineEdit()
+        self.arg_perigee_edit.setPlaceholderText("degrees, 0 to 360, with an apogee altitude")
+        self.arg_perigee_edit.setEnabled(False)  # it only has a meaning for an elliptical orbit
         self.start_edit = QLineEdit()
         self.start_edit.setPlaceholderText("UTC, for example 2026-06-01T00:00:00Z")
         self.duration_edit = QLineEdit()
@@ -69,7 +83,21 @@ class AddScenarioDialog(QDialog):
         rows = (
             ("Name", self.name_edit, "Scenario name"),
             ("Id", self.id_edit, "Scenario id (the file name)"),
-            ("Altitude", self.altitude_edit, "Altitude of the orbit in kilometres"),
+            (
+                "Altitude",
+                self.altitude_edit,
+                "Altitude of the orbit in kilometres (the perigee altitude if there is an apogee)",
+            ),
+            (
+                "Apogee altitude",
+                self.apogee_edit,
+                "Apogee altitude in kilometres, optional: empty gives a near-circular orbit",
+            ),
+            (
+                "Argument of perigee",
+                self.arg_perigee_edit,
+                "Argument of perigee in degrees, for an elliptical orbit",
+            ),
             ("Inclination", self.inclination_edit, "Inclination of the orbit in degrees"),
             ("RAAN", self.raan_edit, "Right ascension of the ascending node in degrees"),
             ("Start", self.start_edit, "Start of the scenario, UTC"),
@@ -84,9 +112,10 @@ class AddScenarioDialog(QDialog):
             form.addRow(label, widget)
 
         intro = QLabel(
-            "A scenario is a stretch of time on an orbit. This one is a near-circular orbit from "
-            "three numbers, with one spacecraft mode the whole time. Ground stations and rules "
-            "are added afterwards in the scenario editor."
+            "A scenario is a stretch of time on an orbit, up to 180 days, with one spacecraft mode "
+            "the whole time. The orbit is near-circular from three numbers; give an apogee "
+            "altitude (and an argument of perigee) for an elliptical one, which starts at "
+            "perigee. Ground stations and rules are added afterwards in the scenario editor."
         )
         intro.setWordWrap(True)
         intro.setProperty("role", "muted")
@@ -120,6 +149,8 @@ class AddScenarioDialog(QDialog):
             self.altitude_edit,
             self.inclination_edit,
             self.raan_edit,
+            self.apogee_edit,
+            self.arg_perigee_edit,
             self.start_edit,
             self.duration_edit,
         ):
@@ -139,6 +170,12 @@ class AddScenarioDialog(QDialog):
             start_utc=self.start_edit.text().strip(),
             duration_days=_number(self.duration_edit.text()),
             default_mode=self.mode_combo.currentText(),
+            apogee_altitude_km=_optional_number(self.apogee_edit.text()),
+            arg_perigee_deg=(
+                _optional_number(self.arg_perigee_edit.text())
+                if self.apogee_edit.text().strip()
+                else None
+            ),
         )
 
     def issues(self) -> list[Issue]:
@@ -158,6 +195,7 @@ class AddScenarioDialog(QDialog):
         self._id_typed = True
 
     def _refresh(self, *_args: object) -> None:
+        self.arg_perigee_edit.setEnabled(bool(self.apogee_edit.text().strip()))
         issues = self.issues()
         started = any(
             edit.text().strip()

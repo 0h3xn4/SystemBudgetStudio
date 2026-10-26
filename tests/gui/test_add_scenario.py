@@ -60,6 +60,57 @@ def test_a_complete_form_can_be_added(qtbot) -> None:  # type: ignore[no-untyped
     assert not dialog.add_button.isEnabled() and "altitude" in dialog.error_label.text()
 
 
+def _filled(dialog: AddScenarioDialog, qtbot) -> None:  # type: ignore[no-untyped-def]
+    qtbot.keyClicks(dialog.name_edit, "Transfer")
+    for edit, text in (
+        (dialog.altitude_edit, "500"),
+        (dialog.inclination_edit, "63.4"),
+        (dialog.raan_edit, "100"),
+        (dialog.start_edit, "2026-06-01T00:00:00Z"),
+        (dialog.duration_edit, "1"),
+    ):
+        qtbot.keyClicks(edit, text)
+
+
+def test_an_empty_apogee_is_a_near_circular_orbit_and_the_argument_of_perigee_waits(  # type: ignore[no-untyped-def]
+    qtbot,
+) -> None:
+    dialog = AddScenarioDialog([], [], ["nominal"])
+    qtbot.addWidget(dialog)
+    _filled(dialog, qtbot)
+    assert dialog.apogee_edit.text() == "" and dialog.arg_perigee_edit.text() == ""
+    assert dialog.add_button.isEnabled()  # no extra answer is needed
+    answers = dialog.answers()
+    assert answers.apogee_altitude_km is None and answers.arg_perigee_deg is None
+
+
+def test_an_apogee_makes_an_elliptical_orbit_and_asks_for_the_argument_of_perigee(  # type: ignore[no-untyped-def]
+    qtbot,
+) -> None:
+    dialog = AddScenarioDialog([], [], ["nominal"])
+    qtbot.addWidget(dialog)
+    _filled(dialog, qtbot)
+    qtbot.keyClicks(dialog.apogee_edit, "20000")
+    assert not dialog.add_button.isEnabled()
+    assert "argument of perigee" in dialog.error_label.text().lower()
+    qtbot.keyClicks(dialog.arg_perigee_edit, "270")
+    assert dialog.add_button.isEnabled() and dialog.error_label.text() == ""
+    answers = dialog.answers()
+    assert answers.apogee_altitude_km == 20000.0 and answers.arg_perigee_deg == 270.0
+    dialog.apogee_edit.setText("400")  # below the perigee altitude
+    assert not dialog.add_button.isEnabled() and "apogee" in dialog.error_label.text().lower()
+
+
+def test_the_form_takes_a_length_of_180_days_and_refuses_more(qtbot) -> None:  # type: ignore[no-untyped-def]
+    dialog = AddScenarioDialog([], [], ["nominal"])
+    qtbot.addWidget(dialog)
+    _filled(dialog, qtbot)
+    dialog.duration_edit.setText("180")
+    assert dialog.add_button.isEnabled()
+    dialog.duration_edit.setText("181")
+    assert not dialog.add_button.isEnabled() and "180" in dialog.error_label.text()
+
+
 def test_the_form_says_at_once_that_a_project_without_a_mode_has_no_scenario(qtbot) -> None:  # type: ignore[no-untyped-def]
     dialog = AddScenarioDialog([], [], [])
     qtbot.addWidget(dialog)

@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Scenarios up to 180 days, and an elliptical orbit in *Add scenario*.** The guided wizard and *Add scenario* took up to 30 days; both take up to 180 now (a run of 180 days took under a minute when measured). The step of a long scenario is capped at 600 s so that the orbits can still be found. *Add scenario* has an optional **apogee altitude** and an **argument of perigee**: with them the orbit is elliptical (perigee altitude 160 to 2000 km, apogee altitude up to 40,000 km, starting at perigee); without them it is the near-circular orbit as before. Suggested by a user. Decision D-196. No equation or file format changed.
+
 - **Open and edit with a single click.** *View → Open with a single click* (also in the Settings card) makes a click on a node of the project tree open it and a click on a selected cell of a grid edit it. It is off at first and the window remembers it in `layout.ini` (`window/open_with`). Suggested by a user who does not like double-clicking. Decision D-195.
 
 - **The power-mode cell of the Spacecraft modes grid is a drop-down.** It lists the power modes of the unit, so a name that does not exist cannot be chosen (a pasted one is still refused, with the list). A model can offer the choices of any cell through one item role, and the cell delegate edits such a cell in a drop-down; other cells keep the text editor. Suggested by a user. Decision D-194.
