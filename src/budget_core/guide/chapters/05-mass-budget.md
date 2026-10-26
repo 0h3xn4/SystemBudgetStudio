@@ -4,7 +4,7 @@ Units and expendables carry a mass and a maturity class. The tool applies the ma
 
 ## Phases
 
-`mission_phases` in `spacecraft.yaml` lists the phases you choose (for example launch, BOL, EOL); none are assumed. A unit may list the phases it is present in. An expendable gives its mass for **every** phase, with `0.0` written explicitly where it is gone.
+`mission_phases` in `spacecraft.yaml` lists the phases you choose (for example launch, BOL, EOL); none are assumed. A unit may list the phases it is present in. An expendable gives its mass for **every** phase, with `0.0` written explicitly where it is gone. In the window, **Edit > Add expendable** (Ctrl+Shift+X) asks for the mass in every phase; a second propellant mass (an oxidizer) is a second expendable.
 
 ## Centre of gravity and inertia
 

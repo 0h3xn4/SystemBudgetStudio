@@ -4,7 +4,7 @@ A scenario places the spacecraft in an orbit for a time span and decides which s
 
 ## Orbit and sites
 
-An orbit is given as a two-line element set (TLE) or as mean orbital elements. Ground stations and imaging targets have a latitude, longitude, altitude and minimum elevation. The tool computes eclipses (cylindrical or conical shadow) and the passes over every site listed in the scenario.
+An orbit is given as a two-line element set (TLE) or as mean orbital elements. Ground stations and imaging targets have a latitude, longitude, altitude and minimum elevation. The tool computes eclipses (cylindrical or conical shadow) and the passes over every site listed in the scenario. In the window, **Edit > Add scenario** (Ctrl+Shift+O) writes an orbit and a scenario of up to 180 days (an optional apogee altitude and argument of perigee make the orbit elliptical), and **Edit > Add ground station** (Ctrl+Shift+G) and **Add imaging target** (Ctrl+Shift+T) write the sites; a site is used once the scenario lists it under **Sites**.
 
 ## Mode timeline
 

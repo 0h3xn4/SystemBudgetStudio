@@ -50,6 +50,14 @@ The tool never converts between them for you: a `dBW` value in a watt field is a
 
 With the wizard (File → New project; pick *Blank project* to start from nothing, and the **Start here** card then takes you through a unit, a spacecraft mode, an orbit and a scenario), with `budget new FOLDER --bus-voltage-v 28`, or by copying an example: [create a project](user-manual/create-a-project.md).
 
+### Can I add a ground station, an expendable or a link in the window?
+
+Yes: the **Edit** menu has **Add expendable** (Ctrl+Shift+X), **Add ground station** (Ctrl+Shift+G), **Add imaging target** (Ctrl+Shift+T) and **Add link** (Ctrl+Shift+L), next to **Add unit**, **Add spacecraft mode** and **Add scenario**. A form never invents a number; the numbers of a link that come from a data sheet are placeholders for *Model → Inputs*. Antenna patterns, attenuation entries and the Eb/N0 table are still edited in the file ([describe a link](user-manual/link-budget.md#how-do-i-describe-a-link)).
+
+### Do I have to double-click?
+
+No: turn on **View → Open with a single click** (also in *Settings*). A click on an item of the project tree then opens it, and a click on a selected cell of a grid edits it. The Problems panel still jumps with a double-click or Enter.
+
 ### Why is my power timeline `n/a`?
 
 It needs a complete `config/power_system.yaml`, a scenario and a mission phase. See [troubleshooting](troubleshooting.md#bol-na-inputs-missing-see-the-problems-below).

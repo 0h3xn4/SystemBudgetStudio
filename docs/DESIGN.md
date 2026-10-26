@@ -70,7 +70,7 @@ More than eight categories (the modes of a scenario) go round again with a light
 
 ## Cell styles
 
-One delegate (`budget_gui/delegates.py`) paints every table cell, so the same state always looks the same. `View > Cell styles…` shows them all (the same delegate draws the legend).
+One delegate (`budget_gui/delegates.py`) paints every table cell, so the same state always looks the same. `View > Cell styles…` shows them all (the same delegate draws the legend). A model that has a closed set of answers for a cell (`CHOICES_ROLE`; today the power mode of the Spacecraft modes grid, D-194) makes the delegate open a drop-down of them instead of a text field, so a value that does not exist cannot be typed. With *Open with a single click* (D-195) a click on a selected cell starts the edit.
 
 | Style | Look | Meaning |
 |---|---|---|
