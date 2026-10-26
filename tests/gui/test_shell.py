@@ -56,6 +56,18 @@ def test_the_rail_chooses_the_area_and_follows_it(window: MainWindow) -> None:
     assert window.workspace.tabBar().isHidden()  # the rail is the navigation
 
 
+def test_the_rail_shows_the_area_that_is_on_show_when_a_project_opens(window: MainWindow) -> None:
+    """A project with units opens on its budgets (Power); the rail names that area, not Model."""
+    assert window.workspace.currentIndex() == 1
+    assert window.rail.current() == 1 and window.rail.buttons[1].isChecked()
+
+
+def test_the_rail_agrees_with_the_area_before_a_project_is_open(qtbot) -> None:  # type: ignore[no-untyped-def]
+    w = MainWindow()
+    qtbot.addWidget(w)
+    assert w.rail.current() == w.workspace.currentIndex()
+
+
 def test_a_page_of_an_area_is_chosen_with_a_segmented_control(window: MainWindow) -> None:
     for pages in (window.power_pages, window.link_pages):
         assert pages.tabBar().property("role") == "segmented"

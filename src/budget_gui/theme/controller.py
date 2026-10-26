@@ -18,6 +18,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QStyle,
     QStyleOption,
+    QTabBar,
     QToolButton,
     QWidget,
 )
@@ -68,7 +69,7 @@ class WindowStyle(QProxyStyle):
         the window (2 px, the focus colour), not Fusion's dotted line. A ring painted over the
         control does not change its size, which a border of the style sheet would (D-181)."""
         if element == QStyle.PrimitiveElement.PE_FrameFocusRect:
-            if isinstance(widget, QPushButton | QToolButton):
+            if isinstance(widget, QPushButton | QToolButton | QTabBar):
                 return  # their style sheet draws the ring: a second one is a box in a box
             box: Any = option  # the stubs of QStyleOption lack rect
             ring = scale.px(scale.FOCUS_RING)

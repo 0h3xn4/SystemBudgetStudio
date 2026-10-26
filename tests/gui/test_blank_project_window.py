@@ -65,3 +65,9 @@ def test_computing_a_timeline_without_a_scenario_does_not_start_a_run(
     window.timeline_view.compute()
     qtbot.wait(200)
     assert window.timeline_view.result is None
+
+
+def test_a_project_with_nothing_to_budget_opens_on_the_model_area(window: MainWindow) -> None:
+    """The first step (add a unit) is on the Model area: an empty Power table is no first screen."""
+    assert window.workspace.currentIndex() == 0
+    assert window.rail.current() == 0 and window.rail.buttons[0].isChecked()

@@ -10,9 +10,16 @@ import re
 from pathlib import Path
 
 import pytest
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor, QFontDatabase, QPalette
-from PySide6.QtWidgets import QApplication
+from PySide6.QtCore import QRect, Qt
+from PySide6.QtGui import QColor, QFontDatabase, QImage, QPainter, QPalette
+from PySide6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QPushButton,
+    QStyle,
+    QStyleOptionFocusRect,
+    QTabBar,
+)
 
 from budget_core.plots import spec as core_spec
 from budget_core.plots.spec import Panel, PlotSpec, Series
@@ -496,3 +503,30 @@ def test_the_design_page_states_the_tokens_of_the_code() -> None:
         assert theme.STATUS_ICONS[status] in page
     for scale in ("11, 12, 13, 15, 18, 22", "4, 8, 12, 16, 24, 32", "90, 100, 110, 125"):
         assert scale in page
+
+
+def _focus_rectangle_pixels(widget) -> int:  # type: ignore[no-untyped-def]
+    """How many pixels the focus rectangle of the window style paints for this widget."""
+    image = QImage(80, 30, QImage.Format.Format_ARGB32)
+    image.fill(0)
+    option = QStyleOptionFocusRect()
+    option.rect = QRect(0, 0, 80, 30)  # type: ignore[attr-defined]
+    painter = QPainter(image)
+    theme_manager.WindowStyle().drawPrimitive(
+        QStyle.PrimitiveElement.PE_FrameFocusRect, option, painter, widget
+    )
+    painter.end()
+    return sum(
+        1
+        for y in range(image.height())
+        for x in range(image.width())
+        if image.pixelColor(x, y).alpha()
+    )
+
+
+def test_a_control_whose_style_sheet_rings_the_focus_gets_no_second_ring(qtbot) -> None:  # type: ignore[no-untyped-def]
+    """A focused tab, button or tool button is ringed by the style sheet; the focus rectangle the
+    style paints over its label as well is a second, smaller ring (a box in a box)."""
+    assert _focus_rectangle_pixels(QCheckBox("x")) > 0  # the ring of the other controls is there
+    assert _focus_rectangle_pixels(QPushButton("x")) == 0
+    assert _focus_rectangle_pixels(QTabBar()) == 0

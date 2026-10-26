@@ -145,6 +145,10 @@ def test_the_steps_tick_as_the_model_is_built_and_the_panel_goes_when_all_are_do
     assert window.scenario_view.last_run is not None
     assert not window._run_after_load
     assert panel.done_keys() == {UNIT, MODE, SCENARIO, RUN}
+    # the first result is shown: the power timeline, with the eclipses, not the scenario form
+    assert window.workspace.currentIndex() == 1 and window.rail.current() == 1
+    assert window.power_pages.currentIndex() == 1
+    assert "first run done" in window.toast.text().lower()
 
 
 def test_an_undo_takes_a_tick_back(tmp_path: Path, qtbot) -> None:  # type: ignore[no-untyped-def]
@@ -187,6 +191,15 @@ def test_help_start_here_shows_the_panel_also_when_everything_is_done(
     _help_entry(window, "Start here").trigger()
     assert not window.start_here.isHidden()
     assert "all done" in window.start_here.title.text()
+
+
+def test_a_run_started_elsewhere_does_not_move_the_person(qtbot) -> None:  # type: ignore[no-untyped-def]
+    example = Path(__file__).resolve().parents[2] / "examples" / "microsat_150kg"
+    window = _window(qtbot, example)
+    window._go_to_tab(2)  # Mass
+    window.run_all()
+    qtbot.waitUntil(lambda: window.run_controller.state().name == "OK", timeout=90000)
+    assert window.workspace.currentIndex() == 2
 
 
 def test_the_help_entry_is_in_the_palette(

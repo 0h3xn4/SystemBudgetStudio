@@ -46,7 +46,7 @@ from budget_gui.add_scenario_dialog import AddScenarioDialog
 from budget_gui.banner import Banner
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
-from budget_gui.components import PanelTitle
+from budget_gui.components import PanelTitle, Toast
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
@@ -117,6 +117,10 @@ class MainWindow(QMainWindow):
         self._start_hidden = False  # the person hid the Start here panel (kept in layout.ini)
         self._start_forced = False  # Help > Start here: shown even when every step is done
         self._run_after_load = False  # Save and run: the run waits for the project to load again
+        self._opened_path: Path | None = None  # the project the area was chosen for
+        self._show_first_run = False  # the run of the Start here card: its result is shown
+        self._first_run_going = False  # ... and that run has started
+        self.toast = Toast(self)
         self._focused = True  # the focused view (D-191); the full view shows every panel and column
         self._problems_height = 0  # the height of the Problems panel while its list was open
         self.layout_settings = layout if layout is not None else LayoutSettings.default()
@@ -233,6 +237,7 @@ class MainWindow(QMainWindow):
         self.rail.folded_changed.connect(self._rail_folded)
         self.project_dock.visibilityChanged.connect(self._project_dock_shown)
         self.workspace.currentChanged.connect(self._area_changed)
+        self.rail.set_current(self.workspace.currentIndex())  # the area the window starts on
         self._default_state = self.saveState(LAYOUT_VERSION)  # what Reset layout goes back to
         self._restore_layout()
 
@@ -1097,6 +1102,22 @@ class MainWindow(QMainWindow):
             self.failed_banner.clear()
         self.run_action.setEnabled(controller.can_run())
         self._update_start_here()
+        if self._show_first_run and state is RunState.RUNNING:
+            self._first_run_going = True  # the save and the reload before it show Not run
+        elif self._show_first_run and self._first_run_going:
+            self._show_first_run = self._first_run_going = False
+            if state is RunState.OK:
+                self._go_to_first_result()
+
+    def _go_to_first_result(self) -> None:
+        """The run of the Start here card is the goal of its four steps: show its result, the
+        power timeline with the eclipses, and say where the other results are."""
+        self.workspace.setCurrentIndex(1)
+        self.power_pages.setCurrentIndex(1)
+        self.toast.show_message(
+            "First run done: this is the power timeline. Mass, Thermal and Link have their own "
+            "areas; press Run (Ctrl+R) again after every change."
+        )
 
     def _update_dirty(self) -> None:
         dirty = self.editors.has_unsaved_changes()
@@ -1153,7 +1174,10 @@ class MainWindow(QMainWindow):
         elif key == SCENARIO:
             self.add_scenario()
         elif key == RUN:
-            self.save_and_run()
+            self._show_first_run = True
+            self._first_run_going = False
+            if not self.save_and_run():
+                self._show_first_run = False
 
     def save_and_run(self) -> bool:
         """Save what was edited, then run. The project loads again after a save, so the run waits
@@ -1344,10 +1368,22 @@ class MainWindow(QMainWindow):
         self._update_dirty()
         self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
         self._update_start_here()
+        self._choose_first_area(project is not None and not project.units)
         if self._run_after_load:
             self._run_after_load = False
             if project is not None:
                 self.run_all()
+
+    def _choose_first_area(self, nothing_to_budget: bool) -> None:
+        """A project opens on its budgets (Power); one with no unit yet opens on the Model area,
+        where its first step is, instead of an empty table. Only for a project that was not open
+        before: a reload after Save keeps the area the person is in."""
+        path = self.session.path
+        if path == self._opened_path:
+            return
+        self._opened_path = path
+        if path is not None:
+            self.workspace.setCurrentIndex(0 if nothing_to_budget else 1)
 
     def _update_problems(self) -> None:
         """Project problems plus the findings of the last power timeline (violations, gaps), each
