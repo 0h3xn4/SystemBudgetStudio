@@ -7,12 +7,14 @@ import shutil
 from pathlib import Path
 
 import pytest
+from PySide6.QtWidgets import QComboBox, QStyleOptionViewItem
 
 from budget_core.blank import BlankAnswers, create_blank_project
 from budget_core.io.project_loader import load_project
 from budget_core.new_mode import ModeAnswers
 from budget_core.new_unit import UnitAnswers
 from budget_gui.add_mode_dialog import AddModeDialog
+from budget_gui.delegates import CHOICES_ROLE
 from budget_gui.main_window import MainWindow
 from budget_gui.model_document import ModelDocument
 from budget_gui.model_pages import SpacecraftModesPage
@@ -124,6 +126,72 @@ def test_a_cell_takes_a_power_mode_of_the_unit_and_refuses_another(
     assert unit in page.feedback_label.text() and "no power mode of that name" in (
         page.feedback_label.text()
     )
+
+
+def _cell_with_choices(page: SpacecraftModesPage) -> tuple[int, str]:
+    modes = page.assignments
+    row = next(
+        r
+        for r in modes.rows_of(page.mode_ids()[0])
+        if len(modes.power_modes_of(modes.id_text(r, 1))) > 1
+    )
+    return row, modes.id_text(row, 1)
+
+
+def test_the_power_mode_cell_offers_the_power_modes_of_its_unit(
+    page: SpacecraftModesPage,
+) -> None:
+    """The cell is a drop-down of the power modes the unit has, so a name that does not exist
+    cannot be typed in the first place."""
+    row, unit = _cell_with_choices(page)
+    modes = page.assignments
+    assert modes.data(modes.index(row, 2), CHOICES_ROLE) == modes.power_modes_of(unit)
+    assert modes.data(modes.index(row, 0), CHOICES_ROLE) is None  # the id columns are not edited
+    assert modes.data(modes.index(row, 1), CHOICES_ROLE) is None
+
+
+def test_the_editor_of_the_power_mode_cell_is_a_list_and_a_choice_is_written(
+    page: SpacecraftModesPage, qtbot
+) -> None:  # type: ignore[no-untyped-def]
+    row, unit = _cell_with_choices(page)
+    modes = page.assignments
+    names = modes.power_modes_of(unit)
+    index = page.table.proxy.mapFromSource(modes.index(row, 2))
+    editor = page.table.delegate.createEditor(page.table.view, QStyleOptionViewItem(), index)
+    qtbot.addWidget(editor)
+    assert isinstance(editor, QComboBox) and not editor.isEditable()
+    assert [editor.itemText(i) for i in range(editor.count())] == names
+    page.table.delegate.setEditorData(editor, index)
+    assert editor.currentText() == modes.display(row, 2)  # it starts on the current choice
+    other = next(n for n in names if n != modes.display(row, 2))
+    editor.setCurrentText(other)
+    page.table.delegate.setModelData(editor, page.table.proxy, index)
+    assert modes.display(row, 2) == other
+
+
+def test_editing_the_cell_in_the_grid_opens_the_list_and_a_choice_closes_it(
+    page: SpacecraftModesPage, qtbot
+) -> None:  # type: ignore[no-untyped-def]
+    page.show()
+    row, unit = _cell_with_choices(page)
+    modes = page.assignments
+    other = next(n for n in modes.power_modes_of(unit) if n != modes.display(row, 2))
+    index = page.table.proxy.mapFromSource(modes.index(row, 2))
+    page.table.view.setCurrentIndex(index)
+    page.table.view.edit(index)
+    combo = page.table.view.findChild(QComboBox)
+    assert combo is not None
+    choice = combo.findText(other)
+    combo.setCurrentIndex(choice)
+    combo.activated.emit(choice)  # a click in the list
+    assert modes.display(row, 2) == other
+    qtbot.waitUntil(lambda: page.table.view.findChild(QComboBox) is None, timeout=2000)
+
+
+def test_a_cell_without_choices_keeps_the_text_editor(page: SpacecraftModesPage) -> None:
+    index = page.table.proxy.mapFromSource(page.assignments.index(0, 0))
+    editor = page.table.delegate.createEditor(page.table.view, QStyleOptionViewItem(), index)
+    assert not isinstance(editor, QComboBox)
 
 
 def test_remove_mode_is_refused_while_a_scenario_names_it(page: SpacecraftModesPage) -> None:
