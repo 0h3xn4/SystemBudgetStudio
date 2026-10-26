@@ -19,9 +19,24 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Any
 
-from PySide6.QtCore import QModelIndex, QPersistentModelIndex, QRect, QRectF, QSize, Qt
+from PySide6.QtCore import (
+    QAbstractItemModel,
+    QModelIndex,
+    QPersistentModelIndex,
+    QRect,
+    QRectF,
+    QSize,
+    Qt,
+    QTimer,
+)
 from PySide6.QtGui import QColor, QFont, QFontMetrics, QPainter, QPen
-from PySide6.QtWidgets import QStyle, QStyledItemDelegate, QStyleOptionViewItem
+from PySide6.QtWidgets import (
+    QComboBox,
+    QStyle,
+    QStyledItemDelegate,
+    QStyleOptionViewItem,
+    QWidget,
+)
 
 from budget_gui import icons, theme
 from budget_gui.theme import Status
@@ -42,6 +57,10 @@ _MOUSE_OVER = QStyle.StateFlag.State_MouseOver.value
 # (text, state, numeric, total, margin) of a cell in one call: a model that answers it saves the
 # four calls through the proxy and into Python that a repaint makes for every cell (D-177).
 CELL_ROLE = int(Qt.ItemDataRole.UserRole) + 24
+# the values a cell may take, as a list of texts, or None for a cell that takes typed text: the
+# cell is then edited in a drop-down of exactly these, so a value that does not exist cannot be
+# typed (the model still checks what it is given)
+CHOICES_ROLE = int(Qt.ItemDataRole.UserRole) + 25
 
 PAD = theme.SPACE[1]
 ICON = 14
@@ -82,6 +101,38 @@ class CellDelegate(QStyledItemDelegate):
         self._widths: dict[tuple[str, bool, Status | None, bool, str], int] = {}
         self._cuts: dict[tuple[str, int, bool, Status | None, bool, int, int], str] = {}
         self._fonts: dict[tuple[str, bool, Status | None, bool, int], QFont] = {}
+
+    # ---- editing: a cell that has choices is a drop-down of them --------------------------------
+    def createEditor(  # noqa: N802 (Qt naming)
+        self, parent: QWidget, option: QStyleOptionViewItem, index: Index
+    ) -> QWidget:
+        choices = index.data(CHOICES_ROLE)
+        if not isinstance(choices, list) or not choices:
+            return super().createEditor(parent, option, index)
+        combo = QComboBox(parent)
+        combo.addItems([str(c) for c in choices])
+        combo.setAccessibleName("Choose a value")
+        combo.activated.connect(lambda _i, box=combo: self._choice_made(box))
+        QTimer.singleShot(0, combo.showPopup)  # the list is open at once: one click, one choice
+        return combo
+
+    def _choice_made(self, combo: QComboBox) -> None:
+        self.commitData.emit(combo)
+        self.closeEditor.emit(combo)
+
+    def setEditorData(self, editor: QWidget, index: Index) -> None:  # noqa: N802 (Qt naming)
+        if isinstance(editor, QComboBox):
+            editor.setCurrentText(str(index.data(Qt.ItemDataRole.EditRole) or ""))
+        else:
+            super().setEditorData(editor, index)
+
+    def setModelData(  # noqa: N802 (Qt naming)
+        self, editor: QWidget, model: QAbstractItemModel, index: Index
+    ) -> None:
+        if isinstance(editor, QComboBox):
+            model.setData(index, editor.currentText(), Qt.ItemDataRole.EditRole)
+        else:
+            super().setModelData(editor, model, index)
 
     def sizeHint(self, option: QStyleOptionViewItem, index: Index) -> QSize:  # noqa: N802
         # Measured from the font directly: the default size hint asks the model for about nine

@@ -17,7 +17,7 @@ from typing import Any
 from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt, Signal
 
 from budget_core.units.quantity import canonical_unit
-from budget_gui.delegates import CELL_ROLE, NUMERIC_ROLE, STATE_ROLE
+from budget_gui.delegates import CELL_ROLE, CHOICES_ROLE, NUMERIC_ROLE, STATE_ROLE
 from budget_gui.entry import cell_value, has_decimal_comma
 from budget_gui.model_document import ModelDocument, Path_, set_at, value_at
 from budget_gui.theme import Status
@@ -195,6 +195,8 @@ class GridModel(QAbstractTableModel):
             return self.marked_state(row, column)
         if role == PATH_ROLE:
             return self.cell(row, column)
+        if role == CHOICES_ROLE:
+            return self.choices(row, column)
         if role == ROW_ROLE:
             return self._keys[row]
         if role == Qt.ItemDataRole.ToolTipRole:
@@ -215,6 +217,10 @@ class GridModel(QAbstractTableModel):
         if isinstance(value, str) and has_decimal_comma(value):
             return "Use a decimal point, not a comma, for example 1.5."
         return problem.message + (f" {problem.hint}" if hint and problem.hint else "")
+
+    def choices(self, row: int, column: int) -> list[str] | None:
+        """The values a cell may take, when it is a choice from a list (None: typed text)."""
+        return None
 
     def id_text(self, row: int, column: int) -> str:
         """The text of a column that is not a field of the file (an id, a computed number)."""
@@ -535,6 +541,11 @@ class ModeAssignmentsModel(GridModel):
         if not isinstance(modes, list):
             return []
         return [str(m["name"]) for m in modes if isinstance(m, dict) and "name" in m]
+
+    def choices(self, row: int, column: int) -> list[str] | None:
+        if column != 2:
+            return None
+        return self.power_modes_of(self.unit_of(self._keys[row])) or None
 
     def column_tip(self, column: Column) -> str:
         if column.key == "power_mode":

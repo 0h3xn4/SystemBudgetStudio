@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **The power-mode cell of the Spacecraft modes grid is a drop-down.** It lists the power modes of the unit, so a name that does not exist cannot be chosen (a pasted one is still refused, with the list). A model can offer the choices of any cell through one item role, and the cell delegate edits such a cell in a drop-down; other cells keep the text editor. Suggested by a user. Decision D-194.
+
 ## [1.5.1] - 2026-10-26
 
 A patch release: a pass over the first run, found by walking it in the window, and a documentation check that a test now keeps true. No equation, report layout or file format changed: the same project gives the same numbers and files as 1.5.0, bit for bit, apart from the tool version in the provenance rows.
