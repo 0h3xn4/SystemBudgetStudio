@@ -4,6 +4,10 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-10-26
+
+A patch release: a pass over the first run, found by walking it in the window, and a documentation check that a test now keeps true. No equation, report layout or file format changed: the same project gives the same numbers and files as 1.5.0, bit for bit, apart from the tool version in the provenance rows.
+
 - **Two things a new user read as faults.** The Spacecraft page of the guided wizard says that the default sample has findings on purpose (a thermal margin, and after Run a peak power above its limit). The status line under the power timeline no longer lists every check that was not evaluated in one long sentence: it says how many kinds were not evaluated and that the Problems panel lists them; the full sentence is the tooltip of the line. Decision D-193. No equation, report or file format changed.
 
 - **A pass over the first run (install, welcome, a blank project, the four steps).** A project that is opened shows the area it opens on in the navigation rail (it said *Model* while the *Power* budgets were on show). A project with no unit opens on the **Model** area, where *Add unit…* is, instead of an empty Power table. The run of the **Start here** card (*Save and run*) now ends on the **Power timeline** with the eclipses, and a toast says where Mass, Thermal and Link are; before, it ended on the scenario form with the card gone. A run started with Run or Ctrl+R does not move you. A focused tab had a second, smaller focus ring over its label (the one of the style sheet and Fusion's own); it has one now. Decision D-192. No equation, report or file format changed.
