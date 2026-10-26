@@ -183,6 +183,28 @@ def test_placeholders_show_na_and_a_hint(window: MainWindow, project: Path, qtbo
     assert "n/a" in cells
 
 
+def test_the_status_line_is_short_and_the_tooltip_has_every_check_that_did_not_run(
+    window: MainWindow,
+    project: Path,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    edit(
+        project,
+        "config/power_config.yaml",
+        "converter_efficiency_ratio:\n  main:\n    value: 0.9",
+        "converter_efficiency_ratio:\n  main:\n    value: null",
+    )
+    window.session.reload()
+    compute(window, qtbot)
+    view = window.timeline_view
+    result = view.result
+    assert result is not None and result.not_evaluated
+    text = view.status.text()
+    assert len(text) < 200 and "not evaluated" in text and "Problems" in text
+    assert result.not_evaluated_text() not in text  # the long list is not on the page ...
+    assert result.not_evaluated_text() in view.status.toolTip()  # ... it is one hover away
+
+
 def test_a_failing_run_is_a_plain_message(window: MainWindow, project: Path, qtbot) -> None:  # type: ignore[no-untyped-def]
     folder = project / "imports" / "run1"
     folder.mkdir(parents=True)
