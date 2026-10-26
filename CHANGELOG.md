@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Documentation checked against 1.6.0.** The README, the tips, the getting-started page, the FAQ, the troubleshooting page, the manual pages, the in-app guide chapters (quick start, projects, mass, link and scenarios), the architecture and design pages and the developer page now name the forms that add an expendable, a ground station, an imaging target and a link (with their shortcuts), the single-click setting, the power-mode drop-down and the 180-day scenario; the sentence that said ground stations, links and expendables were still files is gone. New troubleshooting entries for the three forms and two FAQ entries. The developer page describes how an *Add* form is built. No program change.
+
 ## [1.6.0] - 2026-10-26
 
 A minor release that comes from the feedback of a real user (a working student on Windows 11): files can be added in the window, an orbit can be elliptical, a scenario can be longer, and nothing has to be double-clicked. No equation, report layout or existing file format changed: the same project gives the same numbers and files as 1.5.1, bit for bit, apart from the tool version in the provenance rows and the example files.

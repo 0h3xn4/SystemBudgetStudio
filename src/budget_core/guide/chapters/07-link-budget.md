@@ -2,6 +2,8 @@
 
 A link file describes one direction of one radio link: frequency, transmitter, receiver, modulation and coding, the data rates, the required margin, losses and the atmospheric attenuation entries it uses. A project can hold several links (telemetry, payload data, inter-satellite).
 
+In the window, **Edit > Add link** (Ctrl+Shift+L) writes the link file from a form: the direction, the ground station at the other end, the frequency in MHz, the modulation and coding (a pair of the Eb/N0 table) and the data rates. The numbers that come from a data sheet or a standard (transmit power, antenna gain, G/T, the required margin and the losses) are written as placeholders (`source: TBD`) and filled in under **Model > Inputs**; until then the link shows **n/a**. Add the ground station first (**Edit > Add ground station**, Ctrl+Shift+G).
+
 ## Static table
 
 For every *static point* (a chosen elevation and slant range) and every listed data rate the table shows EIRP, path loss, G/T, other losses, C/N0, Eb/N0 and the margin over the required Eb/N0 from `config/ebn0_table.yaml`, and the highest rate that closes with the required margin.

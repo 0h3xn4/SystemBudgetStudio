@@ -13,6 +13,8 @@ expendables/<id>.yaml     consumables with a mass per mission phase
 config/                   margin policy, power, thermal, Eb/N0 and attenuation tables
 ```
 
+In the window the **Edit** menu adds these files from a form (each is one undo step, and Save writes the file): **Add unit** (Ctrl+Shift+N), **Add spacecraft mode** (Ctrl+Shift+M), **Add scenario** with its orbit (Ctrl+Shift+O), **Add expendable** (Ctrl+Shift+X), **Add ground station** (Ctrl+Shift+G), **Add imaging target** (Ctrl+Shift+T) and **Add link** (Ctrl+Shift+L). A form never invents a number: none has a default, and the numbers of a link that come from a data sheet or a standard are written as placeholders (`source: TBD`) for **Model > Inputs**.
+
 The complete field list is in the file format reference (`docs/FILE_FORMAT.md` in the source repository), and the JSON Schema of every kind is written by `budget export-schemas <folder>`.
 
 ## Sourced numbers

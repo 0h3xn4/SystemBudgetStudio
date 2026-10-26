@@ -154,6 +154,18 @@ A spacecraft mode says what every unit is doing, so **Add spacecraft mode** need
 
 A scenario says which spacecraft mode is active, so **Add scenario** needs one: add it first (Edit → Add spacecraft mode). The form takes an altitude of 160 to 2000 km, an inclination of 0 to 180 degrees, a RAAN of 0 up to (not including) 360 degrees, a start in UTC with a trailing Z and no offset (`2026-06-01T00:00:00Z`) and a length above 0 and at most 180 days, and, for an elliptical orbit, an apogee altitude of at least the altitude and at most 40,000 km with an argument of perigee of 0 up to (not including) 360 degrees; the line under the form says which answer is wrong. See [add an orbit and a scenario](user-manual/scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window).
 
+### Add expendable: a phase mass is refused, or the id exists
+
+An expendable needs a mass in **every** mission phase of the spacecraft (`PHASE_MASS_MISSING` otherwise): write 0 for a phase in which it is not on board. The form has one field per phase and refuses an empty one, a negative one and a position with fewer than three coordinates (all three or none). The id is the file name `expendables/<id>.yaml`; an id that differs from another only in capitals counts as the same. A bipropellant is two expendables, fuel and oxidizer, added one after the other. See [phases and propellant](user-manual/mass-budget.md#how-do-i-handle-mission-phases-and-propellant).
+
+### Add ground station or Add imaging target: a number is refused, or the id exists
+
+The latitude is between -90 and 90 degrees, the longitude between -180 and 180, the altitude between -1000 and 100000 m and the minimum elevation at least 0 and less than 90 degrees; none has a default and the line under the form says which answer is wrong. A scenario names a station or a target by id, so an id may not be used by both (nor differ only in capitals). Adding a site does not put it in a scenario: tick it under **Sites** in *Model → Scenario*. See [ground stations and targets](user-manual/scenarios.md#how-do-i-add-a-ground-station-or-an-imaging-target).
+
+### Add link: "add a ground station first", or the modulation and coding are refused
+
+A link joins the spacecraft and a ground station, so **Add link** needs one: add it first (Edit → Add ground station). The ground station is chosen from the list, the frequency is in **megahertz** (2200 for 2.2 GHz; a value in hertz is refused) and the data rates are in bit/s, separated by semicolons. The modulation and coding must be a pair of `config/ebn0_table.yaml` (the loader refuses any other, `REF_UNKNOWN_MODULATION`); while that table has no entry you type them. The transmit power, the antenna gain, the G/T, the required margin and the losses are written as placeholders, so the link shows *n/a* and the Problems panel lists them until you fill them in *Model → Inputs*. See [describe a link](user-manual/link-budget.md#how-do-i-describe-a-link).
+
 ### Save asks "Saving deletes 1 file from the project folder"
 
 You removed a unit with **Remove unit**. Saving deletes its file (`units/<id>.yaml`) and takes it out of every spacecraft mode. Answer **No** to keep the file, then **Undo** (Ctrl+Z) the removal. A deleted file is not in the undo history any more.
