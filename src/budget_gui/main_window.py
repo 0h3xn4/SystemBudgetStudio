@@ -432,7 +432,7 @@ class MainWindow(QMainWindow):
         self.motion_action.setChecked(theme.manager().reduce_motion_setting)
         self.motion_action.triggered.connect(self.set_reduce_motion)
         view_menu.addAction(self.motion_action)
-        self.single_click_action = QAction("Open with a &single click", self)
+        self.single_click_action = QAction("&Open with a single click", self)
         self.single_click_action.setCheckable(True)
         self.single_click_action.setChecked(self.single_click)
         self.single_click_action.setToolTip(
