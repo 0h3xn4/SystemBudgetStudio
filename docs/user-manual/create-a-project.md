@@ -11,7 +11,7 @@ A project is a folder of plain-text YAML files that describe one spacecraft; thi
    1. **Project**: a name and the parent folder. The project goes into a new folder named after the project; an existing folder is never touched.
    2. **Spacecraft**: a sample to start from: a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a [blank project](#how-do-i-start-a-blank-project).
    3. **Orbit**: altitude (160 to 2000 km), inclination and RAAN of a near-circular orbit.
-   4. **Scenario**: how long to simulate (up to 30 days) and when it starts (UTC).
+   4. **Scenario**: how long to simulate (up to 180 days) and when it starts (UTC). The guided wizard builds near-circular orbits; an elliptical orbit comes from [Add scenario](scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window).
    5. **Review**: **Finish** creates the project, opens it and computes the first power timeline.
 
 With the defaults you press **Next** four times and **Finish**. The result is a *sample* project with **invented** numbers (its description says so). Replace them with your own sourced numbers; the Problems panel lists what is still open (in the focused view it is one line of counts: press **Show problems** to open the list). The default sample, the one with complete inputs, has two findings **on purpose** (a thermal margin that is too small, shown as an error as soon as it opens, and, after **Run**, a peak power above its limit); the wizard says so under the sample list, so that a finding is not taken for a fault. [Getting started](../getting-started.md#5-a-first-worked-example-find-and-fix-a-power-violation) fixes the power one.

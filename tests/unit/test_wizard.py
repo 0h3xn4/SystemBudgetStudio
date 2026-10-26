@@ -38,7 +38,7 @@ def test_defaults_are_valid() -> None:
         ("inclination_deg", 181.0),
         ("raan_deg", 360.0),
         ("duration_days", 0.0),
-        ("duration_days", 60.0),
+        ("duration_days", 181.0),
         ("start_utc", "yesterday"),
     ],
 )
@@ -118,3 +118,14 @@ def test_creation_is_deterministic(tmp_path: Path) -> None:
     assert files == sorted(p.relative_to(two) for p in two.rglob("*") if p.is_file())
     for rel in files:
         assert (one / rel).read_bytes() == (two / rel).read_bytes()
+
+
+def test_a_project_of_180_days_gets_a_step_that_keeps_the_orbits_findable(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    from budget_core.io.project_loader import load_project
+
+    folder = create_project(answers(duration_days=180.0), tmp_path)
+    result = load_project(folder)
+    assert result.project is not None
+    scenario = next(iter(result.project.scenarios.values()))
+    assert scenario.duration_s == 180 * 86400.0 and scenario.step_s <= 600.0
+    assert not [p for p in result.problems if p.severity.name == "ERROR"]

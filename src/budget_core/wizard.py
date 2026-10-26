@@ -33,8 +33,9 @@ SAMPLES = {
 }
 ECCENTRICITY_RATIO = 0.001  # near circular, as in the sample orbits
 MAX_STEPS = 8640  # a longer scenario gets a coarser step so the first run stays quick
+MAX_STEP_S = 600.0  # ... but never one that is too coarse to find the orbits (a quarter period)
 ALTITUDE_RANGE_KM = (160.0, 2000.0)
-MAX_DAYS = 30.0
+MAX_DAYS = 180.0  # a run of this length takes under a minute (D-196)
 MAX_SLUG = 60  # characters of the folder name
 _WINDOWS_DEVICES = {"con", "prn", "aux", "nul", *(f"com{i}" for i in range(1, 10))} | {
     f"lpt{i}" for i in range(1, 10)
@@ -129,6 +130,14 @@ def check_answers(answers: WizardAnswers) -> list[Issue]:
     return issues
 
 
+def first_run_step_s(duration_s: float, base_step_s: float) -> float:
+    """The step of a new scenario: the base step, coarser for a long scenario so that the first run
+    stays quick (at most MAX_STEPS steps), but never coarser than MAX_STEP_S, which still finds the
+    orbits of every altitude of the forms (a quarter of the shortest period is about 1,300 s)."""
+    coarser = max(base_step_s, float(math.ceil(duration_s / MAX_STEPS)))
+    return min(coarser, max(base_step_s, MAX_STEP_S))
+
+
 def folder_name(project_name: str) -> str:
     """A safe folder name: ASCII letters and digits separated by single hyphens."""
     folded = unicodedata.normalize("NFKD", project_name).encode("ascii", "ignore").decode()
@@ -211,7 +220,7 @@ def _build(answers: WizardAnswers, folder: Path) -> Project:
             "orbit": orbit_id,
             "start_utc": start_text,
             "duration_s": duration_s,
-            "step_s": max(scenario.step_s, float(math.ceil(duration_s / MAX_STEPS))),
+            "step_s": first_run_step_s(duration_s, scenario.step_s),
         }
     )
     meta = ProjectMeta(

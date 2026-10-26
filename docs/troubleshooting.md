@@ -152,7 +152,7 @@ A spacecraft mode says what every unit is doing, so **Add spacecraft mode** need
 
 ### Add scenario: "add a spacecraft mode first", or a number is refused
 
-A scenario says which spacecraft mode is active, so **Add scenario** needs one: add it first (Edit → Add spacecraft mode). The form takes an altitude of 160 to 2000 km, an inclination of 0 to 180 degrees, a RAAN of 0 up to (not including) 360 degrees, a start in UTC with a trailing Z and no offset (`2026-06-01T00:00:00Z`) and a length above 0 and at most 30 days; the line under the form says which answer is wrong. See [add an orbit and a scenario](user-manual/scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window).
+A scenario says which spacecraft mode is active, so **Add scenario** needs one: add it first (Edit → Add spacecraft mode). The form takes an altitude of 160 to 2000 km, an inclination of 0 to 180 degrees, a RAAN of 0 up to (not including) 360 degrees, a start in UTC with a trailing Z and no offset (`2026-06-01T00:00:00Z`) and a length above 0 and at most 180 days, and, for an elliptical orbit, an apogee altitude of at least the altitude and at most 40,000 km with an argument of perigee of 0 up to (not including) 360 degrees; the line under the form says which answer is wrong. See [add an orbit and a scenario](user-manual/scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window).
 
 ### Save asks "Saving deletes 1 file from the project folder"
 
