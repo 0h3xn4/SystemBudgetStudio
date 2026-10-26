@@ -35,9 +35,10 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
-from budget_core.model import Expendable, Orbit, Scenario
+from budget_core.model import Expendable, GroundStation, Orbit, Scenario, Target
 from budget_core.new_expendable import ExpendableAnswers, expendable_data
 from budget_core.new_scenario import ScenarioAnswers, scenario_data
+from budget_core.new_site import GROUND_STATION, TARGET, SiteAnswers, site_data
 from budget_core.problems import sort_problems
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
@@ -45,6 +46,7 @@ from budget_gui import problem_class as pc
 from budget_gui import theme
 from budget_gui.add_expendable_dialog import AddExpendableDialog
 from budget_gui.add_scenario_dialog import AddScenarioDialog
+from budget_gui.add_site_dialog import AddSiteDialog
 from budget_gui.banner import Banner
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
@@ -380,6 +382,15 @@ class MainWindow(QMainWindow):
         self.add_expendable_action.setShortcut(QKeySequence("Ctrl+Shift+X"))
         self.add_expendable_action.triggered.connect(self.add_expendable)
         edit_menu.addAction(self.add_expendable_action)
+        edit_menu.addSeparator()
+        self.add_ground_station_action = QAction("Add &ground station…", self)
+        self.add_ground_station_action.setShortcut(QKeySequence("Ctrl+Shift+G"))
+        self.add_ground_station_action.triggered.connect(self.add_ground_station)
+        self.add_imaging_target_action = QAction("Add imaging &target…", self)
+        self.add_imaging_target_action.setShortcut(QKeySequence("Ctrl+Shift+T"))
+        self.add_imaging_target_action.triggered.connect(self.add_imaging_target)
+        edit_menu.addAction(self.add_ground_station_action)
+        edit_menu.addAction(self.add_imaging_target_action)
         for action in self.model_edit_actions():
             action.setEnabled(False)  # until a project is open that loads
 
@@ -659,6 +670,8 @@ class MainWindow(QMainWindow):
             self.remove_mode_action,
             self.add_scenario_action,
             self.add_expendable_action,
+            self.add_ground_station_action,
+            self.add_imaging_target_action,
         )
 
     def _ask_scenario(
@@ -767,6 +780,58 @@ class MainWindow(QMainWindow):
             f"Added the expendable {name}. Save (Ctrl+S) writes {rel}; Undo with Ctrl+Z."
         )
         return True
+
+    def _ask_site(self, kind: str, existing: list[str]) -> SiteAnswers | None:
+        """The form; the tests put their own answers here."""
+        dialog = AddSiteDialog(kind, existing, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.answers()
+
+    def _add_site(self, kind: str) -> bool:
+        project = self.session.project
+        if project is None:
+            return False
+        # a scenario names a station or a target by id, so both count; the loaded ones and those
+        # added in this session and not saved yet
+        added = {
+            r.split("/", 1)[1].removesuffix(".yaml")
+            for prefix in ("ground_stations/", "targets/")
+            for r in self.document.rels(prefix)
+        }
+        existing = sorted({*project.ground_stations, *project.targets, *added})
+        answers = self._ask_site(kind, existing)
+        if answers is None:
+            return False
+        try:
+            data = site_data(answers)
+        except ValueError:
+            self.statusBar().showMessage("The answers do not make a valid site.")
+            return False
+        name = answers.site_id.strip()
+        station = kind == GROUND_STATION
+        noun = "ground station" if station else "imaging target"
+        rel = f"{'ground_stations' if station else 'targets'}/{name}.yaml"
+        cls = GroundStation if station else Target
+        if not self.document.add_file(rel, cls, data, f"Add {noun} {name}"):
+            self.statusBar().showMessage(
+                f"There is already a file for {name} (removed in this session? Undo it, or Save "
+                "first)."
+            )
+            return False
+        self.statusBar().showMessage(
+            f"Added the {noun} {name}. List it in a scenario's sites to use it. Save (Ctrl+S) "
+            f"writes {rel}; Undo with Ctrl+Z."
+        )
+        return True
+
+    def add_ground_station(self) -> bool:
+        """Edit > Add ground station: a link peer on the ground, from a form, from any area."""
+        return self._add_site(GROUND_STATION)
+
+    def add_imaging_target(self) -> bool:
+        """Edit > Add imaging target: a point whose passes count for imaging, from a form."""
+        return self._add_site(TARGET)
 
     def add_spacecraft_mode(self) -> bool:
         """Edit > Add spacecraft mode: the form of the Spacecraft modes grid, from any area."""
