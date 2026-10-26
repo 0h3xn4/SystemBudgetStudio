@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "system-budget-studio"
-version = "1.5.1"
+version = "1.6.0"
 description = "Offline desktop tool for satellite power, mass, thermal and RF-link budgets."
 readme = "README.md"
 license = { file = "LICENSE" }
