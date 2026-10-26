@@ -96,7 +96,7 @@ While a run is in progress, **Run** becomes **Cancel** (Ctrl+R is the same butto
 
 ## Where does the window keep its layout?
 
-The window remembers its size and position, which panels are where, whether the rail is folded, whether you hid the *Start here* card, whether the focused view is on, how wide the Problems columns are, and the theme, the UI size and *Reduce motion*, in one small file of its own, `layout.ini`, in your configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`). It contains no project name, path or value. **View → Reset layout** deletes what it remembered and restores the first layout; deleting the file does the same. See [the design page](../DESIGN.md#the-layout-file).
+The window remembers its size and position, which panels are where, whether the rail is folded, whether you hid the *Start here* card, whether the focused view is on, how wide the Problems columns are, and the theme, the UI size, *Reduce motion* and *Open with a single click*, in one small file of its own, `layout.ini`, in your configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`). It contains no project name, path or value. **View → Reset layout** deletes what it remembered and restores the first layout; deleting the file does the same. See [the design page](../DESIGN.md#the-layout-file).
 
 ## How do I use a plot?
 
@@ -104,7 +104,7 @@ Hover to move a cursor with a readout of every series at that time. The mouse wh
 
 ## How do I edit a file?
 
-Press Enter (or double-click) on it in the tree. It opens as text in a tab of the **Model** area; **Ctrl+S** saves, and the project is checked again (the same checks as `budget validate`). Closing a modified tab, opening another project or quitting asks first, so you cannot lose edits by accident. A file that is not valid UTF-8 is refused instead of being damaged. A byte-order mark and Windows line ends in the file are kept. If the file changed on disk after you opened it (another program, a git checkout), saving asks before it overwrites that change; an editor without edits shows the new file by itself.
+Press Enter (or double-click, or click once with *Open with a single click* on) on it in the tree. It opens as text in a tab of the **Model** area; **Ctrl+S** saves, and the project is checked again (the same checks as `budget validate`). Closing a modified tab, opening another project or quitting asks first, so you cannot lose edits by accident. A file that is not valid UTF-8 is refused instead of being damaged. A byte-order mark and Windows line ends in the file are kept. If the file changed on disk after you opened it (another program, a git checkout), saving asks before it overwrites that change; an editor without edits shows the new file by itself.
 
 In **Model → Scenario**, rules and segments are sentences you edit in place ([scenarios](scenarios.md#how-do-i-edit-the-rules-in-the-window)); the grids and the scenario share one undo (Ctrl+Z) and one **Save** button and Ctrl+S ([below](#how-do-i-edit-in-the-grids)), and Save writes every changed file at once. Saving and undo change only what you edited: comments, the order of the keys and fields the grid does not show stay in the file, and saving without a change leaves the file untouched. Only if a file is in an older layout that cannot be patched is it rewritten whole.
 
@@ -113,6 +113,7 @@ In **Model → Scenario**, rules and segments are sentences you edit in place ([
 - **UI size.** *View > UI size* (or *Settings* in the rail) is 90, 100, 110 or 125 %: text, buttons and tables grow and shrink together. The window is laid out completely at the size you start with; a size changed while the window is open reaches the text and most controls at once and a few fixed sizes at the next start. At 125 % the smallest window is 1093 x 793, so use 110 % or less on a 1366 x 768 screen.
 - **Theme.** *View > Theme*: light, dark, or the system's, which switches live.
 - **Reduce motion.** *View > Reduce motion* (or in *Settings*) turns off every transition.
+- **Open with a single click.** *View > Open with a single click* (or in *Settings*, *Open and edit with a single click*) is for people who do not want to double-click: a click on a node of the project tree opens it, and a click on a cell that is already selected starts editing it. Enter, F2 and typing work as before. It is off at first and the window remembers the choice.
 - **Keyboard.** Tab visits every control and Shift+Tab goes back; the control that has the keyboard shows a 2 px ring. Every frequent action has a shortcut that its tooltip and its menu entry show (the [shortcuts above](#shortcuts)), and **Ctrl+K** finds any command by its name.
 - **Screen readers.** Every button that shows only an icon, every grid, table and plot, and every input has a name (for example *Units grid*, *Power timeline plot*, *Folder to write the files into*).
 

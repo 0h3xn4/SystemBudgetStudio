@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Open and edit with a single click.** *View → Open with a single click* (also in the Settings card) makes a click on a node of the project tree open it and a click on a selected cell of a grid edit it. It is off at first and the window remembers it in `layout.ini` (`window/open_with`). Suggested by a user who does not like double-clicking. Decision D-195.
+
 - **The power-mode cell of the Spacecraft modes grid is a drop-down.** It lists the power modes of the unit, so a name that does not exist cannot be chosen (a pasted one is still refused, with the list). A model can offer the choices of any cell through one item role, and the cell delegate edits such a cell in a drop-down; other cells keep the text editor. Suggested by a user. Decision D-194.
 
 ## [1.5.1] - 2026-10-26

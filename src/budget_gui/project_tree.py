@@ -303,7 +303,8 @@ class BadgeDelegate(QStyledItemDelegate):
 
 
 class ProjectTree(QTreeWidget):
-    """The model tree of the open project. Enter or a double-click opens the node."""
+    """The model tree of the open project. Enter or a double-click opens the node (a single click
+    too, when the setting is on)."""
 
     file_requested = Signal(str)  # a file node: open the file
     field_requested = Signal(str, str)  # a field node: open the file at the field (file, path)
@@ -314,6 +315,8 @@ class ProjectTree(QTreeWidget):
         self.setHeaderHidden(True)
         self.setItemDelegate(BadgeDelegate(self))
         self.itemActivated.connect(self._activated)
+        self.itemClicked.connect(self._clicked)
+        self.single_click = False  # a click opens a node, not only Enter or a double-click
         self.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.customContextMenuRequested.connect(self._context_menu)
         self._top: Node | None = None
@@ -333,6 +336,13 @@ class ProjectTree(QTreeWidget):
             self.field_requested.emit(str(rel), str(item.data(0, PATH_ROLE) or ""))
         elif rel:
             self.file_requested.emit(str(rel))
+
+    def set_single_click(self, on: bool) -> None:
+        self.single_click = bool(on)
+
+    def _clicked(self, item: QTreeWidgetItem, _column: int = 0) -> None:
+        if self.single_click:
+            self._activated(item)
 
     def activate_current(self) -> None:
         """What Enter does: open the selected node."""
