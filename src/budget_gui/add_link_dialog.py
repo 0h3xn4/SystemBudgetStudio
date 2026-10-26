@@ -117,13 +117,14 @@ class AddLinkDialog(QDialog):
         form.addRow("Coding", self.coding_edit)
         form.addRow("Data rates, bit/s", self.rates_edit)
         has_table = bool(self._pairs)
-        for widget in (self.pair_combo,) if has_table else (self.modulation_edit, self.coding_edit):
-            widget.setVisible(True)
-        for widget in (self.modulation_edit, self.coding_edit) if has_table else (self.pair_combo,):
-            widget.hide()
-            label = form.labelForField(widget)
-            if label is not None:
-                label.hide()
+        unused: tuple[QWidget, ...] = (
+            (self.modulation_edit, self.coding_edit) if has_table else (self.pair_combo,)
+        )
+        for hidden in unused:
+            hidden.hide()
+            row_label = form.labelForField(hidden)
+            if row_label is not None:
+                row_label.hide()
 
         intro = QLabel(
             "A link joins the spacecraft and a ground station in one direction. The transmit "
