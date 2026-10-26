@@ -35,8 +35,9 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
-from budget_core.model import Expendable, GroundStation, Orbit, Scenario, Target
+from budget_core.model import Expendable, GroundStation, Link, Orbit, Scenario, Target
 from budget_core.new_expendable import ExpendableAnswers, expendable_data
+from budget_core.new_link import LinkAnswers, link_data
 from budget_core.new_scenario import ScenarioAnswers, scenario_data
 from budget_core.new_site import GROUND_STATION, TARGET, SiteAnswers, site_data
 from budget_core.problems import sort_problems
@@ -45,6 +46,7 @@ from budget_core.reports.run import REPORT_KINDS
 from budget_gui import problem_class as pc
 from budget_gui import theme
 from budget_gui.add_expendable_dialog import AddExpendableDialog
+from budget_gui.add_link_dialog import AddLinkDialog
 from budget_gui.add_scenario_dialog import AddScenarioDialog
 from budget_gui.add_site_dialog import AddSiteDialog
 from budget_gui.banner import Banner
@@ -391,6 +393,10 @@ class MainWindow(QMainWindow):
         self.add_imaging_target_action.triggered.connect(self.add_imaging_target)
         edit_menu.addAction(self.add_ground_station_action)
         edit_menu.addAction(self.add_imaging_target_action)
+        self.add_link_action = QAction("Add &link…", self)
+        self.add_link_action.setShortcut(QKeySequence("Ctrl+Shift+L"))
+        self.add_link_action.triggered.connect(self.add_link)
+        edit_menu.addAction(self.add_link_action)
         for action in self.model_edit_actions():
             action.setEnabled(False)  # until a project is open that loads
 
@@ -672,6 +678,7 @@ class MainWindow(QMainWindow):
             self.add_expendable_action,
             self.add_ground_station_action,
             self.add_imaging_target_action,
+            self.add_link_action,
         )
 
     def _ask_scenario(
@@ -832,6 +839,65 @@ class MainWindow(QMainWindow):
     def add_imaging_target(self) -> bool:
         """Edit > Add imaging target: a point whose passes count for imaging, from a form."""
         return self._add_site(TARGET)
+
+    def _ask_link(
+        self, existing: list[str], stations: list[str], pairs: list[tuple[str, str]]
+    ) -> LinkAnswers | None:
+        """The form; the tests put their own answers here."""
+        dialog = AddLinkDialog(existing, stations, pairs, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.answers()
+
+    def add_link(self) -> bool:
+        """Edit > Add link: the structure of an RF link from a form, from any area; the sourced
+        numbers are placeholders for Model > Inputs. One undo step; Save writes the file."""
+        project = self.session.project
+        if project is None:
+            return False
+        # the stations of the loaded project and those added in this session and not saved yet
+        stations = sorted(
+            {
+                *project.ground_stations,
+                *(
+                    r.removeprefix("ground_stations/").removesuffix(".yaml")
+                    for r in self.document.rels("ground_stations/")
+                ),
+            }
+        )
+        if not stations:
+            self.statusBar().showMessage(
+                "A link joins the spacecraft and a ground station: add a ground station first "
+                "(Edit > Add ground station)."
+            )
+            return False
+        table = project.config.ebn0_table
+        pairs = [(e.modulation, e.coding) for e in table.entries] if table is not None else []
+        added = {
+            r.removeprefix("links/").removesuffix(".yaml") for r in self.document.rels("links/")
+        }
+        existing = sorted({*project.links, *added})
+        answers = self._ask_link(existing, stations, pairs)
+        if answers is None:
+            return False
+        try:
+            data = link_data(answers)
+        except ValueError:
+            self.statusBar().showMessage("The answers do not make a valid link.")
+            return False
+        name = answers.link_id.strip()
+        rel = f"links/{name}.yaml"
+        if not self.document.add_file(rel, Link, data, f"Add link {name}"):
+            self.statusBar().showMessage(
+                f"There is already a file for {name} (removed in this session? Undo it, or Save "
+                "first)."
+            )
+            return False
+        self.statusBar().showMessage(
+            f"Added the link {name} with placeholders for its sourced numbers: fill them in "
+            f"Model > Inputs. Save (Ctrl+S) writes {rel}; Undo with Ctrl+Z."
+        )
+        return True
 
     def add_spacecraft_mode(self) -> bool:
         """Edit > Add spacecraft mode: the form of the Spacecraft modes grid, from any area."""
