@@ -182,6 +182,7 @@ The window keeps no Qt settings file (D-105): Qt's dialogs would write the folde
 | `Ctrl+Shift+N` / `Ctrl+Shift+Delete` | Add a unit / remove the selected unit (Edit menu) | in the window |
 | `Ctrl+Shift+M` / `Ctrl+Shift+Backspace` | Add a spacecraft mode / remove the spacecraft mode of the row (Edit menu) | in the window |
 | `Ctrl+Shift+O` | Add an orbit and a scenario (Edit menu) | in the window |
+| `Ctrl+Shift+X` | Add an expendable (Edit menu) | in the window |
 | `Ctrl+Shift+F` | Focused view on or off (View menu) | in the window |
 | `Ctrl+C` / `Ctrl+V` | In a grid: copy the cells as text with tabs / paste a block, with a preview for more than one cell | in the window |
 | `Ctrl+D` / `Delete` | In a grid: fill down / empty the optional cells | in the window |

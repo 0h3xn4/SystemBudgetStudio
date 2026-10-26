@@ -82,6 +82,7 @@ In the focused view only the summary line is shown, with a **Show problems** but
 | Ctrl+Shift+M / Ctrl+Shift+Backspace | **Edit → Add spacecraft mode** / **Remove spacecraft mode**, from any area: they bring *Model → Spacecraft modes* to the front ([add a spacecraft mode](describe-the-spacecraft.md#how-do-i-add-a-spacecraft-mode)) |
 | Ctrl+Shift+F | **View → Focused view** on or off: one line of problem counts, no Inspector or Provenance panel, only the main columns; off shows everything |
 | Ctrl+Shift+O | **Edit → Add scenario**, from any area: an orbit and a scenario from a form; it brings *Model → Scenario* to the front ([add an orbit and a scenario](scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window)) |
+| Ctrl+Shift+X | **Edit → Add expendable**, from any area: propellant, an oxidizer, a pressurant or the like from a form, with a mass for every mission phase ([how](mass-budget.md#how-do-i-handle-mission-phases-and-propellant)) |
 | (menu only) | File → Export unit table / Import unit table: the unit power modes as a CSV or XLSX table, imported with a preview ([unit tables](unit-tables.md)) |
 | (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
 | (menu only) | View → Theme (light, dark, same as the system), UI size (90, 100, 110 or 125 %), Reduce motion, Cell styles (what every cell style means), the panel toggles, Reset layout |

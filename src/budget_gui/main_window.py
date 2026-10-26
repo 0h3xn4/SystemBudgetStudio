@@ -35,13 +35,15 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
-from budget_core.model import Orbit, Scenario
+from budget_core.model import Expendable, Orbit, Scenario
+from budget_core.new_expendable import ExpendableAnswers, expendable_data
 from budget_core.new_scenario import ScenarioAnswers, scenario_data
 from budget_core.problems import sort_problems
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui import problem_class as pc
 from budget_gui import theme
+from budget_gui.add_expendable_dialog import AddExpendableDialog
 from budget_gui.add_scenario_dialog import AddScenarioDialog
 from budget_gui.banner import Banner
 from budget_gui.command_palette import Command, CommandPalette
@@ -373,6 +375,11 @@ class MainWindow(QMainWindow):
         self.add_scenario_action.setShortcut(QKeySequence("Ctrl+Shift+O"))
         self.add_scenario_action.triggered.connect(self.add_scenario)
         edit_menu.addAction(self.add_scenario_action)
+        edit_menu.addSeparator()
+        self.add_expendable_action = QAction("Add e&xpendable…", self)
+        self.add_expendable_action.setShortcut(QKeySequence("Ctrl+Shift+X"))
+        self.add_expendable_action.triggered.connect(self.add_expendable)
+        edit_menu.addAction(self.add_expendable_action)
         for action in self.model_edit_actions():
             action.setEnabled(False)  # until a project is open that loads
 
@@ -651,6 +658,7 @@ class MainWindow(QMainWindow):
             self.add_mode_action,
             self.remove_mode_action,
             self.add_scenario_action,
+            self.add_expendable_action,
         )
 
     def _ask_scenario(
@@ -707,6 +715,56 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(
             f"Added the scenario {name} and its orbit. Save (Ctrl+S) writes {scenario_rel} and "
             f"{orbit_rel}; then press Run. Undo with Ctrl+Z."
+        )
+        return True
+
+    def _ask_expendable(
+        self, existing: list[str], classes: list[str], phases: list[str]
+    ) -> ExpendableAnswers | None:
+        """The form; the tests put their own answers here."""
+        dialog = AddExpendableDialog(existing, classes, phases, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.answers()
+
+    def add_expendable(self) -> bool:
+        """Edit > Add expendable: propellant, an oxidizer, a pressurant or the like, from a form,
+        from any area. The file is added in one undo step; Save writes it."""
+        project = self.session.project
+        if project is None:
+            return False
+        policy = project.config.margin_policy
+        classes = sorted(policy.classes) if policy is not None else []
+        if not classes:
+            self.statusBar().showMessage(
+                "The margin policy has no maturity class: add one in config/margin_policy.yaml "
+                "first."
+            )
+            return False
+        # those of the loaded project and those added in this session and not saved yet
+        added = {
+            r.removeprefix("expendables/").removesuffix(".yaml")
+            for r in self.document.rels("expendables/")
+        }
+        existing = sorted({*project.expendables, *added})
+        answers = self._ask_expendable(existing, classes, list(project.phases))
+        if answers is None:
+            return False
+        try:
+            data = expendable_data(answers)
+        except ValueError:
+            self.statusBar().showMessage("The answers do not make a valid expendable.")
+            return False
+        name = answers.expendable_id.strip()
+        rel = f"expendables/{name}.yaml"
+        if not self.document.add_file(rel, Expendable, data, f"Add expendable {name}"):
+            self.statusBar().showMessage(
+                f"There is already a file for {name} (removed in this session? Undo it, or Save "
+                "first)."
+            )
+            return False
+        self.statusBar().showMessage(
+            f"Added the expendable {name}. Save (Ctrl+S) writes {rel}; Undo with Ctrl+Z."
         )
         return True
 
