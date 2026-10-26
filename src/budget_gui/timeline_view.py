@@ -430,11 +430,15 @@ class PowerTimelineView(QWidget):
         text = f"{result.steps} steps; {count} violation(s)"
         if incomplete:
             text += "; some inputs are placeholders, results marked n/a are not computed"
+        full = text
         if result.not_evaluated:
-            text += f"; not evaluated: {result.not_evaluated_text()}"
+            kinds = len({n.code for n in result.not_evaluated})
+            text += f"; {kinds} check(s) not evaluated (the Problems panel lists them)"
+            full += f"; not evaluated: {result.not_evaluated_text()}"
         if self.is_stale:
-            text = CHANGED_WHILE_RUNNING_TEXT
+            text = full = CHANGED_WHILE_RUNNING_TEXT
         self.status.setText(text if self.is_stale else text + ".")
+        self.status.setToolTip(full if self.is_stale else full + ".")  # every check, one hover away
         # the listeners (Problems, Reports page) get a turn of their own
         QTimer.singleShot(0, self, lambda: self._announce(result))
 

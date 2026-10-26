@@ -50,6 +50,13 @@ BLANK_FIELDS = {  # the fields of `check_blank` that belong to each page
     "Scenario": (),
     "Review": (),
 }
+SAMPLE_NOTES = {  # what a sample shows on purpose, so that a finding is not taken for a fault
+    "microsat_250kg_eps": (
+        "Its inputs are complete. It contains findings on purpose (a thermal margin that is too "
+        "small and, after Run, a peak power above its limit), so you can see how the tool "
+        "reports a finding and how to fix it."
+    ),
+}
 PAGES = {
     "Project": ("project_name",),
     "Spacecraft": ("sample",),
@@ -114,6 +121,9 @@ class GuidedWizard(QWizard):
         self.raan = self._spin(100.0, 1, " deg", 0.0, 359.9)
         self.duration = self._spin(1.0, 2, " days", 0.01, 1000.0)
         self.start_edit = QLineEdit("2026-06-01T00:00:00Z")
+        self.sample_note = QLabel("")
+        self.sample_note.setWordWrap(True)
+        self.sample_note.setProperty("role", "muted")
         self.review = QLabel("")
         self.review.setWordWrap(True)
         for widget, name in (
@@ -139,6 +149,7 @@ class GuidedWizard(QWizard):
             "Start from a sample spacecraft. Its numbers are invented; you replace them later.",
         )
         spacecraft.form.addRow("Sample", self.sample_combo)
+        spacecraft.form.addRow(self.sample_note)
         spacecraft.form.addRow("Bus name", self.bus_name_edit)
         spacecraft.form.addRow("Bus voltage", self.bus_voltage)
         orbit = _Page(
@@ -237,6 +248,9 @@ class GuidedWizard(QWizard):
         blank = self.is_blank()
         for widget in (self.bus_name_edit, self.bus_voltage):
             self.spacecraft_form.setRowVisible(widget, blank)
+        note = SAMPLE_NOTES.get(str(self.sample_combo.currentData()), "")
+        self.sample_note.setText(note)
+        self.spacecraft_form.setRowVisible(self.sample_note, bool(note))
 
     def nextId(self) -> int:  # noqa: N802 (Qt naming)
         """A blank project has no orbit and no scenario to ask for: the review follows."""

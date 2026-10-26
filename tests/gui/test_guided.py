@@ -71,6 +71,18 @@ def test_every_sample_is_offered(qtbot, tmp_path: Path) -> None:  # type: ignore
     ]
 
 
+def test_the_complete_sample_says_its_findings_are_on_purpose(qtbot, tmp_path: Path) -> None:  # type: ignore[no-untyped-def]
+    """The default sample opens with an error (a thermal margin); a new user must not think the
+    tool is broken."""
+    wizard = GuidedWizard(tmp_path)
+    qtbot.addWidget(wizard)
+    assert wizard.sample_combo.currentData() == "microsat_250kg_eps"
+    assert "on purpose" in wizard.sample_note.text()
+    blank = wizard.sample_combo.findData("blank")
+    wizard.sample_combo.setCurrentIndex(blank)
+    assert wizard.sample_note.text() == ""
+
+
 def test_orbit_to_first_budget_is_far_inside_ten_minutes(
     window: MainWindow,
     tmp_path: Path,

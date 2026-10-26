@@ -14,7 +14,7 @@ A project is a folder of plain-text YAML files that describe one spacecraft; thi
    4. **Scenario**: how long to simulate (up to 30 days) and when it starts (UTC).
    5. **Review**: **Finish** creates the project, opens it and computes the first power timeline.
 
-With the defaults you press **Next** four times and **Finish**. The result is a *sample* project with **invented** numbers (its description says so). Replace them with your own sourced numbers; the Problems panel lists what is still open (in the focused view it is one line of counts: press **Show problems** to open the list).
+With the defaults you press **Next** four times and **Finish**. The result is a *sample* project with **invented** numbers (its description says so). Replace them with your own sourced numbers; the Problems panel lists what is still open (in the focused view it is one line of counts: press **Show problems** to open the list). The default sample, the one with complete inputs, has two findings **on purpose** (a thermal margin that is too small, shown as an error as soon as it opens, and, after **Run**, a peak power above its limit); the wizard says so under the sample list, so that a finding is not taken for a fault. [Getting started](../getting-started.md#5-a-first-worked-example-find-and-fix-a-power-violation) fixes the power one.
 
 ## How do I start a blank project?
 
