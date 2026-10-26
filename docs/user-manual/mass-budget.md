@@ -30,6 +30,10 @@ mass_properties:
   position_m: [0.0, 0.0, 0.35]
 ```
 
+**In the window:** press **Ctrl+Shift+X** (**Edit → Add expendable**, or *Add expendable* in Ctrl+K). A form asks for the name, the id (it becomes the file name `expendables/<id>.yaml`), the subsystem, the maturity class, **one mass for every mission phase of the spacecraft** (write 0 where the item is not on board; none has a default and an empty one is refused) and, optionally, the position of the centre of mass (all three coordinates or none; without it the mass counts but the centre of mass of the spacecraft does not include the item). Adding is one undo step and **Save** (Ctrl+S) writes the file.
+
+**A bipropellant (fuel and oxidizer), a pressurant or a second tank** is one expendable for each, added one after the other: each has its own masses per phase and its own position, so tanks at different places move the centre of mass as they should. Give them names that say what they are (`fuel`, `oxidizer`, `pressurant`) and put them in the same subsystem if you want them to add up in the mass table by subsystem.
+
 ## How do I get the centre of gravity and inertia?
 
 Give each unit (and expendable) a `mass_properties` block: the position of its centre of mass in the project's body frame (metres) and, if you know it, its [inertia tensor](../glossary.md#inertia) about its own centre of mass (axes parallel to the body frame):

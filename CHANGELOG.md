@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Add expendable.** *Edit → Add expendable* (Ctrl+Shift+X, also in Ctrl+K) adds propellant, an oxidizer, a pressurant or the like from a form: name, id, subsystem, maturity class, a mass for every mission phase and an optional position of the centre of mass. A bipropellant is two expendables, one file each. One undo step; Save writes the file. Suggested by a user who needed a second propellant mass. Decision D-197. No equation or file format changed.
+
 - **Scenarios up to 180 days, and an elliptical orbit in *Add scenario*.** The guided wizard and *Add scenario* took up to 30 days; both take up to 180 now (a run of 180 days took under a minute when measured). The step of a long scenario is capped at 600 s so that the orbits can still be found. *Add scenario* has an optional **apogee altitude** and an **argument of perigee**: with them the orbit is elliptical (perigee altitude 160 to 2000 km, apogee altitude up to 40,000 km, starting at perigee); without them it is the near-circular orbit as before. Suggested by a user. Decision D-196. No equation or file format changed.
 
 - **Open and edit with a single click.** *View → Open with a single click* (also in the Settings card) makes a click on a node of the project tree open it and a click on a selected cell of a grid edit it. It is off at first and the window remembers it in `layout.ini` (`window/open_with`). Suggested by a user who does not like double-clicking. Decision D-195.
