@@ -54,6 +54,10 @@ With the wizard (File → New project; pick *Blank project* to start from nothin
 
 Yes: the **Edit** menu has **Add expendable** (Ctrl+Shift+X), **Add ground station** (Ctrl+Shift+G), **Add imaging target** (Ctrl+Shift+T) and **Add link** (Ctrl+Shift+L), next to **Add unit**, **Add spacecraft mode** and **Add scenario**. A form never invents a number; the numbers of a link that come from a data sheet are placeholders for *Model → Inputs*. **Add Eb/N0 entry** (Ctrl+Shift+B) adds a modulation and coding pair to the Eb/N0 table that a link needs. Antenna patterns and attenuation entries are still edited in the file ([describe a link](user-manual/link-budget.md#how-do-i-describe-a-link)).
 
+### How do I remove a ground station, an expendable or a link?
+
+**Edit → Remove from project** (Ctrl+Shift+R): choose the kind and the name. It is refused while something names the file, and says what: a ground station or imaging target that a scenario lists, or a ground station that a link names as its peer. Change the scenario (*Model → Scenario*) or remove the link first. Save deletes the file after a question, and Undo (Ctrl+Z) brings it back until then.
+
 ### Do I have to double-click?
 
 No: turn on **View → Open with a single click** (also in *Settings*). A click on an item of the project tree then opens it, and a click on a selected cell of a grid edits it. The Problems panel still jumps with a double-click or Enter.
