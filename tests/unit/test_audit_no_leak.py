@@ -142,6 +142,7 @@ def copies(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Path]:
     return out
 
 
+@pytest.mark.slow
 def test_the_secret_appears_in_no_problem(copies: dict[str, Path]) -> None:
     leaks: list[str] = []
     for name, rel, path, is_key in VARIANTS:

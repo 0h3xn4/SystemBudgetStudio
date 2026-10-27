@@ -85,4 +85,5 @@ addopts = "-ra"
 markers = [
     "gui: needs a Qt platform (run with QT_QPA_PLATFORM=offscreen)",
     "perf: performance targets",
+    "slow: takes more than about 15 seconds on its own (deselect with -m \"not slow\" for a quick loop; CI runs them)",
 ]
