@@ -445,6 +445,12 @@ def _models_of(project: Project) -> Iterable[tuple[str, BudgetModel]]:
         yield f"scenarios/{scenario_id}.yaml", scenario
     for link_id, link in project.links.items():
         yield f"links/{link_id}.yaml", link
+    for station_id, station in project.ground_stations.items():
+        yield f"ground_stations/{station_id}.yaml", station
+    for target_id, target in project.targets.items():
+        yield f"targets/{target_id}.yaml", target
+    for expendable_id, expendable in project.expendables.items():
+        yield f"expendables/{expendable_id}.yaml", expendable
     for kind in CONFIG_FILES:
         model = getattr(project.config, kind, None)
         if model is not None:

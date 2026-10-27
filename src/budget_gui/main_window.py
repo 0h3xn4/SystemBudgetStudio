@@ -51,6 +51,7 @@ from budget_core.new_link import LinkAnswers, link_data
 from budget_core.new_scenario import ScenarioAnswers, scenario_data
 from budget_core.new_site import GROUND_STATION, TARGET, SiteAnswers, site_data
 from budget_core.problems import sort_problems
+from budget_core.remove_item import KINDS, LABELS, blocked_message, rel_of, users_of
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui import problem_class as pc
@@ -87,6 +88,7 @@ from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.project_tree import ProjectTree
 from budget_gui.provenance_panel import ProvenancePanel
 from budget_gui.rail import NavRail
+from budget_gui.remove_item_dialog import RemoveItemDialog
 from budget_gui.reports_view import ReportItem, ReportsView
 from budget_gui.run_controller import RunController, RunState
 from budget_gui.scenario_view import ScenarioView
@@ -412,6 +414,11 @@ class MainWindow(QMainWindow):
         self.add_ebn0_action.setShortcut(QKeySequence("Ctrl+Shift+B"))
         self.add_ebn0_action.triggered.connect(self.add_ebn0_entry)
         edit_menu.addAction(self.add_ebn0_action)
+        edit_menu.addSeparator()
+        self.remove_item_action = QAction("Remove from &project…", self)
+        self.remove_item_action.setShortcut(QKeySequence("Ctrl+Shift+R"))
+        self.remove_item_action.triggered.connect(self.remove_item)
+        edit_menu.addAction(self.remove_item_action)
         for action in self.model_edit_actions():
             action.setEnabled(False)  # until a project is open that loads
 
@@ -695,6 +702,7 @@ class MainWindow(QMainWindow):
             self.add_imaging_target_action,
             self.add_link_action,
             self.add_ebn0_action,
+            self.remove_item_action,
         )
 
     def _ask_scenario(
@@ -927,21 +935,79 @@ class MainWindow(QMainWindow):
         )
         return True
 
+    def _removable_items(self) -> dict[str, dict[str, str]]:
+        """Every expendable, ground station, imaging target and link of the window as it is now,
+        each with the reason it cannot be removed ("" when nothing names it)."""
+        document = self.document
+
+        def data_of(prefix: str) -> dict[str, dict[str, Any]]:
+            return {
+                rel.removeprefix(prefix).removesuffix(".yaml"): document.data(rel)
+                for rel in document.rels(prefix)
+            }
+
+        scenarios, links = data_of("scenarios/"), data_of("links/")
+        items: dict[str, dict[str, str]] = {}
+        for kind in KINDS:
+            prefix = rel_of(kind, "")[: -len(".yaml")]
+            found: dict[str, str] = {}
+            for item_id in data_of(prefix):
+                users = users_of(kind, item_id, scenarios=scenarios, links=links)
+                found[item_id] = blocked_message(kind, item_id, users) or ""
+            if found:
+                items[kind] = found
+        return items
+
+    def _ask_removal(self, items: dict[str, dict[str, str]]) -> tuple[str, str] | None:
+        """The form; the tests put their own answer here."""
+        dialog = RemoveItemDialog(items, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.choice()
+
+    def remove_item(self) -> bool:
+        """Edit > Remove from project: an expendable, a ground station, an imaging target or a
+        link, from any area. One undo step; Save deletes the file, after a question."""
+        if self.session.project is None:
+            return False
+        items = self._removable_items()
+        if not items:
+            self.statusBar().showMessage(
+                "There is nothing to remove: the project has no expendable, ground station, "
+                "imaging target or link."
+            )
+            return False
+        choice = self._ask_removal(items)
+        if choice is None:
+            return False
+        kind, item_id = choice
+        reason = items.get(kind, {}).get(item_id)
+        if reason is None:
+            return False
+        if reason:
+            self.statusBar().showMessage(reason)
+            return False
+        rel = rel_of(kind, item_id)
+        label = LABELS[kind]
+        if not self.document.remove_file(rel, f"Remove {label} {item_id}"):
+            return False
+        self.statusBar().showMessage(
+            f"Removed the {label} {item_id}. Save (Ctrl+S) deletes {rel}, after a question; "
+            "Undo with Ctrl+Z brings it back."
+        )
+        return True
+
     def add_link(self) -> bool:
         """Edit > Add link: the structure of an RF link from a form, from any area; the sourced
         numbers are placeholders for Model > Inputs. One undo step; Save writes the file."""
         project = self.session.project
         if project is None:
             return False
-        # the stations of the loaded project and those added in this session and not saved yet
+        # the stations as the window has them now: those added and not saved yet count, those
+        # removed and not saved yet do not
         stations = sorted(
-            {
-                *project.ground_stations,
-                *(
-                    r.removeprefix("ground_stations/").removesuffix(".yaml")
-                    for r in self.document.rels("ground_stations/")
-                ),
-            }
+            r.removeprefix("ground_stations/").removesuffix(".yaml")
+            for r in self.document.rels("ground_stations/")
         )
         if not stations:
             self.statusBar().showMessage(
