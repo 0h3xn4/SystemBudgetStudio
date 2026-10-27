@@ -255,8 +255,9 @@ class PowerView(QWidget):
         while self.tabs.count():  # QTabWidget.clear() keeps the pages alive: delete them
             page = self.tabs.widget(0)
             self.tabs.removeTab(0)
-            page.setParent(None)
-            page.deleteLater()
+            if page is not None:
+                page.setParent(None)
+                page.deleteLater()
         self._pages = {}
         shown = document is not None
         self.empty_label.setVisible(not shown)

@@ -18,7 +18,7 @@ from budget_core.power.time_domain import time_domain_budget
 from budget_core.scenario.run import run_scenario
 from tests.perf_limits import LIMIT_S, TARGET_S
 
-pytestmark = pytest.mark.perf
+pytestmark = [pytest.mark.perf, pytest.mark.slow]
 
 
 def test_one_week_at_one_second_with_two_cases() -> None:

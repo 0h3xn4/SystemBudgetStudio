@@ -490,6 +490,7 @@ class PlotWidget(QWidget):
                             sy_[0::2].tolist(),
                             sx[1::2].tolist(),
                             sy_[1::2].tolist(),
+                            strict=True,  # pairs: two values per bucket, so equal lengths
                         )
                     )
                 )

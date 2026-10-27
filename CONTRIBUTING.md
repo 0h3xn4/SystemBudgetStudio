@@ -9,7 +9,7 @@ git clone https://github.com/0h3xn4/systembudgetstudio.git
 cd systembudgetstudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
-QT_QPA_PLATFORM=offscreen pytest                       # about 30 minutes (core 8, window 22); quick loop: pytest tests/unit. Windows PowerShell: $env:QT_QPA_PLATFORM="offscreen"; pytest
+QT_QPA_PLATFORM=offscreen pytest                       # about 17 minutes (core 8, window 11); quick loop: pytest tests/unit or pytest -m "not slow". Windows PowerShell: $env:QT_QPA_PLATFORM="offscreen"; pytest
 ruff check . && ruff format --check . && mypy
 ```
 
@@ -35,7 +35,7 @@ These are enforced by tests and review (the full list is in [CLAUDE.md](CLAUDE.m
 1. Work on a branch; never push to `main`.
 2. Make the change with tests. If you change the model or an example, regenerate the generated files (`budget export-schemas src/budget_core/schemas`, `budget export-examples examples --force`): the tests fail when they drift.
 3. Update the documentation that describes the behaviour ([which pages](docs/developer/README.md#keep-the-documentation-true)) and add an entry to [CHANGELOG.md](CHANGELOG.md).
-4. Open a pull request into `main`. CI must pass on Windows and Linux with Python 3.11 and 3.13. A change that touches `packaging/` also runs the installer workflow.
+4. Open a pull request into `main`. CI must pass on Windows and Linux with Python 3.14. A change that touches `packaging/` also runs the installer workflow.
 
 ## Reporting a problem
 

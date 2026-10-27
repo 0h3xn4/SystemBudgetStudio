@@ -4,6 +4,7 @@ so every test lets the jobs of the windows it made finish before the windows are
 from __future__ import annotations
 
 import pytest
+from PySide6.QtCore import QCoreApplication, QEvent
 from PySide6.QtWidgets import QApplication
 
 from budget_gui import session as session_module
@@ -46,7 +47,23 @@ def _light_theme_again():  # type: ignore[no-untyped-def]
 
 
 @pytest.fixture(autouse=True)
-def _finish_jobs(request: pytest.FixtureRequest):  # type: ignore[no-untyped-def]
+def _no_windows_left_behind():  # type: ignore[no-untyped-def]
+    """A test leaves dozens of top-level widgets behind (popups, menus, dialogs, the window's own
+    children), and a theme or scale change restyles every one that is still alive, so each test
+    made the next one slower (the settings card test: 3 s alone, 109 s after its neighbours). Set
+    up before `qtbot`, so it runs after qtbot closed the test's own windows."""
+    yield
+    app = QApplication.instance()
+    if app is None:
+        return
+    for widget in app.topLevelWidgets():
+        widget.close()
+        widget.deleteLater()
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+
+
+@pytest.fixture(autouse=True)
+def _finish_jobs(request: pytest.FixtureRequest, _no_windows_left_behind: None):  # type: ignore[no-untyped-def]
     request.getfixturevalue("qtbot")  # set up first, so this runs before qtbot closes the windows
     yield
     for widget in QApplication.topLevelWidgets():

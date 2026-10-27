@@ -6,7 +6,7 @@ These are GitHub settings that only the repository owner can change; the assista
 2. **Visibility:** the repository is **public** by the owner's decision of 2026-10-12 (D-140: MIT licence, invented example data only). The earlier request to make it private is withdrawn. *Done.*
 3. **Branch protection for `main`** (Settings → Branches → Add rule). *Open* (not verifiable from here):
    - Require a pull request before merging.
-   - Require status checks to pass: all `CI / ubuntu-latest / py3.11`, `py3.13` and `CI / windows-latest / py3.11`, `py3.13` jobs.
+   - Require status checks to pass: all `CI / ubuntu-latest / py3.14` and `CI / windows-latest / py3.14` jobs.
    - Require branches to be up to date; block force pushes and deletions.
 4. **Actions → General:** allow only actions pinned by SHA (optional hardening). The workflows already pin every action to a commit SHA.
 

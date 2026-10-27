@@ -1684,7 +1684,7 @@ class MainWindow(QMainWindow):
                 if answer != QMessageBox.StandardButton.Yes:
                     return False
                 editor.save(overwrite=True)
-        except (OSError, OutputError):
+        except OSError, OutputError:
             QMessageBox.warning(
                 self,
                 APP_NAME,

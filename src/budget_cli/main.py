@@ -64,7 +64,7 @@ def _iso_datetime(text: str) -> datetime:
     parsed = parsed if parsed.tzinfo else parsed.replace(tzinfo=UTC)
     try:
         year = parsed.astimezone(UTC).year
-    except (OverflowError, ValueError):
+    except OverflowError, ValueError:
         year = 0
     if not MIN_YEAR <= year <= MAX_YEAR:
         raise argparse.ArgumentTypeError(

@@ -1,8 +1,8 @@
 #!/bin/sh
 # Builds the RPM package from the bundle folder (needs rpmbuild; D-149).
 # Usage: make_rpm.sh <bundle folder> <output folder> [version]
-# The version defaults to the one of the tool. Inside the rockylinux:8 container of
-# build_in_container.sh the package is built with rpm 4.14 and installs on RHEL/Rocky 8 and 9.
+# The version defaults to the one of the tool. Inside the rockylinux:9 container of
+# build_in_container.sh the package is built and installs on RHEL/Rocky 9.
 set -eu
 
 [ $# -ge 2 ] || { echo "usage: $0 <bundle folder> <output folder> [version]" >&2; exit 2; }

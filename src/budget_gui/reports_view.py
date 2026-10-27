@@ -238,7 +238,8 @@ class ReportsView(QWidget):
         is not ready cannot be ticked."""
         self._items = list(items)
         while self.items_grid.count():
-            widget = self.items_grid.takeAt(0).widget()
+            taken = self.items_grid.takeAt(0)
+            widget = taken.widget() if taken is not None else None
             if widget is not None:
                 widget.setParent(None)
                 widget.deleteLater()

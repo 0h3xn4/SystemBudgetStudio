@@ -41,7 +41,7 @@ DESCRIPTION = (
 # What the window needs from the system (Qt's xcb platform plugin and OpenGL); the bundle holds
 # everything else. Names of Ubuntu 22.04 and 24.04 and Debian 12.
 DEPENDS = (
-    "libc6 (>= 2.28)",
+    "libc6 (>= 2.34)",
     "libegl1",
     "libgl1",
     "libglib2.0-0",

@@ -86,7 +86,7 @@ class LayoutSettings:
             raw = raw.split(",") if raw else []
         try:
             return [int(v) for v in (raw or [])]
-        except (TypeError, ValueError):
+        except TypeError, ValueError:
             return []
 
     def set_int_list(self, key: str, values: list[int]) -> None:

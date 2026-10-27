@@ -85,8 +85,8 @@ class _RowDelegate(QStyledItemDelegate):
         self, painter: QPainter, option: QStyleOptionViewItem, index: Index
     ) -> None:
         t = theme.tokens()
-        rect = QRect(option.rect)  # type: ignore[attr-defined]
-        state = option.state  # type: ignore[attr-defined]
+        rect = QRect(option.rect)
+        state = option.state
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         inner = rect.adjusted(theme.gap(0), 1, -theme.gap(0), -1)

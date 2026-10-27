@@ -24,15 +24,16 @@ The [architecture overview](../ARCHITECTURE.md) explains the design: pure solver
 
 ```bash
 pip install -e ".[dev]"
-QT_QPA_PLATFORM=offscreen pytest                 # everything (about 30 minutes in one process: the core tests about 8, the window tests about 22)
+QT_QPA_PLATFORM=offscreen pytest                 # everything (about 17 minutes in one process: the core tests about 8, the window tests about 11)
 QT_QPA_PLATFORM=offscreen pytest tests/unit      # one folder; the quick loop while you work
+QT_QPA_PLATFORM=offscreen pytest -m "not slow"   # everything but the three tests of more than 15 seconds (about 2 minutes less); CI runs them
 pytest tests/offline                             # the no-network test
 ruff check . && ruff format --check . && mypy    # lint, format, strict types
 ```
 
-Tests are in five groups: `unit`, `regression` (hand-calculated reference cases, with the working in comments), `golden` (stored expected reports), `gui` (pytest-qt, offscreen) and `offline`. Properties are checked with Hypothesis. Tests marked `perf` time the one-week stress case and how long a worker thread may keep the window thread waiting (D-183); they fail only above three times the target (`tests/perf_limits.py`).
+Tests are in five groups: `unit`, `regression` (hand-calculated reference cases, with the working in comments), `golden` (stored expected reports), `gui` (pytest-qt, offscreen) and `offline`. Properties are checked with Hypothesis. Tests marked `slow` (the secret-in-no-problem audit and the two timing tests) are only for a quicker local loop; CI runs every test. A GUI test leaves no window behind: `tests/gui/conftest.py` closes them all after each test, because a theme or scale change restyles every widget that is still alive and each test made the next one slower. Tests marked `perf` time the one-week stress case and how long a worker thread may keep the window thread waiting (D-183); they fail only above three times the target (`tests/perf_limits.py`).
 
-CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) runs ruff, mypy and pytest on Ubuntu and Windows with Python 3.11 and 3.13, and checks that a runtime-only install (`pip install -e .`) gives a runnable `budget`. Actions are pinned to commit SHAs.
+CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) runs ruff, mypy and pytest on Ubuntu and Windows with Python 3.14, and checks that a runtime-only install (`pip install -e .`) gives a runnable `budget`. Actions are pinned to commit SHAs.
 
 ## Working on the window
 
@@ -99,7 +100,7 @@ The installers are built by CI ([`release.yml`](../../.github/workflows/release.
 ```bash
 pip install -e ".[dev]"
 packaging/build.sh                        # one-folder bundle in dist/, SBOM, licence report, bundle check
-packaging/linux/build_in_container.sh     # the Linux release, inside rockylinux:8 (old glibc): tarball, .deb, .rpm
+packaging/linux/build_in_container.sh     # the Linux release, inside rockylinux:9 (glibc 2.34): tarball, .deb, .rpm
 python packaging/linux/make_deb.py dist/system-budget-studio --out dist   # only the .deb, from a built bundle
 packaging/linux/make_rpm.sh dist/system-budget-studio dist                # only the .rpm (needs rpmbuild)
 sudo packaging/linux/test_package.sh deb dist/*.deb                       # install, check, remove (use a container)
@@ -114,7 +115,7 @@ sudo packaging/linux/test_package.sh deb dist/*.deb                       # inst
 3. Update [CHANGELOG.md](../../CHANGELOG.md): move *Unreleased* under the new version with the date.
 4. Merge to `main` through a pull request with CI green.
 5. Tag **after** the pull request is merged, and tag the merge commit: `git fetch origin && git tag vX.Y.Z origin/main && git push origin vX.Y.Z` (or, with no local clone, **Releases > Draft a new release** on GitHub: *Choose a tag*, type `vX.Y.Z`, *Create new tag on publish*, target `main`, then publish; `main` is whatever it is at that moment, so merge nothing else first, or type the commit of the release pull request as the target, otherwise the tag lands on the newest commit and the release contains it). A tag on an earlier commit has the old version in `pyproject.toml`, and the workflow refuses it (the run fails at once, nothing is attached): delete the tag and the release, and tag again. The **Installers** workflow runs: it refuses a tag that differs from the `pyproject.toml` version, builds the Linux bundle on Rocky 8 and the Windows installer and portable zip, installs and uninstalls each as an ordinary user, makes the `.deb` and the `.rpm` of the Linux bundle and installs and removes them on clean Ubuntu 22.04 and 24.04, Debian 12 and Rocky 8 and 9 containers (`packaging/linux/test_package.sh`, with the window started on a virtual X server), and uploads the artefacts: the installers, the `.deb` and `.rpm`, `SHA256SUMS.txt`, `sbom.cdx.json` and `licences.md`. Its last job (`publish`, D-144) then checks every file against the checksum lists and attaches the files to the release of the tag with `packaging/attach_release.sh`; a release that does not exist yet is created as a **draft**, so nothing becomes public by itself.
-6. Download the artefacts and carry out the manual steps of the [clean-machine checklist](../INSTALL_CHECKLIST.md) on a clean Windows and a clean Rocky 8 machine.
+6. Download the artefacts and carry out the manual steps of the [clean-machine checklist](../INSTALL_CHECKLIST.md) on a clean Windows and a clean Rocky 9 machine.
 7. Publish: write the description of the release (a release made from a tag has an empty one; say what changed, the download table and the known limits) and press **Publish** (the files are attached already). If you made the release in the browser in step 5, it is public from that moment and the files are attached by the workflow 15 to 25 minutes later: mark it *pre-release* until they are there, then edit it and make it the latest release. To attach the files of an earlier run to a release, start **Actions > Attach release files** with the run id and the tag.
 
 ## Upstream documents

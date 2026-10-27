@@ -30,7 +30,7 @@ case "$kind" in
         dpkg -s system-budget-studio | grep -q '^Status: install ok installed'
         ;;
     rpm)
-        # xcb-util-cursor, which Qt's window needs, is in EPEL on RHEL and Rocky 8 and 9
+        # xcb-util-cursor, which Qt's window needs, is in EPEL on RHEL and Rocky 9
         dnf -y install epel-release
         dnf -y install "$package" xorg-x11-server-Xvfb xauth desktop-file-utils
         rpm -q system-budget-studio
