@@ -158,7 +158,9 @@ class LinkPassesView(QWidget):
         self.tabs.addTab(self.passes_table, "Passes")
         self.tabs.addTab(self.volume_table, "Data volume")
         for index in range(self.tabs.count()):  # each table is named by its tab
-            self.tabs.widget(index).setAccessibleName(f"{self.tabs.tabText(index)} table")
+            page = self.tabs.widget(index)
+            if page is not None:
+                page.setAccessibleName(f"{self.tabs.tabText(index)} table")
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.plot)
         self.body.addWidget(self.tabs)

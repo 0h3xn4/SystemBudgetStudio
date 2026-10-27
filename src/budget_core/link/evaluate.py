@@ -252,7 +252,7 @@ def _read_pattern(
         ok = len(angles) >= 2 and all(y > x for x, y in zip(angles, angles[1:], strict=False))
         ok = ok and angles[0] >= 0.0 and angles[-1] <= 180.0
         ok = ok and all(math.isfinite(v) for v in (*angles, *gains))
-    except (OSError, ValueError, IndexError, UnicodeDecodeError, csv.Error):
+    except OSError, ValueError, IndexError, UnicodeDecodeError, csv.Error:
         ok = False
     if not ok:
         notes.add_problem(

@@ -129,7 +129,7 @@ def value_at(data: Any, path: Path_) -> Any:
     for key in path:
         try:
             node = node[key]
-        except (KeyError, IndexError, TypeError):
+        except KeyError, IndexError, TypeError:
             return None
     return node
 
@@ -419,7 +419,7 @@ class ModelDocument(QObject):
                 continue
             try:
                 save_edited_data(root / rel, state.original, state.current, _checker(state.cls))
-            except (OSError, OutputError, UnicodeDecodeError):
+            except OSError, OutputError, UnicodeDecodeError:
                 return SaveReport(
                     False,
                     tuple(written),

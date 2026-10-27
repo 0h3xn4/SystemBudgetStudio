@@ -142,7 +142,7 @@ def run_scenario(
                 hint="Increase step_s or shorten duration_s.",
             )
         ) from None
-    except (OverflowError, ValueError):
+    except OverflowError, ValueError:
         raise ScenarioRunError(
             Problem(
                 Severity.ERROR,

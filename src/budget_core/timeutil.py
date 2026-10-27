@@ -34,7 +34,7 @@ def end_in_range(start: datetime, duration_s: float) -> bool:
     overflow): a scenario that would end in the year 40000 cannot be written out."""
     try:
         end = start + timedelta(seconds=duration_s)
-    except (OverflowError, ValueError):
+    except OverflowError, ValueError:
         return False
     return MIN_YEAR <= end.year <= MAX_YEAR
 

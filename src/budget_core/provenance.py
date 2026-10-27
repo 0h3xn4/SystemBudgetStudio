@@ -79,7 +79,7 @@ def resolve_time(generated_at: datetime | None = None) -> datetime:
     if generated_at is not None:
         try:
             return generated_at.astimezone(UTC).replace(microsecond=0)
-        except (OverflowError, ValueError):
+        except OverflowError, ValueError:
             raise ProvenanceError("The generation time cannot be converted to UTC.") from None
     epoch = os.environ.get("SOURCE_DATE_EPOCH")
     if epoch is not None:
@@ -91,7 +91,7 @@ def resolve_time(generated_at: datetime | None = None) -> datetime:
             )
         try:
             moment = datetime.fromtimestamp(int(text), UTC)
-        except (OverflowError, OSError, ValueError):
+        except OverflowError, OSError, ValueError:
             moment = None
         if moment is None or moment.year > MAX_YEAR:
             raise ProvenanceError(

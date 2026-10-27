@@ -67,7 +67,7 @@ def _start(text: str) -> datetime | None:
     try:
         parsed = datetime.fromisoformat(text.strip().replace("Z", "+00:00"))
         return parsed.astimezone(UTC) if parsed.tzinfo else parsed.replace(tzinfo=UTC)
-    except (ValueError, OverflowError):  # not a date, or an offset that pushes it out of range
+    except ValueError, OverflowError:  # not a date, or an offset that pushes it out of range
         return None
 
 

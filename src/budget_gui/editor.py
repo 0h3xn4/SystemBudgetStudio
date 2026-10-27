@@ -126,8 +126,8 @@ class YamlEditor(QPlainTextEdit):
         highlight = QTextCharFormat()
         highlight.setBackground(QColor(theme.tokens().line_highlight))
         highlight.setProperty(QTextFormat.Property.FullWidthSelection, True)
-        selection.format = highlight  # type: ignore[attr-defined]
-        selection.cursor = cursor  # type: ignore[attr-defined]
+        selection.format = highlight
+        selection.cursor = cursor
         self.setExtraSelections([selection])
         self.setFocus()
 

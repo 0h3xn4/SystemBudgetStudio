@@ -233,7 +233,7 @@ class _Loader:
         except ValidationError as exc:
             self.problems.extend(explain(exc, model_cls, rel, loaded.lines))
             return None
-        except (ArithmeticError, ValueError, TypeError, RecursionError):
+        except ArithmeticError, ValueError, TypeError, RecursionError:
             # a validator hit an impossible number (overflow and the like): report the file
             self.error(
                 "FILE_INVALID",

@@ -21,6 +21,6 @@ def resolve_inside(root: Path, rel: str) -> Path | None:
     try:
         base = Path(root).resolve()
         target = (base / rel).resolve()
-    except (OSError, RuntimeError, ValueError):
+    except OSError, RuntimeError, ValueError:
         return None
     return target if target.is_relative_to(base) else None
