@@ -185,6 +185,7 @@ The window keeps no Qt settings file (D-105): Qt's dialogs would write the folde
 | `Ctrl+Shift+X` | Add an expendable (Edit menu) | in the window |
 | `Ctrl+Shift+G` / `Ctrl+Shift+T` | Add a ground station / an imaging target (Edit menu) | in the window |
 | `Ctrl+Shift+L` | Add a link (Edit menu) | in the window |
+| `Ctrl+Shift+B` | Add an Eb/N0 table entry (Edit menu) | in the window |
 | `Ctrl+Shift+F` | Focused view on or off (View menu) | in the window |
 | `Ctrl+C` / `Ctrl+V` | In a grid: copy the cells as text with tabs / paste a block, with a preview for more than one cell | in the window |
 | `Ctrl+D` / `Delete` | In a grid: fill down / empty the optional cells | in the window |

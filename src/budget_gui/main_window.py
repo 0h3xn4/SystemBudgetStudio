@@ -9,6 +9,7 @@ from dataclasses import replace
 from datetime import datetime
 from functools import partial
 from pathlib import Path
+from typing import Any
 
 from PySide6.QtCore import QMimeData, Qt, QThread, QTimer, Signal
 from PySide6.QtGui import (
@@ -35,7 +36,16 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
-from budget_core.model import Expendable, GroundStation, Link, Orbit, Scenario, Target
+from budget_core.model import (
+    Ebn0Table,
+    Expendable,
+    GroundStation,
+    Link,
+    Orbit,
+    Scenario,
+    Target,
+)
+from budget_core.new_ebn0 import Ebn0Answers, check_ebn0, ebn0_entry_data, ebn0_table_data
 from budget_core.new_expendable import ExpendableAnswers, expendable_data
 from budget_core.new_link import LinkAnswers, link_data
 from budget_core.new_scenario import ScenarioAnswers, scenario_data
@@ -45,6 +55,7 @@ from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui import problem_class as pc
 from budget_gui import theme
+from budget_gui.add_ebn0_dialog import AddEbn0Dialog
 from budget_gui.add_expendable_dialog import AddExpendableDialog
 from budget_gui.add_link_dialog import AddLinkDialog
 from budget_gui.add_scenario_dialog import AddScenarioDialog
@@ -397,6 +408,10 @@ class MainWindow(QMainWindow):
         self.add_link_action.setShortcut(QKeySequence("Ctrl+Shift+L"))
         self.add_link_action.triggered.connect(self.add_link)
         edit_menu.addAction(self.add_link_action)
+        self.add_ebn0_action = QAction("Add Eb/&N0 entry…", self)
+        self.add_ebn0_action.setShortcut(QKeySequence("Ctrl+Shift+B"))
+        self.add_ebn0_action.triggered.connect(self.add_ebn0_entry)
+        edit_menu.addAction(self.add_ebn0_action)
         for action in self.model_edit_actions():
             action.setEnabled(False)  # until a project is open that loads
 
@@ -679,6 +694,7 @@ class MainWindow(QMainWindow):
             self.add_ground_station_action,
             self.add_imaging_target_action,
             self.add_link_action,
+            self.add_ebn0_action,
         )
 
     def _ask_scenario(
@@ -849,6 +865,68 @@ class MainWindow(QMainWindow):
             return None
         return dialog.answers()
 
+    def _ebn0_pairs(self) -> list[tuple[str, str]]:
+        """The modulation and coding pairs of the Eb/N0 table as it is now in the window: the
+        entries added and not saved yet count, a project without a table file has none."""
+        rel = "config/ebn0_table.yaml"
+        if not self.document.has(rel):
+            return []
+        pairs: list[tuple[str, str]] = []
+        for entry in self.document.data(rel).get("entries") or []:
+            if isinstance(entry, dict):
+                modulation, coding = entry.get("modulation"), entry.get("coding")
+                if isinstance(modulation, str) and isinstance(coding, str):
+                    pairs.append((modulation, coding))
+        return pairs
+
+    def _ask_ebn0(self, pairs: list[tuple[str, str]]) -> Ebn0Answers | None:
+        """The form; the tests put their own answers here."""
+        dialog = AddEbn0Dialog(pairs, self)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.answers()
+
+    def add_ebn0_entry(self) -> bool:
+        """Edit > Add Eb/N0 entry: a modulation and coding pair of `config/ebn0_table.yaml` with a
+        placeholder for the Eb/N0 it requires, from any area. One undo step; Save writes it."""
+        if self.session.project is None:
+            return False
+        rel = "config/ebn0_table.yaml"
+        pairs = self._ebn0_pairs()
+        answers = self._ask_ebn0(pairs)
+        if answers is None:
+            return False
+        issues = check_ebn0(answers, existing_pairs=pairs)
+        if issues:
+            self.statusBar().showMessage(issues[0].message)
+            return False
+        try:
+            entry = ebn0_entry_data(answers)
+            table = None if self.document.has(rel) else ebn0_table_data(answers)
+        except ValueError:
+            self.statusBar().showMessage("The answers do not make a valid Eb/N0 entry.")
+            return False
+        what = "Add Eb/N0 entry"
+        if table is not None:
+            added = self.document.add_file(rel, Ebn0Table, table, what)
+        else:
+
+            def append(data: dict[str, Any]) -> None:
+                data["entries"] = [*(data.get("entries") or []), entry]
+
+            added = self.document.edit([(rel, append)], what)
+        if not added:
+            self.statusBar().showMessage(
+                "The Eb/N0 table could not take the entry (a file removed in this session? Undo "
+                "it, or Save first)."
+            )
+            return False
+        self.statusBar().showMessage(
+            "Added an Eb/N0 entry with a placeholder for the Eb/N0 it requires: fill it in "
+            f"Model > Inputs. Save (Ctrl+S) writes {rel}; Undo with Ctrl+Z."
+        )
+        return True
+
     def add_link(self) -> bool:
         """Edit > Add link: the structure of an RF link from a form, from any area; the sourced
         numbers are placeholders for Model > Inputs. One undo step; Save writes the file."""
@@ -871,8 +949,7 @@ class MainWindow(QMainWindow):
                 "(Edit > Add ground station)."
             )
             return False
-        table = project.config.ebn0_table
-        pairs = [(e.modulation, e.coding) for e in table.entries] if table is not None else []
+        pairs = self._ebn0_pairs()
         added = {
             r.removeprefix("links/").removesuffix(".yaml") for r in self.document.rels("links/")
         }
