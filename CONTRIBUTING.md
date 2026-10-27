@@ -9,7 +9,7 @@ git clone https://github.com/0h3xn4/systembudgetstudio.git
 cd systembudgetstudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
-QT_QPA_PLATFORM=offscreen pytest                       # about 30 minutes (core 8, window 22); quick loop: pytest tests/unit. Windows PowerShell: $env:QT_QPA_PLATFORM="offscreen"; pytest
+QT_QPA_PLATFORM=offscreen pytest                       # about 17 minutes (core 8, window 11); quick loop: pytest tests/unit or pytest -m "not slow". Windows PowerShell: $env:QT_QPA_PLATFORM="offscreen"; pytest
 ruff check . && ruff format --check . && mypy
 ```
 

@@ -24,13 +24,14 @@ The [architecture overview](../ARCHITECTURE.md) explains the design: pure solver
 
 ```bash
 pip install -e ".[dev]"
-QT_QPA_PLATFORM=offscreen pytest                 # everything (about 30 minutes in one process: the core tests about 8, the window tests about 22)
+QT_QPA_PLATFORM=offscreen pytest                 # everything (about 17 minutes in one process: the core tests about 8, the window tests about 11)
 QT_QPA_PLATFORM=offscreen pytest tests/unit      # one folder; the quick loop while you work
+QT_QPA_PLATFORM=offscreen pytest -m "not slow"   # everything but the three tests of more than 15 seconds (about 2 minutes less); CI runs them
 pytest tests/offline                             # the no-network test
 ruff check . && ruff format --check . && mypy    # lint, format, strict types
 ```
 
-Tests are in five groups: `unit`, `regression` (hand-calculated reference cases, with the working in comments), `golden` (stored expected reports), `gui` (pytest-qt, offscreen) and `offline`. Properties are checked with Hypothesis. Tests marked `perf` time the one-week stress case and how long a worker thread may keep the window thread waiting (D-183); they fail only above three times the target (`tests/perf_limits.py`).
+Tests are in five groups: `unit`, `regression` (hand-calculated reference cases, with the working in comments), `golden` (stored expected reports), `gui` (pytest-qt, offscreen) and `offline`. Properties are checked with Hypothesis. Tests marked `slow` (the secret-in-no-problem audit and the two timing tests) are only for a quicker local loop; CI runs every test. A GUI test leaves no window behind: `tests/gui/conftest.py` closes them all after each test, because a theme or scale change restyles every widget that is still alive and each test made the next one slower. Tests marked `perf` time the one-week stress case and how long a worker thread may keep the window thread waiting (D-183); they fail only above three times the target (`tests/perf_limits.py`).
 
 CI ([`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)) runs ruff, mypy and pytest on Ubuntu and Windows with Python 3.14, and checks that a runtime-only install (`pip install -e .`) gives a runnable `budget`. Actions are pinned to commit SHAs.
 
