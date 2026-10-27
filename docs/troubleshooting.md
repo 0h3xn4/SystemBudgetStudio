@@ -170,6 +170,10 @@ A link joins the spacecraft and a ground station, so **Add link** needs one: add
 
 The pair is in `config/ebn0_table.yaml` already, or differs from one in it only in capitals (the loader compares the text exactly, so `qpsk` would not match `QPSK`). Use the pair that is there; the link form offers it. The Eb/N0 the pair requires is a placeholder (`source: TBD`) until you fill it in *Model → Inputs*; the link shows *n/a* meanwhile. See [describe a link](user-manual/link-budget.md#how-do-i-describe-a-link).
 
+### Remove from project: "is used by the scenario(s) … or the link(s) …"
+
+A scenario still lists the ground station or imaging target (under **Sites** in *Model → Scenario*, or in a rule), or a link names the ground station as its `peer`. The form shows the reason and keeps *Remove* off. Untick the site and delete its rules in the scenario, and remove the link (or set another `peer` in its file), then remove the station; the check uses what is in the window, so you do not have to save in between. See [ground stations and targets](user-manual/scenarios.md#how-do-i-add-a-ground-station-or-an-imaging-target).
+
 ### Save asks "Saving deletes 1 file from the project folder"
 
 You removed a unit with **Remove unit**. Saving deletes its file (`units/<id>.yaml`) and takes it out of every spacecraft mode. Answer **No** to keep the file, then **Undo** (Ctrl+Z) the removal. A deleted file is not in the undo history any more.

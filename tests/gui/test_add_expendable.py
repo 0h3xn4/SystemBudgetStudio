@@ -124,9 +124,11 @@ def test_the_same_id_twice_is_refused_by_the_form_and_a_cancel_changes_nothing( 
     window = MainWindow()
     qtbot.addWidget(window, before_close_func=lambda w: w.editors.discard_all_changes())
     window.open_project(tmp_path / "p")
+    before = window.document.rels("expendables/")  # the expendables of the project
     window._ask_expendable = lambda *_a: None  # type: ignore[method-assign]
     assert window.add_expendable() is False
-    assert window.document.rels("expendables/") == []  # nothing was added
+    assert window.document.rels("expendables/") == before  # nothing was added
+    assert not window.document.is_modified()
 
 
 def test_a_blank_project_can_have_an_expendable_before_it_has_a_unit(  # type: ignore[no-untyped-def]
