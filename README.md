@@ -8,7 +8,7 @@ An offline desktop and command-line tool that computes **power, mass, thermal an
 
 [![CI](https://github.com/0h3xn4/systembudgetstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/systembudgetstudio/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/0h3xn4/systembudgetstudio)](https://github.com/0h3xn4/systembudgetstudio/releases/latest)
-![Python 3.11 to 3.13](https://img.shields.io/badge/python-3.11%20to%203.13-blue)
+![Python 3.14 and newer](https://img.shields.io/badge/python-3.14%2B-blue)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
 
 ![System Budget Studio showing the power timeline of the 250 kg example satellite: generation, demand and state of charge over one orbit, with eclipse shading and a list of problems](docs/images/ui-overhaul/power-timeline-light.png)
@@ -28,15 +28,15 @@ Download the installer for your system from the [Releases page](https://github.c
 | System | File | What to do |
 |---|---|---|
 | Windows 10/11 | `system-budget-studio-<version>-windows-x64-setup.exe` | Run it; it asks only for the folder, and puts `budget` on your user PATH (open a new terminal afterwards). A portable `…-portable.zip` also exists: extract it and start `system-budget-studio.exe`. |
-| Linux, no administrator rights (RHEL/Rocky 8 or newer, Ubuntu LTS) | `system-budget-studio-<version>-linux-x86_64.tar.gz` | `tar xzf` it, `cd system-budget-studio`, run `./install.sh`. |
+| Linux, no administrator rights (RHEL/Rocky 9 or newer, Ubuntu LTS from 22.04) | `system-budget-studio-<version>-linux-x86_64.tar.gz` | `tar xzf` it, `cd system-budget-studio`, run `./install.sh`. |
 | Ubuntu 22.04 or newer, Debian 12 | `system-budget-studio_<version>-1_amd64.deb` | `sudo apt install ./system-budget-studio_<version>-1_amd64.deb` |
-| RHEL or Rocky 8 or 9 | `system-budget-studio-<version>-1.x86_64.rpm` | `sudo dnf install epel-release` once (the window needs `xcb-util-cursor` from EPEL), then `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` |
+| RHEL or Rocky 9 | `system-budget-studio-<version>-1.x86_64.rpm` | `sudo dnf install epel-release` once (the window needs `xcb-util-cursor` from EPEL), then `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` |
 
 Check the download against `SHA256SUMS-windows.txt` or `SHA256SUMS-linux.txt` from the same page. The installers are unsigned, so Windows may show a warning on first run. Details, uninstalling and the Linux libraries the window needs are in [getting started](docs/getting-started.md#installers). To work on the code or run from source, use the quick start below.
 
 ## Quick start (from source)
 
-You need Python 3.11, 3.12 or 3.13 and git. On Linux also read the [prerequisites](docs/getting-started.md#1-prerequisites) (the window needs one system library).
+You need Python 3.14 or newer and git. On Linux also read the [prerequisites](docs/getting-started.md#1-prerequisites) (the window needs one system library).
 
 ```bash
 git clone https://github.com/0h3xn4/systembudgetstudio.git
@@ -86,8 +86,8 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 
 ## Requirements
 
-- Python 3.11, 3.12 or 3.13 (checked in CI on Windows and Ubuntu with 3.11 and 3.13).
-- Windows 10/11 or Linux (RHEL/Rocky 8 or newer, Ubuntu LTS).
+- Python 3.14 or newer (checked in CI on Windows and Ubuntu with 3.14).
+- Windows 10/11 or Linux (RHEL/Rocky 9 or newer, Ubuntu LTS from 22.04, Debian 12 or newer).
 - No administrator rights and no internet access are needed after the install. For an air-gapped machine see [offline install](docs/getting-started.md#offline-install).
 - The installers above are self-contained; Python is needed only to install from source.
 
@@ -100,7 +100,7 @@ Status: version 1.6.0, all planned milestones (M0 to M6) are done and tested ([p
 Known limits, stated plainly:
 
 - The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
-- The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 8 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
+- The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 9 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
 - The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 8.
 - The XLSX files were not opened in Excel.
 

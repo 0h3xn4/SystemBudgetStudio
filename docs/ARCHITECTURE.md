@@ -136,9 +136,9 @@ Dark and light themes generated from the tokens of `budget_gui/theme/` (Inter an
 ## 8. Packaging, CI, supply chain
 
 - `uv`/`pip-compile --generate-hashes` lock files for runtime and dev; wheelhouse vendoring script for mirrored builds.
-- PyInstaller onedir per OS with two executables (`system-budget-studio`, `budget`); Windows per-user Inno Setup installer (no admin) plus portable zip; Linux tarball with `install.sh`/`uninstall.sh` (per user), built in a `rockylinux:8` container for the glibc 2.28 baseline (D-088). `packaging/licence_check.py` enforces permissive or LGPL runtime licences (D-089).
-- CI matrix: {windows, ubuntu} × {3.11, 3.13}: ruff, mypy --strict, pytest (unit, regression, golden, offline, gui with `QT_QPA_PLATFORM=offscreen`). Tag builds: installers, CycloneDX SBOM, licence report. Actions pinned by SHA.
-- Install check on 3.13 fails the build if any runtime dependency lacks a wheel.
+- PyInstaller onedir per OS with two executables (`system-budget-studio`, `budget`); Windows per-user Inno Setup installer (no admin) plus portable zip; Linux tarball with `install.sh`/`uninstall.sh` (per user), built in a `rockylinux:9` container for the glibc 2.34 baseline (D-088, D-202). `packaging/licence_check.py` enforces permissive or LGPL runtime licences (D-089).
+- CI matrix: {windows, ubuntu} × {3.14}: ruff, mypy --strict, pytest (unit, regression, golden, offline, gui with `QT_QPA_PLATFORM=offscreen`). Tag builds: installers, CycloneDX SBOM, licence report. Actions pinned by SHA.
+- Install check on 3.14 fails the build if any runtime dependency lacks a wheel.
 
 ## 9. Testing strategy
 

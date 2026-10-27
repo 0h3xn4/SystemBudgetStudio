@@ -8,7 +8,7 @@ This page takes you from nothing to a first result: install the tool, run a budg
 
 | You need | Check with | Notes |
 |---|---|---|
-| Python 3.11, 3.12 or 3.13 | `python3 --version` (Windows: `py -3 --version`) | 3.14 and newer are not supported yet. |
+| Python 3.14 or newer | `python3 --version` (Windows: `py -3 --version`) | Older versions (3.13 and below) are not supported. |
 | git | `git --version` | Only to download the source. You can also download a ZIP from GitHub. |
 | A terminal | | Windows: PowerShell. Linux: any shell. |
 

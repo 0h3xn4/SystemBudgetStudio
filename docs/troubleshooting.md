@@ -8,7 +8,7 @@ This page lists the errors you are most likely to meet when installing and start
 
 ### `pip install -e .` fails with "requires a different Python" or "No matching distribution"
 
-The tool supports Python 3.11, 3.12 and 3.13 (not 3.14 or newer, not 3.10 or older). Check `python3 --version`, install a supported one, and create the virtual environment with it: `python3.13 -m venv .venv`.
+The tool needs Python 3.14 or newer (3.13 and older are not supported). Check `python3 --version`, install 3.14, and create the virtual environment with it: `python3.14 -m venv .venv`.
 
 ### `pip` says "externally-managed-environment"
 

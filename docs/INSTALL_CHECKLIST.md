@@ -15,9 +15,9 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 - [ ] Uninstall from *Apps and features*: the program folder, the Start menu entry and the PATH entry are gone (check *Environment Variables* for your user), your project folder is untouched. (CI: silent uninstall and the PATH entry.)
 - [ ] The portable zip starts from a USB stick or a folder, installs nothing and makes no registry entry; the only file the window writes outside it is `layout.ini` in `%APPDATA%\System Budget Studio\`, and nothing at all with `BUDGET_NO_LAYOUT=1`. (Manual.)
 
-## RHEL or Rocky Linux 8 (ordinary user)
+## RHEL or Rocky Linux 9 (ordinary user)
 
-- [ ] `tar xzf` the bundle and run `./install.sh` without sudo: it installs to `~/.local/opt/system-budget-studio` and prints *Self-test passed.* (CI: in a rockylinux:8 container as an unprivileged user.)
+- [ ] `tar xzf` the bundle and run `./install.sh` without sudo: it installs to `~/.local/opt/system-budget-studio` and prints *Self-test passed.* (CI: in a rockylinux:9 container as an unprivileged user.)
 - [ ] The window starts on a graphical session (X11 or Wayland with XWayland) and shows the window in the system's colour scheme (light or dark; *View > Theme* switches it live). (Manual: needs the desktop libraries listed in the guide.)
 - [ ] `budget run`, `budget power-timeline` and `budget compare` on the example projects write their files. (Manual; the CI runs `budget self-test`.)
 - [ ] `~/.local/opt/system-budget-studio/uninstall.sh` removes the program, the links and the menu entry. (CI.)
@@ -33,13 +33,13 @@ Run this on a machine (or a fresh user account) that has never had System Budget
 - [ ] The menu entry *System Budget Studio* is there with the logo as its icon; the window starts from it and shows the logo in the title bar and the task bar. (Manual; CI starts the window on a virtual X server.)
 - [ ] `sudo apt remove system-budget-studio` takes away `/opt/system-budget-studio`, the two links in `/usr/bin`, the menu entry and the icons; your project folders are untouched. (CI.)
 
-## RHEL or Rocky 8 or 9, with the .rpm (administrator)
+## RHEL or Rocky 9, with the .rpm (administrator)
 
-- [ ] `sudo dnf install epel-release`, then `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` installs the package and the libraries it needs (`xcb-util-cursor` comes from EPEL); `budget --version` and `budget self-test` pass. (CI: rockylinux:8 and :9 containers, as root.)
+- [ ] `sudo dnf install epel-release`, then `sudo dnf install ./system-budget-studio-<version>-1.x86_64.rpm` installs the package and the libraries it needs (`xcb-util-cursor` comes from EPEL); `budget --version` and `budget self-test` pass. (CI: a rockylinux:9 container, as root.)
 - [ ] The menu entry is there with the logo, and the window starts from it. (Manual; CI starts the window on a virtual X server.)
 - [ ] `sudo dnf remove system-budget-studio` takes away everything the package installed. (CI.)
 
-## The window, on a real screen (new in 1.1.0, redone for 1.2.0; Windows, Rocky 8 and Ubuntu)
+## The window, on a real screen (new in 1.1.0, redone for 1.2.0; Windows, Rocky 9 and Ubuntu)
 
 The window (redesigned in 1.1.0 and 1.2.0) was built and tested on a virtual (offscreen) display, which has a pixel ratio of 1. These steps need a person at a real screen; at least one of them on a 4K or 200 % display.
 

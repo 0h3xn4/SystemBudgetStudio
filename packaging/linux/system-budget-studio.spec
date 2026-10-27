@@ -15,7 +15,7 @@ ExclusiveArch:  x86_64
 # The bundle brings Python, Qt and every library; what rpm would find in it is not what the
 # system provides, so nothing is generated and the window's system libraries are listed instead.
 AutoReqProv:    no
-Requires:       glibc >= 2.28
+Requires:       glibc >= 2.34
 Requires:       mesa-libEGL
 Requires:       mesa-libGL
 Requires:       libxkbcommon
@@ -26,7 +26,7 @@ Requires:       xcb-util-wm
 Requires:       xcb-util-image
 Requires:       xcb-util-keysyms
 Requires:       xcb-util-renderutil
-# in EPEL on RHEL and Rocky 8 and 9 (not in their own repositories): enable EPEL first
+# in EPEL on RHEL and Rocky 9 (not in their own repositories): enable EPEL first
 Requires:       xcb-util-cursor
 
 %global debug_package %{nil}
