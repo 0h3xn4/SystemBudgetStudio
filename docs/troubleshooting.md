@@ -164,7 +164,11 @@ The latitude is between -90 and 90 degrees, the longitude between -180 and 180, 
 
 ### Add link: "add a ground station first", or the modulation and coding are refused
 
-A link joins the spacecraft and a ground station, so **Add link** needs one: add it first (Edit → Add ground station). The ground station is chosen from the list, the frequency is in **megahertz** (2200 for 2.2 GHz; a value in hertz is refused) and the data rates are in bit/s, separated by semicolons. The modulation and coding must be a pair of `config/ebn0_table.yaml` (the loader refuses any other, `REF_UNKNOWN_MODULATION`); while that table has no entry you type them. The transmit power, the antenna gain, the G/T, the required margin and the losses are written as placeholders, so the link shows *n/a* and the Problems panel lists them until you fill them in *Model → Inputs*. See [describe a link](user-manual/link-budget.md#how-do-i-describe-a-link).
+A link joins the spacecraft and a ground station, so **Add link** needs one: add it first (Edit → Add ground station). The ground station is chosen from the list, the frequency is in **megahertz** (2200 for 2.2 GHz; a value in hertz is refused) and the data rates are in bit/s, separated by semicolons. The modulation and coding must be a pair of `config/ebn0_table.yaml` (the loader refuses any other, `REF_UNKNOWN_MODULATION`); while that table has no entry you type them; **Edit → Add Eb/N0 entry** (Ctrl+Shift+B) adds a pair to the table. The transmit power, the antenna gain, the G/T, the required margin and the losses are written as placeholders, so the link shows *n/a* and the Problems panel lists them until you fill them in *Model → Inputs*. See [describe a link](user-manual/link-budget.md#how-do-i-describe-a-link).
+
+### Add Eb/N0 entry: "The table has this modulation and coding already"
+
+The pair is in `config/ebn0_table.yaml` already, or differs from one in it only in capitals (the loader compares the text exactly, so `qpsk` would not match `QPSK`). Use the pair that is there; the link form offers it. The Eb/N0 the pair requires is a placeholder (`source: TBD`) until you fill it in *Model → Inputs*; the link shows *n/a* meanwhile. See [describe a link](user-manual/link-budget.md#how-do-i-describe-a-link).
 
 ### Save asks "Saving deletes 1 file from the project folder"
 

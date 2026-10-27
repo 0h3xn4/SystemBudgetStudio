@@ -49,6 +49,7 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   new_scenario.py     the orbit and scenario files of the Add scenario form: the checks and the data (D-189)
   new_expendable.py   the file of a new expendable from the Add expendable form: a mass per mission phase (D-197)
   new_site.py         the file of a new ground station or imaging target (D-198)
+  new_ebn0.py         a row of the Eb/N0 table from the Add Eb/N0 entry form: the pair, with a placeholder for the required value (D-200)
   new_link.py         the file of a new link: the structure from the form, every sourced number a placeholder (D-199)
   new_mode.py         the file of a new spacecraft mode: where its assignments start, the checks, the scenarios that name a mode (D-188)
   compare.py, compare_run.py   comparison of two revisions or scenarios (D-084, D-085)
@@ -60,7 +61,7 @@ src/budget_gui/       PySide6; no logic beyond presentation; docs/DESIGN.md
                       inspector.py, provenance_panel.py, status_bar.py, settings_popover.py, command_palette.py, run_controller.py,
                       start_here.py (the Start here card: four steps to a first result, D-190)
                       model editing: model_document.py (one undo stack; adds and removes files), model_pages.py (the Units, Power modes and Inputs pages),
-                      add_unit_dialog.py (the Add unit form), add_mode_dialog.py (the Add spacecraft mode form), add_scenario_dialog.py (the Add orbit and scenario form), add_expendable_dialog.py, add_site_dialog.py (ground station and imaging target) and add_link_dialog.py (the other Add forms; each has a `MainWindow._ask_*` point that tests replace), grid_models.py, grid_view.py, frozen_view.py, delegates.py, scenario_editor.py, guided.py (the project wizard)
+                      add_unit_dialog.py (the Add unit form), add_mode_dialog.py (the Add spacecraft mode form), add_scenario_dialog.py (the Add orbit and scenario form), add_expendable_dialog.py, add_site_dialog.py (ground station and imaging target), add_link_dialog.py and add_ebn0_dialog.py (the other Add forms; each has a `MainWindow._ask_*` point that tests replace), grid_models.py, grid_view.py, frozen_view.py, delegates.py, scenario_editor.py, guided.py (the project wizard)
                       results: timeline_view.py, link_view.py, scenario_view.py, compare_view.py, reports_view.py, plot_widget.py,
                       plot_metrics.py, plot_prepare.py, timeline.py, time_axis.py (long computations in QThread workers)
 ```

@@ -4,6 +4,7 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Add Eb/N0 entry.** *Edit → Add Eb/N0 entry* (Ctrl+Shift+B, also in Ctrl+K) adds a modulation and coding pair to `config/ebn0_table.yaml` from a form, with a placeholder (`source: TBD`) for the Eb/N0 that the pair requires, to be filled in **Model → Inputs**. A link takes its modulation and coding from this table and a blank project has none, so until now a link of a blank project could not get a required Eb/N0 without editing the file. The pair is refused if the table has it already (also in other capitals); a project without a table file gets one. One undo step; Save writes the file. *Add link* now offers the pairs as they are in the window, including an entry added and not saved yet. Decision D-200. No equation or file format changed.
 - **Documentation checked against 1.6.0.** The README, the tips, the getting-started page, the FAQ, the troubleshooting page, the manual pages, the in-app guide chapters (quick start, projects, mass, link and scenarios), the architecture and design pages and the developer page now name the forms that add an expendable, a ground station, an imaging target and a link (with their shortcuts), the single-click setting, the power-mode drop-down and the 180-day scenario; the sentence that said ground stations, links and expendables were still files is gone. New troubleshooting entries for the three forms and two FAQ entries. The developer page describes how an *Add* form is built. No program change.
 
 ## [1.6.0] - 2026-10-26

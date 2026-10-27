@@ -52,7 +52,7 @@ With the wizard (File → New project; pick *Blank project* to start from nothin
 
 ### Can I add a ground station, an expendable or a link in the window?
 
-Yes: the **Edit** menu has **Add expendable** (Ctrl+Shift+X), **Add ground station** (Ctrl+Shift+G), **Add imaging target** (Ctrl+Shift+T) and **Add link** (Ctrl+Shift+L), next to **Add unit**, **Add spacecraft mode** and **Add scenario**. A form never invents a number; the numbers of a link that come from a data sheet are placeholders for *Model → Inputs*. Antenna patterns, attenuation entries and the Eb/N0 table are still edited in the file ([describe a link](user-manual/link-budget.md#how-do-i-describe-a-link)).
+Yes: the **Edit** menu has **Add expendable** (Ctrl+Shift+X), **Add ground station** (Ctrl+Shift+G), **Add imaging target** (Ctrl+Shift+T) and **Add link** (Ctrl+Shift+L), next to **Add unit**, **Add spacecraft mode** and **Add scenario**. A form never invents a number; the numbers of a link that come from a data sheet are placeholders for *Model → Inputs*. **Add Eb/N0 entry** (Ctrl+Shift+B) adds a modulation and coding pair to the Eb/N0 table that a link needs. Antenna patterns and attenuation entries are still edited in the file ([describe a link](user-manual/link-budget.md#how-do-i-describe-a-link)).
 
 ### Do I have to double-click?
 
