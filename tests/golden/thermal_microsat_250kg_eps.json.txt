@@ -2534,13 +2534,16 @@
   ],
   "problems": [
     {
+      "actual": 2.70919292,
       "code": "THERMAL_MARGIN_INSUFFICIENT",
       "file": "units/radio.yaml",
       "hint": "The margin is set in config/thermal_environment.yaml.",
+      "limit": 5.0,
       "line": null,
       "message": "Unit 'radio' is within its operating limits in a thermal case but closer than the required temperature margin.",
       "path": "temperature_limits (case hot)",
-      "severity": "error"
+      "severity": "error",
+      "unit": "K"
     }
   ],
   "provenance": {
