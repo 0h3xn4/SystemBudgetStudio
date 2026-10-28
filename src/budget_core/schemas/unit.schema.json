@@ -148,6 +148,38 @@
       "title": "PowerMode",
       "type": "object"
     },
+    "ProvenanceEntry": {
+      "additionalProperties": false,
+      "description": "The source of one input (or, under `*`, of every input without an entry of its own).",
+      "properties": {
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative",
+            "tbd"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "title": "ProvenanceEntry",
+      "type": "object"
+    },
     "TemperatureLimits": {
       "additionalProperties": false,
       "description": "Operating and survival limits of a unit; a limit that is not given is not checked.",
@@ -284,9 +316,16 @@
       "default": null,
       "title": "Phases"
     },
+    "provenance": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ProvenanceEntry"
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
     "schema_version": {
-      "const": 2,
-      "default": 2,
+      "const": 3,
+      "default": 3,
       "title": "Schema Version",
       "type": "integer"
     },

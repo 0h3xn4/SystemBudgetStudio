@@ -1,4 +1,4 @@
-schema_version: 2
+schema_version: 3
 kind: unit
 name: Camera payload
 subsystem: PL

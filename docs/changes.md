@@ -6,6 +6,17 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-10-29: the inputs digest changes once (file format revision)
+
+**What changed.** The model digest of [provenance.md](models/provenance.md) is taken from what the tool loaded, and that includes the `schema_version` of each file. The format revision for provenance ([D-213](DECISIONS.md)) moved every file kind up one version, so the digest of every project is a different value than before. No input and no result changed.
+
+| Case | Before | After |
+|---|---|---|
+| Inputs digest of a project | value of the release before the revision | a new value, the same for the old file and the new one (a file of the old version is migrated in memory to the new version) |
+| Marking inputs with `provenance:` or `status:` | not possible | does not change the digest |
+
+**Effect.** `budget verify` of an export made by an earlier release reports DIFFERENT for the digest although the inputs are the same; the file hashes tell which. The golden files change by their digest lines only. Test: `tests/unit/test_provenance_format.py` (marking changes neither the digest nor the environment key; a real change still does).
+
 ## 2026-10-28: a comparison pairs mass limits by phase and limit name
 
 **What was wrong.** The mass limits table (phase, limit, value, total, margin, status) named only its first column, the phase, as its key. A comparison paired the rows of two revisions by the phase and, for a phase with several limits, by their order (`phase`, `phase #2`), so reordering or inserting a limit paired a limit with another one, and a renamed limit showed as a changed text cell.

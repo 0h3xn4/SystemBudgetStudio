@@ -109,6 +109,6 @@ Libraries | pinned for-golden-tests
 Project | Thermal test
 Project revision | r1
 Scenario | static (no scenario)
-Inputs digest (model) | sha256:5bef304ab1dbff22689c00320b0f5ed086c59c99c5a23dbdb53449921fdcc683
+Inputs digest (model) | sha256:c51435aeae5340d1d83ab37bb984daa8b88f1964949527c668f624e6b21ad12e
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

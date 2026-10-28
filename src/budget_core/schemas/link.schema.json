@@ -93,6 +93,38 @@
       "title": "AntennaPattern",
       "type": "object"
     },
+    "ProvenanceEntry": {
+      "additionalProperties": false,
+      "description": "The source of one input (or, under `*`, of every input without an entry of its own).",
+      "properties": {
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative",
+            "tbd"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "title": "ProvenanceEntry",
+      "type": "object"
+    },
     "Receiver": {
       "additionalProperties": false,
       "description": "Either a given G/T, or an antenna with the system noise temperature and feed loss.",
@@ -152,7 +184,7 @@
     },
     "Sourced": {
       "additionalProperties": false,
-      "description": "A number from a standard, policy or data sheet. `source: TBD` or a null value marks a\nplaceholder that must be replaced before results are trusted (spec constraint 15).",
+      "description": "A number from a standard, policy or data sheet. `source: TBD` or a null value marks a\nplaceholder that must be replaced before results are trusted (spec constraint 15). `status`\nsays what kind of number it is; it changes no result (D-213).",
       "properties": {
         "note": {
           "default": "",
@@ -162,6 +194,16 @@
         "source": {
           "minLength": 1,
           "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative"
+          ],
+          "title": "Status",
           "type": "string"
         },
         "value": {
@@ -333,6 +375,13 @@
     "polarisation_loss_db": {
       "$ref": "#/$defs/Sourced"
     },
+    "provenance": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ProvenanceEntry"
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
     "receiver": {
       "$ref": "#/$defs/Receiver"
     },
@@ -340,8 +389,8 @@
       "$ref": "#/$defs/Sourced"
     },
     "schema_version": {
-      "const": 1,
-      "default": 1,
+      "const": 2,
+      "default": 2,
       "title": "Schema Version",
       "type": "integer"
     },

@@ -72,6 +72,38 @@
       ],
       "title": "MassProperties",
       "type": "object"
+    },
+    "ProvenanceEntry": {
+      "additionalProperties": false,
+      "description": "The source of one input (or, under `*`, of every input without an entry of its own).",
+      "properties": {
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative",
+            "tbd"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "title": "ProvenanceEntry",
+      "type": "object"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -112,9 +144,16 @@
       "title": "Name",
       "type": "string"
     },
+    "provenance": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ProvenanceEntry"
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
     "schema_version": {
-      "const": 1,
-      "default": 1,
+      "const": 2,
+      "default": 2,
       "title": "Schema Version",
       "type": "integer"
     },

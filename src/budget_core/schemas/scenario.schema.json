@@ -1,5 +1,37 @@
 {
   "$defs": {
+    "ProvenanceEntry": {
+      "additionalProperties": false,
+      "description": "The source of one input (or, under `*`, of every input without an entry of its own).",
+      "properties": {
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative",
+            "tbd"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "title": "ProvenanceEntry",
+      "type": "object"
+    },
     "ScenarioRule": {
       "additionalProperties": false,
       "properties": {
@@ -152,6 +184,13 @@
       "default": null,
       "title": "Orbit"
     },
+    "provenance": {
+      "additionalProperties": {
+        "$ref": "#/$defs/ProvenanceEntry"
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
     "rules": {
       "items": {
         "$ref": "#/$defs/ScenarioRule"
@@ -161,8 +200,8 @@
       "type": "array"
     },
     "schema_version": {
-      "const": 2,
-      "default": 2,
+      "const": 3,
+      "default": 3,
       "title": "Schema Version",
       "type": "integer"
     },

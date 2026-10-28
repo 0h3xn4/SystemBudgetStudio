@@ -275,8 +275,9 @@ def test_a_placeholder_stays_a_placeholder_whatever_its_status(tmp_path: Path) -
         "  source: test fixture",
         "  source: TBD\n  status: estimate",
     )
-    power = load_project(root).project
-    assert power is not None or True  # TBD is a warning class, not an error
+    result = load_project(root)
+    assert result.project is not None
+    assert "CONFIG_PLACEHOLDER" in {p.code for p in result.problems}
     from budget_core.model import Sourced
 
     assert Sourced(value=0.1, source="TBD", status="estimate").is_placeholder
