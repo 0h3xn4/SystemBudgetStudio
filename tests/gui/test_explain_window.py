@@ -181,3 +181,75 @@ def test_a_link_value_is_explained_too(window: MainWindow) -> None:
     window.explain_action.trigger()
     text = window.explain_panel.text.toPlainText()
     assert "LNK-CN0" in text and "LNK-FSPL" in text
+
+
+def _timeline(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
+    window.power_pages.setCurrentIndex(1)  # Timeline
+    QApplication.processEvents()
+    with qtbot.waitSignal(window.timeline_view.computed, timeout=120000):
+        window.timeline_view.compute()
+    QApplication.processEvents()
+
+
+def test_a_timeline_summary_value_is_explained_after_the_series_are_prepared(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    _timeline(window, qtbot)
+    view = window.timeline_view
+    view.tabs.setCurrentWidget(view.summary_table)
+    column = next(
+        i
+        for i in range(view.summary_table.columnCount())
+        if view.summary_table.horizontalHeaderItem(i).text() == "Generated (Wh)"
+    )
+    view.summary_table.setCurrentCell(0, column)
+    window.explain_dock.hide()
+    window.explain_action.trigger()
+    qtbot.waitUntil(lambda: "TDP-ARRAY" in window.explain_panel.text.toPlainText(), timeout=60000)
+    assert window.explain_dock.isVisible()
+    assert window.explain_panel.title.text().startswith("Results by case / Energy generated")
+    assert window._explain_worker is None
+    # a second value of the same result needs no new solve
+    column = next(
+        i
+        for i in range(view.summary_table.columnCount())
+        if view.summary_table.horizontalHeaderItem(i).text() == "Capacity (Wh)"
+    )
+    view.summary_table.setCurrentCell(1, column)
+    window.explain_action.trigger()
+    assert "TDP-CAP" in window.explain_panel.text.toPlainText()
+    assert window._explain_worker is None
+
+
+def test_a_violation_row_and_an_orbit_and_a_mode_are_explained(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    _timeline(window, qtbot)
+    view = window.timeline_view
+    assert view.violations_table.rowCount() > 0
+    headers = [
+        view.violations_table.horizontalHeaderItem(i).text()
+        for i in range(view.violations_table.columnCount())
+    ]
+    target = view.explain_target(view.violations_table, 0, headers.index("Worst"))
+    assert target is not None and target[0] == "timeline:violations" and len(target[1]) == 4
+    window.timeline_view.explain_requested.emit(*target)
+    qtbot.waitUntil(lambda: "TDP-PEAK" in window.explain_panel.text.toPlainText(), timeout=60000)
+    orbit = view.explain_target(view.orbits_table, 0, 5)  # the balance column
+    assert (
+        orbit is not None
+        and orbit[0].startswith("timeline:balance:")
+        and orbit[2] == "Balance (Wh)"
+    )
+    window.timeline_view.explain_requested.emit(*orbit)
+    assert "TDP-BALANCE" in window.explain_panel.text.toPlainText()
+    mode = view.explain_target(view.modes_table, 0, 2)
+    assert mode is not None and mode[2] == "Share"
+    assert view.explain_target(view.summary_table, 0, 0) is None  # the case name
+
+
+def test_explaining_before_the_timeline_is_worked_out_says_so(window: MainWindow) -> None:
+    window.explain_timeline_value("timeline:cases", ["Battery capacity"], "BOL")
+    assert "Work out the power timeline first" in window.explain_panel.empty.message.text()

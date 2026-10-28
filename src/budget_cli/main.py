@@ -293,7 +293,8 @@ def build_parser() -> argparse.ArgumentParser:
     exp.add_argument(
         "table",
         nargs="?",
-        help="The table id, for example power:units:nominal. Without it the tables that can be "
+        help="The table id, for example power:units:nominal or timeline:cases. Without it the "
+        "tables that can be "
         "explained are listed; with only the table, its columns and rows are listed.",
     )
     exp.add_argument(
@@ -308,6 +309,17 @@ def build_parser() -> argparse.ArgumentParser:
         help='The column header exactly as the table shows it, for example "With margin (W)".',
     )
     exp.add_argument("--format", choices=("text", "json"), default="text")
+    exp.add_argument(
+        "--scenario",
+        help="Scenario id for the timeline tables (timeline:...); optional if only one.",
+    )
+    exp.add_argument(
+        "--load-basis",
+        choices=("nominal", "margined"),
+        default="nominal",
+        help="Demand basis of the timeline tables, as for power-timeline (default: nominal).",
+    )
+    exp.add_argument("--phase", help="Mission phase of the timeline tables (depth of discharge).")
 
     prb = sub.add_parser(
         "problems",
@@ -421,12 +433,14 @@ def _explain(args: argparse.Namespace) -> int:
             for table_id, title in explainable_tables(project):
                 print(f"{table_id}\t{title}")
             return 0
-        explainer = Explainer(project)
+        explainer = Explainer(
+            project, scenario=args.scenario, load_basis=args.load_basis, mission_phase=args.phase
+        )
         table = explainer.table(args.table)
         if not args.row and not args.column:
             print(f"{args.table}\t{table.title}")
             print("columns: " + " | ".join(c.header for c in table.columns))
-            keys = [" / ".join(str(row[i]) for i in table.key_columns) for row in table.rows]
+            keys = [" / ".join(str(row[i]) for i in table.explain_key) for row in table.rows]
             print("rows: " + " | ".join(keys))
             return 0
         if not args.row or not args.column:

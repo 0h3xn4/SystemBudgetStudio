@@ -98,6 +98,7 @@ def _case_table(result: TimeDomainResult) -> Table:
         ),
         tuple(rows),
         note=" ".join(notes),
+        explain_id="timeline:cases",
     )
 
 
@@ -127,6 +128,7 @@ def _mode_table(result: TimeDomainResult) -> Table:
             for m in result.modes
         ),
         note=f"Demand basis: {result.load_basis}.",
+        explain_id="timeline:modes",
     )
 
 
@@ -157,10 +159,11 @@ def _balance_table(result: TimeDomainResult, case: CaseResult) -> Table:
             for b in case.balances
         ),
         note="Complete orbits only; the balance is generation minus demand at the source.",
+        explain_id=f"timeline:balance:{case.case}",
     )
 
 
-def _violation_row(result: TimeDomainResult, v: Violation) -> tuple[Cell, ...]:
+def violation_row(result: TimeDomainResult, v: Violation) -> tuple[Cell, ...]:
     where = v.path if v.file == "config/power_system.yaml" else f"{v.file}: {v.path}"
     shown = None if v.extreme is None else v.extreme
     return (
@@ -190,8 +193,10 @@ def violations_table(result: TimeDomainResult) -> Table:
             Column("Unit"),
             Column("Input to change"),
         ),
-        tuple(_violation_row(result, v) for v in result.violations),
+        tuple(violation_row(result, v) for v in result.violations),
         note=_violations_note(result),
+        explain_id="timeline:violations",
+        explain_key_columns=(0, 1, 2, 3),  # case, finding, start and end
     )
 
 

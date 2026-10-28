@@ -12,9 +12,12 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.equation_binding import computes
+
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
 
 
+@computes("TDP-TEMP")
 def temperature_factor(
     cell_temperature_k: float, reference_temperature_k: float, coeff_perk: float
 ) -> float:
@@ -22,6 +25,7 @@ def temperature_factor(
     return max(0.0, 1.0 + coeff_perk * (cell_temperature_k - reference_temperature_k))
 
 
+@computes("TDP-AGE")
 def degradation_factor(annual_degradation_ratio: float, years: float) -> float:
     """TDP-AGE: remaining output fraction after `years`, compounding yearly."""
     if not 0.0 <= annual_degradation_ratio < 1.0 or years < 0.0:
@@ -38,6 +42,7 @@ def _unit(vectors: NDArray) -> NDArray:
     return np.asarray(scaled / np.where(norm > 0.0, norm, 1.0), dtype=np.float64)
 
 
+@computes("TDP-COS")
 def face_cosines(normals_body: NDArray, sun_body: NDArray) -> NDArray:
     """TDP-COS: cosine of the sun incidence angle per step and face, zero on the back side.
 
@@ -48,6 +53,7 @@ def face_cosines(normals_body: NDArray, sun_body: NDArray) -> NDArray:
     return np.asarray(np.maximum(s @ n.T, 0.0), dtype=np.float64)
 
 
+@computes("TDP-ARRAY")
 def array_power_w(
     *,
     irradiance_wm2: float,

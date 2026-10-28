@@ -18,6 +18,7 @@ import numpy as np
 from budget_core.assumptions import Assumption, incomplete, missing_from
 from budget_core.control import RunControl, checkpoint, stage
 from budget_core.environment.intervals import Interval, merge_intervals
+from budget_core.equation_binding import claim, computes
 from budget_core.model import Project, Sourced
 from budget_core.model.power_system import PowerSystem
 from budget_core.power import array as arr
@@ -144,6 +145,38 @@ class ModeRow:
 
 
 @dataclass(frozen=True, eq=False)
+class SolveDetail:
+    """What the solver worked with, kept only on request (`keep_detail`) for Explain: the refined
+    edges, the demand and the array output per refined step, the battery inputs and, per case, its
+    age, capacity and battery trace. The reported series are means over the scenario grid; every
+    summary number is computed from these."""
+
+    redges_s: NDArray
+    rdt_s: NDArray
+    demand_w: NDArray | None
+    base_generation_w: NDArray | None  # array output at beginning of life
+    life_yr: float | None
+    annual_degradation_ratio: float | None
+    battery: BatteryInputs | None
+    setups: tuple[CaseSetup, ...]
+    traces: tuple[BatteryTrace | None, ...]
+
+    def setup(self, case: str) -> CaseSetup:
+        return next(s for s in self.setups if s.name == case)
+
+    def trace(self, case: str) -> BatteryTrace | None:
+        return self.traces[[s.name for s in self.setups].index(case)]
+
+    def generation_w(self, case: str) -> NDArray | None:
+        """Array output per refined step in a case (the beginning-of-life output times the age
+        factor)."""
+        age = self.setup(case).age_factor
+        if self.base_generation_w is None or age is None:
+            return None
+        return self.base_generation_w * age
+
+
+@dataclass(frozen=True, eq=False)
 class TimeDomainResult:
     run: ScenarioRun
     load_basis: str
@@ -163,6 +196,7 @@ class TimeDomainResult:
     peak_limit_w: float | None = None
     dod_limit_ratio: float | None = None
     not_evaluated: tuple[NotEvaluated, ...] = field(default_factory=tuple)
+    detail: SolveDetail | None = None  # only with `keep_detail=True`
 
     @property
     def steps(self) -> int:
@@ -214,6 +248,7 @@ class _Collector:
         return item.value
 
 
+@computes("TDP-DEMAND")
 def _mode_flow(mode: ModePowerResult, basis: LoadBasis) -> tuple[float | None, ...]:
     """(load_w, demand_w, peak_demand_w) of a mode on the chosen basis."""
     if basis == "margined":
@@ -242,6 +277,7 @@ def refined_edges(edges: NDArray, extra_s: list[float]) -> NDArray:
     return np.asarray(np.union1d(edges, inner), dtype=np.float64)
 
 
+@computes("TDP-LIT")
 def _lit_ratio(run: ScenarioRun, edges: NDArray, shadows: list[Interval]) -> NDArray:
     """Share of each step in sunlight, independent of the steps. A sharp shadow is exact. A soft
     one is built from the eclipse and umbra intervals, which do not depend on the step: the
@@ -320,7 +356,9 @@ def _crossing(t0: float, v0: float, t1: float, v1: float, level: float) -> float
     return float(t0 + (level - v0) / (v1 - v0) * (t1 - t0))
 
 
-def _exceeding(edges: NDArray, values: NDArray, limit: float) -> list[tuple[float, float, float]]:
+def exceeding_intervals(
+    edges: NDArray, values: NDArray, limit: float
+) -> list[tuple[float, float, float]]:
     """Intervals where the state `values` (at the edges) is above `limit`, as (start, end, worst);
     the ends are interpolated linearly between the edges."""
     out: list[tuple[float, float, float]] = []
@@ -360,9 +398,12 @@ def time_domain_budget(
     cases: tuple[str, ...] = CASES,
     mission_phase: str | None = None,
     control: RunControl | None = None,
+    keep_detail: bool = False,
 ) -> TimeDomainResult:
     """Solve the scenario. The project must be valid; `run` is its computed scenario. A `control`
-    reports the stages and can stop it between them (D-167); it changes no result."""
+    reports the stages and can stop it between them (D-167); it changes no result. `keep_detail`
+    keeps the solver's refined series in `detail` (Explain); a long run holds a few arrays per
+    case more."""
     if any(name not in CASES for name in cases):
         raise ValueError("a power case must be 'bol' or 'eol'")
     scenario = run.scenario
@@ -537,6 +578,19 @@ def time_domain_budget(
         peak_limit_w=peak_limit,
         dod_limit_ratio=dod_limit,
         not_evaluated=not_evaluated,
+        detail=SolveDetail(
+            prepared.grid.redges,
+            prepared.grid.rdt,
+            prepared.demand_w,
+            prepared.base_generation,
+            life,
+            annual,
+            battery_inputs,
+            setups,
+            tuple(traces),
+        )
+        if keep_detail
+        else None,
     )
 
 
@@ -646,7 +700,7 @@ def _unique_problems(items: list[Problem]) -> list[Problem]:
 
 
 @dataclass(frozen=True)
-class _BatteryInputs:
+class BatteryInputs:
     cell_capacity_ah: float
     cell_voltage_v: float
     series: int
@@ -660,7 +714,7 @@ class _BatteryInputs:
 
 def _battery_inputs(
     system: PowerSystem | None, phase: str | None, col: _Collector, scenario_file: str
-) -> _BatteryInputs | None:
+) -> BatteryInputs | None:
     b = system.battery if system else None
     cap = col.get(
         "Battery cell capacity",
@@ -726,7 +780,7 @@ def _battery_inputs(
         return None
     assert cap is not None and volt is not None and eta_c is not None
     assert eta_d is not None and soc0 is not None
-    return _BatteryInputs(
+    return BatteryInputs(
         cap, volt, b.cells_in_series, b.cells_in_parallel, fade, eta_c, eta_d, soc0, dod
     )
 
@@ -862,6 +916,7 @@ def _base_generation(
     )
 
 
+@computes("TDP-PEAK")
 def _peak_violations(
     run: ScenarioRun, modes: tuple[ModeRow, ...], limit: float | None
 ) -> list[Violation]:
@@ -924,7 +979,7 @@ class _GridMap:
 
 
 @dataclass(frozen=True)
-class _CaseSetup:
+class CaseSetup:
     """What a case needs besides the time series: its age, array factor and pack capacity."""
 
     name: str
@@ -934,8 +989,8 @@ class _CaseSetup:
 
 
 def _case_setup(
-    name: str, battery: _BatteryInputs | None, life_yr: float | None, annual: float | None
-) -> _CaseSetup:
+    name: str, battery: BatteryInputs | None, life_yr: float | None, annual: float | None
+) -> CaseSetup:
     """Beginning of life (age 0) needs neither the array degradation nor the battery fade."""
     years = life_yr if name == "eol" else 0.0
     age = None
@@ -953,17 +1008,17 @@ def _case_setup(
             battery.fade or 0.0,
             years,
         )
-    return _CaseSetup(name, years, age, capacity)
+    return CaseSetup(name, years, age, capacity)
 
 
-def _generation(prepared: _Prepared, setup: _CaseSetup) -> NDArray | None:
+def _generation(prepared: _Prepared, setup: CaseSetup) -> NDArray | None:
     if prepared.base_generation is None or setup.age_factor is None:
         return None
     return prepared.base_generation * setup.age_factor
 
 
 def _integrate(
-    setup: _CaseSetup, battery: _BatteryInputs | None, prepared: _Prepared
+    setup: CaseSetup, battery: BatteryInputs | None, prepared: _Prepared
 ) -> BatteryTrace | None:
     generation = _generation(prepared, setup)
     capacity = setup.capacity_wh
@@ -981,9 +1036,9 @@ def _integrate(
 
 
 def _solve_case(
-    setup: _CaseSetup,
+    setup: CaseSetup,
     prepared: _Prepared,
-    battery: _BatteryInputs | None,
+    battery: BatteryInputs | None,
     trace: BatteryTrace | None,
     phase: str | None,
     windows: tuple[tuple[float, float], ...],
@@ -1006,7 +1061,7 @@ def _solve_case(
 
     violations: list[Violation] = []
     if dod is not None and battery is not None and battery.dod_limit is not None:
-        for start, end, worst in _exceeding(edges, dod, battery.dod_limit):
+        for start, end, worst in exceeding_intervals(edges, dod, battery.dod_limit):
             violations.append(
                 Violation(
                     name,
@@ -1082,7 +1137,7 @@ def _solve_case(
     )
 
 
-def _wh(power_w: NDArray | None, dt: NDArray) -> float | None:
+def integral_wh(power_w: NDArray | None, dt: NDArray) -> float | None:
     return None if power_w is None else float(np.sum(power_w * dt) / 3600.0)
 
 
@@ -1098,7 +1153,7 @@ def _summary(
     energy: NDArray | None,
 ) -> CaseSummary:
     total = float(np.sum(dt))
-    gen_wh, dem_wh = _wh(generation, dt), _wh(demand, dt)
+    gen_wh, dem_wh = integral_wh(generation, dt), integral_wh(demand, dt)
     return CaseSummary(
         average_generation_w=None if gen_wh is None else gen_wh * 3600.0 / total,
         average_demand_w=None if dem_wh is None else dem_wh * 3600.0 / total,
@@ -1107,10 +1162,51 @@ def _summary(
         minimum_margin_w=None if margin is None else float(margin.min()),
         minimum_soc_ratio=None if soc is None else float(soc.min()),
         maximum_dod_ratio=None if dod is None else float(dod.max()),
-        unmet_wh=_wh(unmet, dt),
-        curtailed_wh=_wh(curtailed, dt),
+        unmet_wh=integral_wh(unmet, dt),
+        curtailed_wh=integral_wh(curtailed, dt),
         energy_change_wh=None if energy is None else float(energy[-1] - energy[0]),
     )
+
+
+claim("TDP-DOD", "budget_core.power.time_domain._solve_case")
+
+
+@dataclass(frozen=True)
+class BalanceCumulatives:
+    """Energy accumulated up to the start and the end of every complete orbit (`bounds` holds them
+    in pairs), the numbers an orbit balance subtracts."""
+
+    bounds_s: NDArray
+    eclipse_s: NDArray  # time in eclipse up to each bound
+    generated_wh: NDArray | None
+    demanded_wh: NDArray | None
+    stored_wh: NDArray | None
+
+
+@computes("TDP-BALANCE")
+def balance_cumulatives(
+    edges: NDArray,
+    dt: NDArray,
+    generation: NDArray | None,
+    demand: NDArray | None,
+    energy: NDArray | None,
+    windows: tuple[tuple[float, float], ...],
+    run: ScenarioRun,
+) -> BalanceCumulatives:
+    bounds = np.array([w for pair in windows for w in pair], dtype=np.float64)
+    shadows = merge_intervals(list(run.env.eclipses))
+    ecl_s = [e.start_s for e in shadows]
+    ecl_e = [e.end_s for e in shadows]
+    shadow = integral_of_steps(ecl_s, ecl_e, [1.0] * len(ecl_s), bounds)
+
+    def at(power: NDArray | None) -> NDArray | None:
+        if power is None:
+            return None
+        cumulative = np.concatenate(([0.0], np.cumsum(power * dt))) / 3600.0
+        return np.asarray(np.interp(bounds, edges, cumulative), dtype=np.float64)
+
+    stored = None if energy is None else np.interp(bounds, edges, energy)
+    return BalanceCumulatives(bounds, shadow, at(generation), at(demand), stored)
 
 
 def _balances(
@@ -1124,20 +1220,8 @@ def _balances(
 ) -> list[OrbitBalance]:
     if not windows:
         return []
-    bounds = np.array([w for pair in windows for w in pair], dtype=np.float64)
-    shadows = merge_intervals(list(run.env.eclipses))
-    ecl_s = [e.start_s for e in shadows]
-    ecl_e = [e.end_s for e in shadows]
-    shadow = integral_of_steps(ecl_s, ecl_e, [1.0] * len(ecl_s), bounds)
-
-    def at(power: NDArray | None) -> NDArray | None:
-        if power is None:
-            return None
-        cumulative = np.concatenate(([0.0], np.cumsum(power * dt))) / 3600.0
-        return np.asarray(np.interp(bounds, edges, cumulative), dtype=np.float64)
-
-    gen, dem = at(generation), at(demand)
-    stored = None if energy is None else np.interp(bounds, edges, energy)
+    cum = balance_cumulatives(edges, dt, generation, demand, energy, windows, run)
+    gen, dem, stored, shadow = cum.generated_wh, cum.demanded_wh, cum.stored_wh, cum.eclipse_s
     out: list[OrbitBalance] = []
     for k, (start, end) in enumerate(windows):
         i0, i1 = 2 * k, 2 * k + 1

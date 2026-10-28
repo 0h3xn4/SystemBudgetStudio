@@ -9,17 +9,21 @@ from budget_core.explain.link import explain_link, link_table_ids
 from budget_core.explain.mass import explain_mass, mass_table_ids
 from budget_core.explain.power import ExplainError, explain_power, power_table_ids
 from budget_core.explain.thermal import explain_thermal, thermal_table_ids
+from budget_core.explain.timeline import explain_timeline, timeline_table_ids
 from budget_core.explain.trace import Explanation, Quantity, Step
 from budget_core.link.evaluate import StaticLinkResult, link_static_budget
 from budget_core.mass.static_mass import StaticMassResult, static_mass_budget
 from budget_core.model import Project
 from budget_core.power.static_budget import StaticPowerResult, static_power_budget
+from budget_core.power.time_domain import LoadBasis, TimeDomainResult, time_domain_budget
 from budget_core.provenance import Provenance
 from budget_core.reports.document import Table
 from budget_core.reports.link_report import build_link_report
 from budget_core.reports.mass_report import build_mass_report
 from budget_core.reports.power_report import build_power_report
 from budget_core.reports.thermal_report import build_thermal_report
+from budget_core.reports.timeline_report import build_timeline_report
+from budget_core.scenario.run import ScenarioRunError, run_scenario
 from budget_core.thermal.static_thermal import StaticThermalResult, static_thermal_budget
 
 __all__ = [
@@ -40,6 +44,7 @@ def explainable_tables(project: Project) -> list[tuple[str, str]]:
         *mass_table_ids(project),
         *thermal_table_ids(project),
         *link_table_ids(project),
+        *(timeline_table_ids() if project.scenarios else []),
     ]
 
 
@@ -54,18 +59,29 @@ class Explainer:
         mass: StaticMassResult | None = None,
         thermal: StaticThermalResult | None = None,
         link: StaticLinkResult | None = None,
+        timeline: TimeDomainResult | None = None,
+        *,
+        scenario: str | None = None,
+        load_basis: LoadBasis = "nominal",
+        mission_phase: str | None = None,
     ) -> None:
-        """`power`, `mass` and `thermal` are the static budgets of `project` when the caller has
-        them."""
+        """`power`, `mass`, `thermal` and `link` are the static budgets of `project` when the
+        caller has them. The timeline tables need a scenario: `timeline`, the result the caller
+        has (solved again with its detail when it has none), or `scenario` (an id; optional when
+        the project has one) with the basis and mission phase to solve it with."""
         self.project = project
         self._power = power
         self._mass = mass
         self._thermal = thermal
         self._link = link
+        self._timeline = timeline
+        self._scenario = scenario
+        self._load_basis: LoadBasis = load_basis
+        self._mission_phase = mission_phase
 
     def _family(self, table_id: str) -> str:
         family = table_id.split(":", 1)[0]
-        if family not in ("power", "mass", "thermal", "link"):
+        if family not in ("power", "mass", "thermal", "link", "timeline"):
             raise ExplainError("This table cannot be explained.")
         return family
 
@@ -89,6 +105,51 @@ class Explainer:
             self._link = link_static_budget(self.project)
         return self._link
 
+    @property
+    def timeline(self) -> TimeDomainResult | None:
+        """The timeline result this explainer was given or has solved (None before either)."""
+        return self._timeline
+
+    @property
+    def timeline_ready(self) -> bool:
+        """The timeline is solved with the solver's detail (explaining a cell is then quick)."""
+        return self._timeline is not None and self._timeline.detail is not None
+
+    def timeline_result(self) -> TimeDomainResult:
+        """The power timeline with the solver's detail kept: solved here, or solved again from the
+        caller's result (the same inputs give the same numbers)."""
+        current = self._timeline
+        if current is not None and current.detail is not None:
+            return current
+        try:
+            if current is not None:
+                run = current.run
+                basis: LoadBasis = "margined" if current.load_basis == "margined" else "nominal"
+                phase = current.mission_phase
+                cases = tuple(c.case for c in current.cases)
+            else:
+                ids = sorted(self.project.scenarios)
+                chosen = self._scenario or (ids[0] if len(ids) == 1 else None)
+                if chosen is None:
+                    raise ExplainError(
+                        "The project has several scenarios; say which one to explain."
+                        if ids
+                        else "The project has no scenario."
+                    )
+                run = run_scenario(self.project, chosen)
+                basis, phase, cases = self._load_basis, self._mission_phase, ("bol", "eol")
+            self._timeline = time_domain_budget(
+                self.project,
+                run,
+                load_basis=basis,
+                cases=cases,
+                mission_phase=phase,
+                keep_detail=True,
+            )
+        except ScenarioRunError as exc:
+            raise ExplainError(exc.problem.message) from exc
+        return self._timeline
+
     def table(self, table_id: str) -> Table:
         """The report table named `table_id`, built as the reports build it: its column headers and
         the values of its key columns are what a cell is addressed by."""
@@ -102,8 +163,12 @@ class Explainer:
             document = build_mass_report(self.project, self.mass_result(), bare)
         elif family == "thermal":
             document = build_thermal_report(self.project, self.thermal_result(), bare)
-        else:
+        elif family == "link":
             document = build_link_report(self.project, self.link_result(), bare, plots=False)
+        else:
+            document = build_timeline_report(
+                self.project, self.timeline_result(), bare, plots=False
+            )
         for section in document.sections:
             for table in section.tables:
                 if table.explain_id == table_id:
@@ -120,7 +185,11 @@ class Explainer:
             return explain_mass(self.project, table_id, key, column, self.mass_result())
         if family == "thermal":
             return explain_thermal(self.project, table_id, key, column, self.thermal_result())
-        return explain_link(self.project, table_id, key, column, self.link_result())
+        if family == "link":
+            return explain_link(self.project, table_id, key, column, self.link_result())
+        return explain_timeline(
+            self.project, table_id, key, column, self.timeline_result(), self.power_result()
+        )
 
 
 def explain_cell(project: Project, table_id: str, key: Sequence[str], column: str) -> Explanation:

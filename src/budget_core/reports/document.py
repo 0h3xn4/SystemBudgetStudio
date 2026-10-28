@@ -43,6 +43,13 @@ class Table:
     # Names the table for `budget explain` and the window's Explain view ("power:units:nominal");
     # empty when the table cannot be explained. No report renderer reads it.
     explain_id: str = ""
+    # The columns that name a row for Explain when `key_columns` is too coarse for it (a list of
+    # findings: the case alone does not tell two rows apart). Empty: `key_columns`.
+    explain_key_columns: tuple[int, ...] = ()
+
+    @property
+    def explain_key(self) -> tuple[int, ...]:
+        return self.explain_key_columns or self.key_columns
 
 
 @dataclass(frozen=True)

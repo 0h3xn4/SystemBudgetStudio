@@ -29,7 +29,7 @@ You need three more things: `config/power_system.yaml` (solar array faces, batte
 budget power-timeline my_satellite --out out
 ```
 
-Options you will use: `--scenario <id>` (if the project has several), `--case bol|eol|both`, `--load-basis nominal|margined`, `--phase <name>`, `--series-every N` (thin the CSV series), `--no-plots`. In the window use the **Power timeline** tab and click **Compute**.
+Options you will use: `--scenario <id>` (if the project has several), `--case bol|eol|both`, `--load-basis nominal|margined`, `--phase <name>`, `--series-every N` (thin the CSV series), `--no-plots`. In the window use the **Power timeline** tab and click **Compute**. To see how a number of the timeline was obtained (a state of charge, an energy, a margin, an orbit balance, a finding), select it in the Summary, Violations, Orbits or Modes table and choose *View → Explain this value* (Ctrl+Shift+I), or use `budget explain my_satellite timeline:cases --row "Lowest state of charge" --column EOL`; the model is on [its page](../models/power-timeline.md).
 
 The tool steps through the scenario on its time grid and, for [**beginning of life** (BOL) and **end of life** (EOL)](../glossary.md#bol-eol):
 
