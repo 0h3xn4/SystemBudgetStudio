@@ -58,6 +58,38 @@ def _unit_hint(name: str) -> str:
     )
 
 
+_NUMBER_KINDS = frozenset(
+    {
+        "float_parsing",
+        "float_type",
+        "int_parsing",
+        "int_type",
+        "int_from_float",
+        "decimal_parsing",
+        "decimal_type",
+        "finite_number",
+    }
+)
+_RANGE_KINDS = frozenset(
+    {"greater_than", "greater_than_equal", "less_than", "less_than_equal", "multiple_of"}
+)
+
+
+def _field_hint(kind: str, name: str) -> str:
+    """What to do about an invalid field, by the kind of the failure. Only a field that must be a
+    number gets the advice to write a number; the other kinds are explained by the message."""
+    unit = canonical_unit(name)
+    if kind in _NUMBER_KINDS:
+        return _unit_hint(name) or "Write a number."
+    if kind in _RANGE_KINDS:
+        return "The allowed range is in the message." + (
+            f" A bare number is in {unit}." if unit else ""
+        )
+    if kind in ("literal_error", "enum"):
+        return "Use one of the values the message lists."
+    return ""
+
+
 def explain(
     exc: ValidationError,
     root: type[BaseModel],
@@ -72,7 +104,7 @@ def explain(
         if "field" in ctx:
             loc = loc + (str(ctx["field"]),)
         name = str(loc[-1]) if loc and isinstance(loc[-1], str) else ""
-        code, message, hint = "FIELD_INVALID", str(err["msg"]), _unit_hint(name)
+        code, message, hint = "FIELD_INVALID", str(err["msg"]), _field_hint(kind, name)
 
         if kind == "missing":
             code = "FIELD_MISSING"

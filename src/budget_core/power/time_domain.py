@@ -1167,6 +1167,14 @@ def violation_problems(result: TimeDomainResult) -> list[Problem]:
     out: list[Problem] = []
     for (code, case), items in sorted(groups.items(), key=lambda kv: (kv[0][0], kv[0][1] or "")):
         first = min(items, key=lambda v: v.start_s)
+        limit = first.limit
+        # the worst value: the one furthest from the limit (the largest for an upper limit, the
+        # smallest for a balance that must not be negative)
+        worst = max(
+            (v.extreme for v in items if v.extreme is not None),
+            key=lambda e: abs(e - (limit or 0.0)),
+            default=None,
+        )
         where = f" Case {case.upper()}." if case else ""
         out.append(
             Problem(
@@ -1178,6 +1186,9 @@ def violation_problems(result: TimeDomainResult) -> list[Problem]:
                 path=first.path,
                 hint="Open the violations table for every interval; change the input named "
                 "here or the scenario.",
+                actual=worst,
+                limit=limit,
+                unit=first.unit,
             )
         )
     return out

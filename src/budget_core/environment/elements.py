@@ -80,7 +80,10 @@ def orbit_age_problem(
     if orbit.tle is None:
         return None
     epoch = tle_epoch(orbit.tle[0])
-    if epoch is None or abs((scenario_start - epoch).total_seconds()) <= MAX_TLE_AGE_DAYS * 86400:
+    if epoch is None:
+        return None
+    age_days = abs((scenario_start - epoch).total_seconds()) / 86400.0
+    if age_days <= MAX_TLE_AGE_DAYS:
         return None
     return Problem(
         Severity.WARNING,
@@ -90,6 +93,9 @@ def orbit_age_problem(
         file=f"orbits/{orbit_id}.yaml",
         path="tle",
         hint="Use a TLE with an epoch close to the scenario start, or elements.",
+        actual=age_days,
+        limit=MAX_TLE_AGE_DAYS,
+        unit="days",
     )
 
 

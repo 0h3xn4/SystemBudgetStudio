@@ -10,6 +10,7 @@ from budget_core.io.paths import resolve_inside
 from budget_core.io.yamlio import LineMap, Path, format_path
 from budget_core.model import Antenna, BudgetModel, Link, Project, Scenario, Sourced
 from budget_core.problems import Problem, Severity
+from budget_core.units.quantity import canonical_unit
 
 
 def iter_sourced(value: Any, path: Path = ()) -> Iterator[tuple[Path, Sourced]]:
@@ -258,6 +259,13 @@ def _range_problem(
     file: str, path: Path, lines: dict[str, LineMap], what: str, allowed: str
 ) -> Problem:
     line = lines[file].lookup(path + ("value",)) if file in lines else None
+    unit = canonical_unit(str(path[-1])) if path and isinstance(path[-1], str) else None
+    if unit == "ratio":
+        hint = "Ratios are written as fractions (0.1 means 10 %); the allowed range is above."
+    elif unit:
+        hint = f"The value is in {unit}; the allowed range is above."
+    else:
+        hint = "Check the value and its unit; the allowed range is above."
     return Problem(
         Severity.ERROR,
         "CONFIG_VALUE_INVALID",
@@ -265,7 +273,7 @@ def _range_problem(
         file=file,
         path=format_path(path + ("value",)),
         line=line,
-        hint="Check the value and its unit; ratios are written as fractions (0.1 means 10 %).",
+        hint=hint,
     )
 
 
