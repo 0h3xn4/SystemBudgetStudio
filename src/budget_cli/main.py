@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import difflib
 import json
 import sys
 from collections.abc import Callable, Sequence
@@ -30,6 +31,7 @@ from budget_core.mass.static_mass import static_mass_budget
 from budget_core.model import Project
 from budget_core.power.static_budget import static_power_budget
 from budget_core.power.time_domain import time_domain_budget, violation_problems
+from budget_core.problem_catalogue import CATALOGUE, describe, render_markdown
 from budget_core.problems import Problem, Severity, sort_problems
 from budget_core.provenance import ProvenanceError, make_provenance
 from budget_core.reports.files import OutputError, write_file
@@ -307,6 +309,21 @@ def build_parser() -> argparse.ArgumentParser:
     )
     exp.add_argument("--format", choices=("text", "json"), default="text")
 
+    prb = sub.add_parser(
+        "problems",
+        help="Explain a problem code: the rule, why it matters, what to do about it.",
+    )
+    prb.add_argument(
+        "code",
+        nargs="?",
+        help="A problem code, for example MASS_LIMIT_EXCEEDED. Without it the codes are listed.",
+    )
+    prb.add_argument(
+        "--markdown",
+        action="store_true",
+        help="Write the page of all codes (docs/PROBLEMS.md) to standard output.",
+    )
+
     ver = sub.add_parser(
         "verify",
         help="Check that a project is the one an export was made from (input digest).",
@@ -423,6 +440,32 @@ def _explain(args: argparse.Namespace) -> int:
         print(json.dumps(explanation.to_dict(), indent=2, ensure_ascii=False))
     else:
         print(explanation.format_text(), end="")
+    return 0
+
+
+def _problems(args: argparse.Namespace) -> int:
+    """List the problem codes, show one (rule, why, what to do), or write the page of all."""
+    if args.markdown:
+        print(render_markdown(), end="")
+        return 0
+    if args.code is None:
+        for info in CATALOGUE.values():
+            print(f"{info.code}\t{info.severity.value}\t{info.title}")
+        return 0
+    entry = describe(args.code.upper())
+    if entry is None:
+        close = difflib.get_close_matches(args.code.upper(), list(CATALOGUE), n=3)
+        _fail(
+            "There is no such problem code."
+            + (f" Did you mean {', '.join(close)}?" if close else "")
+        )
+        return 1
+    print(f"{entry.code}  ({entry.severity.value}, {entry.area})")
+    print(entry.title)
+    print()
+    print(f"Rule.            {entry.rule}")
+    print(f"Why it matters.  {entry.why}")
+    print(f"What to do.      {entry.fix}")
     return 0
 
 
@@ -861,6 +904,8 @@ def _dispatch(
         return _verify(args)
     if args.command == "explain":
         return _explain(args)
+    if args.command == "problems":
+        return _problems(args)
     if args.command == "units-export":
         return _units_export(args)
     if args.command == "units-import":

@@ -19,7 +19,7 @@ Docs index: `docs/README.md` (change the docs with the code: `docs/developer/REA
 - Tests first; no warnings on main. Work on a branch and open a PR; never push to `main`.
 - Runtime deps only in `[project.dependencies]`; all tooling in the `dev` extra.
 - Example projects: invented data only.
-- Problems/messages never contain values read from project files (field names, ids and units only).
+- Problem `message` and `hint` texts never contain values read from project files (field names, ids and units only). A numeric finding carries them in `actual`/`limit`/`unit`, shown in the window and written to result files, never printed by the command line or logged (D-207). Every problem code has an entry in `budget_core/problem_catalogue.py` (a test checks it); `docs/PROBLEMS.md` is generated from it.
 - File format: `docs/FILE_FORMAT.md`. Schema changes need a version bump and a migration.
 
 ## UI design rules (the window; full text in `docs/DESIGN.md`, brief in `docs/ui/UI_OVERHAUL.md`)

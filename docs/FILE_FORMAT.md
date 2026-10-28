@@ -193,6 +193,8 @@ JSON Schemas for all kinds: `budget export-schemas <dir>` (also committed in `sr
 
 ## Problem codes (`budget validate`)
 
+The rule, the reason and the remedy of every code are in [PROBLEMS.md](PROBLEMS.md) (or `budget problems CODE`). The list below groups the codes by when they occur.
+
 Errors: `FILE_NOT_FOUND`, `FILE_INVALID` (also: not a regular file, a folder or pipe named `*.yaml`), `ID_INVALID`, `YAML_SYNTAX`, `KIND_MISMATCH`, `SCHEMA_VERSION_MISSING`, `SCHEMA_TOO_NEW`, `SCHEMA_MIGRATION_MISSING`, `SCHEMA_MIGRATION_FAILED`, `FIELD_MISSING`, `FIELD_UNKNOWN`, `FIELD_INVALID`, `UNIT_INVALID`, `DUPLICATE_NAME`, `SOURCE_MISSING`, `REF_UNKNOWN_BUS`, `REF_UNKNOWN_MATURITY`, `REF_UNKNOWN_UNIT`, `REF_UNKNOWN_UNIT_MODE`, `UNIT_NOT_MAPPED`.
 Errors (config values): `CONFIG_VALUE_INVALID`, `REF_UNKNOWN_PHASE`, `PHASE_MASS_MISSING`.
 Thermal (errors at load): `THERMAL_NODE_UNKNOWN`, `REF_UNKNOWN_CASE`. Link (errors at load): `REF_UNKNOWN_STATION`, `REF_UNKNOWN_ATTENUATION`, `REF_UNKNOWN_MODULATION`, `LINK_ANTENNA_PATTERN_GROUND`, `LINK_PATTERN_FILE_MISSING`; `LINK_INPUT_INVALID` (error when running: unreadable pattern file); warnings `LINK_ATTENUATION_FREQUENCY`, `LINK_ATTENUATION_DUPLICATE`, `LINK_SITE_NOT_IN_SCENARIO`; info `LINK_NO_STATIC_POINTS`, `LINK_NEVER_ACTIVE`, `LINK_PER_DAY_NOT_GIVEN`; error when running: `LINK_NOT_CLOSED` (no listed data rate closes, D-098). Environment: `REF_UNKNOWN_ORBIT`, `REF_UNKNOWN_SITE`, `REF_UNKNOWN_MODE`, `DUPLICATE_ID`, `IMPORT_DIR_MISSING`, `ORBIT_INVALID` (errors at load); `SCENARIO_UNKNOWN`, `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED`, `SCENARIO_TOO_LARGE` (errors when running a scenario); warning `ORBIT_EPOCH_FAR` (a TLE epoch more than 30 days from the scenario start, D-133).

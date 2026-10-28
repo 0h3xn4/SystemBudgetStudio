@@ -18,6 +18,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget units-export PROJECT [--out FILE.csv\|.xlsx]` | Write the unit power modes as a table to fill in outside the tool ([unit tables](unit-tables.md)) |
 | `budget units-import PROJECT TABLE [--apply]` | Show the changes a filled-in table would make; with `--apply` write them into the unit files |
 | `budget guide --out DIR [--format html\|pdf\|all] [--project PROJECT]` | Write the user guide (offline HTML and PDF) |
+| `budget problems [CODE] [--markdown]` | Explain a problem code: the rule, why it matters, what to do (all codes are listed without `CODE`; `--markdown` writes the page [PROBLEMS.md](../PROBLEMS.md)) |
 | `budget explain PROJECT [TABLE] [--row KEY ...] [--column HEADER] [--format text\|json]` | Show how one number of a budget table was obtained: the equation, the inputs with units and where they come from, every step (static power, mass, thermal and link tables; more to come). Without a table it lists the tables; with only the table, its columns and rows |
 | `budget verify EXPORT PROJECT` | Say whether a project is the one an export was made from (input digest; exit 0 match, 1 different or not checkable, 2 export unreadable) |
 | `budget self-test` | Check that this installation can compute and render a budget |
