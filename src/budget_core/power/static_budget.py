@@ -12,22 +12,26 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from budget_core.assumptions import Assumption, incomplete, missing_from
+from budget_core.equation_binding import computes
 from budget_core.model import Project, Sourced
 from budget_core.problems import Problem
 
 # ---- scalar building blocks (pure) ----------------------------------------------------------
 
 
+@computes("PWR-EFF")
 def effective_power_w(avg_power_w: float, duty_cycle_ratio: float) -> float:
     """PWR-EFF."""
     return avg_power_w * duty_cycle_ratio
 
 
+@computes("PWR-MARGIN")
 def with_margin_w(power_w: float, margin_ratio: float | None) -> float | None:
     """PWR-MARGIN; None when the margin is unavailable."""
     return None if margin_ratio is None else power_w * (1.0 + margin_ratio)
 
 
+@computes("PWR-SOURCE")
 def source_power_w(
     load_w: float | None, efficiency_ratio: float | None, distribution_loss_ratio: float | None
 ) -> float | None:
@@ -37,6 +41,22 @@ def source_power_w(
     if not 0.0 < efficiency_ratio <= 1.0 or not 0.0 <= distribution_loss_ratio < 1.0:
         raise ValueError("efficiency must be in (0, 1] and distribution loss in [0, 1)")
     return load_w / (efficiency_ratio * (1.0 - distribution_loss_ratio))
+
+
+@computes("PWR-SYSMARGIN")
+def system_margined_w(
+    unit_margined_w: float | None, system_margin_ratio: float | None
+) -> float | None:
+    """PWR-SYSMARGIN; None when the margined load or the system margin is unavailable."""
+    if unit_margined_w is None or system_margin_ratio is None:
+        return None
+    return unit_margined_w * (1.0 + system_margin_ratio)
+
+
+@computes("PWR-PEAK")
+def peak_load_w(peak_powers_w: Iterable[float]) -> float:
+    """PWR-PEAK: every unit at its peak at once (conservative)."""
+    return math.fsum(peak_powers_w)
 
 
 def _sum(values: Iterable[float]) -> float:
@@ -128,11 +148,7 @@ def _flow(
     efficiency: float | None,
     loss: float | None,
 ) -> Flow:
-    system_margined = (
-        None
-        if unit_margined is None or system_margin is None
-        else unit_margined * (1.0 + system_margin)
-    )
+    system_margined = system_margined_w(unit_margined, system_margin)
     return Flow(
         load_w=load,
         unit_margined_w=unit_margined,
@@ -201,7 +217,7 @@ def static_power_budget(project: Project) -> StaticPowerResult:
                 subsystem=name,
                 effective_w=_sum(r.effective_power_w for r in rows if r.subsystem == name),
                 margined_w=_sum_opt(r.margined_power_w for r in rows if r.subsystem == name),
-                peak_w=_sum(r.peak_power_w for r in rows if r.subsystem == name),
+                peak_w=peak_load_w(r.peak_power_w for r in rows if r.subsystem == name),
                 margined_peak_w=_sum_opt(r.margined_peak_w for r in rows if r.subsystem == name),
             )
             for name in sorted({r.subsystem for r in rows})
@@ -223,7 +239,7 @@ def static_power_budget(project: Project) -> StaticPowerResult:
                         loss,
                     ),
                     peak=_flow(
-                        _sum(r.peak_power_w for r in members),
+                        peak_load_w(r.peak_power_w for r in members),
                         _sum_opt(r.margined_peak_w for r in members),
                         system_margin,
                         eta,
