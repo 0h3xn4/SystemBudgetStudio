@@ -155,7 +155,12 @@ class MainWindow(QMainWindow):
         self.mass_view = PowerView()
         self.thermal_view = PowerView()
         self.link_view = PowerView()
-        self._explainable_views = (self.power_view, self.mass_view, self.thermal_view)
+        self._explainable_views = (
+            self.power_view,
+            self.mass_view,
+            self.thermal_view,
+            self.link_view,
+        )
         for budget_view in self._explainable_views:
             budget_view.explain_requested.connect(self.explain_value)
         self.editors = EditorTabs()  # the Model tab: the grids, the scenario and the open files
@@ -1257,16 +1262,16 @@ class MainWindow(QMainWindow):
 
     # ---- Explain (D-206) ---------------------------------------------------------------------
     def explain_selected_value(self) -> None:
-        """View > Explain this value: the cell last selected on the open Power, Mass or Thermal
-        sheet."""
+        """View > Explain this value: the cell last selected on the open Power, Mass, Thermal
+        or Link sheet."""
         target = None
         for budget_view in self._explainable_views:
             if budget_view.isVisible():
                 target = budget_view.current_explain_target()
         if target is None:
             self._show_explain_message(
-                "Select a value on a Power, Mass or Thermal sheet first, then choose Explain this "
-                "value."
+                "Select a value on a Power, Mass, Thermal or Link sheet first, then choose "
+                "Explain this value."
             )
             return
         self.explain_value(*target)
@@ -1279,7 +1284,11 @@ class MainWindow(QMainWindow):
             return
         if self._explainer is None or self._explainer.project is not project:
             self._explainer = Explainer(
-                project, self.session.power, self.session.mass, self.session.thermal
+                project,
+                self.session.power,
+                self.session.mass,
+                self.session.thermal,
+                self.session.link,
             )
         key = [str(table.rows[row][i]) for i in table.key_columns]
         try:

@@ -65,6 +65,7 @@ def _static_table(result: StaticLinkResult) -> Table:
             for r in result.rows
         ),
         key_columns=(0, 2),  # link and point
+        explain_id="link:static",
         note="Other losses = pointing, polarisation and implementation. A link closes at a rate "
         "when its margin is at least the required margin of the link. n/a: an input is a "
         "placeholder or missing. Highest closing rate empty (n/a with a result): no listed rate "
@@ -104,6 +105,7 @@ def _rate_table(result: StaticLinkResult) -> Table:
         ),
         tuple(rows),
         key_columns=(0, 1, 2),  # link, point and rate
+        explain_id="link:rates",
         status_column=6,
         status_marks=(4,),
     )

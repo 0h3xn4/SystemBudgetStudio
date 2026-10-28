@@ -11,7 +11,7 @@ budget explain my_satellite power:units:nominal --row eps --column "With margin 
 budget explain my_satellite power:units:nominal --row eps --column "With margin (W)" --format json
 ```
 
-A cell is named by the **table id**, the **value of the row's first column** (repeat `--row` when a table has several key columns) and the **column header exactly as the table shows it**. The ids are printed by the first command: `power:summary`, and for every spacecraft mode `power:units:<mode>`, `power:subsystems:<mode>`, `power:buses:<mode>` and `power:totals:<mode>`; for the mass budget `mass:summary`, `mass:limits` (two key columns: the phase and the limit name, so give `--row` twice) and, for every mission phase, `mass:items:<phase>`, `mass:subsystems:<phase>`, `mass:totals:<phase>` and `mass:inertia:<phase>`; for the thermal budget `thermal:summary`, per spacecraft mode `thermal:units:<mode>`, `thermal:subsystems:<mode>` and `thermal:nodes:<mode>`, and per thermal case `thermal:temperatures:<case>` and `thermal:limits:<case>`.
+A cell is named by the **table id**, the **value of the row's first column** (repeat `--row` when a table has several key columns) and the **column header exactly as the table shows it**. The ids are printed by the first command: `power:summary`, and for every spacecraft mode `power:units:<mode>`, `power:subsystems:<mode>`, `power:buses:<mode>` and `power:totals:<mode>`; for the mass budget `mass:summary`, `mass:limits` (two key columns: the phase and the limit name, so give `--row` twice) and, for every mission phase, `mass:items:<phase>`, `mass:subsystems:<phase>`, `mass:totals:<phase>` and `mass:inertia:<phase>`; for the thermal budget `thermal:summary`, per spacecraft mode `thermal:units:<mode>`, `thermal:subsystems:<mode>` and `thermal:nodes:<mode>`, and per thermal case `thermal:temperatures:<case>` and `thermal:limits:<case>`; for the link budget `link:static` (give the link and the point with `--row` twice) and `link:rates` (the link, the point and the data rate in kbit/s, `--row` three times).
 
 What you get, for example for the power with margin of the unit `eps` in mode *Nominal*:
 
@@ -48,12 +48,13 @@ The value is shown with up to ten significant digits, not rounded to the display
 | Static power | summary, units, subsystems, buses, totals (every spacecraft mode) | **available** (command line and window) |
 | Static mass | summary, limits, and per mission phase items, subsystems, totals and centre of gravity, inertia | **available** (command line and window) |
 | Static thermal | summary, units, subsystems, nodes (dissipation), node temperatures and unit limits per case | **available** (command line and window); a temperature is shown as the terms of its heat balance around the solver's result |
-| Link, power timeline, orbit and eclipse | | planned, in this order |
+| Static link | the link budget at the static points and the margin by data rate | **available** (command line and window) |
+| Link passes (margin over time, data volume), power timeline, orbit and eclipse | | planned, in this order |
 
 The equation registry also records which code applies each equation; the equations that no code claims yet are listed in `tests/unit/test_equation_binding.py` and the list only gets shorter.
 
 ## In the window
 
-On a Power, Mass or Thermal sheet, select a value and choose **View → Explain this value** (Ctrl+Shift+I, also in Ctrl+K), or right-click the value. The **Explain** panel opens on the right, in the same group as the Inspector and Provenance panels, and shows the title of the value, the value, and the same text `budget explain` prints. The panel is hidden until you ask for it, also in the focused view; closing it is final until the next request. When nothing is selected, or the value is not one that can be explained, the panel says so. The explanation is cleared when the project is loaded again, since the numbers may have changed. The tables of the link budget and the timelines do not offer it yet.
+On a Power, Mass, Thermal or Link sheet, select a value and choose **View → Explain this value** (Ctrl+Shift+I, also in Ctrl+K), or right-click the value. The **Explain** panel opens on the right, in the same group as the Inspector and Provenance panels, and shows the title of the value, the value, and the same text `budget explain` prints. The panel is hidden until you ask for it, also in the focused view; closing it is final until the next request. When nothing is selected, or the value is not one that can be explained, the panel says so. The explanation is cleared when the project is loaded again, since the numbers may have changed. The pass tables and the timelines do not offer it yet.
 
 Decision: [D-206](../DECISIONS.md). The model behind the first tables: [static power](power-static.md).

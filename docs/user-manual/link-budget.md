@@ -46,7 +46,7 @@ The required [Eb/N0](../glossary.md#ebn0) comes from `config/ebn0_table.yaml` (a
 budget run my_satellite --budget link --out out
 ```
 
-For each **static point** (an [elevation](../glossary.md#elevation) and slant range you choose) and each listed data rate the table shows [EIRP](../glossary.md#eirp), [path loss](../glossary.md#path-loss), [G/T](../glossary.md#gt), other losses, [C/N0](../glossary.md#cn0), Eb/N0 and the [**margin**](../glossary.md#link-margin) over the required Eb/N0, and the highest rate that closes with the required margin. In the window: the **Link budget** tab.
+For each **static point** (an [elevation](../glossary.md#elevation) and slant range you choose) and each listed data rate the table shows [EIRP](../glossary.md#eirp), [path loss](../glossary.md#path-loss), [G/T](../glossary.md#gt), other losses, [C/N0](../glossary.md#cn0), Eb/N0 and the [**margin**](../glossary.md#link-margin) over the required Eb/N0, and the highest rate that closes with the required margin. In the window: the **Link budget** tab. To see how any number of the table was obtained, with the equation of every step, the inputs and the files they come from, use `budget explain` or *View → Explain this value* in the window ([how](../models/explain.md); the model: [static link](../models/link-static.md)).
 
 ## How do I get the data volume over the passes?
 
