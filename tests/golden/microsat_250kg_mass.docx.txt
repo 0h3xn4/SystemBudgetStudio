@@ -320,7 +320,7 @@ Provenance
 Provenance
 ## table
 Item | Value
-Tool | System Budget Studio 1.7.0
+Tool | System Budget Studio 1.8.0
 Python | 3.x
 Libraries | pinned for-golden-tests
 Project | Example 250 kg minisatellite
