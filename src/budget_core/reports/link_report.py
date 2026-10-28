@@ -144,6 +144,7 @@ def _pass_tables(result: LinkSeriesResult) -> list[Table]:
             note="From the highest listed rate that closes at each sample while the link is "
             "active (its modes, below its tracking limit). Per day = scenario total scaled to "
             "86 400 s.",
+            explain_id="linkpass:volume",
         )
     ]
     for s in result.series:
@@ -175,6 +176,8 @@ def _pass_tables(result: LinkSeriesResult) -> list[Table]:
                 ),
                 key_columns=(2,),  # AOS time: an inserted pass does not renumber the others
                 note="Lowest margin is at the lowest listed rate over the active samples.",
+                explain_id=f"linkpass:passes:{s.link_id}",
+                explain_key_columns=(0,),  # the pass number
             )
         )
     return tables

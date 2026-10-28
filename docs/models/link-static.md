@@ -1,6 +1,6 @@
 # Static RF link budget
 
-**What it computes.** For every link and every static point (an elevation and a range): the effective isotropic radiated power (EIRP), the receiver figure of merit (G/T), the free-space path loss, the atmospheric loss, the other losses, the carrier to noise density (C/N0); then, for each listed data rate, the energy per bit to noise density (Eb/N0), the margin over the required Eb/N0 and whether the link closes; the highest listed rate that closes and the rate at which the margin equals the required margin. It has no orbit and no time. The same equations run over the passes of a scenario for the [link passes](../user-manual/link-budget.md) (margin over time, data volume); those tables are not explained yet.
+**What it computes.** For every link and every static point (an elevation and a range): the effective isotropic radiated power (EIRP), the receiver figure of merit (G/T), the free-space path loss, the atmospheric loss, the other losses, the carrier to noise density (C/N0); then, for each listed data rate, the energy per bit to noise density (Eb/N0), the margin over the required Eb/N0 and whether the link closes; the highest listed rate that closes and the rate at which the margin equals the required margin. It has no orbit and no time. The same equations run over the passes of a scenario for the [link passes](../user-manual/link-budget.md) (margin over time, data volume): [link passes](link-passes.md).
 
 ## Equations
 
@@ -15,7 +15,7 @@
 | LNK-ATT | Atmospheric attenuation | sum of the named table entries, linear interpolation by elevation | only from `config/attenuation_table.yaml`; the tool has no propagation model (DV-P3, DV-L1) |
 | LNK-NADIR | Angle from nadir at the spacecraft | `sin η = R cos(el) / r`, `r² = R² + d² + 2 R d sin(el)` | spherical Earth, antenna boresight at nadir (DV-L2) |
 
-The data volume equation (LNK-VOLUME) belongs to the passes and is not explained yet.
+The data volume equation (LNK-VOLUME) belongs to the passes: [link passes](link-passes.md).
 
 ## Inputs and where they come from
 

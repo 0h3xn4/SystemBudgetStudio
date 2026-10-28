@@ -79,6 +79,13 @@ def ebn0_db(cn0: Number, data_rate_bps: float) -> Number:
     return cn0 - 10.0 * math.log10(data_rate_bps)
 
 
+@computes("LNK-VOLUME")
+def data_volume_bits(selected_rate_bps: Any, weight_s: Any) -> float:
+    """Bits sent: the chosen data rate of each sample times the seconds the sample stands for,
+    summed (the samples of a link, or of one pass)."""
+    return float((selected_rate_bps * weight_s).sum())
+
+
 @computes("LNK-MARGIN")
 def margin_db(ebn0: Number, required_ebn0_db: float) -> Number:
     """LNK-MARGIN: positive means the link closes with room to spare."""

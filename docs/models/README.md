@@ -7,12 +7,12 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | Area | Page | Status |
 |---|---|---|
 | Static power budget | [power-static.md](power-static.md) | written |
-| How a number was obtained (`budget explain`) | [explain.md](explain.md) | written for static power, mass, thermal, link and the power timeline |
+| How a number was obtained (`budget explain`) | [explain.md](explain.md) | written for static power, mass, thermal, link, the power timeline and the link passes |
 | Time-domain power (array, battery, modes, edges) | [power-timeline.md](power-timeline.md) | written |
 | Orbit, eclipse and Sun geometry (gravity models, shadow models) | (planned) | planned |
 | Mass budget (margins, centre of mass, inertia, expendables) | [mass-static.md](mass-static.md) | written |
 | Thermal (network, steady state, environment) | [thermal-static.md](thermal-static.md) | written |
-| RF link (EIRP, G/T, losses, rate selection, volume) | [link-static.md](link-static.md) | written for the static table (passes and volume planned) |
+| RF link (EIRP, G/T, losses, rate selection, volume) | [link-static.md](link-static.md), [link-passes.md](link-passes.md) | written |
 | Units and conversions (accepted units, canonical units, refused words) | (planned) | planned |
 | Rounding and number formats | (planned) | planned |
 | Provenance, input digest and `budget verify` | [provenance.md](provenance.md) | written |
