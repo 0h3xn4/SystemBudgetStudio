@@ -101,7 +101,7 @@ Known limits, stated plainly:
 
 - The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 9 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
-- The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 8.
+- The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 9.
 - The XLSX files were not opened in Excel.
 
 ## Related tools
