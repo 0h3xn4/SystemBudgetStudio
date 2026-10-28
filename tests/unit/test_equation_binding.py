@@ -24,17 +24,6 @@ NOT_YET_BOUND = frozenset(
         "ENV-SUN",
         "ENV-TOPO",
         "LNK-VOLUME",
-        "TDP-AGE",
-        "TDP-ARRAY",
-        "TDP-BALANCE",
-        "TDP-CAP",
-        "TDP-COS",
-        "TDP-DEMAND",
-        "TDP-DOD",
-        "TDP-LIT",
-        "TDP-PEAK",
-        "TDP-SOC",
-        "TDP-TEMP",
     }
 )
 

@@ -15,7 +15,7 @@ from budget_core.environment.data import EnvironmentData
 from budget_core.environment.intervals import Interval, merge_intervals
 from budget_core.power.time_domain import (
     DOD_EXCEEDED,
-    _exceeding,
+    exceeding_intervals,
     time_domain_budget,
 )
 from tests.power_helpers import power_system, sv, synthetic_env, synthetic_run, td_project
@@ -106,5 +106,5 @@ def test_soft_shadow_energy_is_the_trapezoid_integral() -> None:
 def test_a_limit_met_exactly_is_not_a_violation() -> None:
     edges = np.array([0.0, 10.0, 20.0])
     just_over = np.array([0.0, 0.2 + 1e-13, 0.2])
-    assert _exceeding(edges, just_over, 0.2) == []
-    assert len(_exceeding(edges, np.array([0.0, 0.2 + 1e-6, 0.2]), 0.2)) == 1
+    assert exceeding_intervals(edges, just_over, 0.2) == []
+    assert len(exceeding_intervals(edges, np.array([0.0, 0.2 + 1e-6, 0.2]), 0.2)) == 1

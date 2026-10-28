@@ -15,13 +15,14 @@ from collections.abc import Callable, Collection
 from datetime import timedelta
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, QTimer, Signal
+from PySide6.QtCore import QPoint, Qt, QThread, QTimer, Signal
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QFileDialog,
     QHBoxLayout,
     QLabel,
+    QMenu,
     QSplitter,
     QTableWidget,
     QTabWidget,
@@ -71,6 +72,24 @@ from budget_gui.worker import ExportWorker
 BASES = ("nominal", "margined")
 CASE_NAMES = ("bol", "eol")
 AXES = ("Elapsed", "UTC", "Orbit")
+
+
+# The window's tables name their columns a little differently from the report tables Explain
+# addresses (D-208): these are the report's names.
+SUMMARY_ROWS = {
+    "Capacity (Wh)": "Battery capacity",
+    "Avg generation (W)": "Average generation",
+    "Avg demand (W)": "Average demand at source",
+    "Generated (Wh)": "Energy generated",
+    "Demanded (Wh)": "Energy demanded",
+    "Lowest SoC (%)": "Lowest state of charge",
+    "Deepest DoD (%)": "Deepest depth of discharge",
+    "Not supplied (Wh)": "Energy not supplied",
+    "Violations": "Violations",
+}
+VIOLATION_COLUMNS = {"Worst": "Worst value", "Input": "Input to change"}
+MODE_COLUMNS = {"Share (%)": "Share"}
+EXPLAIN_TEXT = "Explain this value"
 
 
 EMPTY_TEXT = (
@@ -133,6 +152,7 @@ class PowerTimelineView(QWidget):
     jump_requested = Signal(str, str)  # file, path in the file
     export_finished = Signal(list)
     export_failed = Signal(str)
+    explain_requested = Signal(str, object, str)  # table id, key of the row, column to explain
 
     def __init__(self) -> None:
         super().__init__()
@@ -267,7 +287,69 @@ class PowerTimelineView(QWidget):
         self.violations_table.cellClicked.connect(lambda row, _c: self.select_violation(row))
         self.violations_table.cellDoubleClicked.connect(lambda row, _c: self.jump_to(row))
         self.plot.set_info_provider(self._info_at)
+        for table in (
+            self.summary_table,
+            self.violations_table,
+            self.orbits_table,
+            self.modes_table,
+        ):
+            self._make_explainable(table)
         self.set_project(None, [])
+
+    # ---- Explain (D-208) ---------------------------------------------------------------------
+    def explain_target(
+        self, table: QTableWidget, row: int, col: int
+    ) -> tuple[str, list[str], str] | None:
+        """(table id, row key, column) of the report table cell that the cell at (row, col) of a
+        table of this view shows, or None when it is not a value that is explained."""
+        if self.result is None or not (
+            0 <= row < table.rowCount() and 0 <= col < table.columnCount()
+        ):
+            return None
+
+        def text(r: int, c: int) -> str:
+            item = table.item(r, c)
+            return "" if item is None else item.text()
+
+        head = table.horizontalHeaderItem(col)
+        header = "" if head is None else head.text()
+        if table is self.summary_table:
+            label = SUMMARY_ROWS.get(header)
+            return None if label is None else ("timeline:cases", [label], text(row, 0))
+        if table is self.violations_table:
+            key = [text(row, c) for c in range(4)]
+            return ("timeline:violations", key, VIOLATION_COLUMNS.get(header, header))
+        if table is self.orbits_table:
+            return (f"timeline:balance:{self.current_case()}", [text(row, 0)], header)
+        if table is self.modes_table:
+            return ("timeline:modes", [text(row, 0)], MODE_COLUMNS.get(header, header))
+        return None
+
+    def current_explain_target(self) -> tuple[str, list[str], str] | None:
+        """The cell last selected on the table in view."""
+        table = self.tabs.currentWidget()
+        if not isinstance(table, QTableWidget):
+            return None
+        return self.explain_target(table, table.currentRow(), table.currentColumn())
+
+    def _make_explainable(self, table: QTableWidget) -> None:
+        table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        def menu(position: QPoint) -> None:
+            index = table.indexAt(position)
+            if not index.isValid():
+                return
+            table.setCurrentCell(index.row(), index.column())
+            target = self.explain_target(table, index.row(), index.column())
+            popup = QMenu(table)
+            action = popup.addAction(f"{EXPLAIN_TEXT}\tCtrl+Shift+I")
+            if target is not None:
+                action.triggered.connect(lambda: self.explain_requested.emit(*target))
+            else:
+                action.setEnabled(False)
+            popup.exec(table.viewport().mapToGlobal(position))
+
+        table.customContextMenuRequested.connect(menu)
 
     def use_shared_selectors(self) -> None:
         """Scenario and case (BOL or EOL) are chosen in the top bar: hide this view's own."""

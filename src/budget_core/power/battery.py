@@ -14,11 +14,13 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.equation_binding import computes
 from budget_core.slices import array_from, list_from, release
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
 
 
+@computes("TDP-CAP")
 def pack_capacity_wh(
     cell_capacity_ah: float,
     cell_voltage_v: float,
@@ -44,6 +46,7 @@ class BatteryTrace:
     saturation_fraction: NDArray
 
 
+@computes("TDP-SOC")
 def integrate_battery(
     dt_s: NDArray,
     generation_w: NDArray,

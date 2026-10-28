@@ -7,6 +7,7 @@ from pathlib import Path
 
 from PySide6.QtCore import QThread, Signal
 
+from budget_core.explain import Explainer, ExplainError
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import BudgetOutput, write_outputs
 
@@ -45,3 +46,26 @@ class ExportWorker(QThread):
             self.failed.emit(f"The export failed ({type(exc).__name__}).")
             return
         self.finished_ok.emit([str(p) for p in written])
+
+
+class ExplainWorker(QThread):
+    """Solves the power timeline again with the solver's detail (Explain needs the series the
+    result only keeps as means), off the window thread."""
+
+    finished_ok = Signal()
+    failed = Signal(str)
+
+    def __init__(self, explainer: Explainer) -> None:
+        super().__init__()
+        self._explainer = explainer
+
+    def run(self) -> None:
+        try:
+            self._explainer.timeline_result()
+        except ExplainError as exc:  # plain language by construction
+            self.failed.emit(str(exc))
+            return
+        except Exception as exc:  # plain message only, no traceback or project content
+            self.failed.emit(f"The explanation could not be prepared ({type(exc).__name__}).")
+            return
+        self.finished_ok.emit()

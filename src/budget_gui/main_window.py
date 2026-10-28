@@ -105,7 +105,7 @@ from budget_gui.top_bar import TopBar
 from budget_gui.unit_table import export_unit_table, import_unit_table
 from budget_gui.welcome import WelcomePage
 from budget_gui.widgets import PowerView
-from budget_gui.worker import ExportWorker
+from budget_gui.worker import ExplainWorker, ExportWorker
 from budget_gui.workspace import TABS, SubTabs, Workspace
 
 
@@ -183,6 +183,7 @@ class MainWindow(QMainWindow):
         self.editors.add_fixed(self.scenario_view, "Scenario")
         self.scenario_view.editor.save_requested.connect(self.save_model)
         self.timeline_view = PowerTimelineView()
+        self.timeline_view.explain_requested.connect(self.explain_timeline_value)
         self.timeline_view.run_provider = self.scenario_view.reusable_run
         self.link_passes_view = LinkPassesView()
         self.link_passes_view.run_provider = self.scenario_view.reusable_run
@@ -235,6 +236,10 @@ class MainWindow(QMainWindow):
         self.explain_panel = ExplainPanel()
         self.explain_dock = self._dock("Explain", "dock-explain", self.explain_panel)
         self._explainer: Explainer | None = None  # of the project that is open
+        self._timeline_explainer: Explainer | None = None  # of the timeline result on show
+        self._timeline_explainer_of: object = None  # the result that explainer was made for
+        self._explain_worker: ExplainWorker | None = None
+        self._explain_pending: tuple[Explainer, str, list[str], str] | None = None
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.project_dock)
         for dock in (self.inspector_dock, self.provenance_dock, self.explain_dock):
             self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
@@ -1262,8 +1267,13 @@ class MainWindow(QMainWindow):
 
     # ---- Explain (D-206) ---------------------------------------------------------------------
     def explain_selected_value(self) -> None:
-        """View > Explain this value: the cell last selected on the open Power, Mass, Thermal
-        or Link sheet."""
+        """View > Explain this value: the cell last selected on the open Power (budget or
+        timeline), Mass, Thermal or Link sheet."""
+        if self.timeline_view.isVisible():
+            timeline_target = self.timeline_view.current_explain_target()
+            if timeline_target is not None:
+                self.explain_timeline_value(*timeline_target)
+                return
         target = None
         for budget_view in self._explainable_views:
             if budget_view.isVisible():
@@ -1290,11 +1300,76 @@ class MainWindow(QMainWindow):
                 self.session.thermal,
                 self.session.link,
             )
-        key = [str(table.rows[row][i]) for i in table.key_columns]
+        key = [str(table.rows[row][i]) for i in table.explain_key]
         try:
             explanation = self._explainer.explain(
                 table.explain_id, key, table.columns[column].header
             )
+        except ExplainError as exc:
+            self._show_explain_message(str(exc))
+            return
+        self.explain_panel.show_explanation(explanation)
+        self._reveal_explain()
+
+    def explain_timeline_value(self, table_id: str, key: list[str], column: str) -> None:
+        """Show how a value of the power timeline was obtained. The timeline keeps means over the
+        scenario grid; Explain needs the solver's own series, so the scenario is solved again with
+        them in a worker (the same inputs give the same numbers) and the cell is explained then."""
+        project = self.session.project
+        result = self.timeline_view.result
+        if project is None or result is None:
+            self._show_explain_message("Work out the power timeline first, then explain a value.")
+            return
+        explainer = self._timeline_explainer
+        if (
+            explainer is None
+            or explainer.project is not project
+            or self._timeline_explainer_of is not result
+        ):
+            explainer = Explainer(
+                project,
+                self.session.power,
+                self.session.mass,
+                self.session.thermal,
+                self.session.link,
+                result,
+            )
+            self._timeline_explainer = explainer
+            self._timeline_explainer_of = result
+        if explainer.timeline_ready:
+            self._explain_with(explainer, table_id, key, column)
+            return
+        self._explain_pending = (explainer, table_id, key, column)
+        if self._explain_worker is not None:
+            return  # the one in progress hands over to the latest request when it is done
+        self._show_explain_message("Preparing the explanation: the timeline is solved again.")
+        worker = ExplainWorker(explainer)
+        worker.finished_ok.connect(self._explain_prepared)
+        worker.failed.connect(self._explain_failed)
+        self._explain_worker = worker
+        worker.start()
+
+    def _end_explain_worker(self) -> None:
+        if self._explain_worker is not None:
+            self._explain_worker.wait()  # the signal arrives just before the thread ends
+            self._explain_worker = None
+
+    def _explain_prepared(self) -> None:
+        self._end_explain_worker()
+        pending, self._explain_pending = self._explain_pending, None
+        if pending is not None:
+            self._explain_with(*pending)
+
+    def _explain_failed(self, message: str) -> None:
+        self._end_explain_worker()
+        self._explain_pending = None
+        self._show_explain_message(message)
+
+    def _explain_with(
+        self, explainer: Explainer, table_id: str, key: list[str], column: str
+    ) -> None:
+        try:
+            explanation = explainer.explain(table_id, key, column)
         except ExplainError as exc:
             self._show_explain_message(str(exc))
             return
@@ -1775,6 +1850,8 @@ class MainWindow(QMainWindow):
         self.tree.set_project(session.path, session.display_project)
         self.power_view.set_document(session.document)
         self._explainer = None
+        self._timeline_explainer = None
+        self._explain_pending = None
         self.explain_panel.clear()
         self.mass_view.set_document(session.mass_document)
         self.thermal_view.set_document(session.thermal_document)
@@ -2142,7 +2219,12 @@ class MainWindow(QMainWindow):
     def busy(self) -> bool:
         """A computation or an export is running in a background thread."""
         views = (self.scenario_view, self.timeline_view, self.link_passes_view, self.compare_view)
-        return self._worker is not None or self.session.loading or any(v.is_busy() for v in views)
+        return (
+            self._worker is not None
+            or self._explain_worker is not None
+            or self.session.loading
+            or any(v.is_busy() for v in views)
+        )
 
     def wait_for_jobs(self, timeout_s: float = 120.0) -> bool:
         """Let the running jobs finish (their results are delivered); False on timeout."""
