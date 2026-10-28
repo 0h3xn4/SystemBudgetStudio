@@ -2,6 +2,8 @@
 
 Status: **Phase 0 only. No code, test, configuration or documentation file other than this one was changed.** Implementation waits for the product owner's review of this document (see [section 8](#8-decisions-needed-from-the-product-owner)).
 
+**Progress after the review** (the owner adopted the recommendations of section 8, decision D-203): P0 (safety net, `docs/changes.md`, two defects fixed) is done; P1 (input digest, run parameters, `budget verify`) is in progress. Later phases follow the order of section 7. The sections below are the audit as it stood at 1.7.0 and are not rewritten as phases land; what changed is recorded in [`changes.md`](changes.md), the [changelog](../CHANGELOG.md) and the pages of [`models/`](models/README.md).
+
 Tool version audited: 1.7.0 (`main` at the merge of PR #78). Date: 2026-10-28.
 
 Task context: engineering teams find the tool a "black box" and too restrictive. The users are experienced spacecraft systems engineers who must verify, defend and adapt every number in a design review. The target principles are: glass box, nothing hidden or hard-coded, engineer stays in control, progressive disclosure. The task lists 14 requirements; section 3 scores the tool against each of them.

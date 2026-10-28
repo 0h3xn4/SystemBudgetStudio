@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Collection, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -43,6 +43,7 @@ from budget_core.reports.timeline_export import (
     violations_csv,
 )
 from budget_core.reports.timeline_report import build_timeline_report
+from budget_core.scenario.run import run_parameters
 from budget_core.thermal.static_thermal import StaticThermalResult
 
 REPORT_KINDS = ("xlsx", "pdf", "docx", "json", "csv")
@@ -111,6 +112,17 @@ def thermal_output(
     )
 
 
+def timeline_parameters(result: TimeDomainResult) -> tuple[tuple[str, str], ...]:
+    """The options of a power timeline: the scenario's, the demand basis, the cases solved and the
+    mission phase that picks the depth-of-discharge limit."""
+    return (
+        *run_parameters(result.run),
+        ("Demand basis", result.load_basis),
+        ("Cases", ", ".join(c.case for c in result.cases)),
+        ("Mission phase", result.mission_phase or "not set"),
+    )
+
+
 def link_output(
     project: Project,
     static: StaticLinkResult,
@@ -121,6 +133,8 @@ def link_output(
     plots: bool = True,
 ) -> BudgetOutput:
     """Static link table, plus the pass series when a scenario was run."""
+    if passes is not None:
+        provenance = replace(provenance, parameters=run_parameters(passes.run))
     document = build_link_report(project, static, provenance, load_problems, passes, plots=plots)
     prefix = "link_static" if passes is None else f"link_passes_{passes.run.scenario_id}"
     csvs: list[tuple[str, str]] = [(f"{prefix}_table.csv", static_csv(static))]
@@ -155,6 +169,7 @@ def timeline_output(
 ) -> BudgetOutput:
     """Time-domain power budget: report, JSON summary, and CSV files (series per case, the
     violations and the orbit balances). `series_every` thins the series CSV (every n-th step)."""
+    provenance = replace(provenance, parameters=timeline_parameters(result))
     document = build_timeline_report(project, result, provenance, list(load_problems), plots=plots)
     scenario = result.run.scenario_id
     csvs = [

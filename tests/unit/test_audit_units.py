@@ -108,3 +108,21 @@ def test_hint_example_is_valid_for_each_field() -> None:
         unit = canonical_unit(field)
         assert unit and f"'2.5 {unit}'" in _unit_hint(field)
         parse_quantity(f"2.5 {unit}", field)
+
+
+@pytest.mark.parametrize("word", ["ton", "tons", "Ton"])
+def test_the_ambiguous_word_ton_is_refused_and_the_message_names_the_alternatives(
+    word: str,
+) -> None:
+    """pint reads 'ton' as the US short ton (907 kg); it is refused (docs/changes.md)."""
+    with pytest.raises(UnitError) as info:
+        parse_quantity(f"5 {word}", "mass_kg")
+    message = str(info.value)
+    assert "ambiguous" in message and "'t'" in message and "lb" in message
+    assert "5" not in message  # the message never carries the value read from the file
+
+
+def test_the_unambiguous_mass_units_still_parse() -> None:
+    assert parse_quantity("1 t", "mass_kg") == 1000.0
+    assert parse_quantity("1 tonne", "mass_kg") == 1000.0
+    assert parse_quantity("1 lb", "mass_kg") == pytest.approx(0.45359237)

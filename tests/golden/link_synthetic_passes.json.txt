@@ -122,10 +122,34 @@
   ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
+    "input_files": [],
+    "inputs_digest": "sha256:f6b7483bdf8c0b5bbb411b6d64735296a243667eb5ee2acd3d911752577df50a",
     "libraries": [
       [
         "pinned",
         "for-golden-tests"
+      ]
+    ],
+    "parameters": [
+      [
+        "Environment source",
+        "synthetic"
+      ],
+      [
+        "Shadow model",
+        "cylindrical"
+      ],
+      [
+        "Start (UTC)",
+        "2026-01-01T00:00:00Z"
+      ],
+      [
+        "Duration",
+        "1000 s"
+      ],
+      [
+        "Step",
+        "10 s"
       ]
     ],
     "project_name": "Time-domain test",

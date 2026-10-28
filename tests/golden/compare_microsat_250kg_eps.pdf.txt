@@ -671,8 +671,8 @@ System Budget Studio 1.7.0
 Python
 3.x
 Libraries
-numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests,
-reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
+numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx
+for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
 Project
 Example 250 kg minisatellite, complete power and thermal inputs
 ## page 5
@@ -685,6 +685,10 @@ Project revision
 1
 Scenario
 static vs static
+Inputs digest (model)
+sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb
+Input files
+41 files, sha256:32342adb88001ea2877337884279309f008a73e7f83fb7326b38369872bba605
 Generated (UTC)
 2026-01-02T03:04:05Z
 User

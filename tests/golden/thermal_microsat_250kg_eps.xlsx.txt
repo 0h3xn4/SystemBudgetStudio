@@ -345,7 +345,7 @@
 6: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | 'system_mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 7: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | 'limits[0].limit_kg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 8: 'error' | 'THERMAL_MARGIN_INSUFFICIENT' | 'units/radio.yaml' | 'temperature_limits (case hot)' | "Unit 'radio' is within its operating limits in a thermal case but closer than the required temperature margin." | 'The margin is set in config/thermal_environment.yaml.'
-## sheet Provenance rows=10 cols=2
+## sheet Provenance rows=12 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 1.7.0'
@@ -354,5 +354,7 @@
 6: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs'
 7: 'Project revision' | '1'
 8: 'Scenario' | 'static (no scenario)'
-9: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-10: 'User' | 'Golden User'
+9: 'Inputs digest (model)' | 'sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb'
+10: 'Input files' | '41 files, sha256:32342adb88001ea2877337884279309f008a73e7f83fb7326b38369872bba605'
+11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+12: 'User' | 'Golden User'

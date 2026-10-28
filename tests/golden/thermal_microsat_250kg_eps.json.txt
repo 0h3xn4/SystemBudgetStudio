@@ -2545,12 +2545,221 @@
   ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
+    "input_files": [
+      {
+        "path": "config/attenuation_table.yaml",
+        "sha256": "57a9d8deda42af04dde80b2479d04819947334435b0af1570fc7aa3199eb280e",
+        "size": 998
+      },
+      {
+        "path": "config/ebn0_table.yaml",
+        "sha256": "b5d405331a23276b617ab955af8e1c6a09c882e7ae01e71547342a7dcf1ee1df",
+        "size": 355
+      },
+      {
+        "path": "config/margin_policy.yaml",
+        "sha256": "d59ff23a6f69384c715010bf8033e82ea706eea2f818d3dd9daf885960f87e4c",
+        "size": 991
+      },
+      {
+        "path": "config/mass_limits.yaml",
+        "sha256": "5d623aaf09dd240b4a72a1d4f67e8d841d940d456e592bfc8a44bcc13995e56f",
+        "size": 189
+      },
+      {
+        "path": "config/power_config.yaml",
+        "sha256": "999447ee487265d2768b8f0a0513a84ff77fdfe63b2cc8cf85cfd5dd094a547a",
+        "size": 373
+      },
+      {
+        "path": "config/power_system.yaml",
+        "sha256": "a7e1e276d5f54b0c7fed2487bd5367e91bea264e409298cffe6716e111654708",
+        "size": 3150
+      },
+      {
+        "path": "config/thermal_environment.yaml",
+        "sha256": "8ea06e55672deba2af3f3041d6d2043f599850fbe3abc9ef6f3e737a3207d96e",
+        "size": 1169
+      },
+      {
+        "path": "config/thermal_model.yaml",
+        "sha256": "cb7aaa7db5f7110b8212e360e97b44c125faf95732c727b1d5c6fa86464f9a38",
+        "size": 6966
+      },
+      {
+        "path": "expendables/propellant.yaml",
+        "sha256": "e27262dc7747488e9cf57817ef48375590c67d46e3ab858b9b8ade03a0e27f25",
+        "size": 194
+      },
+      {
+        "path": "ground_stations/gs_north.yaml",
+        "sha256": "6a93e512e00843232808b27779d8b629fb20025a6f765f37c1a868c4b08ffaee",
+        "size": 147
+      },
+      {
+        "path": "ground_stations/gs_south.yaml",
+        "sha256": "9a8ecb57378ea47135e8b51c051ea1fad0341fb28a024712438d384a928a0ea5",
+        "size": 149
+      },
+      {
+        "path": "links/sband_down.yaml",
+        "sha256": "3a6529c9ff08ca074fe2f39d898680537e5e9163d5b5b36d315afcdfd4473fc7",
+        "size": 1357
+      },
+      {
+        "path": "links/xband_down.yaml",
+        "sha256": "a9058a1a7eeb981d953369d4b08d49e685262a46b8dc16339aed63b1677eca74",
+        "size": 1451
+      },
+      {
+        "path": "modes/charging.yaml",
+        "sha256": "2ec1798816ccbcc21a9cf050f79faebba2dad37011a31ecefa92110ea9e2fa9a",
+        "size": 456
+      },
+      {
+        "path": "modes/downlink.yaml",
+        "sha256": "4c1305b74427e321491fdb7cfa7e3947175f3523c195f0623d69eedb4474da06",
+        "size": 440
+      },
+      {
+        "path": "modes/imaging.yaml",
+        "sha256": "83dd3584e5b504c6370edaff8bc6c8e75be52c65875af45246883a87e2fe6580",
+        "size": 419
+      },
+      {
+        "path": "modes/nominal.yaml",
+        "sha256": "245ccff1475362fafe29449295dc2be7ab8a6020a70ced666f26a6dd05cecbdd",
+        "size": 422
+      },
+      {
+        "path": "modes/safe.yaml",
+        "sha256": "116aa800ab3fc612b15797946d3285d071cfdf682d6da71a567fb010c33948a9",
+        "size": 395
+      },
+      {
+        "path": "orbits/leo.yaml",
+        "sha256": "28e743e5ae8282d0d2252ae676be37fe5803d5db6fb6285bbd777b474155fdd3",
+        "size": 280
+      },
+      {
+        "path": "project.yaml",
+        "sha256": "d573e6156c09bf2efbc9fc4696414fba687d8c4b66ed841a73c9146c1f6c965d",
+        "size": 252
+      },
+      {
+        "path": "scenarios/one_day.yaml",
+        "sha256": "caafc03fd450d7c6743956a8243b950a70bfaa1709627ce30da8bcb59f1c69f7",
+        "size": 662
+      },
+      {
+        "path": "spacecraft.yaml",
+        "sha256": "ea4a80a3bf2a4cb2b2781d1b0465c00ccf34c2af189fbef4ffdc2f46ed064f6b",
+        "size": 435
+      },
+      {
+        "path": "targets/tgt_plains.yaml",
+        "sha256": "1a83f7c3e4d7deba4bd397c3e8924154b30ce061624975be97146716a9cc0e47",
+        "size": 143
+      },
+      {
+        "path": "units/adapter.yaml",
+        "sha256": "704419f098134722b159c336eff6dd982b84087f17d09b01e3eabeb725bdfde5",
+        "size": 573
+      },
+      {
+        "path": "units/adcs.yaml",
+        "sha256": "a4831fd28fc64168437bd8cf98ad6df9b7fdb71376acce7441571b98f259165f",
+        "size": 1157
+      },
+      {
+        "path": "units/battery.yaml",
+        "sha256": "2f5c70fcacebbdacddc773a504650b00911b058b1c7fac32e5a15e5d7694f4fa",
+        "size": 547
+      },
+      {
+        "path": "units/camera.yaml",
+        "sha256": "b64de56b337aaf35ff8c9a6137d3f7d73d0d2ffef8493bdc5d6d6b8673b96ea2",
+        "size": 670
+      },
+      {
+        "path": "units/eps.yaml",
+        "sha256": "d01b876c03a2d46ed5bedb1d78178c542caa38fe0f98a453c108808c2b48ce66",
+        "size": 1044
+      },
+      {
+        "path": "units/gnss.yaml",
+        "sha256": "95dae377dd641504e9e780d490d267a2716d62998431b2485d9d74fe5510ac3e",
+        "size": 892
+      },
+      {
+        "path": "units/harness.yaml",
+        "sha256": "14dbd288ba3287092fd969c9f585ed9f393e3e9439290aa830e12c650ddb135d",
+        "size": 408
+      },
+      {
+        "path": "units/heaters.yaml",
+        "sha256": "04c859b139a17face3611fe98588a4e9fce6fb4b874cb530ca743bd07011b8c0",
+        "size": 901
+      },
+      {
+        "path": "units/magnetorquers.yaml",
+        "sha256": "33378cea113a7e5a643150ea6afb9a2d74b6da410ba0cafe089fdd2823a6c8ec",
+        "size": 900
+      },
+      {
+        "path": "units/obc.yaml",
+        "sha256": "6cd9f86c4e07408badda33c0ad74addb93afae8dce095970987e2891f6a4e12d",
+        "size": 1026
+      },
+      {
+        "path": "units/pdu_data.yaml",
+        "sha256": "4f6b4f58208c4f1283e94a52c9bd8317eaa673761ab5378a9faccdb269f19dba",
+        "size": 1028
+      },
+      {
+        "path": "units/radio.yaml",
+        "sha256": "dd7df7c0f97b1d0d58d6c221339fcb28354f8f6938a8865a97e9d23fdd4f6007",
+        "size": 1144
+      },
+      {
+        "path": "units/reaction_wheels.yaml",
+        "sha256": "60d9e7d7394190fcbb90489c210afcd3333c58023913683ebb23397951cda07a",
+        "size": 1149
+      },
+      {
+        "path": "units/solar_array.yaml",
+        "sha256": "9420f389800175f0b1d6ec89ea7ffbfd3df13e9f7854fa81db6e0e615c6491e8",
+        "size": 553
+      },
+      {
+        "path": "units/star_tracker.yaml",
+        "sha256": "95b7487d85fd20379ee6c1001fb91e82b51ebb37221b3239460d76555816c8b6",
+        "size": 1024
+      },
+      {
+        "path": "units/structure.yaml",
+        "sha256": "04090c35277546fc39c376e33487118f7ab355ee53d134d9f5cff5c89bda6b1c",
+        "size": 547
+      },
+      {
+        "path": "units/sun_sensors.yaml",
+        "sha256": "876bc9689886f02d05764e097a252acb7f08753c9ebddb4c6f052de0d55829d0",
+        "size": 899
+      },
+      {
+        "path": "units/xband_tx.yaml",
+        "sha256": "f11da8dba60829593792e104e8781576dafe4babdf9e25f8a47860be1d68a609",
+        "size": 675
+      }
+    ],
+    "inputs_digest": "sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb",
     "libraries": [
       [
         "pinned",
         "for-golden-tests"
       ]
     ],
+    "parameters": [],
     "project_name": "Example 250 kg minisatellite, complete power and thermal inputs",
     "project_revision": "1",
     "python_version": "3.x",

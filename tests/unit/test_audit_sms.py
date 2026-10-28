@@ -158,6 +158,9 @@ def test_an_unknown_time_of_maximum_is_empty_in_csv_and_null_in_json(tmp_path: P
         project_revision="1",
         generated="2026-01-01T00:00:00Z",
         user="u",
+        inputs_digest="",
+        input_files=(),
+        parameters=(),
     )
     data = json.loads(export.environment_json(run, provenance))  # type: ignore[arg-type]
     assert data["sites"]["gs"]["passes"][0]["time_of_max_s"] is None

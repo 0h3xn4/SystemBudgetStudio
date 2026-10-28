@@ -43,6 +43,28 @@ budget run my_satellite --user "A. Engineer" --date 2026-01-02T00:00:00Z --out o
 
 Without them the user is the `BUDGET_USER` environment variable or your login name, and the date is `SOURCE_DATE_EPOCH` or the clock. Every report records the tool version, the library versions, the project revision, the scenario, the time and the user; because of that, remember to raise `revision` in `project.yaml` when you change numbers ([revisions](create-a-project.md#how-do-i-keep-revisions)).
 
+## How do I know which inputs a result came from?
+
+Every report also records **what it was computed from**, so that a colleague can check it without trusting the revision label:
+
+| Provenance row | What it is |
+|---|---|
+| **Inputs digest (model)** | A SHA-256 of the project as the tool loaded it: every unit, mode, orbit, station, scenario, link and configuration number, in a fixed order. Comments, key order and spacing do not change it; any number does. |
+| **Input files** | How many project files were read and one SHA-256 over their names, sizes and byte hashes. A comment edit changes this one but not the digest above. |
+| **Run parameters** | The options that change a number: for a scenario the environment source, the shadow model, start, duration and step; for a power timeline also the demand basis, the cases and the mission phase. |
+
+The JSON files carry the full list (`provenance.input_files`: path, size and hash of every file) and the run parameters as pairs. The CSV sets carry the three rows in `<name>_provenance.csv`.
+
+To find out whether a project is the one a result came from, give the export and the project folder to `verify`:
+
+```bash
+budget verify results/power_static.json my_satellite
+```
+
+It prints **MATCH** (exit code 0) when the project gives the digest recorded in the export, and says which files differ as text only (a comment, say). It prints **DIFFERENT** (exit code 1) when it does not, and names the files that changed, appeared or disappeared, so you can see what was edited since the export. A `<name>_provenance.csv` works in place of the JSON file but cannot name the files. An export made by an older version records no digest and is reported as such. `verify` says whether the *inputs* agree, not whether the numbers are right; if the tool version differs it says so, because a new version can compute a different number from the same inputs ([changes](../changes.md)).
+
+Files that are read outside the project's own YAML files (an antenna pattern file, imported environment files) are not in the list yet.
+
 ## How do I export from the window?
 
 The **Reports** area (Ctrl+7) is the place to write files. It shows the provenance every file will carry, then what can be exported with where it stands (the static budgets, the power timeline and the scenario results; the last two are *not worked out* until you press **Run**, and *out of date* when the project changed since), the formats (XLSX, PDF, DOCX, JSON, CSV; the scenario files are always CSV and JSON), and a folder. **Export** writes the ticked parts one after the other in the background, with a progress bar, and lists the files written; **Show the folder** opens it. When Export is greyed out, its tooltip says why. **File → Export reports** (Ctrl+E) still writes the reports of all static budgets to a folder you choose and **File → Export power timeline** (Ctrl+Shift+E) the power timeline. *Power → Timeline*, *Link → Passes* and *Compare* also have an **Export…** button. The folder is not remembered between sessions, because the tool keeps no path of your projects.  *Power → Timeline*, *Link → Passes* and *Compare* also have an **Export…** button. While the project has an error nothing can be exported: the tables on screen are the old results from before the error. Long exports run in the background and the window stays usable; a second export cannot start while one runs.

@@ -24,7 +24,7 @@ from budget_core.io.project_loader import model_to_data
 from budget_core.model import Project, Scenario
 from budget_core.problems import Problem, Severity
 from budget_core.scenario.timeline import TimelineSegment, build_timeline
-from budget_core.timeutil import parse_utc
+from budget_core.timeutil import format_utc, parse_utc
 
 
 class ScenarioRunError(Exception):
@@ -43,6 +43,18 @@ class ScenarioRun:
     timeline: tuple[TimelineSegment, ...]
     notes: tuple[str, ...]
     problems: tuple[Problem, ...] = ()  # findings of the run itself (an old TLE)
+
+
+def run_parameters(run: ScenarioRun) -> tuple[tuple[str, str], ...]:
+    """The scenario options that change a number, for the provenance of a run's outputs."""
+    env, sc = run.env, run.scenario
+    return (
+        ("Environment source", str(env.source)),
+        ("Shadow model", str(env.shadow_model)),
+        ("Start (UTC)", format_utc(env.grid.start)),
+        ("Duration", f"{sc.duration_s:.0f} s"),
+        ("Step", f"{sc.step_s:g} s"),
+    )
 
 
 def grid_for(scenario: Scenario) -> TimeGrid:

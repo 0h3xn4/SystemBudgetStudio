@@ -149,6 +149,17 @@ def parse_quantity(text: str, field: str) -> float:
     return result
 
 
+# pint's default registry knows words whose meaning depends on the country. "ton" is its US short
+# ton (907.18 kg), while an engineer reading "5 ton" usually means the metric tonne. These words
+# are refused with a message that names the unambiguous spellings (docs/changes.md, 2026-10-28).
+_AMBIGUOUS_UNITS = {
+    "ton": "'ton' is ambiguous (US short ton 907 kg, metric tonne 1000 kg); write 't' for the "
+    "metric tonne or 'lb' for pounds",
+    "tons": "'tons' is ambiguous (US short ton 907 kg, metric tonne 1000 kg); write 't' for the "
+    "metric tonne or 'lb' for pounds",
+}
+
+
 def _example(key: str) -> str:
     return {"w": "2.5 W", "hz": "2.2 GHz", "kg": "1.5 kg", "s": "35 min"}.get(
         key, f"1 {_SUFFIXES[key].label}"
@@ -188,6 +199,9 @@ def _linear(number: float, token: str, key: str, info: _Suffix, difference: bool
             f"this field is a linear {info.dimension} in {info.label}; a logarithmic unit "
             f"({token}) is not converted implicitly"
         )
+    ambiguous = _AMBIGUOUS_UNITS.get(token.lower())
+    if ambiguous is not None:
+        raise UnitError(ambiguous)
     import pint
 
     ureg = _registry()

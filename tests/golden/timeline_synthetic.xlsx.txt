@@ -109,7 +109,7 @@
 3: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'battery.max_dod_ratio.eol' | 'The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first at T+00:59:00.' | 'Open the violations table for every interval; change the input named here or the scenario.'
 4: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'battery.max_dod_ratio.eol' | 'The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first at T+00:58:33.' | 'Open the violations table for every interval; change the input named here or the scenario.'
 5: 'error' | 'PEAK_POWER_EXCEEDED' | 'config/power_system.yaml' | 'limits.peak_power_w' | 'The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00.' | 'Open the violations table for every interval; change the input named here or the scenario.'
-## sheet Provenance rows=10 cols=2
+## sheet Provenance rows=12 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 1.7.0'
@@ -118,5 +118,7 @@
 6: 'Project' | 'Time-domain test'
 7: 'Project revision' | 'r1'
 8: 'Scenario' | 'synthetic'
-9: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-10: 'User' | 'Golden User'
+9: 'Run parameters' | 'Environment source synthetic; Shadow model cylindrical; Start (UTC) 2026-01-01T00:00:00Z; Duration 12000 s; Step 20 s; Demand basis nominal; Cases bol, eol; Mission phase eol'
+10: 'Inputs digest (model)' | 'sha256:c19f7f2cedddc9391f1a0ff2c4a808ca12f8c346fe0770af30846fb0673c9d3a'
+11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+12: 'User' | 'Golden User'

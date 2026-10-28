@@ -135,7 +135,7 @@
 39: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:25' | 'cases.cold.earth_ir_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 40: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_environment.yaml:33' | 'cases.hot.solar_flux_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 ...
-## sheet Provenance rows=10 cols=2
+## sheet Provenance rows=13 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 1.7.0'
@@ -144,5 +144,8 @@
 6: 'Project' | 'Example 150 kg microsatellite'
 7: 'Project revision' | '1'
 8: 'Scenario' | 'static (no scenario)'
-9: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-10: 'User' | 'Golden User'
+9: 'Run parameters' | 'Environment source elements; Shadow model conical; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s'
+10: 'Inputs digest (model)' | 'sha256:cfa09eb9182ed8605e9af522bf30624fcfe620ea42aba7e02c289f260677006a'
+11: 'Input files' | '40 files, sha256:39c2db426ae200d6a40113156b15aded7d1b85ddfb83454392a7131a93533cb0'
+12: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+13: 'User' | 'Golden User'
