@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Transparency work, step P0 (safety net).** [`docs/transparency_audit.md`](docs/transparency_audit.md) is the audit and the plan; [`docs/changes.md`](docs/changes.md) now records every change that moves a number or refuses an input, with values before and after; [`docs/models/`](docs/models/README.md) is the index of the model pages that come with the features. Two defects found by the audit are fixed and recorded there: **the unit `ton` is refused** (it was read as the US short ton, 907 kg, where most engineers mean the metric tonne; write `t` or `lb`), and **a power timeline that used up its four refinement rounds** (the battery full and empty instants) **no longer stops with an internal error**: it finishes and warns with the new `POWER_REFINEMENT_INCOMPLETE`. No example, golden file or other result changed.
+
 - **Documentation checked against 1.7.0.** The manual pages for expendables, ground stations and imaging targets, and links now say how to remove one (*Edit → Remove from project*, Ctrl+Shift+R) and when it is refused; the README no longer names Rocky 8 for the real-machine checks; the two M0 risks in the architecture page (RHEL 8 glibc, Python 3.13 wheels) point to D-202. The fake bundle in the bundle-check tests carries a Python 3.14 library name. No program change.
 
 ## [1.7.0] - 2026-10-28

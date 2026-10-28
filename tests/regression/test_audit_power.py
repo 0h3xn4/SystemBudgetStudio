@@ -360,3 +360,33 @@ def test_face_cosines_survive_huge_and_tiny_vectors() -> None:
     normals = np.array([[1e300, 0.0, 0.0], [0.0, 1e-300, 0.0]])
     sun = np.array([[1.0, 1.0, 0.0], [1e200, 1e200, 0.0]])
     assert face_cosines(normals, sun) == pytest.approx(math.sqrt(0.5))
+
+
+def test_a_run_that_uses_all_refinement_rounds_is_finished_and_says_so(monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """With the rounds exhausted the traces used to belong to the previous edges (a ValueError in
+    the orbit balance). The run now integrates once more on the final edges and warns."""
+    import budget_core.power.time_domain as td
+    from budget_core.model import ScenarioRule
+    from tests.power_helpers import (
+        power_system,
+        sv,
+        synthetic_env,
+        synthetic_run,
+        td_project,
+    )
+
+    system = power_system()
+    battery = system.battery.model_copy(update={"max_dod_ratio": {"eol": sv(0.15)}})
+    project = td_project(system=system.model_copy(update={"battery": battery}))
+    env = synthetic_env(12000.0, 20.0, [(3000.0, 4800.0), (9000.0, 10800.0)])
+    run = synthetic_run(env, rules=[ScenarioRule(kind="in_eclipse", mode="b")])
+    complete = td.time_domain_budget(project, run)
+    assert "POWER_REFINEMENT_INCOMPLETE" not in {p.code for p in complete.problems}
+
+    monkeypatch.setattr(td, "MAX_REFINE_ROUNDS", 1)
+    short = td.time_domain_budget(project, run)
+    assert "POWER_REFINEMENT_INCOMPLETE" in {p.code for p in short.problems}
+    assert [c.case for c in short.cases] == [c.case for c in complete.cases]
+    for a, b in zip(short.cases, complete.cases, strict=True):
+        assert a.soc_ratio is not None and b.soc_ratio is not None
+        assert float(np.min(a.soc_ratio)) == pytest.approx(float(np.min(b.soc_ratio)), abs=1e-6)

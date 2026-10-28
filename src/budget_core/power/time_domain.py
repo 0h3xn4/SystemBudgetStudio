@@ -479,6 +479,7 @@ def time_domain_budget(
     setups = tuple(_case_setup(name, battery_inputs, life, annual) for name in cases)
     traces: list[BatteryTrace | None] = []
     stage(control, "Power timeline: battery")
+    converged = False
     for _ in range(MAX_REFINE_ROUNDS):
         checkpoint(control)
         traces = [_integrate(setup, battery_inputs, prepared) for setup in setups]
@@ -492,8 +493,14 @@ def time_domain_budget(
         ]
         finer = refined_edges(g.redges, extra)
         if len(finer) == len(g.redges):
+            converged = True
             break
         prepared = prepare(finer, _Collector(file_present=system is not None))
+    if not converged:
+        # The last round still added edges, so the traces belong to the previous, coarser edges
+        # while `prepared` holds the finer ones: integrate once more on the final edges.
+        traces = [_integrate(setup, battery_inputs, prepared) for setup in setups]
+        col.problems.append(_refinement_problem(run))
     stage(control, "Power timeline: violations and orbit balance")
     case_results = tuple(
         _solve_case(setup, prepared, battery_inputs, trace, phase, windows, run)
@@ -530,6 +537,22 @@ def time_domain_budget(
         peak_limit_w=peak_limit,
         dod_limit_ratio=dod_limit,
         not_evaluated=not_evaluated,
+    )
+
+
+def _refinement_problem(run: ScenarioRun) -> Problem:
+    """The instants at which the battery becomes full or empty were still moving after the last
+    refinement round (a rare case), so those instants are accurate to the last edge found."""
+    return Problem(
+        Severity.WARNING,
+        "POWER_REFINEMENT_INCOMPLETE",
+        "The instants at which the battery becomes full or empty were still changing after "
+        "the last refinement round; the energy results are accurate to the last edges found, "
+        "not exact.",
+        file=f"scenarios/{run.scenario_id}.yaml",
+        path="step_s",
+        hint="Use a shorter step to place the edges more closely; report the project if this "
+        "persists.",
     )
 
 
