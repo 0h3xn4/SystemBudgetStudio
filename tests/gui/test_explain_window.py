@@ -119,3 +119,21 @@ def test_it_stays_hidden_in_the_focused_view_until_asked(window: MainWindow) -> 
     view.setCurrentIndex(view.model().index(0, column))
     window.explain_action.trigger()
     assert not window.explain_dock.isHidden()
+
+
+def test_a_mass_value_is_explained_too(window: MainWindow) -> None:
+    window.workspace.show_view(window.mass_view)
+    QApplication.processEvents()
+    window.mass_view.build_pages()
+    found = None
+    for page in window.mass_view._pages.values():
+        for view, model in zip(page.findChildren(QTableView), page.models, strict=False):
+            if model.table.explain_id.startswith("mass:totals:"):
+                window.mass_view.tabs.setCurrentWidget(page)
+                found = (view, model.table)
+    assert found is not None
+    view, table = found
+    row = next(i for i, r in enumerate(table.rows) if r[0] == "Total, with system margin")
+    view.setCurrentIndex(view.model().index(row, 1))
+    window.explain_action.trigger()
+    assert "MASS-SYSMARGIN" in window.explain_panel.text.toPlainText()

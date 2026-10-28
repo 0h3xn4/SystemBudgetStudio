@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 from budget_core.assumptions import Assumption, incomplete, missing_from
+from budget_core.equation_binding import computes
 from budget_core.mass.mass_properties import (
     MassItem,
     Tensor,
@@ -26,9 +27,27 @@ LimitStatus = Literal["ok", "exceeded", "n/a"]
 LIMIT_TOLERANCE_RATIO = 1e-9  # a limit met to within rounding noise is met (as in D-097)
 
 
+@computes("MASS-MARGIN")
 def margined_mass_kg(mass_kg: float, margin_ratio: float | None) -> float | None:
     """MASS-MARGIN; None when the margin is unavailable."""
     return None if margin_ratio is None else mass_kg * (1.0 + margin_ratio)
+
+
+@computes("MASS-SYSMARGIN")
+def system_margined_kg(unit_margined_kg: float | None, margin_ratio: float | None) -> float | None:
+    """MASS-SYSMARGIN; None when the margined total or the system margin is unavailable."""
+    if unit_margined_kg is None or margin_ratio is None:
+        return None
+    return unit_margined_kg * (1.0 + margin_ratio)
+
+
+def limit_margin_kg(limit_kg: float, total_kg: float) -> float:
+    """Margin to a mass limit. A limit that is met exactly is not exceeded: the sum of the masses
+    carries rounding noise, so a margin within LIMIT_TOLERANCE_RATIO of the limit is zero."""
+    margin = limit_kg - total_kg
+    if abs(margin) <= LIMIT_TOLERANCE_RATIO * max(1.0, abs(limit_kg)):
+        margin = 0.0
+    return margin
 
 
 @dataclass(frozen=True)
@@ -176,11 +195,7 @@ def static_mass_budget(project: Project) -> StaticMassResult:
 
         total = math.fsum(r.mass_kg for r in rows)
         unit_margined = _sum_opt([r.margined_mass_kg for r in rows])
-        system_margined = (
-            None
-            if unit_margined is None or system_margin is None
-            else unit_margined * (1.0 + system_margin)
-        )
+        system_margined = system_margined_kg(unit_margined, system_margin)
         subsystems = tuple(
             SubsystemMass(
                 name,
@@ -238,10 +253,7 @@ def _limit_checks(
         if value is None or system_margined_kg is None:
             checks.append(LimitCheck(limit.name, value, system_margined_kg, None, "n/a"))
             continue
-        margin = value - system_margined_kg
-        # a limit that is met exactly is not exceeded: the sum of the masses carries rounding noise
-        if abs(margin) <= LIMIT_TOLERANCE_RATIO * max(1.0, abs(value)):
-            margin = 0.0
+        margin = limit_margin_kg(value, system_margined_kg)
         checks.append(
             LimitCheck(
                 limit.name, value, system_margined_kg, margin, "ok" if margin >= 0 else "exceeded"

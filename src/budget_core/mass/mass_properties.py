@@ -11,6 +11,8 @@ import math
 from collections.abc import Sequence
 from dataclasses import dataclass
 
+from budget_core.equation_binding import computes
+
 Vec3 = tuple[float, float, float]
 
 
@@ -39,6 +41,7 @@ class MassItem:
     inertia: Tensor | None  # about the item's own centre of mass; None means a point mass
 
 
+@computes("MASS-COG")
 def center_of_gravity(items: Sequence[tuple[float, Vec3]]) -> tuple[float, Vec3] | None:
     """MASS-COG: (total mass, centre of gravity) of (mass, position) pairs, None for zero mass."""
     total = math.fsum(m for m, _ in items)
@@ -52,6 +55,7 @@ def center_of_gravity(items: Sequence[tuple[float, Vec3]]) -> tuple[float, Vec3]
     return total, centre
 
 
+@computes("MASS-PARALLEL")
 def parallel_axis(own: Tensor, mass: float, d: Vec3) -> Tensor:
     """MASS-PARALLEL: inertia of an item about a point offset by d from its own centre of mass,
     I = I_own + m (|d|^2 E - d d^T) (Huygens-Steiner theorem)."""
