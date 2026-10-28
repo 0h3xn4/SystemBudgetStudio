@@ -1277,6 +1277,11 @@
     "tool_version": "1.7.0",
     "user": "Golden User"
   },
+  "result_format": {
+    "kind": "link",
+    "name": "system-budget-studio-result",
+    "version": 1
+  },
   "static": [
     {
       "atmospheric_loss_db": 0.2,

@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime
 
 from budget_core.compare import ComparisonResult, compare_documents, comparison_output
+from budget_core.io.project_digest import project_digest
 from budget_core.link.evaluate import link_pass_series, link_static_budget
+from budget_core.manifest import files_digest
 from budget_core.mass.static_mass import static_mass_budget
 from budget_core.model import Project
 from budget_core.power.static_budget import static_power_budget
@@ -129,6 +131,15 @@ def compare_sides(
             compare_documents(KIND_NAMES[kind], doc_a, doc_b, short_a, short_b, max_rows=max_rows)
         )
     scenario = f"{a.scenario or 'static'} vs {b.scenario or 'static'}"
-    provenance = make_provenance(a.project, scenario, user=user, generated_at=generated_at)
+    provenance = replace(
+        make_provenance(a.project, scenario, user=user, generated_at=generated_at),
+        # the provenance of a comparison describes side A; side B's inputs are named here
+        parameters=(
+            ("Side A inputs digest", project_digest(a.project)),
+            ("Side B inputs digest", project_digest(b.project)),
+            ("Side A files", files_digest(a.project.manifest)),
+            ("Side B files", files_digest(b.project.manifest)),
+        ),
+    )
     title = f"Comparison: {a.label} and {b.label}"
     return comparison_output(results, short_a, short_b, provenance, title), notes

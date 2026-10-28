@@ -33,6 +33,7 @@ from budget_core.reports.document import (
     format_cell,
 )
 from budget_core.reports.run import BudgetOutput
+from budget_core.result_format import result_format
 
 Status = Literal["changed", "added", "removed", "now computed", "now n/a"]
 
@@ -342,6 +343,7 @@ def _json(results: Sequence[ComparisonResult], label_a: str, label_b: str, prov:
         "rows_one_sided": sum(r.rows_one_sided for r in results),
         "unmatched": [{"comparison": r.name, **asdict(u)} for r in results for u in r.unmatched],
         "provenance": asdict(prov),
+        "result_format": result_format("comparison"),
     }
     return json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
 

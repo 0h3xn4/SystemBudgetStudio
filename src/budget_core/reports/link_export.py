@@ -19,6 +19,7 @@ from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer
 from budget_core.reports.numfmt import clean_numbers, fixed
+from budget_core.result_format import result_format
 from budget_core.timeutil import format_utc
 
 
@@ -210,6 +211,7 @@ def link_json(
         "assumptions": [asdict(a) for a in static.assumptions],
         "problems": [p.to_dict() for p in sort_problems([*load_problems, *static.problems])],
         "provenance": asdict(provenance),
+        "result_format": result_format("link"),
     }
     if passes is not None:
         env = passes.run.env

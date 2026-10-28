@@ -25,6 +25,7 @@ from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_field, csv_writer
 from budget_core.reports.numfmt import clean_numbers, fixed
+from budget_core.result_format import result_format
 from budget_core.timeutil import format_utc
 
 NDArray = np.ndarray[Any, np.dtype[Any]]
@@ -224,5 +225,6 @@ def timeline_json(
             for p in sort_problems([*load_problems, *result.problems, *violation_problems(result)])
         ],
         "provenance": asdict(provenance),
+        "result_format": result_format("power_timeline"),
     }
     return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
