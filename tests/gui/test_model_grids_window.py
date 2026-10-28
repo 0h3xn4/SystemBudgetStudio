@@ -238,3 +238,74 @@ def test_a_failed_write_leaves_the_file_and_no_temporary_file(
     assert "could not be written" in window.modes_page.feedback_label.text()
     assert (project / "units/camera.yaml").read_bytes() == before
     assert not [p for p in (project / "units").iterdir() if p.name.endswith(".tmp")]
+
+
+def _lossy(monkeypatch, project: Path) -> None:  # type: ignore[no-untyped-def]
+    """The unit file has a comment and the edit cannot be made in place."""
+    camera = project / "units" / "camera.yaml"
+    camera.write_text("# datasheet rev C\n" + camera.read_text(encoding="utf-8"), encoding="utf-8")
+
+    def cannot(_text: str, _old: object, _new: object) -> str:
+        raise ValueError("the patch cannot follow this file")
+
+    monkeypatch.setattr("budget_core.io.roundtrip.patch_yaml_text", cannot)
+
+
+def test_a_save_that_would_drop_comments_asks_first_and_no_leaves_the_file(
+    window: MainWindow,
+    project: Path,
+    monkeypatch,  # type: ignore[no-untyped-def]
+) -> None:
+    window.open_project(project)
+    _lossy(monkeypatch, project)
+    window.open_project(project)
+    before = (project / "units" / "camera.yaml").read_bytes()
+    assert set_mode_value(window, "camera", "imaging", "avg_power_w", "62.5 W")
+    asked: list[str] = []
+
+    def no(_parent, _title, text, *_a):  # type: ignore[no-untyped-def]
+        asked.append(text)
+        return QMessageBox.StandardButton.No
+
+    monkeypatch.setattr(QMessageBox, "question", staticmethod(no))
+    assert window.save_model() is False
+    assert asked and "units/camera.yaml" in asked[0] and "without" in asked[0]
+    assert (project / "units" / "camera.yaml").read_bytes() == before
+    assert window.document.is_modified()  # the edit is still there to save or undo
+    assert "lose its comments" in window.status_bar.currentMessage()
+
+
+def test_accepting_the_rewrite_saves_and_says_the_comments_were_not_kept(
+    window: MainWindow,
+    project: Path,
+    monkeypatch,  # type: ignore[no-untyped-def]
+) -> None:
+    _lossy(monkeypatch, project)
+    window.open_project(project)
+    assert set_mode_value(window, "camera", "imaging", "avg_power_w", "62.5 W")
+    monkeypatch.setattr(
+        QMessageBox, "question", staticmethod(lambda *_a: QMessageBox.StandardButton.Yes)
+    )
+    assert window.save_model() is True
+    text = (project / "units" / "camera.yaml").read_text(encoding="utf-8")
+    assert "datasheet rev C" not in text
+    assert saved(project).modes[1].avg_power_w == pytest.approx(62.5)
+    assert "Comments were not kept in units/camera.yaml" in window.status_bar.currentMessage()
+
+
+def test_an_edit_made_in_place_does_not_ask(
+    window: MainWindow,
+    project: Path,
+    monkeypatch,  # type: ignore[no-untyped-def]
+) -> None:
+    camera = project / "units" / "camera.yaml"
+    camera.write_text("# datasheet rev C\n" + camera.read_text(encoding="utf-8"), encoding="utf-8")
+    window.open_project(project)
+
+    def never(*_a, **_k):  # type: ignore[no-untyped-def]
+        raise AssertionError("the user must not be asked")
+
+    monkeypatch.setattr(QMessageBox, "question", staticmethod(never))
+    assert set_mode_value(window, "camera", "imaging", "avg_power_w", "62.5 W")
+    assert window.save_model() is True
+    assert "# datasheet rev C" in camera.read_text(encoding="utf-8")

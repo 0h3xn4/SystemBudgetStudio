@@ -27,7 +27,7 @@ from PySide6.QtGui import QUndoCommand, QUndoStack
 
 from budget_core.io.errors import explain
 from budget_core.io.project_loader import CONFIG_FILES, model_to_data
-from budget_core.io.roundtrip import file_stamp, save_edited_data
+from budget_core.io.roundtrip import file_stamp, plan_save, save_edited_data
 from budget_core.io.yamlio import LineMap, format_path
 from budget_core.model import Project
 from budget_core.model.base import BudgetModel
@@ -58,6 +58,9 @@ class SaveReport:
     ok: bool
     written: tuple[str, ...] = ()
     message: str = ""
+    # files that had to be written whole, leaving out their comments (the user was asked first
+    # when the window is in charge; see `ModelDocument.confirm_comment_loss`)
+    comments_dropped: tuple[str, ...] = ()
 
 
 class EditFiles(QUndoCommand):
@@ -177,6 +180,9 @@ class ModelDocument(QObject):
         self._files: dict[str, FileState] = {}
         self._root: Path | None = None
         self._dirty = False
+        # Asked before a save that would write a file whole and leave its comments out (V10): it
+        # gets the files and answers whether to go on. None: go on without asking.
+        self.confirm_comment_loss: Callable[[list[str]], bool] | None = None
 
     # ---- loading -----------------------------------------------------------------------------
     @property
@@ -378,6 +384,25 @@ class ModelDocument(QObject):
         """The name the Model tab uses for every editor that can drop its edits."""
         self.discard()
 
+    def files_losing_comments(self) -> list[str]:
+        """The changed files whose edit cannot be made in place and that have comments: saving
+        would write them whole and leave the comments out (V10). Found without writing."""
+        root = self._root
+        if root is None:
+            return []
+        lost: list[str] = []
+        for rel in self.modified_files():
+            state = self._files[rel]
+            if state.deleted or state.problems or not (root / rel).is_file():
+                continue
+            try:
+                plan = plan_save(root / rel, state.original, state.current, _checker(state.cls))
+            except OSError, UnicodeDecodeError:
+                continue  # the save reports it
+            if plan.drops_comments:
+                lost.append(rel)
+        return lost
+
     def save(self) -> SaveReport:
         """Write the changed files. Nothing is written unless every changed file is valid and
         still as it was loaded."""
@@ -402,7 +427,15 @@ class ModelDocument(QObject):
                 message=f"Not saved: {', '.join(moved)} changed on disk after it was loaded. "
                 "Saving would overwrite that change: reload the project (F5) and edit again.",
             )
+        lossy = self.files_losing_comments()
+        if lossy and self.confirm_comment_loss is not None and not self.confirm_comment_loss(lossy):
+            return SaveReport(
+                False,
+                message=f"Not saved: {', '.join(lossy)} would lose its comments. Keep them by "
+                "editing the file in the text editor, or save and accept the rewrite.",
+            )
         written: list[str] = []
+        dropped: list[str] = []
         for rel in changed:
             state = self._files[rel]
             if state.deleted:
@@ -418,7 +451,9 @@ class ModelDocument(QObject):
                 written.append(rel)
                 continue
             try:
-                save_edited_data(root / rel, state.original, state.current, _checker(state.cls))
+                result = save_edited_data(
+                    root / rel, state.original, state.current, _checker(state.cls)
+                )
             except OSError, OutputError, UnicodeDecodeError:
                 return SaveReport(
                     False,
@@ -429,9 +464,11 @@ class ModelDocument(QObject):
             state.stamp = file_stamp(root / rel)
             state.new = False
             written.append(rel)
+            if result.dropped_comments:
+                dropped.append(rel)
         self._after_change()
         self.saved.emit()
-        return SaveReport(True, tuple(written))
+        return SaveReport(True, tuple(written), comments_dropped=tuple(dropped))
 
 
 # ---- helpers --------------------------------------------------------------------------------

@@ -13,7 +13,9 @@ import pytest
 from budget_core.io.project_loader import model_to_data
 from budget_core.io.roundtrip import (
     file_stamp,
+    has_comments,
     patch_yaml_text,
+    plan_save,
     save_edited_data,
     split_text,
 )
@@ -183,3 +185,42 @@ def test_file_stamp_changes_with_the_bytes(tmp_path: Path) -> None:
     path.write_bytes(b"b")
     assert first is not None and file_stamp(path) not in (None, first)
     assert os.path.exists(path)
+
+
+def test_a_plan_says_an_edit_in_place_keeps_the_comments(tmp_path: Path) -> None:
+    path = tmp_path / "u.yaml"
+    path.write_bytes(UNIT.encode())
+    new = data_of(UNIT)
+    new["mass_kg"] = 0.5
+    plan = plan_save(path, data_of(UNIT), new, check)
+    assert plan.changed and not plan.canonical and not plan.drops_comments
+    assert path.read_bytes() == UNIT.encode()  # planning writes nothing
+
+
+def test_a_plan_warns_when_the_rewrite_would_drop_comments(tmp_path: Path) -> None:
+    path = tmp_path / "u.yaml"
+    text = "# the vendor says so\nschema_version: 2\nkind: unit\n"
+    path.write_text(text, encoding="utf-8")  # not what 'old' says: the patch cannot follow
+    new = data_of(UNIT)
+    plan = plan_save(path, data_of(UNIT), new, check)
+    assert plan.changed and plan.canonical and plan.drops_comments
+    assert path.read_text(encoding="utf-8") == text
+    result = save_edited_data(path, data_of(UNIT), new, check)
+    assert result.canonical and result.dropped_comments
+    assert "# the vendor says so" not in path.read_text(encoding="utf-8")
+
+
+def test_a_rewrite_of_a_file_without_comments_loses_nothing(tmp_path: Path) -> None:
+    path = tmp_path / "u.yaml"
+    path.write_text("schema_version: 2\nkind: unit\n", encoding="utf-8")
+    plan = plan_save(path, data_of(UNIT), data_of(UNIT), check)
+    assert plan.canonical and not plan.drops_comments
+
+
+def test_has_comments_reads_the_yaml_not_the_characters() -> None:
+    assert has_comments("a: 1  # why\n")
+    assert has_comments("# top\na: 1\n")
+    assert has_comments("a:\n  - 1\n  # between\n  - 2\n")
+    assert not has_comments('a: "Table #3 of the sheet"\n')
+    assert not has_comments("a: 1\nb: [2, 3]\n")
+    assert not has_comments("a: [unclosed\n")  # unreadable: nothing to keep
