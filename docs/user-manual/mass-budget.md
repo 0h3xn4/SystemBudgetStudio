@@ -10,7 +10,7 @@ This page shows how to get the spacecraft mass with margins, its [centre of grav
 budget run my_satellite --budget mass --out out
 ```
 
-Every unit has `mass_kg` and a maturity class; every [expendable](#how-do-i-handle-mission-phases-and-propellant) has a mass. The tool applies the [**mass margin**](../glossary.md#margin-policy) of the class, then the **system mass margin**, and rolls the result up by subsystem and for the whole spacecraft. In the window it is the **Mass budget** tab. The margins come from `config/margin_policy.yaml` (placeholders until you supply them: the totals with margin then show *n/a*).
+Every unit has `mass_kg` and a maturity class; every [expendable](#how-do-i-handle-mission-phases-and-propellant) has a mass. The tool applies the [**mass margin**](../glossary.md#margin-policy) of the class, then the **system mass margin**, and rolls the result up by subsystem and for the whole spacecraft. In the window it is the **Mass budget** tab. The margins come from `config/margin_policy.yaml` (placeholders until you supply them: the totals with margin then show *n/a*). To see how any number of the mass tables was obtained, with the equation, the inputs and the files they come from, use `budget explain` or *View → Explain this value* in the window ([how](../models/explain.md); the model: [static mass](../models/mass-static.md)).
 
 ## How do I handle mission phases and propellant?
 

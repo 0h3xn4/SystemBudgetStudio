@@ -9,7 +9,7 @@ INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked
 placeholders are replaced with sourced values.
 Summary
 rev 1 compared with rev 2.
-74 value(s) differ out of 3609 compared.
+74 value(s) differ out of 3608 compared.
 Values that look equal at the displayed precision are not reported as differences.
 Compared sides
 Item

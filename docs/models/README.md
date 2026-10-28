@@ -7,10 +7,10 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | Area | Page | Status |
 |---|---|---|
 | Static power budget | [power-static.md](power-static.md) | written |
-| How a number was obtained (`budget explain`) | [explain.md](explain.md) | written for static power |
+| How a number was obtained (`budget explain`) | [explain.md](explain.md) | written for static power and mass |
 | Time-domain power (array, battery, modes, edges) | (planned) | planned |
 | Orbit, eclipse and Sun geometry (gravity models, shadow models) | (planned) | planned |
-| Mass budget (margins, centre of mass, inertia, expendables) | (planned) | planned |
+| Mass budget (margins, centre of mass, inertia, expendables) | [mass-static.md](mass-static.md) | written |
 | Thermal (network, steady state, environment) | (planned) | planned |
 | RF link (EIRP, G/T, losses, rate selection, volume) | (planned) | planned |
 | Units and conversions (accepted units, canonical units, refused words) | (planned) | planned |

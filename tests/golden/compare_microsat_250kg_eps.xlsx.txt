@@ -2,7 +2,7 @@
 1: 'Comparison: Example 250 kg minisatellite, complete power and thermal inputs rev 1 and Example 250 kg minisatellite, complete power and thermal inputs rev 2' |  | 
 2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  | 
 4: 'rev 1 compared with rev 2.' |  | 
-5: '74 value(s) differ out of 3609 compared.' |  | 
+5: '74 value(s) differ out of 3608 compared.' |  | 
 6: 'Values that look equal at the displayed precision are not reported as differences.' |  | 
 7: 'Compared sides' |  | 
 8: 'Item' | 'rev 1' | 'rev 2'

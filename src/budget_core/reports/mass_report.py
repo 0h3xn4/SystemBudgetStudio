@@ -50,6 +50,7 @@ def _summary(result: StaticMassResult) -> Table:
         tuple(rows),
         note="CG and inertia use nominal masses of items with a position; coverage is their share "
         "of the nominal total.",
+        explain_id="mass:summary",
     )
 
 
@@ -71,9 +72,11 @@ def _limits(result: StaticMassResult) -> Table:
             Column("Status"),
         ),
         tuple(rows),
+        key_columns=(0, 1),
         status_column=5,
         status_marks=(3, 4),
         bar=(3, 2),
+        explain_id="mass:limits",
     )
 
 
@@ -114,6 +117,7 @@ def _items(p: PhaseMass) -> Table:
             Column("Own inertia"),
         ),
         tuple(rows),
+        explain_id=f"mass:items:{p.phase}",
     )
 
 
@@ -122,6 +126,7 @@ def _subsystems(p: PhaseMass) -> Table:
         "By subsystem",
         (Column("Subsystem"), _kg("Mass"), _kg("With margin")),
         tuple((s.subsystem, s.mass_kg, s.margined_kg) for s in p.subsystems),
+        explain_id=f"mass:subsystems:{p.phase}",
     )
 
 
@@ -141,6 +146,7 @@ def _totals(p: PhaseMass) -> Table:
         "Totals and centre of gravity",
         (Column("Quantity"), Column("Value", "number", 4)),
         tuple(rows),
+        explain_id=f"mass:totals:{p.phase}",
     )
 
 
@@ -151,6 +157,7 @@ def _inertia(p: PhaseMass) -> Table:
             "Inertia tensor",
             (Column("Entry"), Column("About CG"), Column("About origin")),
             tuple((n, None, None) for n in names),
+            explain_id=f"mass:inertia:{p.phase}",
         )
     cg, origin = p.cog.inertia_cg.entries(), p.cog.inertia_origin.entries()
     return Table(
@@ -163,6 +170,7 @@ def _inertia(p: PhaseMass) -> Table:
         tuple((n, a, b) for n, a, b in zip(names, cg, origin, strict=True)),
         note="Tensor entries in the body frame; Ixy, Ixz, Iyz are tensor elements (minus the "
         "products of inertia), see docs/DECISIONS.md D-048.",
+        explain_id=f"mass:inertia:{p.phase}",
     )
 
 

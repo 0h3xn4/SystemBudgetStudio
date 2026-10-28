@@ -1,5 +1,5 @@
 {
-  "compared": 3609,
+  "compared": 3608,
   "differences": [
     {
       "change": "+2.000 W",
@@ -1173,7 +1173,7 @@
   },
   "rows_one_sided": 0,
   "truncated": 0,
-  "unchanged": 3535,
+  "unchanged": 3534,
   "unmatched": [],
   "values_differ": 74
 }
