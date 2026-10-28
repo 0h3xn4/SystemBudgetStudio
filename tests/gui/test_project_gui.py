@@ -147,7 +147,7 @@ def test_tree_double_click_opens_the_file(window: MainWindow) -> None:
     window.tree.request_file("units/obc.yaml")
     editor = window.editors.current_editor()
     assert editor is not None and editor.rel_path == "units/obc.yaml"
-    assert "schema_version: 2" in editor.toPlainText()
+    assert "schema_version: 3" in editor.toPlainText()
 
 
 def test_dirty_state_is_shown_in_the_tab_title(window: MainWindow) -> None:
@@ -155,7 +155,7 @@ def test_dirty_state_is_shown_in_the_tab_title(window: MainWindow) -> None:
     window.tree.request_file("units/obc.yaml")
     editor = window.editors.current_editor()
     assert editor is not None
-    replace_text(editor, "schema_version: 2", "schema_version: 2 ")
+    replace_text(editor, "schema_version: 3", "schema_version: 3 ")
     assert window.editors.tabText(window.editors.currentIndex()).endswith("*")
     assert window.editors.has_unsaved_changes()
     editor.document().setModified(False)  # otherwise closing the window asks (tested below)
@@ -171,7 +171,7 @@ def test_closing_with_unsaved_changes_asks(
     window.tree.request_file("units/obc.yaml")
     editor = window.editors.current_editor()
     assert editor is not None
-    replace_text(editor, "schema_version: 2", "schema_version: 2 ")
+    replace_text(editor, "schema_version: 3", "schema_version: 3 ")
     monkeypatch.setattr(QMessageBox, "question", lambda *a, **k: QMessageBox.StandardButton.Cancel)
     assert window.close() is False
     monkeypatch.setattr(QMessageBox, "question", lambda *a, **k: QMessageBox.StandardButton.Discard)

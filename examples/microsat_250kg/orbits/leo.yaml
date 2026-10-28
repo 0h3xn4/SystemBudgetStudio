@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 kind: orbit
 name: Example sun-synchronous-like orbit, about 550 km
 elements:

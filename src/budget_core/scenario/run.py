@@ -225,13 +225,18 @@ def environment_key(project: Project, scenario: Scenario) -> str:
         "step_s": scenario.step_s,
         "shadow_model": scenario.shadow_model,
         "sites": [
-            [site_id, model_to_data((project.ground_stations | project.targets)[site_id])]
+            [
+                site_id,
+                model_to_data(
+                    (project.ground_stations | project.targets)[site_id], annotations=False
+                ),
+            ]
             for site_id in scenario.sites
             if site_id in project.ground_stations or site_id in project.targets
         ],
     }
     if scenario.environment_source == "elements" and scenario.orbit in project.orbits:
-        parts["orbit"] = model_to_data(project.orbits[scenario.orbit])
+        parts["orbit"] = model_to_data(project.orbits[scenario.orbit], annotations=False)
     if scenario.environment_source == "spacemissionstudio" and scenario.import_dir:
         folder = resolve_inside(project.root, scenario.import_dir)
         files = sorted(folder.glob("*.csv")) if folder is not None and folder.is_dir() else []

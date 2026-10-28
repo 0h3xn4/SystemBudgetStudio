@@ -129,6 +129,11 @@ def explain(
         elif kind == "duplicate_name":
             code = "DUPLICATE_NAME"
             hint = "Rename one of the entries."
+        elif kind == "provenance_path":
+            message = "A 'provenance' key must be the path of an input, or '*'."
+            hint = (
+                "Write the path as in the Problems panel, for example modes[imaging].avg_power_w."
+            )
         elif kind == "string_too_short" and name == "source":
             code = "SOURCE_MISSING"
             message = "Every configuration number needs a non-empty 'source'."

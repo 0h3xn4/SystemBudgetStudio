@@ -1,11 +1,11 @@
 # Project file format
 
-A project is a folder of YAML files (LF line endings). Every file starts with `schema_version` and `kind`. All kinds are at schema version 1 except `margin_policy`, `scenario` and `unit` (version 2, see below).
+A project is a folder of YAML files (LF line endings). Every file starts with `schema_version` and `kind`. The current version of each kind is in [Schema versions](#schema-versions): `unit`, `scenario` and `margin_policy` are at version 3, every other kind at version 2.
 
-**Contents:** [Ids, text and numbers (decisions D-120 to D-124)](#ids-text-and-numbers-decisions-d-120-to-d-124) · [Mass properties (decisions D-048 to D-050)](#mass-properties-decisions-d-048-to-d-050) · [Power system (decisions D-061 to D-066)](#power-system-decisions-d-061-to-d-066) · [Thermal (decisions D-071 to D-076)](#thermal-decisions-d-071-to-d-076) · [Links (decisions D-077 to D-083)](#links-decisions-d-077-to-d-083) · [Unit schema 2](#unit-schema-2) · [Scenario schema 2](#scenario-schema-2) · [Margin policy schema 2](#margin-policy-schema-2) · [Problem codes (budget validate)](#problem-codes-budget-validate) · [Schema versions](#schema-versions)
+**Contents:** [Ids, text and numbers (decisions D-120 to D-124)](#ids-text-and-numbers-decisions-d-120-to-d-124) · [Mass properties (decisions D-048 to D-050)](#mass-properties-decisions-d-048-to-d-050) · [Power system (decisions D-061 to D-066)](#power-system-decisions-d-061-to-d-066) · [Thermal (decisions D-071 to D-076)](#thermal-decisions-d-071-to-d-076) · [Links (decisions D-077 to D-083)](#links-decisions-d-077-to-d-083) · [Unit schema 2](#unit-schema-2) · [Scenario schema 2](#scenario-schema-2) · [Margin policy schema 2](#margin-policy-schema-2) · [Sources, statuses and required features (schema revision D-213)](#sources-statuses-and-required-features-schema-revision-d-213) · [Problem codes (budget validate)](#problem-codes-budget-validate) · [Schema versions](#schema-versions)
 
 ```
-project.yaml            kind: project            name, revision, description
+project.yaml            kind: project            name, revision, description, requires[]?
 spacecraft.yaml         kind: spacecraft         name, buses[{name, nominal_voltage_v}], mission_phases[], body_frame
 units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, maturity, modes[], mass_properties?, phases[]?, thermal_node?, temperature_limits?, catalogue_ref?
 orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...}   (see ENVIRONMENT_FORMAT.md)
@@ -191,19 +191,50 @@ Units: the field-name suffix is the unit. A value may be written with a unit (`m
 
 JSON Schemas for all kinds: `budget export-schemas <dir>` (also committed in `src/budget_core/schemas/`).
 
+## Sources, statuses and required features (schema revision D-213)
+
+The revision for provenance added three optional things and moved every kind up one schema version (`unit`, `scenario` and `margin_policy` to 3, all others to 2). Files of the older versions migrate in memory unchanged (`FILE_MIGRATED`); a tool of an earlier release reads a new file as `SCHEMA_TOO_NEW`. None of them is used by an equation, none changes a result, and none is part of the model digest. The design is in [transparency_p3_design.md](transparency_p3_design.md).
+
+**`provenance:` in the file of an entity** (`spacecraft.yaml`, units, spacecraft modes, expendables, orbits, ground stations, targets, scenarios, links) says where a plain input came from, without changing the shape of any value:
+
+```yaml
+provenance:
+  "*":                          # every input of this file that has no entry of its own
+    source: "Invented example value"
+    status: illustrative
+  mass_kg:
+    source: "Data sheet XYZ rev C, table 3"
+    note: "Flight model, measured"
+    status: sourced
+  modes[imaging].avg_power_w:   # a list item selected by its name
+    source: "Thermal-vacuum test report TR-12, section 5"
+    status: estimate
+```
+
+- **Key:** the path of an input in the file, written as in the Problems panel and in Explain (`modes[1].avg_power_w`). In a list whose items have a `name`, `[imaging]` selects the item by name, so inserting or removing a mode does not move the entry. The key `"*"` is the default for the file.
+- **Entry:** `source` (text, required), `note` (text), `status` (default `sourced`).
+- **Status:** `sourced` (comes from the source named), `estimate` (an engineering estimate; the source says whose), `illustrative` (an invented sample value, not for use), `tbd` (a placeholder; not to be used). An input with no entry has no recorded source; that is not an error.
+- **A key that is not a path** is `FIELD_INVALID`; a path that names no input of the file is the warning `PROVENANCE_PATH_UNKNOWN` (a field that was renamed or removed).
+
+**`status` on a sourced number** (the numbers of `config/`) takes `sourced` (default), `estimate` or `illustrative`. A number with `source: TBD` or a null value is a placeholder whatever its status.
+
+**`requires:` in `project.yaml`** lists the features the project uses that a tool without them would ignore. This version knows none; a name it does not know is the error `FEATURE_UNSUPPORTED`. A tool of an earlier release refuses the file because `requires` is an unknown key (and, before that, because of the schema version).
+
+The tool writes `provenance`, `status` and `requires` only when they are not at their default, and `provenance` and `requires` last in the file. Marking inputs changes the manifest (the files differ) but not the model digest ([provenance.md](models/provenance.md)).
+
 ## Problem codes (`budget validate`)
 
 The rule, the reason and the remedy of every code are in [PROBLEMS.md](PROBLEMS.md) (or `budget problems CODE`). The list below groups the codes by when they occur.
 
-Errors: `FILE_NOT_FOUND`, `FILE_INVALID` (also: not a regular file, a folder or pipe named `*.yaml`), `ID_INVALID`, `YAML_SYNTAX`, `KIND_MISMATCH`, `SCHEMA_VERSION_MISSING`, `SCHEMA_TOO_NEW`, `SCHEMA_MIGRATION_MISSING`, `SCHEMA_MIGRATION_FAILED`, `FIELD_MISSING`, `FIELD_UNKNOWN`, `FIELD_INVALID`, `UNIT_INVALID`, `DUPLICATE_NAME`, `SOURCE_MISSING`, `REF_UNKNOWN_BUS`, `REF_UNKNOWN_MATURITY`, `REF_UNKNOWN_UNIT`, `REF_UNKNOWN_UNIT_MODE`, `UNIT_NOT_MAPPED`.
+Errors: `FILE_NOT_FOUND`, `FILE_INVALID` (also: not a regular file, a folder or pipe named `*.yaml`), `ID_INVALID`, `YAML_SYNTAX`, `KIND_MISMATCH`, `SCHEMA_VERSION_MISSING`, `SCHEMA_TOO_NEW`, `SCHEMA_MIGRATION_MISSING`, `SCHEMA_MIGRATION_FAILED`, `FEATURE_UNSUPPORTED`, `FIELD_MISSING`, `FIELD_UNKNOWN`, `FIELD_INVALID`, `UNIT_INVALID`, `DUPLICATE_NAME`, `SOURCE_MISSING`, `REF_UNKNOWN_BUS`, `REF_UNKNOWN_MATURITY`, `REF_UNKNOWN_UNIT`, `REF_UNKNOWN_UNIT_MODE`, `UNIT_NOT_MAPPED`.
 Errors (config values): `CONFIG_VALUE_INVALID`, `REF_UNKNOWN_PHASE`, `PHASE_MASS_MISSING`.
 Thermal (errors at load): `THERMAL_NODE_UNKNOWN`, `REF_UNKNOWN_CASE`. Link (errors at load): `REF_UNKNOWN_STATION`, `REF_UNKNOWN_ATTENUATION`, `REF_UNKNOWN_MODULATION`, `LINK_ANTENNA_PATTERN_GROUND`, `LINK_PATTERN_FILE_MISSING`; `LINK_INPUT_INVALID` (error when running: unreadable pattern file); warnings `LINK_ATTENUATION_FREQUENCY`, `LINK_ATTENUATION_DUPLICATE`, `LINK_SITE_NOT_IN_SCENARIO`; info `LINK_NO_STATIC_POINTS`, `LINK_NEVER_ACTIVE`, `LINK_PER_DAY_NOT_GIVEN`; error when running: `LINK_NOT_CLOSED` (no listed data rate closes, D-098). Environment: `REF_UNKNOWN_ORBIT`, `REF_UNKNOWN_SITE`, `REF_UNKNOWN_MODE`, `DUPLICATE_ID`, `IMPORT_DIR_MISSING`, `ORBIT_INVALID` (errors at load); `SCENARIO_UNKNOWN`, `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED`, `SCENARIO_TOO_LARGE` (errors when running a scenario); warning `ORBIT_EPOCH_FAR` (a TLE epoch more than 30 days from the scenario start, D-133).
-Result findings (errors): `MASS_LIMIT_EXCEEDED`; thermal: `THERMAL_LIMIT_EXCEEDED`, `THERMAL_MARGIN_INSUFFICIENT`, `THERMAL_SOLVE_FAILED`; time-domain power: `BATTERY_DOD_EXCEEDED`, `BATTERY_DEPLETED`, `ORBIT_BALANCE_NEGATIVE`, `PEAK_POWER_EXCEEDED`. Warnings: `FILE_IGNORED`, `ID_UNUSUAL`, `ID_COLLISION`, `SCENARIO_OPTION_IGNORED`, `SCENARIO_PHASE_NO_DOD`, `MASS_PROPS_MISSING`, `MASS_FRAME_UNDEFINED`, `RESULT_INCOMPLETE` (a result needs a placeholder number, shown as n/a), `CONFIG_MISSING`, `CONFIG_PLACEHOLDER`, `CONFIG_EMPTY_TABLE`, `THERMAL_NO_LIMITS`, `MASS_INERTIA_NOT_SCALED` (an expendable has its own inertia and more than one mass, DV-M4), `POWER_REFINEMENT_INCOMPLETE` (the instants at which the battery becomes full or empty were still changing after the last refinement round, so the energy results are accurate to the last edges found), `ORBIT_BALANCE_NOT_EVALUATED` (the step is too coarse to find the orbits, D-131). Info: `FILE_MIGRATED`, `MASS_INERTIA_POINT_MASS`. Unexpected failure in the window: `INTERNAL_ERROR` (error; names only the kind of failure). Unit tables (`budget units-import`, D-102): errors `IMPORT_FILE_UNREADABLE`, `IMPORT_FILE_TOO_LARGE`, `IMPORT_COLUMN_MISSING`, `IMPORT_UNKNOWN_UNIT`, `IMPORT_DUPLICATE_ROW`, `IMPORT_FIELD_MISSING`, `IMPORT_VALUE_INVALID`; warning `IMPORT_COLUMN_IGNORED`.
+Result findings (errors): `MASS_LIMIT_EXCEEDED`; thermal: `THERMAL_LIMIT_EXCEEDED`, `THERMAL_MARGIN_INSUFFICIENT`, `THERMAL_SOLVE_FAILED`; time-domain power: `BATTERY_DOD_EXCEEDED`, `BATTERY_DEPLETED`, `ORBIT_BALANCE_NEGATIVE`, `PEAK_POWER_EXCEEDED`. Warnings: `PROVENANCE_PATH_UNKNOWN`, `FILE_IGNORED`, `ID_UNUSUAL`, `ID_COLLISION`, `SCENARIO_OPTION_IGNORED`, `SCENARIO_PHASE_NO_DOD`, `MASS_PROPS_MISSING`, `MASS_FRAME_UNDEFINED`, `RESULT_INCOMPLETE` (a result needs a placeholder number, shown as n/a), `CONFIG_MISSING`, `CONFIG_PLACEHOLDER`, `CONFIG_EMPTY_TABLE`, `THERMAL_NO_LIMITS`, `MASS_INERTIA_NOT_SCALED` (an expendable has its own inertia and more than one mass, DV-M4), `POWER_REFINEMENT_INCOMPLETE` (the instants at which the battery becomes full or empty were still changing after the last refinement round, so the energy results are accurate to the last edges found), `ORBIT_BALANCE_NOT_EVALUATED` (the step is too coarse to find the orbits, D-131). Info: `FILE_MIGRATED`, `MASS_INERTIA_POINT_MASS`. Unexpected failure in the window: `INTERNAL_ERROR` (error; names only the kind of failure). Unit tables (`budget units-import`, D-102): errors `IMPORT_FILE_UNREADABLE`, `IMPORT_FILE_TOO_LARGE`, `IMPORT_COLUMN_MISSING`, `IMPORT_UNKNOWN_UNIT`, `IMPORT_DUPLICATE_ROW`, `IMPORT_FIELD_MISSING`, `IMPORT_VALUE_INVALID`; warning `IMPORT_COLUMN_IGNORED`.
 
 ## Schema versions
 
 Range checks on values (the years 1950 to 2100 for a scenario start and an element epoch, the semi-major axis of 6.4e6 to 1e8 m, the counts of strings and cells, the length of direction vectors, D-133) are validation, not format: the schema versions do not change, and the exported JSON Schemas carry the limits.
 
-Older files are migrated in memory (`budget_core/io/migrations.py`, one function per version step; a migration keeps the keys it does not know, so a misspelt key is still reported as `FIELD_UNKNOWN`, and it must raise the version); newer files fail with `SCHEMA_TOO_NEW`, and `schema_version: 0` is `SCHEMA_VERSION_MISSING`. In the JSON schemas (`budget export-schemas`) `schema_version` is a constant: the current version of the kind. `margin_policy`, `scenario` and `unit` are at version 2; all other kinds are at version 1.
+Older files are migrated in memory (`budget_core/io/migrations.py`, one function per version step; a migration keeps the keys it does not know, so a misspelt key is still reported as `FIELD_UNKNOWN`, and it must raise the version); newer files fail with `SCHEMA_TOO_NEW`, and `schema_version: 0` is `SCHEMA_VERSION_MISSING`. In the JSON schemas (`budget export-schemas`) `schema_version` is a constant: the current version of the kind. `margin_policy`, `scenario` and `unit` are at version 3; all other kinds are at version 2 (the revision of D-213 added one step to every kind).
 
 Next: [Environment inputs](ENVIRONMENT_FORMAT.md) · [User manual: create a project](user-manual/create-a-project.md) · [Docs index](README.md).

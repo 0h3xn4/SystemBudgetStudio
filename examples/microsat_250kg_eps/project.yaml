@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 kind: project
 name: Example 250 kg minisatellite, complete power and thermal inputs
 revision: '1'

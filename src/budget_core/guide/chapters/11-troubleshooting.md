@@ -10,6 +10,8 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `FILE_IGNORED` | (Warning) A file that looks like a project file is skipped, for example `camera.yml` or `Units.YAML`, or a sub-folder inside `units/`. Rename it to end in exactly `.yaml`, or move it. |
 | `ID_UNUSUAL`, `ID_COLLISION`, `ID_INVALID` | (Warnings, and an error for `ID_INVALID`) The id is the file name without `.yaml`. Use letters, digits, `_` and `-`; a name that starts with a dot, or two names that differ only in capitals, cannot be used safely. |
 | `KIND_MISMATCH`, `SCHEMA_VERSION_MISSING`, `SCHEMA_TOO_NEW`, `SCHEMA_MIGRATION_MISSING`, `SCHEMA_MIGRATION_FAILED` | The file is of another kind or from a newer or unsupported version. Check the first two lines. |
+| `FEATURE_UNSUPPORTED` | `project.yaml` lists in `requires:` a feature this version does not have. Open the project with a newer release. |
+| `PROVENANCE_PATH_UNKNOWN` | (Warning) A key of a file's `provenance:` names an input the file does not have (a renamed or removed field). Correct the key or delete the entry; no result is affected. |
 | `FIELD_MISSING`, `FIELD_UNKNOWN`, `FIELD_INVALID`, `UNIT_INVALID`, `DUPLICATE_NAME`, `DUPLICATE_ID` | Fix the named field: it is missing, misspelled, out of range, has an unknown unit or repeats a name. |
 | `SOURCE_MISSING` | A sourced number has no `source`. Write the source, or `TBD` if you do not have it yet. |
 | `REF_UNKNOWN_BUS`, `REF_UNKNOWN_MATURITY`, `REF_UNKNOWN_UNIT`, `REF_UNKNOWN_UNIT_MODE`, `UNIT_NOT_MAPPED`, `REF_UNKNOWN_PHASE`, `PHASE_MASS_MISSING` | A name points to something that does not exist, or a unit is not in a spacecraft mode. |

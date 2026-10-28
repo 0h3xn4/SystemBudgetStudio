@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import Field, field_validator, model_validator
 from pydantic_core import PydanticCustomError
 
+from budget_core.model.annotations import ProvenancedModel
 from budget_core.model.base import BudgetModel, duplicate_names
 from budget_core.model.mass import MassProperties
 from budget_core.model.versions import CURRENT_VERSIONS
@@ -87,7 +88,7 @@ class TemperatureLimits(BudgetModel):
         return self
 
 
-class Unit(BudgetModel):
+class Unit(ProvenancedModel):
     schema_version: int = CURRENT_VERSIONS["unit"]
     kind: Literal["unit"] = "unit"
     name: str = Field(min_length=1)
@@ -117,7 +118,7 @@ class Unit(BudgetModel):
         return modes
 
 
-class SpacecraftMode(BudgetModel):
+class SpacecraftMode(ProvenancedModel):
     """A spacecraft mode maps unit ids (file names in units/) to one of their power modes."""
 
     schema_version: int = CURRENT_VERSIONS["spacecraft_mode"]
@@ -137,7 +138,7 @@ class Bus(BudgetModel):
     nominal_voltage_v: float = Field(gt=0)
 
 
-class Spacecraft(BudgetModel):
+class Spacecraft(ProvenancedModel):
     schema_version: int = CURRENT_VERSIONS["spacecraft"]
     kind: Literal["spacecraft"] = "spacecraft"
     name: str = Field(min_length=1)

@@ -20,7 +20,7 @@ def test_default_registry_matches_model_versions() -> None:
 
 
 def test_current_version_passes_through() -> None:
-    data = {"schema_version": 1, "kind": "orbit"}
+    data = {"schema_version": CURRENT_VERSIONS["orbit"], "kind": "orbit"}
     out, problem = DEFAULT_REGISTRY.migrate("orbit", data)
     assert out == data and problem is None
 
@@ -53,7 +53,12 @@ def test_chain_of_migrations_applies_in_order() -> None:
 def test_loader_migrates_old_file_in_memory(tmp_path: Any) -> None:
     write_valid_project(tmp_path)
     edit(tmp_path, "units/obc.yaml", "mass_kg:", "weight_kg:")
-    edit(tmp_path, "units/obc.yaml", "schema_version: 2", "schema_version: 1")
+    edit(
+        tmp_path,
+        "units/obc.yaml",
+        f"schema_version: {CURRENT_VERSIONS['unit']}",
+        "schema_version: 1",
+    )
     reg = MigrationRegistry(
         {**CURRENT_VERSIONS, "unit": 3},
         {("unit", 1): _rename, ("unit", 2): lambda d: {**d, "schema_version": 3}},

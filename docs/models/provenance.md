@@ -22,7 +22,7 @@ The JSON files also list every input file with its size and hash (`provenance.in
 2. The data is written as one line of JSON with sorted keys, no spaces and ASCII only; numbers are written in their shortest exact form.
 3. The SHA-256 of that line is the digest.
 
-Comments, key order, spacing, file names other than the ids, and the folder the project lives in do not enter. Because the digest is taken from what the tool *loaded*, two projects written differently but meaning the same give the same digest, and a typo in a comment does not break reproducibility.
+Comments, key order, spacing, file names other than the ids, and the folder the project lives in do not enter, and neither do the sources and statuses of the inputs (`provenance:` and `status`, D-213): saying where a number came from is not changing the number. The schema version of a file does enter, so the digest of a project changes once, with the release that moved the file versions up (2.0.0), and not again when its inputs are marked. Because the digest is taken from what the tool *loaded*, two projects written differently but meaning the same give the same digest, and a typo in a comment does not break reproducibility.
 
 ## Checking a result: `budget verify`
 

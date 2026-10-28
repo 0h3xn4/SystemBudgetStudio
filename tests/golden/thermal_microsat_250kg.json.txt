@@ -3091,211 +3091,211 @@
     "input_files": [
       {
         "path": "config/attenuation_table.yaml",
-        "sha256": "a38e06dff013fbfd7e4c951f0040f7f0b69d43d84dd1c54f26b908f483f3fc7c",
+        "sha256": "344341f421bd83329e756c94b41e8404734fa9c32f97f9f68b0805b10d3c5841",
         "size": 988
       },
       {
         "path": "config/ebn0_table.yaml",
-        "sha256": "10c331b7112e987ccd429048409c49a31cd0457ef63467198bb40cbdbc3fe6a7",
+        "sha256": "3d2a0bd5ef34961b176d02fd4310489e3a63bdb8d27970a81478bf691ac9047f",
         "size": 350
       },
       {
         "path": "config/margin_policy.yaml",
-        "sha256": "f8eeceab442c9d2f0b26f4fbf3fab6b81bbeb03a213bb16b5d118f24e75a92bc",
+        "sha256": "072124855859f20c82ed947cb1e500d6a626dd06b49160b88ab49b69366d07d2",
         "size": 978
       },
       {
         "path": "config/mass_limits.yaml",
-        "sha256": "5d623aaf09dd240b4a72a1d4f67e8d841d940d456e592bfc8a44bcc13995e56f",
+        "sha256": "cf671e8c0c4de1051fa9b892c87f732ecdeee8d13664c6bf8b47fe568595483a",
         "size": 189
       },
       {
         "path": "config/power_config.yaml",
-        "sha256": "2b934156dc320dd5a2f23402cfeb7da22d4b79aeb6a4db0265d20bd3d6a937aa",
+        "sha256": "11f1a696bbcf32d4025d8cd3f43b0accc4010a4c32f3086a3d84b2d2e586ddf3",
         "size": 358
       },
       {
         "path": "config/power_system.yaml",
-        "sha256": "461fdd1ded3c0e737d8c17aecc70ced336e05bbaa67ddb035e38f5ec5764b6e2",
+        "sha256": "f681418f29ffc379edc69595111e7bd4a189a1ebbd9615dc9ed92ea44a78a438",
         "size": 3053
       },
       {
         "path": "config/thermal_environment.yaml",
-        "sha256": "92b5646c5c039652010fde0b8040de432a4ec692774f9e6ff04114fccca25655",
+        "sha256": "859f3e8ff30d158c7343725aa152b7b9e719907c0e0aab96357bb441fbb1ad50",
         "size": 1138
       },
       {
         "path": "config/thermal_model.yaml",
-        "sha256": "8987778a7a5584790fdf7012fbd7a965f5b28d991057428be5b5450e30be1aec",
+        "sha256": "94984fc749eafe929daefd96b3cd52b432b046ffa88d1bf690b2543bd34b8d54",
         "size": 6975
       },
       {
         "path": "expendables/propellant.yaml",
-        "sha256": "e27262dc7747488e9cf57817ef48375590c67d46e3ab858b9b8ade03a0e27f25",
+        "sha256": "0241a159bad560cd8dd06c9f3dd9e968a3c35b14c5ab644005346220337de92b",
         "size": 194
       },
       {
         "path": "ground_stations/gs_north.yaml",
-        "sha256": "6a93e512e00843232808b27779d8b629fb20025a6f765f37c1a868c4b08ffaee",
+        "sha256": "ab6f2d59cea038141c06e92b011e646f95c6d4ee4f0e3500be1ceaf42a022a0f",
         "size": 147
       },
       {
         "path": "ground_stations/gs_south.yaml",
-        "sha256": "9a8ecb57378ea47135e8b51c051ea1fad0341fb28a024712438d384a928a0ea5",
+        "sha256": "da79ea1505f359100927707a7722329c11bec302c8196c88f1cd62d01153c392",
         "size": 149
       },
       {
         "path": "links/sband_down.yaml",
-        "sha256": "e115ce9389bb59915cffb0cdcc1d10e7275bec4974eb72f9ff442cf4bf1af368",
+        "sha256": "f807a57fdacf300c12a17f95eb3bcde6801d92c874a9b5479a9de3de7784bc04",
         "size": 1318
       },
       {
         "path": "links/xband_down.yaml",
-        "sha256": "47b35ecf93450f154bf90e2acef3deef2f4df87465749ef4704337c08de163f9",
+        "sha256": "387f20995c6642c44f0c3c3dc22e2c4358b53cf3fdfe0e94711cd9e0e3f162d6",
         "size": 1355
       },
       {
         "path": "modes/charging.yaml",
-        "sha256": "2ec1798816ccbcc21a9cf050f79faebba2dad37011a31ecefa92110ea9e2fa9a",
+        "sha256": "15feddd95451ceb4e6efe6c34f555f49f21eedaf6afe101a91689d2ce62718ed",
         "size": 456
       },
       {
         "path": "modes/downlink.yaml",
-        "sha256": "4c1305b74427e321491fdb7cfa7e3947175f3523c195f0623d69eedb4474da06",
+        "sha256": "44014b297023bc2879d2fdac5aa53bf5a84eade19a7e1d9a66466c65cc1230a3",
         "size": 440
       },
       {
         "path": "modes/imaging.yaml",
-        "sha256": "83dd3584e5b504c6370edaff8bc6c8e75be52c65875af45246883a87e2fe6580",
+        "sha256": "ed28c10309c22788fcc4d1bc6b4e137d39702d1821ed9c5b6a113bcbf78a40ab",
         "size": 419
       },
       {
         "path": "modes/nominal.yaml",
-        "sha256": "245ccff1475362fafe29449295dc2be7ab8a6020a70ced666f26a6dd05cecbdd",
+        "sha256": "f44eab1346566879e4e9664e4012858d638a7509617769611b69ac0fbf9642a3",
         "size": 422
       },
       {
         "path": "modes/safe.yaml",
-        "sha256": "116aa800ab3fc612b15797946d3285d071cfdf682d6da71a567fb010c33948a9",
+        "sha256": "44a666bb85113b659af4cf0b69de12197f89f8cb6f26961ac593e8c286ad4c96",
         "size": 395
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "28e743e5ae8282d0d2252ae676be37fe5803d5db6fb6285bbd777b474155fdd3",
+        "sha256": "ab7afdddae5aa7c0c8e00d1db17e4b6565636951f89a0d5f45e9aad9927acd39",
         "size": 280
       },
       {
         "path": "project.yaml",
-        "sha256": "6c11eed3028a98559d877bfa99ed68033bafbf29c4f5c2bad56b0dd2a800e991",
+        "sha256": "ac6c099407701fc675c71ca25088f420db511ec9f11038668b9f30a4443db709",
         "size": 141
       },
       {
         "path": "scenarios/one_day.yaml",
-        "sha256": "b4593159626c2ab5029b9634bfa07804ad92a2a753abd043293c192677157428",
+        "sha256": "d1a49512c5c936d054901a478cc3ee2cd4a9d8ee27fc16889fbc3d5c069d7942",
         "size": 673
       },
       {
         "path": "spacecraft.yaml",
-        "sha256": "ea4a80a3bf2a4cb2b2781d1b0465c00ccf34c2af189fbef4ffdc2f46ed064f6b",
+        "sha256": "e982ac2310fb683eaf7efcd2c018a4a04574ab26cbea8506bb025316c744eaf0",
         "size": 435
       },
       {
         "path": "targets/tgt_plains.yaml",
-        "sha256": "1a83f7c3e4d7deba4bd397c3e8924154b30ce061624975be97146716a9cc0e47",
+        "sha256": "08c5f8a775b47dc2b0955505ce72ac595a5075fcd470f1cc93f4ede929b047ff",
         "size": 143
       },
       {
         "path": "units/adapter.yaml",
-        "sha256": "117413de0c13dbc75fe8f4cb78961df9c3a1533ca8bd273ec1f668c6d8fd9bb8",
+        "sha256": "37849761583d6c40dadd81ca64f66ff406eb4f2a159ba5c3ed3fd004a2ce56c4",
         "size": 451
       },
       {
         "path": "units/adcs.yaml",
-        "sha256": "7c25eb332f02ea24799a18287392d57acbac7fa4f6b007b55e9ffd4b8ba1fe66",
+        "sha256": "e2924ac0c8c13391de6e5a31b12424bbf63a97251a690de879d8c8974da08eef",
         "size": 1035
       },
       {
         "path": "units/battery.yaml",
-        "sha256": "ba116db5e03a644876caa7e9a26ec7a6a2d3c70da95c5472f32bc06225199e3f",
+        "sha256": "e838c8a51e0965d8aca84c9f392395860a3a6f8539d32fdac77f4f25072216ae",
         "size": 425
       },
       {
         "path": "units/camera.yaml",
-        "sha256": "3b1307d607cef8676dcbd69ce096b9a2bf432c782e3491e4d4554c1416bb522d",
+        "sha256": "85b896478d2e52930ccdc53744676da811ebfbed824f140cc70746793032ccd5",
         "size": 548
       },
       {
         "path": "units/eps.yaml",
-        "sha256": "215a5e66f0bf363a90e1f43ec551e75f444a44bc672a78421e1a6019724c2063",
+        "sha256": "dad6b4c41858a09891f73b8dc8e6b364b146924353b671bf1d24ae04f5feb773",
         "size": 922
       },
       {
         "path": "units/gnss.yaml",
-        "sha256": "791c94c9873b43babc675d6830b0bfa656a1d7f98cff4a6e9b8daf3abba5dd2b",
+        "sha256": "ea67bb4cffe90d20264929d566f52f3bfcdae310b56aeb6745c094eb4e980175",
         "size": 770
       },
       {
         "path": "units/harness.yaml",
-        "sha256": "385e9b90a74115f8e5835255fab59ec4bdd8f2e0b6d5e5adb10952c7d2663840",
+        "sha256": "c6077d11c0b5f80f5cf51a39fb171e94a1fae181f01a820d1251d5b05ac0ad27",
         "size": 286
       },
       {
         "path": "units/heaters.yaml",
-        "sha256": "684faa7840b705b27137a6fc9955a5cb5b9356455f8594ce418a8a5c1e2325f1",
+        "sha256": "9f7da08773bfd804a9509fa04c56da8948d28f1068a4b96a660f1d643125d7f0",
         "size": 779
       },
       {
         "path": "units/magnetorquers.yaml",
-        "sha256": "034b00b1608268401bdd9463af37441cf01b6f42b28673afeb2a4d05a5011e27",
+        "sha256": "5a324cb04ae307a99d4e66118163766d9653d9ccf61a2c5896fcd4a4dae74af8",
         "size": 778
       },
       {
         "path": "units/obc.yaml",
-        "sha256": "10a6fa832654c772ea76d8468cc5ccb9a863e2da0d6119af3631364f003b450b",
+        "sha256": "97ee2d5f785bde84e72017b59e205f7080a1ed9dfdc3a3d59135b29ff2699cec",
         "size": 904
       },
       {
         "path": "units/pdu_data.yaml",
-        "sha256": "8e032beebf1dd6eb3de96412c528d5bb8d8111ab8eea80e9073305d5d6c5c47b",
+        "sha256": "930f539a18dbb99728eff5f6657f9a74c9462085592a1396a2e1657a745d3223",
         "size": 906
       },
       {
         "path": "units/radio.yaml",
-        "sha256": "b2d334ce85d48d21d9816c4b33a653e1a87a97c65ccd88a61fa976178debeb56",
+        "sha256": "927baa4dcaebaff5822d8563ce06d34e821fad36a578e0d37bb6a95cf74020b7",
         "size": 1022
       },
       {
         "path": "units/reaction_wheels.yaml",
-        "sha256": "16232633d8d48dc1803c4ca45a1423040e1be7f1bf29fd07b913002c3bcc382e",
+        "sha256": "24ee3305a5fc3fc5784f75f85c9b49b678f3f9deca86fb9a1d63b2a297262b12",
         "size": 1027
       },
       {
         "path": "units/solar_array.yaml",
-        "sha256": "47268df6e890c84a09df258e087b3de19bc088001dcb5afb0d988a7f28edd33d",
+        "sha256": "518748eb2d12039f2170ac2616fd5635231f10fc7f3d474f9beb2ddf84a7362f",
         "size": 431
       },
       {
         "path": "units/star_tracker.yaml",
-        "sha256": "4242693d73cf75f22d99bdb39ea91841fe2908412d39e1fa1b5fa6550284d73e",
+        "sha256": "57fbb4164fb491accc99d9d83cebcfc0fbf1718b71e48323c2682684bbbf23d1",
         "size": 902
       },
       {
         "path": "units/structure.yaml",
-        "sha256": "ea6a30cb486f4d398a103ffeccc92128e02eefc1893dde295900ec5c9637677c",
+        "sha256": "54c2fc8b0465d517aa972ef6d099a589971f1e706b845fbfcdae36d25b015e4b",
         "size": 425
       },
       {
         "path": "units/sun_sensors.yaml",
-        "sha256": "cca499ec067061eaff9d6d194b717066dbf7d7faf74e4d584291ea2bc5e9cc27",
+        "sha256": "cac98e15e8892eddcdaa0b00535331877827c4cc0abfaf2ec512d08fa5f57758",
         "size": 777
       },
       {
         "path": "units/xband_tx.yaml",
-        "sha256": "75e29c524c6656d722df424d69cf149f76683d7ed943521ceb9c7ec0ac599a0a",
+        "sha256": "85fab57b60ecd1e95c2a3c9311e903e8f64cba0985fe92719bc04021406ff7e3",
         "size": 553
       }
     ],
-    "inputs_digest": "sha256:2d0a5ef8c2d6fabfac4d4969be71d52b0f88903c1f204f423c796e4000674482",
+    "inputs_digest": "sha256:5aaef01b6a3ab18bba18c7215ee8028c895b63d60fa497cd32c7baece290c613",
     "libraries": [
       [
         "pinned",

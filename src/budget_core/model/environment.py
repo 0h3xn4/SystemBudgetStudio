@@ -8,6 +8,7 @@ from typing import Literal
 from pydantic import Field, field_validator, model_validator
 from pydantic_core import PydanticCustomError
 
+from budget_core.model.annotations import ProvenancedModel
 from budget_core.model.base import BudgetModel, duplicate_names
 from budget_core.model.versions import CURRENT_VERSIONS
 from budget_core.timeutil import format_utc, parse_utc
@@ -77,7 +78,7 @@ class Elements(BudgetModel):
         return _utc(value)
 
 
-class Orbit(BudgetModel):
+class Orbit(ProvenancedModel):
     schema_version: int = CURRENT_VERSIONS["orbit"]
     kind: Literal["orbit"] = "orbit"
     name: str = Field(min_length=1)
@@ -117,7 +118,7 @@ class Orbit(BudgetModel):
         return self
 
 
-class GroundSite(BudgetModel):
+class GroundSite(ProvenancedModel):
     name: str = Field(min_length=1)
     latitude_deg: float = Field(ge=-90, le=90)
     longitude_deg: float = Field(ge=-180, le=180)
@@ -167,7 +168,7 @@ class ScenarioRule(BudgetModel):
         return self
 
 
-class Scenario(BudgetModel):
+class Scenario(ProvenancedModel):
     """Parameters of a scenario; computed results are never stored in the project (D-057)."""
 
     schema_version: int = CURRENT_VERSIONS["scenario"]

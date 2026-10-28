@@ -134,8 +134,8 @@ Libraries | numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden
 Project | Example 250 kg minisatellite, complete power and thermal inputs
 Project revision | 1
 Scenario | static vs static
-Run parameters | Side A inputs digest sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb; Side B inputs digest sha256:b983f4ea3067365a0f9a2845a0f3a8639f39be70f8bf01bf9810bfa3d8c60bc6; Side A files sha256:32342adb88001ea2877337884279309f008a73e7f83fb7326b38369872bba605; Side B files sha256:64c7c6ef9acdbcbd923ad1f6411a261dc54d257dd82526a4ad3e296aa13dbde6
-Inputs digest (model) | sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb
-Input files | 41 files, sha256:32342adb88001ea2877337884279309f008a73e7f83fb7326b38369872bba605
+Run parameters | Side A inputs digest sha256:53724c8ea7e2ffd0763785cfae83db778da81a9c1bb6be64fc439f27d1dc9b61; Side B inputs digest sha256:1c48fa5d3e9a37aa6d29c4e55db05c4faf00009976476ac16c5ca16d71d98b53; Side A files sha256:2b4a5707a284f3a79bb8c9c737146a726f7331f96cb6f6d4fb11cc6ab331620b; Side B files sha256:950d6ca6302b363f7b3d5355a4a997eb1eef29c4325e348363129f05122d273f
+Inputs digest (model) | sha256:53724c8ea7e2ffd0763785cfae83db778da81a9c1bb6be64fc439f27d1dc9b61
+Input files | 41 files, sha256:2b4a5707a284f3a79bb8c9c737146a726f7331f96cb6f6d4fb11cc6ab331620b
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

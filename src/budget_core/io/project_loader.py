@@ -24,6 +24,7 @@ from budget_core.io.yamlio import (
     LineMap,
     YamlSyntaxError,
     dump_yaml,
+    format_path,
     load_yaml_text,
     read_limited,
 )
@@ -51,6 +52,7 @@ from budget_core.model import (
     ThermalModel,
     Unit,
 )
+from budget_core.model.annotations import unknown_paths
 from budget_core.problems import Problem, Severity, sort_problems
 from budget_core.reports.files import write_file
 
@@ -80,26 +82,45 @@ class LoadResult:
     lines: dict[str, LineMap]
 
 
-def model_to_data(model: BudgetModel) -> dict[str, Any]:
-    """Model -> plain data in field order. Optional fields that are None or empty are omitted."""
+# Fields that say where a number came from or what kind it is. They are written only when they
+# differ from the default, and the model digest leaves them out (D-213).
+ANNOTATION_FIELDS = frozenset({"provenance", "status"})
+_FILE_ORDER = {"schema_version": 0, "kind": 1, "provenance": 3, "requires": 4}
+
+
+def model_to_data(model: BudgetModel, *, annotations: bool = True) -> dict[str, Any]:
+    """Model -> plain data in field order. Optional fields that are None or empty are omitted, and
+    so are the annotation fields and `requires` at their default. `annotations=False` leaves the
+    annotation fields out altogether (the content of the model, as the digest sees it)."""
     out: dict[str, Any] = {}
-    # schema_version and kind come first in every file (a site model declares them last)
-    order = {"schema_version": 0, "kind": 1}
-    for name, info in sorted(type(model).model_fields.items(), key=lambda kv: order.get(kv[0], 2)):
+    # schema_version and kind come first in every file (a site model declares them last); the
+    # provenance mapping and the feature list come last
+    fields = sorted(type(model).model_fields.items(), key=lambda kv: _FILE_ORDER.get(kv[0], 2))
+    for name, info in fields:
         value = getattr(model, name)
-        if not info.is_required() and (value is None or value == ""):
+        if name in ANNOTATION_FIELDS and not annotations:
             continue
-        out[name] = _plain(value)
+        if not info.is_required() and (
+            value is None or value == "" or (name in _OMIT_AT_DEFAULT and value == info.default)
+        ):
+            continue
+        if not info.is_required() and name in _OMIT_WHEN_EMPTY and not value:
+            continue
+        out[name] = _plain(value, annotations)
     return out
 
 
-def _plain(value: Any) -> Any:
+_OMIT_AT_DEFAULT = frozenset({"status"})
+_OMIT_WHEN_EMPTY = frozenset({"provenance", "requires"})
+
+
+def _plain(value: Any, annotations: bool = True) -> Any:
     if isinstance(value, BudgetModel):
-        return model_to_data(value)
+        return model_to_data(value, annotations=annotations)
     if isinstance(value, list):
-        return [_plain(v) for v in value]
+        return [_plain(v, annotations) for v in value]
     if isinstance(value, dict):
-        return {k: _plain(v) for k, v in value.items()}
+        return {k: _plain(v, annotations) for k, v in value.items()}
     return value
 
 
@@ -243,7 +264,7 @@ class _Loader:
             if problem.severity is Severity.ERROR:
                 return None
         try:
-            return model_cls.model_validate(data)
+            model = model_cls.model_validate(data)
         except ValidationError as exc:
             self.problems.extend(explain(exc, model_cls, rel, loaded.lines))
             return None
@@ -256,6 +277,40 @@ class _Loader:
                 "Check the numbers in this file; values must be finite and of a sensible size.",
             )
             return None
+        for key in unknown_paths(data):
+            self.problems.append(
+                Problem(
+                    Severity.WARNING,
+                    "PROVENANCE_PATH_UNKNOWN",
+                    "A 'provenance' entry names an input that the file does not have.",
+                    file=rel,
+                    path=format_path(("provenance", key)),
+                    line=loaded.lines.lookup(("provenance", key)),
+                    hint="The field may have been renamed or removed; correct the key or "
+                    "delete the entry.",
+                )
+            )
+        return model
+
+
+KNOWN_FEATURES: frozenset[str] = frozenset()  # P4 adds "settings", P7 adds "overrides"
+
+
+def _unsupported_features(meta: ProjectMeta) -> list[Problem]:
+    """An error for each feature the project says it needs that this version does not have: a
+    tool that ignored it would give results the project did not ask for (D-213)."""
+    return [
+        Problem(
+            Severity.ERROR,
+            "FEATURE_UNSUPPORTED",
+            "The project needs a feature that this version of the tool does not have.",
+            file="project.yaml",
+            path=f"requires[{i}]",
+            hint="Upgrade System Budget Studio, or open the project with the tool that wrote it.",
+        )
+        for i, name in enumerate(meta.requires)
+        if name not in KNOWN_FEATURES
+    ]
 
 
 def _located(problem: Problem, file: str, lines: LineMap) -> Problem:
@@ -454,6 +509,8 @@ def load_project(root: FsPath, registry: MigrationRegistry = DEFAULT_REGISTRY) -
 
     loader = _Loader(root, registry)
     meta = loader.load("project.yaml", ProjectMeta, "project")
+    if meta is not None:
+        loader.problems.extend(_unsupported_features(meta))
     spacecraft = loader.load("spacecraft.yaml", Spacecraft, "spacecraft")
     failed: dict[str, set[str]] = {}  # per folder: ids of files that exist but did not load
 

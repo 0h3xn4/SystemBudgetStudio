@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 kind: attenuation_table
 entries:
   - name: gas_s

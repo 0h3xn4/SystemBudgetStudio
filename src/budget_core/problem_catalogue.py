@@ -138,6 +138,26 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "Save the project to write the file in the current format.",
     ),
     _e(
+        "FEATURE_UNSUPPORTED",
+        ERR,
+        _READ,
+        "The project needs a feature this version does not have",
+        "`project.yaml` lists in `requires:` the features the project uses that an older tool "
+        "would ignore; a name this version does not know is refused.",
+        "A tool that ignored the feature would give results the project did not ask for.",
+        "Open the project with a newer release of the tool.",
+    ),
+    _e(
+        "PROVENANCE_PATH_UNKNOWN",
+        WARN,
+        _READ,
+        "A source is recorded for an input that does not exist",
+        "A key of the `provenance:` mapping must be the path of an input of the same file.",
+        "The source belongs to a field that was renamed or removed, so it describes nothing; "
+        "the results are not affected.",
+        "Correct the key to the current path, or delete the entry.",
+    ),
+    _e(
         "SCHEMA_VERSION_MISSING",
         ERR,
         _READ,

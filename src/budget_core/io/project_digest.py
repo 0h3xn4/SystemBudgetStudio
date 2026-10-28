@@ -21,17 +21,20 @@ _FOLDERS = (
 
 
 def project_data(project: Project) -> dict[str, Any]:
-    """Every model of the project as plain data, keyed by kind and id. Comments, key order, file
-    names other than the ids, and the folder the project was read from do not appear."""
+    """Every model of the project as plain data, keyed by kind and id. Comments, key order, the
+    sources and statuses (D-213), file names other than the ids, and the folder the project was
+    read from do not appear."""
     data: dict[str, Any] = {
-        "project": model_to_data(project.meta),
-        "spacecraft": model_to_data(project.spacecraft),
+        "project": model_to_data(project.meta, annotations=False),
+        "spacecraft": model_to_data(project.spacecraft, annotations=False),
     }
     for folder in _FOLDERS:
         models = getattr(project, folder)
-        data[folder] = {name: model_to_data(models[name]) for name in sorted(models)}
+        data[folder] = {
+            name: model_to_data(models[name], annotations=False) for name in sorted(models)
+        }
     data["config"] = {
-        name: model_to_data(model)
+        name: model_to_data(model, annotations=False)
         for name in sorted(vars(project.config))
         if (model := getattr(project.config, name)) is not None
     }

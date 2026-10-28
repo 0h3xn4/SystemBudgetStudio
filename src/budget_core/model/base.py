@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, get_args, get_origin
+from typing import Any, Literal, get_args, get_origin
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationInfo, field_validator
 from pydantic_core import PydanticCustomError
@@ -128,13 +128,18 @@ def duplicate_names(names: list[str]) -> bool:
     return len(set(names)) != len(names)
 
 
+SourcedStatus = Literal["sourced", "estimate", "illustrative"]
+
+
 class Sourced(BudgetModel):
     """A number from a standard, policy or data sheet. `source: TBD` or a null value marks a
-    placeholder that must be replaced before results are trusted (spec constraint 15)."""
+    placeholder that must be replaced before results are trusted (spec constraint 15). `status`
+    says what kind of number it is; it changes no result (D-213)."""
 
     value: float | None
     source: str = Field(min_length=1)
     note: str = ""
+    status: SourcedStatus = "sourced"
 
     @property
     def is_placeholder(self) -> bool:

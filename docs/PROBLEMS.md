@@ -80,6 +80,22 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** Nothing changes in your results; the file on disk is still the old version.
 - **What to do.** Save the project to write the file in the current format.
 
+### FEATURE_UNSUPPORTED
+
+**The project needs a feature this version does not have** (error)
+
+- **Rule.** `project.yaml` lists in `requires:` the features the project uses that an older tool would ignore; a name this version does not know is refused.
+- **Why it matters.** A tool that ignored the feature would give results the project did not ask for.
+- **What to do.** Open the project with a newer release of the tool.
+
+### PROVENANCE_PATH_UNKNOWN
+
+**A source is recorded for an input that does not exist** (warning)
+
+- **Rule.** A key of the `provenance:` mapping must be the path of an input of the same file.
+- **Why it matters.** The source belongs to a field that was renamed or removed, so it describes nothing; the results are not affected.
+- **What to do.** Correct the key to the current path, or delete the entry.
+
 ### SCHEMA_VERSION_MISSING
 
 **The file has no valid schema version** (error)

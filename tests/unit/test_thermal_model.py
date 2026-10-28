@@ -118,7 +118,7 @@ def test_temperature_limits_must_be_ordered(root: Path) -> None:
 
 
 def test_unit_version_1_migrates_in_memory(root: Path) -> None:
-    edit(root, "units/u1.yaml", "schema_version: 2", "schema_version: 1")
+    edit(root, "units/u1.yaml", "schema_version: 3", "schema_version: 1")
     result = load_project(root)
     assert result.project is not None
     migrated = [p for p in result.problems if p.code == "FILE_MIGRATED"]

@@ -27,7 +27,7 @@
     },
     "Sourced": {
       "additionalProperties": false,
-      "description": "A number from a standard, policy or data sheet. `source: TBD` or a null value marks a\nplaceholder that must be replaced before results are trusted (spec constraint 15).",
+      "description": "A number from a standard, policy or data sheet. `source: TBD` or a null value marks a\nplaceholder that must be replaced before results are trusted (spec constraint 15). `status`\nsays what kind of number it is; it changes no result (D-213).",
       "properties": {
         "note": {
           "default": "",
@@ -37,6 +37,16 @@
         "source": {
           "minLength": 1,
           "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative"
+          ],
+          "title": "Status",
           "type": "string"
         },
         "value": {
@@ -76,8 +86,8 @@
       "type": "string"
     },
     "schema_version": {
-      "const": 1,
-      "default": 1,
+      "const": 2,
+      "default": 2,
       "title": "Schema Version",
       "type": "integer"
     }

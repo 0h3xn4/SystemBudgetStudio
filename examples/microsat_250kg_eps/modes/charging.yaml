@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 kind: spacecraft_mode
 name: Charging
 description: Sun-pointing to charge the battery.
