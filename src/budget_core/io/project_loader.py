@@ -27,6 +27,7 @@ from budget_core.io.yamlio import (
     load_yaml_text,
     read_limited,
 )
+from budget_core.manifest import ManifestEntry, entry_for
 from budget_core.model import (
     AttenuationTable,
     BudgetModel,
@@ -143,6 +144,7 @@ class _Loader:
         self.registry = registry
         self.problems: list[Problem] = []
         self.lines: dict[str, LineMap] = {}
+        self.manifest: list[ManifestEntry] = []
 
     def error(self, code: str, message: str, file: str | None, hint: str = "") -> None:
         self.problems.append(Problem(Severity.ERROR, code, message, file=file, hint=hint))
@@ -175,6 +177,7 @@ class _Loader:
                     "Project files are small text files; check that this is the right file.",
                 )
                 return None
+            self.manifest.append(entry_for(rel, raw))
             text = raw.decode("utf-8")
         except UnicodeDecodeError:
             self.error(
@@ -506,6 +509,7 @@ def load_project(root: FsPath, registry: MigrationRegistry = DEFAULT_REGISTRY) -
             targets,
             scenarios,
             links,
+            tuple(sorted(loader.manifest)),
         )
         problems = problems + validate_references(project, loader.lines, failed)
     problems = sort_problems(problems)

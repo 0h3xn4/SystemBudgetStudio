@@ -155,7 +155,7 @@
 39: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.annual_degradation_ratio' | 'The array annual degradation is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 40: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.cell_area_m2' | 'The cell area is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 ...
-## sheet Provenance rows=12 cols=2
+## sheet Provenance rows=15 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -165,5 +165,8 @@
 8: 'Project' | 'Example 250 kg minisatellite'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
-11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-12: 'User' | 'Golden User'
+11: 'Run parameters' | 'Environment source elements; Shadow model cylindrical; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s; Demand basis nominal; Cases bol, eol; Mission phase not set'
+12: 'Inputs digest (model)' | 'sha256:2d0a5ef8c2d6fabfac4d4969be71d52b0f88903c1f204f423c796e4000674482'
+13: 'Input files' | '41 files, sha256:b984a5164a6ff3b5ec058b91e9f365c318f80cad18bd1fc8597ab4cd2bf38439'
+14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+15: 'User' | 'Golden User'

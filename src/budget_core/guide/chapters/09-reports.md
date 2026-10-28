@@ -22,9 +22,11 @@ Numbers are rounded half up on their decimal value in every format (0.125 shows 
 
 The same project, scenario, user name and generation time give the same file contents. Use `--user` and `--date` (or `BUDGET_USER` and `SOURCE_DATE_EPOCH`) to regenerate an earlier report.
 
-Every set of CSV files comes with a `<name>_provenance.csv` (tool and library versions, project, revision, scenario, time, user), because a CSV has no room for a header block. The files of a run are written together: they are first written under temporary names and then moved into place, so a failing write leaves the folder as it was, and the message names the file that failed. Names that differ only by case (`hot` and `Hot`) are refused because Windows would write them to one file.
+Every set of CSV files comes with a `<name>_provenance.csv` (tool and library versions, project, revision, scenario, run parameters, the digest of the inputs, time, user), because a CSV has no room for a header block. The files of a run are written together: they are first written under temporary names and then moved into place, so a failing write leaves the folder as it was, and the message names the file that failed. Names that differ only by case (`hot` and `Hot`) are refused because Windows would write them to one file.
 
 Text in a CSV file that a spreadsheet would run as a formula (a leading `=` or `@`, or `+` or `-` followed by anything but a number or plain words) gets one leading apostrophe; nothing else is changed.
+
+To check that a project is the one a result came from, run `budget verify <export.json> <project folder>`: it compares the SHA-256 of the project's content with the one recorded in the export and names the files that differ. A comment edit does not count as a difference in the numbers; an edited number does.
 
 Plots exist only inside the reports, which carry the same provenance block; no plot is written as a loose image.
 

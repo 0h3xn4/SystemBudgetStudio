@@ -8,6 +8,7 @@ from typing import Literal
 
 from pydantic import Field
 
+from budget_core.manifest import ManifestEntry
 from budget_core.model.base import BudgetModel
 from budget_core.model.config import AttenuationTable, Ebn0Table, MarginPolicy, PowerConfig
 from budget_core.model.environment import GroundStation, Orbit, Scenario, Target
@@ -53,6 +54,8 @@ class Project:
     targets: dict[str, Target] = field(default_factory=dict)
     scenarios: dict[str, Scenario] = field(default_factory=dict)
     links: dict[str, Link] = field(default_factory=dict)
+    # the files the loader read and their hashes (D-204); empty for a project built in memory
+    manifest: tuple[ManifestEntry, ...] = ()
 
     @property
     def phases(self) -> tuple[str, ...]:

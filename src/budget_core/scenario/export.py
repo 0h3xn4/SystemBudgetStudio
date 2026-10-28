@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+from dataclasses import replace
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
@@ -11,7 +12,7 @@ from typing import Any
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer, provenance_csv
 from budget_core.reports.files import write_file
-from budget_core.scenario.run import ScenarioRun
+from budget_core.scenario.run import ScenarioRun, run_parameters
 from budget_core.timeutil import format_utc
 
 
@@ -159,12 +160,16 @@ def environment_json(run: ScenarioRun, provenance: Provenance) -> str:
             "scenario": run.scenario_id,
             "generated": provenance.generated,
             "user": provenance.user,
+            "inputs_digest": provenance.inputs_digest,
+            "input_files": [e.to_dict() for e in provenance.input_files],
+            "parameters": [list(item) for item in provenance.parameters],
         },
     }
     return json.dumps(data, indent=2, sort_keys=True) + "\n"
 
 
 def write_scenario_outputs(run: ScenarioRun, provenance: Provenance, out_dir: Path) -> list[Path]:
+    provenance = replace(provenance, parameters=run_parameters(run))
     sid = run.scenario_id
     files = {
         f"{sid}_environment.json": environment_json(run, provenance),

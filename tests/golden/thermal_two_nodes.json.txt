@@ -375,12 +375,15 @@
   ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
+    "input_files": [],
+    "inputs_digest": "sha256:5bef304ab1dbff22689c00320b0f5ed086c59c99c5a23dbdb53449921fdcc683",
     "libraries": [
       [
         "pinned",
         "for-golden-tests"
       ]
     ],
+    "parameters": [],
     "project_name": "Thermal test",
     "project_revision": "r1",
     "python_version": "3.x",

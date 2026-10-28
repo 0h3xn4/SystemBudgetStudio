@@ -270,6 +270,10 @@ Project revision
 r1
 Scenario
 static (no scenario)
+Run parameters
+Environment source synthetic; Shadow model cylindrical; Start (UTC) 2026-01-01T00:00:00Z; Duration 1000 s; Step 10 s
+Inputs digest (model)
+sha256:f6b7483bdf8c0b5bbb411b6d64735296a243667eb5ee2acd3d911752577df50a
 Generated (UTC)
 2026-01-02T03:04:05Z
 User

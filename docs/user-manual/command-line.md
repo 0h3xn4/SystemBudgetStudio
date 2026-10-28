@@ -18,6 +18,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget units-export PROJECT [--out FILE.csv\|.xlsx]` | Write the unit power modes as a table to fill in outside the tool ([unit tables](unit-tables.md)) |
 | `budget units-import PROJECT TABLE [--apply]` | Show the changes a filled-in table would make; with `--apply` write them into the unit files |
 | `budget guide --out DIR [--format html\|pdf\|all] [--project PROJECT]` | Write the user guide (offline HTML and PDF) |
+| `budget verify EXPORT PROJECT` | Say whether a project is the one an export was made from (input digest; exit 0 match, 1 different or not checkable, 2 export unreadable) |
 | `budget self-test` | Check that this installation can compute and render a budget |
 | `budget export-schemas DIR` | Write the JSON Schema of every file kind |
 | `budget export-examples DIR [--force]` | Write the four example projects; an example folder that exists is never touched unless you add `--force` |

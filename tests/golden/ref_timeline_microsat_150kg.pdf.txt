@@ -1,4 +1,4 @@
-pages=13
+pages=14
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User

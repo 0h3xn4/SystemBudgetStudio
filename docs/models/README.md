@@ -14,3 +14,4 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | RF link (EIRP, G/T, losses, rate selection, volume) | (planned) | planned |
 | Units and conversions (accepted units, canonical units, refused words) | (planned) | planned |
 | Rounding and number formats | (planned) | planned |
+| Provenance, input digest and `budget verify` | [provenance.md](provenance.md) | written |

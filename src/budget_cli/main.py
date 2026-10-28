@@ -48,6 +48,7 @@ from budget_core.schemas import export_schemas
 from budget_core.selftest import run_selftest
 from budget_core.thermal.static_thermal import static_thermal_budget
 from budget_core.timeutil import MAX_YEAR, MIN_YEAR
+from budget_core.verify import MATCH, VerifyError, verify_export
 from budget_core.wizard import WizardError
 
 REPORTS = REPORT_KINDS
@@ -281,6 +282,17 @@ def build_parser() -> argparse.ArgumentParser:
         "self-test", help="Check that this installation can compute and render a budget."
     )
 
+    ver = sub.add_parser(
+        "verify",
+        help="Check that a project is the one an export was made from (input digest).",
+    )
+    ver.add_argument(
+        "export",
+        type=Path,
+        help="A JSON export of any budget, or a *_provenance.csv written next to the CSV files.",
+    )
+    ver.add_argument("project", type=Path, help="The project folder to compare with.")
+
     sch = sub.add_parser("export-schemas", help="Write the JSON Schema of every file kind.")
     sch.add_argument("out_dir", type=Path)
 
@@ -353,6 +365,19 @@ def _validate(args: argparse.Namespace) -> int:
             print(problem.format())
         print(f"{_plural(errors, 'error')}, {_plural(warnings, 'warning')}.")
     return 1 if errors or (args.strict and warnings) else 0
+
+
+def _verify(args: argparse.Namespace) -> int:
+    """MATCH (0): the project gives the digest recorded in the export. DIFFERENT or UNKNOWN (1):
+    it does not, or the export records none. An export that cannot be read is a bad call (2)."""
+    try:
+        result = verify_export(args.export, args.project)
+    except VerifyError as exc:
+        _fail(str(exc))
+        return 2
+    for line in result.lines:
+        print(line)
+    return 0 if result.status == MATCH else 1
 
 
 def _valid_project(path: Path) -> tuple[Project | None, int]:
@@ -773,6 +798,8 @@ def _dispatch(
         return 1 if failures else 0
     if args.command == "run":
         return _run(args)
+    if args.command == "verify":
+        return _verify(args)
     if args.command == "units-export":
         return _units_export(args)
     if args.command == "units-import":

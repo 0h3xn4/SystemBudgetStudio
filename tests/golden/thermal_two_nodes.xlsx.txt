@@ -84,7 +84,7 @@
 2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
 3: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u1.yaml' | 'temperature_limits' | "Unit 'u1' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
 4: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u2.yaml' | 'temperature_limits' | "Unit 'u2' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
-## sheet Provenance rows=10 cols=2
+## sheet Provenance rows=11 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 1.7.0'
@@ -93,5 +93,6 @@
 6: 'Project' | 'Thermal test'
 7: 'Project revision' | 'r1'
 8: 'Scenario' | 'static (no scenario)'
-9: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-10: 'User' | 'Golden User'
+9: 'Inputs digest (model)' | 'sha256:5bef304ab1dbff22689c00320b0f5ed086c59c99c5a23dbdb53449921fdcc683'
+10: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+11: 'User' | 'Golden User'
