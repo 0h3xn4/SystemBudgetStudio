@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass
+from pathlib import Path
 
 from budget_core.control import RunControl, checkpoint, stage
 from budget_core.environment.data import (
@@ -190,6 +191,29 @@ def run_scenario(
     )
 
 
+FULL_HASH_BYTES = 16 * 1024 * 1024  # files up to this size are hashed whole
+EDGE_HASH_BYTES = 1024 * 1024  # larger ones: their first and last megabyte, and the size
+
+
+def import_fingerprint(path: Path) -> str:
+    """What identifies the content of an imported file for the key. A file of up to 16 MiB is
+    hashed whole, so an edit of any size is seen even when the size and the modification time
+    stay the same (a coarse clock or a restored time); a larger file is identified by its size,
+    its modification time and its first and last megabyte, since hashing hundreds of megabytes
+    on every check would stall the window (D-212)."""
+    info = path.stat()
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        if info.st_size <= FULL_HASH_BYTES:
+            for block in iter(lambda: handle.read(1024 * 1024), b""):
+                digest.update(block)
+            return f"{info.st_size}:{digest.hexdigest()}"
+        digest.update(handle.read(EDGE_HASH_BYTES))
+        handle.seek(max(info.st_size - EDGE_HASH_BYTES, 0))
+        digest.update(handle.read(EDGE_HASH_BYTES))
+    return f"{info.st_size}:{info.st_mtime_ns}:{digest.hexdigest()}"
+
+
 def environment_key(project: Project, scenario: Scenario) -> str:
     """Fingerprint of everything the environment depends on. Rules, segments, the default mode
     and the name only change the timeline, so they are not part of it. Equal keys allow reusing a
@@ -211,7 +235,7 @@ def environment_key(project: Project, scenario: Scenario) -> str:
     if scenario.environment_source == "spacemissionstudio" and scenario.import_dir:
         folder = resolve_inside(project.root, scenario.import_dir)
         files = sorted(folder.glob("*.csv")) if folder is not None and folder.is_dir() else []
-        parts["import"] = [[p.name, p.stat().st_size, p.stat().st_mtime_ns] for p in files]
+        parts["import"] = [[p.name, import_fingerprint(p)] for p in files]
     text = json.dumps(parts, sort_keys=True, default=str)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 

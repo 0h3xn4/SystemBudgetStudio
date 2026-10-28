@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -76,6 +77,53 @@ def test_import_folder_changes_change_the_key(root: Path) -> None:
     )
     before = key(root)
     (folder / "orbit.csv").write_text("a\nb\n", encoding="utf-8")
+    assert key(root) != before
+
+
+def _import_project(root: Path) -> Path:
+    folder = root / "imports" / "r"
+    folder.mkdir(parents=True)
+    csv = folder / "orbit.csv"
+    csv.write_text("a,1\n", encoding="utf-8")
+    edit(
+        root,
+        "scenarios/day.yaml",
+        "environment_source: elements\norbit: leo",
+        "environment_source: spacemissionstudio\nimport_dir: imports/r",
+    )
+    return csv
+
+
+def test_a_same_size_edit_with_the_same_time_changes_the_key(root: Path) -> None:
+    """V12: size and modification time alone would not see this edit."""
+    csv = _import_project(root)
+    before = key(root)
+    stamp = csv.stat()
+    csv.write_text("a,2\n", encoding="utf-8")  # same length
+    os.utime(csv, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
+    after = csv.stat()
+    assert (after.st_size, after.st_mtime_ns) == (stamp.st_size, stamp.st_mtime_ns)
+    assert key(root) != before
+
+
+def test_a_file_that_is_not_changed_keeps_its_key(root: Path) -> None:
+    csv = _import_project(root)
+    before = key(root)
+    os.utime(csv, ns=(1, 2))  # a touch alone is not an edit of the content
+    assert key(root) == before
+
+
+def test_a_large_file_is_identified_by_its_edges_size_and_time(
+    root: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import budget_core.scenario.run as run_module
+
+    monkeypatch.setattr(run_module, "FULL_HASH_BYTES", 64)
+    monkeypatch.setattr(run_module, "EDGE_HASH_BYTES", 16)
+    csv = _import_project(root)
+    csv.write_bytes(b"x" * 16 + b"m" * 200 + b"y" * 16)
+    before = key(root)
+    csv.write_bytes(b"x" * 16 + b"m" * 200 + b"z" * 16)  # the last bytes change
     assert key(root) != before
 
 

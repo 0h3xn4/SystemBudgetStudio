@@ -144,8 +144,8 @@ The constraint says: do not change existing numerical results unless a bug is fo
 | V9 | **Run uses the saved project** while grid edits are unsaved, but the status tooltip says "Everything was worked out from the inputs now on screen" (`main_window.py:1447`). `run_controller.run()` has no unsaved-edits check. | Reported, consistent with a read of `run_controller.py` | None | Warn or save first; tie "up to date" to a content hash (warning done: D-211) |
 | V10 | `save_edited_data` can fall back to a whole-file rewrite that drops all comments (where users keep sources, per D-102) and returns `canonical=True`; its only caller ignores it (`model_document.py:421`). | Reported; the call site checked (return value unused) | None | Tell the user before it happens (done: D-210) |
 | V11 | The OS login name is written into every export, including document author properties. | Reported | None | Decision D4 (opt-in user) |
-| V12 | Hash-less cache key for imported environments uses file size and mtime (`scenario/run.py:202`). A same-size edit within one mtime tick reuses a stale environment. | Reported | Possible stale environment | Content hash |
-| V13 | The thermal check table omits the required margin, so a `margin` status cannot be reproduced from it. | Reported | None | Add column in the explain trace |
+| V12 | Hash-less cache key for imported environments uses file size and mtime (`scenario/run.py:202`). A same-size edit within one mtime tick reuses a stale environment. | Reported | Possible stale environment | Content hash (done: D-212) |
+| V13 | The thermal check table omits the required margin, so a `margin` status cannot be reproduced from it. | Reported | None | Add column in the explain trace (done since D-206; see D-212) |
 
 No defect found so far changes a number the tool prints for a correct input except V1 (a units ambiguity) and V3 (unproven). Everything else is missing visibility, not wrong arithmetic.
 
