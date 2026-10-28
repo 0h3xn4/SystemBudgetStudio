@@ -147,7 +147,7 @@ def test_scenario_version_1_migrates_in_memory(tmp_path: Path) -> None:
     write_valid_project(tmp_path)
     path = tmp_path / "scenarios" / "day.yaml"
     path.write_text(
-        path.read_text().replace("schema_version: 2", "schema_version: 1"), newline="\n"
+        path.read_text().replace("schema_version: 3", "schema_version: 1"), newline="\n"
     )
     result = load_project(tmp_path)
     assert result.project is not None
