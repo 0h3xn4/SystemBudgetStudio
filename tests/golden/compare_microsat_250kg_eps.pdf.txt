@@ -685,6 +685,11 @@ Project revision
 1
 Scenario
 static vs static
+Run parameters
+Side A inputs digest sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb; Side B inputs digest
+sha256:b983f4ea3067365a0f9a2845a0f3a8639f39be70f8bf01bf9810bfa3d8c60bc6; Side A files
+sha256:32342adb88001ea2877337884279309f008a73e7f83fb7326b38369872bba605; Side B files
+sha256:64c7c6ef9acdbcbd923ad1f6411a261dc54d257dd82526a4ad3e296aa13dbde6
 Inputs digest (model)
 sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb
 Input files

@@ -43,4 +43,4 @@ If the tool version of the export differs from yours, `verify` says so. The same
 - Files read outside the project's YAML files (an antenna pattern file, imported environment files) are not in the manifest yet.
 - Reproducing the exact bytes of a report additionally needs the same library builds (see the Libraries row) and the same `--user` and `--date`.
 
-Decision: [D-204](../DECISIONS.md).
+Decisions: [D-204](../DECISIONS.md), [D-205](../DECISIONS.md). The layout of the JSON files is in [RESULT_FORMAT.md](../RESULT_FORMAT.md).

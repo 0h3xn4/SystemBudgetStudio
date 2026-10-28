@@ -448,6 +448,11 @@
     "tool_version": "1.7.0",
     "user": "Golden User"
   },
+  "result_format": {
+    "kind": "power_timeline",
+    "name": "system-budget-studio-result",
+    "version": 1
+  },
   "scenario": "synthetic",
   "violations": [
     {

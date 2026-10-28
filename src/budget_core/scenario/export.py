@@ -12,6 +12,7 @@ from typing import Any
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer, provenance_csv
 from budget_core.reports.files import write_file
+from budget_core.result_format import result_format
 from budget_core.scenario.run import ScenarioRun, run_parameters
 from budget_core.timeutil import format_utc
 
@@ -150,6 +151,7 @@ def environment_json(run: ScenarioRun, provenance: Provenance) -> str:
             for s in run.timeline
         ],
         "notes": list(run.notes),
+        "result_format": result_format("scenario_environment"),
         "provenance": {
             "tool": provenance.tool,
             "tool_version": provenance.tool_version,

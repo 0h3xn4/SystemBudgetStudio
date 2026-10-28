@@ -14,6 +14,7 @@ from budget_core.problems import Problem, sort_problems
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer
 from budget_core.reports.numfmt import clean_numbers, no_negative_zero
+from budget_core.result_format import result_format, static_kind
 from budget_core.thermal.static_thermal import CaseThermal, ModeHeat
 
 CSV_COLUMNS = (
@@ -53,6 +54,7 @@ def result_json(
     data["incomplete"] = incomplete
     data["problems"] = [p.to_dict() for p in sort_problems([*load_problems, *result.problems])]
     data["provenance"] = _plain(asdict(provenance))
+    data["result_format"] = result_format(static_kind(result))
     return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
 
 

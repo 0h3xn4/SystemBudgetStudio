@@ -1140,7 +1140,24 @@
         "for-golden-tests"
       ]
     ],
-    "parameters": [],
+    "parameters": [
+      [
+        "Side A inputs digest",
+        "sha256:bce9c692d27db5be044f3523b6af23bac0257faf23a4bb31c40edd3eaea118cb"
+      ],
+      [
+        "Side B inputs digest",
+        "sha256:b983f4ea3067365a0f9a2845a0f3a8639f39be70f8bf01bf9810bfa3d8c60bc6"
+      ],
+      [
+        "Side A files",
+        "sha256:32342adb88001ea2877337884279309f008a73e7f83fb7326b38369872bba605"
+      ],
+      [
+        "Side B files",
+        "sha256:64c7c6ef9acdbcbd923ad1f6411a261dc54d257dd82526a4ad3e296aa13dbde6"
+      ]
+    ],
     "project_name": "Example 250 kg minisatellite, complete power and thermal inputs",
     "project_revision": "1",
     "python_version": "3.x",
@@ -1148,6 +1165,11 @@
     "tool": "System Budget Studio",
     "tool_version": "1.7.0",
     "user": "Golden User"
+  },
+  "result_format": {
+    "kind": "comparison",
+    "name": "system-budget-studio-result",
+    "version": 1
   },
   "rows_one_sided": 0,
   "truncated": 0,

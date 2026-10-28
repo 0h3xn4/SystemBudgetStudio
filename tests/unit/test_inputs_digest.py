@@ -243,3 +243,46 @@ def test_the_command_exits_0_for_a_match_1_for_a_difference_2_for_a_bad_file(
     assert "DIFFERENT" in capsys.readouterr().out
     nothing = tmp_path / "missing.json"
     assert main(["verify", str(nothing), str(eps)]) == 2
+
+
+# ---- the result envelope (D-205) ---------------------------------------------------------------
+def test_every_json_result_names_its_format_and_kind(eps: Path, tmp_path: Path) -> None:
+    from budget_core.result_format import KINDS, RESULT_FORMAT_NAME, RESULT_FORMAT_VERSION
+
+    out = tmp_path / "out"
+    scenario = next((eps / "scenarios").glob("*.yaml")).stem
+    for budget in ("power", "mass", "thermal", "link"):
+        main(["run", str(eps), "--budget", budget, "--report", "json", "--out", str(out)])
+    main(["scenario", str(eps), "--scenario", scenario, "--out", str(out)])
+    main(
+        ["power-timeline", str(eps), "--scenario", scenario, "--report", "json", "--out", str(out)]
+    )
+    main(["link-passes", str(eps), "--scenario", scenario, "--report", "json", "--out", str(out)])
+    main(["compare", str(eps), str(eps), "--report", "json", "--out", str(out)])
+    seen = set()
+    for path in sorted(out.glob("*.json")):
+        fmt = json.loads(path.read_text(encoding="utf-8"))["result_format"]
+        assert fmt["name"] == RESULT_FORMAT_NAME and fmt["version"] == RESULT_FORMAT_VERSION
+        seen.add(fmt["kind"])
+    assert seen == set(KINDS)
+
+
+def test_the_format_page_describes_every_kind() -> None:
+    from budget_core.result_format import KINDS
+
+    page = (Path(__file__).resolve().parents[2] / "docs" / "RESULT_FORMAT.md").read_text(
+        encoding="utf-8"
+    )
+    for kind in KINDS:
+        assert f"| `{kind}` |" in page, kind
+
+
+def test_a_comparison_names_the_inputs_of_both_sides(eps: Path, tmp_path: Path) -> None:
+    other = tmp_path / "other"
+    shutil.copytree(EXAMPLES / "microsat_150kg", other)
+    out = tmp_path / "out"
+    main(["compare", str(eps), str(other), "--report", "json", "--out", str(out)])
+    data = json.loads((out / "compare.json").read_text(encoding="utf-8"))
+    params = dict(data["provenance"]["parameters"])
+    assert params["Side A inputs digest"] == project_digest(_project(eps))
+    assert params["Side B inputs digest"] == project_digest(_project(other))
