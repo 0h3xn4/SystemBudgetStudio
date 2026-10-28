@@ -132,7 +132,7 @@ A computation or an export is still running in the background; stopping it half 
 
 ### Export is switched off, or says "out of date" / "changed since this result was computed"
 
-The result on screen was computed from different inputs than the ones set now: the project was reloaded or saved, another scenario or demand basis is selected, or the other folder in **Compare** changed. The run status in the top bar says **Out of date**. Press **Run** (or **Compute** in the view, or **Compare**) again, then export.
+The result on screen was computed from different inputs than the ones set now: edits are not saved yet (a run reads the saved files), the project was reloaded or saved, another scenario or demand basis is selected, or the other folder in **Compare** changed. The run status in the top bar says **Out of date**. Press **Run** (or **Compute** in the view, or **Compare**) again, then export.
 
 ### A yellow banner says the tables show the last results that worked
 
