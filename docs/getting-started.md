@@ -63,7 +63,7 @@ budget self-test
 You should see (the first line carries the version you installed):
 
 ```text
-System Budget Studio 1.7.0
+System Budget Studio 1.8.0
 Self-test passed.
 ```
 
