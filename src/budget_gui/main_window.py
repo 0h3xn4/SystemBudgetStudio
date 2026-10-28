@@ -165,6 +165,7 @@ class MainWindow(QMainWindow):
             budget_view.explain_requested.connect(self.explain_value)
         self.editors = EditorTabs()  # the Model tab: the grids, the scenario and the open files
         self.document = ModelDocument()  # what the grids and the scenario edit: one undo stack
+        self.document.confirm_comment_loss = self._confirm_comment_loss
         self.units_page = UnitsPage(self.document)
         self.modes_page = PowerModesPage(self.document)
         self.spacecraft_modes_page = SpacecraftModesPage(self.document)
@@ -1828,6 +1829,22 @@ class MainWindow(QMainWindow):
         )
         return answer == QMessageBox.StandardButton.Yes
 
+    def _confirm_comment_loss(self, files: list[str]) -> bool:
+        """Saving would write these files whole, because the edit cannot be made in place, and
+        leave out their comments (where sources are often kept): ask first."""
+        n = len(files)
+        answer = QMessageBox.question(
+            self,
+            APP_NAME,
+            f"{'These files have' if n != 1 else 'This file has'} comments that saving cannot "
+            f"keep, because the edit cannot be made in place:\n\n{chr(10).join(files)}\n\n"
+            f"Saving writes {'them' if n != 1 else 'it'} again in the standard layout, without "
+            "the comments. Save anyway?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No,
+        )
+        return answer == QMessageBox.StandardButton.Yes
+
     def save_model(self) -> bool:
         """Write the files the grids and the scenario editor changed (nothing while a cell is
         wrong or a file moved on disk)."""
@@ -1842,6 +1859,8 @@ class MainWindow(QMainWindow):
             text = (
                 f"Saved {n} file{'s' if n != 1 else ''}." if n else "Nothing to save: no changes."
             )
+            if report.comments_dropped:
+                text += f" Comments were not kept in {', '.join(report.comments_dropped)}."
             self.status_bar.showMessage(text)
             if grid is not None:
                 grid.show_message(text)

@@ -39,6 +39,7 @@ class SaveResult:
     path: Path
     changed: bool  # False: the file already held exactly these values and was not written
     canonical: bool  # True: the edit could not be applied in place; the file was rewritten whole
+    dropped_comments: bool = False  # True: the rewrite left out comments the file had
 
 
 # ---- reading and writing bytes ----------------------------------------------------------------
@@ -220,24 +221,46 @@ def patch_yaml_text(text: str, old: Any, new: Any) -> str:
 
 
 # ---- saving a model ---------------------------------------------------------------------------
-def save_edited_data(
+@dataclass(frozen=True)
+class SavePlan:
+    """What saving an edit would do to a file, found without writing it."""
+
+    path: Path
+    changed: bool  # False: the file already holds exactly these values
+    canonical: bool  # True: the edit cannot be applied in place; the file would be rewritten whole
+    drops_comments: bool  # True: ... and the file has comments that the rewrite would not keep
+
+
+def has_comments(text: str) -> bool:
+    """Whether the YAML text has a comment (found by reading it, so a '#' inside a quoted string
+    is not one)."""
+    try:
+        document = YAML(typ="rt").load(text)
+    except Exception:  # a file that cannot be read has nothing to keep
+        return False
+    return _node_has_comments(document)
+
+
+def _node_has_comments(node: Any) -> bool:
+    if isinstance(node, (CommentedMap, CommentedSeq)):
+        attrs = node.ca
+        if attrs.comment or attrs.end or any(attrs.items.values()):
+            return True
+        children = node.values() if isinstance(node, CommentedMap) else node
+        return any(_node_has_comments(child) for child in children)
+    return False
+
+
+def _plan(
     path: Path,
     old: dict[str, Any],
     new: dict[str, Any],
     check: Callable[[Any], dict[str, Any]],
-) -> SaveResult:
-    """Write the edit `old` -> `new` into the existing file `path`.
-
-    `check` turns data read from a file into the plain data of its model (validate, then
-    `model_to_data`). The patched text is read back through it and must give exactly `new`; when
-    it does not (a hand-written file the patch cannot follow, an older schema version) the file is
-    written whole in canonical form instead, and `canonical` says so. A file that already holds
-    the new values is not written at all. Raises `OutputError` (cannot write), `OSError` and
-    `UnicodeDecodeError` (cannot read)."""
+) -> tuple[SavePlan, bytes | None]:
+    """The plan and the bytes to write (None: nothing to write)."""
     path = Path(path)
     if not path.is_file():
-        write_bytes_atomic(path, dump_yaml(new).encode("utf-8"))
-        return SaveResult(path, True, False)
+        return SavePlan(path, True, False, False), dump_yaml(new).encode("utf-8")
     raw = path.read_bytes()
     text, bom, crlf = split_text(raw)
     canonical = False
@@ -250,6 +273,37 @@ def save_edited_data(
         canonical = True
     data = join_text(patched, bom, crlf)
     if data == raw:
-        return SaveResult(path, False, False)
-    write_bytes_atomic(path, data)
-    return SaveResult(path, True, canonical)
+        return SavePlan(path, False, False, False), None
+    return SavePlan(path, True, canonical, canonical and has_comments(text)), data
+
+
+def plan_save(
+    path: Path,
+    old: dict[str, Any],
+    new: dict[str, Any],
+    check: Callable[[Any], dict[str, Any]],
+) -> SavePlan:
+    """What `save_edited_data` would do, without writing: whether the edit can be made in place and,
+    if not, whether the rewrite would drop comments (so the user can be asked first)."""
+    return _plan(path, old, new, check)[0]
+
+
+def save_edited_data(
+    path: Path,
+    old: dict[str, Any],
+    new: dict[str, Any],
+    check: Callable[[Any], dict[str, Any]],
+) -> SaveResult:
+    """Write the edit `old` -> `new` into the existing file `path`.
+
+    `check` turns data read from a file into the plain data of its model (validate, then
+    `model_to_data`). The patched text is read back through it and must give exactly `new`; when
+    it does not (a hand-written file the patch cannot follow, an older schema version) the file is
+    written whole in canonical form instead, and `canonical` says so (`dropped_comments` says
+    whether that left comments out; `plan_save` tells beforehand). A file that already holds the
+    new values is not written at all. Raises `OutputError` (cannot write), `OSError` and
+    `UnicodeDecodeError` (cannot read)."""
+    plan, data = _plan(path, old, new, check)
+    if data is not None:
+        write_bytes_atomic(plan.path, data)
+    return SaveResult(plan.path, plan.changed, plan.canonical, plan.drops_comments)
