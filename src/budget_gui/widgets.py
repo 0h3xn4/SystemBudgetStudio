@@ -4,12 +4,20 @@ from __future__ import annotations
 
 from typing import Any
 
-from PySide6.QtCore import QAbstractTableModel, QModelIndex, QPersistentModelIndex, Qt
+from PySide6.QtCore import (
+    QAbstractTableModel,
+    QModelIndex,
+    QPersistentModelIndex,
+    QPoint,
+    Qt,
+    Signal,
+)
 from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QFrame,
     QLabel,
+    QMenu,
     QScrollArea,
     QTableView,
     QTabWidget,
@@ -34,6 +42,7 @@ from budget_gui.theme import Status
 from budget_gui.workspace import segmented_tabs
 
 SEVERITY_ORDER = {Severity.ERROR: 0, Severity.WARNING: 1, Severity.INFO: 2}
+EXPLAIN_TEXT = "Explain this value"
 Index = QModelIndex | QPersistentModelIndex
 _NO_PARENT = QModelIndex()
 UNIT_ROLE = int(Qt.ItemDataRole.UserRole) + 1
@@ -159,10 +168,13 @@ class _SectionPage(QScrollArea):
     200 units has tables of 200 rows in every sheet, and making all of them when the project loads
     (most are never looked at) kept the window busy for a second."""
 
+    explain_requested = Signal(object, int, int)  # (table, row, column) of a value to explain
+
     def __init__(self, section: Section) -> None:
         super().__init__()
         self.section = section
         self.models: list[DocTableModel] = []
+        self.current_cell: tuple[Table, int, int] | None = None  # the last cell selected
         self._built = False
         self.setWidgetResizable(True)
         self.setFrameShape(QFrame.Shape.NoFrame)
@@ -203,6 +215,8 @@ class _SectionPage(QScrollArea):
             height += sum(view.rowHeight(r) for r in range(len(table.rows)))
             view.setFixedHeight(max(height, theme.px(theme.TABLE_MIN_HEIGHT)))
             layout.addWidget(view)
+            if table.explain_id:
+                self._make_explainable(view, model)
             if table.note:
                 note = QLabel(table.note)
                 note.setWordWrap(True)
@@ -210,9 +224,35 @@ class _SectionPage(QScrollArea):
         layout.addStretch(1)
         self.setWidget(page)
 
+    def _make_explainable(self, view: QTableView, model: DocTableModel) -> None:
+        """A table whose values can be explained remembers its current cell and offers Explain this
+        value in its context menu."""
+        table = model.table
+        view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        def remember(current: Index, _previous: Index) -> None:
+            if current.isValid():
+                self.current_cell = (table, current.row(), current.column())
+
+        def menu(position: QPoint) -> None:
+            index = view.indexAt(position)
+            if not index.isValid():
+                return
+            view.setCurrentIndex(index)
+            row, col = index.row(), index.column()
+            popup = QMenu(view)
+            action = popup.addAction(f"{EXPLAIN_TEXT}\tCtrl+Shift+I")
+            action.triggered.connect(lambda: self.explain_requested.emit(table, row, col))
+            popup.exec(view.viewport().mapToGlobal(position))
+
+        view.selectionModel().currentChanged.connect(remember)
+        view.customContextMenuRequested.connect(menu)
+
 
 class PowerView(QWidget):
     """Tabs with the same tables the reports contain (Summary, one tab per mode, Assumptions)."""
+
+    explain_requested = Signal(object, int, int)  # (table, row, column) of a value to explain
 
     def __init__(self) -> None:
         super().__init__()
@@ -245,6 +285,15 @@ class PowerView(QWidget):
         for page in self._pages.values():
             page.ensure_built()
 
+    def current_explain_target(self) -> tuple[Table, int, int] | None:
+        """The cell last selected on the open sheet, if that sheet has explainable tables."""
+        page = self.tabs.currentWidget()
+        if not isinstance(page, _SectionPage):
+            return None
+        if page.current_cell is not None and page.current_cell[0].explain_id:
+            return page.current_cell
+        return None
+
     def table_model(self, tab: str, index: int) -> DocTableModel:
         page = self._pages[tab]
         page.ensure_built()
@@ -272,5 +321,6 @@ class PowerView(QWidget):
             if section.sheet_name == "Problems":  # shown in the Problems panel instead
                 continue
             page = _SectionPage(section)
+            page.explain_requested.connect(self.explain_requested)
             self.tabs.addTab(page, section.sheet_name)
             self._pages[section.sheet_name] = page

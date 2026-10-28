@@ -48,9 +48,16 @@ def test_every_dock_has_a_name_for_the_saved_layout(window: MainWindow) -> None:
             window.inspector_dock,
             window.problems_dock,
             window.provenance_dock,
+            window.explain_dock,
         )
     }
-    assert names == {"dock-project", "dock-inspector", "dock-problems", "dock-provenance"}
+    assert names == {
+        "dock-project",
+        "dock-inspector",
+        "dock-problems",
+        "dock-provenance",
+        "dock-explain",
+    }
 
 
 def test_the_inspector_follows_the_tree(window: MainWindow) -> None:
