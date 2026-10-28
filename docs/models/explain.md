@@ -45,13 +45,13 @@ The value is shown with up to ten significant digits, not rounded to the display
 
 | Budget | Tables | State |
 |---|---|---|
-| Static power | summary, units, subsystems, buses, totals (every spacecraft mode) | **available** |
+| Static power | summary, units, subsystems, buses, totals (every spacecraft mode) | **available** (command line and window) |
 | Mass, thermal, link, power timeline, orbit and eclipse | | planned, in this order |
 
 The equation registry also records which code applies each equation; the equations that no code claims yet are listed in `tests/unit/test_equation_binding.py` and the list only gets shorter.
 
 ## In the window
 
-Planned: *Explain this value* in the right-click menu of every result cell, in Ctrl+K and under a shortcut, opening a panel with the same content. The panel stays hidden until asked for, as the other panels do in the focused view.
+On a Power sheet, select a value and choose **View → Explain this value** (Ctrl+Shift+I, also in Ctrl+K), or right-click the value. The **Explain** panel opens on the right, in the same group as the Inspector and Provenance panels, and shows the title of the value, the value, and the same text `budget explain` prints. The panel is hidden until you ask for it, also in the focused view; closing it is final until the next request. When nothing is selected, or the value is not one that can be explained, the panel says so. The explanation is cleared when the project is loaded again, since the numbers may have changed. The tables of the other budgets (mass, thermal, link) do not offer it yet.
 
 Decision: [D-206](../DECISIONS.md). The model behind the first tables: [static power](power-static.md).

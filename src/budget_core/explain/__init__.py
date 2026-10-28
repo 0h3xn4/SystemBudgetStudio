@@ -33,9 +33,10 @@ class Explainer:
     """Explains the cells of one project. It computes each budget once and keeps it, so that
     explaining many cells (a test, a window that explains as the cursor moves) stays cheap."""
 
-    def __init__(self, project: Project) -> None:
+    def __init__(self, project: Project, power: StaticPowerResult | None = None) -> None:
+        """`power` is the static power budget of `project` when the caller has it already."""
         self.project = project
-        self._power: StaticPowerResult | None = None
+        self._power = power
 
     def _family(self, table_id: str) -> str:
         family = table_id.split(":", 1)[0]

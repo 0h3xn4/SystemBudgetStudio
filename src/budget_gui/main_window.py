@@ -36,6 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
+from budget_core.explain import Explainer, ExplainError
 from budget_core.model import (
     Ebn0Table,
     Expendable,
@@ -52,6 +53,7 @@ from budget_core.new_scenario import ScenarioAnswers, scenario_data
 from budget_core.new_site import GROUND_STATION, TARGET, SiteAnswers, site_data
 from budget_core.problems import sort_problems
 from budget_core.remove_item import KINDS, LABELS, blocked_message, rel_of, users_of
+from budget_core.reports.document import Table
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
 from budget_gui import problem_class as pc
@@ -66,6 +68,7 @@ from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
 from budget_gui.components import PanelTitle, Toast
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
+from budget_gui.explain_panel import ExplainPanel
 from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
@@ -121,7 +124,7 @@ def _path_tokens(path: str) -> tuple[str | int, ...]:
 
 
 DEFAULT_VIEW = "focused"  # what a window with no saved layout starts in (D-191)
-LAYOUT_VERSION = 2  # the arrangement of the docks: a saved layout of another version is ignored
+LAYOUT_VERSION = 3  # the arrangement of the docks: a saved layout of another version is ignored
 
 
 class MainWindow(QMainWindow):
@@ -149,6 +152,7 @@ class MainWindow(QMainWindow):
         self.inspector = InspectorPanel()
         self.provenance_panel = ProvenancePanel()
         self.power_view = PowerView()
+        self.power_view.explain_requested.connect(self.explain_value)
         self.mass_view = PowerView()
         self.thermal_view = PowerView()
         self.link_view = PowerView()
@@ -221,10 +225,14 @@ class MainWindow(QMainWindow):
         self.inspector_dock = self._dock("Inspector", "dock-inspector", self.inspector)
         self.problems_dock = self._dock("Problems", "dock-problems", self.problems_panel)
         self.provenance_dock = self._dock("Provenance", "dock-provenance", self.provenance_panel)
+        self.explain_panel = ExplainPanel()
+        self.explain_dock = self._dock("Explain", "dock-explain", self.explain_panel)
+        self._explainer: Explainer | None = None  # of the project that is open
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.project_dock)
-        for dock in (self.inspector_dock, self.provenance_dock):
+        for dock in (self.inspector_dock, self.provenance_dock, self.explain_dock):
             self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock)
         self.tabifyDockWidget(self.inspector_dock, self.provenance_dock)
+        self.tabifyDockWidget(self.provenance_dock, self.explain_dock)
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, self.problems_dock)
         # the Problems panel runs under the project panel and the inspector, the full width
         self.setCorner(Qt.Corner.BottomLeftCorner, Qt.DockWidgetArea.BottomDockWidgetArea)
@@ -438,6 +446,14 @@ class MainWindow(QMainWindow):
         palette.setShortcut(QKeySequence("Ctrl+K"))
         palette.triggered.connect(self.open_command_palette)
         view_menu.addAction(palette)
+        self.explain_action = QAction("&Explain this value", self)
+        self.explain_action.setShortcut(QKeySequence("Ctrl+Shift+I"))
+        self.explain_action.setStatusTip(
+            "Show how the selected value of a power table was obtained: the equation, the inputs "
+            "with units and where they come from, and the steps."
+        )
+        self.explain_action.triggered.connect(self.explain_selected_value)
+        view_menu.addAction(self.explain_action)
         view_menu.addSeparator()
         for number, title in enumerate(TABS, start=1):
             action = QAction(f"Go to {title}", self)
@@ -504,6 +520,7 @@ class MainWindow(QMainWindow):
             self.inspector_dock,
             self.problems_dock,
             self.provenance_dock,
+            self.explain_dock,
         ):
             view_menu.addAction(dock.toggleViewAction())
         reset = QAction("Re&set layout", self)
@@ -1194,6 +1211,7 @@ class MainWindow(QMainWindow):
             self.inspector_dock,
             self.problems_dock,
             self.provenance_dock,
+            self.explain_dock,
         ):
             dock.setFloating(False)
             dock.show()
@@ -1224,7 +1242,7 @@ class MainWindow(QMainWindow):
             return  # the toggle calls this again
         for page in self.grid_pages():
             page.set_optional_columns(not focused)
-        side = (self.inspector_dock, self.provenance_dock)
+        side = (self.inspector_dock, self.provenance_dock, self.explain_dock)
         if self._welcome_hid is not None:
             for dock in side:
                 self._welcome_hid[dock] = not focused  # what the first screen gives back
@@ -1234,6 +1252,46 @@ class MainWindow(QMainWindow):
                 dock.setVisible(not focused and self._regime == "wide")
         self.problems_panel.set_expanded(not focused)
         self.problems_dock.show()
+
+    # ---- Explain (D-206) ---------------------------------------------------------------------
+    def explain_selected_value(self) -> None:
+        """View > Explain this value: the cell last selected on the open Power sheet."""
+        target = self.power_view.current_explain_target() if self.power_view.isVisible() else None
+        if target is None:
+            self._show_explain_message(
+                "Select a value on a Power sheet first, then choose Explain this value."
+            )
+            return
+        self.explain_value(*target)
+
+    def explain_value(self, table: Table, row: int, column: int) -> None:
+        """Show how the value at (row, column) of a result table was obtained."""
+        project = self.session.project
+        if project is None or not table.explain_id:
+            self._show_explain_message("This value cannot be explained yet.")
+            return
+        if self._explainer is None or self._explainer.project is not project:
+            self._explainer = Explainer(project, self.session.power)
+        key = [str(table.rows[row][i]) for i in table.key_columns]
+        try:
+            explanation = self._explainer.explain(
+                table.explain_id, key, table.columns[column].header
+            )
+        except ExplainError as exc:
+            self._show_explain_message(str(exc))
+            return
+        self.explain_panel.show_explanation(explanation)
+        self._reveal_explain()
+
+    def _show_explain_message(self, message: str) -> None:
+        self.explain_panel.show_message(message)
+        self._reveal_explain()
+
+    def _reveal_explain(self) -> None:
+        """Open the Explain panel (hidden in the focused view) in front of the other side panels."""
+        self._narrow_hid.discard(self.explain_dock)
+        self.explain_dock.show()
+        self.explain_dock.raise_()
 
     def reveal_problems(self) -> None:
         """Bring the Problems panel to the front with its list open (a jump to a problem, the
@@ -1308,7 +1366,7 @@ class MainWindow(QMainWindow):
         self._regime = regime
         waiting: tuple[QDockWidget, ...] = ()
         if regime != "wide":
-            waiting = (self.inspector_dock, self.provenance_dock)
+            waiting = (self.inspector_dock, self.provenance_dock, self.explain_dock)
         if regime == "tiny":
             waiting = (*waiting, self.project_dock)
         for dock in list(self._narrow_hid):
@@ -1698,6 +1756,8 @@ class MainWindow(QMainWindow):
         project = session.project
         self.tree.set_project(session.path, session.display_project)
         self.power_view.set_document(session.document)
+        self._explainer = None
+        self.explain_panel.clear()
         self.mass_view.set_document(session.mass_document)
         self.thermal_view.set_document(session.thermal_document)
         self.link_view.set_document(session.link_document)
@@ -1841,7 +1901,13 @@ class MainWindow(QMainWindow):
         for part in (self.top_bar, self.workspace):
             part.setVisible(not empty)
         self.rail.set_enabled_destinations(not empty)
-        docks = (self.project_dock, self.inspector_dock, self.problems_dock, self.provenance_dock)
+        docks = (
+            self.project_dock,
+            self.inspector_dock,
+            self.problems_dock,
+            self.provenance_dock,
+            self.explain_dock,
+        )
         if empty and self._welcome_hid is None:
             self._welcome_hid = {dock: not dock.isHidden() for dock in docks}
             for dock in docks:
