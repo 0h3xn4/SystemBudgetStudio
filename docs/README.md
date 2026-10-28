@@ -73,6 +73,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [../CHANGELOG.md](../CHANGELOG.md) | What changed |
 | [demo/](demo/M0.md) | One short note per milestone (historical: written when each milestone was finished): [M0](demo/M0.md) · [M1](demo/M1.md) · [M2a](demo/M2a.md) · [M2b](demo/M2b.md) · [M3a](demo/M3a.md) · [M3b](demo/M3b.md) · [M4](demo/M4.md) · [M4b](demo/M4b.md) · [M5](demo/M5.md) · [M6](demo/M6.md) |
 | [DOCS_AUDIT.md](DOCS_AUDIT.md) | The audit behind this documentation structure |
+| [transparency_audit.md](transparency_audit.md) | Phase 0 of the transparency work: every hard-coded constant, hidden assumption, opaque output, forced option and interface, the gap against 14 requirements, a prioritized plan and the decisions it needs (under review; nothing implemented yet) |
 | [UX_STANDARD.md](UX_STANDARD.md) | The UX/UI standard the window was redesigned to (the owner's brief; the design system itself is [DESIGN.md](DESIGN.md)) |
 | [DESIGN.md](DESIGN.md) | The design system of the window: colour tokens, status styles, cell styles, type and spacing, components, icons, the shell, the layout file, shortcuts, accessibility, UI sizes, responsiveness (generated tables, kept true by a test) |
 | [ux-audit.md](ux-audit.md) | The UX audit of the 1.0.0 window: findings, screenshots, measurements, decisions needed (historical; the window has been redesigned since) |
