@@ -12,7 +12,7 @@ Each power mode of a unit has a [`heat_dissipation_ratio`](../glossary.md#heat-d
 budget run my_satellite --budget thermal --out out
 ```
 
-The report lists the dissipation by unit, subsystem, thermal node and spacecraft mode.
+The report lists the dissipation by unit, subsystem, thermal node and spacecraft mode. To see how any number of the thermal tables was obtained, with the equation, the inputs and the files they come from, use `budget explain` or *View → Explain this value* in the window ([how](../models/explain.md); the model: [static thermal](../models/thermal-static.md)).
 
 ## How do I get node temperatures for a hot and a cold case?
 

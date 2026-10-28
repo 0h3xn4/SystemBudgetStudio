@@ -27,6 +27,7 @@ def _mode_summary(result: StaticThermalResult) -> Table:
         tuple((m.mode_name, m.total_w, m.peak_total_w) for m in result.modes),
         note="Average = sum of unit power x duty cycle x heat dissipation ratio. Peak uses the "
         "unit peak powers. n/a: a unit has no heat dissipation ratio for its power mode.",
+        explain_id="thermal:summary",
     )
 
 
@@ -58,6 +59,7 @@ def _unit_table(m: ModeHeat) -> Table:
             )
             for r in m.rows
         ),
+        explain_id=f"thermal:units:{m.mode_id}",
     )
 
 
@@ -67,6 +69,7 @@ def _group_table(title: str, header: str, m: ModeHeat, nodes: bool) -> Table:
         title,
         (Column(header), _w("Dissipation"), _w("Peak dissipation")),
         tuple((g.name, g.dissipation_w, g.peak_dissipation_w) for g in groups),
+        explain_id=f"thermal:{'nodes' if nodes else 'subsystems'}:{m.mode_id}",
     )
 
 
@@ -76,6 +79,7 @@ def _node_table(c: CaseThermal) -> Table:
             f"Node temperatures, case {c.case}",
             (Column("Node"), Column("Temperature (K)", "number", 2)),
             (("not computed (inputs missing, see Problems)", None),),
+            explain_id=f"thermal:temperatures:{c.case}",
         )
     return Table(
         f"Node temperatures, case {c.case}",
@@ -102,6 +106,7 @@ def _node_table(c: CaseThermal) -> Table:
         ),
         note=f"Mode {c.mode_id}; limit set: {c.limit_set}. Largest node imbalance after solving: "
         + _imbalance(c.balance_residual_w),
+        explain_id=f"thermal:temperatures:{c.case}",
     )
 
 
@@ -142,6 +147,7 @@ def _check_table(c: CaseThermal) -> Table:
         "margin; exceeded; no limits = the unit has no limits for this set (not checked).",
         status_column=7,
         status_marks=(2,),
+        explain_id=f"thermal:limits:{c.case}",
     )
 
 
