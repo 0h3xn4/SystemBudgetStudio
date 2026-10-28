@@ -12,12 +12,13 @@ from collections.abc import Callable, Collection
 from datetime import timedelta
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtCore import QPoint, Qt, QThread, Signal
 from PySide6.QtWidgets import (
     QComboBox,
     QFileDialog,
     QHBoxLayout,
     QLabel,
+    QMenu,
     QSplitter,
     QTableWidget,
     QTabWidget,
@@ -108,6 +109,7 @@ class LinkPassesView(QWidget):
     cancelled = Signal()  # a computation was stopped at the user's request
     export_finished = Signal(list)
     export_failed = Signal(str)
+    explain_requested = Signal(str, object, str)  # table id, key of the row, column to explain
 
     def __init__(self) -> None:
         super().__init__()
@@ -180,7 +182,55 @@ class LinkPassesView(QWidget):
         self.scenario_combo.currentTextChanged.connect(self._scenario_changed)
         self.passes_table.cellClicked.connect(lambda row, _c: self.select_pass(row))
         self.plot.set_info_provider(self._info_at)
+        for table in (self.passes_table, self.volume_table):
+            self._make_explainable(table)
         self.set_project(None, [])
+
+    # ---- Explain (D-209) ---------------------------------------------------------------------
+    def explain_target(
+        self, table: QTableWidget, row: int, col: int
+    ) -> tuple[str, list[str], str] | None:
+        """(table id, row key, column) of the report table cell that the cell at (row, col) shows,
+        or None when there is nothing to explain there. The window's columns carry the report's
+        names."""
+        series = self.selected_link()
+        if self.result is None or series is None:
+            return None
+        if not (0 <= row < table.rowCount() and 0 <= col < table.columnCount()):
+            return None
+        first, head = table.item(row, 0), table.horizontalHeaderItem(col)
+        if first is None or head is None:
+            return None
+        if table is self.passes_table:
+            return (f"linkpass:passes:{series.link_id}", [first.text()], head.text())
+        if table is self.volume_table:
+            return ("linkpass:volume", [first.text()], head.text())
+        return None
+
+    def current_explain_target(self) -> tuple[str, list[str], str] | None:
+        table = self.tabs.currentWidget()
+        if not isinstance(table, QTableWidget):
+            return None
+        return self.explain_target(table, table.currentRow(), table.currentColumn())
+
+    def _make_explainable(self, table: QTableWidget) -> None:
+        table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        def menu(position: QPoint) -> None:
+            index = table.indexAt(position)
+            if not index.isValid():
+                return
+            table.setCurrentCell(index.row(), index.column())
+            target = self.explain_target(table, index.row(), index.column())
+            popup = QMenu(table)
+            action = popup.addAction("Explain this value\tCtrl+Shift+I")
+            if target is not None:
+                action.triggered.connect(lambda: self.explain_requested.emit(*target))
+            else:
+                action.setEnabled(False)
+            popup.exec(table.viewport().mapToGlobal(position))
+
+        table.customContextMenuRequested.connect(menu)
 
     def use_shared_selector(self) -> None:
         """The scenario is chosen in the top bar: this view keeps its selector hidden."""

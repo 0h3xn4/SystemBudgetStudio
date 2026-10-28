@@ -253,3 +253,39 @@ def test_a_violation_row_and_an_orbit_and_a_mode_are_explained(
 def test_explaining_before_the_timeline_is_worked_out_says_so(window: MainWindow) -> None:
     window.explain_timeline_value("timeline:cases", ["Battery capacity"], "BOL")
     assert "Work out the power timeline first" in window.explain_panel.empty.message.text()
+
+
+def test_a_link_pass_value_is_explained(window: MainWindow, qtbot) -> None:  # type: ignore[no-untyped-def]
+    window.link_pages.setCurrentIndex(1)  # Passes
+    window.workspace.show_view(window.link_passes_view)
+    QApplication.processEvents()
+    with qtbot.waitSignal(window.link_passes_view.computed, timeout=120000):
+        window.link_passes_view.compute()
+    QApplication.processEvents()
+    view = window.link_passes_view
+    assert view.passes_table.rowCount() > 0
+    headers = [
+        view.passes_table.horizontalHeaderItem(i).text()
+        for i in range(view.passes_table.columnCount())
+    ]
+    view.tabs.setCurrentWidget(view.passes_table)
+    view.passes_table.setCurrentCell(0, headers.index("Lowest margin (dB)"))
+    window.explain_dock.hide()
+    window.explain_action.trigger()
+    assert window.explain_dock.isVisible()
+    text = window.explain_panel.text.toPlainText()
+    assert "LNK-MARGIN" in text and "Lowest margin of the pass" in text
+    view.tabs.setCurrentWidget(view.volume_table)
+    volume_headers = [
+        view.volume_table.horizontalHeaderItem(i).text()
+        for i in range(view.volume_table.columnCount())
+    ]
+    view.volume_table.setCurrentCell(0, volume_headers.index("Scenario total (Mbit)"))
+    window.explain_action.trigger()
+    assert "LNK-VOLUME" in window.explain_panel.text.toPlainText()
+    assert view.explain_target(view.volume_table, 0, 99) is None
+
+
+def test_explaining_a_pass_before_the_passes_are_worked_out_says_so(window: MainWindow) -> None:
+    window.explain_link_pass_value("linkpass:volume", ["x"], "Passes")
+    assert "Work out the link passes first" in window.explain_panel.empty.message.text()

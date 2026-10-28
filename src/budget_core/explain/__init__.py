@@ -6,12 +6,18 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from budget_core.explain.link import explain_link, link_table_ids
+from budget_core.explain.linkpass import explain_linkpass, linkpass_table_ids
 from budget_core.explain.mass import explain_mass, mass_table_ids
 from budget_core.explain.power import ExplainError, explain_power, power_table_ids
 from budget_core.explain.thermal import explain_thermal, thermal_table_ids
 from budget_core.explain.timeline import explain_timeline, timeline_table_ids
 from budget_core.explain.trace import Explanation, Quantity, Step
-from budget_core.link.evaluate import StaticLinkResult, link_static_budget
+from budget_core.link.evaluate import (
+    LinkSeriesResult,
+    StaticLinkResult,
+    link_pass_series,
+    link_static_budget,
+)
 from budget_core.mass.static_mass import StaticMassResult, static_mass_budget
 from budget_core.model import Project
 from budget_core.power.static_budget import StaticPowerResult, static_power_budget
@@ -44,6 +50,7 @@ def explainable_tables(project: Project) -> list[tuple[str, str]]:
         *mass_table_ids(project),
         *thermal_table_ids(project),
         *link_table_ids(project),
+        *(linkpass_table_ids(project) if project.scenarios else []),
         *(timeline_table_ids() if project.scenarios else []),
     ]
 
@@ -60,6 +67,7 @@ class Explainer:
         thermal: StaticThermalResult | None = None,
         link: StaticLinkResult | None = None,
         timeline: TimeDomainResult | None = None,
+        link_series: LinkSeriesResult | None = None,
         *,
         scenario: str | None = None,
         load_basis: LoadBasis = "nominal",
@@ -75,13 +83,14 @@ class Explainer:
         self._thermal = thermal
         self._link = link
         self._timeline = timeline
+        self._link_series = link_series
         self._scenario = scenario
         self._load_basis: LoadBasis = load_basis
         self._mission_phase = mission_phase
 
     def _family(self, table_id: str) -> str:
         family = table_id.split(":", 1)[0]
-        if family not in ("power", "mass", "thermal", "link", "timeline"):
+        if family not in ("power", "mass", "thermal", "link", "timeline", "linkpass"):
             raise ExplainError("This table cannot be explained.")
         return family
 
@@ -150,6 +159,25 @@ class Explainer:
             raise ExplainError(exc.problem.message) from exc
         return self._timeline
 
+    def link_series_result(self) -> LinkSeriesResult:
+        """The pass series of the scenario: the caller's, or worked out here."""
+        if self._link_series is None:
+            try:
+                ids = sorted(self.project.scenarios)
+                chosen = self._scenario or (ids[0] if len(ids) == 1 else None)
+                if chosen is None:
+                    raise ExplainError(
+                        "The project has several scenarios; say which one to explain."
+                        if ids
+                        else "The project has no scenario."
+                    )
+                self._link_series = link_pass_series(
+                    self.project, run_scenario(self.project, chosen)
+                )
+            except ScenarioRunError as exc:
+                raise ExplainError(exc.problem.message) from exc
+        return self._link_series
+
     def table(self, table_id: str) -> Table:
         """The report table named `table_id`, built as the reports build it: its column headers and
         the values of its key columns are what a cell is addressed by."""
@@ -165,6 +193,14 @@ class Explainer:
             document = build_thermal_report(self.project, self.thermal_result(), bare)
         elif family == "link":
             document = build_link_report(self.project, self.link_result(), bare, plots=False)
+        elif family == "linkpass":
+            document = build_link_report(
+                self.project,
+                self.link_result(),
+                bare,
+                passes=self.link_series_result(),
+                plots=False,
+            )
         else:
             document = build_timeline_report(
                 self.project, self.timeline_result(), bare, plots=False
@@ -187,6 +223,8 @@ class Explainer:
             return explain_thermal(self.project, table_id, key, column, self.thermal_result())
         if family == "link":
             return explain_link(self.project, table_id, key, column, self.link_result())
+        if family == "linkpass":
+            return explain_linkpass(self.project, table_id, key, column, self.link_series_result())
         return explain_timeline(
             self.project, table_id, key, column, self.timeline_result(), self.power_result()
         )

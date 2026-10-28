@@ -186,6 +186,7 @@ class MainWindow(QMainWindow):
         self.timeline_view.explain_requested.connect(self.explain_timeline_value)
         self.timeline_view.run_provider = self.scenario_view.reusable_run
         self.link_passes_view = LinkPassesView()
+        self.link_passes_view.explain_requested.connect(self.explain_link_pass_value)
         self.link_passes_view.run_provider = self.scenario_view.reusable_run
         self.compare_view = CompareView()
         self.reports_view = ReportsView()
@@ -238,6 +239,8 @@ class MainWindow(QMainWindow):
         self._explainer: Explainer | None = None  # of the project that is open
         self._timeline_explainer: Explainer | None = None  # of the timeline result on show
         self._timeline_explainer_of: object = None  # the result that explainer was made for
+        self._passes_explainer: Explainer | None = None  # of the pass series on show
+        self._passes_explainer_of: object = None
         self._explain_worker: ExplainWorker | None = None
         self._explain_pending: tuple[Explainer, str, list[str], str] | None = None
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.project_dock)
@@ -1274,6 +1277,11 @@ class MainWindow(QMainWindow):
             if timeline_target is not None:
                 self.explain_timeline_value(*timeline_target)
                 return
+        if self.link_passes_view.isVisible():
+            passes_target = self.link_passes_view.current_explain_target()
+            if passes_target is not None:
+                self.explain_link_pass_value(*passes_target)
+                return
         target = None
         for budget_view in self._explainable_views:
             if budget_view.isVisible():
@@ -1348,6 +1356,32 @@ class MainWindow(QMainWindow):
         worker.failed.connect(self._explain_failed)
         self._explain_worker = worker
         worker.start()
+
+    def explain_link_pass_value(self, table_id: str, key: list[str], column: str) -> None:
+        """Show how a value of the link pass tables was obtained (the pass series is on show, so
+        there is nothing to work out again)."""
+        project = self.session.project
+        result = self.link_passes_view.result
+        if project is None or result is None:
+            self._show_explain_message("Work out the link passes first, then explain a value.")
+            return
+        explainer = self._passes_explainer
+        if (
+            explainer is None
+            or explainer.project is not project
+            or self._passes_explainer_of is not result
+        ):
+            explainer = Explainer(
+                project,
+                self.session.power,
+                self.session.mass,
+                self.session.thermal,
+                self.session.link,
+                link_series=result,
+            )
+            self._passes_explainer = explainer
+            self._passes_explainer_of = result
+        self._explain_with(explainer, table_id, key, column)
 
     def _end_explain_worker(self) -> None:
         if self._explain_worker is not None:
@@ -1851,6 +1885,7 @@ class MainWindow(QMainWindow):
         self.power_view.set_document(session.document)
         self._explainer = None
         self._timeline_explainer = None
+        self._passes_explainer = None
         self._explain_pending = None
         self.explain_panel.clear()
         self.mass_view.set_document(session.mass_document)

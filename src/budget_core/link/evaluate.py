@@ -769,8 +769,7 @@ def link_pass_series(
             rate_arr = np.array(rates)
             chosen = np.where(closes, rate_arr[None, :], 0.0).max(axis=1)
             selected = np.where(active, chosen, 0.0)
-            bits = selected * w_arr
-            volume = float(bits.sum())
+            volume = lb.data_volume_bits(selected, w_arr)
             per_day = volume / (duration / DAY_S) if duration >= DAY_S * (1.0 - 1e-9) else None
             if active.any() and not bool((selected > 0).any()):
                 best_margin = float(margins[active].max())
@@ -809,7 +808,7 @@ def link_pass_series(
                     p.max_elevation_deg,
                     usable,
                     low,
-                    None if selected is None else float((selected * w_arr)[mask].sum()),
+                    None if selected is None else lb.data_volume_bits(selected[mask], w_arr[mask]),
                 )
             )
         series.append(

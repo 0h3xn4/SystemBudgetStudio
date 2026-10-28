@@ -23,7 +23,6 @@ NOT_YET_BOUND = frozenset(
         "ENV-SHADOW-CYL",
         "ENV-SUN",
         "ENV-TOPO",
-        "LNK-VOLUME",
     }
 )
 
