@@ -79,6 +79,8 @@ def _field_hint(kind: str, name: str) -> str:
     """What to do about an invalid field, by the kind of the failure. Only a field that must be a
     number gets the advice to write a number; the other kinds are explained by the message."""
     unit = canonical_unit(name)
+    if kind == "unit_invalid":
+        return _unit_hint(name)
     if kind in _NUMBER_KINDS:
         return _unit_hint(name) or "Write a number."
     if kind in _RANGE_KINDS:
