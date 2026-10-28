@@ -6,6 +6,17 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-10-28: a comparison pairs mass limits by phase and limit name
+
+**What was wrong.** The mass limits table (phase, limit, value, total, margin, status) named only its first column, the phase, as its key. A comparison paired the rows of two revisions by the phase and, for a phase with several limits, by their order (`phase`, `phase #2`), so reordering or inserting a limit paired a limit with another one, and a renamed limit showed as a changed text cell.
+
+| Case | Before | After |
+|---|---|---|
+| Mass limits table in a comparison | rows keyed by phase (+ order); the limit name was a compared cell | rows keyed by phase and limit name; the name is the key, not a compared cell |
+| Comparison of the two revisions of `microsat_250kg_eps` | 3609 cells compared, 74 differ, 3535 unchanged | 3608 compared, 74 differ, 3534 unchanged (the limit name column is the key now) |
+
+**Effect.** Only the count of compared cells in a comparison of mass budgets, and the pairing when limits are reordered or renamed. No budget number changed. It follows from naming the cell for `budget explain` (a limit is addressed by phase and name). Test: the golden comparison files, regenerated.
+
 ## 2026-10-28: "ton" is refused (units)
 
 **What was wrong.** A value written with the unit `ton` (for example `5 ton` in a mass field) was read by the unit library as the US short ton, 907.18474 kg, while an engineer writing "ton" usually means the metric tonne, 1000 kg. The tool did not say so.
