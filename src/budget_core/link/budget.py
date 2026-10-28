@@ -18,6 +18,7 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.equation_binding import computes
 from budget_core.link.constants import (
     BOLTZMANN_DBW_HZ_K,
     EARTH_RADIUS_M,
@@ -33,11 +34,18 @@ def watt_to_dbw(power_w: float) -> float:
     return 10.0 * math.log10(power_w)
 
 
+@computes("LNK-EIRP")
+def eirp_from_dbw(power_dbw: float, line_loss_db: float, gain_dbi: Number) -> Number:
+    """LNK-EIRP: transmit power (dBW) minus the line loss plus the antenna gain."""
+    return power_dbw - line_loss_db + gain_dbi
+
+
 def eirp_dbw(power_w: float, line_loss_db: float, gain_dbi: Number) -> Number:
-    """LNK-EIRP."""
-    return watt_to_dbw(power_w) - line_loss_db + gain_dbi
+    """LNK-EIRP from the power in watts."""
+    return eirp_from_dbw(watt_to_dbw(power_w), line_loss_db, gain_dbi)
 
 
+@computes("LNK-FSPL")
 def free_space_path_loss_db(range_m: Number, freq_hz: float) -> Number:
     """LNK-FSPL: spreading loss between isotropic antennas."""
     if freq_hz <= 0.0:
@@ -45,6 +53,7 @@ def free_space_path_loss_db(range_m: Number, freq_hz: float) -> Number:
     return 20.0 * np.log10(4.0 * math.pi * np.asarray(range_m) * freq_hz / SPEED_OF_LIGHT_MS)
 
 
+@computes("LNK-GT")
 def g_over_t_dbk(
     gain_dbi: Number, feed_loss_db: float, system_noise_temperature_k: float
 ) -> Number:
@@ -54,6 +63,7 @@ def g_over_t_dbk(
     return gain_dbi - feed_loss_db - 10.0 * math.log10(system_noise_temperature_k)
 
 
+@computes("LNK-CN0")
 def cn0_dbhz(
     eirp: Number, path_loss_db: Number, other_losses_db: Number, g_over_t: Number
 ) -> Number:
@@ -61,6 +71,7 @@ def cn0_dbhz(
     return eirp - path_loss_db - other_losses_db + g_over_t - BOLTZMANN_DBW_HZ_K
 
 
+@computes("LNK-EBN0")
 def ebn0_db(cn0: Number, data_rate_bps: float) -> Number:
     """LNK-EBN0."""
     if data_rate_bps <= 0.0:
@@ -68,6 +79,7 @@ def ebn0_db(cn0: Number, data_rate_bps: float) -> Number:
     return cn0 - 10.0 * math.log10(data_rate_bps)
 
 
+@computes("LNK-MARGIN")
 def margin_db(ebn0: Number, required_ebn0_db: float) -> Number:
     """LNK-MARGIN: positive means the link closes with room to spare."""
     return ebn0 - required_ebn0_db
@@ -90,6 +102,7 @@ def spacecraft_range_for(elevation_deg: Number, range_m: Number) -> Number:
     return np.asarray(root, dtype=np.float64)
 
 
+@computes("LNK-NADIR")
 def nadir_angle_deg(elevation_deg: Number, range_m: Number) -> Number:
     """Angle at the spacecraft between nadir and the line of sight to a ground site:
     sin(eta) = R cos(el) / r (law of sines in the centre-site-spacecraft triangle)."""
@@ -105,6 +118,7 @@ def interpolate_gain_dbi(
     return np.asarray(np.interp(np.asarray(angle_deg), angles_deg, gains_dbi), dtype=np.float64)
 
 
+@computes("LNK-ATT")
 def interpolate_attenuation_db(
     elevations_deg: list[float], losses_db: list[float], elevation_deg: Number
 ) -> Number:

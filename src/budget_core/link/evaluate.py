@@ -508,6 +508,12 @@ def resolve_link(project: Project, link_id: str, notes: _Notes) -> Resolved:
     )
 
 
+def resolve_for_explain(project: Project, link_id: str) -> Resolved:
+    """The resolved inputs of a link, without recording assumptions or problems (for
+    `budget explain`)."""
+    return resolve_link(project, link_id, _Notes())
+
+
 def _required_ebn0(project: Project, link: Link, file: str, notes: _Notes) -> float | None:
     table = project.config.ebn0_table
     entries = [
@@ -560,7 +566,8 @@ def evaluate(res: Resolved, elevation_deg: NDArray, range_m: NDArray) -> Evaluat
     if res.tx_gain is not None and res.tx_power_dbw is not None and res.line_loss_db is not None:
         tx_angle = nadir if res.spacecraft_transmits else zero
         eirp = np.asarray(
-            res.tx_power_dbw - res.line_loss_db + res.tx_gain(tx_angle), dtype=np.float64
+            lb.eirp_from_dbw(res.tx_power_dbw, res.line_loss_db, res.tx_gain(tx_angle)),
+            dtype=np.float64,
         )
     gt: NDArray | None = None
     if res.direct_gt_dbk is not None:
@@ -619,7 +626,7 @@ def link_static_budget(project: Project) -> StaticLinkResult:
             ):
                 for rate in link.data_rates_bps:
                     ebn0 = _scalar(np.asarray(lb.ebn0_db(ev.cn0_dbhz, rate)))
-                    m = ebn0 - res.required_ebn0_db
+                    m = float(lb.margin_db(ebn0, res.required_ebn0_db))
                     rates.append(RateResult(rate, ebn0, m, m >= res.required_margin_db))
                 closing = [r.data_rate_bps for r in rates if r.closes]
                 max_rate = max(closing) if closing else None
@@ -747,7 +754,8 @@ def link_pass_series(
             and res.required_margin_db is not None
         ):
             margins = np.stack(
-                [lb.ebn0_db(ev.cn0_dbhz, r) - res.required_ebn0_db for r in rates], axis=1
+                [lb.margin_db(lb.ebn0_db(ev.cn0_dbhz, r), res.required_ebn0_db) for r in rates],
+                axis=1,
             )
             closes = margins >= res.required_margin_db
             rate_arr = np.array(rates)

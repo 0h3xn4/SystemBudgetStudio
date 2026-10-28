@@ -159,3 +159,25 @@ def test_a_thermal_value_is_explained_too(window: MainWindow) -> None:
     window.explain_action.trigger()
     text = window.explain_panel.text.toPlainText()
     assert "TH-BAL" in text and "damped Newton" in text
+
+
+def test_a_link_value_is_explained_too(window: MainWindow) -> None:
+    window.workspace.show_view(window.link_view)
+    QApplication.processEvents()
+    window.link_view.build_pages()
+    found = None
+    for page in window.link_view._pages.values():
+        for view, model in zip(page.findChildren(QTableView), page.models, strict=False):
+            if model.table.explain_id == "link:static":
+                window.link_view.tabs.setCurrentWidget(page)
+                found = (view, model.table)
+                break
+        if found:
+            break
+    assert found is not None
+    view, table = found
+    column = next(i for i, c in enumerate(table.columns) if c.header == "C/N0 (dBHz)")
+    view.setCurrentIndex(view.model().index(0, column))
+    window.explain_action.trigger()
+    text = window.explain_panel.text.toPlainText()
+    assert "LNK-CN0" in text and "LNK-FSPL" in text

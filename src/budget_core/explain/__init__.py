@@ -5,15 +5,18 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from budget_core.explain.link import explain_link, link_table_ids
 from budget_core.explain.mass import explain_mass, mass_table_ids
 from budget_core.explain.power import ExplainError, explain_power, power_table_ids
 from budget_core.explain.thermal import explain_thermal, thermal_table_ids
 from budget_core.explain.trace import Explanation, Quantity, Step
+from budget_core.link.evaluate import StaticLinkResult, link_static_budget
 from budget_core.mass.static_mass import StaticMassResult, static_mass_budget
 from budget_core.model import Project
 from budget_core.power.static_budget import StaticPowerResult, static_power_budget
 from budget_core.provenance import Provenance
 from budget_core.reports.document import Table
+from budget_core.reports.link_report import build_link_report
 from budget_core.reports.mass_report import build_mass_report
 from budget_core.reports.power_report import build_power_report
 from budget_core.reports.thermal_report import build_thermal_report
@@ -32,7 +35,12 @@ __all__ = [
 
 def explainable_tables(project: Project) -> list[tuple[str, str]]:
     """(table id, title) of every table whose cells can be explained."""
-    return [*power_table_ids(project), *mass_table_ids(project), *thermal_table_ids(project)]
+    return [
+        *power_table_ids(project),
+        *mass_table_ids(project),
+        *thermal_table_ids(project),
+        *link_table_ids(project),
+    ]
 
 
 class Explainer:
@@ -45,6 +53,7 @@ class Explainer:
         power: StaticPowerResult | None = None,
         mass: StaticMassResult | None = None,
         thermal: StaticThermalResult | None = None,
+        link: StaticLinkResult | None = None,
     ) -> None:
         """`power`, `mass` and `thermal` are the static budgets of `project` when the caller has
         them."""
@@ -52,10 +61,11 @@ class Explainer:
         self._power = power
         self._mass = mass
         self._thermal = thermal
+        self._link = link
 
     def _family(self, table_id: str) -> str:
         family = table_id.split(":", 1)[0]
-        if family not in ("power", "mass", "thermal"):
+        if family not in ("power", "mass", "thermal", "link"):
             raise ExplainError("This table cannot be explained.")
         return family
 
@@ -74,6 +84,11 @@ class Explainer:
             self._thermal = static_thermal_budget(self.project)
         return self._thermal
 
+    def link_result(self) -> StaticLinkResult:
+        if self._link is None:
+            self._link = link_static_budget(self.project)
+        return self._link
+
     def table(self, table_id: str) -> Table:
         """The report table named `table_id`, built as the reports build it: its column headers and
         the values of its key columns are what a cell is addressed by."""
@@ -85,8 +100,10 @@ class Explainer:
             document = build_power_report(self.project, self.power_result(), bare)
         elif family == "mass":
             document = build_mass_report(self.project, self.mass_result(), bare)
-        else:
+        elif family == "thermal":
             document = build_thermal_report(self.project, self.thermal_result(), bare)
+        else:
+            document = build_link_report(self.project, self.link_result(), bare, plots=False)
         for section in document.sections:
             for table in section.tables:
                 if table.explain_id == table_id:
@@ -101,7 +118,9 @@ class Explainer:
             return explain_power(self.project, table_id, key, column, self.power_result())
         if family == "mass":
             return explain_mass(self.project, table_id, key, column, self.mass_result())
-        return explain_thermal(self.project, table_id, key, column, self.thermal_result())
+        if family == "thermal":
+            return explain_thermal(self.project, table_id, key, column, self.thermal_result())
+        return explain_link(self.project, table_id, key, column, self.link_result())
 
 
 def explain_cell(project: Project, table_id: str, key: Sequence[str], column: str) -> Explanation:
