@@ -42,6 +42,7 @@ __all__ = [
     "PROBLEMS_HEIGHT",
     "SECTION_COLUMN",
     "PROGRESS_HEIGHT",
+    "PROBLEM_DETAILS_HEIGHT",
     "PROVENANCE_MAX_HEIGHT",
     "RADIUS_CONTROL",
     "RADIUS_PANEL",
@@ -156,6 +157,7 @@ TIMELINE_MIN_HEIGHT = 180
 LIST_MIN_HEIGHT = 32  # the Problems list
 COLUMN_MIN = 40  # a table column is never narrower
 TABLE_MIN_HEIGHT = 60  # a table in a page that holds several
+PROBLEM_DETAILS_HEIGHT = 84  # the rule, the reason and the remedy of the selected problem
 PROVENANCE_MAX_HEIGHT = 170
 RESULTS_MIN_HEIGHT = 140
 SITES_MAX_HEIGHT = 72

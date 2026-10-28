@@ -28,6 +28,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMenu,
+    QPlainTextEdit,
     QStackedLayout,
     QStyledItemDelegate,
     QStyleOptionViewItem,
@@ -36,6 +37,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from budget_core.problem_catalogue import describe
 from budget_core.problems import Problem
 from budget_gui import icons, theme
 from budget_gui import problem_class as pc
@@ -163,10 +165,22 @@ class ProblemsPanel(QWidget):
         self.empty.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.empty.setWordWrap(True)
         self.empty.setProperty("role", "muted")
-        self._stack_host = QWidget()
-        self._stack = QStackedLayout(self._stack_host)
+        self._list_host = QWidget()
+        self._stack = QStackedLayout(self._list_host)
         self._stack.addWidget(self.view)
         self._stack.addWidget(self.empty)
+        # what the selected problem means: the rule, why it matters, what to do, and the numbers
+        self.details = QPlainTextEdit()
+        self.details.setReadOnly(True)
+        self.details.setAccessibleName("What the selected problem means")
+        self.details.setMaximumHeight(theme.px(theme.PROBLEM_DETAILS_HEIGHT))
+        self.details.hide()  # shown while a problem is selected
+        self._stack_host = QWidget()
+        host = QVBoxLayout(self._stack_host)
+        host.setContentsMargins(0, 0, 0, 0)
+        host.setSpacing(theme.gap(1))
+        host.addWidget(self._list_host, 1)
+        host.addWidget(self.details)
 
         self._expanded = True
         self.toggle_button = Button("", "ghost", icon="chevron-up", compact=True)
@@ -191,6 +205,7 @@ class ProblemsPanel(QWidget):
         self.class_box.currentIndexChanged.connect(lambda _i: self._rebuild())
         self.group_box.currentIndexChanged.connect(lambda _i: self._rebuild())
         self.view.activated.connect(self._activated)
+        self.view.selectionModel().currentChanged.connect(lambda *_: self._show_details())
         theme.manager().changed.connect(self._theme_changed)
         self._sync_toggle()
 
@@ -411,6 +426,30 @@ class ProblemsPanel(QWidget):
         if position is None or not 0 <= int(position) < len(self._visible):
             return None
         return self._visible[int(position)]
+
+    def details_text(self, problem: Problem) -> str:
+        """The rule of the problem's code, why it matters and what to do; the numbers when the
+        problem compares one with a limit. Plain text, one paragraph per item."""
+        info = describe(problem.code)
+        lines = [f"{problem.code}: {info.title}" if info else problem.code]
+        numbers = problem.values_text()
+        if numbers:
+            lines.append(f"This project: {numbers}.")
+        if info:
+            lines += [
+                f"Rule: {info.rule}",
+                f"Why it matters: {info.why}",
+                f"What to do: {info.fix}",
+            ]
+        return "\n".join(lines)
+
+    def _show_details(self) -> None:
+        problem = self.current_problem()
+        if problem is None:
+            self.details.clear()
+        else:
+            self.details.setPlainText(self.details_text(problem))
+        self.details.setVisible(problem is not None)
 
     def _restore(self, problem: Problem | None) -> None:
         if problem is None:

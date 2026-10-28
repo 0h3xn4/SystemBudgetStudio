@@ -589,7 +589,9 @@ def evaluate(res: Resolved, elevation_deg: NDArray, range_m: NDArray) -> Evaluat
     return Evaluation(path, atmos, eirp, gt, cn0)
 
 
-def _not_closed(link_id: str, where: str) -> Problem:
+def _not_closed(
+    link_id: str, where: str, best_margin_db: float | None = None, required_db: float | None = None
+) -> Problem:
     return Problem(
         Severity.ERROR,
         "LINK_NOT_CLOSED",
@@ -598,6 +600,9 @@ def _not_closed(link_id: str, where: str) -> Problem:
         path="data_rates_bps",
         hint="Lower the data rates, raise the transmit power or antenna gain, or review the "
         "losses and the required margin.",
+        actual=best_margin_db,
+        limit=required_db,
+        unit="dB",
     )
 
 
@@ -660,7 +665,10 @@ def link_static_budget(project: Project) -> StaticLinkResult:
             )
         mine = rows[first_row:]
         if mine and all(r.rates for r in mine) and all(r.max_rate_bps is None for r in mine):
-            notes.add_problem(_not_closed(link_id, "at any of its static points"))
+            best = max(rate.margin_db for r in mine for rate in r.rates)
+            notes.add_problem(
+                _not_closed(link_id, "at any of its static points", best, res.required_margin_db)
+            )
         if not link.static_points:
             notes.add_problem(
                 Problem(
@@ -765,7 +773,12 @@ def link_pass_series(
             volume = float(bits.sum())
             per_day = volume / (duration / DAY_S) if duration >= DAY_S * (1.0 - 1e-9) else None
             if active.any() and not bool((selected > 0).any()):
-                notes.add_problem(_not_closed(link_id, "in any pass of this scenario"))
+                best_margin = float(margins[active].max())
+                notes.add_problem(
+                    _not_closed(
+                        link_id, "in any pass of this scenario", best_margin, res.required_margin_db
+                    )
+                )
             if not active.any():
                 notes.add_problem(
                     Problem(

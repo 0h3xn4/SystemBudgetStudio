@@ -369,31 +369,40 @@
   "not_evaluated": [],
   "problems": [
     {
+      "actual": 0.5000000000000014,
       "code": "BATTERY_DOD_EXCEEDED",
       "file": "config/power_system.yaml",
       "hint": "Open the violations table for every interval; change the input named here or the scenario.",
+      "limit": 0.15,
       "line": null,
       "message": "The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first at T+00:59:00.",
       "path": "battery.max_dod_ratio.eol",
-      "severity": "error"
+      "severity": "error",
+      "unit": "ratio"
     },
     {
+      "actual": 0.5257678564066766,
       "code": "BATTERY_DOD_EXCEEDED",
       "file": "config/power_system.yaml",
       "hint": "Open the violations table for every interval; change the input named here or the scenario.",
+      "limit": 0.15,
       "line": null,
       "message": "The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first at T+00:58:33.",
       "path": "battery.max_dod_ratio.eol",
-      "severity": "error"
+      "severity": "error",
+      "unit": "ratio"
     },
     {
+      "actual": 120.0,
       "code": "PEAK_POWER_EXCEEDED",
       "file": "config/power_system.yaml",
       "hint": "Open the violations table for every interval; change the input named here or the scenario.",
+      "limit": 110.0,
       "line": null,
       "message": "The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00.",
       "path": "limits.peak_power_w",
-      "severity": "error"
+      "severity": "error",
+      "unit": "W"
     }
   ],
   "provenance": {

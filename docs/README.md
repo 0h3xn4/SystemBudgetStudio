@@ -41,6 +41,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | Page | What it is for |
 |---|---|
 | [FILE_FORMAT.md](FILE_FORMAT.md) | Every project file, field and problem code |
+| [PROBLEMS.md](PROBLEMS.md) | Every problem code: the rule, why it matters, what to do (generated from the tool) |
 | [ENVIRONMENT_FORMAT.md](ENVIRONMENT_FORMAT.md) | Scenario files, orbits, and the interim SpaceMissionStudio format |
 | [THERMAL_SOURCES.md](THERMAL_SOURCES.md) | Candidate reference sources for the numbers a thermal engineer must supply |
 | [LICENCES.md](LICENCES.md) | Licences of every runtime dependency |

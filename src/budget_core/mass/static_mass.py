@@ -284,6 +284,9 @@ def _limit_problems(limits: MassLimits | None, phases: list[PhaseMass]) -> list[
                         hint="Phases are numbered in the order of mission_phases in "
                         "spacecraft.yaml. Reduce mass, change the limit (cite its source) or "
                         "review margins.",
+                        actual=check.total_kg,
+                        limit=check.limit_kg,
+                        unit="kg",
                     )
                 )
     return out

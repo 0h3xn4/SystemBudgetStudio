@@ -138,6 +138,17 @@ def write_project(project: Project, root: FsPath) -> None:
             _write(root / "config" / f"{kind}.yaml", model)
 
 
+def _yaml_hint(message: str) -> str:
+    """What to do about a YAML failure: a limit or an unsupported construct is not an indentation
+    problem."""
+    if "not supported" in message or "too " in message or "not plain text" in message:
+        return (
+            "Project files are small plain YAML: text, numbers and lists, without anchors, "
+            "tags or merge keys."
+        )
+    return "Check indentation, colons and quotes around this line."
+
+
 class _Loader:
     def __init__(self, root: FsPath, registry: MigrationRegistry) -> None:
         self.root = root
@@ -202,7 +213,7 @@ class _Loader:
                     f"{exc}.",
                     file=rel,
                     line=exc.line,
-                    hint="Check indentation, colons and quotes around this line.",
+                    hint=_yaml_hint(str(exc)),
                 )
             )
             return None

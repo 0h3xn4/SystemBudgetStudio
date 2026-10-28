@@ -55,6 +55,8 @@ In the window, double-click (or press Enter on) a row of the **Problems** panel,
 
 ## Where are all the codes?
 
+[**Problem codes**](../PROBLEMS.md) is the page that says, for every code, what the **rule** is, **why it matters** and **what to do**. The same text is in the window (select a problem in the Problems panel and the rule appears under the list; a finding that compares a number with a limit, such as a mass over its limit, also shows what was found and the limit) and on the command line: `budget problems` lists the codes and `budget problems MASS_LIMIT_EXCEEDED` explains one.
+
 The user guide chapter *Problems and what to do* ([source](../../src/budget_core/guide/chapters/11-troubleshooting.md)) lists every code with what to do, and the [file format](../FILE_FORMAT.md#problem-codes-budget-validate) lists them by when they occur. Problems with installing or starting the tool are in [troubleshooting](../troubleshooting.md).
 
 Next: [Use the window](use-the-window.md) · [Command-line reference](command-line.md).

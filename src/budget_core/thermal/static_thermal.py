@@ -611,6 +611,9 @@ def _checks(
                     file=f"units/{uid}.yaml",
                     path=f"temperature_limits (case {case_name})",
                     hint="Change the design (conduction, radiator area, dissipation) or the limit.",
+                    actual=t,
+                    limit=hi if up is not None and up < 0.0 else lo,
+                    unit="K",
                 )
             )
         elif status == STATUS_MARGIN:
@@ -623,6 +626,9 @@ def _checks(
                     file=f"units/{uid}.yaml",
                     path=f"temperature_limits (case {case_name})",
                     hint="The margin is set in config/thermal_environment.yaml.",
+                    actual=min(h for h in (up, down) if h is not None),
+                    limit=margin,
+                    unit="K",
                 )
             )
         out.append(UnitLimitCheck(uid, node, t, lo, hi, down, up, margin, status))

@@ -166,3 +166,34 @@ def test_a_placeholder_heavy_project_is_listed_quickly(qtbot) -> None:  # type: 
     panel.set_problems(many)
     assert time.perf_counter() - start < 1.0  # generous: ~0.1 s in practice
     assert len(panel.codes()) == 400
+
+
+def test_selecting_a_problem_shows_the_rule_behind_it(panel: ProblemsPanel) -> None:
+    assert panel.details.toPlainText() == ""
+    for position, shown in enumerate(panel._visible):
+        if shown.code == "REF_UNKNOWN_BUS":
+            panel.select_row(position)
+    text = panel.details.toPlainText()
+    assert "REF_UNKNOWN_BUS" in text and "Rule:" in text
+    assert "Why it matters:" in text and "What to do:" in text
+
+
+def test_a_finding_with_numbers_shows_them_in_the_details(qtbot) -> None:  # type: ignore[no-untyped-def]
+    widget = ProblemsPanel()
+    qtbot.addWidget(widget)
+    widget.set_problems(
+        [
+            Problem(
+                Severity.ERROR,
+                "MASS_LIMIT_EXCEEDED",
+                "A mass limit is exceeded in mission phase number 1.",
+                file="config/mass_limits.yaml",
+                path="limits[0]",
+                actual=312.5,
+                limit=300.0,
+                unit="kg",
+            )
+        ]
+    )
+    widget.select_row(0)
+    assert "found 312.5 kg, limit 300 kg" in widget.details.toPlainText()
