@@ -74,7 +74,7 @@ def fake_bundle(tmp_path: Path, extra: tuple[str, ...] = (), skip: tuple[str, ..
     for exe in ("system-budget-studio", "budget"):
         (bundle / exe).write_text("x", encoding="utf-8")
     if "python" not in skip:
-        (internal / "libpython3.13.so.1.0").write_bytes(b"x")
+        (internal / "libpython3.14.so.1.0").write_bytes(b"x")
     return bundle
 
 
@@ -103,7 +103,7 @@ def test_missing_licence_material_is_reported(tmp_path: Path, missing: str) -> N
     assert any(missing.split("/")[-1] in p for p in problems)
 
 
-@pytest.mark.parametrize("name", ["libpython3.13.so.1.0", "python313.dll"])
+@pytest.mark.parametrize("name", ["libpython3.14.so.1.0", "python314.dll"])
 def test_the_private_python_of_the_bundle_may_have_any_platform_name(
     tmp_path: Path, name: str
 ) -> None:

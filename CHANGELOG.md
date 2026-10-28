@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Documentation checked against 1.7.0.** The manual pages for expendables, ground stations and imaging targets, and links now say how to remove one (*Edit → Remove from project*, Ctrl+Shift+R) and when it is refused; the README no longer names Rocky 8 for the real-machine checks; the two M0 risks in the architecture page (RHEL 8 glibc, Python 3.13 wheels) point to D-202. The fake bundle in the bundle-check tests carries a Python 3.14 library name. No program change.
+
 ## [1.7.0] - 2026-10-28
 
 A minor release: two more things that could only be done by editing files can now be done in the window (a modulation and coding pair of the Eb/N0 table, and removing an expendable, a site or a link), and the tool needs **Python 3.14 or newer**, which moves the window to Qt 6.10 and drops RHEL/Rocky 8. No equation, report layout or existing file format changed: the same project gives the same numbers and files as 1.6.0, bit for bit, apart from the tool version in the provenance rows and the example files.

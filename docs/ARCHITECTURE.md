@@ -148,8 +148,8 @@ Tests first per milestone. Per solver ≥ 10 hand-calculated regression cases wi
 
 1. SpaceMissionStudio export format unknown (blocks M3 fidelity) — need samples.
 2. No approved source for margin/Eb/N0/attenuation numbers — placeholders only; reports will show warnings until supplied.
-3. PySide6 + PyInstaller size and RHEL 8 glibc compatibility — validate in M0 with an empty app.
+3. PySide6 + PyInstaller size and RHEL glibc compatibility — validated in M0 with an empty app; since 1.7.0 the Linux bundle is built on Rocky 9 and needs glibc 2.34 (D-202).
 4. Byte-identical PDF/DOCX/XLSX — need to neutralise embedded timestamps/IDs (ReportLab `invariant=1`, zip entry dates fixed in docx/xlsx); proven in M2.
-5. Python 3.13 wheels for all runtime deps — checked in M0 CI.
+5. Python wheels for all runtime deps — checked in M0 CI; since 1.7.0 the tool needs Python 3.14 or newer (D-202).
 
 Next: [File format](FILE_FORMAT.md) · [Decisions](DECISIONS.md) · [Developer docs](developer/README.md) · [Docs index](README.md).
