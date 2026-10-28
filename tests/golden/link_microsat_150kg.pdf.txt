@@ -1,6 +1,6 @@
 pages=10
 ## page 1
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Link budget: Example 150 kg microsatellite
 Summary
@@ -216,7 +216,7 @@ zenith
  3.00
 yes
 ## page 2
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Assumptions
 Configuration numbers used
@@ -369,7 +369,7 @@ Atmospheric attenuation
 L_atm = sum of the named table entries, linear interpolation by elevation
 SOURCE_MISSING
 ## page 3
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 ID
 Name
@@ -504,7 +504,7 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 4
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Severity
 Code
@@ -653,7 +653,7 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 5
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Severity
 Code
@@ -809,7 +809,7 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 6
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Severity
 Code
@@ -963,7 +963,7 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 7
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Severity
 Code
@@ -1120,7 +1120,7 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 8
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 Severity
 Code
@@ -1279,7 +1279,7 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 9
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
 Severity
 Code
@@ -1438,14 +1438,14 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 ## page 10
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 10
 Provenance
 Provenance
 Item
 Value
 Tool
-System Budget Studio 1.6.0
+System Budget Studio 1.7.0
 Python
 3.x
 Libraries

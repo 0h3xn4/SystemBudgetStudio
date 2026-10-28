@@ -348,7 +348,7 @@
 ## sheet Provenance rows=10 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
-3: 'Tool' | 'System Budget Studio 1.6.0'
+3: 'Tool' | 'System Budget Studio 1.7.0'
 4: 'Python' | '3.x'
 5: 'Libraries' | 'pinned for-golden-tests'
 6: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs'
