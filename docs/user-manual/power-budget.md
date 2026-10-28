@@ -19,7 +19,7 @@ For every spacecraft mode the tool computes, in this order:
 3. the [**system margin**](../glossary.md#system-margin) on the sum;
 4. the power at the source, after the [**converter efficiency**](../glossary.md#converter-efficiency) of each bus and the **distribution loss**.
 
-The [peak power](../glossary.md#peak-power) is the sum of the unit peak powers. The report (`power_static.xlsx`, PDF, DOCX, JSON, one CSV per mode) shows the result by mode, by subsystem and by bus. In the window it is the **Power budget** tab.
+The [peak power](../glossary.md#peak-power) is the sum of the unit peak powers. The report (`power_static.xlsx`, PDF, DOCX, JSON, one CSV per mode) shows the result by mode, by subsystem and by bus. To see how any number of these tables was obtained, with the equation, the inputs and the files they come from, use `budget explain` ([how](../models/explain.md); the model: [static power](../models/power-static.md)). In the window it is the **Power budget** tab.
 
 ## How do I check the solar array and battery over an orbit?
 

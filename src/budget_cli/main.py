@@ -16,6 +16,7 @@ from budget_core import APP_NAME, __version__
 from budget_core.blank import BlankAnswers, create_blank_project
 from budget_core.compare_run import ALL_KINDS, Side, compare_sides, default_kinds
 from budget_core.examples import ExportRefusedError, export_examples
+from budget_core.explain import Explainer, ExplainError, explainable_tables
 from budget_core.io.project_loader import LoadResult, load_project
 from budget_core.io.unit_table import (
     apply_plan,
@@ -282,6 +283,30 @@ def build_parser() -> argparse.ArgumentParser:
         "self-test", help="Check that this installation can compute and render a budget."
     )
 
+    exp = sub.add_parser(
+        "explain",
+        help="Show how one number of a budget table was obtained: equation, inputs, steps.",
+    )
+    exp.add_argument("project", type=Path, help="The project folder.")
+    exp.add_argument(
+        "table",
+        nargs="?",
+        help="The table id, for example power:units:nominal. Without it the tables that can be "
+        "explained are listed; with only the table, its columns and rows are listed.",
+    )
+    exp.add_argument(
+        "--row",
+        action="append",
+        default=[],
+        help="The value of the row's key column (the first column of the table); repeat when "
+        "the table has several key columns.",
+    )
+    exp.add_argument(
+        "--column",
+        help='The column header exactly as the table shows it, for example "With margin (W)".',
+    )
+    exp.add_argument("--format", choices=("text", "json"), default="text")
+
     ver = sub.add_parser(
         "verify",
         help="Check that a project is the one an export was made from (input digest).",
@@ -365,6 +390,40 @@ def _validate(args: argparse.Namespace) -> int:
             print(problem.format())
         print(f"{_plural(errors, 'error')}, {_plural(warnings, 'warning')}.")
     return 1 if errors or (args.strict and warnings) else 0
+
+
+def _explain(args: argparse.Namespace) -> int:
+    """List the explainable tables, a table's columns and rows, or explain one cell. Exit 0 when
+    the cell is explained (also when its value is n/a, which the explanation says why), 1 when the
+    project cannot be used or the cell does not exist."""
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    try:
+        if args.table is None:
+            for table_id, title in explainable_tables(project):
+                print(f"{table_id}\t{title}")
+            return 0
+        explainer = Explainer(project)
+        table = explainer.table(args.table)
+        if not args.row and not args.column:
+            print(f"{args.table}\t{table.title}")
+            print("columns: " + " | ".join(c.header for c in table.columns))
+            keys = [" / ".join(str(row[i]) for i in table.key_columns) for row in table.rows]
+            print("rows: " + " | ".join(keys))
+            return 0
+        if not args.row or not args.column:
+            _fail("Give both --row and --column (or neither, to list them).")
+            return 2
+        explanation = explainer.explain(args.table, args.row, args.column)
+    except ExplainError as exc:
+        _fail(str(exc))
+        return 1
+    if args.format == "json":
+        print(json.dumps(explanation.to_dict(), indent=2, ensure_ascii=False))
+    else:
+        print(explanation.format_text(), end="")
+    return 0
 
 
 def _verify(args: argparse.Namespace) -> int:
@@ -800,6 +859,8 @@ def _dispatch(
         return _run(args)
     if args.command == "verify":
         return _verify(args)
+    if args.command == "explain":
+        return _explain(args)
     if args.command == "units-export":
         return _units_export(args)
     if args.command == "units-import":

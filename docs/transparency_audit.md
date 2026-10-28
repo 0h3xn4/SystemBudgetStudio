@@ -2,7 +2,7 @@
 
 Status: **Phase 0 only. No code, test, configuration or documentation file other than this one was changed.** Implementation waits for the product owner's review of this document (see [section 8](#8-decisions-needed-from-the-product-owner)).
 
-**Progress after the review** (the owner adopted the recommendations of section 8, decision D-203): P0 (safety net, `docs/changes.md`, two defects fixed) is done; P1 (input digest, run parameters, `budget verify`) is in progress. Later phases follow the order of section 7. The sections below are the audit as it stood at 1.7.0 and are not rewritten as phases land; what changed is recorded in [`changes.md`](changes.md), the [changelog](../CHANGELOG.md) and the pages of [`models/`](models/README.md).
+**Progress after the review** (the owner adopted the recommendations of section 8, decision D-203): P0 (safety net, `docs/changes.md`, two defects fixed) is done; P1 (input digest, run parameters, `budget verify`, result format) is done; P2 (Explain) has started with the static power tables. Later phases follow the order of section 7. The sections below are the audit as it stood at 1.7.0 and are not rewritten as phases land; what changed is recorded in [`changes.md`](changes.md), the [changelog](../CHANGELOG.md) and the pages of [`models/`](models/README.md).
 
 Tool version audited: 1.7.0 (`main` at the merge of PR #78). Date: 2026-10-28.
 

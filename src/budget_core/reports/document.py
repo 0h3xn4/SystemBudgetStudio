@@ -40,6 +40,9 @@ class Table:
     status_column: int | None = None
     status_marks: tuple[int, ...] = ()
     bar: tuple[int, int] | None = None
+    # Names the table for `budget explain` and the window's Explain view ("power:units:nominal");
+    # empty when the table cannot be explained. No report renderer reads it.
+    explain_id: str = ""
 
 
 @dataclass(frozen=True)

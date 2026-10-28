@@ -47,6 +47,7 @@ def power_summary_table(result: StaticPowerResult) -> Table:
         tuple(rows),
         note="Average = sum of unit power x duty cycle. Peak = sum of unit peak powers. "
         "Source = after converter and distribution losses.",
+        explain_id="power:summary",
     )
 
 
@@ -82,6 +83,7 @@ def _unit_table(m: ModePowerResult) -> Table:
             )
             for r in m.rows
         ),
+        explain_id=f"power:units:{m.mode_id}",
     )
 
 
@@ -99,6 +101,7 @@ def _subsystem_table(m: ModePowerResult) -> Table:
             (s.subsystem, s.effective_w, s.margined_w, s.peak_w, s.margined_peak_w)
             for s in m.subsystems
         ),
+        explain_id=f"power:subsystems:{m.mode_id}",
     )
 
 
@@ -128,6 +131,7 @@ def _bus_table(m: ModePowerResult) -> Table:
             _w("Peak at source, with margins"),
         ),
         tuple(row(b.bus, b.converter_efficiency_ratio, b.average, b.peak) for b in m.buses),
+        explain_id=f"power:buses:{m.mode_id}",
     )
 
 
@@ -144,6 +148,7 @@ def _totals_table(m: ModePowerResult) -> Table:
             ("Source, with margins", a.source_margined_w, p.source_margined_w),
         ),
         emphasise_last_row=True,
+        explain_id=f"power:totals:{m.mode_id}",
     )
 
 
