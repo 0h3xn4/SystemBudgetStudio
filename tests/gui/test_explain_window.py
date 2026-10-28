@@ -137,3 +137,25 @@ def test_a_mass_value_is_explained_too(window: MainWindow) -> None:
     view.setCurrentIndex(view.model().index(row, 1))
     window.explain_action.trigger()
     assert "MASS-SYSMARGIN" in window.explain_panel.text.toPlainText()
+
+
+def test_a_thermal_value_is_explained_too(window: MainWindow) -> None:
+    window.workspace.show_view(window.thermal_view)
+    QApplication.processEvents()
+    window.thermal_view.build_pages()
+    found = None
+    for page in window.thermal_view._pages.values():
+        for view, model in zip(page.findChildren(QTableView), page.models, strict=False):
+            if model.table.explain_id.startswith("thermal:temperatures:"):
+                window.thermal_view.tabs.setCurrentWidget(page)
+                found = (view, model.table)
+                break
+        if found:
+            break
+    assert found is not None
+    view, table = found
+    column = next(i for i, c in enumerate(table.columns) if c.header == "Temperature (K)")
+    view.setCurrentIndex(view.model().index(0, column))
+    window.explain_action.trigger()
+    text = window.explain_panel.text.toPlainText()
+    assert "TH-BAL" in text and "damped Newton" in text

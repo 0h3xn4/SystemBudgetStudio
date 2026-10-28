@@ -153,10 +153,11 @@ class MainWindow(QMainWindow):
         self.provenance_panel = ProvenancePanel()
         self.power_view = PowerView()
         self.mass_view = PowerView()
-        for budget_view in (self.power_view, self.mass_view):
-            budget_view.explain_requested.connect(self.explain_value)
         self.thermal_view = PowerView()
         self.link_view = PowerView()
+        self._explainable_views = (self.power_view, self.mass_view, self.thermal_view)
+        for budget_view in self._explainable_views:
+            budget_view.explain_requested.connect(self.explain_value)
         self.editors = EditorTabs()  # the Model tab: the grids, the scenario and the open files
         self.document = ModelDocument()  # what the grids and the scenario edit: one undo stack
         self.units_page = UnitsPage(self.document)
@@ -1256,14 +1257,16 @@ class MainWindow(QMainWindow):
 
     # ---- Explain (D-206) ---------------------------------------------------------------------
     def explain_selected_value(self) -> None:
-        """View > Explain this value: the cell last selected on the open Power or Mass sheet."""
+        """View > Explain this value: the cell last selected on the open Power, Mass or Thermal
+        sheet."""
         target = None
-        for budget_view in (self.power_view, self.mass_view):
+        for budget_view in self._explainable_views:
             if budget_view.isVisible():
                 target = budget_view.current_explain_target()
         if target is None:
             self._show_explain_message(
-                "Select a value on a Power or Mass sheet first, then choose Explain this value."
+                "Select a value on a Power, Mass or Thermal sheet first, then choose Explain this "
+                "value."
             )
             return
         self.explain_value(*target)
@@ -1275,7 +1278,9 @@ class MainWindow(QMainWindow):
             self._show_explain_message("This value cannot be explained yet.")
             return
         if self._explainer is None or self._explainer.project is not project:
-            self._explainer = Explainer(project, self.session.power, self.session.mass)
+            self._explainer = Explainer(
+                project, self.session.power, self.session.mass, self.session.thermal
+            )
         key = [str(table.rows[row][i]) for i in table.key_columns]
         try:
             explanation = self._explainer.explain(

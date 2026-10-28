@@ -14,6 +14,7 @@ from typing import Any
 import numpy as np
 
 from budget_core.assumptions import Assumption, incomplete
+from budget_core.equation_binding import claim, computes
 from budget_core.model import Project, Sourced, ThermalCase
 from budget_core.power.static_budget import static_power_budget
 from budget_core.problems import Problem, Severity
@@ -111,11 +112,13 @@ STATUS_NO_LIMITS, STATUS_NA = "no limits", "n/a"
 STATUS_OK_UNMARGINED = "ok (margin not checked)"  # within limits, required margin is a placeholder
 
 
+@computes("TH-DISS")
 def dissipation_w(power_w: float, ratio: float | None) -> float | None:
     """TH-DISS: heat dissipated in the unit; None when the ratio is not given."""
     return None if ratio is None else power_w * ratio
 
 
+@computes("TH-ABS")
 def absorbed_w(
     area_m2: float,
     absorptivity: float,
@@ -131,6 +134,35 @@ def absorbed_w(
     reflected = absorptivity * earth_view * albedo * solar_flux_wm2
     infrared = emissivity * earth_view * earth_ir_wm2
     return area_m2 * (sun + reflected + infrared)
+
+
+def radiation_coefficient_wk4(emissivity: float, area_m2: float) -> float:
+    """Radiation of a surface to space per T^4 (W/K^4): emissivity x sigma x area (TH-SB)."""
+    return emissivity * STEFAN_BOLTZMANN_WM2K4 * area_m2
+
+
+claim("TH-SB", "budget_core.thermal.static_thermal.radiation_coefficient_wk4")
+
+
+@computes("TH-LIMIT")
+def limit_status(
+    temperature_k: float, lower_k: float | None, upper_k: float | None, margin_k: float | None
+) -> tuple[float | None, float | None, str]:
+    """(headroom to the lower limit, headroom to the upper limit, status) of a unit temperature.
+    Exceeded below the lower or above the upper limit; `margin` when within the limits but closer
+    than the required margin; `ok (margin not checked)` when no margin is given."""
+    up = None if upper_k is None else upper_k - temperature_k
+    down = None if lower_k is None else temperature_k - lower_k
+    status = STATUS_OK
+    if (up is not None and up < 0.0) or (down is not None and down < 0.0):
+        status = STATUS_EXCEEDED
+    elif margin_k is not None and (
+        (up is not None and up < margin_k) or (down is not None and down < margin_k)
+    ):
+        status = STATUS_MARGIN
+    if status == STATUS_OK and margin_k is None:
+        status = STATUS_OK_UNMARGINED  # "ok" would claim a margin that was never checked
+    return down, up, status
 
 
 def _clean(watts: float) -> float:
@@ -461,7 +493,7 @@ def _solve_case(
         absorbed[node] += absorbed_w(
             s.area_m2, alpha, eps, sun_view, earth_view, flux, albedo, earth_ir
         )
-        radiation[node] += eps * STEFAN_BOLTZMANN_WM2K4 * s.area_m2
+        radiation[node] += radiation_coefficient_wk4(eps, s.area_m2)
 
     limit_set = case.limit_set
     if not complete or conductance is None or space is None:
@@ -568,11 +600,8 @@ def _checks(
         if t is None:
             out.append(UnitLimitCheck(uid, node, None, lo, hi, None, None, margin, STATUS_NA))
             continue
-        up = None if hi is None else hi - t
-        down = None if lo is None else t - lo
-        status = STATUS_OK
-        if (up is not None and up < 0.0) or (down is not None and down < 0.0):
-            status = STATUS_EXCEEDED
+        down, up, status = limit_status(t, lo, hi, margin)
+        if status == STATUS_EXCEEDED:
             notes.problems.append(
                 Problem(
                     Severity.ERROR,
@@ -584,10 +613,7 @@ def _checks(
                     hint="Change the design (conduction, radiator area, dissipation) or the limit.",
                 )
             )
-        elif margin is not None and (
-            (up is not None and up < margin) or (down is not None and down < margin)
-        ):
-            status = STATUS_MARGIN
+        elif status == STATUS_MARGIN:
             notes.problems.append(
                 Problem(
                     Severity.ERROR,
@@ -599,7 +625,5 @@ def _checks(
                     hint="The margin is set in config/thermal_environment.yaml.",
                 )
             )
-        if status == STATUS_OK and margin is None:
-            status = STATUS_OK_UNMARGINED  # "ok" would claim a margin that was never checked
         out.append(UnitLimitCheck(uid, node, t, lo, hi, down, up, margin, status))
     return tuple(out)

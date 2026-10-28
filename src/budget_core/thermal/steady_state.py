@@ -13,6 +13,8 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.equation_binding import computes
+
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
 
 # Stefan-Boltzmann constant, exact in the 2019 SI (defined from h, k and c). A definitional
@@ -51,6 +53,7 @@ def components(conductance_wk: NDArray) -> list[list[int]]:
     return groups
 
 
+@computes("TH-BAL")
 def solve_steady_state(
     conductance_wk: NDArray,
     radiation_wk4: NDArray,

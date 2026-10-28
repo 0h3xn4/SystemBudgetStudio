@@ -43,11 +43,6 @@ NOT_YET_BOUND = frozenset(
         "TDP-PEAK",
         "TDP-SOC",
         "TDP-TEMP",
-        "TH-ABS",
-        "TH-BAL",
-        "TH-DISS",
-        "TH-LIMIT",
-        "TH-SB",
     }
 )
 
