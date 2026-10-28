@@ -1579,6 +1579,11 @@ class MainWindow(QMainWindow):
                 "progress to end."
             )
             return False
+        if self._unsaved_edits():
+            self.status_bar.showMessage(
+                "Running on the saved files: edits that are not saved are not in this run "
+                "(Ctrl+S saves them)."
+            )
         self._update_run_state()
         return True
 
@@ -1623,15 +1628,27 @@ class MainWindow(QMainWindow):
                     self.open_file(problem.file, problem.line or 1)
                 return
 
+    def _unsaved_edits(self) -> bool:
+        """Edits on screen that are not in the files: a run reads the files (V9)."""
+        return self.document.is_modified() or self.editors.has_unsaved_changes()
+
     def _update_run_state(self) -> None:
         controller = self.run_controller
         state = controller.state()
+        unsaved = state is RunState.OK and self._unsaved_edits()
+        if unsaved:
+            state = RunState.STALE  # what is on screen is not what was worked out
         tips = {
             RunState.NOT_RUN: "The scenario, the power timeline and the link passes have not "
             "been worked out for this scenario. Press Run (Ctrl+R).",
             RunState.RUNNING: "Working out the scenario, the power timeline and the link passes.",
-            RunState.OK: "Everything was worked out from the inputs now on screen.",
-            RunState.STALE: "The project or a setting changed since the last run. Press Run.",
+            RunState.OK: "Everything was worked out from the saved project files.",
+            RunState.STALE: (
+                "Edits that are not saved are not in these results: a run reads the saved files. "
+                "Save (Ctrl+S), then press Run."
+                if unsaved
+                else "The project or a setting changed since the last run. Press Run."
+            ),
             RunState.FAILED: controller.failure or "",
         }
         detail = ""
@@ -1675,6 +1692,7 @@ class MainWindow(QMainWindow):
         if has_project and name:
             self.setWindowTitle(f"{'● ' if dirty else ''}{name} — {APP_NAME}")
         self._update_start_here()
+        self._update_run_state()  # an edit makes the last run out of date; a save does not
 
     # ---- the Start here panel ----------------------------------------------------------------
     def start_progress(self) -> Progress:
