@@ -3308,7 +3308,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "1.8.0",
+    "tool_version": "1.9.0",
     "user": "Golden User"
   },
   "result_format": {
