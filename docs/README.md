@@ -75,6 +75,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [demo/](demo/M0.md) | One short note per milestone (historical: written when each milestone was finished): [M0](demo/M0.md) · [M1](demo/M1.md) · [M2a](demo/M2a.md) · [M2b](demo/M2b.md) · [M3a](demo/M3a.md) · [M3b](demo/M3b.md) · [M4](demo/M4.md) · [M4b](demo/M4b.md) · [M5](demo/M5.md) · [M6](demo/M6.md) |
 | [DOCS_AUDIT.md](DOCS_AUDIT.md) | The audit behind this documentation structure |
 | [transparency_audit.md](transparency_audit.md) | Phase 0 of the transparency work: every hard-coded constant, hidden assumption, opaque output, forced option and interface, the gap against 14 requirements, a prioritized plan and the decisions it needs (under review; nothing implemented yet) |
+| [transparency_p3_design.md](transparency_p3_design.md) | Design of the file-format revision for provenance (P3): a `provenance:` mapping for plain inputs, the `illustrative` status, `requires:` in the project file, one version step with an identity migration (proposed, for review; nothing implemented) |
 | [RESULT_FORMAT.md](RESULT_FORMAT.md) | The layout of every JSON result file (envelope, kinds, keys) for tools that read them |
 | [changes.md](changes.md) | Every change that moved a number or refused an input that was accepted before, with values before and after |
 | [models/](models/README.md) | One page per model, rule and assumption, for systems engineers (index; pages are added with the features) |
