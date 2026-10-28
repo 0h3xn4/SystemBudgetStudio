@@ -30,7 +30,7 @@ def _cells(explainer: Explainer, limit_rows: int | None = None):  # type: ignore
         table = explainer.table(table_id)
         rows = table.rows if limit_rows is None else table.rows[:limit_rows]
         for row in rows:
-            key = tuple(str(row[i]) for i in table.key_columns)
+            key = tuple(str(row[i]) for i in table.explain_key)
             for column, value in zip(table.columns, row, strict=True):
                 yield table_id, key, column.header, value
 
