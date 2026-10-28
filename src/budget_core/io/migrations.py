@@ -159,11 +159,50 @@ def unit_v1_to_v2(data: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+def _annotated(version: int) -> Migration:
+    """The step to `version` of the format revision for provenance (D-213): files gain the
+    optional `provenance`, `status` or `requires`, so no key moves and the data stays as it is."""
+
+    def step(data: dict[str, Any]) -> dict[str, Any]:
+        out = dict(data)
+        out["schema_version"] = version
+        return out
+
+    return step
+
+
+# one step for every kind: the files of version 1 (2 for unit, scenario and margin_policy) read
+# unchanged in the next version
+_PROVENANCE_STEPS = {
+    **{
+        (kind, 1): _annotated(2)
+        for kind in (
+            "project",
+            "spacecraft",
+            "expendable",
+            "orbit",
+            "ground_station",
+            "target",
+            "link",
+            "spacecraft_mode",
+            "power_config",
+            "power_system",
+            "thermal_model",
+            "thermal_environment",
+            "mass_limits",
+            "ebn0_table",
+            "attenuation_table",
+        )
+    },
+    **{(kind, 2): _annotated(3) for kind in ("unit", "scenario", "margin_policy")},
+}
+
 DEFAULT_REGISTRY = MigrationRegistry(
     CURRENT_VERSIONS,
     {
         ("margin_policy", 1): margin_policy_v1_to_v2,
         ("scenario", 1): scenario_v1_to_v2,
         ("unit", 1): unit_v1_to_v2,
+        **_PROVENANCE_STEPS,
     },
 )

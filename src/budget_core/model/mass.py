@@ -13,6 +13,7 @@ from typing import Literal
 from pydantic import Field, field_validator, model_validator
 from pydantic_core import PydanticCustomError
 
+from budget_core.model.annotations import ProvenancedModel
 from budget_core.model.base import BudgetModel, Sourced
 from budget_core.model.versions import CURRENT_VERSIONS
 
@@ -85,7 +86,7 @@ def _unique_phases(phases: list[str]) -> list[str]:
     return phases
 
 
-class Expendable(BudgetModel):
+class Expendable(ProvenancedModel):
     """Propellant, consumables or jettisoned equipment: mass differs per mission phase."""
 
     schema_version: int = CURRENT_VERSIONS["expendable"]

@@ -12,6 +12,7 @@ from typing import Literal
 from pydantic import Field, field_validator, model_validator
 from pydantic_core import PydanticCustomError
 
+from budget_core.model.annotations import ProvenancedModel
 from budget_core.model.base import BudgetModel, Sourced
 from budget_core.model.versions import CURRENT_VERSIONS
 
@@ -114,7 +115,7 @@ class StaticPoint(BudgetModel):
     range_m: float = Field(gt=0)
 
 
-class Link(BudgetModel):
+class Link(ProvenancedModel):
     schema_version: int = CURRENT_VERSIONS["link"]
     kind: Literal["link"] = "link"
     name: str = Field(min_length=1)

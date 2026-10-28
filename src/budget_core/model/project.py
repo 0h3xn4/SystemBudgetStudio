@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import Field
+from pydantic import Field, StringConstraints
 
 from budget_core.manifest import ManifestEntry
 from budget_core.model.base import BudgetModel
@@ -19,6 +19,8 @@ from budget_core.model.power_system import PowerSystem
 from budget_core.model.thermal import ThermalEnvironment, ThermalModel
 from budget_core.model.versions import CURRENT_VERSIONS
 
+Feature = Annotated[str, StringConstraints(pattern=r"^[a-z][a-z0-9_]*$")]
+
 
 class ProjectMeta(BudgetModel):
     schema_version: int = CURRENT_VERSIONS["project"]
@@ -26,6 +28,8 @@ class ProjectMeta(BudgetModel):
     name: str = Field(min_length=1)
     revision: str = Field(min_length=1)
     description: str = ""
+    # features the project uses that a tool without them would ignore (D-213); none exist yet
+    requires: list[Feature] = Field(default_factory=list)
 
 
 @dataclass(frozen=True)
