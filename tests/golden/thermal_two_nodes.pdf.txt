@@ -1,6 +1,6 @@
 pages=4
 ## page 1
-System Budget Studio 1.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Thermal budget (static): Thermal test
 Summary
@@ -116,7 +116,7 @@ B
 no limits
 Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
 ## page 2
-System Budget Studio 1.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Mode: Cold
 Units in mode Cold
@@ -218,7 +218,7 @@ B
  18.000
 Assumptions
 ## page 3
-System Budget Studio 1.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Configuration numbers used
 Name
@@ -352,14 +352,14 @@ temperature_limits
 Unit 'u2' has no operating temperature limits; it is not checked.
 Add temperature_limits from the unit's data sheet.
 ## page 4
-System Budget Studio 1.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Provenance
 Provenance
 Item
 Value
 Tool
-System Budget Studio 1.6.0
+System Budget Studio 1.7.0
 Python
 3.x
 Libraries

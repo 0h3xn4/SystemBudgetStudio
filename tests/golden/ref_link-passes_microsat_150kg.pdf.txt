@@ -1,6 +1,6 @@
 pages=11
 ## page 1
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Link budget over passes: Example 150 kg microsatellite
 Summary
@@ -216,7 +216,7 @@ zenith
  3.00
 yes
 ## page 2
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Passes
 Scenario commissioning_day: One day with a safe-mode commissioning start. Step 10 s, duration 86400 s.
@@ -393,7 +393,7 @@ W
 Synthetic example value; not from a data sheet or a standard.
 sourced
 ## page 3
-System Budget Studio 1.6.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 1.7.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Name
 Value

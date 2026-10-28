@@ -4,6 +4,10 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-10-28
+
+A minor release: two more things that could only be done by editing files can now be done in the window (a modulation and coding pair of the Eb/N0 table, and removing an expendable, a site or a link), and the tool needs **Python 3.14 or newer**, which moves the window to Qt 6.10 and drops RHEL/Rocky 8. No equation, report layout or existing file format changed: the same project gives the same numbers and files as 1.6.0, bit for bit, apart from the tool version in the provenance rows and the example files.
+
 - **Python 3.14 and newer only.** The tool needs Python 3.14 or newer (it supported 3.11 to 3.13 and was capped below 3.14). `requires-python` is `>=3.14`, CI runs on 3.14, the hashed lock files are made for 3.14, and ruff and mypy target 3.14. **Two things follow from PySide6, the only dependency that decides it:** the window moves from Qt 6.8 to **Qt 6.10** (PySide6 6.10.3), the first line that supports 3.14; and the 6.10 Linux wheels need **glibc 2.34**, so **RHEL/Rocky 8 is no longer supported** (RHEL/Rocky 9, Ubuntu 22.04 and newer, Debian 12 and newer are): the Linux bundle is built on Rocky 9 and the `.rpm` and `.deb` require glibc 2.34. Nothing else about the program changes: no equation, report layout or file format. Decision D-202.
 
 - **Faster tests.** The window tests close every window they leave behind (a theme or scale change had to restyle all of them, so each test made the next one slower): the 751 window tests take 10½ instead of 19¾ minutes and the whole suite about 17 instead of 29 minutes. A `slow` marker (three tests of more than 15 seconds) allows `pytest -m "not slow"` for a quick loop; CI still runs every test. No test was removed or changed.
