@@ -45,6 +45,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="shadow-model"></a>
 **Earth model** (`earth_model`): the set of Earth constants (equatorial radius and gravitational parameter) used to propagate an orbit given as elements and for the Earth sphere of the shadow: WGS-84 (the default) or WGS-72. The two differ by 2 m in the radius and 0.3 km³/s² in mu. A TLE is always propagated on WGS-72, the set SGP4 is defined on; ground sites stay WGS-84 geodetic coordinates. Chosen per scenario; see [model choices](models/choices.md).
 
+**Irradiance model** (`irradiance_model`): how the solar irradiance on the array is taken. `constant` (the default) uses the configured value as it is; `seasonal` reads it as the value at 1 AU and scales it by the inverse square of the Earth-Sun distance on the date of the scenario. Chosen per scenario; see [model choices](models/choices.md).
+
 **Cylindrical and conical shadow**: two models of the Earth's shadow. Cylindrical has a sharp edge (the satellite is either lit or in shadow); conical includes the soft [penumbra](#umbra-penumbra). Chosen per scenario (`shadow_model`).
 
 ## D

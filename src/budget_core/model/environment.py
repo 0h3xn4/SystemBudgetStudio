@@ -185,6 +185,9 @@ class Scenario(ProvenancedModel):
     # the gravity constants of an orbit given as elements and the Earth sphere of the shadow
     # (D-219); a TLE is on WGS-72 whatever this says
     earth_model: Literal["wgs84", "wgs72"] = "wgs84"
+    # constant: the configured irradiance as it is; seasonal: it is the value at 1 AU, scaled by
+    # (AU / R)^2 with the Earth-Sun distance of each step (D-219)
+    irradiance_model: Literal["constant", "seasonal"] = "constant"
     sites: list[str] = Field(default_factory=list)
     mission_phase: str | None = None  # selects the allowed battery depth of discharge
     default_mode: str = Field(min_length=1)

@@ -243,6 +243,7 @@ class ElementsPropagator:
             source=self.name,
             shadow_model=shadow_model,
             earth_model=self.earth_model,
+            sun_distance_m=sun_dist,
             position_m=pos,
             sun_direction=sun_dir,
             sunlight_ratio=ratio,

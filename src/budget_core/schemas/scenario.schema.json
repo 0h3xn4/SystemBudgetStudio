@@ -158,6 +158,15 @@
       "default": null,
       "title": "Import Dir"
     },
+    "irradiance_model": {
+      "default": "constant",
+      "enum": [
+        "constant",
+        "seasonal"
+      ],
+      "title": "Irradiance Model",
+      "type": "string"
+    },
     "kind": {
       "const": "scenario",
       "default": "scenario",

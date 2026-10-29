@@ -264,7 +264,12 @@ def build_timeline_report(
         "TDP-",
         problems,
         provenance,
-        [*equation_ids("PWR-"), *environment_equations(env.shadow_model, bool(env.sites))],
+        [
+            *equation_ids("PWR-"),
+            *environment_equations(
+                env.shadow_model, bool(env.sites), result.run.scenario.irradiance_model
+            ),
+        ],
     )
     incomplete = any(a.placeholder for a in result.assumptions)
     return ReportDocument(

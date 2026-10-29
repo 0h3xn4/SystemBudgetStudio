@@ -904,6 +904,21 @@ def _base_generation(
     normals = np.array([f.normal_body for f in a.faces], dtype=np.float64)
     counts = np.array([f.cell_count for f in a.faces], dtype=np.float64)
     cosines = arr.face_cosines(normals, sun_body)
+    distance_factor: NDArray | float = 1.0
+    if run.scenario.irradiance_model == "seasonal":
+        if env.sun_distance_m is None:
+            col.problems.append(
+                incomplete(
+                    "The environment has no Sun distance, so the seasonal irradiance cannot be "
+                    "applied.",
+                    FILE,
+                    "solar_array.solar_irradiance_wm2",
+                )
+            )
+            return None
+        # the Earth-Sun distance of the grid step that contains the solver step, like the Sun
+        # direction (DEVIATIONS DV-P6)
+        distance_factor = arr.distance_factor_ratio(env.sun_distance_m)[grid_of]
     return arr.array_power_w(
         irradiance_wm2=irradiance,
         cell_counts=counts,
@@ -915,6 +930,7 @@ def _base_generation(
         age_factor_ratio=1.0,
         cosines=cosines,
         lit_ratio=lit,
+        distance_factor=distance_factor,
     )
 
 

@@ -110,7 +110,7 @@ def model_to_data(model: BudgetModel, *, annotations: bool = True) -> dict[str, 
     return out
 
 
-_OMIT_AT_DEFAULT = frozenset({"status", "earth_model"})
+_OMIT_AT_DEFAULT = frozenset({"status", "earth_model", "irradiance_model"})
 _OMIT_WHEN_EMPTY = frozenset({"provenance", "requires"})
 
 

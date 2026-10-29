@@ -88,6 +88,9 @@ class EnvironmentData:
     # the Earth model the geometry was computed on: wgs84, wgs72, `tle` (WGS-72 propagation on the
     # default sphere) or `imported` (not computed here), D-219
     earth_model: str = "wgs84"
+    # Earth-Sun distance on the scenario grid, from the Sun model (used by the seasonal
+    # irradiance model, D-219)
+    sun_distance_m: NDArray | None = None
 
     @property
     def eclipse_fraction(self) -> float:

@@ -326,6 +326,15 @@ EQUATIONS: dict[str, Equation] = {
             "(about 0.01 degree). Owner to verify against the Almanac.",
         ),
         Equation(
+            "ENV-IRRADIANCE",
+            "Irradiance at the Earth-Sun distance",
+            "E(R) = E_1AU * (AU / R)^2 (the configured irradiance is the value at 1 AU)",
+            None,
+            "Inverse-square law of a point source; R from the Sun position (ENV-SUN). Used only "
+            "when the scenario chooses the seasonal irradiance model (DEVIATIONS DV-P5); the "
+            "reference text is not available to the tool, owner to confirm.",
+        ),
+        Equation(
             "ENV-GMST",
             "Greenwich mean sidereal time (IAU-82)",
             "theta = 67310.54841 + (876600 h + 8640184.812866) T + 0.093104 T^2 - 6.2e-6 T^3 s",

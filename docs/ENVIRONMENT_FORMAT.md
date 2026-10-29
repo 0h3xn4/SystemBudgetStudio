@@ -13,6 +13,7 @@ start_utc: '2026-06-01T00:00:00Z' # UTC only; years 1950 to 2100
 duration_s, step_s                # grid of the results; step_s <= duration_s; at most 1,000,000 steps of min(step_s, 20 s)
 shadow_model: cylindrical | conical
 earth_model: wgs84 | wgs72         # default wgs84; the gravity constants of elements and the Earth sphere of the shadow
+irradiance_model: constant | seasonal  # default constant; seasonal scales the array irradiance by (1 AU / R)^2
 sites: [<ground station or target ids>]
 default_mode: <spacecraft mode id>
 rules:                            # applied in order, later rules win
