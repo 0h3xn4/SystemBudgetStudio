@@ -188,7 +188,8 @@ The window keeps no Qt settings file (D-105): Qt's dialogs would write the folde
 | `Ctrl+Shift+B` | Add an Eb/N0 table entry (Edit menu) | in the window |
 | `Ctrl+Shift+R` | Remove an expendable, a ground station, an imaging target or a link (Edit menu) | in the window |
 | `Ctrl+Shift+F` | Focused view on or off (View menu) | in the window |
-| `Ctrl+Shift+I` | Explain this value: how the selected value of a Power table was obtained (View menu, right-click menu of the table) | in the window |
+| `Ctrl+Shift+I` | Explain this value: how the selected value of a Power, Mass, Thermal or Link table, of the power timeline or of the link passes was obtained (View menu, right-click menu of the table) | in the window |
+| `Ctrl+Shift+A` | Show the Assumptions list: everything that is active for the project (View menu) | in the window |
 | `Ctrl+C` / `Ctrl+V` | In a grid: copy the cells as text with tabs / paste a block, with a preview for more than one cell | in the window |
 | `Ctrl+D` / `Delete` | In a grid: fill down / empty the optional cells | in the window |
 | `Enter` / `Tab` / `Esc` | In a grid: accept and move down / accept and move right (leaves the grid after the last cell) / cancel | in the window |

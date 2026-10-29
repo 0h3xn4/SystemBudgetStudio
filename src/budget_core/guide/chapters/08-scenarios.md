@@ -6,6 +6,10 @@ A scenario places the spacecraft in an orbit for a time span and decides which s
 
 An orbit is given as a two-line element set (TLE) or as mean orbital elements. Ground stations and imaging targets have a latitude, longitude, altitude and minimum elevation. The tool computes eclipses (cylindrical or conical shadow) and the passes over every site listed in the scenario. In the window, **Edit > Add scenario** (Ctrl+Shift+O) writes an orbit and a scenario of up to 180 days (an optional apogee altitude and argument of perigee make the orbit elliptical), and **Edit > Add ground station** (Ctrl+Shift+G) and **Add imaging target** (Ctrl+Shift+T) write the sites; a site is used once the scenario lists it under **Sites**.
 
+## Models
+
+Three choices of a scenario change the environment and the array output, each with a default that is what earlier versions did: `shadow_model` (cylindrical or conical), `earth_model` (WGS-84, or WGS-72 for the gravity constants of an orbit given as elements and the Earth sphere of the shadow; a TLE is always on WGS-72) and `irradiance_model` (constant, or seasonal). They are drop-downs in **Model > Scenario**; every report names the models it used. See the chapter *Tracing a number*.
+
 ## Mode timeline
 
 `default_mode` is active unless a rule or a segment says otherwise. Rules switch modes automatically (`in_eclipse`, `during_pass` of a site, with a lead and lag time); segments set a mode for a fixed interval. The **Scenario** tab shows the resulting timeline and lets you edit rules and segments.

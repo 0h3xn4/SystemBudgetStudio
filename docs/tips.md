@@ -21,6 +21,9 @@ Shortcuts, working habits and ways to connect System Budget Studio to your other
 
 ## Keep projects healthy
 
+- **Explain a number before you argue with it**: select it and press Ctrl+Shift+I (or `budget explain`) to see the equation, the inputs and the file each came from. Most "the tool is wrong" turn out to be an input in another file.
+- **Say where a number came from as you enter it**: the Inspector's *Source* field (or `budget source`) records a source and a status; `budget source my_satellite` counts the inputs that still have none, and every report shows how many inputs are only `illustrative` ([trace a number](user-manual/trace-a-number.md)).
+- **Look at the Assumptions page once per project** (Ctrl+Shift+A): it shows the numbers the tool applies that you did not type, and which of them you could change.
 - **Put the project folder in git.** Files are plain text with stable formatting: diffs show exactly which number changed. Commit after every sourced number you add; tag the revisions you review.
 - **Raise `revision` in `project.yaml`** when you change numbers behind a report; it appears on every output and labels the sides of a [comparison](user-manual/compare.md).
 - **Compare before you review**: `budget compare old new` lists what changed between two revisions, so reviewers read the differences, not two whole reports.

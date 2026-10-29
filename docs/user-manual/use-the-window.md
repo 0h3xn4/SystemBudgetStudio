@@ -66,7 +66,7 @@ In the focused view only the summary line is shown, with a **Show problems** but
 | Ctrl+O | Open project (or drop a project folder on the window) |
 | Ctrl+K | Find a command: a card over the window. Type a few words to run a menu command (its menu, its name and its key are shown apart) or go to a unit, a file, a scenario or a problem; Up and Down choose, Enter runs, Esc closes |
 | Ctrl+B | Show or hide the project panel |
-| Ctrl+Shift+A | Show the **Assumptions** list: everything that is active for the project ([placeholders and sources](placeholders-and-sources.md#where-do-i-see-everything-that-is-active)) |
+| Ctrl+Shift+A | Show the **Assumptions** list: everything that is active for the project ([placeholders and sources](placeholders-and-sources.md#where-do-i-see-everything-that-is-active), [trace a number](trace-a-number.md)) |
 | Ctrl+S | Save what you are editing (a text tab, the grids of *Units*, *Power modes* and *Inputs*, or the scenario); it acts only while the **Model** area is in front |
 | Ctrl+Z / Ctrl+Y (or Ctrl+Shift+Z) | Undo / redo an edit of the grids or the scenario (the Edit menu names the step); a text editor keeps its own undo while it has the keyboard |
 | Ctrl+C / Ctrl+V | In a grid: copy the selected cells as text with tabs; paste a block (from this or any spreadsheet) |
@@ -82,7 +82,7 @@ In the focused view only the summary line is shown, with a **Show problems** but
 | Ctrl+Shift+N / Ctrl+Shift+Delete | **Edit → Add unit** / **Remove unit**, from any area: they bring *Model → Units* to the front ([add a unit](describe-the-spacecraft.md#how-do-i-add-a-unit)). Remove takes the unit with the cursor in the grid, or the unit selected in the project tree |
 | Ctrl+Shift+M / Ctrl+Shift+Backspace | **Edit → Add spacecraft mode** / **Remove spacecraft mode**, from any area: they bring *Model → Spacecraft modes* to the front ([add a spacecraft mode](describe-the-spacecraft.md#how-do-i-add-a-spacecraft-mode)) |
 | Ctrl+Shift+F | **View → Focused view** on or off: one line of problem counts, no Inspector or Provenance panel, only the main columns; off shows everything |
-| Ctrl+Shift+I | **View → Explain this value**, or right-click a value in a Power table: opens the **Explain** panel with the equation, the inputs (value, unit, file and path they were read from, source) and the steps that give the value ([explain](../models/explain.md)). The panel is hidden until you ask |
+| Ctrl+Shift+I | **View → Explain this value**, or right-click a value in a Power, Mass, Thermal or Link table (also the power timeline and the link passes): opens the **Explain** panel with the equation, the inputs (value, unit, file and path they were read from, source) and the steps that give the value ([explain](../models/explain.md)). The panel is hidden until you ask |
 | Ctrl+Shift+O | **Edit → Add scenario**, from any area: an orbit and a scenario from a form; it brings *Model → Scenario* to the front ([add an orbit and a scenario](scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window)) |
 | Ctrl+Shift+G / Ctrl+Shift+T | **Edit → Add ground station** / **Add imaging target**, from any area: a name, an id, latitude, longitude, altitude and minimum elevation from a form ([how](scenarios.md#how-do-i-add-a-ground-station-or-an-imaging-target)) |
 | Ctrl+Shift+L | **Edit → Add link**, from any area: the structure of an RF link from a form, with its sourced numbers as placeholders ([how](link-budget.md#how-do-i-describe-a-link)) |

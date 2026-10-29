@@ -18,7 +18,7 @@ This page takes you from nothing to a first result: install the tool, run a budg
 sudo apt install libxcb-cursor0          # Ubuntu / Debian
 ```
 
-On RHEL or Rocky the window needs the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)), and `xcb-util-cursor`, which is not in their own repositories but in EPEL: `sudo dnf install epel-release` (on RHEL itself: the `epel-release` package from the Fedora project's EPEL page), then `sudo dnf install xcb-util-cursor`.
+On RHEL or Rocky the window needs the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/13-installation.md)), and `xcb-util-cursor`, which is not in their own repositories but in EPEL: `sudo dnf install epel-release` (on RHEL itself: the `epel-release` package from the Fedora project's EPEL page), then `sudo dnf install xcb-util-cursor`.
 
 ## 2. Install
 
@@ -27,8 +27,8 @@ Use a virtual environment so the tool's libraries stay out of your system Python
 Linux:
 
 ```bash
-git clone https://github.com/0h3xn4/systembudgetstudio.git
-cd systembudgetstudio
+git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+cd SystemBudgetStudio
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -37,8 +37,8 @@ pip install -e .
 Windows (PowerShell):
 
 ```powershell
-git clone https://github.com/0h3xn4/systembudgetstudio.git
-cd systembudgetstudio
+git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+cd SystemBudgetStudio
 py -3 -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -e .
@@ -217,6 +217,6 @@ The lock file (`requirements.lock`) pins every runtime library with a hash, so w
 
 ## Installers
 
-The [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest) has a Windows installer (per user, no administrator rights; it brings its own Python, asks only for the folder and puts `budget` on your user PATH, so open a new terminal afterwards), a Windows portable ZIP, a Linux tarball with `install.sh` (per user, no administrator rights), a `.deb` for Ubuntu and Debian and an `.rpm` for RHEL and Rocky (both for all users, installed with `sudo apt install ./file.deb` or `sudo dnf install ./file.rpm`, and they bring in the system libraries the window needs; on RHEL and Rocky enable EPEL first with `sudo dnf install epel-release`), with `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` to check the downloads; or install from source as above. The steps are in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)) and the [clean-machine checklist](INSTALL_CHECKLIST.md).
+The [Releases page](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest) has a Windows installer (per user, no administrator rights; it brings its own Python, asks only for the folder and puts `budget` on your user PATH, so open a new terminal afterwards), a Windows portable ZIP, a Linux tarball with `install.sh` (per user, no administrator rights), a `.deb` for Ubuntu and Debian and an `.rpm` for RHEL and Rocky (both for all users, installed with `sudo apt install ./file.deb` or `sudo dnf install ./file.rpm`, and they bring in the system libraries the window needs; on RHEL and Rocky enable EPEL first with `sudo dnf install epel-release`), with `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` to check the downloads; or install from source as above. The steps are in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/13-installation.md)) and the [clean-machine checklist](INSTALL_CHECKLIST.md).
 
 Next: the [user manual](user-manual/README.md) (task by task), the [examples](../examples/README.md), or [troubleshooting](troubleshooting.md) if something did not work.
