@@ -68,7 +68,7 @@ def project_text(name: str) -> str:
 def test_project_numbers_are_listed_with_status() -> None:
     placeholders = project_text("microsat_250kg")
     assert "PLACEHOLDER" in placeholders and "margin_policy" in placeholders
-    assert "sourced" in project_text("microsat_250kg_eps")
+    assert "illustrative" in project_text("microsat_250kg_eps")  # the examples are invented
 
 
 def test_html_is_self_contained_and_offline() -> None:

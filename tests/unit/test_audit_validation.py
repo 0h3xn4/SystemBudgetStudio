@@ -288,7 +288,7 @@ def test_a_scenario_phase_without_a_depth_of_discharge_entry_is_warned(tmp_path:
         dest,
         "config/power_system.yaml",
         "    eol:\n      value: 0.3\n      source: Synthetic example value; "
-        "not from a data sheet or a standard.\n",
+        "not from a data sheet or a standard.\n      status: illustrative\n",
         "",
     )
     warnings = of(load_project(dest).problems, "SCENARIO_PHASE_NO_DOD")
