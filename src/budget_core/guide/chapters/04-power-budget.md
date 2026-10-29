@@ -15,7 +15,7 @@ Peak power is the sum of unit peak powers. The report shows the result by mode, 
 
 ## Time-domain budget
 
-Add `config/power_system.yaml` (solar array faces, battery, attitude per mode, peak power limit) and a scenario. **Run** (Ctrl+R) steps through the scenario on its time grid and, for both beginning of life (BOL) and end of life (EOL):
+Add `config/power_system.yaml` (solar array faces, battery, attitude per mode, peak power limit) and a scenario. **Run** (Ctrl+R, or the **Compute** button of the tab) steps through the scenario on its time grid and, for both beginning of life (BOL) and end of life (EOL):
 
 - array output from the Sun direction, the eclipse and the array temperature and degradation;
 - the battery energy with charge and discharge efficiency and capacity fade;
