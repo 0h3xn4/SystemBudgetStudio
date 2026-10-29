@@ -53,7 +53,7 @@
 1: 'Problems and open items' |  |  |  |  | 
 2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
 3: 'info' | 'LINK_PER_DAY_NOT_GIVEN' | 'scenarios/synthetic.yaml' | 'duration_s' | 'The scenario is shorter than one day, so the data volume per day is not given (scaling a short scenario to a day would repeat its passes).' | 'Use a scenario of at least one day for a per-day figure.'
-## sheet Provenance rows=12 cols=2
+## sheet Provenance rows=13 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 1.9.0'
@@ -64,5 +64,6 @@
 8: 'Scenario' | 'static (no scenario)'
 9: 'Run parameters' | 'Environment source synthetic; Shadow model cylindrical; Start (UTC) 2026-01-01T00:00:00Z; Duration 1000 s; Step 10 s'
 10: 'Inputs digest (model)' | 'sha256:72ac95b7cf40a37737b4042fd7685258927479f23b96763af59d7814d2c083b4'
-11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-12: 'User' | 'Golden User'
+11: 'Illustrative inputs' | '0'
+12: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+13: 'User' | 'Golden User'

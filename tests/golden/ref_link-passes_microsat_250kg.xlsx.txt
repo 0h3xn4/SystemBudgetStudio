@@ -120,7 +120,7 @@
 39: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:53' | 'solar_array.cell_efficiency_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 40: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:57' | 'solar_array.reference_temperature_k' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 ...
-## sheet Provenance rows=15 cols=2
+## sheet Provenance rows=16 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -133,5 +133,6 @@
 11: 'Run parameters' | 'Environment source elements; Shadow model cylindrical; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s'
 12: 'Inputs digest (model)' | 'sha256:5aaef01b6a3ab18bba18c7215ee8028c895b63d60fa497cd32c7baece290c613'
 13: 'Input files' | '41 files, sha256:aaf60ed1fa4d7da9a4e05dea6c6838396fd6b985d91fff6eaf9fdf3555a45ba8'
-14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-15: 'User' | 'Golden User'
+14: 'Illustrative inputs' | '0'
+15: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+16: 'User' | 'Golden User'

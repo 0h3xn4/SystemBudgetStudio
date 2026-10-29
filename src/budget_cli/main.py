@@ -18,6 +18,13 @@ from budget_core.blank import BlankAnswers, create_blank_project
 from budget_core.compare_run import ALL_KINDS, Side, compare_sides, default_kinds
 from budget_core.examples import ExportRefusedError, export_examples
 from budget_core.explain import Explainer, ExplainError, explainable_tables
+from budget_core.input_sources import (
+    NO_SOURCE,
+    SourceError,
+    inputs_of,
+    set_source,
+    status_counts,
+)
 from budget_core.io.project_loader import LoadResult, load_project
 from budget_core.io.unit_table import (
     apply_plan,
@@ -29,6 +36,7 @@ from budget_core.io.unit_table import (
 from budget_core.link.evaluate import link_pass_series, link_static_budget
 from budget_core.mass.static_mass import static_mass_budget
 from budget_core.model import Project
+from budget_core.model.annotations import INPUT_STATUSES
 from budget_core.power.static_budget import static_power_budget
 from budget_core.power.time_domain import time_domain_budget, violation_problems
 from budget_core.problem_catalogue import CATALOGUE, describe, render_markdown
@@ -347,6 +355,41 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ver.add_argument("project", type=Path, help="The project folder to compare with.")
 
+    src = sub.add_parser(
+        "source",
+        help="Show or set where the inputs of a project came from (provenance, D-213).",
+    )
+    src.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    src.add_argument(
+        "file", nargs="?", help="The file to record a source in, for example units/adcs.yaml."
+    )
+    src.add_argument(
+        "path",
+        nargs="?",
+        help="The input in the file, as Explain writes it (modes[imaging].avg_power_w), or * "
+        "for every input of the file that has no entry of its own.",
+    )
+    src.add_argument("--source", help="The source: a data sheet, a report, a decision.")
+    src.add_argument("--note", help="A note about the source.")
+    src.add_argument(
+        "--status",
+        choices=INPUT_STATUSES,
+        help="What kind of number it is (default: sourced).",
+    )
+    src.add_argument("--clear", action="store_true", help="Remove the entry.")
+    src.add_argument(
+        "--rewrite",
+        action="store_true",
+        help="Allow writing the file whole (leaving its comments out) when the edit cannot be "
+        "made in place.",
+    )
+    src.add_argument(
+        "--list",
+        dest="list_status",
+        choices=(*INPUT_STATUSES, "none"),
+        help="List the inputs with this status ('none': no source recorded) instead of counting.",
+    )
+
     sch = sub.add_parser("export-schemas", help="Write the JSON Schema of every file kind.")
     sch.add_argument("out_dir", type=Path)
 
@@ -494,6 +537,56 @@ def _verify(args: argparse.Namespace) -> int:
     for line in result.lines:
         print(line)
     return 0 if result.status == MATCH else 1
+
+
+def _source(args: argparse.Namespace) -> int:
+    """Without a file: the number of inputs by status (or, with --list, which ones). With a file
+    and a path: record or remove its source."""
+    if args.file is None:
+        return _source_report(args)
+    if args.path is None:
+        _fail("Give the path of the input after the file, or leave both out.")
+        return 2
+    if not args.clear and args.source is None:
+        _fail("Give --source (or --clear to remove the entry).")
+        return 2
+    try:
+        edit = set_source(
+            args.project,
+            args.file,
+            args.path,
+            source=None if args.clear else args.source,
+            note=args.note,
+            status=args.status,
+            rewrite=args.rewrite,
+        )
+    except SourceError as exc:
+        _fail(str(exc))
+        return 2
+    except OutputError, OSError, UnicodeDecodeError:
+        _fail("The file could not be read or written.")
+        return 1
+    print(f"{args.file}: " + ("written." if edit.plan.changed else "already as asked."))
+    return 0
+
+
+def _source_report(args: argparse.Namespace) -> int:
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    items = inputs_of(project)
+    if args.list_status is not None:
+        wanted = NO_SOURCE if args.list_status == "none" else args.list_status
+        for item in items:
+            if item.status == wanted:
+                print(f"{item.file} {item.path}")
+        return 0
+    counts = status_counts(project)
+    width = max(len(name) for name in (*INPUT_STATUSES, "no source recorded"))
+    for status in (*INPUT_STATUSES, NO_SOURCE):
+        label = status or "no source recorded"
+        print(f"{label:<{width}}  {counts.get(status, 0)}")
+    return 0
 
 
 def _valid_project(path: Path) -> tuple[Project | None, int]:
@@ -916,6 +1009,8 @@ def _dispatch(
         return _run(args)
     if args.command == "verify":
         return _verify(args)
+    if args.command == "source":
+        return _source(args)
     if args.command == "explain":
         return _explain(args)
     if args.command == "problems":

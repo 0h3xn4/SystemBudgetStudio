@@ -375,6 +375,7 @@
   ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
+    "illustrative_inputs": 0,
     "input_files": [],
     "inputs_digest": "sha256:c51435aeae5340d1d83ab37bb984daa8b88f1964949527c668f624e6b21ad12e",
     "libraries": [

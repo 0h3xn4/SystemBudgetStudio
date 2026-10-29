@@ -156,7 +156,7 @@
 39: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.harness_loss_ratio' | 'The harness loss is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 40: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.packing_loss_ratio' | 'The packing loss is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 ...
-## sheet Provenance rows=15 cols=2
+## sheet Provenance rows=16 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -169,5 +169,6 @@
 11: 'Run parameters' | 'Environment source elements; Shadow model conical; Start (UTC) 2026-06-01T00:00:00Z; Duration 604800 s; Step 1 s; Demand basis nominal; Cases bol, eol; Mission phase not set'
 12: 'Inputs digest (model)' | 'sha256:45223c9d89e0edabb05b2c52ea787636270473ee601c1a58d3ba8ec6fdbc7471'
 13: 'Input files' | '220 files, sha256:9390ff9e74bbec24194e5408c8fb8778190e8cd009897324cdccc2ff5d2e8a76'
-14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-15: 'User' | 'Golden User'
+14: 'Illustrative inputs' | '0'
+15: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+16: 'User' | 'Golden User'

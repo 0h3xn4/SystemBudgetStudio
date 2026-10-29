@@ -160,7 +160,7 @@
 95: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:292' | 'surfaces[7].exposure.cold.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 96: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:297' | 'surfaces[7].exposure.hot.solar_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 97: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/thermal_model.yaml:301' | 'surfaces[7].exposure.hot.earth_view_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-## sheet Provenance rows=12 cols=2
+## sheet Provenance rows=13 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 1.9.0'
@@ -171,5 +171,6 @@
 8: 'Scenario' | 'static (no scenario)'
 9: 'Inputs digest (model)' | 'sha256:001b362d917749bdc8ca2d00f58f54aced4959d2f6248913347b43c8fdba5844'
 10: 'Input files' | '40 files, sha256:3a332f630a2b4cdfd0d34e45f2a11571f9c4a9caab0aa2f259bad4782a252ae9'
-11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-12: 'User' | 'Golden User'
+11: 'Illustrative inputs' | '0'
+12: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+13: 'User' | 'Golden User'

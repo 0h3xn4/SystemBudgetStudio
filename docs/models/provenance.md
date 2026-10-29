@@ -12,6 +12,7 @@
 | Run parameters | Options that change a number: environment source, shadow model, start, duration and step of the scenario; for a power timeline also the demand basis, the cases and the mission phase | you choose other options |
 | Inputs digest (model) | SHA-256 of the project as loaded: every unit, mode, orbit, station, scenario, link and configuration number | a **number or a name** in any input file changes |
 | Input files | The count and one SHA-256 over every file's name, size and byte hash | **any** change to a file, including a comment or spacing |
+| Illustrative inputs | How many inputs of the project are marked `illustrative` ([D-213](../DECISIONS.md)); 0 when none | an input is marked or unmarked |
 | Generated (UTC), User | When and by whom | every run (set `SOURCE_DATE_EPOCH` and `BUDGET_USER` to reproduce) |
 
 The JSON files also list every input file with its size and hash (`provenance.input_files`) and the run parameters as name and value pairs.
