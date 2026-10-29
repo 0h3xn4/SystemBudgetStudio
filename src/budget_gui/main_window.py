@@ -65,6 +65,7 @@ from budget_gui.add_expendable_dialog import AddExpendableDialog
 from budget_gui.add_link_dialog import AddLinkDialog
 from budget_gui.add_scenario_dialog import AddScenarioDialog
 from budget_gui.add_site_dialog import AddSiteDialog
+from budget_gui.assumptions_page import AssumptionsPage
 from budget_gui.banner import Banner
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
@@ -172,6 +173,7 @@ class MainWindow(QMainWindow):
         self.modes_page = PowerModesPage(self.document)
         self.spacecraft_modes_page = SpacecraftModesPage(self.document)
         self.inputs_page = InputsPage(self.document)
+        self.assumptions_page = AssumptionsPage()
         for title, page in (
             ("Units", self.units_page),
             ("Power modes", self.modes_page),
@@ -184,6 +186,8 @@ class MainWindow(QMainWindow):
         self.editors.register_modifiable(self.document)
         self.scenario_view = ScenarioView(self.document)
         self.editors.add_fixed(self.scenario_view, "Scenario")
+        self.editors.add_fixed(self.assumptions_page, "Assumptions")
+        self.assumptions_page.open_requested.connect(self.jump_to_input)
         self.scenario_view.editor.save_requested.connect(self.save_model)
         self.timeline_view = PowerTimelineView()
         self.timeline_view.explain_requested.connect(self.explain_timeline_value)
@@ -473,6 +477,14 @@ class MainWindow(QMainWindow):
         )
         self.explain_action.triggered.connect(self.explain_selected_value)
         view_menu.addAction(self.explain_action)
+        self.assumptions_action = QAction("Show the &assumptions", self)
+        self.assumptions_action.setShortcut(QKeySequence("Ctrl+Shift+A"))
+        self.assumptions_action.setStatusTip(
+            "List everything that is active for the project: its sourced numbers, the settings "
+            "and constants the tool applies, and the model choices."
+        )
+        self.assumptions_action.triggered.connect(self.show_assumptions)
+        view_menu.addAction(self.assumptions_action)
         view_menu.addSeparator()
         for number, title in enumerate(TABS, start=1):
             action = QAction(f"Go to {title}", self)
@@ -1827,6 +1839,10 @@ class MainWindow(QMainWindow):
         """Open the file that governs a finding at the line of the named field."""
         self.open_file(rel, self._line_of(rel, path))
 
+    def show_assumptions(self) -> None:
+        """Bring the list of everything that is active for the project to the front."""
+        self.workspace.show_view(self.assumptions_page)
+
     def show_unit(self, unit_id: str) -> PowerModesPage | None:
         """Show a unit's power modes in the grid of the Model tab, its first row current."""
         project = self.session.project
@@ -1958,6 +1974,7 @@ class MainWindow(QMainWindow):
         self.thermal_view.set_document(session.thermal_document)
         self.link_view.set_document(session.link_document)
         self.document.reload(session.path, project)
+        self.assumptions_page.set_project(project)
         self.scenario_view.set_project(project)
         load_problems = session.load_result.problems if session.load_result else []
         self.timeline_view.set_project(project, load_problems)
