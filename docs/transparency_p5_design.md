@@ -82,7 +82,7 @@ The default behaviour of every command, every number of a project that omits the
 
 ## 8. Order of work (each its own pull request)
 
-1. **P5a, the registry and the visibility.** `model_choices.py` with every row of the table (selectable and fixed), the Assumptions page, `budget assumptions` and the provenance row built from it, the reasons for the fixed models, `docs/models/choices.md` generated from the registry (a drift test, as for settings and problems). No file change, no number change.
+1. **P5a, the registry and the visibility.** `model_choices.py` with every row of the table (selectable and fixed), the Assumptions page and `budget assumptions` built from it (the provenance row *Model choices* moves to P5b, D-220), the reasons for the fixed models, `docs/models/choices.md` generated from the registry (a drift test, as for settings and problems). No file change, no number change.
 2. **P5b, the Earth model.** The scenario field, loader codes, schema, `requires`, the geometry and elements path reading the chosen set (including the duplicate Earth radius of the link module, which must follow it), the environment key, the model page and the deviation entry DV-E5 updated, tests against the SGP4 constants.
 3. **P5c, the seasonal irradiance.** The scenario field, the factor in the array generation, the equation and its source, the check against perihelion and aphelion, the Explain step, the model page and DV-P5.
 4. **P5d, the window.** The *Model choices* group of the scenario editor, undo, tooltips, palette entry, tests.

@@ -39,6 +39,10 @@ from budget_core.link.evaluate import link_pass_series, link_static_budget
 from budget_core.mass.static_mass import static_mass_budget
 from budget_core.model import Project
 from budget_core.model.annotations import INPUT_STATUSES
+from budget_core.model_choices import BY_ID as CHOICES_BY_ID
+from budget_core.model_choices import REGISTRY as CHOICES_REGISTRY
+from budget_core.model_choices import SCOPE_TEXT as CHOICES_SCOPE_TEXT
+from budget_core.model_choices import render_markdown as render_choices_markdown
 from budget_core.power.static_budget import static_power_budget
 from budget_core.power.time_domain import time_domain_budget, violation_problems
 from budget_core.problem_catalogue import CATALOGUE, describe, render_markdown
@@ -366,6 +370,21 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write the page of all settings (docs/models/settings.md) to standard output.",
     )
 
+    chc = sub.add_parser(
+        "choices",
+        help="List the modelling choices of the tool (selectable and fixed), or explain one.",
+    )
+    chc.add_argument(
+        "choice",
+        nargs="?",
+        help="A choice id, for example environment.shadow_model. Without it all are listed.",
+    )
+    chc.add_argument(
+        "--markdown",
+        action="store_true",
+        help="Write the page of all choices (docs/models/choices.md) to standard output.",
+    )
+
     asm = sub.add_parser(
         "assumptions",
         help="List everything that is active for a project: numbers, settings, model choices.",
@@ -584,6 +603,39 @@ def _settings(args: argparse.Namespace) -> int:
     print(f"Why.             {entry.reason}")
     print(f"Acts on.         {entry.acts_on}")
     print(f"In the code.     budget_core.{entry.binding.replace(':', '.')}")
+    return 0
+
+
+def _choices(args: argparse.Namespace) -> int:
+    """List the model choices, show one (alternatives, default, where it is made), or write the
+    page."""
+    if args.markdown:
+        print(render_choices_markdown(), end="")
+        return 0
+    if args.choice is None:
+        for m in CHOICES_REGISTRY:
+            print(f"{m.id}\t{CHOICES_SCOPE_TEXT[m.scope]}\t{m.active_title(m.default)}\t{m.title}")
+        return 0
+    entry = CHOICES_BY_ID.get(args.choice)
+    if entry is None:
+        close = difflib.get_close_matches(args.choice, list(CHOICES_BY_ID), n=3)
+        _fail(
+            "There is no such model choice."
+            + (f" Did you mean {', '.join(close)}?" if close else " `budget choices` lists them.")
+        )
+        return 1
+    print(f"{entry.id}  ({CHOICES_SCOPE_TEXT[entry.scope]})")
+    print(entry.title)
+    print()
+    print(f"Default.         {entry.default}")
+    print(f"Made in.         {entry.where}")
+    print(f"Acts on.         {entry.acts_on}")
+    print(f"Reference.       {entry.reference}")
+    if entry.selectable:
+        print("Alternatives.")
+        for c in entry.choices:
+            equations = f"  [{', '.join(c.equations)}]" if c.equations else ""
+            print(f"  {c.id}: {c.title}{equations}")
     return 0
 
 
@@ -1093,6 +1145,8 @@ def _dispatch(
         return _run(args)
     if args.command == "settings":
         return _settings(args)
+    if args.command == "choices":
+        return _choices(args)
     if args.command == "assumptions":
         return _assumptions(args)
     if args.command == "verify":

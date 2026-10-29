@@ -11,13 +11,12 @@ from pathlib import Path
 import pytest
 
 from budget_cli.main import main
-from budget_core import settings
+from budget_core import model_choices, settings
 from budget_core.assumptions_view import (
     ASSUMPTION_SECTIONS,
     CHOICES,
     CONFIGURATION,
     CREATION,
-    FIXED_CHOICES,
     SECTIONS,
     SETTINGS,
     assumptions,
@@ -168,7 +167,7 @@ def test_the_assumptions_of_an_example_have_every_section(name: str) -> None:
     assert n[SETTINGS] == len(
         [s for s in settings.CATALOGUE if s.kind not in ("creation", "internal")]
     )
-    assert n[CHOICES] >= len(FIXED_CHOICES)
+    assert n[CHOICES] >= len(model_choices.of_scope("fixed"))
     assert {r.status for r in rows if r.section == CONFIGURATION} <= {
         "sourced",
         "estimate",
