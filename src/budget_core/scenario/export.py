@@ -165,6 +165,11 @@ def environment_json(run: ScenarioRun, provenance: Provenance) -> str:
             "inputs_digest": provenance.inputs_digest,
             "input_files": [e.to_dict() for e in provenance.input_files],
             "parameters": [list(item) for item in provenance.parameters],
+            **(
+                {}
+                if provenance.illustrative_inputs is None
+                else {"illustrative_inputs": provenance.illustrative_inputs}
+            ),
         },
     }
     return json.dumps(data, indent=2, sort_keys=True) + "\n"

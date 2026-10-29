@@ -9,6 +9,7 @@ from budget_core.explain.link import explain_link, link_table_ids
 from budget_core.explain.linkpass import explain_linkpass, linkpass_table_ids
 from budget_core.explain.mass import explain_mass, mass_table_ids
 from budget_core.explain.power import ExplainError, explain_power, power_table_ids
+from budget_core.explain.sources import add_sources
 from budget_core.explain.thermal import explain_thermal, thermal_table_ids
 from budget_core.explain.timeline import explain_timeline, timeline_table_ids
 from budget_core.explain.trace import Explanation, Quantity, Step
@@ -213,7 +214,11 @@ class Explainer:
 
     def explain(self, table_id: str, key: Sequence[str], column: str) -> Explanation:
         """Explain the cell at row `key` (the values of the table's key columns) and `column`
-        (the header text) of the table `table_id`."""
+        (the header text) of the table `table_id`. The inputs say where they came from, when the
+        project records it (D-213)."""
+        return add_sources(self.project, self._explain(table_id, key, column))
+
+    def _explain(self, table_id: str, key: Sequence[str], column: str) -> Explanation:
         family = self._family(table_id)
         if family == "power":
             return explain_power(self.project, table_id, key, column, self.power_result())

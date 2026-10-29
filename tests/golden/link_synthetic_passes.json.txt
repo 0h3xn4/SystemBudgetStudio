@@ -122,6 +122,7 @@
   ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
+    "illustrative_inputs": 0,
     "input_files": [],
     "inputs_digest": "sha256:72ac95b7cf40a37737b4042fd7685258927479f23b96763af59d7814d2c083b4",
     "libraries": [

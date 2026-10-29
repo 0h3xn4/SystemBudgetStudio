@@ -131,5 +131,6 @@ Project revision | r1
 Scenario | synthetic
 Run parameters | Environment source synthetic; Shadow model cylindrical; Start (UTC) 2026-01-01T00:00:00Z; Duration 12000 s; Step 20 s; Demand basis nominal; Cases bol, eol; Mission phase eol
 Inputs digest (model) | sha256:66c866cf984af5a6cf4cb5cd168467054211db7b982e1b1b91334ddddfb281ee
+Illustrative inputs | 0
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

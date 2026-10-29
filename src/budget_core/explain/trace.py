@@ -27,22 +27,28 @@ class Quantity:
 
     `origin` is the file and path of an input (`units/adcs.yaml modes[0].avg_power_w`) or the name
     of the step that produced it (`step 2`). `source` is the source text of a sourced number,
-    empty for a plain input (the project file does not record one) and for a computed value."""
+    empty for a plain input whose file does not record one and for a computed value. `status` is
+    what the project says the number is (`estimate`, `illustrative`, `tbd`); empty when it says
+    nothing or `sourced` (D-213)."""
 
     name: str
     value: Value
     unit: str = ""
     origin: str = ""
     source: str = ""
+    status: str = ""
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "name": self.name,
             "value": self.value,
             "unit": self.unit,
             "origin": self.origin,
             "source": self.source,
         }
+        if self.status:  # absent for the usual case, so existing explanations stay as they are
+            out["status"] = self.status
+        return out
 
     def text(self) -> str:
         if self.value is None:
@@ -123,8 +129,13 @@ class Explanation:
             for q in step.inputs:
                 where = f"  ({q.origin})" if q.origin else ""
                 src = f'  source: "{q.source}"' if q.source else ""
+                src += f"  [{q.status}]" if q.status else ""
                 lines.append(f"  {q.name} = {q.text()}{where}{src}")
-            lines.append(f"  -> {step.result.name} = {step.result.text()}")
+            r = step.result  # a value read from the project says where it was read from
+            where = f"  ({r.origin})" if r.origin else ""
+            src = f'  source: "{r.source}"' if r.source else ""
+            src += f"  [{r.status}]" if r.status else ""
+            lines.append(f"  -> {r.name} = {r.text()}{where}{src}")
             lines.append("")
         if self.equations:
             lines.append("Equations")
@@ -145,8 +156,9 @@ class Explanation:
 
 def link_steps(steps: tuple[Step, ...]) -> tuple[Step, ...]:
     """Number the steps and say, for an input that is the result of an earlier step, which one:
-    the origin of such an input becomes `result of step N`, and the origin of a result is empty
-    (a step's result needs no origin; the step is where it comes from)."""
+    the origin of such an input becomes `result of step N`, and the origin of a computed result is
+    empty (the step is where it comes from). A step that computes nothing, only reads an input,
+    keeps the origin of what it read."""
     produced: dict[tuple[str, Value], int] = {}
     out: list[Step] = []
     for number, step in enumerate(steps, start=1):
@@ -156,7 +168,7 @@ def link_steps(steps: tuple[Step, ...]) -> tuple[Step, ...]:
             else q
             for q in step.inputs
         )
-        result = replace(step.result, origin="")
+        result = step.result if not step.inputs else replace(step.result, origin="")
         produced[(result.name, result.value)] = number
         out.append(replace(step, inputs=inputs, result=result))
     return tuple(out)

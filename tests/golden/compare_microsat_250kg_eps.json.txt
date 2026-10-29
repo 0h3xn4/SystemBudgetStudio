@@ -894,6 +894,7 @@
   "label_b": "rev 2",
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
+    "illustrative_inputs": 0,
     "input_files": [
       {
         "path": "config/attenuation_table.yaml",

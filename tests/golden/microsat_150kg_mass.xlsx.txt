@@ -286,7 +286,7 @@
 106: 'info' | 'MASS_INERTIA_POINT_MASS' | 'units/gnss.yaml' | 'mass_properties' | "'gnss' has no own inertia; it is treated as a point mass." | 
 107: 'info' | 'MASS_INERTIA_POINT_MASS' | 'units/heaters.yaml' | 'mass_properties' | "'heaters' has no own inertia; it is treated as a point mass." | 
 108: 'info' | 'MASS_INERTIA_POINT_MASS' | 'units/sun_sensors.yaml' | 'mass_properties' | "'sun_sensors' has no own inertia; it is treated as a point mass." | 
-## sheet Provenance rows=14 cols=2
+## sheet Provenance rows=15 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -298,5 +298,6 @@
 10: 'Scenario' | 'static (no scenario)'
 11: 'Inputs digest (model)' | 'sha256:001b362d917749bdc8ca2d00f58f54aced4959d2f6248913347b43c8fdba5844'
 12: 'Input files' | '40 files, sha256:3a332f630a2b4cdfd0d34e45f2a11571f9c4a9caab0aa2f259bad4782a252ae9'
-13: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-14: 'User' | 'Golden User'
+13: 'Illustrative inputs' | '0'
+14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+15: 'User' | 'Golden User'

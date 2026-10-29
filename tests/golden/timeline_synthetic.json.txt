@@ -407,6 +407,7 @@
   ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
+    "illustrative_inputs": 0,
     "input_files": [],
     "inputs_digest": "sha256:66c866cf984af5a6cf4cb5cd168467054211db7b982e1b1b91334ddddfb281ee",
     "libraries": [

@@ -15,6 +15,7 @@ from datetime import UTC, datetime
 from importlib.metadata import PackageNotFoundError, version
 
 from budget_core import APP_NAME, __version__
+from budget_core.input_sources import illustrative_inputs
 from budget_core.io.project_digest import project_digest
 from budget_core.manifest import ManifestEntry, files_digest
 from budget_core.model import Project
@@ -52,6 +53,9 @@ class Provenance:
     inputs_digest: str = ""  # sha256 of the loaded model, comments and key order gone
     input_files: tuple[ManifestEntry, ...] = ()  # every project file read, with its hash
     parameters: tuple[tuple[str, str], ...] = ()  # run options that change a number (name, value)
+    # How many inputs the project marks as invented sample values (D-213); None on a provenance
+    # built by hand, which has no project to count in.
+    illustrative_inputs: int | None = None
 
     def rows(self) -> list[tuple[str, str]]:
         libs = ", ".join(f"{n} {v}" for n, v in self.libraries)
@@ -75,6 +79,8 @@ class Provenance:
                     f"{count} file{'s' if count != 1 else ''}, {files_digest(self.input_files)}",
                 )
             )
+        if self.illustrative_inputs is not None:
+            rows.append(("Illustrative inputs", str(self.illustrative_inputs)))
         rows += [("Generated (UTC)", self.generated), ("User", self.user)]
         return rows
 
@@ -150,4 +156,5 @@ def make_provenance(
         user=resolve_user(user),
         inputs_digest=project_digest(project),
         input_files=project.manifest,
+        illustrative_inputs=illustrative_inputs(project),
     )

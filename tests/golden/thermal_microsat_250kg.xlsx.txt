@@ -520,7 +520,7 @@
 187: 'warning' | 'THERMAL_NO_LIMITS' | 'units/structure.yaml' | 'temperature_limits' | "Unit 'structure' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
 188: 'warning' | 'THERMAL_NO_LIMITS' | 'units/sun_sensors.yaml' | 'temperature_limits' | "Unit 'sun_sensors' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
 189: 'warning' | 'THERMAL_NO_LIMITS' | 'units/xband_tx.yaml' | 'temperature_limits' | "Unit 'xband_tx' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
-## sheet Provenance rows=14 cols=2
+## sheet Provenance rows=15 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -532,5 +532,6 @@
 10: 'Scenario' | 'static (no scenario)'
 11: 'Inputs digest (model)' | 'sha256:5aaef01b6a3ab18bba18c7215ee8028c895b63d60fa497cd32c7baece290c613'
 12: 'Input files' | '41 files, sha256:aaf60ed1fa4d7da9a4e05dea6c6838396fd6b985d91fff6eaf9fdf3555a45ba8'
-13: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-14: 'User' | 'Golden User'
+13: 'Illustrative inputs' | '0'
+14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+15: 'User' | 'Golden User'

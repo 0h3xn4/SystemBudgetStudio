@@ -155,7 +155,7 @@
 39: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.reference_temperature_k' | 'The reference temperature is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 40: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.solar_irradiance_wm2' | 'The solar irradiance is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 ...
-## sheet Provenance rows=15 cols=2
+## sheet Provenance rows=16 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -168,5 +168,6 @@
 11: 'Run parameters' | 'Environment source elements; Shadow model conical; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s; Demand basis nominal; Cases bol, eol; Mission phase not set'
 12: 'Inputs digest (model)' | 'sha256:001b362d917749bdc8ca2d00f58f54aced4959d2f6248913347b43c8fdba5844'
 13: 'Input files' | '40 files, sha256:3a332f630a2b4cdfd0d34e45f2a11571f9c4a9caab0aa2f259bad4782a252ae9'
-14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
-15: 'User' | 'Golden User'
+14: 'Illustrative inputs' | '0'
+15: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
+16: 'User' | 'Golden User'

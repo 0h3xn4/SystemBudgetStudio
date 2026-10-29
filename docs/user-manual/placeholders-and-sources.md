@@ -2,7 +2,7 @@
 
 This page explains why some results say *n/a*, why a report may start with an INCOMPLETE banner, and how to enter a number the way the tool wants it.
 
-**Contents:** [The rule](#the-rule-the-tool-never-invents-a-number) · [Enter a sourced number](#how-do-i-enter-a-sourced-number) · [Find what is open](#how-do-i-find-what-is-still-open) · [Where the numbers live](#which-numbers-need-a-source)
+**Contents:** [The rule](#the-rule-the-tool-never-invents-a-number) · [Enter a sourced number](#how-do-i-enter-a-sourced-number) · [Find what is open](#how-do-i-find-what-is-still-open) · [Record where a plain input came from](#how-do-i-record-where-a-plain-input-came-from) · [Where the numbers live](#which-numbers-need-a-source)
 
 ## The rule: the tool never invents a number
 
@@ -30,6 +30,23 @@ power_margin_ratio:
 - To mark a number as not yet known, write `value: null` and `source: TBD`.
 
 Do not copy a number from a standard unless you have the text and can cite it. The example projects use `Synthetic example value; not from a data sheet or a standard.` as their source, which is the honest description of invented numbers.
+
+## How do I record where a plain input came from?
+
+A mass, a power or an orbit element is a plain number in its file, and it can say where it came from too. Add a `provenance:` block at the end of the file, or let the tool write it:
+
+```
+budget source my_satellite units/obc.yaml mass_kg --source "Data sheet XYZ rev C, table 3" --status estimate
+budget source my_satellite units/obc.yaml "modes[imaging].avg_power_w" --source "Thermal-vacuum test report TR-12" --note "measured at 28 V"
+budget source my_satellite units/obc.yaml "*" --source "Invented example value" --status illustrative
+```
+
+- The path is the one **Explain** and the Problems panel use; `[imaging]` selects a power mode by its name, so adding or removing a mode does not move the entry. `*` is the default for every number of the file that has no entry of its own.
+- The status is `sourced` (the default), `estimate` (an engineering estimate; the source says whose), `illustrative` (an invented sample value, not for use) or `tbd` (a placeholder). The sourced numbers of `config/` can carry `status: estimate` or `status: illustrative` too; `budget source my_satellite config/margin_policy.yaml system_power_margin_ratio --source "…"` sets one.
+- `--clear` removes an entry. The command writes the file in place and keeps its comments; if the file cannot be edited in place and has comments, it stops and says so (`--rewrite` writes the file whole).
+- `budget source my_satellite` counts the inputs by status, and `--list illustrative` (or `sourced`, `estimate`, `tbd`, `none`) names them, with their file and path.
+
+Where it shows: **Explain** prints the source of each input (and its status when it is not `sourced`), and every report has the row **Illustrative inputs** in its provenance table, so a report built from invented numbers says so. A source changes no number, and the model digest ignores it ([provenance](../models/provenance.md)). A project with no entries works as before; an input with no entry simply has no recorded source, which is not an error. Format: [FILE_FORMAT.md](../FILE_FORMAT.md#sources-statuses-and-required-features-schema-revision-d-213).
 
 ## How do I find what is still open?
 

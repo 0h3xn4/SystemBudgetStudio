@@ -11,7 +11,7 @@ Every file has these keys at the top level:
 | Key | Meaning |
 |---|---|
 | `result_format` | `{"name": "system-budget-studio-result", "kind": <kind>, "version": 1}`. Check `name` and `version` first. `version` changes only when a key is renamed, removed or changes meaning; adding a key does not change it. |
-| `provenance` | What produced the file: `tool`, `tool_version`, `python_version`, `libraries` (name and version pairs), `project_name`, `project_revision`, `scenario`, `generated` (UTC), `user`, `inputs_digest`, `input_files`, `parameters`. |
+| `provenance` | What produced the file: `tool`, `tool_version`, `python_version`, `libraries` (name and version pairs), `project_name`, `project_revision`, `scenario`, `generated` (UTC), `user`, `inputs_digest`, `input_files`, `parameters`, `illustrative_inputs` (how many inputs the project marks as invented sample values). |
 | `incomplete` | `true` when the report carries the INCOMPLETE banner (a result needs a placeholder). Not in `scenario_environment` and `comparison`. |
 | `problems` | Load and result problems: `severity`, `code`, `message`, `file`, `path`, `line`, `hint`, and for a finding that compares a number with a limit also `actual`, `limit` and `unit` (the number found, the limit and the unit; absent for the others). The rule behind each `code` is in [PROBLEMS.md](PROBLEMS.md). Not in `scenario_environment` and `comparison`. |
 | `assumptions` | The configuration numbers the result used: `name`, `value`, `unit`, `source`, `file`, `path`, `placeholder`. Not in `scenario_environment` and `comparison`. |

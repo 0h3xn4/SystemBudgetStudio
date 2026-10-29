@@ -372,6 +372,8 @@ Scenario
 static (no scenario)
 Inputs digest (model)
 sha256:c51435aeae5340d1d83ab37bb984daa8b88f1964949527c668f624e6b21ad12e
+Illustrative inputs
+0
 Generated (UTC)
 2026-01-02T03:04:05Z
 User
