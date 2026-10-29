@@ -37,6 +37,7 @@ from PySide6.QtWidgets import (
 
 from budget_core import APP_NAME
 from budget_core.explain import Explainer, ExplainError
+from budget_core.input_sources import entries_for, has_provenance, set_entry
 from budget_core.model import (
     Ebn0Table,
     Expendable,
@@ -46,6 +47,7 @@ from budget_core.model import (
     Scenario,
     Target,
 )
+from budget_core.model.annotations import ProvenanceEntry, stable_path
 from budget_core.new_ebn0 import Ebn0Answers, check_ebn0, ebn0_entry_data, ebn0_table_data
 from budget_core.new_expendable import ExpendableAnswers, expendable_data
 from budget_core.new_link import LinkAnswers, link_data
@@ -72,7 +74,7 @@ from budget_gui.explain_panel import ExplainPanel
 from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
-from budget_gui.inspector import CellInfo, InspectorPanel
+from budget_gui.inspector import CellInfo, InspectorPanel, SourceInfo
 from budget_gui.layout_settings import (
     MOTION,
     OPEN_STATES,
@@ -318,6 +320,7 @@ class MainWindow(QMainWindow):
         self.inspector.open_requested.connect(self.tree.activate_current)
         self.inspector.modes_requested.connect(lambda unit_id: self.show_unit(unit_id))
         self.inspector.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
+        self.inspector.source_requested.connect(self._record_source)
         self.tree.unit_requested.connect(lambda unit_id: self.show_unit(unit_id))
         self.problems_panel.jump_requested.connect(lambda rel, line: self.open_file(rel, line))
         self._export_folder = Path()
@@ -1172,6 +1175,9 @@ class MainWindow(QMainWindow):
         if found is None:
             return
         state = model.state_of(row, column)
+        source = None
+        if page is not self.inputs_page:  # the Inputs grid shows the source of a number itself
+            source = self._source_info(found[0], found[1])
         self.inspector.show_cell(
             CellInfo(
                 title=model.label_of(model.row_keys()[row]),
@@ -1182,8 +1188,31 @@ class MainWindow(QMainWindow):
                 state=theme.STATUS_LABELS[state] if state is not None else "",
                 message=model.message_at(found, hint=True) or "",
                 help=model.column_tip(model.columns[column]),
+                source=source,
             )
         )
+
+    def _source_info(self, rel: str, path: tuple[str | int, ...]) -> SourceInfo | None:
+        """What the file records about the source of the number at `path`; None for a value that
+        is not a number or a file that keeps no sources (D-213)."""
+        value = self.document.value(rel, path)
+        if not has_provenance(rel) or isinstance(value, bool) or not isinstance(value, int | float):
+            return None
+        stable = stable_path(self.document.data(rel), path)
+        own, default = entries_for(self.document.data(rel), stable)
+        return SourceInfo(stable, own, default)
+
+    def _record_source(self, rel: str, key: str, entry: object) -> None:
+        """Write (or remove) the source entry the Inspector asked for: one undo step."""
+        if not isinstance(entry, ProvenanceEntry | None):
+            return
+        where = "the whole file" if key == "*" else key
+        text = f"Edit the source of {where}" if entry else f"Remove the source of {where}"
+        if self.document.edit([(rel, lambda data: set_entry(data, key, entry))], text):
+            self.toast.show_message(
+                f"Source of {where} {'recorded' if entry else 'removed'}. Undo with Ctrl+Z."
+            )
+        self._inspect_cell()
 
     def _inspect(self) -> None:
         """The Inspector follows the selected node of the tree."""
