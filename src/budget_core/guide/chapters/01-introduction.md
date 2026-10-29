@@ -9,6 +9,7 @@ System Budget Studio computes power, mass, thermal and RF link budgets for a spa
 - **Thermal budget**: heat dissipation by unit, subsystem, node and mode, and a steady-state node model with hot and cold cases checked against unit temperature limits.
 - **Link budget**: EIRP, path loss, G/T, C/N0, Eb/N0 and margin in a table at chosen elevations, and over every ground-station pass with the margin-constrained data rate and the data volume per pass and per day.
 - **Reports and exports** in XLSX, PDF and DOCX, plus CSV for every table and time series and JSON for other tools.
+- **Traceability**: select any number and **Explain** it (equation, inputs, the file each came from); record the source and status of an input; see everything the tool assumes on one page; and choose the shadow, Earth and irradiance models of a scenario.
 - **Comparison** of two project revisions, or two scenarios, with the differences highlighted.
 
 ## Principles you can rely on

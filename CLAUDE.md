@@ -7,7 +7,7 @@ Docs index: `docs/README.md` (change the docs with the code: `docs/developer/REA
 - Test: `QT_QPA_PLATFORM=offscreen pytest` (offline test: `pytest tests/offline`)
 - Lint/type: `ruff check . && ruff format --check . && mypy`
 - Lock: `packaging/lock.sh` (uv, hashes)
-- Regenerate generated files after model changes: `budget export-schemas src/budget_core/schemas` and `budget export-examples examples --force` (tests fail on drift)
+- Regenerate generated files after model changes: `budget export-schemas src/budget_core/schemas` and `budget export-examples examples --force`; after a problem code, a setting or a model choice: `budget problems --markdown > docs/PROBLEMS.md`, `budget settings --markdown > docs/models/settings.md`, `budget choices --markdown > docs/models/choices.md` (tests fail on drift)
 - Package: `pyinstaller packaging/system_budget_studio.spec` (Linux release: `packaging/linux/build_in_container.sh` in `rockylinux:9`)
 - Licences: `python packaging/licence_check.py --markdown docs/LICENCES.md` (permissive or LGPL only); user guide: `budget guide --out guide`
 
@@ -21,6 +21,7 @@ Docs index: `docs/README.md` (change the docs with the code: `docs/developer/REA
 - Example projects: invented data only.
 - Problem `message` and `hint` texts never contain values read from project files (field names, ids and units only). A numeric finding carries them in `actual`/`limit`/`unit`, shown in the window and written to result files, never printed by the command line or logged (D-207). Every problem code has an entry in `budget_core/problem_catalogue.py` (a test checks it); `docs/PROBLEMS.md` is generated from it.
 - File format: `docs/FILE_FORMAT.md`. Schema changes need a version bump and a migration.
+- Constants and modelling choices are registered: a numeric constant needs an entry in `budget_core/settings.py` (a test finds the ones that have none); a selectable model is an entry of `budget_core/model_choices.py` with a source, an independent reference test, and a default that is the earlier behaviour, so it changes no result.
 
 ## UI design rules (the window; full text in `docs/DESIGN.md`, brief in `docs/ui/UI_OVERHAUL.md`)
 - Colours, fonts and pixel sizes live in `budget_gui/theme/` only (a test fails on a hex colour, a font family, a pixel size in a Qt size call or `setStyleSheet` anywhere else). Take sizes from the scales (`theme.gap(i)`, `theme.inset(h, v)`, `theme.px(theme.CONSTANT)`), fonts from `theme.ui_font()` / `theme.mono_font()`, colours from `theme.tokens()`; widgets that paint themselves connect to `theme.manager().changed`.

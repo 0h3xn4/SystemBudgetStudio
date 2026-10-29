@@ -32,7 +32,11 @@ An orbit window is one revolution of the angle in the orbit plane, counted from 
 
 ## Simplifications
 
-[DV-P4](../DEVIATIONS.md) (the battery is an energy store with constant efficiencies), DV-P5 (constant irradiance, no albedo, perfect pointing), DV-P6 (the Sun direction is sampled at the start of a step).
+[DV-P4](../DEVIATIONS.md) (the battery is an energy store with constant efficiencies), DV-P5 (a constant irradiance unless the scenario chooses the seasonal model, no albedo, perfect pointing), DV-P6 (the Sun direction is sampled at the start of a step).
+
+## Choices
+
+Two choices of the scenario change this model, both with the constant model and WGS-84 as the default ([model choices](choices.md)). `irradiance_model: seasonal` reads `solar_irradiance_wm2` as the value at 1 AU and multiplies the array output of every step by (1 AU / R)² (equation `ENV-IRRADIANCE`), with the Earth-Sun distance R of the Sun model at the start of the grid step, the same sampling as the Sun direction; the factor is about 1.034 in early January and 0.967 in early July. `earth_model` changes the orbit and the shadow sphere, and so the eclipse times. The load basis (`--load-basis nominal|margined`) chooses which demand of a mode is used. A report names each of them in its run parameters.
 
 ## Explain
 

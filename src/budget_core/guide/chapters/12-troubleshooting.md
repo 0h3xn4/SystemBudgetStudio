@@ -11,6 +11,7 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `ID_UNUSUAL`, `ID_COLLISION`, `ID_INVALID` | (Warnings, and an error for `ID_INVALID`) The id is the file name without `.yaml`. Use letters, digits, `_` and `-`; a name that starts with a dot, or two names that differ only in capitals, cannot be used safely. |
 | `KIND_MISMATCH`, `SCHEMA_VERSION_MISSING`, `SCHEMA_TOO_NEW`, `SCHEMA_MIGRATION_MISSING`, `SCHEMA_MIGRATION_FAILED` | The file is of another kind or from a newer or unsupported version. Check the first two lines. |
 | `FEATURE_UNSUPPORTED` | `project.yaml` lists in `requires:` a feature this version does not have. Open the project with a newer release. |
+| `FEATURE_NOT_DECLARED` | (Warning) The project uses a model choice that older versions do not know (an Earth model other than WGS-84, an irradiance model other than constant) and does not list `model_choices` under `requires:`. Add it, so that an older version refuses the project; the scenario editor does it for you. |
 | `PROVENANCE_PATH_UNKNOWN` | (Warning) A key of a file's `provenance:` names an input the file does not have (a renamed or removed field). Correct the key or delete the entry; no result is affected. |
 | `FIELD_MISSING`, `FIELD_UNKNOWN`, `FIELD_INVALID`, `UNIT_INVALID`, `DUPLICATE_NAME`, `DUPLICATE_ID` | Fix the named field: it is missing, misspelled, out of range, has an unknown unit or repeats a name. |
 | `SOURCE_MISSING` | A sourced number has no `source`. Write the source, or `TBD` if you do not have it yet. |
@@ -18,6 +19,7 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `CONFIG_VALUE_INVALID`, `CONFIG_MISSING`, `CONFIG_PLACEHOLDER`, `CONFIG_EMPTY_TABLE` | A configuration number is invalid, a file is absent, a number is still a placeholder, or a table is empty. |
 | `THERMAL_NODE_UNKNOWN`, `REF_UNKNOWN_CASE` | A thermal node or case name is not defined. |
 | `SCENARIO_OPTION_IGNORED` | (Warning) A scenario option does not apply to its environment source (an `import_dir` with orbit elements, an `orbit` with an imported environment). |
+| `MODEL_CHOICE_IGNORED` | (Warning) The Earth model does not apply to an orbit given as a TLE, which is propagated on WGS-72. Remove the option or give the orbit as elements. |
 | `SCENARIO_PHASE_NO_DOD` | (Warning) The scenario's mission phase has no allowed depth of discharge under `battery.max_dod_ratio`, so that check is not evaluated. |
 | `REF_UNKNOWN_STATION`, `REF_UNKNOWN_ATTENUATION`, `REF_UNKNOWN_MODULATION`, `LINK_ANTENNA_PATTERN_GROUND`, `LINK_PATTERN_FILE_MISSING`, `LINK_INPUT_INVALID` | A link points to something missing, or a ground antenna has a pattern, or a pattern file cannot be read. |
 | `REF_UNKNOWN_ORBIT`, `REF_UNKNOWN_SITE`, `REF_UNKNOWN_MODE`, `IMPORT_DIR_MISSING`, `ORBIT_INVALID` | A scenario points to an orbit, site or mode that does not exist, or the imported environment folder is missing. |

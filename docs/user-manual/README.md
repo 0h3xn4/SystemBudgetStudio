@@ -8,6 +8,7 @@ This is the task-by-task manual for System Budget Studio: each page answers a fe
 | [Describe the spacecraft](describe-the-spacecraft.md) | How do I add or remove a unit, its power modes and a spacecraft mode? How do I type units? |
 | [Unit data in a spreadsheet](unit-tables.md) | How do I export the unit power modes to a table, fill it in, and import it back safely? |
 | [Placeholders and sources](placeholders-and-sources.md) | What does *n/a* or INCOMPLETE mean? How do I fill in a margin or an efficiency properly? |
+| [Trace a number](trace-a-number.md) | How do I see how a number was worked out? Where did an input come from? What does the tool assume that I did not type? Which model is used, and can I choose another? |
 | [Power budget](power-budget.md) | How do I get the power per mode? How do I check the solar array and battery over an orbit? |
 | [Mass budget](mass-budget.md) | How do I get mass, centre of gravity and inertia, per phase, against a limit? How do I add propellant or an oxidizer? |
 | [Thermal budget](thermal-budget.md) | How do I get heat dissipation and unit temperatures for a hot and a cold case? |

@@ -21,6 +21,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [user-manual/describe-the-spacecraft.md](user-manual/describe-the-spacecraft.md) | Units, power modes, spacecraft modes, buses, phases |
 | [user-manual/unit-tables.md](user-manual/unit-tables.md) | Export unit power modes to CSV/XLSX, fill them in, import them back |
 | [user-manual/placeholders-and-sources.md](user-manual/placeholders-and-sources.md) | *n/a*, INCOMPLETE, how to enter a sourced number |
+| [user-manual/trace-a-number.md](user-manual/trace-a-number.md) | Explain a number, record where an input came from, the Assumptions page, the model choices, verify a result |
 | [user-manual/power-budget.md](user-manual/power-budget.md) | Static and time-domain power budgets |
 | [user-manual/mass-budget.md](user-manual/mass-budget.md) | Mass, centre of gravity, inertia, phases, limits |
 | [user-manual/thermal-budget.md](user-manual/thermal-budget.md) | Dissipation, node temperatures, unit limits |
@@ -43,6 +44,8 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [FILE_FORMAT.md](FILE_FORMAT.md) | Every project file, field and problem code |
 | [PROBLEMS.md](PROBLEMS.md) | Every problem code: the rule, why it matters, what to do (generated from the tool) |
 | [ENVIRONMENT_FORMAT.md](ENVIRONMENT_FORMAT.md) | Scenario files, orbits, and the interim SpaceMissionStudio format |
+| [RESULT_FORMAT.md](RESULT_FORMAT.md) | The layout of every JSON result file (envelope, kinds, keys) for tools that read them |
+| [models/](models/README.md) | One page per model, rule and assumption, for systems engineers: the equations of each budget, how Explain works, provenance, and the generated lists of [settings](models/settings.md) and [model choices](models/choices.md) |
 | [THERMAL_SOURCES.md](THERMAL_SOURCES.md) | Candidate reference sources for the numbers a thermal engineer must supply |
 | [LICENCES.md](LICENCES.md) | Licences of every runtime dependency |
 | [SPEC.md](SPEC.md) | The original requirements (written as a brief to the implementer; authoritative). Its design-system item (IBM Carbon, item 18) was replaced for the window by [decision D-168](DECISIONS.md) and [DESIGN.md](DESIGN.md) |
@@ -78,9 +81,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [transparency_p3_design.md](transparency_p3_design.md) | Design of the file-format revision for provenance (P3): a `provenance:` mapping for plain inputs, the `illustrative` status, `requires:` in the project file, one version step with an identity migration (accepted and built, D-213 to D-216) |
 | [transparency_p4_design.md](transparency_p4_design.md) | Design of model settings and the Assumptions panel (P4): a catalogue of every setting, tolerance and constant, a project file for the settings meant to be changed, and one list of everything active (proposed, for review; nothing implemented) |
 | [transparency_p5_design.md](transparency_p5_design.md) | Design of selectable models (P5): a registry of modelling choices (shadow geometry, Earth constants, array irradiance, load basis) with a visible active choice, and of the models that stay fixed and why; proposed, for review |
-| [RESULT_FORMAT.md](RESULT_FORMAT.md) | The layout of every JSON result file (envelope, kinds, keys) for tools that read them |
 | [changes.md](changes.md) | Every change that moved a number or refused an input that was accepted before, with values before and after |
-| [models/](models/README.md) | One page per model, rule and assumption, for systems engineers (index; pages are added with the features) |
 | [UX_STANDARD.md](UX_STANDARD.md) | The UX/UI standard the window was redesigned to (the owner's brief; the design system itself is [DESIGN.md](DESIGN.md)) |
 | [DESIGN.md](DESIGN.md) | The design system of the window: colour tokens, status styles, cell styles, type and spacing, components, icons, the shell, the layout file, shortcuts, accessibility, UI sizes, responsiveness (generated tables, kept true by a test) |
 | [ux-audit.md](ux-audit.md) | The UX audit of the 1.0.0 window: findings, screenshots, measurements, decisions needed (historical; the window has been redesigned since) |

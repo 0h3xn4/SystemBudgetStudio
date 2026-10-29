@@ -18,7 +18,7 @@ This page takes you from nothing to a first result: install the tool, run a budg
 sudo apt install libxcb-cursor0          # Ubuntu / Debian
 ```
 
-On RHEL or Rocky the window needs the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)), and `xcb-util-cursor`, which is not in their own repositories but in EPEL: `sudo dnf install epel-release` (on RHEL itself: the `epel-release` package from the Fedora project's EPEL page), then `sudo dnf install xcb-util-cursor`.
+On RHEL or Rocky the window needs the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/13-installation.md)), and `xcb-util-cursor`, which is not in their own repositories but in EPEL: `sudo dnf install epel-release` (on RHEL itself: the `epel-release` package from the Fedora project's EPEL page), then `sudo dnf install xcb-util-cursor`.
 
 ## 2. Install
 
@@ -27,8 +27,8 @@ Use a virtual environment so the tool's libraries stay out of your system Python
 Linux:
 
 ```bash
-git clone https://github.com/0h3xn4/systembudgetstudio.git
-cd systembudgetstudio
+git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+cd SystemBudgetStudio
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -37,8 +37,8 @@ pip install -e .
 Windows (PowerShell):
 
 ```powershell
-git clone https://github.com/0h3xn4/systembudgetstudio.git
-cd systembudgetstudio
+git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+cd SystemBudgetStudio
 py -3 -m venv .venv
 .venv\Scripts\Activate.ps1
 pip install -e .
@@ -190,6 +190,7 @@ You should see the window below: the **navigation rail** on the far left with th
 - **Power → Budget** is the table you saw in the XLSX file; **Mass**, **Thermal** and **Link → Budget** are the other static budgets. Cells with `n/a` have a marker and a tooltip that says which kind of input is missing.
 - Press **Run** (Ctrl+R) to work out the scenario you ran above, the power timeline and the link passes in one go; the chip next to it says when they are up to date. In **Power → Timeline**, hover over a plot to read the values at that time; the wheel zooms, dragging pans, a double-click shows everything again, a click pins a second cursor (the readout then shows differences) and Escape unpins it. The shaded bands are eclipses and passes. Click a row of the **Violations** table to zoom to that interval.
 - In the focused view the **Problems** panel is one line of counts: press **Show problems** to open the list (**F8**, **Show the first error** and the *not checked* link in the status bar open it for you). Double-click (or Enter on) a row to jump to the file and line it names; **F8** goes to the next problem. Press Enter on a file in the tree to edit it; **Ctrl+S** saves, and the budgets update. If you make a mistake the tables keep the last results that worked, with a yellow banner that says so.
+- Select a value in any table and press **Ctrl+Shift+I** to see how it was worked out (the equation, the inputs and the file each came from); **View → Show the assumptions** (Ctrl+Shift+A) lists everything the tool applies next to your own numbers ([trace a number](user-manual/trace-a-number.md)).
 - **File → Export reports** (Ctrl+E), or the **Reports** area, writes the same files as the command line.
 - **Ctrl+K** finds any command, unit, file or scenario by a few letters of its name. **Settings** at the bottom of the rail changes the theme (light, dark or the system's), the UI size and reduce-motion; the [window page](user-manual/use-the-window.md) lists the shortcuts.
 - **File → New project (guided)** (Ctrl+N) builds a new project in five short pages, from a sample spacecraft or as a blank project of your own; a project that is not finished shows a **Start here** card with four steps, and the **Edit** menu has **Add unit** (Ctrl+Shift+N), **Add spacecraft mode** (Ctrl+Shift+M) and **Add scenario** (Ctrl+Shift+O) with their removals, and **Add expendable** (Ctrl+Shift+X), **Add ground station** (Ctrl+Shift+G), **Add imaging target** (Ctrl+Shift+T) **Add link** (Ctrl+Shift+L) **Add Eb/N0 entry** (Ctrl+Shift+B) and **Remove from project** (Ctrl+Shift+R, for an expendable, a site or a link) ([create a project](user-manual/create-a-project.md#how-do-i-start-a-blank-project)).
@@ -217,6 +218,6 @@ The lock file (`requirements.lock`) pins every runtime library with a hash, so w
 
 ## Installers
 
-The [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest) has a Windows installer (per user, no administrator rights; it brings its own Python, asks only for the folder and puts `budget` on your user PATH, so open a new terminal afterwards), a Windows portable ZIP, a Linux tarball with `install.sh` (per user, no administrator rights), a `.deb` for Ubuntu and Debian and an `.rpm` for RHEL and Rocky (both for all users, installed with `sudo apt install ./file.deb` or `sudo dnf install ./file.rpm`, and they bring in the system libraries the window needs; on RHEL and Rocky enable EPEL first with `sudo dnf install epel-release`), with `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` to check the downloads; or install from source as above. The steps are in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)) and the [clean-machine checklist](INSTALL_CHECKLIST.md).
+The [Releases page](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest) has a Windows installer (per user, no administrator rights; it brings its own Python, asks only for the folder and puts `budget` on your user PATH, so open a new terminal afterwards), a Windows portable ZIP, a Linux tarball with `install.sh` (per user, no administrator rights), a `.deb` for Ubuntu and Debian and an `.rpm` for RHEL and Rocky (both for all users, installed with `sudo apt install ./file.deb` or `sudo dnf install ./file.rpm`, and they bring in the system libraries the window needs; on RHEL and Rocky enable EPEL first with `sudo dnf install epel-release`), with `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` to check the downloads; or install from source as above. The steps are in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/13-installation.md)) and the [clean-machine checklist](INSTALL_CHECKLIST.md).
 
 Next: the [user manual](user-manual/README.md) (task by task), the [examples](../examples/README.md), or [troubleshooting](troubleshooting.md) if something did not work.

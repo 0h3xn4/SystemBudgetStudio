@@ -38,7 +38,15 @@ A warning is something open (a placeholder, an empty table). An error is an inva
 
 ### Can I trust the equations?
 
-They are textbook relations, each named in the *Equations and sources* chapter of the user guide. Where the reference text has not been attached the equation is flagged `SOURCE_MISSING`; treat such results as engineering estimates until your team has confirmed them. The simplifications of the physics are listed in [DEVIATIONS.md](DEVIATIONS.md) (perfect pointing, no albedo for the array, one array temperature, steady-state thermal only, and so on).
+They are textbook relations, each named in the *Equations and sources* chapter of the user guide. Where the reference text has not been attached the equation is flagged `SOURCE_MISSING` (38 of the 41 at the moment); treat such results as engineering estimates until your team has confirmed them. The simplifications of the physics are listed in [DEVIATIONS.md](DEVIATIONS.md) (perfect pointing, no albedo for the array, one array temperature, steady-state thermal only, and so on).
+
+### How do I see how a number was worked out, or where an input came from?
+
+Select the value and press Ctrl+Shift+I (or `budget explain`): the equation, the inputs with the file each came from, and the steps. An input can record its source and status in the Inspector or with `budget source`. The Assumptions page (Ctrl+Shift+A) lists everything the tool applies besides what you typed ([trace a number](user-manual/trace-a-number.md)).
+
+### Can I change the Earth model, the shadow or the irradiance?
+
+Yes, per scenario, from the drop-downs in *Model → Scenario*: the shadow (cylindrical or conical), the Earth constants (WGS-84 or WGS-72) and the array irradiance (constant or seasonal). The other models (the orbit propagation, the Sun, the thermal model) are fixed simplifications, and the tool's own settings and tolerances are shown but not yet changeable; `budget choices` and the Assumptions page say which is which ([model choices](models/choices.md)).
 
 ### Can I use dB and linear values together?
 

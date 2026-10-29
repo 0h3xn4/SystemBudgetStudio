@@ -40,7 +40,7 @@ qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it 
 This application failed to start because no Qt platform plugin could be initialized.
 ```
 
-A system library is missing. On Ubuntu or Debian: `sudo apt install libxcb-cursor0`. On RHEL or Rocky install the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/12-installation.md)) and `xcb-util-cursor`, which is in EPEL and not in their own repositories: `sudo dnf install epel-release`, then `sudo dnf install xcb-util-cursor`. The command-line `budget` does not need it. To see what else is missing: `QT_DEBUG_PLUGINS=1 system-budget-studio`.
+A system library is missing. On Ubuntu or Debian: `sudo apt install libxcb-cursor0`. On RHEL or Rocky install the Qt libraries listed in the user guide chapter *Installing and uninstalling* ([source](../src/budget_core/guide/chapters/13-installation.md)) and `xcb-util-cursor`, which is in EPEL and not in their own repositories: `sudo dnf install epel-release`, then `sudo dnf install xcb-util-cursor`. The command-line `budget` does not need it. To see what else is missing: `QT_DEBUG_PLUGINS=1 system-budget-studio`.
 
 ### "This plugin does not support propagateSizeHints()"
 
@@ -121,6 +121,18 @@ The power timeline needs `config/power_system.yaml` with a complete array and ba
 ### Same inputs, different file bytes
 
 Reports include the generation time and the user. Pass `--user` and `--date` to regenerate exactly: [reports and exports](user-manual/reports-and-exports.md#how-do-i-regenerate-a-report-exactly).
+
+### `budget verify` says DIFFERENT for the inputs digest, but I changed nothing
+
+The export was made by a version before 2.0.0. The digest is taken from the project as loaded and includes the schema version of each file, which 2.0.0 moved up, so every project has a new digest although its inputs are the same. The file hashes tell which files differ (`budget verify` names them); a project that was only re-saved shows the same numbers. Regenerate the export with 2.0.0 to get a digest that `verify` can match ([what changed](changes.md)).
+
+### A project is refused: `SCHEMA_TOO_NEW` or `FEATURE_UNSUPPORTED`
+
+The project was written by a newer version than the one you run: a file has a newer schema version (`SCHEMA_TOO_NEW`), or `project.yaml` lists under `requires:` a feature this version does not have (`FEATURE_UNSUPPORTED`, today `model_choices`, written when a scenario chooses another Earth or irradiance model). Open it with a version that has the feature; nothing in the project is changed by being refused.
+
+### Warnings `FEATURE_NOT_DECLARED` or `MODEL_CHOICE_IGNORED`
+
+`FEATURE_NOT_DECLARED`: a scenario chooses a model that older versions do not know (`earth_model` other than `wgs84`, `irradiance_model` other than `constant`) and `project.yaml` does not list `model_choices` under `requires:`. Add the line, or choose the model again in *Model → Scenario*, which writes it. `MODEL_CHOICE_IGNORED`: `earth_model` was set on a scenario whose orbit is a TLE; a TLE is propagated on WGS-72 whatever the setting, so remove the line or give the orbit as elements ([scenarios](user-manual/scenarios.md#how-do-i-choose-the-earth-model-and-the-irradiance-model)).
 
 ### The run is slow
 
