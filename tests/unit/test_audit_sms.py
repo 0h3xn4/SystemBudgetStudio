@@ -144,7 +144,8 @@ def test_an_unknown_time_of_maximum_is_empty_in_csv_and_null_in_json(tmp_path: P
     from budget_core.scenario import export
 
     env = compute(folder_with(tmp_path, profile=None))
-    run = SimpleNamespace(env=env, scenario_id="s", timeline=[], notes=[])
+    scenario = SimpleNamespace(irradiance_model="constant")
+    run = SimpleNamespace(env=env, scenario_id="s", scenario=scenario, timeline=[], notes=[])
     text = export.passes_csv(run)  # type: ignore[arg-type]
     header, first = text.splitlines()[0].split(","), text.splitlines()[1].split(",")
     assert first[header.index("time_of_max_s")] == ""
