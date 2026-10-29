@@ -380,3 +380,87 @@ def test_a_report_built_from_an_example_says_it_has_invented_numbers(tmp_path: P
     assert document["provenance"]["illustrative_inputs"] > 0
     csv = (out / "mass_static_provenance.csv").read_text(encoding="utf-8")
     assert "Illustrative inputs" in csv
+
+
+# ---- helpers for the window (P3b-2) ------------------------------------------------------------
+
+
+def test_stable_path_selects_a_list_item_by_name_when_that_is_safe() -> None:
+    from budget_core.model.annotations import stable_path
+
+    data = {
+        "modes": [
+            {"name": "idle"},
+            {"name": "imaging"},
+            {"name": "7"},
+            {"name": "a"},
+            {"name": "a"},
+        ]
+    }
+    assert stable_path(data, ("modes", 1, "avg_power_w")) == "modes[imaging].avg_power_w"
+    assert stable_path(data, ("modes", 2, "avg_power_w")) == "modes[2].avg_power_w", "a number"
+    assert stable_path(data, ("modes", 3, "x")) == "modes[3].x", "a name used twice"
+    assert stable_path(data, ("mass_kg",)) == "mass_kg"
+    assert stable_path({"a": [[1, 2]]}, ("a", 0, 1)) == "a[0][1]"
+
+
+def test_covering_entry_finds_the_own_entry_then_the_default() -> None:
+    from budget_core.input_sources import covering_entry
+
+    data = {
+        "mass_kg": 1.0,
+        "modes": [{"name": "idle", "avg_power_w": 1.0}, {"name": "imaging", "avg_power_w": 5.0}],
+        "provenance": {
+            "*": {"source": "Invented", "status": "illustrative"},
+            "modes[imaging].avg_power_w": {"source": "TVAC", "note": "n"},
+            "broken": "not an entry",
+        },
+    }
+    key, entry = covering_entry(data, "modes[1].avg_power_w") or ("", None)
+    assert key == "modes[imaging].avg_power_w" and entry is not None and entry.source == "TVAC"
+    key, entry = covering_entry(data, "mass_kg") or ("", None)
+    assert key == "*" and entry is not None and entry.status == "illustrative"
+    assert covering_entry({"mass_kg": 1.0}, "mass_kg") is None
+    assert covering_entry({"mass_kg": 1.0, "provenance": []}, "mass_kg") is None
+
+
+def test_set_entry_writes_and_removes_and_drops_an_empty_mapping() -> None:
+    from budget_core.input_sources import set_entry
+    from budget_core.model.annotations import ProvenanceEntry
+
+    data: dict = {"mass_kg": 1.0}
+    set_entry(data, "mass_kg", ProvenanceEntry(source="S", note="n", status="estimate"))
+    assert data["provenance"] == {"mass_kg": {"source": "S", "note": "n", "status": "estimate"}}
+    set_entry(data, "mass_kg", ProvenanceEntry(source="T"))
+    assert data["provenance"] == {"mass_kg": {"source": "T"}}, "the default status is not written"
+    set_entry(data, "mass_kg", None)
+    assert "provenance" not in data
+    set_entry(data, "mass_kg", None)  # nothing to remove is not an error
+    assert data == {"mass_kg": 1.0}
+
+
+def test_only_the_entity_files_can_hold_a_provenance() -> None:
+    from budget_core.input_sources import has_provenance
+
+    for rel in ("spacecraft.yaml", "units/a.yaml", "modes/a.yaml", "orbits/a.yaml", "links/a.yaml"):
+        assert has_provenance(rel), rel
+    for rel in ("project.yaml", "config/margin_policy.yaml", "results/x.yaml"):
+        assert not has_provenance(rel), rel
+
+
+def test_entries_for_gives_the_own_entry_and_the_default_separately() -> None:
+    from budget_core.input_sources import entries_for
+
+    data = {
+        "modes": [{"name": "idle", "avg_power_w": 1.0}, {"name": "imaging", "avg_power_w": 5.0}],
+        "provenance": {
+            "*": {"source": "Invented", "status": "illustrative"},
+            "modes[imaging].avg_power_w": {"source": "TVAC"},
+        },
+    }
+    own, default = entries_for(data, "modes[1].avg_power_w")
+    assert own is not None and own[0] == "modes[imaging].avg_power_w" and own[1].source == "TVAC"
+    assert default is not None and default.source == "Invented"
+    own, default = entries_for(data, "modes[0].avg_power_w")
+    assert own is None and default is not None
+    assert entries_for({"mass_kg": 1.0}, "mass_kg") == (None, None)

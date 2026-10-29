@@ -43,6 +43,7 @@ budget source my_satellite units/obc.yaml "*" --source "Invented example value" 
 
 - The path is the one **Explain** and the Problems panel use; `[imaging]` selects a power mode by its name, so adding or removing a mode does not move the entry. `*` is the default for every number of the file that has no entry of its own.
 - The status is `sourced` (the default), `estimate` (an engineering estimate; the source says whose), `illustrative` (an invented sample value, not for use) or `tbd` (a placeholder). The sourced numbers of `config/` can carry `status: estimate` or `status: illustrative` too; `budget source my_satellite config/margin_policy.yaml system_power_margin_ratio --source "…"` sets one.
+- In the window, select a number in the **Units** or **Power modes** grid: the **Inspector** shows its **Source** (choose *This input* or *Whole file*, write the source and a note, pick the status, press *Set source*). Each change is one undo step (Ctrl+Z) and is saved with the file like any other edit. The Inputs grid shows the source of a sourced number in its own columns.
 - `--clear` removes an entry. The command writes the file in place and keeps its comments; if the file cannot be edited in place and has comments, it stops and says so (`--rewrite` writes the file whole).
 - `budget source my_satellite` counts the inputs by status, and `--list illustrative` (or `sourced`, `estimate`, `tbd`, `none`) names them, with their file and path.
 

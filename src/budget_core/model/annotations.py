@@ -9,7 +9,7 @@ model digest.
 from __future__ import annotations
 
 import re
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping, Sequence
 from typing import Any, Literal, NamedTuple
 
 from pydantic import Field, field_validator
@@ -125,18 +125,67 @@ def unknown_paths(data: dict[str, Any]) -> list[str]:
     return sorted(missing)
 
 
-def find_entry(
-    data: dict[str, Any], entries: Mapping[str, ProvenanceEntry], path: str
-) -> ProvenanceEntry | None:
-    """The entry for the input at `path` (as the Problems panel and Explain write it): the entry
-    whose key reaches the same input, else the `*` entry, else None. `data` is the file as plain
-    data."""
+def own_key(data: dict[str, Any], keys: Iterable[str], path: str) -> str | None:
+    """The key of the entry that is written for exactly the input at `path` (not `*`)."""
     body = {k: v for k, v in data.items() if k != "provenance"}
     wanted_tokens = parse_path(path)
     wanted = resolve_path(body, wanted_tokens) if wanted_tokens is not None else None
+    if wanted is None:
+        return None
+    for key in keys:
+        tokens = parse_path(key) if key != DEFAULT_KEY else None
+        if tokens is not None and resolve_path(body, tokens) == wanted:
+            return key
+    return None
+
+
+def find_key(data: dict[str, Any], keys: Iterable[str], path: str) -> str | None:
+    """The key of the entry that covers the input at `path` (as the Problems panel and Explain
+    write it): the key that reaches the same input, else `*`, else None. `data` is the file as
+    plain data."""
+    body = {k: v for k, v in data.items() if k != "provenance"}
+    wanted_tokens = parse_path(path)
+    wanted = resolve_path(body, wanted_tokens) if wanted_tokens is not None else None
+    keys = list(keys)
     if wanted is not None:
-        for key, entry in entries.items():
+        for key in keys:
             tokens = parse_path(key) if key != DEFAULT_KEY else None
             if tokens is not None and resolve_path(body, tokens) == wanted:
-                return entry
-    return entries.get(DEFAULT_KEY)
+                return key
+    return DEFAULT_KEY if DEFAULT_KEY in keys else None
+
+
+def find_entry(
+    data: dict[str, Any], entries: Mapping[str, ProvenanceEntry], path: str
+) -> ProvenanceEntry | None:
+    """The entry that covers the input at `path`: its own, else the `*` entry, else None."""
+    key = find_key(data, entries, path)
+    return None if key is None else entries[key]
+
+
+def stable_path(data: Any, parts: Sequence[str | int]) -> str:
+    """The path of an input written to survive edits: an item of a list whose items have a unique
+    `name` is selected by it (`modes[imaging].avg_power_w`), any other item by its index."""
+    out = ""
+    node = data
+    for part in parts:
+        if isinstance(part, int):
+            name = None
+            if isinstance(node, list) and 0 <= part < len(node) and isinstance(node[part], dict):
+                name = node[part].get("name")
+            shown = str(part)
+            if (
+                isinstance(name, str)
+                and name
+                and not name.isdecimal()
+                and name == name.strip()
+                and not any(c in name for c in "[]")
+                and sum(1 for i in node if isinstance(i, dict) and i.get("name") == name) == 1
+            ):
+                shown = name
+            out += f"[{shown}]"
+            node = node[part] if isinstance(node, list) and part < len(node) else None
+        else:
+            out += f".{part}" if out else str(part)
+            node = node.get(part) if isinstance(node, dict) else None
+    return out

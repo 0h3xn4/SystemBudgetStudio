@@ -23,6 +23,8 @@ from budget_core.model.annotations import (
     ProvenanceEntry,
     Token,
     find_entry,
+    find_key,
+    own_key,
     parse_path,
     resolve_path,
 )
@@ -176,6 +178,70 @@ class Lookup:
             return None
         status = str(node.get("status", "sourced"))  # a placeholder shows its source, TBD
         return InputSource(rel, path, status, str(node["source"]), str(node.get("note", "")))
+
+
+def has_provenance(rel: str) -> bool:
+    """Whether the file `rel` of a project may hold a `provenance:` mapping (the configuration
+    files keep the source in the number itself)."""
+    return rel == "spacecraft.yaml" or rel.partition("/")[0] in {
+        folder for _attr, folder in _ENTITY_FOLDERS
+    }
+
+
+def covering_entry(data: dict[str, Any], path: str) -> tuple[str, ProvenanceEntry] | None:
+    """The `provenance` entry of a file's plain data that covers the input at `path`, with its
+    key; None when the file records nothing for it. Entries that do not read are ignored."""
+    raw = data.get("provenance")
+    if not isinstance(raw, dict):
+        return None
+    entries: dict[str, ProvenanceEntry] = {}
+    for key, item in raw.items():
+        try:
+            entries[str(key)] = ProvenanceEntry.model_validate(item)
+        except ValueError:
+            continue
+    key = find_key(data, entries, path)
+    return None if key is None else (key, entries[key])
+
+
+def entries_for(
+    data: dict[str, Any], path: str
+) -> tuple[tuple[str, ProvenanceEntry] | None, ProvenanceEntry | None]:
+    """What a file's plain data records for the input at `path`: the entry written for exactly
+    that input (with its key) and the `*` entry of the file, each None when absent."""
+    raw = data.get("provenance")
+    if not isinstance(raw, dict):
+        return None, None
+    entries: dict[str, ProvenanceEntry] = {}
+    for key, item in raw.items():
+        try:
+            entries[str(key)] = ProvenanceEntry.model_validate(item)
+        except ValueError:
+            continue
+    key = own_key(data, entries, path)
+    own = None if key is None else (key, entries[key])
+    return own, entries.get(DEFAULT_KEY)
+
+
+def set_entry(data: dict[str, Any], key: str, entry: ProvenanceEntry | None) -> None:
+    """Put `entry` under `key` in the `provenance` of a file's plain data, or remove the key
+    (`None`); an empty mapping is removed too."""
+    entries = data.get("provenance")
+    if not isinstance(entries, dict):
+        entries = {}
+    if entry is None:
+        entries.pop(key, None)
+    else:
+        item: dict[str, str] = {"source": entry.source}
+        if entry.note:
+            item["note"] = entry.note
+        if entry.status != "sourced":
+            item["status"] = entry.status
+        entries[key] = item
+    if entries:
+        data["provenance"] = entries
+    else:
+        data.pop("provenance", None)
 
 
 class SourceError(ValueError):
