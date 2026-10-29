@@ -211,6 +211,7 @@ def timeline_json(
         "environment": {
             "source": env.source,
             "shadow_model": env.shadow_model,
+            "earth_model": env.earth_model,
             "eclipse_fraction": env.eclipse_fraction,
             "orbits": len(result.windows),
         },

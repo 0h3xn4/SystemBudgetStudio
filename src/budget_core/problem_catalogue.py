@@ -148,6 +148,17 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "Open the project with a newer release of the tool.",
     ),
     _e(
+        "FEATURE_NOT_DECLARED",
+        WARN,
+        _READ,
+        "The project uses a feature it does not list in requires",
+        "A model choice that older versions do not know (the Earth model of a scenario) should "
+        "be listed in `requires:` of `project.yaml`, so that an older tool refuses the project.",
+        "An older tool would otherwise read the project and could give results for a different "
+        "model than the one chosen.",
+        "Add `model_choices` to `requires:` in project.yaml.",
+    ),
+    _e(
         "PROVENANCE_PATH_UNKNOWN",
         WARN,
         _READ,
@@ -552,6 +563,16 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "The elements or the TLE must describe an orbit above the Earth's surface.",
         "An orbit that touches the Earth cannot be propagated.",
         "Check the elements (a perigee below the surface is not valid) or the TLE lines.",
+    ),
+    _e(
+        "MODEL_CHOICE_IGNORED",
+        WARN,
+        _SCEN,
+        "A model choice does not apply to this orbit",
+        "The Earth model of a scenario applies to an orbit given as elements; a TLE is "
+        "propagated on WGS-72, the set SGP4 is defined on.",
+        "You may believe the TLE was propagated on the model you chose.",
+        "Remove the option, or give the orbit as elements.",
     ),
     _e(
         "ORBIT_EPOCH_FAR",

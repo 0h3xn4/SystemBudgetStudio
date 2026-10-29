@@ -103,6 +103,7 @@ def environment_json(run: ScenarioRun, provenance: Provenance) -> str:
         "scenario": run.scenario_id,
         "source": env.source,
         "shadow_model": env.shadow_model,
+        "earth_model": env.earth_model,
         "grid": {
             "start_utc": format_utc(env.grid.start),
             "duration_s": env.grid.duration_s,

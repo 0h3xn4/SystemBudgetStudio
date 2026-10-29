@@ -106,37 +106,44 @@ def topocentric(
     return elevation, azimuth, rng
 
 
-def _disk_geometry(r: NDArray, sun: NDArray) -> tuple[NDArray, NDArray, NDArray]:
+def _disk_geometry(
+    r: NDArray, sun: NDArray, radius_m: float = EARTH_RADIUS_M
+) -> tuple[NDArray, NDArray, NDArray]:
     """Apparent radius of the Sun, of the Earth, and the angle between the two disk centres, seen
     from `r` (radians)."""
     to_sun = sun - r
     dist_sun = np.linalg.norm(to_sun, axis=1)
     dist_earth = np.linalg.norm(r, axis=1)
     a = np.arcsin(np.clip(SUN_RADIUS_M / dist_sun, -1.0, 1.0))  # apparent Sun radius
-    b = np.arcsin(np.clip(EARTH_RADIUS_M / dist_earth, -1.0, 1.0))  # apparent Earth radius
+    b = np.arcsin(np.clip(radius_m / dist_earth, -1.0, 1.0))  # apparent Earth radius
     cos_c = -np.sum(r * to_sun, axis=1) / (dist_earth * dist_sun)
     sep = np.arccos(np.clip(cos_c, -1.0, 1.0))  # angular separation of the two disk centres
     return a, b, sep
 
 
-def shadow_margins(r: NDArray, sun: NDArray, model: str = "cylindrical") -> tuple[NDArray, NDArray]:
+def shadow_margins(
+    r: NDArray, sun: NDArray, model: str = "cylindrical", radius_m: float = EARTH_RADIUS_M
+) -> tuple[NDArray, NDArray]:
     """How far `r` is inside the shadow: positive inside the eclipse (any shadow) and, second,
     inside the umbra, negative outside; continuous in `r`. A shadow crossed in less than the
     sampling step is found from the maximum of this function (DEVIATIONS DV-E4). Radians for the
-    conical model, metres for the cylindrical one (where the umbra is the whole shadow)."""
+    conical model, metres for the cylindrical one (where the umbra is the whole shadow). `radius_m`
+    is the radius of the Earth sphere (the Earth model of the scenario, D-219)."""
     if model == "cylindrical":
         direction = sun / np.linalg.norm(sun, axis=1, keepdims=True)
         along = np.sum(r * direction, axis=1)
         perpendicular = np.linalg.norm(r - along[:, None] * direction, axis=1)
-        margin = np.minimum(-along, EARTH_RADIUS_M - perpendicular)
+        margin = np.minimum(-along, radius_m - perpendicular)
         return margin, margin
     if model != "conical":
         raise ValueError("shadow model must be 'cylindrical' or 'conical'")
-    a, b, sep = _disk_geometry(r, sun)
+    a, b, sep = _disk_geometry(r, sun, radius_m)
     return a + b - sep, b - a - sep
 
 
-def sun_visibility(r: NDArray, sun: NDArray, model: str = "cylindrical") -> NDArray:
+def sun_visibility(
+    r: NDArray, sun: NDArray, model: str = "cylindrical", radius_m: float = EARTH_RADIUS_M
+) -> NDArray:
     """Fraction of the Sun's disk visible from `r` (1 lit, 0 umbra); positions and the Earth to
     Sun vectors in metres. `cylindrical` gives 0 or 1 (ENV-SHADOW-CYL); `conical` includes
     penumbra and annular geometry (ENV-SHADOW-CON)."""
@@ -144,11 +151,11 @@ def sun_visibility(r: NDArray, sun: NDArray, model: str = "cylindrical") -> NDAr
         direction = sun / np.linalg.norm(sun, axis=1, keepdims=True)
         along = np.sum(r * direction, axis=1)
         perpendicular = np.linalg.norm(r - along[:, None] * direction, axis=1)
-        return np.where((along < 0.0) & (perpendicular < EARTH_RADIUS_M), 0.0, 1.0)
+        return np.where((along < 0.0) & (perpendicular < radius_m), 0.0, 1.0)
     if model != "conical":
         raise ValueError("shadow model must be 'cylindrical' or 'conical'")
 
-    a, b, sep = _disk_geometry(r, sun)
+    a, b, sep = _disk_geometry(r, sun, radius_m)
 
     with np.errstate(divide="ignore", invalid="ignore"):
         x = (sep**2 + a**2 - b**2) / (2.0 * sep)

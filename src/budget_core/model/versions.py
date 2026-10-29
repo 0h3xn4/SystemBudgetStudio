@@ -8,7 +8,7 @@ CURRENT_VERSIONS: dict[str, int] = {
     "orbit": 2,
     "ground_station": 2,
     "target": 2,
-    "scenario": 3,
+    "scenario": 4,
     "link": 2,
     "spacecraft_mode": 2,
     "margin_policy": 3,

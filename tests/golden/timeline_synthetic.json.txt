@@ -352,6 +352,7 @@
     }
   },
   "environment": {
+    "earth_model": "wgs84",
     "eclipse_fraction": 0.3,
     "orbits": 2,
     "shadow_model": "cylindrical",
@@ -446,6 +447,10 @@
       [
         "Shadow model",
         "cylindrical"
+      ],
+      [
+        "Earth model",
+        "WGS-84"
       ],
       [
         "Start (UTC)",

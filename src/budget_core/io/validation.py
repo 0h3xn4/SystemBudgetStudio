@@ -770,6 +770,8 @@ def _ignored_scenario_options(sc: Scenario, file: str, lines: dict[str, LineMap]
             ignored.append("orbit")
         if sc.shadow_model != "cylindrical":
             ignored.append("shadow_model")  # imported eclipse intervals are used as they are
+        if sc.earth_model != "wgs84":
+            ignored.append("earth_model")  # the imported geometry is not computed here
     return [
         _p(
             Severity.WARNING,
@@ -1051,7 +1053,7 @@ def _environment_references(
     from budget_core.environment.elements import check_orbit
 
     out: list[Problem] = []
-    err = Severity.ERROR
+    err, warn = Severity.ERROR, Severity.WARNING
 
     for oid, orbit in project.orbits.items():
         reason = check_orbit(orbit)
@@ -1083,6 +1085,22 @@ def _environment_references(
         )
     sites = set(project.ground_stations) | set(project.targets)
 
+    if "model_choices" not in project.meta.requires and any(
+        sc.earth_model != "wgs84" for sc in project.scenarios.values()
+    ):
+        out.append(
+            _p(
+                warn,
+                "FEATURE_NOT_DECLARED",
+                "The project uses a model choice that an older version would not know, and "
+                "does not list the feature in 'requires'.",
+                "project.yaml",
+                ("requires",),
+                lines,
+                "Add 'model_choices' to 'requires' in project.yaml, so that an older version "
+                "refuses the project instead of ignoring the choice.",
+            )
+        )
     for scid, sc in project.scenarios.items():
         file = f"scenarios/{scid}.yaml"
         if (
@@ -1102,6 +1120,24 @@ def _environment_references(
                 )
             )
         out.extend(_ignored_scenario_options(sc, file, lines))
+        orbit = project.orbits.get(sc.orbit) if sc.orbit else None
+        if (
+            sc.environment_source == "elements"
+            and sc.earth_model != "wgs84"
+            and (orbit is not None and orbit.tle is not None)
+        ):
+            out.append(
+                _p(
+                    warn,
+                    "MODEL_CHOICE_IGNORED",
+                    "The Earth model does not apply to an orbit given as a TLE.",
+                    file,
+                    ("earth_model",),
+                    lines,
+                    "A TLE is propagated on WGS-72, the set SGP4 is defined on. Remove the "
+                    "option, or give the orbit as elements.",
+                )
+            )
         missing_import = (
             sc.environment_source == "spacemissionstudio"
             and sc.import_dir is not None

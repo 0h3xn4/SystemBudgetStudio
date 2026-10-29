@@ -1527,7 +1527,7 @@
       },
       {
         "path": "scenarios/one_day.yaml",
-        "sha256": "f45d6679d4e328f6461823b4b406a6999818665cdd6f798477effb143d7dc9c0",
+        "sha256": "b11923dd148470ac3f3633fc870d60cdaf08b834b4cc7aa41d6d00b69665c749",
         "size": 752
       },
       {
@@ -1631,7 +1631,7 @@
         "size": 632
       }
     ],
-    "inputs_digest": "sha256:5aaef01b6a3ab18bba18c7215ee8028c895b63d60fa497cd32c7baece290c613",
+    "inputs_digest": "sha256:22a87921c950b10bd138ed4bf82acadb344c1a8257f4aaf345f7733c5ead6a6b",
     "libraries": [
       [
         "pinned",

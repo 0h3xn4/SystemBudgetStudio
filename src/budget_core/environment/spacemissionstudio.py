@@ -154,6 +154,7 @@ class SpaceMissionStudioImport:
             grid=grid,
             source=self.name,
             shadow_model=shadow_model,
+            earth_model="imported",
             position_m=position,
             sun_direction=sun_dir,
             sunlight_ratio=ratio,

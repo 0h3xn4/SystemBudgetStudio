@@ -149,6 +149,36 @@ REGISTRY: tuple[ModelChoice, ...] = (
         "shadow_model",
     ),
     ModelChoice(
+        "environment.earth_model",
+        "Earth constants",
+        "earth model",
+        "scenario",
+        "wgs84",
+        (
+            Choice(
+                "wgs84",
+                "WGS-84",
+                source="WGS 84 (NIMA TR8350.2), the set of the sgp4 library: equatorial radius "
+                "6378.137 km, mu 398600.5 km3/s2.",
+                note="The default.",
+            ),
+            Choice(
+                "wgs72",
+                "WGS-72",
+                source="WGS 72, the gravity constants of the SGP4 theory (Hoots and Roehrich, "
+                "Spacetrack Report No. 3), the set of the sgp4 library: equatorial radius "
+                "6378.135 km, mu 398600.8 km3/s2.",
+                note="Also the set a TLE is defined on.",
+            ),
+        ),
+        "The propagation of an orbit given as elements (mean motion and the SGP4 constants) "
+        "and the Earth sphere of the shadow. The ground sites stay WGS-84 geodetic coordinates, "
+        "a TLE stays on WGS-72, an imported environment is not computed here.",
+        "scenarios/<id>.yaml field earth_model",
+        "DEVIATIONS DV-E5",
+        "earth_model",
+    ),
+    ModelChoice(
         "power.load_basis",
         "Load basis of the power timeline",
         "load basis",
@@ -187,14 +217,6 @@ REGISTRY: tuple[ModelChoice, ...] = (
         "The propagation of a TLE.",
         "DEVIATIONS DV-E5: the SGP4 library's default constants, the usual pairing for TLEs; "
         "SGP4 is defined on this set.",
-    ),
-    _fixed(
-        "environment.gravity_elements",
-        "Gravity model of orbital elements",
-        "WGS-84",
-        "The conversion of the elements to SGP4, the Earth radius of the geometry.",
-        "DEVIATIONS DV-E5: Earth radius and mu of the SGP4 library's WGS-84 set. "
-        "A named choice of the Earth model is planned for 2.0.0 (P5b).",
     ),
     _fixed(
         "environment.sun_position",

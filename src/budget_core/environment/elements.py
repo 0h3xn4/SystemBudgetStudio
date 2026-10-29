@@ -12,9 +12,10 @@ from datetime import datetime, timedelta
 from typing import Any
 
 import numpy as np
-from sgp4.api import WGS84, Satrec, SatrecArray
+from sgp4.api import WGS72, WGS84, Satrec, SatrecArray
 
 from budget_core.environment import geometry as geo
+from budget_core.environment.constants import DEFAULT_EARTH_MODEL, EARTH_MODELS
 from budget_core.environment.data import (
     EnvironmentData,
     GeometryFn,
@@ -41,17 +42,23 @@ UMBRA = 1e-12
 EDGE_TOLERANCE_S = 1e-3
 
 
-def build_satrec(orbit: Orbit) -> Satrec:
-    """Create the sgp4 satellite record of an orbit definition."""
+_SGP4_SETS = {"wgs84": WGS84, "wgs72": WGS72}
+
+
+def build_satrec(orbit: Orbit, earth_model: str = DEFAULT_EARTH_MODEL) -> Satrec:
+    """Create the sgp4 satellite record of an orbit definition. Elements use the gravity set of
+    `earth_model` (D-219); a TLE is on WGS-72, the set SGP4 is defined on, whatever the choice."""
     if orbit.tle is not None:
         return Satrec.twoline2rv(orbit.tle[0], orbit.tle[1])
     el = orbit.elements
     assert el is not None  # validated: exactly one source
     jd, fr = geo.julian_date_parts(parse_utc(el.epoch_utc))
-    motion_rad_per_min = math.sqrt(geo.EARTH_MU_M3S2 / el.semi_major_axis_m**3) * 60.0
+    motion_rad_per_min = (
+        math.sqrt(EARTH_MODELS[earth_model].mu_m3s2 / el.semi_major_axis_m**3) * 60.0
+    )
     sat = Satrec()
     sat.sgp4init(
-        WGS84,
+        _SGP4_SETS[earth_model],
         "i",
         1,
         (jd + fr) - 2433281.5,
@@ -112,9 +119,15 @@ def check_orbit(orbit: Orbit) -> str | None:
 class ElementsPropagator:
     name = "elements"
 
-    def __init__(self, orbit: Orbit) -> None:
+    def __init__(self, orbit: Orbit, earth_model: str = DEFAULT_EARTH_MODEL) -> None:
         self.orbit = orbit
-        self.sat = build_satrec(orbit)
+        # a TLE is on WGS-72 and its geometry stays on the default sphere: the choice does not
+        # apply to it (D-219)
+        self.earth_model = "tle" if orbit.tle is not None else earth_model
+        self.earth_radius_m = EARTH_MODELS[
+            DEFAULT_EARTH_MODEL if orbit.tle is not None else earth_model
+        ].radius_m
+        self.sat = build_satrec(orbit, earth_model)
 
     # ---- states --------------------------------------------------------------------------------
     def state_teme(self, start: datetime, t_s: float) -> tuple[NDArray, NDArray]:
@@ -147,7 +160,9 @@ class ElementsPropagator:
         times = grid.times_s
         pos, jd = self._positions(grid.start, times)
         sun_dir, sun_dist = geo.sun_direction_and_distance(jd)
-        ratio = geo.sun_visibility(pos, sun_dir * sun_dist[:, None], shadow_model)
+        ratio = geo.sun_visibility(
+            pos, sun_dir * sun_dist[:, None], shadow_model, self.earth_radius_m
+        )
 
         def sun_state(t: float) -> tuple[NDArray, NDArray]:
             r, _ = self.state_teme(grid.start, t)
@@ -156,20 +171,22 @@ class ElementsPropagator:
             return r[None, :], d * dist[:, None]
 
         def nu_at(t: float) -> float:
-            return float(geo.sun_visibility(*sun_state(t), shadow_model)[0])
+            return float(geo.sun_visibility(*sun_state(t), shadow_model, self.earth_radius_m)[0])
 
         def eclipse_margin_at(t: float) -> float:
-            return float(geo.shadow_margins(*sun_state(t), shadow_model)[0][0])
+            return float(geo.shadow_margins(*sun_state(t), shadow_model, self.earth_radius_m)[0][0])
 
         def umbra_margin_at(t: float) -> float:
-            return float(geo.shadow_margins(*sun_state(t), shadow_model)[1][0])
+            return float(geo.shadow_margins(*sun_state(t), shadow_model, self.earth_radius_m)[1][0])
 
         detect = _detection_times(grid)
         det_pos, det_jd = self._positions(grid.start, detect)
         det_dir, det_dist = geo.sun_direction_and_distance(det_jd)
-        det_ratio = geo.sun_visibility(det_pos, det_dir * det_dist[:, None], shadow_model)
+        det_ratio = geo.sun_visibility(
+            det_pos, det_dir * det_dist[:, None], shadow_model, self.earth_radius_m
+        )
         eclipse_margin, umbra_margin = geo.shadow_margins(
-            det_pos, det_dir * det_dist[:, None], shadow_model
+            det_pos, det_dir * det_dist[:, None], shadow_model, self.earth_radius_m
         )
         in_eclipse = det_ratio < LIT
         in_umbra = det_ratio <= UMBRA
@@ -225,6 +242,7 @@ class ElementsPropagator:
             grid=grid,
             source=self.name,
             shadow_model=shadow_model,
+            earth_model=self.earth_model,
             position_m=pos,
             sun_direction=sun_dir,
             sunlight_ratio=ratio,

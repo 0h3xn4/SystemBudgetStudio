@@ -46,12 +46,22 @@ class ScenarioRun:
     problems: tuple[Problem, ...] = ()  # findings of the run itself (an old TLE)
 
 
+# what the report says of the Earth model the geometry was computed on (D-219)
+EARTH_MODEL_TEXT = {
+    "wgs84": "WGS-84",
+    "wgs72": "WGS-72",
+    "tle": "TLE: WGS-72 propagation, WGS-84 geometry",
+    "imported": "not used (imported environment)",
+}
+
+
 def run_parameters(run: ScenarioRun) -> tuple[tuple[str, str], ...]:
     """The scenario options that change a number, for the provenance of a run's outputs."""
     env, sc = run.env, run.scenario
     return (
         ("Environment source", str(env.source)),
         ("Shadow model", str(env.shadow_model)),
+        ("Earth model", EARTH_MODEL_TEXT.get(env.earth_model, env.earth_model)),
         ("Start (UTC)", format_utc(env.grid.start)),
         ("Duration", f"{sc.duration_s:.0f} s"),
         ("Step", f"{sc.step_s:g} s"),
@@ -107,7 +117,7 @@ def environment_for(project: Project, scenario: Scenario) -> Environment:
             )
         return SpaceMissionStudioImport(folder)
     assert scenario.orbit is not None
-    return ElementsPropagator(project.orbits[scenario.orbit])
+    return ElementsPropagator(project.orbits[scenario.orbit], scenario.earth_model)
 
 
 def run_scenario(
@@ -224,6 +234,7 @@ def environment_key(project: Project, scenario: Scenario) -> str:
         "duration_s": scenario.duration_s,
         "step_s": scenario.step_s,
         "shadow_model": scenario.shadow_model,
+        "earth_model": scenario.earth_model,
         "sites": [
             [
                 site_id,
