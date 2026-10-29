@@ -14,6 +14,8 @@ from pathlib import Path
 from typing import Any
 
 from budget_core import APP_NAME, __version__
+from budget_core.assumptions_view import ASSUMPTION_SECTIONS
+from budget_core.assumptions_view import assumptions as list_assumptions
 from budget_core.blank import BlankAnswers, create_blank_project
 from budget_core.compare_run import ALL_KINDS, Side, compare_sides, default_kinds
 from budget_core.examples import ExportRefusedError, export_examples
@@ -57,6 +59,11 @@ from budget_core.scenario.export import write_scenario_outputs
 from budget_core.scenario.run import ScenarioRunError, run_scenario
 from budget_core.schemas import export_schemas
 from budget_core.selftest import run_selftest
+from budget_core.settings import BY_ID as SETTINGS_BY_ID
+from budget_core.settings import CATALOGUE as SETTINGS_CATALOGUE
+from budget_core.settings import KIND_TEXT as SETTINGS_KIND_TEXT
+from budget_core.settings import format_value
+from budget_core.settings import render_markdown as render_settings_markdown
 from budget_core.thermal.static_thermal import static_thermal_budget
 from budget_core.timeutil import MAX_YEAR, MIN_YEAR
 from budget_core.verify import MATCH, VerifyError, verify_export
@@ -344,6 +351,33 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write the page of all codes (docs/PROBLEMS.md) to standard output.",
     )
 
+    stg = sub.add_parser(
+        "settings",
+        help="List the settings, tolerances and constants the tool applies, or explain one.",
+    )
+    stg.add_argument(
+        "setting",
+        nargs="?",
+        help="A setting id, for example environment.detection_step_s. Without it all are listed.",
+    )
+    stg.add_argument(
+        "--markdown",
+        action="store_true",
+        help="Write the page of all settings (docs/models/settings.md) to standard output.",
+    )
+
+    asm = sub.add_parser(
+        "assumptions",
+        help="List everything that is active for a project: numbers, settings, model choices.",
+    )
+    asm.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    asm.add_argument(
+        "--section",
+        choices=tuple(ASSUMPTION_SECTIONS),
+        help="Only this section (default: all).",
+    )
+    asm.add_argument("--format", choices=("text", "json"), default="text")
+
     ver = sub.add_parser(
         "verify",
         help="Check that a project is the one an export was made from (input digest).",
@@ -523,6 +557,56 @@ def _problems(args: argparse.Namespace) -> int:
     print(f"Rule.            {entry.rule}")
     print(f"Why it matters.  {entry.why}")
     print(f"What to do.      {entry.fix}")
+    return 0
+
+
+def _settings(args: argparse.Namespace) -> int:
+    """List the catalogue, show one entry (value, why, where it acts), or write the page."""
+    if args.markdown:
+        print(render_settings_markdown(), end="")
+        return 0
+    if args.setting is None:
+        for s in SETTINGS_CATALOGUE:
+            print(f"{s.id}\t{s.kind}\t{format_value(s.default)} {s.unit}".rstrip() + f"\t{s.title}")
+        return 0
+    entry = SETTINGS_BY_ID.get(args.setting)
+    if entry is None:
+        close = difflib.get_close_matches(args.setting, list(SETTINGS_BY_ID), n=3)
+        _fail(
+            "There is no such setting."
+            + (f" Did you mean {', '.join(close)}?" if close else " `budget settings` lists them.")
+        )
+        return 1
+    print(f"{entry.id}  ({SETTINGS_KIND_TEXT[entry.kind]})")
+    print(entry.title)
+    print()
+    print(f"Value.           {format_value(entry.default)} {entry.unit}".rstrip())
+    print(f"Why.             {entry.reason}")
+    print(f"Acts on.         {entry.acts_on}")
+    print(f"In the code.     budget_core.{entry.binding.replace(':', '.')}")
+    return 0
+
+
+def _assumptions(args: argparse.Namespace) -> int:
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    rows = list_assumptions(project)
+    if args.section:
+        rows = [r for r in rows if r.section == ASSUMPTION_SECTIONS[args.section]]
+    if args.format == "json":
+        print(json.dumps([r.to_dict() for r in rows], indent=2, sort_keys=True))
+        return 0
+    section = ""
+    for row in rows:
+        if row.section != section:
+            section = row.section
+            print(f"\n{section}")
+        value = f"{row.value} {row.unit}".rstrip()
+        print(f"  {row.name} = {value}  [{row.status}]")
+        if row.source:
+            print(f"    {row.source}")
+        print(f"    {row.where}")
     return 0
 
 
@@ -1007,6 +1091,10 @@ def _dispatch(
         return 1 if failures else 0
     if args.command == "run":
         return _run(args)
+    if args.command == "settings":
+        return _settings(args)
+    if args.command == "assumptions":
+        return _assumptions(args)
     if args.command == "verify":
         return _verify(args)
     if args.command == "source":

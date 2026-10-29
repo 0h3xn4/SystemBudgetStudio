@@ -81,17 +81,19 @@ def _numbers(node: Any, path: tuple[str | int, ...]) -> Iterator[tuple[str | int
         yield path
 
 
-def _sourced(node: Any, path: tuple[str | int, ...]) -> Iterator[tuple[tuple[str | int, ...], Any]]:
+def sourced_nodes(
+    node: Any, path: tuple[str | int, ...]
+) -> Iterator[tuple[tuple[str | int, ...], Any]]:
     """The sourced numbers (`{value, source, ...}`) inside the plain data of a config file."""
     if isinstance(node, dict):
         if "source" in node and "value" in node:
             yield path, node
             return
         for key, value in node.items():
-            yield from _sourced(value, (*path, key))
+            yield from sourced_nodes(value, (*path, key))
     elif isinstance(node, list):
         for index, value in enumerate(node):
-            yield from _sourced(value, (*path, index))
+            yield from sourced_nodes(value, (*path, index))
 
 
 def entry_source(file: str, path: str, entry: ProvenanceEntry | None) -> InputSource:
@@ -110,7 +112,7 @@ def inputs_of(project: Project) -> list[InputSource]:
                 path = format_path(parts)
                 out.append(entry_source(rel, path, find_entry(data, model.provenance, path)))
         else:
-            for parts, node in _sourced(model_to_data(model), ()):
+            for parts, node in sourced_nodes(model_to_data(model), ()):
                 placeholder = node.get("value") is None or str(node["source"]).strip() == "TBD"
                 status = "tbd" if placeholder else str(node.get("status", "sourced"))
                 out.append(
