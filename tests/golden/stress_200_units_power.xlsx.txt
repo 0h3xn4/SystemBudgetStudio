@@ -117,7 +117,7 @@
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
-5: 'Tool' | 'System Budget Studio 1.9.0'
+5: 'Tool' | 'System Budget Studio 2.0.0'
 6: 'Python' | '3.x'
 7: 'Libraries' | 'pinned for-golden-tests'
 8: 'Project' | 'Example stress case (200 units)'
