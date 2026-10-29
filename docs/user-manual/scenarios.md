@@ -61,6 +61,7 @@ start_utc: '2026-06-01T00:00:00Z' # UTC only
 duration_s: 86400.0
 step_s: 10.0                      # the time grid of the results
 shadow_model: cylindrical         # or conical
+earth_model: wgs84                # or wgs72 (optional, see below)
 sites: [gs_north, tgt_plains]     # stations and targets to compute passes for
 mission_phase: eol                # selects the allowed depth of discharge
 default_mode: charging
@@ -69,6 +70,8 @@ segments: []
 ```
 
 A scenario may have up to 1,000,000 steps (a week at 1 s is 604,801), counted at the smaller of `step_s` and 20 s. The start time must lie between the years 1950 and 2100; a semi-major axis between 6,400 km and 100,000 km; a TLE more than 30 days from the start gives a warning. [`shadow_model`](../glossary.md#shadow-model) is the Earth shadow: `cylindrical` (sharp edge) or `conical` (umbra and penumbra).
+
+**The Earth model.** `earth_model` is `wgs84` (the default, and what a scenario without the line uses) or `wgs72`. It sets the gravity constants an orbit given as elements is propagated with and the radius of the Earth sphere of the shadow; the difference is 2 m in the radius and about 8e-7 of mu, small beside the other errors of the model, and it matters when you compare with a tool that uses the other set. A TLE is always propagated on WGS-72 (the set SGP4 is defined on), so the line does nothing for it and the tool says so (`MODEL_CHOICE_IGNORED`); ground sites stay WGS-84 geodetic coordinates. A project that uses the line lists `model_choices` under `requires:` in `project.yaml`, so that an older version refuses it instead of ignoring it. Every report says which model it used (the provenance row *Earth model*), and `budget choices environment.earth_model` explains it.
 
 ## How do I switch modes automatically?
 

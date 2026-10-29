@@ -1120,11 +1120,11 @@ def _environment_references(
                 )
             )
         out.extend(_ignored_scenario_options(sc, file, lines))
-        orbit = project.orbits.get(sc.orbit) if sc.orbit else None
+        used_orbit = project.orbits.get(sc.orbit) if sc.orbit else None
         if (
             sc.environment_source == "elements"
             and sc.earth_model != "wgs84"
-            and (orbit is not None and orbit.tle is not None)
+            and (used_orbit is not None and used_orbit.tle is not None)
         ):
             out.append(
                 _p(

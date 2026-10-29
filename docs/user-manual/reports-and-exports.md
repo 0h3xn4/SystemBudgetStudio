@@ -51,7 +51,7 @@ Every report also records **what it was computed from**, so that a colleague can
 |---|---|
 | **Inputs digest (model)** | A SHA-256 of the project as the tool loaded it: every unit, mode, orbit, station, scenario, link and configuration number, in a fixed order. Comments, key order and spacing do not change it; any number does. |
 | **Input files** | How many project files were read and one SHA-256 over their names, sizes and byte hashes. A comment edit changes this one but not the digest above. |
-| **Run parameters** | The options that change a number: for a scenario the environment source, the shadow model, start, duration and step; for a power timeline also the demand basis, the cases and the mission phase. |
+| **Run parameters** | The options that change a number: for a scenario the environment source, the shadow model, the Earth model, start, duration and step; for a power timeline also the demand basis, the cases and the mission phase. |
 
 The JSON files carry the full list (`provenance.input_files`: path, size and hash of every file) and the run parameters as pairs. The CSV sets carry the three rows in `<name>_provenance.csv`.
 
