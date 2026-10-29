@@ -1,7 +1,7 @@
 pages=15
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.9.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Power budget over time: Example 250 kg minisatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
@@ -110,7 +110,7 @@ Imaging
  n/a
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.9.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Mode
 Name
@@ -356,7 +356,7 @@ T+15:57:07
  n/a
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 1.9.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.0.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Orbit
 Start (T+)

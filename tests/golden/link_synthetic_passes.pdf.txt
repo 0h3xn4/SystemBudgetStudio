@@ -1,6 +1,6 @@
 pages=4
 ## page 1
-System Budget Studio 1.9.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.0.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Link budget over passes: Time-domain test
 Summary
@@ -110,13 +110,13 @@ T+00:01:45
  29.00
 Lowest margin is at the lowest listed rate over the active samples.
 ## page 2
-System Budget Studio 1.9.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.0.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Plot, dl
 Link dl over gs
 Margin at each listed rate with the required margin, the selected data rate and the elevation, inside the passes.
 ## page 3
-System Budget Studio 1.9.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.0.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Assumptions
 Configuration numbers used
@@ -234,7 +234,7 @@ required margin while the link is active
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 ## page 4
-System Budget Studio 1.9.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.0.0 | Time-domain test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Problems
 Problems and open items
@@ -259,7 +259,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 1.9.0
+System Budget Studio 2.0.0
 Python
 3.x
 Libraries
