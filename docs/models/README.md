@@ -14,5 +14,6 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | Thermal (network, steady state, environment) | [thermal-static.md](thermal-static.md) | written |
 | RF link (EIRP, G/T, losses, rate selection, volume) | [link-static.md](link-static.md), [link-passes.md](link-passes.md) | written |
 | Units and conversions (accepted units, canonical units, refused words) | (planned) | planned |
+| Settings, tolerances, limits and constants (every number the code applies that no file shows) | [settings.md](settings.md) | written (generated from the catalogue) |
 | Rounding and number formats | (planned) | planned |
 | Provenance, input digest and `budget verify` | [provenance.md](provenance.md) | written |
