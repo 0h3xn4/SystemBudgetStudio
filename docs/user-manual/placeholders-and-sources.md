@@ -37,10 +37,10 @@ Some numbers are not in any of your files: the grid on which passes and eclipses
 
 - **Numbers**: every sourced number of `config/` and of the links, with its unit, its source, its status (`sourced`, `estimate`, `illustrative` or `placeholder`) and the file and field to edit;
 - **Settings**: the settings, tolerances, limits and constants the tool applies, with their value, why they are what they are and where they act; they are fixed in this version ([the full list](../models/settings.md));
-- **Choices**: the shadow model and the environment of each scenario, and the choices the tool makes for every project (SGP4, a TLE on WGS-72 and elements on WGS-84, the low-precision Sun, BOL and EOL cases);
+- **Choices**: the environment and the shadow model of each scenario, the load basis of a run, and the models the tool fixes for every project (SGP4, a TLE on WGS-72 and elements on WGS-84, the low-precision Sun, BOL and EOL cases), each with the reason it is fixed ([the full list](../models/choices.md));
 - **Forms**: the defaults the guided mode and the forms write into a new project.
 
-The buttons above the list keep one kind; the filter keeps the rows that contain every word you type, in any order. Double-click a row that names a file to open it at the field. The page shows the project as it was last loaded or saved. On the command line: `budget assumptions my_satellite` (`--section`, `--format json`) and `budget settings`.
+The buttons above the list keep one kind; the filter keeps the rows that contain every word you type, in any order. Double-click a row that names a file to open it at the field. The page shows the project as it was last loaded or saved. On the command line: `budget assumptions my_satellite` (`--section`, `--format json`), `budget settings` and `budget choices`.
 
 ## How do I record where a plain input came from?
 

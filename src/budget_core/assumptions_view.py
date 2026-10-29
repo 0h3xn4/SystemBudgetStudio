@@ -14,7 +14,8 @@ from dataclasses import dataclass
 from budget_core.input_sources import project_files, sourced_nodes
 from budget_core.io.project_loader import model_to_data
 from budget_core.io.yamlio import format_path
-from budget_core.model import Project
+from budget_core.model import Project, Scenario
+from budget_core.model_choices import REGISTRY, ModelChoice
 from budget_core.reports import numfmt
 from budget_core.settings import CATALOGUE, KIND_TEXT, format_value
 from budget_core.units.quantity import canonical_unit
@@ -53,62 +54,6 @@ class Row:
             "status": self.status,
             "where": self.where,
         }
-
-
-# Choices the tool makes for every project, with the reference that describes them. They are
-# facts of the code (audit appendix A); the panel names them so that none is hidden.
-FIXED_CHOICES: tuple[tuple[str, str, str], ...] = (
-    (
-        "Orbit propagation",
-        "SGP4 on mean elements",
-        "DEVIATIONS DV-E2: elements are used as mean elements, without drag (B* = 0)",
-    ),
-    (
-        "Gravity model of a TLE",
-        "WGS-72",
-        "DEVIATIONS DV-E5: the SGP4 library's default constants, the usual pairing for TLEs",
-    ),
-    (
-        "Gravity model of orbital elements",
-        "WGS-84",
-        "DEVIATIONS DV-E5: Earth radius and mu of the SGP4 library's WGS-84 set",
-    ),
-    (
-        "Sun position",
-        "Low-precision almanac formulae (about 0.01 degree)",
-        "DEVIATIONS DV-E1; equation ENV-SUN",
-    ),
-    (
-        "Earth rotation",
-        "GMST only, UTC treated as UT1",
-        "DEVIATIONS DV-E1: up to 0.9 s, about 400 m on the ground",
-    ),
-    (
-        "Earth in the shadow geometry",
-        "Sphere of the equatorial radius",
-        "DEVIATIONS DV-P1: no oblateness, no atmosphere",
-    ),
-    (
-        "Eclipse",
-        "Any shadow, penumbra included",
-        "DEVIATIONS DV-E4: the sunlight ratio is below 1 by more than 1e-12",
-    ),
-    (
-        "Power cases",
-        "BOL and EOL (EOL at the design life)",
-        "DEVIATIONS DV-P2; power_system.design_life_yr",
-    ),
-    (
-        "Load basis of a run",
-        "Nominal unless the run asks for margined",
-        "Option --load-basis of budget power-timeline; shown in the run parameters",
-    ),
-    (
-        "Thermal model",
-        "Steady state, isothermal nodes, radiation to one sink",
-        "DEVIATIONS DV-T1",
-    ),
-)
 
 
 def assumptions(project: Project) -> list[Row]:
@@ -159,49 +104,73 @@ def _settings() -> list[Row]:
 
 
 def _choices(project: Project) -> list[Row]:
+    """One row per scenario for a choice made in the scenario file, one row for a run option,
+    and one row for each model the tool fixes (the registry, `model_choices.py`)."""
     rows: list[Row] = []
-    for sid, scenario in sorted(project.scenarios.items()):
-        where = f"scenarios/{sid}.yaml"
-        shadow_default = "shadow_model" not in scenario.model_fields_set
-        rows.append(
-            Row(
-                CHOICES,
-                f"Scenario {sid}: environment",
-                scenario.environment_source,
-                "",
-                "",
-                "set",
-                where,
-            )
-        )
-        rows.append(
-            Row(
-                CHOICES,
-                f"Scenario {sid}: shadow model",
-                scenario.shadow_model,
-                "",
-                "the default of the model; the file does not say" if shadow_default else "",
-                "default" if shadow_default else "set",
-                where,
-            )
-        )
-        if scenario.mission_phase:
+    for entry in REGISTRY:
+        if entry.scope == "scenario":
+            for sid, scenario in sorted(project.scenarios.items()):
+                rows.append(_scenario_row(entry, sid, scenario))
+        elif entry.scope == "run":
+            others = ", ".join(c.id for c in entry.choices if c.id != entry.default)
             rows.append(
                 Row(
                     CHOICES,
-                    f"Scenario {sid}: mission phase",
-                    scenario.mission_phase,
+                    entry.title,
+                    entry.default,
                     "",
-                    "selects the allowed depth of discharge",
-                    "set",
-                    where,
+                    f"{entry.where}; the other choice is {others}; shown in the run parameters",
+                    "default",
+                    "Chosen for each run",
                 )
             )
-    for name, value, reference in FIXED_CHOICES:
-        rows.append(
-            Row(CHOICES, name, value, "", reference, "fixed", "Not selectable in this version")
-        )
+        else:
+            rows.append(
+                Row(
+                    CHOICES,
+                    entry.title,
+                    entry.active_title(entry.default),
+                    "",
+                    entry.reference,
+                    "fixed",
+                    entry.where,
+                )
+            )
+        if entry.id == "environment.shadow_model":
+            rows.extend(_mission_phase_rows(project))
     return rows
+
+
+def _scenario_row(entry: ModelChoice, sid: str, scenario: Scenario) -> Row:
+    chosen = str(getattr(scenario, entry.field))
+    is_default = entry.field not in scenario.model_fields_set
+    return Row(
+        CHOICES,
+        f"Scenario {sid}: {entry.label}",
+        chosen,
+        "",
+        "the default of the model; the file does not say"
+        if is_default and chosen == entry.default
+        else entry.active_title(chosen),
+        "default" if is_default else "set",
+        f"scenarios/{sid}.yaml",
+    )
+
+
+def _mission_phase_rows(project: Project) -> list[Row]:
+    return [
+        Row(
+            CHOICES,
+            f"Scenario {sid}: mission phase",
+            scenario.mission_phase,
+            "",
+            "selects the allowed depth of discharge",
+            "set",
+            f"scenarios/{sid}.yaml",
+        )
+        for sid, scenario in sorted(project.scenarios.items())
+        if scenario.mission_phase
+    ]
 
 
 def _creation() -> list[Row]:
