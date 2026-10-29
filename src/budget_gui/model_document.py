@@ -473,6 +473,7 @@ class ModelDocument(QObject):
 
 # ---- helpers --------------------------------------------------------------------------------
 def _models_of(project: Project) -> Iterable[tuple[str, BudgetModel]]:
+    yield "project.yaml", project.meta  # the features it requires follow the choices made (D-219)
     yield "spacecraft.yaml", project.spacecraft
     for unit_id, unit in project.units.items():
         yield f"units/{unit_id}.yaml", unit

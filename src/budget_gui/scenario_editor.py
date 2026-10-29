@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from budget_core.model_choices import REGISTRY, ModelChoice, source_of
 from budget_gui import theme
 from budget_gui.components import Button, icon_button
 from budget_gui.edit_bar import EditBar
@@ -37,6 +38,9 @@ from budget_gui.model_document import ModelDocument, set_at
 
 RULE_KINDS = ("during_pass", "in_eclipse", "in_sunlight")
 SHADOW_MODELS = ("cylindrical", "conical")
+# the model choices made in the scenario file, from the registry (D-219): the field is also the
+# name of the control
+CHOICE_FIELDS = ("shadow_model", "earth_model", "irradiance_model")
 WHEN = {
     "during_pass": "during every pass over",
     "in_eclipse": "while in eclipse",
@@ -180,6 +184,17 @@ class _SegmentRow(_Row):
             button.setAccessibleName(tip)
 
 
+def _entry_of(field: str) -> ModelChoice:
+    return next(m for m in REGISTRY if m.scope == "scenario" and m.field == field)
+
+
+def _declare_model_choices(data: dict[str, Any]) -> None:
+    requires = list(data.get("requires") or [])
+    if "model_choices" not in requires:
+        requires.append("model_choices")
+    data["requires"] = requires
+
+
 class ScenarioEditor(QWidget):
     """Default mode, shadow model, sites, rules and manual segments of one scenario."""
 
@@ -196,15 +211,34 @@ class ScenarioEditor(QWidget):
         self.segment_rows: list[_SegmentRow] = []
 
         self.default_mode = QComboBox()
-        self.shadow_model = QComboBox()
         self.default_mode.setAccessibleName("Default mode")
-        self.shadow_model.setAccessibleName("Shadow model")
-        self.shadow_model.addItems(SHADOW_MODELS)
+        self.choice_combos: dict[str, QComboBox] = {}
+        for field in CHOICE_FIELDS:
+            entry = _entry_of(field)
+            combo = QComboBox()
+            combo.setAccessibleName(entry.title)
+            combo.setToolTip(f"{entry.title}: {entry.acts_on} ({entry.reference})")
+            for choice in entry.choices:
+                combo.addItem(choice.id)
+                combo.setItemData(
+                    combo.count() - 1,
+                    " ".join(
+                        part
+                        for part in (choice.title + ".", choice.note, source_of(choice))
+                        if part
+                    ),
+                    Qt.ItemDataRole.ToolTipRole,
+                )
+            self.choice_combos[field] = combo
+        self.shadow_model = self.choice_combos["shadow_model"]
+        self.earth_model = self.choice_combos["earth_model"]
+        self.irradiance_model = self.choice_combos["irradiance_model"]
         self.sites_list = QListWidget()
         self.sites_list.setMaximumHeight(theme.px(theme.SITES_MAX_HEIGHT))
         form = QFormLayout()
         form.addRow("Default mode", self.default_mode)
-        form.addRow("Shadow model", self.shadow_model)
+        for field in CHOICE_FIELDS:
+            form.addRow(_entry_of(field).title, self.choice_combos[field])
         form.addRow("Sites", self.sites_list)
 
         self.rules_title = QLabel("Rules: in this order, a later rule wins")
@@ -251,7 +285,8 @@ class ScenarioEditor(QWidget):
         self.add_rule_button.clicked.connect(lambda: self.add_rule())
         self.add_segment_button.clicked.connect(lambda: self.add_segment())
         self.default_mode.currentTextChanged.connect(self._default_mode_changed)
-        self.shadow_model.currentTextChanged.connect(self._shadow_changed)
+        for field, combo in self.choice_combos.items():
+            combo.currentTextChanged.connect(lambda text, f=field: self._choice_changed(f, text))
         self.sites_list.itemChanged.connect(self._sites_changed)
         document.changed.connect(self._sync)
 
@@ -342,7 +377,8 @@ class ScenarioEditor(QWidget):
         self, data: dict[str, Any], rules: list[dict[str, Any]], segments: list[dict[str, Any]]
     ) -> None:
         _set_combo(self.default_mode, str(data.get("default_mode") or ""))
-        self.shadow_model.setCurrentText(str(data.get("shadow_model") or SHADOW_MODELS[0]))
+        for field, combo in self.choice_combos.items():
+            combo.setCurrentText(str(data.get(field) or _entry_of(field).default))
         chosen = set(data.get("sites") or [])
         for index in range(self.sites_list.count()):
             item = self.sites_list.item(index)
@@ -396,8 +432,30 @@ class ScenarioEditor(QWidget):
         if text:
             self._edit(lambda data: set_at(data, ("default_mode",), text), "default mode")
 
-    def _shadow_changed(self, text: str) -> None:
-        self._edit(lambda data: set_at(data, ("shadow_model",), text), "shadow model")
+    def _choice_changed(self, field: str, text: str) -> None:
+        """A model choice: the value is written (a choice at its default is left out of the file),
+        and a non-default one of a model that older versions do not know also declares the
+        feature in project.yaml, in the same undo step (D-219)."""
+        rel = self._rel()
+        if rel is None or self._loading or not text:
+            return
+        entry = _entry_of(field)
+        value = None if text == entry.default else text
+
+        def change(data: dict[str, Any]) -> None:
+            set_at(data, (field,), value)
+
+        changes: list[tuple[str, Callable[[dict[str, Any]], None]]] = [(rel, change)]
+        has_project = self.document.has("project.yaml")
+        requires = (self.document.data("project.yaml").get("requires") or []) if has_project else []
+        if (
+            value is not None
+            and field != "shadow_model"
+            and has_project
+            and ("model_choices" not in requires)
+        ):
+            changes.append(("project.yaml", _declare_model_choices))
+        self.document.edit(changes, f"Edit scenario {self._id}: {entry.label}")
 
     def _sites_changed(self, _item: QListWidgetItem) -> None:
         checked = {
