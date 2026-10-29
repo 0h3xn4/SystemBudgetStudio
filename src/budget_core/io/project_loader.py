@@ -110,7 +110,7 @@ def model_to_data(model: BudgetModel, *, annotations: bool = True) -> dict[str, 
     return out
 
 
-_OMIT_AT_DEFAULT = frozenset({"status"})
+_OMIT_AT_DEFAULT = frozenset({"status", "earth_model"})
 _OMIT_WHEN_EMPTY = frozenset({"provenance", "requires"})
 
 
@@ -293,7 +293,7 @@ class _Loader:
         return model
 
 
-KNOWN_FEATURES: frozenset[str] = frozenset()  # P4 adds "settings", P7 adds "overrides"
+KNOWN_FEATURES: frozenset[str] = frozenset({"model_choices"})  # P4b adds "settings", P7 "overrides"
 
 
 def _unsupported_features(meta: ProjectMeta) -> list[Problem]:

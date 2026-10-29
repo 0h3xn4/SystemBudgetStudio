@@ -9,7 +9,7 @@
 | Tool, Python, Libraries | The versions that computed the result | the installation changes |
 | Project, Project revision | The name and the revision label from `project.yaml` | you edit them (the label is yours to raise) |
 | Scenario | The scenario id, or "static (no scenario)" | |
-| Run parameters | Options that change a number: environment source, shadow model, start, duration and step of the scenario; for a power timeline also the demand basis, the cases and the mission phase | you choose other options |
+| Run parameters | Options that change a number: environment source, shadow model, Earth model, start, duration and step of the scenario; for a power timeline also the demand basis, the cases and the mission phase | you choose other options |
 | Inputs digest (model) | SHA-256 of the project as loaded: every unit, mode, orbit, station, scenario, link and configuration number | a **number or a name** in any input file changes |
 | Input files | The count and one SHA-256 over every file's name, size and byte hash | **any** change to a file, including a comment or spacing |
 | Illustrative inputs | How many inputs of the project are marked `illustrative` ([D-213](../DECISIONS.md)); 0 when none | an input is marked or unmarked |

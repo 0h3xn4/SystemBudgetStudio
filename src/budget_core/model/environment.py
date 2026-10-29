@@ -182,6 +182,9 @@ class Scenario(ProvenancedModel):
     duration_s: float = Field(gt=0)
     step_s: float = Field(gt=0)
     shadow_model: Literal["cylindrical", "conical"] = "cylindrical"
+    # the gravity constants of an orbit given as elements and the Earth sphere of the shadow
+    # (D-219); a TLE is on WGS-72 whatever this says
+    earth_model: Literal["wgs84", "wgs72"] = "wgs84"
     sites: list[str] = Field(default_factory=list)
     mission_phase: str | None = None  # selects the allowed battery depth of discharge
     default_mode: str = Field(min_length=1)

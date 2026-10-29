@@ -12,9 +12,9 @@ Generated from the registry in `budget_core/model_choices.py` (`budget choices -
 |---|---|---|---|---|---|---|
 | `environment.source` | Source of the environment | Computed from the orbit file | `elements`; `spacemissionstudio` | scenarios/<id>.yaml field environment_source | Where the orbit, the eclipses and the passes come from. | DEVIATIONS DV-I1, docs/ENVIRONMENT_FORMAT.md |
 | `environment.shadow_model` | Shadow geometry | Cylindrical shadow | `cylindrical`; `conical` | scenarios/<id>.yaml field shadow_model | Eclipse times, the sunlit fraction of the array and every result that follows from them. | DEVIATIONS DV-P1, DV-E4 |
+| `environment.earth_model` | Earth constants | WGS-84 | `wgs84`; `wgs72` | scenarios/<id>.yaml field earth_model | The propagation of an orbit given as elements (mean motion and the SGP4 constants) and the Earth sphere of the shadow. The ground sites stay WGS-84 geodetic coordinates, a TLE stays on WGS-72, an imported environment is not computed here. | DEVIATIONS DV-E5 |
 | `environment.propagation` | Orbit propagation | SGP4 on mean elements | (none: fixed) | Fixed | Every position of the spacecraft. | DEVIATIONS DV-E2: elements are used as mean elements, without drag (B* = 0). A numerical propagator is a different model with new inputs (forces, drag), not a switch. |
 | `environment.gravity_tle` | Gravity model of a TLE | WGS-72 | (none: fixed) | Fixed | The propagation of a TLE. | DEVIATIONS DV-E5: the SGP4 library's default constants, the usual pairing for TLEs; SGP4 is defined on this set. |
-| `environment.gravity_elements` | Gravity model of orbital elements | WGS-84 | (none: fixed) | Fixed | The conversion of the elements to SGP4, the Earth radius of the geometry. | DEVIATIONS DV-E5: Earth radius and mu of the SGP4 library's WGS-84 set. A named choice of the Earth model is planned for 2.0.0 (P5b). |
 | `environment.sun_position` | Sun position | Low-precision almanac formulae (about 0.01 degree) | (none: fixed) | Fixed | The Sun direction and distance, the shadow and the array incidence. | DEVIATIONS DV-E1; equation ENV-SUN. A high-precision ephemeris needs data or a dependency that is not offline and licence-clean today. |
 | `environment.earth_rotation` | Earth rotation | GMST only, UTC treated as UT1 | (none: fixed) | Fixed | The ground track, the passes and the visibility of a site. | DEVIATIONS DV-E1: up to 0.9 s, about 400 m on the ground. |
 | `environment.shadow_earth` | Earth in the shadow geometry | Sphere of the equatorial radius | (none: fixed) | Fixed | The edge of the shadow. | DEVIATIONS DV-P1: no oblateness, no atmosphere. |
@@ -65,6 +65,15 @@ Generated from the registry in `budget_core/model_choices.py` (`budget choices -
 |---|---|---|---|
 | `cylindrical` | Cylindrical shadow | `ENV-SHADOW-CYL` | The Sun is a point at infinity: lit or dark, no penumbra. ENV-SHADOW-CYL: SOURCE_MISSING |
 | `conical` | Conical shadow (umbra, penumbra, annular) | `ENV-SHADOW-CON` | The Sun and the Earth are discs: the lit fraction falls through the penumbra. ENV-SHADOW-CON: SOURCE_MISSING |
+
+### Earth constants
+
+`environment.earth_model`, made in: scenarios/<id>.yaml field earth_model. Default: `wgs84`.
+
+| Value | Title | Equations | Source or note |
+|---|---|---|---|
+| `wgs84` | WGS-84 | (none) | The default. WGS 84 (NIMA TR8350.2), the set of the sgp4 library: equatorial radius 6378.137 km, mu 398600.5 km3/s2. |
+| `wgs72` | WGS-72 | (none) | Also the set a TLE is defined on. WGS 72, the gravity constants of the SGP4 theory (Hoots and Roehrich, Spacetrack Report No. 3), the set of the sgp4 library: equatorial radius 6378.135 km, mu 398600.8 km3/s2. |
 
 ### Load basis of the power timeline
 

@@ -88,6 +88,14 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** A tool that ignored the feature would give results the project did not ask for.
 - **What to do.** Open the project with a newer release of the tool.
 
+### FEATURE_NOT_DECLARED
+
+**The project uses a feature it does not list in requires** (warning)
+
+- **Rule.** A model choice that older versions do not know (the Earth model of a scenario) should be listed in `requires:` of `project.yaml`, so that an older tool refuses the project.
+- **Why it matters.** An older tool would otherwise read the project and could give results for a different model than the one chosen.
+- **What to do.** Add `model_choices` to `requires:` in project.yaml.
+
 ### PROVENANCE_PATH_UNKNOWN
 
 **A source is recorded for an input that does not exist** (warning)
@@ -573,6 +581,14 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Rule.** The elements or the TLE must describe an orbit above the Earth's surface.
 - **Why it matters.** An orbit that touches the Earth cannot be propagated.
 - **What to do.** Check the elements (a perigee below the surface is not valid) or the TLE lines.
+
+### MODEL_CHOICE_IGNORED
+
+**A model choice does not apply to this orbit** (warning)
+
+- **Rule.** The Earth model of a scenario applies to an orbit given as elements; a TLE is propagated on WGS-72, the set SGP4 is defined on.
+- **Why it matters.** You may believe the TLE was propagated on the model you chose.
+- **What to do.** Remove the option, or give the orbit as elements.
 
 ### ORBIT_EPOCH_FAR
 

@@ -11,7 +11,7 @@ units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, 
 orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...}   (see ENVIRONMENT_FORMAT.md)
 ground_stations/<id>.yaml kind: ground_station   name, latitude_deg, longitude_deg, altitude_m, min_elevation_deg
 targets/<id>.yaml       kind: target             same fields as a ground station (imaging target)
-scenarios/<id>.yaml     kind: scenario (v2)      orbit, start_utc, duration_s, step_s, sites, mission_phase?, default_mode, rules[], segments[]
+scenarios/<id>.yaml     kind: scenario (v4)      orbit, start_utc, duration_s, step_s, shadow_model?, earth_model?, sites, mission_phase?, default_mode, rules[], segments[]
 expendables/<id>.yaml   kind: expendable         name, subsystem, maturity, masses_kg{phase: kg}, mass_properties?
 modes/<id>.yaml         kind: spacecraft_mode    name, description, assignments{unit id: power mode name}
 config/margin_policy.yaml      kind: margin_policy (v2)  classes{name: {power_margin_ratio, mass_margin_ratio}}, system_power_margin_ratio, system_mass_margin_ratio
@@ -40,7 +40,7 @@ Power mode: `name`, `avg_power_w`, `peak_power_w` (>= average), `duty_cycle_rati
 - **Ranges** (`CONFIG_VALUE_INVALID`): antenna `gain_dbi` -50 to 100 dBi, `g_over_t_dbk` -100 to 100 dB/K, `required_ebn0_db` -20 to 60 dB, attenuation `loss_db` 0 to 100 dB, next to the ranges of earlier versions.
 - **Duplicates** are errors (`DUPLICATE_NAME`): two Eb/N0 entries with the same modulation and coding, two attenuation entries with the same name and elevation, two mass limits with one name that apply to the same phase (a limit without a phase applies to every phase).
 - **Temperature limits**: when both bands are given, the survival band must enclose the operating band (`survival_min_k <= operating_min_k` and `survival_max_k >= operating_max_k`).
-- **Scenario options that are not used** get `SCENARIO_OPTION_IGNORED` (warning): `import_dir` with `environment_source: elements`; `orbit`, and a `shadow_model` other than `cylindrical`, with `environment_source: spacemissionstudio`.
+- **Scenario options that are not used** get `SCENARIO_OPTION_IGNORED` (warning): `import_dir` with `environment_source: elements`; `orbit`, and a `shadow_model` other than `cylindrical`, with `environment_source: spacemissionstudio` (so does an `earth_model` other than `wgs84`). An `earth_model` other than `wgs84` on a scenario whose orbit is a TLE gets `MODEL_CHOICE_IGNORED` (warning): a TLE is propagated on WGS-72, the set SGP4 is defined on.
 
 ## Mass properties (decisions D-048 to D-050)
 
@@ -193,7 +193,7 @@ JSON Schemas for all kinds: `budget export-schemas <dir>` (also committed in `sr
 
 ## Sources, statuses and required features (schema revision D-213)
 
-The revision for provenance added three optional things and moved every kind up one schema version (`unit`, `scenario` and `margin_policy` to 3, all others to 2). Files of the older versions migrate in memory unchanged (`FILE_MIGRATED`); a tool of an earlier release reads a new file as `SCHEMA_TOO_NEW`. None of them is used by an equation, none changes a result, and none is part of the model digest. The design is in [transparency_p3_design.md](transparency_p3_design.md).
+The scenario went up one more version in the step that added the model choice `earth_model` ([choices](models/choices.md)): version 4, an older file reads unchanged. The revision for provenance added three optional things and moved every kind up one schema version (`unit`, `scenario` and `margin_policy` to 3, all others to 2). Files of the older versions migrate in memory unchanged (`FILE_MIGRATED`); a tool of an earlier release reads a new file as `SCHEMA_TOO_NEW`. None of them is used by an equation, none changes a result, and none is part of the model digest. The design is in [transparency_p3_design.md](transparency_p3_design.md).
 
 **`provenance:` in the file of an entity** (`spacecraft.yaml`, units, spacecraft modes, expendables, orbits, ground stations, targets, scenarios, links) says where a plain input came from, without changing the shape of any value:
 
@@ -218,7 +218,7 @@ provenance:
 
 **`status` on a sourced number** (the numbers of `config/`) takes `sourced` (default), `estimate` or `illustrative`. A number with `source: TBD` or a null value is a placeholder whatever its status.
 
-**`requires:` in `project.yaml`** lists the features the project uses that a tool without them would ignore. This version knows none; a name it does not know is the error `FEATURE_UNSUPPORTED`. A tool of an earlier release refuses the file because `requires` is an unknown key (and, before that, because of the schema version).
+**`requires:` in `project.yaml`** lists the features the project uses that a tool without them would ignore. This version knows one, `model_choices` (a model choice that older versions do not have, today the `earth_model` of a scenario); a name it does not know is the error `FEATURE_UNSUPPORTED`, and a project that uses a model choice without listing it gets `FEATURE_NOT_DECLARED` (warning). A tool of an earlier release refuses the file because `requires` is an unknown key (and, before that, because of the schema version).
 
 The tool writes `provenance`, `status` and `requires` only when they are not at their default, and `provenance` and `requires` last in the file. Marking inputs changes the manifest (the files differ) but not the model digest ([provenance.md](models/provenance.md)).
 

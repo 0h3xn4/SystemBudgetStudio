@@ -195,6 +195,8 @@ _PROVENANCE_STEPS = {
         )
     },
     **{(kind, 2): _annotated(3) for kind in ("unit", "scenario", "margin_policy")},
+    # the scenario gains the optional `earth_model` (D-219); an older file is valid unchanged
+    ("scenario", 3): _annotated(4),
 }
 
 DEFAULT_REGISTRY = MigrationRegistry(

@@ -79,8 +79,8 @@
 8: 'Project' | 'Example stress case (200 units)'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
-11: 'Inputs digest (model)' | 'sha256:45223c9d89e0edabb05b2c52ea787636270473ee601c1a58d3ba8ec6fdbc7471'
-12: 'Input files' | '220 files, sha256:0bdca543916cd7d4f83133eb35a812cc974de8221f24e40e3da016f0cac5341a'
+11: 'Inputs digest (model)' | 'sha256:50c44d33d4d5e0239a089db3c06c0f7e18a25021ba455ad58348e4daed83e48a'
+12: 'Input files' | '220 files, sha256:146847c69b8a3ec7e1e85ec6b58f5a199a6756b99f4441129451fa5749e0ff09'
 13: 'Illustrative inputs' | '6592'
 14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 ...

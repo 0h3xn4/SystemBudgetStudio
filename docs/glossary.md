@@ -43,6 +43,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **Converter efficiency and distribution loss**: the share of power lost in a bus's converters and in the cabling. Both come from `config/power_config.yaml`; the power needed *at the source* is higher than the power the units use.
 
 <a id="shadow-model"></a>
+**Earth model** (`earth_model`): the set of Earth constants (equatorial radius and gravitational parameter) used to propagate an orbit given as elements and for the Earth sphere of the shadow: WGS-84 (the default) or WGS-72. The two differ by 2 m in the radius and 0.3 km³/s² in mu. A TLE is always propagated on WGS-72, the set SGP4 is defined on; ground sites stay WGS-84 geodetic coordinates. Chosen per scenario; see [model choices](models/choices.md).
+
 **Cylindrical and conical shadow**: two models of the Earth's shadow. Cylindrical has a sharp edge (the satellite is either lit or in shadow); conical includes the soft [penumbra](#umbra-penumbra). Chosen per scenario (`shadow_model`).
 
 ## D

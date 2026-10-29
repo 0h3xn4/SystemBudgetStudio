@@ -9438,7 +9438,7 @@
       },
       {
         "path": "scenarios/stress_week.yaml",
-        "sha256": "5993a35aeb1fccaa612fde6e22c735eb3e61c928550d67665fdb9f6bba71389d",
+        "sha256": "4078a9ed0af757c3ffee777831bdce36edf0ee574b8ada420b4c8cf875fd1bad",
         "size": 777
       },
       {
@@ -10452,7 +10452,7 @@
         "size": 1102
       }
     ],
-    "inputs_digest": "sha256:45223c9d89e0edabb05b2c52ea787636270473ee601c1a58d3ba8ec6fdbc7471",
+    "inputs_digest": "sha256:50c44d33d4d5e0239a089db3c06c0f7e18a25021ba455ad58348e4daed83e48a",
     "libraries": [
       [
         "pinned",

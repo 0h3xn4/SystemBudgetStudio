@@ -85,6 +85,9 @@ class EnvironmentData:
     eclipses: tuple[Interval, ...]  # sunlight ratio below 1
     umbras: tuple[Interval, ...]  # sunlight ratio 0
     sites: dict[str, SiteVisibility]
+    # the Earth model the geometry was computed on: wgs84, wgs72, `tle` (WGS-72 propagation on the
+    # default sphere) or `imported` (not computed here), D-219
+    earth_model: str = "wgs84"
 
     @property
     def eclipse_fraction(self) -> float:

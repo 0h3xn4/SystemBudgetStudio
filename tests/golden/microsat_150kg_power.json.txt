@@ -2100,7 +2100,7 @@
       },
       {
         "path": "scenarios/commissioning_day.yaml",
-        "sha256": "b2342b841aeb3ccaa421b479807e92d361abbc1080b22c8a5507b16bb9f7a45b",
+        "sha256": "296cc2ef406dd4e55438e255380cc47f8f78a161387752ddcb2a2c22ff08dd3a",
         "size": 709
       },
       {
@@ -2199,7 +2199,7 @@
         "size": 641
       }
     ],
-    "inputs_digest": "sha256:001b362d917749bdc8ca2d00f58f54aced4959d2f6248913347b43c8fdba5844",
+    "inputs_digest": "sha256:fb65b9099dee83c766c28438de05727543e1c5b8f8ea32200abd15c0f0db8ba0",
     "libraries": [
       [
         "pinned",
