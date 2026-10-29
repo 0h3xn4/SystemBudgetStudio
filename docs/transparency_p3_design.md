@@ -1,6 +1,6 @@
 # P3 design: the file-format revision for provenance
 
-Status: **proposed, for review; nothing is implemented.** Decision record: D-213 in [DECISIONS.md](DECISIONS.md). Context: step P3 of the [transparency plan](transparency_audit.md#7-prioritized-implementation-plan).
+Status: **accepted and built** (P3a to P3c, D-213 to D-216); the text below is the design as it was reviewed. Decision record: D-213 in [DECISIONS.md](DECISIONS.md). Context: step P3 of the [transparency plan](transparency_audit.md#7-prioritized-implementation-plan).
 
 ## 1. What it is for
 
