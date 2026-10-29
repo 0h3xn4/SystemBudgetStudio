@@ -1,6 +1,6 @@
 # P5 design: selectable models
 
-Status: **proposed, for review; nothing is implemented.** Decision record: D-219 in [DECISIONS.md](DECISIONS.md). Context: step P5 of the [transparency plan](transparency_audit.md#7-prioritized-implementation-plan); it builds on the file revision of [P3](transparency_p3_design.md) (built) and the catalogue and Assumptions page of [P4](transparency_p4_design.md) (built).
+Status: **accepted by the owner (all six questions answered "as recommended", 2026-10-29); nothing is implemented yet.** Decision record: D-219 in [DECISIONS.md](DECISIONS.md). Context: step P5 of the [transparency plan](transparency_audit.md#7-prioritized-implementation-plan); it builds on the file revision of [P3](transparency_p3_design.md) (built) and the catalogue and Assumptions page of [P4](transparency_p4_design.md) (built).
 
 ## 1. What it is for
 
@@ -90,7 +90,9 @@ The default behaviour of every command, every number of a project that omits the
 
 Each step leaves the tool working, and the format revision ships once, with the last step that needs it.
 
-## 9. Questions for the owner
+## 9. Questions for the owner, and the answers
+
+The owner answered every question with the recommendation made here, so the proposals below are the decisions. Question 4 is the only one where the recommendation is to do nothing: link rate selection stays fixed and is registered with its reason.
 
 1. **Where do the choices live?** In the scenario file (my proposal: the choice changes the environment, a scenario already names its shadow model, and two scenarios can compare two models) or in one project-wide file, which is simpler to read but makes a per-scenario comparison impossible?
 2. **Which choices in 2.0.0?** My proposal is the four of section 3 (shadow geometry and load basis registered; Earth constants and seasonal irradiance new). Too many, too few, or the wrong two new ones?
