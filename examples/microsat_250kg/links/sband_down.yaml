@@ -60,3 +60,7 @@ static_points:
   - name: zenith
     elevation_deg: 90.0
     range_m: 550000.0
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

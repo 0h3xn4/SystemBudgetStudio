@@ -6,6 +6,7 @@
       "path": "transmitter.power_w",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "W",
       "value": 2.0
     },
@@ -15,6 +16,7 @@
       "path": "transmitter.line_loss_db",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dB",
       "value": 1.0
     },
@@ -24,6 +26,7 @@
       "path": "transmitter.antenna.gain_dbi",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dBi",
       "value": 6.0
     },
@@ -33,6 +36,7 @@
       "path": "receiver.g_over_t_dbk",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dB/K",
       "value": -7.4897
     },
@@ -42,6 +46,7 @@
       "path": "required_margin_db",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dB",
       "value": 3.0
     },
@@ -51,6 +56,7 @@
       "path": "pointing_loss_db",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dB",
       "value": 1.0
     },
@@ -60,6 +66,7 @@
       "path": "polarisation_loss_db",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dB",
       "value": 0.5
     },
@@ -69,6 +76,7 @@
       "path": "implementation_loss_db",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dB",
       "value": 0.5
     },
@@ -78,6 +86,7 @@
       "path": "entries[0].required_ebn0_db",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "dB",
       "value": 10.0
     }

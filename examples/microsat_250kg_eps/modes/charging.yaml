@@ -21,3 +21,7 @@ assignments:
   structure: off
   sun_sensors: charging
   xband_tx: off
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

@@ -32,3 +32,7 @@ segments:
   - start_s: 0.0
     duration_s: 1800.0
     mode: safe
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

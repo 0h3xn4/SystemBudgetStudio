@@ -34,3 +34,7 @@ rules:
     lead_s: 0.0
     lag_s: 0.0
 segments: []
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

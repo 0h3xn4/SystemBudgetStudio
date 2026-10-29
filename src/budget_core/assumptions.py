@@ -18,6 +18,7 @@ class Assumption:
     file: str
     path: str
     placeholder: bool
+    status: str = "sourced"  # what the project says the number is (D-213); a placeholder says so
 
 
 def missing_from(file: str, file_present: bool) -> str:

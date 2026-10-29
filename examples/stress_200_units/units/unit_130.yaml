@@ -41,3 +41,7 @@ mass_properties:
     - 0.05
     - 0.05
     - 0.1
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

@@ -229,62 +229,62 @@ Transmit power
  5
 W
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Line loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Antenna gain, transmitter
  3
 dBi
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 G/T
  10
 dB/K
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Required margin
  3
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Pointing loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Polarisation loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Implementation loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Required Eb/N0, QPSK rate 1/2
  4
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation gas_s
  0.2
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Transmit power
  10
 W
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Line loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Antenna pattern, transmitter
  n/a
 dBi
@@ -294,47 +294,47 @@ G/T
  20
 dB/K
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Required margin
  3
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Pointing loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Polarisation loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Implementation loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation rain_x at 5 deg
  3
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation rain_x at 20 deg
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation rain_x at 90 deg
  0.4
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation gas_x
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Equations
 ID
 Name
@@ -1459,9 +1459,9 @@ static (no scenario)
 Inputs digest (model)
 sha256:001b362d917749bdc8ca2d00f58f54aced4959d2f6248913347b43c8fdba5844
 Input files
-40 files, sha256:3a332f630a2b4cdfd0d34e45f2a11571f9c4a9caab0aa2f259bad4782a252ae9
+40 files, sha256:0d365e87e15809e28d5c2594a829087002a3db54db6a02bade41aefa9d7d6d97
 Illustrative inputs
-0
+466
 Generated (UTC)
 2026-01-02T03:04:05Z
 User

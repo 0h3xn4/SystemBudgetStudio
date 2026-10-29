@@ -375,7 +375,11 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             problems.append(incomplete(f"{what} is missing {where}.", file, path))
             return
         unit = "ratio" if "margin" in path else "kg"
-        out.append(Assumption(name, item.value, unit, item.source, file, path, item.is_placeholder))
+        out.append(
+            Assumption(
+                name, item.value, unit, item.source, file, path, item.is_placeholder, item.status
+            )
+        )
         if item.is_placeholder:
             problems.append(incomplete(f"{what} is a placeholder.", file, path))
 

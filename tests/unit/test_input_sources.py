@@ -28,8 +28,15 @@ ITEMS = "mass:items:launch"
 
 @pytest.fixture()
 def eps(tmp_path: Path) -> Path:
+    """The example without the marking of its numbers, so each test starts with no sources."""
     root = tmp_path / "eps"
     shutil.copytree(EXAMPLES / "microsat_250kg_eps", root)
+    for path in root.rglob("*.yaml"):
+        lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
+        if "provenance:\n" in lines:
+            lines = lines[: lines.index("provenance:\n")]
+        lines = [line for line in lines if line.strip() != "status: illustrative"]
+        path.write_text("".join(lines), encoding="utf-8", newline="\n")
     return root
 
 
@@ -337,3 +344,39 @@ def test_a_json_export_of_a_budget_records_the_illustrative_count(
     assert main(["run", str(eps), "--out", str(out)]) in (0, 1)
     document = json.loads((out / "mass_static.json").read_text(encoding="utf-8"))
     assert document["provenance"]["illustrative_inputs"] == illustrative_inputs(_project(eps)) > 0
+
+
+# ---- the examples are marked as invented (P3c) ------------------------------------------------
+
+
+@pytest.mark.parametrize("name", sorted(p.name for p in EXAMPLES.iterdir() if p.is_dir()))
+def test_every_input_of_an_example_is_marked_illustrative(name: str) -> None:
+    project = _project(EXAMPLES / name)
+    counts = status_counts(project)
+    assert counts["illustrative"] > 0
+    assert counts["sourced"] == counts["estimate"] == counts[""] == 0, "nothing is left unmarked"
+    placeholders = [i for i in inputs_of(project) if i.status == "tbd"]
+    assert counts["tbd"] == len(placeholders), "a placeholder is not marked as invented"
+    assert illustrative_inputs(project) == counts["illustrative"]
+    rows = dict(make_provenance(project).rows())
+    assert rows["Illustrative inputs"] == str(counts["illustrative"])
+
+
+def test_marking_the_examples_does_not_change_their_digest() -> None:
+    from budget_core.examples import EXAMPLES as BUILT
+    from budget_core.examples import mark_illustrative
+    from budget_core.io.project_digest import project_digest
+
+    for name, build in BUILT.items():
+        plain = build()  # already marked
+        unmarked = mark_illustrative(plain)  # idempotent
+        assert project_digest(plain) == project_digest(unmarked), name
+
+
+def test_a_report_built_from_an_example_says_it_has_invented_numbers(tmp_path: Path) -> None:
+    out = tmp_path / "out"
+    assert main(["run", str(EXAMPLES / "microsat_250kg_eps"), "--out", str(out)]) in (0, 1)
+    document = json.loads((out / "mass_static.json").read_text(encoding="utf-8"))
+    assert document["provenance"]["illustrative_inputs"] > 0
+    csv = (out / "mass_static_provenance.csv").read_text(encoding="utf-8")
+    assert "Illustrative inputs" in csv

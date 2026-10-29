@@ -294,62 +294,62 @@ Assumptions
 Configuration numbers used
 ## table
 Name | Value | Unit | Source | Status
-Space temperature | 3 | K | Synthetic example value; not from a data sheet or a standard. | sourced
-Temperature margin | 5 | K | Synthetic example value; not from a data sheet or a standard. | sourced
-Conductance ADCS - DH | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Conductance DH - EPS | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Conductance EPS - PL | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Conductance PL - STRUCT | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Conductance STRUCT - THERM | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Conductance THERM - TTC | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar flux, case cold | 0 | W/m2 | Synthetic example value; not from a data sheet or a standard. | sourced
-Albedo, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth infrared, case cold | 240 | W/m2 | Synthetic example value; not from a data sheet or a standard. | sourced
-Emissivity, ADCS panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Absorptivity, ADCS panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, ADCS panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, ADCS panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Emissivity, DH panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Absorptivity, DH panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, DH panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, DH panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Emissivity, EPS panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Absorptivity, EPS panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, EPS panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, EPS panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Emissivity, PL panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Absorptivity, PL panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, PL panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, PL panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Emissivity, STRUCT panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Absorptivity, STRUCT panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, STRUCT panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, STRUCT panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Emissivity, THERM panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Absorptivity, THERM panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, THERM panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, THERM panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Emissivity, TTC panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Absorptivity, TTC panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, TTC panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, TTC panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar flux, case hot | 1400 | W/m2 | Synthetic example value; not from a data sheet or a standard. | sourced
-Albedo, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth infrared, case hot | 240 | W/m2 | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, ADCS panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, ADCS panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, DH panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, DH panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, EPS panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, EPS panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, PL panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, PL panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, STRUCT panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, STRUCT panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, THERM panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, THERM panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Solar view, TTC panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
-Earth view, TTC panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | sourced
+Space temperature | 3 | K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Temperature margin | 5 | K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Conductance ADCS - DH | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Conductance DH - EPS | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Conductance EPS - PL | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Conductance PL - STRUCT | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Conductance STRUCT - THERM | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Conductance THERM - TTC | 0.5 | W/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar flux, case cold | 0 | W/m2 | Synthetic example value; not from a data sheet or a standard. | illustrative
+Albedo, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth infrared, case cold | 240 | W/m2 | Synthetic example value; not from a data sheet or a standard. | illustrative
+Emissivity, ADCS panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Absorptivity, ADCS panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, ADCS panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, ADCS panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Emissivity, DH panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Absorptivity, DH panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, DH panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, DH panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Emissivity, EPS panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Absorptivity, EPS panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, EPS panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, EPS panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Emissivity, PL panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Absorptivity, PL panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, PL panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, PL panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Emissivity, STRUCT panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Absorptivity, STRUCT panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, STRUCT panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, STRUCT panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Emissivity, THERM panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Absorptivity, THERM panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, THERM panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, THERM panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Emissivity, TTC panel | 0.85 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Absorptivity, TTC panel | 0.6 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, TTC panel, case cold | 0 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, TTC panel, case cold | 0.8 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar flux, case hot | 1400 | W/m2 | Synthetic example value; not from a data sheet or a standard. | illustrative
+Albedo, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth infrared, case hot | 240 | W/m2 | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, ADCS panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, ADCS panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, DH panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, DH panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, EPS panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, EPS panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, PL panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, PL panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, STRUCT panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, STRUCT panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, THERM panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, THERM panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Solar view, TTC panel, case hot | 0.5 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
+Earth view, TTC panel, case hot | 0.3 | ratio | Synthetic example value; not from a data sheet or a standard. | illustrative
 Equations
 ## table
 ID | Name | Formula | Source
@@ -363,10 +363,10 @@ Problems
 Problems and open items
 ## table
 Severity | Code | Location | Path | Message | Hint
-warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:9 | classes.class_a.mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
-warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:17 | classes.class_b.mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
-warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:25 | classes.class_c.mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
-warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:32 | system_mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
+warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:10 | classes.class_a.mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
+warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:19 | classes.class_b.mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
+warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:28 | classes.class_c.mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
+warning | CONFIG_PLACEHOLDER | config/margin_policy.yaml:36 | system_mass_margin_ratio | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
 warning | CONFIG_PLACEHOLDER | config/mass_limits.yaml:7 | limits[0].limit_kg | This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy. | Replace it with a value from your margin policy, standard or data sheet and cite the source.
 error | THERMAL_MARGIN_INSUFFICIENT | units/radio.yaml | temperature_limits (case hot) | Unit 'radio' is within its operating limits in a thermal case but closer than the required temperature margin. | The margin is set in config/thermal_environment.yaml.
 Provenance
@@ -380,7 +380,7 @@ Project | Example 250 kg minisatellite, complete power and thermal inputs
 Project revision | 1
 Scenario | static (no scenario)
 Inputs digest (model) | sha256:53724c8ea7e2ffd0763785cfae83db778da81a9c1bb6be64fc439f27d1dc9b61
-Input files | 41 files, sha256:2b4a5707a284f3a79bb8c9c737146a726f7331f96cb6f6d4fb11cc6ab331620b
-Illustrative inputs | 0
+Input files | 41 files, sha256:df4e8f39f06cecbe8fd161916f51fd8253febbc4bff5fa3c7f71222f85d54605
+Illustrative inputs | 657
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

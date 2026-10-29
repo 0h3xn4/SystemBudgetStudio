@@ -9,3 +9,7 @@ elements:
   raan_deg: 100.0
   arg_perigee_deg: 90.0
   mean_anomaly_deg: 0.0
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

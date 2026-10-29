@@ -23,3 +23,7 @@ mass_properties:
     ixy_kgm2: 0.0
     ixz_kgm2: 0.0
     iyz_kgm2: 0.0
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

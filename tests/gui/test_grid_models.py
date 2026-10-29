@@ -18,7 +18,7 @@ from budget_gui.grid_models import (
     is_placeholder,
     sourced_paths,
 )
-from budget_gui.model_document import ModelDocument
+from budget_gui.model_document import ModelDocument, value_at
 from budget_gui.theme import Status
 
 EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
@@ -279,3 +279,31 @@ def test_the_helpers_find_sourced_numbers_and_placeholders() -> None:
     }
     assert sourced_paths(data) == [("a",), ("b", 0)]
     assert not is_placeholder(data["a"]) and is_placeholder(data["b"][0])
+
+
+def test_a_sourced_number_with_a_status_is_still_a_row_and_replacing_it_drops_the_status(
+    doc: ModelDocument,
+) -> None:
+    """The examples mark their numbers `illustrative` (D-213): such a number is listed like any
+    other, and a value or a source typed over it makes it the user's own again."""
+    model = SourcedModel(doc)
+    rel, path = next(
+        (r, p)
+        for row in range(model.rowCount())
+        for r, p in [model.item(row)]
+        if r == "config/margin_policy.yaml"
+    )
+    doc.edit([(rel, lambda data: value_at(data, path).update({"status": "illustrative"}))], "mark")
+    count = model.rowCount()
+    assert count > 40, "a number with a status is still listed"
+    row = next(i for i in range(model.rowCount()) if model.item(i) == (rel, path))
+    assert model.setData(model.index(row, 1), "0.3")
+    assert "status" not in value_at(doc.data(rel), path)
+
+    doc.edit([(rel, lambda data: value_at(data, path).update({"status": "estimate"}))], "mark")
+    assert model.setData(model.index(row, 3), "Programme rule 12")
+    assert "status" not in value_at(doc.data(rel), path)
+
+    doc.edit([(rel, lambda data: value_at(data, path).update({"status": "estimate"}))], "mark")
+    assert model.setData(model.index(row, 4), "a note")
+    assert value_at(doc.data(rel), path)["status"] == "estimate", "a note changes no number"

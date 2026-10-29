@@ -197,7 +197,16 @@ class _Notes:
             return None
         if first:
             self.assumptions.append(
-                Assumption(name, item.value, unit, item.source, file, path, item.is_placeholder)
+                Assumption(
+                    name,
+                    item.value,
+                    unit,
+                    item.source,
+                    file,
+                    path,
+                    item.is_placeholder,
+                    item.status,
+                )
             )
             if item.is_placeholder:
                 self.problems.append(incomplete(f"{what} is a placeholder.", file, path))

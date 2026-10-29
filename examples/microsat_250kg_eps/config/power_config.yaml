@@ -3,10 +3,13 @@ kind: power_config
 distribution_loss_ratio:
   value: 0.03
   source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
 converter_efficiency_ratio:
   main:
     value: 0.9
     source: Synthetic example value; not from a data sheet or a standard.
+    status: illustrative
   payload:
     value: 0.9
     source: Synthetic example value; not from a data sheet or a standard.
+    status: illustrative

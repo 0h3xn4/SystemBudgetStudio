@@ -240,7 +240,9 @@ class _Collector:
             self.problems.append(incomplete(f"{what} is missing {where}.", FILE, path))
             return None
         self.assumptions.append(
-            Assumption(name, item.value, unit, item.source, FILE, path, item.is_placeholder)
+            Assumption(
+                name, item.value, unit, item.source, FILE, path, item.is_placeholder, item.status
+            )
         )
         if item.is_placeholder:
             self.problems.append(incomplete(f"{what} is a placeholder.", FILE, path))

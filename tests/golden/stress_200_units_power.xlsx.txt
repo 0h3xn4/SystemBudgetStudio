@@ -124,7 +124,7 @@
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
 11: 'Inputs digest (model)' | 'sha256:45223c9d89e0edabb05b2c52ea787636270473ee601c1a58d3ba8ec6fdbc7471'
-12: 'Input files' | '220 files, sha256:9390ff9e74bbec24194e5408c8fb8778190e8cd009897324cdccc2ff5d2e8a76'
-13: 'Illustrative inputs' | '0'
+12: 'Input files' | '220 files, sha256:0bdca543916cd7d4f83133eb35a812cc974de8221f24e40e3da016f0cac5341a'
+13: 'Illustrative inputs' | '6592'
 14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 ...

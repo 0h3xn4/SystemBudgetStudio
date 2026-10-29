@@ -8,18 +8,22 @@ transmitter:
   power_w:
     value: 5.0
     source: Synthetic example value; not from a data sheet or a standard.
+    status: illustrative
   line_loss_db:
     value: 0.5
     source: Synthetic example value; not from a data sheet or a standard.
+    status: illustrative
   antenna:
     gain_dbi:
       value: 3.0
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
   polarisation: RHCP
 receiver:
   g_over_t_dbk:
     value: 10.0
     source: Synthetic example value; not from a data sheet or a standard.
+    status: illustrative
   polarisation: RHCP
 modulation: QPSK
 coding: rate 1/2
@@ -32,15 +36,19 @@ data_rates_bps:
 required_margin_db:
   value: 3.0
   source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
 pointing_loss_db:
   value: 1.0
   source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
 polarisation_loss_db:
   value: 0.5
   source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
 implementation_loss_db:
   value: 1.0
   source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
 attenuation:
   - gas_s
 active_modes:
@@ -52,3 +60,7 @@ static_points:
   - name: zenith
     elevation_deg: 90.0
     range_m: 550000.0
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

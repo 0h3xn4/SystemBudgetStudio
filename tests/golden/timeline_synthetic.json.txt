@@ -6,6 +6,7 @@
       "path": "classes.m1.power_margin_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.1
     },
@@ -15,6 +16,7 @@
       "path": "system_power_margin_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.05
     },
@@ -24,6 +26,7 @@
       "path": "distribution_loss_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.0
     },
@@ -33,6 +36,7 @@
       "path": "converter_efficiency_ratio.main",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 1.0
     },
@@ -42,6 +46,7 @@
       "path": "solar_array.solar_irradiance_wm2",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "W/m2",
       "value": 1000.0
     },
@@ -51,6 +56,7 @@
       "path": "solar_array.cell_area_m2",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "m2",
       "value": 0.0005
     },
@@ -60,6 +66,7 @@
       "path": "solar_array.cell_efficiency_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.5
     },
@@ -69,6 +76,7 @@
       "path": "solar_array.reference_temperature_k",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "K",
       "value": 300.0
     },
@@ -78,6 +86,7 @@
       "path": "solar_array.cell_temperature_k",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "K",
       "value": 300.0
     },
@@ -87,6 +96,7 @@
       "path": "solar_array.efficiency_temp_coeff_perk",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "1/K",
       "value": -0.002
     },
@@ -96,6 +106,7 @@
       "path": "solar_array.packing_loss_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.0
     },
@@ -105,6 +116,7 @@
       "path": "solar_array.harness_loss_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.0
     },
@@ -114,6 +126,7 @@
       "path": "design_life_yr",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "yr",
       "value": 5.0
     },
@@ -123,6 +136,7 @@
       "path": "battery.cell_capacity_ah",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "Ah",
       "value": 5.0
     },
@@ -132,6 +146,7 @@
       "path": "battery.cell_nominal_voltage_v",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "V",
       "value": 4.0
     },
@@ -141,6 +156,7 @@
       "path": "battery.charge_efficiency_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 1.0
     },
@@ -150,6 +166,7 @@
       "path": "battery.discharge_efficiency_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 1.0
     },
@@ -159,6 +176,7 @@
       "path": "battery.annual_capacity_fade_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.01
     },
@@ -168,6 +186,7 @@
       "path": "battery.initial_soc_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 1.0
     },
@@ -177,6 +196,7 @@
       "path": "battery.max_dod_ratio.eol",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.15
     },
@@ -186,6 +206,7 @@
       "path": "solar_array.annual_degradation_ratio",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "ratio",
       "value": 0.02
     },
@@ -195,6 +216,7 @@
       "path": "limits.peak_power_w",
       "placeholder": false,
       "source": "test fixture",
+      "status": "sourced",
       "unit": "W",
       "value": 110.0
     }

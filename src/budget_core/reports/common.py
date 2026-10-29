@@ -74,7 +74,7 @@ def closing_sections(
             Column("Status"),
         ),
         tuple(
-            (a.name, a.value, a.unit, a.source, "PLACEHOLDER" if a.placeholder else "sourced")
+            (a.name, a.value, a.unit, a.source, "PLACEHOLDER" if a.placeholder else a.status)
             for a in assumptions
         ),
     )

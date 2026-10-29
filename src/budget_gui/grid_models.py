@@ -577,7 +577,7 @@ def is_sourced(node: Any) -> bool:
         isinstance(node, dict)
         and "value" in node
         and "source" in node
-        and set(node) <= {"value", "source", "note"}
+        and set(node) <= {"value", "source", "note", "status"}
     )
 
 
@@ -701,6 +701,7 @@ class SourcedModel(GridModel):
                 node = value_at(data, path)
                 if isinstance(node, dict):
                     node["value"] = parsed
+                    node.pop("status", None)  # a number the user replaced is no longer a sample
 
             return rel, apply_value, f"Edit {self.label_of(self._keys[row])}: value"
         if column == 4:  # an emptied note is dropped
@@ -716,4 +717,16 @@ class SourcedModel(GridModel):
                         node.pop("note", None)
 
             return rel, apply_note, f"Edit {self.label_of(self._keys[row])}: note"
-        return super().change_for(row, column, text)
+        change = super().change_for(row, column, text)
+        if change is not None and column == 3:  # a new source: the old status no longer applies
+            rel, apply, label = change
+            path = self._items[row][1]
+
+            def apply_source(data: dict[str, Any]) -> None:
+                apply(data)
+                node = value_at(data, path)
+                if isinstance(node, dict):
+                    node.pop("status", None)
+
+            return rel, apply_source, label
+        return change
