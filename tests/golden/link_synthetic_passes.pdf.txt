@@ -271,7 +271,8 @@ r1
 Scenario
 static (no scenario)
 Run parameters
-Environment source synthetic; Shadow model cylindrical; Earth model WGS-84; Start (UTC) 2026-01-01T00:00:00Z; Duration 1000 s; Step 10 s
+Environment source synthetic; Shadow model cylindrical; Earth model WGS-84; Irradiance model constant; Start (UTC) 2026-01-01T00:00:00Z;
+Duration 1000 s; Step 10 s
 Inputs digest (model)
 sha256:72ac95b7cf40a37737b4042fd7685258927479f23b96763af59d7814d2c083b4
 Illustrative inputs

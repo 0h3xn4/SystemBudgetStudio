@@ -7,6 +7,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
+
 from budget_core.control import RunControl, checkpoint, stage
 from budget_core.environment.data import (
     Environment,
@@ -23,6 +25,7 @@ from budget_core.environment.spacemissionstudio import (
 from budget_core.io.paths import resolve_inside
 from budget_core.io.project_loader import model_to_data
 from budget_core.model import Project, Scenario
+from budget_core.power import array as arr
 from budget_core.problems import Problem, Severity
 from budget_core.scenario.timeline import TimelineSegment, build_timeline
 from budget_core.timeutil import format_utc, parse_utc
@@ -55,6 +58,18 @@ EARTH_MODEL_TEXT = {
 }
 
 
+def irradiance_text(run: ScenarioRun) -> str:
+    """`constant`, or `seasonal` with the mean factor over the scenario (AU / R)^2 that scales the
+    configured irradiance (D-219)."""
+    if run.scenario.irradiance_model == "constant":
+        return "constant"
+    distance = run.env.sun_distance_m
+    if distance is None or len(distance) == 0:
+        return "seasonal"
+    factor = float(np.mean(arr.distance_factor_ratio(distance)))
+    return f"seasonal (mean factor {factor:.4f} of the value at 1 AU)"
+
+
 def run_parameters(run: ScenarioRun) -> tuple[tuple[str, str], ...]:
     """The scenario options that change a number, for the provenance of a run's outputs."""
     env, sc = run.env, run.scenario
@@ -62,6 +77,7 @@ def run_parameters(run: ScenarioRun) -> tuple[tuple[str, str], ...]:
         ("Environment source", str(env.source)),
         ("Shadow model", str(env.shadow_model)),
         ("Earth model", EARTH_MODEL_TEXT.get(env.earth_model, env.earth_model)),
+        ("Irradiance model", irradiance_text(run)),
         ("Start (UTC)", format_utc(env.grid.start)),
         ("Duration", f"{sc.duration_s:.0f} s"),
         ("Step", f"{sc.step_s:g} s"),
@@ -235,6 +251,7 @@ def environment_key(project: Project, scenario: Scenario) -> str:
         "step_s": scenario.step_s,
         "shadow_model": scenario.shadow_model,
         "earth_model": scenario.earth_model,
+        "irradiance_model": scenario.irradiance_model,
         "sites": [
             [
                 site_id,

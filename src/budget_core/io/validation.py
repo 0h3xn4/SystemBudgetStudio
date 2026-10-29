@@ -1086,7 +1086,8 @@ def _environment_references(
     sites = set(project.ground_stations) | set(project.targets)
 
     if "model_choices" not in project.meta.requires and any(
-        sc.earth_model != "wgs84" for sc in project.scenarios.values()
+        sc.earth_model != "wgs84" or sc.irradiance_model != "constant"
+        for sc in project.scenarios.values()
     ):
         out.append(
             _p(

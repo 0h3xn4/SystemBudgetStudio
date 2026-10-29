@@ -165,7 +165,7 @@
 8: 'Project' | 'Example 150 kg microsatellite'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
-11: 'Run parameters' | 'Environment source elements; Shadow model conical; Earth model WGS-84; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s; Demand basis nominal; Cases bol, eol; Mission phase not set'
+11: 'Run parameters' | 'Environment source elements; Shadow model conical; Earth model WGS-84; Irradiance model constant; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s; Demand basis nominal; Cases bol, eol; Mission phase not set'
 12: 'Inputs digest (model)' | 'sha256:fb65b9099dee83c766c28438de05727543e1c5b8f8ea32200abd15c0f0db8ba0'
 13: 'Input files' | '40 files, sha256:2ca5fd58e480674fe8b6e38d5b23446bb8ae84b38c0fa7007979d3307add2740'
 14: 'Illustrative inputs' | '466'

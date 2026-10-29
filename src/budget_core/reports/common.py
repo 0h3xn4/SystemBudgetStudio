@@ -42,12 +42,16 @@ def equation_ids(*prefixes: str) -> list[str]:
     return [e.id for e in EQUATIONS.values() if e.id.startswith(prefixes)]
 
 
-def environment_equations(shadow_model: str | None, with_sites: bool) -> list[str]:
+def environment_equations(
+    shadow_model: str | None, with_sites: bool, irradiance_model: str = "constant"
+) -> list[str]:
     """The environment equations a result relies on: the Sun and the Earth shadow of the model in
     use (`None`: no eclipse analysis), and the geometry of the pass analysis."""
     ids: list[str] = []
     if shadow_model is not None:
         ids += ["ENV-SUN", "ENV-SHADOW-CON" if shadow_model == "conical" else "ENV-SHADOW-CYL"]
+    if irradiance_model == "seasonal":
+        ids.append("ENV-IRRADIANCE")
     if with_sites:
         ids += ["ENV-GMST", "ENV-GEODETIC", "ENV-TOPO"]
     return ids

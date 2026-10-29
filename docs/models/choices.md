@@ -24,9 +24,9 @@ Generated from the registry in `budget_core/model_choices.py` (`budget choices -
 
 | Id | Choice | Default | Alternatives | Made in | Acts on | Reference |
 |---|---|---|---|---|---|---|
+| `power.array_irradiance` | Irradiance on the array | Constant irradiance | `constant`; `seasonal` | scenarios/<id>.yaml field irradiance_model | The array output, and so the energy balance and the battery, over the year. | DEVIATIONS DV-P5 |
 | `power.load_basis` | Load basis of the power timeline | Nominal loads | `nominal`; `margined` | Option --load-basis of budget power-timeline; the window runs the nominal basis | The demand of every mode, and so the energy balance and the battery. | docs/models/power-timeline.md |
 | `power.cases` | Power cases | BOL and EOL (EOL at the design life) | (none: fixed) | Fixed | The age of the array and the battery in every result. | DEVIATIONS DV-P2; power_system.design_life_yr. |
-| `power.array_irradiance` | Irradiance on the array | Constant solar_irradiance_wm2 | (none: fixed) | Fixed | The array output. | DEVIATIONS DV-P5: no Earth-Sun distance variation. A seasonal irradiance is planned for 2.0.0 (P5c). |
 
 ## Thermal
 
@@ -74,6 +74,15 @@ Generated from the registry in `budget_core/model_choices.py` (`budget choices -
 |---|---|---|---|
 | `wgs84` | WGS-84 | (none) | The default. WGS 84 (NIMA TR8350.2), the set of the sgp4 library: equatorial radius 6378.137 km, mu 398600.5 km3/s2. |
 | `wgs72` | WGS-72 | (none) | Also the set a TLE is defined on. WGS 72, the gravity constants of the SGP4 theory (Hoots and Roehrich, Spacetrack Report No. 3), the set of the sgp4 library: equatorial radius 6378.135 km, mu 398600.8 km3/s2. |
+
+### Irradiance on the array
+
+`power.array_irradiance`, made in: scenarios/<id>.yaml field irradiance_model. Default: `constant`.
+
+| Value | Title | Equations | Source or note |
+|---|---|---|---|
+| `constant` | Constant irradiance | (none) | The configured solar_irradiance_wm2 as it is, whatever the date. |
+| `seasonal` | Seasonal irradiance | `ENV-IRRADIANCE`, `ENV-SUN` | The configured irradiance is the value at 1 AU; it is scaled by (AU / R)^2 with the Earth-Sun distance R of the Sun model, so it is about 3.4 % higher in early January and 3.3 % lower in early July. ENV-IRRADIANCE: SOURCE_MISSING; ENV-SUN: SOURCE_MISSING |
 
 ### Load basis of the power timeline
 

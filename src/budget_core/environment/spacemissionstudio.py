@@ -144,7 +144,7 @@ class SpaceMissionStudioImport:
         position = self._orbit(grid, times)
         jd0, fr0 = geo.julian_date_parts(grid.start)
         jd = jd0 + fr0 + times / 86400.0
-        sun_dir, _ = geo.sun_direction_and_distance(jd)
+        sun_dir, sun_dist = geo.sun_direction_and_distance(jd)
         eclipses = self._eclipses(grid)
         ratio = np.ones(len(times))
         for e in eclipses:
@@ -155,6 +155,7 @@ class SpaceMissionStudioImport:
             source=self.name,
             shadow_model=shadow_model,
             earth_model="imported",
+            sun_distance_m=sun_dist,
             position_m=position,
             sun_direction=sun_dir,
             sunlight_ratio=ratio,

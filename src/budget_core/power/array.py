@@ -12,6 +12,7 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.environment.constants import ASTRONOMICAL_UNIT
 from budget_core.equation_binding import computes
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
@@ -53,6 +54,13 @@ def face_cosines(normals_body: NDArray, sun_body: NDArray) -> NDArray:
     return np.asarray(np.maximum(s @ n.T, 0.0), dtype=np.float64)
 
 
+@computes("ENV-IRRADIANCE")
+def distance_factor_ratio(sun_distance_m: NDArray) -> NDArray:
+    """ENV-IRRADIANCE: the irradiance at the Earth-Sun distance relative to the value at 1 AU,
+    (AU / R)^2 (the inverse-square law). Used by the `seasonal` irradiance model."""
+    return np.asarray((ASTRONOMICAL_UNIT.value / np.asarray(sun_distance_m)) ** 2, dtype=np.float64)
+
+
 @computes("TDP-ARRAY")
 def array_power_w(
     *,
@@ -66,11 +74,13 @@ def array_power_w(
     age_factor_ratio: float,
     cosines: NDArray,
     lit_ratio: NDArray,
+    distance_factor: NDArray | float = 1.0,
 ) -> NDArray:
     """TDP-ARRAY: electrical power at the array output per step, shape (N,).
 
     cell_counts: (F,) cells per face; cosines: (N, F); lit_ratio: (N,) share of the step in
-    sunlight."""
+    sunlight; distance_factor: 1 for the constant irradiance, (N,) from ENV-IRRADIANCE for the
+    seasonal one (multiplying by 1.0 changes no bit)."""
     per_face_w = (
         irradiance_wm2
         * np.asarray(cell_counts, dtype=np.float64)
@@ -81,4 +91,4 @@ def array_power_w(
         * (1.0 - harness_loss_ratio)
         * age_factor_ratio
     )
-    return np.asarray((cosines @ per_face_w) * lit_ratio, dtype=np.float64)
+    return np.asarray((cosines @ per_face_w) * lit_ratio * distance_factor, dtype=np.float64)

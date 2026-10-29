@@ -166,7 +166,7 @@
 8: 'Project' | 'Example stress case (200 units)'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
-11: 'Run parameters' | 'Environment source elements; Shadow model conical; Earth model WGS-84; Start (UTC) 2026-06-01T00:00:00Z; Duration 604800 s; Step 1 s; Demand basis nominal; Cases bol, eol; Mission phase not set'
+11: 'Run parameters' | 'Environment source elements; Shadow model conical; Earth model WGS-84; Irradiance model constant; Start (UTC) 2026-06-01T00:00:00Z; Duration 604800 s; Step 1 s; Demand basis nominal; Cases bol, eol; Mission phase not set'
 12: 'Inputs digest (model)' | 'sha256:50c44d33d4d5e0239a089db3c06c0f7e18a25021ba455ad58348e4daed83e48a'
 13: 'Input files' | '220 files, sha256:146847c69b8a3ec7e1e85ec6b58f5a199a6756b99f4441129451fa5749e0ff09'
 14: 'Illustrative inputs' | '6592'

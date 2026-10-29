@@ -354,6 +354,7 @@
   "environment": {
     "earth_model": "wgs84",
     "eclipse_fraction": 0.3,
+    "irradiance_model": "constant",
     "orbits": 2,
     "shadow_model": "cylindrical",
     "source": "synthetic"
@@ -451,6 +452,10 @@
       [
         "Earth model",
         "WGS-84"
+      ],
+      [
+        "Irradiance model",
+        "constant"
       ],
       [
         "Start (UTC)",

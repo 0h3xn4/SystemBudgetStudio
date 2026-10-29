@@ -179,6 +179,32 @@ REGISTRY: tuple[ModelChoice, ...] = (
         "earth_model",
     ),
     ModelChoice(
+        "power.array_irradiance",
+        "Irradiance on the array",
+        "irradiance model",
+        "scenario",
+        "constant",
+        (
+            Choice(
+                "constant",
+                "Constant irradiance",
+                note="The configured solar_irradiance_wm2 as it is, whatever the date.",
+            ),
+            Choice(
+                "seasonal",
+                "Seasonal irradiance",
+                ("ENV-IRRADIANCE", "ENV-SUN"),
+                note="The configured irradiance is the value at 1 AU; it is scaled by "
+                "(AU / R)^2 with the Earth-Sun distance R of the Sun model, so it is about 3.4 % "
+                "higher in early January and 3.3 % lower in early July.",
+            ),
+        ),
+        "The array output, and so the energy balance and the battery, over the year.",
+        "scenarios/<id>.yaml field irradiance_model",
+        "DEVIATIONS DV-P5",
+        "irradiance_model",
+    ),
+    ModelChoice(
         "power.load_basis",
         "Load basis of the power timeline",
         "load basis",
@@ -255,14 +281,6 @@ REGISTRY: tuple[ModelChoice, ...] = (
         "BOL and EOL (EOL at the design life)",
         "The age of the array and the battery in every result.",
         "DEVIATIONS DV-P2; power_system.design_life_yr.",
-    ),
-    _fixed(
-        "power.array_irradiance",
-        "Irradiance on the array",
-        "Constant solar_irradiance_wm2",
-        "The array output.",
-        "DEVIATIONS DV-P5: no Earth-Sun distance variation. A seasonal irradiance is planned "
-        "for 2.0.0 (P5c).",
     ),
     _fixed(
         "thermal.model",

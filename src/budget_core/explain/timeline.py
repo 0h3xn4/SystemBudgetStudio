@@ -26,6 +26,7 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.environment.constants import ASTRONOMICAL_UNIT
 from budget_core.equations import EQUATIONS
 from budget_core.explain.power import ExplainError, explain_power
 from budget_core.explain.trace import Explanation, Quantity, Step, equations_used, link_steps
@@ -266,10 +267,42 @@ def _array_steps(ctx: _Ctx) -> list[Step]:
     )
     base_generation = ctx.detail.base_generation_w
     peak = None if base_generation is None else float(np.max(base_generation))
+    distance_steps: list[Step] = []
+    distance_inputs: tuple[Quantity, ...] = ()
+    run = ctx.result.run
+    if run.scenario.irradiance_model == "seasonal" and run.env.sun_distance_m is not None:
+        factors = arr.distance_factor_ratio(run.env.sun_distance_m)
+        mean_factor = Quantity(
+            "irradiance factor (AU / R)^2, mean over the scenario",
+            float(np.mean(factors)),
+            "ratio",
+            "this step",
+        )
+        distance_steps.append(
+            Step(
+                "Irradiance at the Earth-Sun distance (seasonal model)",
+                (
+                    Quantity(
+                        "Earth-Sun distance, mean over the scenario",
+                        float(np.mean(run.env.sun_distance_m)),
+                        "m",
+                        "the Sun model (ENV-SUN)",
+                    ),
+                    Quantity("astronomical unit", ASTRONOMICAL_UNIT.value, "m", "constant"),
+                ),
+                mean_factor,
+                "ENV-IRRADIANCE",
+                "The scenario chooses the seasonal irradiance model: the configured irradiance is "
+                "the value at 1 AU and every step is scaled by (AU / R)^2 with the distance R of "
+                "its grid step.",
+            )
+        )
+        distance_inputs = (replace(mean_factor, origin="previous step"),)
     output = Step(
         "Array output at beginning of life",
         (
             irradiance,
+            *distance_inputs,
             cells,
             area,
             eff,
@@ -286,7 +319,7 @@ def _array_steps(ctx: _Ctx) -> list[Step]:
         "the other steps follow the Sun direction and the eclipses. n/a when an array input, a "
         "face or the pointing of a mode is missing (see Problems).",
     )
-    return [temp, output, _age_step(ctx)]
+    return [temp, *distance_steps, output, _age_step(ctx)]
 
 
 def _total_duration(ctx: _Ctx) -> Quantity:
