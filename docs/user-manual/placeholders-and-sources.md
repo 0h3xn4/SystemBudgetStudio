@@ -2,7 +2,7 @@
 
 This page explains why some results say *n/a*, why a report may start with an INCOMPLETE banner, and how to enter a number the way the tool wants it.
 
-**Contents:** [The rule](#the-rule-the-tool-never-invents-a-number) · [Enter a sourced number](#how-do-i-enter-a-sourced-number) · [Find what is open](#how-do-i-find-what-is-still-open) · [Record where a plain input came from](#how-do-i-record-where-a-plain-input-came-from) · [Where the numbers live](#which-numbers-need-a-source)
+**Contents:** [The rule](#the-rule-the-tool-never-invents-a-number) · [Enter a sourced number](#how-do-i-enter-a-sourced-number) · [Find what is open](#how-do-i-find-what-is-still-open) · [See everything that is active](#where-do-i-see-everything-that-is-active) · [Record where a plain input came from](#how-do-i-record-where-a-plain-input-came-from) · [Where the numbers live](#which-numbers-need-a-source)
 
 ## The rule: the tool never invents a number
 
@@ -30,6 +30,17 @@ power_margin_ratio:
 - To mark a number as not yet known, write `value: null` and `source: TBD`.
 
 Do not copy a number from a standard unless you have the text and can cite it. The example projects use `Synthetic example value; not from a data sheet or a standard.` as their source, which is the honest description of invented numbers.
+
+## Where do I see everything that is active?
+
+Some numbers are not in any of your files: the grid on which passes and eclipses are found, the age of a TLE that is warned about, the tolerances of the solvers, the gravity model, the Sun model. The **Assumptions** page (Model area, **View → Show the assumptions**, Ctrl+Shift+A, or Ctrl+K) lists all of them next to your own, with four kinds of rows:
+
+- **Numbers**: every sourced number of `config/` and of the links, with its unit, its source, its status (`sourced`, `estimate`, `illustrative` or `placeholder`) and the file and field to edit;
+- **Settings**: the settings, tolerances, limits and constants the tool applies, with their value, why they are what they are and where they act; they are fixed in this version ([the full list](../models/settings.md));
+- **Choices**: the shadow model and the environment of each scenario, and the choices the tool makes for every project (SGP4, a TLE on WGS-72 and elements on WGS-84, the low-precision Sun, BOL and EOL cases);
+- **Forms**: the defaults the guided mode and the forms write into a new project.
+
+The buttons above the list keep one kind; the filter keeps the rows that contain every word you type, in any order. Double-click a row that names a file to open it at the field. The page shows the project as it was last loaded or saved. On the command line: `budget assumptions my_satellite` (`--section`, `--format json`) and `budget settings`.
 
 ## How do I record where a plain input came from?
 

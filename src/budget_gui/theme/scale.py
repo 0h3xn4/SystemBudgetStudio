@@ -11,6 +11,7 @@ from __future__ import annotations
 
 # every name the theme package re-exports; add new constants here (and nowhere else)
 __all__ = [
+    "ASSUMPTIONS_WIDTHS",
     "BORDER",
     "COLUMN_MIN",
     "COMBO_MAX_WIDTH",
@@ -164,6 +165,7 @@ SITES_MAX_HEIGHT = 72
 COMBO_MAX_WIDTH = 120
 COMPACT_BUTTON_WIDTH = 36  # the arrows that step through violations
 PROGRESS_HEIGHT = 4
+ASSUMPTIONS_WIDTHS = (300, 110, 80, 100, 360)  # Name, Value, Unit, Status, Source or reason
 COMPARE_KEY_WIDTHS = (120, 90, 110, 180)  # Budget, Section, Row, Quantity: never wider than this
 COMPARE_VALUE_MAX = 200  # a value column of the comparison
 PROBLEMS_HEIGHT = 200  # the Problems panel at the bottom
