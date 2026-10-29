@@ -50,7 +50,7 @@ def test_every_kind_moves_up_one_version() -> None:
         "orbit": 2,
         "ground_station": 2,
         "target": 2,
-        "scenario": 3,
+        "scenario": 4,  # 3 for the provenance, 4 for the model choice earth_model (D-221)
         "link": 2,
         "spacecraft_mode": 2,
         "margin_policy": 3,
