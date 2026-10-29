@@ -203,3 +203,7 @@ assignments:
   unit_197: imaging
   unit_198: imaging
   unit_199: imaging
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

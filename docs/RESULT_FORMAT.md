@@ -14,7 +14,7 @@ Every file has these keys at the top level:
 | `provenance` | What produced the file: `tool`, `tool_version`, `python_version`, `libraries` (name and version pairs), `project_name`, `project_revision`, `scenario`, `generated` (UTC), `user`, `inputs_digest`, `input_files`, `parameters`, `illustrative_inputs` (how many inputs the project marks as invented sample values). |
 | `incomplete` | `true` when the report carries the INCOMPLETE banner (a result needs a placeholder). Not in `scenario_environment` and `comparison`. |
 | `problems` | Load and result problems: `severity`, `code`, `message`, `file`, `path`, `line`, `hint`, and for a finding that compares a number with a limit also `actual`, `limit` and `unit` (the number found, the limit and the unit; absent for the others). The rule behind each `code` is in [PROBLEMS.md](PROBLEMS.md). Not in `scenario_environment` and `comparison`. |
-| `assumptions` | The configuration numbers the result used: `name`, `value`, `unit`, `source`, `file`, `path`, `placeholder`. Not in `scenario_environment` and `comparison`. |
+| `assumptions` | The configuration numbers the result used: `name`, `value`, `unit`, `source`, `file`, `path`, `placeholder`, `status` (`sourced`, `estimate` or `illustrative`; a placeholder has `placeholder: true`). Not in `scenario_environment` and `comparison`. |
 
 `provenance.inputs_digest` is the SHA-256 of the loaded model (see [provenance](models/provenance.md)); `provenance.input_files` lists every project file read as `{path, size, sha256}`; `provenance.parameters` is a list of `[name, value]` pairs with the options that change a number (for a comparison: the digests of both sides). `budget verify` checks a project against these.
 

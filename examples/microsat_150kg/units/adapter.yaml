@@ -25,3 +25,7 @@ mass_properties:
     iyz_kgm2: 0.0
 phases:
   - launch
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

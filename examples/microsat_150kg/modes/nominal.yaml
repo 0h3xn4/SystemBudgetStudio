@@ -20,3 +20,7 @@ assignments:
   structure: off
   sun_sensors: nominal
   xband_tx: off
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

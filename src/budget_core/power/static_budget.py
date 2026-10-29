@@ -283,7 +283,11 @@ def _assumptions(project: Project) -> tuple[list[Assumption], list[Problem]]:
             where = missing_from(file, file_present)
             problems.append(incomplete(f"{what} is missing {where}.", file, path))
             return
-        out.append(Assumption(name, item.value, unit, item.source, file, path, item.is_placeholder))
+        out.append(
+            Assumption(
+                name, item.value, unit, item.source, file, path, item.is_placeholder, item.status
+            )
+        )
         if item.is_placeholder:
             problems.append(incomplete(f"{what} is a placeholder.", file, path))
 

@@ -1,6 +1,6 @@
 # Examples
 
-This folder holds four complete example projects with **invented data**: none of the numbers describes a real spacecraft, and none comes from a standard or a data sheet. Use them to learn the tool and as templates for your own project.
+This folder holds four complete example projects with **invented data**: none of the numbers describes a real spacecraft, and none comes from a standard or a data sheet. Every number in them is marked `illustrative` (a `provenance:` entry `*` in each file, `status: illustrative` on the sourced numbers), so a report made from an example says in its provenance table how many invented inputs it used; placeholders (`source: TBD`) stay placeholders. Use them to learn the tool and as templates for your own project: when you replace a number with a real one, record its source ([how](../docs/user-manual/placeholders-and-sources.md#how-do-i-record-where-a-plain-input-came-from)).
 
 **Contents:** [Getting a copy](#getting-a-copy) · [Which example for what](#which-example-for-what) · [microsat_250kg](#microsat_250kg-placeholders-everywhere) · [microsat_250kg_eps](#microsat_250kg_eps-complete-power-and-thermal-inputs) · [microsat_150kg](#microsat_150kg-two-links-and-phases) · [stress_200_units](#stress_200_units-a-week-at-one-second) · [Exit codes](#exit-codes-in-the-examples)
 

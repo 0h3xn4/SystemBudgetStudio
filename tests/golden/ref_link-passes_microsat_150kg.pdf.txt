@@ -391,7 +391,7 @@ Transmit power
  5
 W
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 ## page 3
 System Budget Studio 1.9.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
@@ -404,57 +404,57 @@ Line loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Antenna gain, transmitter
  3
 dBi
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 G/T
  10
 dB/K
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Required margin
  3
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Pointing loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Polarisation loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Implementation loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Required Eb/N0, QPSK rate 1/2
  4
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation gas_s
  0.2
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Transmit power
  10
 W
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Line loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Antenna pattern, transmitter
  n/a
 dBi
@@ -464,47 +464,47 @@ G/T
  20
 dB/K
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Required margin
  3
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Pointing loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Polarisation loss
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Implementation loss
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation rain_x at 5 deg
  3
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation rain_x at 20 deg
  1
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation rain_x at 90 deg
  0.4
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Attenuation gas_x
  0.5
 dB
 Synthetic example value; not from a data sheet or a standard.
-sourced
+illustrative
 Equations
 ID
 Name

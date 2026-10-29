@@ -5,3 +5,7 @@ latitude_deg: 40.0
 longitude_deg: -100.0
 altitude_m: 300.0
 min_elevation_deg: 45.0
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

@@ -11,7 +11,9 @@ budgets show results; its mass inputs are still placeholders. All of them descri
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import fields, replace
 from pathlib import Path
+from typing import Any
 
 from budget_core.io.project_loader import write_project
 from budget_core.model import (
@@ -22,6 +24,7 @@ from budget_core.model import (
     AttenuationTable,
     Attitude,
     Battery,
+    BudgetModel,
     Bus,
     Conductance,
     Ebn0Entry,
@@ -64,6 +67,7 @@ from budget_core.model import (
     Transmitter,
     Unit,
 )
+from budget_core.model.annotations import ProvenancedModel, ProvenanceEntry
 from budget_core.model.power_system import Pointing
 
 SYNTHETIC = "Synthetic example data; not a real spacecraft."
@@ -1176,11 +1180,60 @@ def _stress() -> Project:
     )
 
 
+ILLUSTRATIVE_SOURCE = "Invented example value"
+
+
+def _mark(value: Any) -> Any:
+    """`value` with every invented number marked as such (D-213): a sourced number that has a
+    value gets the status `illustrative`, and the file of an entity says so for all its inputs
+    with the `*` entry of its `provenance`. A placeholder stays a placeholder."""
+    if isinstance(value, Sourced):
+        return (
+            value if value.is_placeholder else value.model_copy(update={"status": "illustrative"})
+        )
+    if isinstance(value, BudgetModel):
+        update = {name: _mark(getattr(value, name)) for name in type(value).model_fields}
+        if isinstance(value, ProvenancedModel):
+            update["provenance"] = {
+                "*": ProvenanceEntry(source=ILLUSTRATIVE_SOURCE, status="illustrative")
+            }
+        return value.model_copy(update=update)
+    if isinstance(value, list):
+        return [_mark(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _mark(v) for k, v in value.items()}
+    return value
+
+
+def mark_illustrative(project: Project) -> Project:
+    """The project with all its inputs marked as invented sample values."""
+    config = ProjectConfig(
+        **{f.name: _mark(getattr(project.config, f.name)) for f in fields(project.config)}
+    )
+    return replace(
+        project,
+        spacecraft=_mark(project.spacecraft),
+        units=_mark(project.units),
+        modes=_mark(project.modes),
+        expendables=_mark(project.expendables),
+        orbits=_mark(project.orbits),
+        ground_stations=_mark(project.ground_stations),
+        targets=_mark(project.targets),
+        scenarios=_mark(project.scenarios),
+        links=_mark(project.links),
+        config=config,
+    )
+
+
+def _marked(build: Callable[[], Project]) -> Callable[[], Project]:
+    return lambda: mark_illustrative(build())
+
+
 EXAMPLES: dict[str, Callable[[], Project]] = {
-    "microsat_250kg": lambda: _minisat(complete=False),
-    "microsat_250kg_eps": lambda: _minisat(complete=True),
-    "microsat_150kg": _microsat,
-    "stress_200_units": _stress,
+    "microsat_250kg": _marked(lambda: _minisat(complete=False)),
+    "microsat_250kg_eps": _marked(lambda: _minisat(complete=True)),
+    "microsat_150kg": _marked(_microsat),
+    "stress_200_units": _marked(_stress),
 }
 
 

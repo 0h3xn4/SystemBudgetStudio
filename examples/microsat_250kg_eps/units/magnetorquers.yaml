@@ -43,3 +43,7 @@ temperature_limits:
   operating_max_k: 343.15
   survival_min_k: 218.15
   survival_max_k: 358.15
+provenance:
+  '*':
+    source: Invented example value
+    status: illustrative

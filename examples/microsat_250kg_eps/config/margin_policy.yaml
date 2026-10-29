@@ -5,6 +5,7 @@ classes:
     power_margin_ratio:
       value: 0.05
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
     mass_margin_ratio:
       value: null
       source: TBD
@@ -13,6 +14,7 @@ classes:
     power_margin_ratio:
       value: 0.1
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
     mass_margin_ratio:
       value: null
       source: TBD
@@ -21,6 +23,7 @@ classes:
     power_margin_ratio:
       value: 0.2
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
     mass_margin_ratio:
       value: null
       source: TBD
@@ -28,6 +31,7 @@ classes:
 system_power_margin_ratio:
   value: 0.1
   source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
 system_mass_margin_ratio:
   value: null
   source: TBD

@@ -166,7 +166,7 @@ def _project_blocks(project: Project) -> list[Block]:
                     _code(path),
                     _plain("n/a" if number.value is None else f"{number.value:.10g}"),
                     _plain(number.source),
-                    _bold("PLACEHOLDER") if number.is_placeholder else _plain("sourced"),
+                    _bold("PLACEHOLDER") if number.is_placeholder else _plain(number.status),
                 )
             )
     return [
@@ -177,7 +177,8 @@ def _project_blocks(project: Project) -> list[Block]:
             _plain(
                 "Every sourced number of the configuration files and links of the open project. "
                 "PLACEHOLDER means the value is missing or its source is TBD: results that depend "
-                "on it are shown as n/a and the report is marked INCOMPLETE."
+                "on it are shown as n/a and the report is marked INCOMPLETE. The status of any "
+                "other number is sourced, estimate or illustrative (an invented sample value)."
             )
         ),
         TableBlock(

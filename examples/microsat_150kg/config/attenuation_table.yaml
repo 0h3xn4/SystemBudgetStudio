@@ -7,12 +7,14 @@ entries:
     loss_db:
       value: 0.2
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
   - name: gas_x
     attenuation_kind: gas
     freq_hz: 8200000000.0
     loss_db:
       value: 0.5
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
   - name: rain_x
     attenuation_kind: rain
     freq_hz: 8200000000.0
@@ -20,6 +22,7 @@ entries:
     loss_db:
       value: 3.0
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
   - name: rain_x
     attenuation_kind: rain
     freq_hz: 8200000000.0
@@ -27,6 +30,7 @@ entries:
     loss_db:
       value: 1.0
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
   - name: rain_x
     attenuation_kind: rain
     freq_hz: 8200000000.0
@@ -34,3 +38,4 @@ entries:
     loss_db:
       value: 0.4
       source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative

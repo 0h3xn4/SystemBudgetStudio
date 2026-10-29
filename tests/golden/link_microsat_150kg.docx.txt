@@ -32,28 +32,28 @@ Assumptions
 Configuration numbers used
 ## table
 Name | Value | Unit | Source | Status
-Transmit power | 5 | W | Synthetic example value; not from a data sheet or a standard. | sourced
-Line loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Antenna gain, transmitter | 3 | dBi | Synthetic example value; not from a data sheet or a standard. | sourced
-G/T | 10 | dB/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Required margin | 3 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Pointing loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Polarisation loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Implementation loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Required Eb/N0, QPSK rate 1/2 | 4 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Attenuation gas_s | 0.2 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Transmit power | 10 | W | Synthetic example value; not from a data sheet or a standard. | sourced
-Line loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
+Transmit power | 5 | W | Synthetic example value; not from a data sheet or a standard. | illustrative
+Line loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Antenna gain, transmitter | 3 | dBi | Synthetic example value; not from a data sheet or a standard. | illustrative
+G/T | 10 | dB/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Required margin | 3 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Pointing loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Polarisation loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Implementation loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Required Eb/N0, QPSK rate 1/2 | 4 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Attenuation gas_s | 0.2 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Transmit power | 10 | W | Synthetic example value; not from a data sheet or a standard. | illustrative
+Line loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
 Antenna pattern, transmitter | n/a | dBi | Synthetic example value; not from a data sheet or a standard. | sourced
-G/T | 20 | dB/K | Synthetic example value; not from a data sheet or a standard. | sourced
-Required margin | 3 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Pointing loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Polarisation loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Implementation loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Attenuation rain_x at 5 deg | 3 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Attenuation rain_x at 20 deg | 1 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Attenuation rain_x at 90 deg | 0.4 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
-Attenuation gas_x | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | sourced
+G/T | 20 | dB/K | Synthetic example value; not from a data sheet or a standard. | illustrative
+Required margin | 3 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Pointing loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Polarisation loss | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Implementation loss | 1 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Attenuation rain_x at 5 deg | 3 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Attenuation rain_x at 20 deg | 1 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Attenuation rain_x at 90 deg | 0.4 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
+Attenuation gas_x | 0.5 | dB | Synthetic example value; not from a data sheet or a standard. | illustrative
 Equations
 ## table
 ID | Name | Formula | Source
@@ -177,7 +177,7 @@ Project | Example 150 kg microsatellite
 Project revision | 1
 Scenario | static (no scenario)
 Inputs digest (model) | sha256:001b362d917749bdc8ca2d00f58f54aced4959d2f6248913347b43c8fdba5844
-Input files | 40 files, sha256:3a332f630a2b4cdfd0d34e45f2a11571f9c4a9caab0aa2f259bad4782a252ae9
-Illustrative inputs | 0
+Input files | 40 files, sha256:0d365e87e15809e28d5c2594a829087002a3db54db6a02bade41aefa9d7d6d97
+Illustrative inputs | 466
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User
