@@ -40,6 +40,8 @@ Some numbers are not in any of your files: the grid on which passes and eclipses
 - **Choices**: the environment and the shadow model of each scenario, the load basis of a run, and the models the tool fixes for every project (SGP4, a TLE on WGS-72 and elements on WGS-84, the low-precision Sun, BOL and EOL cases), each with the reason it is fixed ([the full list](../models/choices.md));
 - **Forms**: the defaults the guided mode and the forms write into a new project.
 
+![The Assumptions page of the 250 kg example: the list with its filter and the buttons that keep one kind of row](../images/ui-overhaul/model-assumptions-light.png)
+
 The buttons above the list keep one kind; the filter keeps the rows that contain every word you type, in any order. Double-click a row that names a file to open it at the field. The page shows the project as it was last loaded or saved. On the command line: `budget assumptions my_satellite` (`--section`, `--format json`), `budget settings` and `budget choices`.
 
 ## How do I record where a plain input came from?

@@ -8,7 +8,7 @@ Newest first.
 
 ## 2026-10-29: the inputs digest changes again, and reports name the Earth model (model choice)
 
-**What changed.** The scenario file went up to schema version 4 for the new optional field `earth_model` ([D-221](DECISIONS.md)), and the schema version is part of the model digest, so the digest of every project differs once more from the 1.9.0 value (and from the value between the 1.9.0 and this change; neither has been released apart from 1.9.0). The provenance table of every report that has a scenario gains the row *Earth model* (`WGS-84` for every existing project), and the JSON environment blocks the key `earth_model`. No result changed: a scenario without the field, or with `earth_model: wgs84`, is computed on the same constants as before.
+**What changed.** The scenario file went up to schema version 4 for the new optional field `earth_model` ([D-221](DECISIONS.md)), and the schema version is part of the model digest, so the digest of every project differs from the 1.9.0 value. (The format revision for provenance already changed it once; both changes are released together in 2.0.0, so a user sees one new value.) The provenance table of every report that has a scenario gains the row *Earth model* (`WGS-84` for every existing project), and the JSON environment blocks the key `earth_model`. No result changed: a scenario without the field, or with `earth_model: wgs84`, is computed on the same constants as before.
 
 | Case | Before | After |
 |---|---|---|

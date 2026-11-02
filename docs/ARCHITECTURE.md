@@ -24,7 +24,8 @@ Runtime deps (`[project.dependencies]`): PySide6-Essentials, pydantic, ruamel.ya
 ```
 src/budget_core/      no GUI, no network imports (kept by convention and review; the offline test checks that no networking module is imported)
   model/              pydantic models: Project, Spacecraft, Unit, PowerMode, SpacecraftMode,
-                      Scenario, Array, Battery, Link, Transmitter, Receiver, GroundStation
+                      Scenario, Array, Battery, Link, Transmitter, Receiver, GroundStation;
+                      annotations.py (the `provenance:` mapping and the `status` of an input, D-213)
   io/                 YAML load/save, schema versioning + migrations, unit table import and export (`unit_table.py`, D-102)
   units/              suffix conventions, pint parse/format, dB helpers
   schemas/            the generated JSON Schemas (*.schema.json), written by `budget export-schemas`; schemas.py builds them
@@ -54,12 +55,19 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   new_link.py         the file of a new link: the structure from the form, every sourced number a placeholder (D-199)
   new_mode.py         the file of a new spacecraft mode: where its assignments start, the checks, the scenarios that name a mode (D-188)
   compare.py, compare_run.py   comparison of two revisions or scenarios (D-084, D-085)
-  equations.py, assumptions.py, examples.py, selftest.py   the equation registry, the placeholder list behind INCOMPLETE, the four example projects, `budget self-test`
-src/budget_cli/       `budget new | validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | export-schemas | units-export | units-import | export-examples`
+  equations.py, equation_binding.py   the equation registry, and `@computes("ID")`, which ties each solver function to the equation it applies (a test checks both ways, D-206)
+  assumptions.py, examples.py, selftest.py   the placeholder list behind INCOMPLETE, the four example projects (marked illustrative, D-215), `budget self-test`
+  explain/            how a number of a table was obtained: trace.py (Explanation, Step, Quantity), one module per budget (power, mass, thermal, link, timeline, linkpass), sources.py (fills the recorded source and status of each input afterwards, D-214)
+  manifest.py, verify.py, result_format.py, provenance.py   the input manifest and model digest of every export, `budget verify`, the envelope of the JSON results (D-204, D-205)
+  input_sources.py    the `provenance:` entries of the input files: counts by status, lookup, set and remove a source in place (D-213, D-214)
+  problem_catalogue.py   the rule, the reason and the remedy of every problem code; PROBLEMS.md is generated from it (D-207)
+  settings.py, assumptions_view.py   the catalogue of the settings, tolerances, limits and constants the tool applies, and the one list of everything active for a project (D-217, D-218)
+  model_choices.py    the registry of the modelling choices, selectable and fixed: the scenario fields, the run option, the equations and sources of each alternative; docs/models/choices.md is generated from it (D-219, D-220)
+src/budget_cli/       `budget new | validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | explain | problems | settings | choices | assumptions | verify | source | export-schemas | units-export | units-import | export-examples`
 src/budget_gui/       PySide6; no logic beyond presentation; docs/DESIGN.md
                       theme/ (tokens, fonts, style sheet, scale: the only place for colours and sizes), components/ (Button, StatusBadge, Card ...)
                       shell: main_window.py, rail.py (navigation), top_bar.py, workspace.py (the seven areas), project_tree.py, problems_panel.py,
-                      inspector.py, provenance_panel.py, status_bar.py, settings_popover.py, command_palette.py, run_controller.py,
+                      inspector.py (with the Source field of an input), provenance_panel.py, explain_panel.py (the Explain panel), assumptions_page.py (the Assumptions list), scenario_editor.py (rules, segments and the model-choice drop-downs), status_bar.py, settings_popover.py, command_palette.py, run_controller.py,
                       start_here.py (the Start here card: four steps to a first result, D-190)
                       model editing: model_document.py (one undo stack; adds and removes files), model_pages.py (the Units, Power modes and Inputs pages),
                       add_unit_dialog.py (the Add unit form), add_mode_dialog.py (the Add spacecraft mode form), add_scenario_dialog.py (the Add orbit and scenario form), add_expendable_dialog.py, add_site_dialog.py (ground station and imaging target), add_link_dialog.py, add_ebn0_dialog.py and remove_item_dialog.py (the Remove from project form) (the other Add forms; each has a `MainWindow._ask_*` point that tests replace), grid_models.py, grid_view.py, frozen_view.py, delegates.py, scenario_editor.py, guided.py (the project wizard)

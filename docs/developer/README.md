@@ -55,6 +55,9 @@ Some files are produced by code and checked by tests, so they cannot drift:
 |---|---|---|
 | `src/budget_core/schemas/*.schema.json` | `budget export-schemas src/budget_core/schemas` | the model |
 | `examples/` | `budget export-examples examples --force` | the example builders |
+| `docs/PROBLEMS.md` | `budget problems --markdown > docs/PROBLEMS.md` | a problem code or its catalogue entry (`problem_catalogue.py`) |
+| `docs/models/settings.md` | `budget settings --markdown > docs/models/settings.md` | a setting, tolerance or constant of the catalogue (`settings.py`) |
+| `docs/models/choices.md` | `budget choices --markdown > docs/models/choices.md` | a modelling choice of the registry (`model_choices.py`) |
 | `docs/LICENCES.md` | `python packaging/licence_check.py --markdown docs/LICENCES.md` | the dependencies |
 | `requirements.lock`, `requirements-dev.lock` | `packaging/lock.sh` (uses `uv`; needs a network) | `pyproject.toml` dependencies |
 | `assets/icons/logo-*.png`, `assets/icons/logo.ico` | `python packaging/make_icons.py` (the same drawing as `docs/images/logo.svg`) | the logo |

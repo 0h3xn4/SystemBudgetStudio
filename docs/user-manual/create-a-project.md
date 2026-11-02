@@ -59,7 +59,7 @@ budget validate my_satellite
 ## What is in a project folder?
 
 ```text
-project.yaml              name, revision, description
+project.yaml              name, revision, description, requires (optional)
 spacecraft.yaml           buses, mission phases, body frame
 units/<id>.yaml           one file per unit: mass, bus, maturity, power modes, limits
 modes/<id>.yaml           spacecraft modes: which power mode each unit is in

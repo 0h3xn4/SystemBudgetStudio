@@ -6,8 +6,8 @@
 
 An offline desktop and command-line tool that computes **power, mass, thermal and radio-link budgets** for a small satellite from one spacecraft model kept in plain text files.
 
-[![CI](https://github.com/0h3xn4/systembudgetstudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/systembudgetstudio/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/0h3xn4/systembudgetstudio)](https://github.com/0h3xn4/systembudgetstudio/releases/latest)
+[![CI](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/0h3xn4/SystemBudgetStudio)](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest)
 ![Python 3.14 and newer](https://img.shields.io/badge/python-3.14%2B-blue)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
 
@@ -23,7 +23,7 @@ If you know a little Python and nothing about this tool, start with the [getting
 
 ## Install
 
-Download the installer for your system from the [Releases page](https://github.com/0h3xn4/systembudgetstudio/releases/latest). No Python is needed. The Windows installer and the Linux tarball need no administrator rights; the `.deb` and `.rpm` packages install for all users and need `sudo`.
+Download the installer for your system from the [Releases page](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest). No Python is needed. The Windows installer and the Linux tarball need no administrator rights; the `.deb` and `.rpm` packages install for all users and need `sudo`.
 
 | System | File | What to do |
 |---|---|---|
@@ -39,8 +39,8 @@ Check the download against `SHA256SUMS-windows.txt` or `SHA256SUMS-linux.txt` fr
 You need Python 3.14 or newer and git. On Linux also read the [prerequisites](docs/getting-started.md#1-prerequisites) (the window needs one system library).
 
 ```bash
-git clone https://github.com/0h3xn4/systembudgetstudio.git
-cd systembudgetstudio
+git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+cd SystemBudgetStudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e .
 budget --version                                       # System Budget Studio 2.0.0
@@ -59,6 +59,7 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 | Install the tool and get a first result | [Getting started](docs/getting-started.md) |
 | See every guide on one page | [Documentation index](docs/README.md) |
 | Do a specific task (build a project, run a budget, compare two revisions…) | [User manual](docs/user-manual/README.md) |
+| See how a number was worked out, where an input came from, and which models are used | [Trace a number](docs/user-manual/trace-a-number.md) |
 | Look at the example projects and what they show | [Examples](examples/README.md) |
 | Fix an error message | [Troubleshooting](docs/troubleshooting.md) and the [FAQ](docs/faq.md) |
 | Look up a word (BOL, EIRP, Eb/N0, placeholder…) | [Glossary](docs/glossary.md) |
@@ -75,6 +76,8 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 - **Link budget**: EIRP, path loss, G/T, C/N0, Eb/N0 and margin at chosen elevations, and over every ground-station pass with the data rate that closes and the data volume per pass and per day; uplink and downlink; several links per project.
 - **Scenarios**: eclipses and passes from a two-line element set (TLE) or orbital elements, a mode timeline built from rules (for example "downlink during every pass") and segments; orbits can also be imported from [SpaceMissionStudio](docs/ENVIRONMENT_FORMAT.md).
 - **Reports**: XLSX, PDF and DOCX in classic review layouts, CSV for every table and series, JSON for other tools. Every output carries provenance (tool and library versions, project revision, scenario, time, user) and is reproducible byte for byte.
+- **Traceable**: select any number in a budget table and **Explain** it (Ctrl+Shift+I, or `budget explain`): the equation, the inputs with the file each came from and the steps. An input can record its **source** and a **status** (sourced, estimate, illustrative, tbd) in the window or with `budget source`. The **Assumptions** page (Ctrl+Shift+A, or `budget assumptions`) lists everything the tool applies next to your own numbers, and every report says which models it used. `budget verify` checks that a project is the one a result came from.
+- **Choosable models**: a scenario chooses its shadow geometry (cylindrical or conical), its Earth constants (WGS-84 or WGS-72) and its array irradiance (constant or seasonal) from drop-downs in the scenario editor; the models that are fixed are listed with the reason (`budget choices`, [model choices](docs/models/choices.md)).
 - **Comparison**: two project revisions, or two scenarios, side by side with the differences listed.
 - **Guided mode**: a wizard from an orbit to a first budget with a sample spacecraft, or a blank project (also `budget new`) to describe your own, which the window then takes to a first result with a *Start here* card (add a unit, a spacecraft mode, an orbit and a scenario, save and run); an offline user guide (HTML and PDF) with a generated *Equations and sources* chapter.
 - **Plain-language problems**: every message names the file and field, says what is wrong and what to change; a double-click jumps to it.
@@ -99,7 +102,8 @@ Status: version 2.0.0, all planned milestones (M0 to M6) are done and tested ([p
 
 Known limits, stated plainly:
 
-- The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project.
+- The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project, and 38 of the 41 equations still have no citation (`SOURCE_MISSING`; the references are yours to supply).
+- The tool's own settings, tolerances and constants are shown (Assumptions page) but cannot yet be changed per project; the orbit propagation, the Sun model and the thermal model are fixed simplifications ([deviations](docs/DEVIATIONS.md)).
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 9 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
 - The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 9.
 - The XLSX files were not opened in Excel.

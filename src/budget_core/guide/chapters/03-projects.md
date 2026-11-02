@@ -30,6 +30,8 @@ power_margin_ratio:
 
 `source: TBD` or a missing `value` marks a placeholder. The tool still loads the project and warns with `CONFIG_PLACEHOLDER`. Results that need the number show **n/a**.
 
+A plain input (a mass, a power, an orbit element) has no `source` field of its own; a `provenance:` block at the end of its file says where it came from, with a note and a status (`sourced`, `estimate`, `illustrative`, `tbd`), and the Inspector can write it. `project.yaml` may list `requires:`, the features the project uses that an older version would ignore (today `model_choices`); a version that does not know one refuses the project.
+
 ## File names are ids
 
 The id of a unit, mode, site, scenario or link is its file name without `.yaml`. Use letters, digits, `_` and `-`; other names load with a warning (`ID_UNUSUAL`). Only names ending in exactly `.yaml` are read: a file such as `camera.yml`, or a sub-folder inside `units/`, is skipped and the tool says so (`FILE_IGNORED`).

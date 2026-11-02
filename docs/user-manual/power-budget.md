@@ -39,6 +39,8 @@ The tool steps through the scenario on its time grid and, for [**beginning of li
 
 Pointing is `sun` (the Sun is at a fixed direction in the body frame) or `nadir` per spacecraft mode, set in `power_system.yaml` (`attitude`).
 
+The array output also depends on two choices of the scenario: `irradiance_model` (`constant`, the default, uses `solar_irradiance_wm2` as it is; `seasonal` reads it as the value at 1 AU and scales it by the Earth-Sun distance of the scenario date, about +3.4 % in early January and −3.3 % in early July) and `earth_model` (the orbit and the eclipse times). The report names both in its run parameters ([choose them](scenarios.md#how-do-i-choose-the-earth-model-and-the-irradiance-model), [the model](../models/power-timeline.md#choices)).
+
 ## How do I read the result?
 
 ```text

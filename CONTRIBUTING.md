@@ -5,8 +5,8 @@ This page tells you how to set up a development copy of System Budget Studio, wh
 ## Set up
 
 ```bash
-git clone https://github.com/0h3xn4/systembudgetstudio.git
-cd systembudgetstudio
+git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+cd SystemBudgetStudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
 QT_QPA_PLATFORM=offscreen pytest                       # about 17 minutes (core 8, window 11); quick loop: pytest tests/unit or pytest -m "not slow". Windows PowerShell: $env:QT_QPA_PLATFORM="offscreen"; pytest
