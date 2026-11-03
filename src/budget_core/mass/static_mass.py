@@ -112,10 +112,39 @@ class PhaseMass:
 
 
 @dataclass(frozen=True)
+class CogShift:
+    """The centre of gravity of a phase relative to that of the first phase."""
+
+    phase: str
+    delta_m: tuple[float, float, float]
+    distance_m: float
+
+
+@dataclass(frozen=True)
 class StaticMassResult:
     phases: tuple[PhaseMass, ...]
     assumptions: tuple[Assumption, ...]
     problems: tuple[Problem, ...]
+
+    @property
+    def cog_shifts(self) -> tuple[CogShift, ...]:
+        """The shift of the centre of gravity from the first phase to each phase, in mission
+        order (empty when the first phase has no centre of gravity); a phase without one is left
+        out."""
+        if not self.phases or self.phases[0].cog is None:
+            return ()
+        origin = self.phases[0].cog.position_m
+        out = []
+        for p in self.phases:
+            if p.cog is None:
+                continue
+            delta = (
+                p.cog.position_m[0] - origin[0],
+                p.cog.position_m[1] - origin[1],
+                p.cog.position_m[2] - origin[2],
+            )
+            out.append(CogShift(p.phase, delta, math.sqrt(sum(c * c for c in delta))))
+        return tuple(out)
 
 
 def _value(item: Sourced | None) -> float | None:
@@ -178,6 +207,8 @@ def static_mass_budget(project: Project) -> StaticMassResult:
             mass = exp.masses_kg[phase]
             margin = class_margin(exp.maturity)
             props = exp.mass_properties
+            moved = exp.phase_positions_m.get(phase)  # the centre of mass of this phase (D-230)
+            position = (moved[0], moved[1], moved[2]) if moved is not None else _position(props)
             rows.append(
                 MassRow(
                     eid,
@@ -188,7 +219,7 @@ def static_mass_budget(project: Project) -> StaticMassResult:
                     mass,
                     margin,
                     margined_mass_kg(mass, margin),
-                    _position(props),
+                    position,
                     _tensor(props),
                 )
             )

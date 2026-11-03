@@ -3,7 +3,7 @@ Comparison: Example 250 kg minisatellite, complete power and thermal inputs rev 
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.
 Summary
 rev 1 compared with rev 2.
-74 value(s) differ out of 3608 compared.
+74 value(s) differ out of 3620 compared.
 Values that look equal at the displayed precision are not reported as differences.
 Compared sides
 ## table
@@ -134,9 +134,9 @@ Libraries | numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden
 Project | Example 250 kg minisatellite, complete power and thermal inputs
 Project revision | 1
 Scenario | static vs static
-Run parameters | Side A inputs digest sha256:36e3dfd7e0c765a51dcb3a90d23a7ff5fd8f60e26d83ba0656bf9a6018b8125d; Side B inputs digest sha256:032a994358348bf81c8895ffe1c271e4abd687b650ebf064c599e487ed9c3b84; Side A files sha256:55234168f4955e6329988df250009a62d4a234a0f8f16e9ed20d3fe5defa11f6; Side B files sha256:5dd6cac2d70cd74cda2947a64bc2c61e575b5f486135ad261d9d85886721619e
-Inputs digest (model) | sha256:36e3dfd7e0c765a51dcb3a90d23a7ff5fd8f60e26d83ba0656bf9a6018b8125d
-Input files | 41 files, sha256:55234168f4955e6329988df250009a62d4a234a0f8f16e9ed20d3fe5defa11f6
+Run parameters | Side A inputs digest sha256:1c71deae2609cec57239648269d991ad23150eab7375278d83257124f90318dd; Side B inputs digest sha256:7e0e6db3c78d1fc8819c69a07b0403cf9463620ae8d1fc1e9e77d7d3b6fda192; Side A files sha256:2838b51f9b1a3adfeeb373103afec2b1d0868e71a32a7e8cac065a5e05eb6b98; Side B files sha256:a3b5ea981bb9f4e2e44d8d5f0d20b895a959f4dc33932d485076d4de664a7bf8
+Inputs digest (model) | sha256:1c71deae2609cec57239648269d991ad23150eab7375278d83257124f90318dd
+Input files | 41 files, sha256:2838b51f9b1a3adfeeb373103afec2b1d0868e71a32a7e8cac065a5e05eb6b98
 Illustrative inputs | 657
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

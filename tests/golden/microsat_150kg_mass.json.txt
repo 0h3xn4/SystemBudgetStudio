@@ -1567,7 +1567,7 @@
       },
       {
         "path": "expendables/propellant.yaml",
-        "sha256": "35c67f6892e78fc19889248226ee25f261b39626e50b46c8074c40cca638cd22",
+        "sha256": "db72ad84a08b37342cd70b4bc5b1e370f16dddc797750290075b297146299823",
         "size": 274
       },
       {
@@ -1726,7 +1726,7 @@
         "size": 641
       }
     ],
-    "inputs_digest": "sha256:de64e0d252fe4d148f3cc84ccd36eb9a55f22981b0ed2a361b0f98b1f0830f09",
+    "inputs_digest": "sha256:1c69ef4747ebab29e5df4f9594c7c46a6c3059ee743176bed517b336ce180f54",
     "libraries": [
       [
         "pinned",

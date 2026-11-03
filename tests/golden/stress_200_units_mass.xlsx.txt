@@ -1,4 +1,4 @@
-## sheet Summary rows=13 cols=8
+## sheet Summary rows=19 cols=8
 1: 'Mass budget (static): Example stress case (200 units)' |  |  |  |  |  |  | 
 2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  |  |  |  |  |  | 
 4: 'Body frame: Right-handed body frame. Origin: centre of the launch-vehicle interface plane. +Z: along the launch axis, away from the interface. X and Y: in the interface plane. Positions are item centres of mass in metres. Synthetic example.' |  |  |  |  |  |  | 
@@ -10,6 +10,7 @@
 11: 'Mass limits (checked against the system-margined total)' |  |  |  |  |  |  | 
 12: 'Phase' | 'Limit' | 'Limit value (kg)' | 'Total (kg)' | 'Margin (kg)' | 'Status' |  | 
 13: 'launch' | 'Launch mass' | 'n/a' | 'n/a' | 'n/a' | 'n/a' |  | 
+...
 ## sheet Phase launch rows=235 cols=12
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  |  |  |  |  | 
 3: 'Items' |  |  |  |  |  |  |  |  |  |  | 

@@ -14,6 +14,13 @@ Mass limits (checked against the system-margined total)
 ## table
 Phase | Limit | Limit value (kg) | Total (kg) | Margin (kg) | Status
 launch | Launch mass | n/a | n/a | n/a | n/a
+Centre-of-gravity shift from the first phase (launch)
+## table
+Phase | Shift x (m) | Shift y (m) | Shift z (m) | Distance (m)
+launch | 0.0000 | 0.0000 | 0.0000 | 0.0000
+bol | -0.0005 | 0.0003 | 0.0085 | 0.0085
+eol | -0.0018 | 0.0009 | 0.0147 | 0.0149
+The centre of gravity of each phase minus that of the first phase, from the nominal masses of the items with a position. An expendable may give the position of its centre of mass for each phase (phase_positions_m), so that a tank that empties moves it.
 Phase: launch
 Items
 ## table
@@ -309,8 +316,8 @@ Libraries | pinned for-golden-tests
 Project | Example 150 kg microsatellite
 Project revision | 1
 Scenario | static (no scenario)
-Inputs digest (model) | sha256:de64e0d252fe4d148f3cc84ccd36eb9a55f22981b0ed2a361b0f98b1f0830f09
-Input files | 40 files, sha256:e4198b06a4b0abf9e52592513a4af9f40fb1d9d83ede7446c6a5464a69d36ad3
+Inputs digest (model) | sha256:1c69ef4747ebab29e5df4f9594c7c46a6c3059ee743176bed517b336ce180f54
+Input files | 40 files, sha256:c3e232dc8867128bf4cbcd828cb5326c1b39c90f461f106af709df77f9283eee
 Illustrative inputs | 466
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

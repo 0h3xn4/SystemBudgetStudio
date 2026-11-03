@@ -4,7 +4,7 @@ CURRENT_VERSIONS: dict[str, int] = {
     "project": 2,
     "spacecraft": 2,
     "unit": 3,
-    "expendable": 2,
+    "expendable": 3,
     "orbit": 3,
     "ground_station": 2,
     "target": 2,

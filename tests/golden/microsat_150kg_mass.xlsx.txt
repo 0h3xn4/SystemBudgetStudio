@@ -1,4 +1,4 @@
-## sheet Summary rows=14 cols=8
+## sheet Summary rows=21 cols=8
 1: 'Mass budget (static): Example 150 kg microsatellite' |  |  |  |  |  |  | 
 2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  |  |  |  |  |  | 
 4: 'Body frame: Right-handed body frame. Origin: centre of the launch-vehicle interface plane. +Z: along the launch axis, away from the interface. X and Y: in the interface plane. Positions are item centres of mass in metres. Synthetic example.' |  |  |  |  |  |  | 
@@ -11,6 +11,12 @@
 12: 'Mass limits (checked against the system-margined total)' |  |  |  |  |  |  | 
 13: 'Phase' | 'Limit' | 'Limit value (kg)' | 'Total (kg)' | 'Margin (kg)' | 'Status' |  | 
 14: 'launch' | 'Launch mass' | 'n/a' | 'n/a' | 'n/a' | 'n/a' |  | 
+16: 'Centre-of-gravity shift from the first phase (launch)' |  |  |  |  |  |  | 
+17: 'Phase' | 'Shift x (m)' | 'Shift y (m)' | 'Shift z (m)' | 'Distance (m)' |  |  | 
+18: 'launch' | 0 | 0 | 0 | 0 |  |  | 
+19: 'bol' | -0.0004717691914130143 | 0.0002503399191202751 | 0.008486501356172182 | 0.008503290040530425 |  |  | 
+20: 'eol' | -0.001773949683059987 | 0.0009413298457463144 | 0.01472753688243333 | 0.01486382662640935 |  |  | 
+21: 'The centre of gravity of each phase minus that of the first phase, from the nominal masses of the items with a position. An expendable may give the position of its centre of mass for each phase (phase_positions_m), so that a tank that empties moves it.' |  |  |  |  |  |  | 
 ## sheet Phase launch rows=54 cols=12
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  |  |  |  |  |  |  | 
 3: 'Items' |  |  |  |  |  |  |  |  |  |  | 
@@ -296,8 +302,8 @@
 8: 'Project' | 'Example 150 kg microsatellite'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
-11: 'Inputs digest (model)' | 'sha256:de64e0d252fe4d148f3cc84ccd36eb9a55f22981b0ed2a361b0f98b1f0830f09'
-12: 'Input files' | '40 files, sha256:e4198b06a4b0abf9e52592513a4af9f40fb1d9d83ede7446c6a5464a69d36ad3'
+11: 'Inputs digest (model)' | 'sha256:1c69ef4747ebab29e5df4f9594c7c46a6c3059ee743176bed517b336ce180f54'
+12: 'Input files' | '40 files, sha256:c3e232dc8867128bf4cbcd828cb5326c1b39c90f461f106af709df77f9283eee'
 13: 'Illustrative inputs' | '466'
 14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 15: 'User' | 'Golden User'

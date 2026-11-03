@@ -1,5 +1,5 @@
 {
-  "compared": 3608,
+  "compared": 3620,
   "differences": [
     {
       "change": "+2.000 W",
@@ -938,7 +938,7 @@
       },
       {
         "path": "expendables/propellant.yaml",
-        "sha256": "3d2b5580134dfd1ebccd584181dced8cdc8ea15144fcf0fb8ee13b453b723575",
+        "sha256": "c94aeddf3ed514095cfe7920ee7ebb41c3d67094563ab8439ee06fb09ab57e4d",
         "size": 273
       },
       {
@@ -1102,7 +1102,7 @@
         "size": 754
       }
     ],
-    "inputs_digest": "sha256:36e3dfd7e0c765a51dcb3a90d23a7ff5fd8f60e26d83ba0656bf9a6018b8125d",
+    "inputs_digest": "sha256:1c71deae2609cec57239648269d991ad23150eab7375278d83257124f90318dd",
     "libraries": [
       [
         "numpy",
@@ -1144,19 +1144,19 @@
     "parameters": [
       [
         "Side A inputs digest",
-        "sha256:36e3dfd7e0c765a51dcb3a90d23a7ff5fd8f60e26d83ba0656bf9a6018b8125d"
+        "sha256:1c71deae2609cec57239648269d991ad23150eab7375278d83257124f90318dd"
       ],
       [
         "Side B inputs digest",
-        "sha256:032a994358348bf81c8895ffe1c271e4abd687b650ebf064c599e487ed9c3b84"
+        "sha256:7e0e6db3c78d1fc8819c69a07b0403cf9463620ae8d1fc1e9e77d7d3b6fda192"
       ],
       [
         "Side A files",
-        "sha256:55234168f4955e6329988df250009a62d4a234a0f8f16e9ed20d3fe5defa11f6"
+        "sha256:2838b51f9b1a3adfeeb373103afec2b1d0868e71a32a7e8cac065a5e05eb6b98"
       ],
       [
         "Side B files",
-        "sha256:5dd6cac2d70cd74cda2947a64bc2c61e575b5f486135ad261d9d85886721619e"
+        "sha256:a3b5ea981bb9f4e2e44d8d5f0d20b895a959f4dc33932d485076d4de664a7bf8"
       ]
     ],
     "project_name": "Example 250 kg minisatellite, complete power and thermal inputs",
@@ -1174,7 +1174,7 @@
   },
   "rows_one_sided": 0,
   "truncated": 0,
-  "unchanged": 3534,
+  "unchanged": 3546,
   "unmatched": [],
   "values_differ": 74
 }

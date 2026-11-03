@@ -12,7 +12,7 @@ orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...} 
 ground_stations/<id>.yaml kind: ground_station   name, latitude_deg, longitude_deg, altitude_m, min_elevation_deg
 targets/<id>.yaml       kind: target             same fields as a ground station (imaging target)
 scenarios/<id>.yaml     kind: scenario (v4)      orbit, start_utc, duration_s, step_s, shadow_model?, earth_model?, irradiance_model?, sites, mission_phase?, default_mode, rules[], segments[]
-expendables/<id>.yaml   kind: expendable         name, subsystem, maturity, masses_kg{phase: kg}, mass_properties?
+expendables/<id>.yaml   kind: expendable (v3)    name, subsystem, maturity, masses_kg{phase: kg}, mass_properties?, phase_positions_m{phase: [x, y, z]}?
 modes/<id>.yaml         kind: spacecraft_mode    name, description, assignments{unit id: power mode name}
 config/margin_policy.yaml      kind: margin_policy (v2)  classes{name: {power_margin_ratio, mass_margin_ratio}}, system_power_margin_ratio, system_mass_margin_ratio
 config/mass_limits.yaml        kind: mass_limits         limits[{name, phase?, limit_kg}]
@@ -195,7 +195,7 @@ JSON Schemas for all kinds: `budget export-schemas <dir>` (also committed in `sr
 
 The scenario went up one more version in the step that added the model choices `earth_model` and `irradiance_model` ([choices](models/choices.md)): version 4, an older file reads unchanged. The revision for provenance added three optional things and moved every kind up one schema version (`unit`, `scenario` and `margin_policy` to 3, all others to 2). Files of the older versions migrate in memory unchanged (`FILE_MIGRATED`); a tool of an earlier release reads a new file as `SCHEMA_TOO_NEW`. None of them is used by an equation, none changes a result, and none is part of the model digest. The design is in [transparency_p3_design.md](transparency_p3_design.md).
 
-The orbit went up to version 3 in 2.2.0 for the optional `state` block, an orbit given as a position and velocity at an epoch in `j2000` or `teme` (the frame has no default); an older file reads unchanged (`FILE_MIGRATED`), and an earlier release reads a new file as `SCHEMA_TOO_NEW`. See [ENVIRONMENT_FORMAT.md](ENVIRONMENT_FORMAT.md).
+The expendable went up to version 3 in 2.2.0 for the optional `phase_positions_m` (the position of its centre of mass in each mission phase, so that a tank that empties moves the centre of gravity; a phase without an entry uses `mass_properties.position_m`; a phase that is not a mission phase is `REF_UNKNOWN_PHASE`); an older file reads unchanged. The orbit went up to version 3 in 2.2.0 for the optional `state` block, an orbit given as a position and velocity at an epoch in `j2000` or `teme` (the frame has no default); an older file reads unchanged (`FILE_MIGRATED`), and an earlier release reads a new file as `SCHEMA_TOO_NEW`. See [ENVIRONMENT_FORMAT.md](ENVIRONMENT_FORMAT.md).
 
 The Eb/N0 table went up to version 3 in 2.1.0: an entry may record the error rates its required Eb/N0 refers to, `target_ber` and `target_fer` (each above 0 and below 1, as the standard or data sheet gives them; the tool never supplies one). The Explain panel and the configuration table of the link report show them next to the number ("Required Eb/N0, QPSK rate 1/2 at BER 1e-05"); no result depends on them. An older file reads unchanged (`FILE_MIGRATED`); an earlier release reads a new file as `SCHEMA_TOO_NEW`.
 

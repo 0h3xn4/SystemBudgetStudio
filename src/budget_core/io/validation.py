@@ -999,19 +999,23 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                         "is not present).",
                     )
                 )
-        for phase in exp.masses_kg:
-            if phase not in phases:
-                out.append(
-                    _p(
-                        err,
-                        "REF_UNKNOWN_PHASE",
-                        "This phase is not a mission phase.",
-                        file,
-                        ("masses_kg", phase),
-                        lines,
-                        "Use a name listed under 'mission_phases' in spacecraft.yaml.",
+        for field, names in (
+            ("masses_kg", exp.masses_kg),
+            ("phase_positions_m", exp.phase_positions_m),
+        ):
+            for phase in names:
+                if phase not in phases:
+                    out.append(
+                        _p(
+                            err,
+                            "REF_UNKNOWN_PHASE",
+                            "This phase is not a mission phase.",
+                            file,
+                            (field, phase),
+                            lines,
+                            "Use a name listed under 'mission_phases' in spacecraft.yaml.",
+                        )
                     )
-                )
 
     limits = project.config.mass_limits
     for index, limit in enumerate(limits.limits if limits else []):

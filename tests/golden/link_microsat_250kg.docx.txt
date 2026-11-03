@@ -199,8 +199,8 @@ Libraries | pinned for-golden-tests
 Project | Example 250 kg minisatellite
 Project revision | 1
 Scenario | static (no scenario)
-Inputs digest (model) | sha256:436006801757ae0ed48f42caaddc861fb1b6bcc0f301a16ee7851827ac1747c8
-Input files | 41 files, sha256:c2d28249ccbce34a068d22ec43a609858b55c2eb6840aa9501c15cd9035a4559
+Inputs digest (model) | sha256:794ce291cde902658370fb18e360cc17e01fe08d3a7139ff1a3a7e2e9eccd511
+Input files | 41 files, sha256:b28d6072f55eb37d6f63bc6ad1fb9438be4eaf975a7cc2f974a5f2b2710c736d
 Illustrative inputs | 480
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User
