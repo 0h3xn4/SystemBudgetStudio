@@ -94,6 +94,15 @@ EARTH_ROTATION_RATE = Constant(
     "IAU-82 GMST (Vallado), derived from the rate of the polynomial used by ENV-GMST",
 )
 
+# The standard acceleration of gravity that converts a specific impulse in seconds to an exhaust
+# velocity (Isp * g0). A definition, not a measurement.
+STANDARD_GRAVITY = Constant(
+    "Standard gravity (specific impulse convention)",
+    9.80665,
+    "m/s2",
+    "3rd CGPM (1901), exact by definition (ISO 80000-3)",
+)
+
 ALL = (
     EARTH_RADIUS,
     EARTH_MU,
@@ -102,4 +111,5 @@ ALL = (
     ASTRONOMICAL_UNIT,
     MEAN_SUN_LONGITUDE_RATE,
     EARTH_ROTATION_RATE,
+    STANDARD_GRAVITY,
 )

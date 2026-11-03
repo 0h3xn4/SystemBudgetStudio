@@ -10,6 +10,8 @@ This is the task-by-task manual for System Budget Studio: each page answers a fe
 | [Placeholders and sources](placeholders-and-sources.md) | What does *n/a* or INCOMPLETE mean? How do I fill in a margin or an efficiency properly? |
 | [Trace a number](trace-a-number.md) | How do I see how a number was worked out? Where did an input come from? What does the tool assume that I did not type? Which model is used, and can I choose another? |
 | [Power budget](power-budget.md) | How do I get the power per mode? How do I check the solar array and battery over an orbit? |
+| [Propulsion and delta-v](propulsion.md) | How much propellant do the manoeuvres need, how long are the burns, what does an electric thruster draw? |
+| [Pointing and slews](pointing.md) | How long does a slew take, how much momentum does it need, how much energy does it use? |
 | [Mass budget](mass-budget.md) | How do I get mass, centre of gravity and inertia, per phase, against a limit? How do I add propellant or an oxidizer? |
 | [Thermal budget](thermal-budget.md) | How do I get heat dissipation and unit temperatures for a hot and a cold case? |
 | [Link budget](link-budget.md) | How do I add a link in the window? How do I get link margin at a chosen range, and data volume over the passes? |

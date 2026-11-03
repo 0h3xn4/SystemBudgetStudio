@@ -38,7 +38,7 @@ A warning is something open (a placeholder, an empty table). An error is an inva
 
 ### Can I trust the equations?
 
-They are textbook relations, each named in the *Equations and sources* chapter of the user guide. Where the reference text has not been attached the equation is flagged `SOURCE_MISSING` (46 of the 49 at the moment); treat such results as engineering estimates until your team has confirmed them. The simplifications of the physics are listed in [DEVIATIONS.md](DEVIATIONS.md) (perfect pointing, no albedo for the array, one array temperature, steady-state thermal only, and so on).
+They are textbook relations, each named in the *Equations and sources* chapter of the user guide. Where the reference text has not been attached the equation is flagged `SOURCE_MISSING` (52 of the 55 at the moment); treat such results as engineering estimates until your team has confirmed them. The simplifications of the physics are listed in [DEVIATIONS.md](DEVIATIONS.md) (perfect pointing, no albedo for the array, one array temperature, steady-state thermal only, and so on).
 
 ### How do I see how a number was worked out, or where an input came from?
 

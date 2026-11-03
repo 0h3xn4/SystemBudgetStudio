@@ -13,8 +13,10 @@ import budget_core.link.evaluate  # noqa: F401
 import budget_core.mass.static_mass  # noqa: F401
 import budget_core.orbit_design  # noqa: F401
 import budget_core.orbit_state  # noqa: F401
+import budget_core.pointing.budget  # noqa: F401
 import budget_core.power.static_budget  # noqa: F401
 import budget_core.power.time_domain  # noqa: F401
+import budget_core.propulsion.budget  # noqa: F401
 import budget_core.thermal.static_thermal  # noqa: F401
 from budget_core.equation_binding import BOUND
 from budget_core.equations import EQUATIONS

@@ -24,6 +24,8 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [user-manual/trace-a-number.md](user-manual/trace-a-number.md) | Explain a number, record where an input came from, the Assumptions page, the model choices, verify a result |
 | [user-manual/power-budget.md](user-manual/power-budget.md) | Static and time-domain power budgets |
 | [user-manual/mass-budget.md](user-manual/mass-budget.md) | Mass, centre of gravity, inertia, phases, limits |
+| [user-manual/pointing.md](user-manual/pointing.md) | Pointing modes, slew time, momentum, energy |
+| [user-manual/propulsion.md](user-manual/propulsion.md) | Propellant, delta-v, burn time, electric thruster power |
 | [user-manual/thermal-budget.md](user-manual/thermal-budget.md) | Dissipation, node temperatures, unit limits |
 | [user-manual/link-budget.md](user-manual/link-budget.md) | Link margin, data volume over passes |
 | [user-manual/scenarios.md](user-manual/scenarios.md) | Orbits, stations, mode timeline, SpaceMissionStudio data |

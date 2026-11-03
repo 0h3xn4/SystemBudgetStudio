@@ -39,11 +39,13 @@ from budget_core.model import (
     MarginPolicy,
     MassLimits,
     Orbit,
+    PointingConfig,
     PowerConfig,
     PowerSystem,
     Project,
     ProjectConfig,
     ProjectMeta,
+    PropulsionConfig,
     Scenario,
     Spacecraft,
     SpacecraftMode,
@@ -67,10 +69,14 @@ CONFIG_FILES: dict[str, type[BudgetModel]] = {
     "power_system": PowerSystem,
     "thermal_model": ThermalModel,
     "thermal_environment": ThermalEnvironment,
+    "propulsion": PropulsionConfig,
+    "pointing": PointingConfig,
 }
 
 # Files a project may leave out without a warning (the static budgets do not need them).
-OPTIONAL_CONFIG = frozenset({"power_system", "thermal_model", "thermal_environment"})
+OPTIONAL_CONFIG = frozenset(
+    {"power_system", "thermal_model", "thermal_environment", "propulsion", "pointing"}
+)
 
 
 @dataclass(frozen=True)

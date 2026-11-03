@@ -46,10 +46,12 @@ from budget_core.model_choices import BY_ID as CHOICES_BY_ID
 from budget_core.model_choices import REGISTRY as CHOICES_REGISTRY
 from budget_core.model_choices import SCOPE_TEXT as CHOICES_SCOPE_TEXT
 from budget_core.model_choices import render_markdown as render_choices_markdown
+from budget_core.pointing.budget import pointing_budget
 from budget_core.power.static_budget import static_power_budget
 from budget_core.power.time_domain import time_domain_budget, violation_problems
 from budget_core.problem_catalogue import CATALOGUE, describe, render_markdown
 from budget_core.problems import Problem, Severity, sort_problems
+from budget_core.propulsion.budget import propulsion_budget
 from budget_core.provenance import ProvenanceError, make_provenance
 from budget_core.reports.files import OutputError, write_file
 from budget_core.reports.run import (
@@ -57,7 +59,9 @@ from budget_core.reports.run import (
     BudgetOutput,
     link_output,
     mass_output,
+    pointing_output,
     power_output,
+    propulsion_output,
     thermal_output,
     timeline_output,
     write_outputs,
@@ -166,7 +170,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
     run.add_argument(
         "--budget",
-        choices=("power", "mass", "thermal", "link", "all"),
+        choices=("power", "mass", "thermal", "propulsion", "pointing", "link", "all"),
         default="all",
         help="Budget to compute (default: all).",
     )
@@ -962,6 +966,24 @@ def _run(args: argparse.Namespace) -> int:
         thermal = static_thermal_budget(project)
         outputs.append(thermal_output(project, thermal, provenance, loaded.problems))
         problems += thermal.problems
+
+    if args.budget == "propulsion" and project.config.propulsion is None:
+        _fail("The project has no config/propulsion.yaml; no propulsion budget was computed.")
+        return 1
+    if args.budget in ("propulsion", "all"):
+        propulsion = propulsion_budget(project)
+        if propulsion is not None:
+            outputs.append(propulsion_output(project, propulsion, provenance, loaded.problems))
+            problems += propulsion.problems
+
+    if args.budget == "pointing" and project.config.pointing is None:
+        _fail("The project has no config/pointing.yaml; no pointing budget was computed.")
+        return 1
+    if args.budget in ("pointing", "all"):
+        pointing = pointing_budget(project)
+        if pointing is not None:
+            outputs.append(pointing_output(project, pointing, provenance, loaded.problems))
+            problems += pointing.problems
 
     if args.budget in ("link", "all") and project.links:
         link = link_static_budget(project)

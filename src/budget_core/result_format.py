@@ -17,6 +17,8 @@ KINDS = (
     "power_static",
     "mass_static",
     "thermal_static",
+    "propulsion",
+    "pointing",
     "link",
     "power_timeline",
     "scenario_environment",
@@ -27,6 +29,8 @@ _STATIC_KINDS = {
     "StaticPowerResult": "power_static",
     "StaticMassResult": "mass_static",
     "StaticThermalResult": "thermal_static",
+    "PropulsionResult": "propulsion",
+    "PointingResult": "pointing",
 }
 
 

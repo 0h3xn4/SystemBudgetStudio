@@ -436,6 +436,53 @@ EQUATIONS: dict[str, Equation] = {
             "Constants in budget_core.environment.constants (decision D-054).",
         ),
         Equation(
+            "POINT-SLEW",
+            "Rest-to-rest slew time",
+            "alpha = T / I; t = 2 sqrt(theta / alpha), peak rate sqrt(theta alpha); with a rate "
+            "limit w_max below that: t = theta / w_max + w_max / alpha",
+            None,
+            "Classical bang-bang rigid-body slew about a principal axis (the torque is the only "
+            "limit, no flexible modes, no cross-axis coupling): DEVIATIONS DV-P2.",
+        ),
+        Equation(
+            "POINT-MOMENTUM",
+            "Peak angular momentum of a slew",
+            "h = I w_peak, compared with the momentum capacity of the actuators",
+            None,
+            "Definition of angular momentum about the slew axis.",
+        ),
+        Equation(
+            "POINT-ENERGY",
+            "Electrical energy of a slew",
+            "E = P t / 3600 (Wh), P the actuator set's mean power while slewing",
+            None,
+            "Definition of energy; the power is the project's input, not derived from the torque.",
+        ),
+        Equation(
+            "PROP-ROCKET",
+            "Rocket equation (Tsiolkovsky)",
+            "m_before = m_after exp(dv / (Isp g0)); propellant = m_before - m_after, the "
+            "manoeuvres worked backwards from the dry mass",
+            None,
+            "Classical rocket dynamics, constant specific impulse; g0 is the standard gravity "
+            "(3rd CGPM). Instantaneous burns, no gravity or steering loss (DEVIATIONS DV-P1).",
+        ),
+        Equation(
+            "PROP-BURN",
+            "Burn time at constant thrust",
+            "t = m_propellant Isp g0 / F (mass flow F / (Isp g0))",
+            None,
+            "Classical rocket dynamics; the thrust is taken as constant.",
+        ),
+        Equation(
+            "PROP-ENERGY",
+            "Electric thrusting energy",
+            "E = P t / 3600 (Wh), P the power drawn while thrusting",
+            None,
+            "Definition of energy; the power is the project's input, not derived from the "
+            "thrust and the specific impulse.",
+        ),
+        Equation(
             "ENV-SUBPOINT",
             "Sub-satellite point (ground track)",
             "p = hypot(x, y); phi = atan2(z + e2 N sin(phi), p) iterated; lam = atan2(y, x); "

@@ -23,7 +23,13 @@ config/thermal_environment.yaml kind: thermal_environment space_temperature_k, t
 links/<id>.yaml         kind: link               name, direction, peer?, frequency_hz, transmitter{}, receiver{}, modulation, coding, data_rates_bps[], required_margin_db, ..._loss_db, attenuation[], active_modes[], max_elevation_deg?, static_points[]
 config/ebn0_table.yaml         kind: ebn0_table          entries[{modulation, coding, required_ebn0_db, target_ber?, target_fer?}]
 config/attenuation_table.yaml  kind: attenuation_table   entries[{name, attenuation_kind, freq_hz, elevation_deg, loss_db}]
+config/pointing.yaml           kind: pointing            actuators{id: {name, max_torque_nm, max_rate_deg_s?, momentum_capacity_nms?, slew_power_w?}}, modes{id: {name, reference, accuracy_deg?, actuator, hold_power_w?}}, slews[{name, from_mode, to_mode, angle_deg, axis, actuator, inertia_kgm2?, settle_s?, per_day?}], mass_phase?   (optional)
+config/propulsion.yaml         kind: propulsion          systems{id: {name, type, isp_s, thrust_n?, power_w?, propellant?}}, maneuvers[{name, system, delta_v_m_s, count?}], dry_mass_kg?, delta_v_margin_ratio?   (optional)
 ```
+
+`config/propulsion.yaml` (2.2.0, schema version 1) holds the propulsion and delta-v budget: `systems` (each `type` is `chemical` or `electric`; `isp_s`, `thrust_n` and `power_w` are sourced numbers, `power_w` only for an electric system; `propellant` is the id of an expendable), `maneuvers` in mission order (`delta_v_m_s` sourced, `count` of identical burns, default 1), `dry_mass_kg` and `delta_v_margin_ratio` (both sourced and optional). See [propulsion](user-manual/propulsion.md).
+
+`config/pointing.yaml` (2.2.0, schema version 1) holds the pointing and slew budget: `actuators` (sourced `max_torque_nm`, optional `max_rate_deg_s`, `momentum_capacity_nms`, `slew_power_w`), pointing `modes` (`reference` is `nadir`, `sun`, `inertial`, `target` or `other`; optional sourced `accuracy_deg` and `hold_power_w`), `slews` (sourced `angle_deg`, `axis` is `x`, `y` or `z`, optional `inertia_kgm2` and `settle_s`, `per_day` default 1) and the optional `mass_phase`. See [pointing](user-manual/pointing.md).
 
 The two tables can be written and filled as a spreadsheet with `budget tables-export` and `budget tables-import` ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet), decision D-231); the file stays the source of truth.
 

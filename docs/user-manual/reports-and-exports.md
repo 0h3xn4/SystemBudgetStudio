@@ -21,6 +21,8 @@ Commands and what they write (prefix is the file name start):
 | `budget run --budget power` | `power_static` (and one CSV per spacecraft mode) |
 | `budget run --budget mass` | `mass_static` (one CSV per phase) |
 | `budget run --budget thermal` | `thermal_static`, `thermal_case_<case>` |
+| `budget run --budget propulsion` | `propulsion` (and `propulsion_maneuvers.csv`) |
+| `budget run --budget pointing` | `pointing` (and `pointing_slews.csv`) |
 | `budget run --budget link` | `link_static` |
 | `budget power-timeline` | `power_time_<scenario>` (series per case, orbits, violations) |
 | `budget link-passes` | `link_passes_<scenario>` |

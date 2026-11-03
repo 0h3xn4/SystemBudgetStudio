@@ -11,15 +11,19 @@ from budget_core.io.project_loader import LoadResult, load_project
 from budget_core.link.evaluate import StaticLinkResult, link_static_budget
 from budget_core.mass.static_mass import StaticMassResult, static_mass_budget
 from budget_core.model import Project
+from budget_core.pointing.budget import PointingResult, pointing_budget
 from budget_core.power.static_budget import StaticPowerResult, static_power_budget
 from budget_core.problems import Problem, Severity, sort_problems
+from budget_core.propulsion.budget import PropulsionResult, propulsion_budget
 from budget_core.provenance import Provenance, make_provenance
 from budget_core.reports.document import ReportDocument
 from budget_core.reports.run import (
     BudgetOutput,
     link_output,
     mass_output,
+    pointing_output,
     power_output,
+    propulsion_output,
     thermal_output,
 )
 from budget_core.thermal.static_thermal import StaticThermalResult, static_thermal_budget
@@ -40,6 +44,8 @@ class _Computed:
     mass: StaticMassResult | None = None
     thermal: StaticThermalResult | None = None
     link: StaticLinkResult | None = None
+    propulsion: PropulsionResult | None = None
+    pointing: PointingResult | None = None
     provenance: Provenance | None = None
     document: ReportDocument | None = None
     mass_document: ReportDocument | None = None
@@ -68,6 +74,16 @@ def _compute(path: Path) -> _Computed:
             out.outputs = [power_out, mass_out, thermal_out]
             out.document, out.mass_document = power_out.document, mass_out.document
             out.thermal_document = thermal_out.document
+            out.propulsion = propulsion_budget(project)
+            if out.propulsion is not None:
+                out.outputs.append(
+                    propulsion_output(project, out.propulsion, out.provenance, load_problems)
+                )
+            out.pointing = pointing_budget(project)
+            if out.pointing is not None:
+                out.outputs.append(
+                    pointing_output(project, out.pointing, out.provenance, load_problems)
+                )
             if project.links:
                 out.link = link_static_budget(project)
                 link_out = link_output(project, out.link, out.provenance, load_problems)
@@ -80,6 +96,8 @@ def _compute(path: Path) -> _Computed:
                     *out.mass.problems,
                     *out.thermal.problems,
                     *(out.link.problems if out.link else ()),
+                    *(out.propulsion.problems if out.propulsion else ()),
+                    *(out.pointing.problems if out.pointing else ()),
                 ]
             )
     except Exception as exc:  # never show a traceback; say what happened in plain words

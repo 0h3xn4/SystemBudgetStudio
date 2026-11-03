@@ -1,4 +1,4 @@
-pages=17
+pages=18
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
@@ -1966,6 +1966,127 @@ trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
 warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:7
+actuators.wheels.max_torque_nm
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:11
+actuators.wheels.max_rate_deg_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:15
+actuators.wheels.momentum_capacity_
+nms
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:19
+actuators.wheels.slew_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:27
+modes.nadir.accuracy_deg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:32
+modes.nadir.hold_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:39
+modes.target.accuracy_deg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:44
+modes.target.hold_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:52
+slews[0].angle_deg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 11
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 11
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:58
+slews[0].inertia_kgm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/pointing.yaml:62
+slews[0].settle_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
 RESULT_INCO
 MPLETE
 config/power_config.yaml
@@ -2061,16 +2182,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
-## page 11
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 11
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2101,6 +2212,16 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
+## page 12
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 12
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2211,16 +2332,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
-## page 12
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 12
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2236,6 +2347,76 @@ CONFIG_PLAC
 EHOLDER
 config/power_system.yaml:132
 limits.peak_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/propulsion.yaml:8
+systems.thruster.isp_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+## page 13
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 13
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLAC
+EHOLDER
+config/propulsion.yaml:12
+systems.thruster.thrust_n
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/propulsion.yaml:20
+maneuvers[0].delta_v_m_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/propulsion.yaml:27
+maneuvers[1].delta_v_m_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/propulsion.yaml:34
+maneuvers[2].delta_v_m_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin policy,
+standard or data sheet and cite the source.
+warning
+CONFIG_PLAC
+EHOLDER
+config/propulsion.yaml:39
+delta_v_margin_ratio
 This number is a placeholder (no value or
 source 'TBD'); results that use it are not
 trustworthy.
@@ -2339,6 +2520,16 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
+## page 14
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 14
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2369,16 +2560,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
-## page 13
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 13
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2494,6 +2675,16 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
+## page 15
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 15
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2527,16 +2718,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
-## page 14
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 14
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2654,6 +2835,16 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
+## page 16
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 16
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2685,16 +2876,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
-## page 15
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 15
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2813,6 +2994,16 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
+## page 17
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 17
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2845,16 +3036,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
-## page 16
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 16
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2967,6 +3148,16 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from the data sheet or
 requirement and cite the source.
+## page 18
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 18
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -2996,16 +3187,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from the data sheet or
 requirement and cite the source.
-## page 17
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 17
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLAC
 EHOLDER
@@ -3063,9 +3244,9 @@ Project revision
 Scenario
 static (no scenario)
 Inputs digest (model)
-sha256:794ce291cde902658370fb18e360cc17e01fe08d3a7139ff1a3a7e2e9eccd511
+sha256:6a40a91be7b8095916a7ccf10517406192af2be418c11c9f4e56bfe6ffff57c0
 Input files
-41 files, sha256:b28d6072f55eb37d6f63bc6ad1fb9438be4eaf975a7cc2f974a5f2b2710c736d
+43 files, sha256:5c814d5def781ecbfa4e290a509c7570a4179339b6e8c60495b2d9c87cf1c195
 Illustrative inputs
 480
 Generated (UTC)

@@ -2059,6 +2059,11 @@
         "size": 189
       },
       {
+        "path": "config/pointing.yaml",
+        "sha256": "87c79639b2e5cd020e2d8dd9f8ec5b1b76dd14817562d96d741560bc91002268",
+        "size": 1568
+      },
+      {
         "path": "config/power_config.yaml",
         "sha256": "11f1a696bbcf32d4025d8cd3f43b0accc4010a4c32f3086a3d84b2d2e586ddf3",
         "size": 358
@@ -2067,6 +2072,11 @@
         "path": "config/power_system.yaml",
         "sha256": "f681418f29ffc379edc69595111e7bd4a189a1ebbd9615dc9ed92ea44a78a438",
         "size": 3053
+      },
+      {
+        "path": "config/propulsion.yaml",
+        "sha256": "c21dcf2c42dd560329996fd9371f4328a7a2991dcff13c4e6289c2fca02be8d0",
+        "size": 947
       },
       {
         "path": "config/thermal_environment.yaml",
@@ -2244,7 +2254,7 @@
         "size": 632
       }
     ],
-    "inputs_digest": "sha256:794ce291cde902658370fb18e360cc17e01fe08d3a7139ff1a3a7e2e9eccd511",
+    "inputs_digest": "sha256:6a40a91be7b8095916a7ccf10517406192af2be418c11c9f4e56bfe6ffff57c0",
     "libraries": [
       [
         "pinned",

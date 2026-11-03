@@ -13,6 +13,8 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | Orbit design helpers (LTAN, sun-synchronous, repeat ground track) | [orbit-design.md](orbit-design.md) | written |
 | Orbit, eclipse and Sun geometry (gravity models, shadow models) | (planned) | planned |
 | Mass budget (margins, centre of mass, inertia, expendables) | [mass-static.md](mass-static.md) | written |
+| Propulsion and delta-v (rocket equation, burn time, electric power) | [propulsion.md](propulsion.md) | written |
+| Pointing and slew (bang-bang slew time, momentum, energy) | [pointing.md](pointing.md) | written |
 | Thermal (network, steady state, environment) | [thermal-static.md](thermal-static.md) | written |
 | RF link (EIRP, G/T, losses, rate selection, volume) | [link-static.md](link-static.md), [link-passes.md](link-passes.md) | written |
 | Units and conversions (accepted units, canonical units, refused words) | (planned) | planned |

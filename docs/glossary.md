@@ -71,6 +71,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **Earth model** (`earth_model`): the set of Earth constants (equatorial radius and gravitational parameter) used to propagate an orbit given as elements and for the Earth sphere of the shadow: WGS-84 (the default) or WGS-72. The two differ by 2 m in the radius and 0.3 km³/s² in mu. A TLE is always propagated on WGS-72, the set SGP4 is defined on; ground sites stay WGS-84 geodetic coordinates. Chosen per scenario; see [model choices](models/choices.md).
 
 <a id="eclipse"></a>
+**Specific impulse (Isp)**: the thrust a propellant gives per unit weight flow, in seconds; the exhaust velocity is Isp times the standard gravity. About 200 to 320 s for chemical and 1000 s or more for electric thrusters; the values for your thrusters come from their data sheets ([propulsion](models/propulsion.md)).
+
 **Eclipse**: the time the satellite is in the Earth's shadow, so the solar array produces nothing. The tool computes eclipses from the orbit.
 
 <a id="ecss"></a>
@@ -83,6 +85,12 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **Elevation**: the angle of the satellite above the horizon as seen from a ground station. Low elevation means a long path and more atmospheric loss.
 
 <a id="expendable"></a>
+**Pointing mode**: what the spacecraft points at (nadir, the Sun, an inertial direction, a target), how well, and the actuators that hold it. It is not a [spacecraft mode](#spacecraft-mode); see [pointing](models/pointing.md).
+
+**Slew**: a turn of the spacecraft from one pointing attitude to another. The pointing budget gives its time, peak rate, momentum and energy ([pointing](models/pointing.md)).
+
+**Delta-v**: the change of velocity a manoeuvre gives the spacecraft, in m/s. The propulsion budget takes the delta-v of each manoeuvre from you and works out the propellant with the rocket equation ([propulsion](models/propulsion.md)).
+
 **Expendable**: something whose mass changes during the mission, such as propellant or jettisoned equipment. It has a mass for every [mission phase](#mission-phase).
 
 <a id="explain"></a>

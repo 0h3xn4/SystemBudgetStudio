@@ -894,7 +894,7 @@
   "label_b": "rev 2",
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
-    "illustrative_inputs": 657,
+    "illustrative_inputs": 675,
     "input_files": [
       {
         "path": "config/attenuation_table.yaml",
@@ -917,6 +917,11 @@
         "size": 189
       },
       {
+        "path": "config/pointing.yaml",
+        "sha256": "f5f0219cebe550504285fd72ad3ced4d9ad19b609969d4a68ea9dbaab6dbc961",
+        "size": 1895
+      },
+      {
         "path": "config/power_config.yaml",
         "sha256": "435248fe4c0aafefaf332c3a3c0c2cde0016829a364b59718015cb67c4c817ec",
         "size": 446
@@ -925,6 +930,11 @@
         "path": "config/power_system.yaml",
         "sha256": "0ab37c73273b4025838141f1a844a9e2902acaf42e00b2731217881964850b0d",
         "size": 3654
+      },
+      {
+        "path": "config/propulsion.yaml",
+        "sha256": "1006a49b59c27102d05068869d71bdce0c37da52a0cf7020045721bf79b5894e",
+        "size": 1247
       },
       {
         "path": "config/thermal_environment.yaml",
@@ -1102,7 +1112,7 @@
         "size": 754
       }
     ],
-    "inputs_digest": "sha256:1c71deae2609cec57239648269d991ad23150eab7375278d83257124f90318dd",
+    "inputs_digest": "sha256:6c84f8d0689fe9f09bead3abca05fed4f31f3a52252e4c6741280c0e54d46c86",
     "libraries": [
       [
         "numpy",
@@ -1144,19 +1154,19 @@
     "parameters": [
       [
         "Side A inputs digest",
-        "sha256:1c71deae2609cec57239648269d991ad23150eab7375278d83257124f90318dd"
+        "sha256:6c84f8d0689fe9f09bead3abca05fed4f31f3a52252e4c6741280c0e54d46c86"
       ],
       [
         "Side B inputs digest",
-        "sha256:7e0e6db3c78d1fc8819c69a07b0403cf9463620ae8d1fc1e9e77d7d3b6fda192"
+        "sha256:b2437e966f486de6dd67713323cccef33858b566b621d267cc3bafa013590ed7"
       ],
       [
         "Side A files",
-        "sha256:2838b51f9b1a3adfeeb373103afec2b1d0868e71a32a7e8cac065a5e05eb6b98"
+        "sha256:7b33a1092e1b3e08b8d612a1a1c0d21255c05173e9a6c4666df235b34fd87129"
       ],
       [
         "Side B files",
-        "sha256:a3b5ea981bb9f4e2e44d8d5f0d20b895a959f4dc33932d485076d4de664a7bf8"
+        "sha256:a837e6ccb64078c98ccc28bbe188b7c20604b7e5d12a1af71ee00218b6e47cca"
       ]
     ],
     "project_name": "Example 250 kg minisatellite, complete power and thermal inputs",
