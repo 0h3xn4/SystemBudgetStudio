@@ -6,13 +6,13 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
-## 2026-11-05: the inputs digest changes once more (the propulsion and pointing files)
+## 2026-11-03: the inputs digest changes once more (the propulsion and pointing files)
 
 **What changed.** A project may now hold `config/propulsion.yaml` and `config/pointing.yaml` ([D-233](DECISIONS.md), [D-234](DECISIONS.md)), two new file kinds at schema version 1. The model digest lists the schema version of every kind, so the digest of every project is a new value, and the example projects `microsat_250kg` and `microsat_250kg_eps` gain the file (their file hashes and digests change). No existing number changes: a project without the file gives the same budgets.
 
 **Effect.** `budget verify` of an export made by an earlier release reports DIFFERENT for the digest although the inputs are the same; the file hashes tell which. The golden files of the examples change by the digest and file-hash lines and, for the two examples, by the new propulsion file.
 
-## 2026-11-04: the inputs digest changes once more (orbit version 3)
+## 2026-11-03: the inputs digest changes once more (orbit version 3)
 
 **What changed.** The orbit file went up to schema version 3 for the new optional `state` block ([D-229](DECISIONS.md)), and the schema version is part of the model digest, so the digest of every project with an orbit is a new value. No result changed: an orbit given as a TLE or as elements is read and propagated exactly as before.
 

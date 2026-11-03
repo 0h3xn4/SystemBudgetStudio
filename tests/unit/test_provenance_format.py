@@ -61,11 +61,12 @@ def test_every_kind_moves_up_one_version() -> None:
         "mass_limits": 2,
         "ebn0_table": 3,
         "attenuation_table": 2,
+        "pointing": 1,
         "propulsion": 1,  # new in 2.2.0: has no earlier version to migrate from
     }
 
 
-@pytest.mark.parametrize("kind", sorted(set(CURRENT_VERSIONS) - {"propulsion"}))
+@pytest.mark.parametrize("kind", sorted(set(CURRENT_VERSIONS) - {"propulsion", "pointing"}))
 def test_a_file_of_the_previous_version_reads_unchanged_in_the_current_one(kind: str) -> None:
     current = CURRENT_VERSIONS[kind]
     # the oldest version a file of this kind ever had that has a chain of steps

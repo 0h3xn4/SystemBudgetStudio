@@ -104,9 +104,8 @@ def propulsion_budget(project: Project) -> PropulsionResult | None:
     def note(name: str, item: Sourced | None, unit: str, path: str, what: str) -> None:
         if item is None:
             assumptions.append(Assumption(name, None, unit, "missing", FILE, path, True))
-            problems.append(
-                incomplete(f"{what} is missing {missing_from(FILE, True)}.", FILE, path)
-            )
+            where = missing_from(FILE, True)
+            problems.append(incomplete(f"{what} is missing {where}.", FILE, path))
             return
         assumptions.append(
             Assumption(
