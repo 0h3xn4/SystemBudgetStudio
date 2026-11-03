@@ -22,6 +22,8 @@ Three choices of a scenario change the environment and the array output, each wi
 
 After **Compute**, the **Statistics** tab gives the number, shortest, mean and longest eclipse, the share of the scenario in eclipse and the longest stretch of sunlight, and for every ground station and imaging target the number of passes, the time in contact, the shortest, mean and longest pass, the largest gap without a pass and the lowest, mean and highest peak elevation. The **Passes** tab can show one station or all. The **Beta angle** tab plots the angle between the Sun and the orbit plane over the scenario, and the Statistics tab gives its minimum, mean and maximum and the critical angle above which a circular orbit has no eclipse. The same figures are in `<id>_environment.json` under `statistics`, and the series in `<id>_beta.csv`.
 
+The **Ground track** tab draws the sub-satellite point on a 30-degree graticule with the stations and targets marked (the tool carries no coastline data), and the Statistics tab gives the latitude range and the longitude shift between two ascending equator crossings. `<id>_groundtrack.csv` has the series.
+
 ## Imported environments
 
 Instead of the built-in propagator a scenario can read orbit, eclipse and pass files exported by SpaceMissionStudio (`environment_source: spacemissionstudio`). The format is described in `docs/ENVIRONMENT_FORMAT.md` in the source repository.

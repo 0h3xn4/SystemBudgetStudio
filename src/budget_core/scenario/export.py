@@ -12,6 +12,7 @@ from typing import Any
 
 import numpy as np
 
+from budget_core.environment.ground_track import ground_track
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer, provenance_csv
 from budget_core.reports.files import write_file
@@ -103,6 +104,35 @@ def beta_csv(run: ScenarioRun) -> str | None:
             [f"{times[k]:.3f}", _t(run, float(times[k])), f"{series[k]:.4f}"]
             for k in picks
             if np.isfinite(series[k])
+        ],
+    )
+
+
+GROUND_TRACK_CSV_SAMPLE_S = 60.0  # the rows of the ground track file: no finer than this
+
+
+def ground_track_csv(run: ScenarioRun) -> str | None:
+    """The sub-satellite point (geodetic latitude, longitude east positive, height above the
+    WGS-84 ellipsoid), one row every minute or every step if that is longer, the last time
+    included; None for an environment without positions."""
+    track = ground_track(run.env)
+    if track is None:
+        return None
+    grid = run.env.grid
+    stride = max(1, math.ceil(GROUND_TRACK_CSV_SAMPLE_S / grid.step_s))
+    picks = sorted(set(range(0, len(track.latitude_deg), stride)) | {len(track.latitude_deg) - 1})
+    times = grid.times_s
+    return _csv(
+        ["time_s", "utc", "latitude_deg", "longitude_deg", "altitude_m"],
+        [
+            [
+                f"{times[k]:.3f}",
+                _t(run, float(times[k])),
+                f"{track.latitude_deg[k]:.5f}",
+                f"{track.longitude_deg[k]:.5f}",
+                f"{track.altitude_m[k]:.1f}",
+            ]
+            for k in picks
         ],
     )
 
@@ -217,5 +247,8 @@ def write_scenario_outputs(run: ScenarioRun, provenance: Provenance, out_dir: Pa
     beta = beta_csv(run)
     if beta is not None:
         files[f"{sid}_beta.csv"] = beta
+    ground = ground_track_csv(run)
+    if ground is not None:
+        files[f"{sid}_groundtrack.csv"] = ground
     files[f"{sid}_provenance.csv"] = provenance_csv(provenance)
     return [write_file(out_dir, name, text) for name, text in files.items()]

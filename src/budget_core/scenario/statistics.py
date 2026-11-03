@@ -21,6 +21,12 @@ import numpy as np
 from budget_core.environment.beta import BetaStatistics, beta_angle_deg, beta_statistics
 from budget_core.environment.constants import EARTH_MODELS
 from budget_core.environment.data import EnvironmentData, Pass
+from budget_core.environment.ground_track import (
+    GroundTrack,
+    GroundTrackStatistics,
+    ground_track,
+    ground_track_statistics,
+)
 from budget_core.environment.intervals import Interval, merge_intervals
 
 
@@ -86,6 +92,7 @@ class ScenarioStatistics:
     eclipses: EclipseStats
     sites: tuple[SiteStats, ...]
     beta: BetaStatistics | None = None  # None: no orbit plane known (nothing to compute from)
+    ground_track: GroundTrackStatistics | None = None  # None: no positions
 
     def to_dict(self) -> dict[str, Any]:
         out: dict[str, Any] = {
@@ -95,6 +102,8 @@ class ScenarioStatistics:
         }
         if self.beta is not None:
             out["beta"] = self.beta.to_dict()
+        if self.ground_track is not None:
+            out["ground_track"] = self.ground_track.to_dict()
         return out
 
 
@@ -144,7 +153,11 @@ def site_statistics(site_id: str, kind: str, passes: Sequence[Pass], span_s: flo
     )
 
 
-def scenario_statistics(env: EnvironmentData) -> ScenarioStatistics:
+def scenario_statistics(
+    env: EnvironmentData, track: GroundTrack | None = None
+) -> ScenarioStatistics:
+    """All the statistics of a computed environment. A caller that already has the ground track
+    passes it, so the sub-satellite point is not worked out twice."""
     span = env.grid.duration_s
     eclipses = EclipseStats(
         duration_stats(e.duration_s for e in env.eclipses),
@@ -155,7 +168,7 @@ def scenario_statistics(env: EnvironmentData) -> ScenarioStatistics:
         site_statistics(site_id, vis.site.kind, vis.passes, span)
         for site_id, vis in sorted(env.sites.items())
     )
-    return ScenarioStatistics(span, eclipses, sites, beta_of(env))
+    return ScenarioStatistics(span, eclipses, sites, beta_of(env), ground_track_of(env, track))
 
 
 def beta_series_deg(env: EnvironmentData) -> Any:
@@ -176,3 +189,12 @@ def beta_of(env: EnvironmentData) -> BetaStatistics | None:
         return None
     radius = float(np.mean(np.linalg.norm(env.position_m, axis=1)))
     return beta_statistics(series, mean_radius_m=radius, earth_radius_m=_earth_radius_m(env))
+
+
+def ground_track_of(
+    env: EnvironmentData, track: GroundTrack | None = None
+) -> GroundTrackStatistics | None:
+    track = track or ground_track(env)
+    if track is None:
+        return None
+    return ground_track_statistics(env.grid.times_s, track)

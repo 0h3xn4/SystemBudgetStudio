@@ -55,6 +55,6 @@ Rules of the importer (D-124): the files may start with a UTF-8 byte order mark 
 ```
 budget scenario PROJECT [--scenario ID] [--out DIR]
 ```
-writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>_timeline.csv`, `<id>_beta.csv` (when the orbit plane is known) and `<id>_provenance.csv`.
+writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>_timeline.csv`, `<id>_beta.csv` (when the orbit plane is known), `<id>_groundtrack.csv` (latitude, longitude and height of the sub-satellite point, one row a minute or every step if that is longer) and `<id>_provenance.csv`.
 
 Next: [Scenarios (user manual)](user-manual/scenarios.md) · [Project file format](FILE_FORMAT.md) · [Docs index](README.md).

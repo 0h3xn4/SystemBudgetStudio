@@ -235,6 +235,19 @@ CATALOGUE: tuple[SettingSpec, ...] = (
         "The rows of <id>_beta.csv (the finer of the scenario step and this, the last time "
         "included).",
     ),
+    _s(
+        "environment.ground_track_csv_sample_s",
+        "format",
+        "Sampling of the ground track file",
+        "s",
+        60.0,
+        "scenario.export:GROUND_TRACK_CSV_SAMPLE_S",
+        "The sub-satellite point moves about 7 km a second, so a sample every minute draws the "
+        "track to a few hundred kilometres and keeps a long scenario's file small; the "
+        "statistics use every step.",
+        "The rows of <id>_groundtrack.csv (the finer of the scenario step and this, the last "
+        "time included).",
+    ),
     # ---- power -------------------------------------------------------------------------------
     _s(
         "power.ratio_tolerance",

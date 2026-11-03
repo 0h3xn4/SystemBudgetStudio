@@ -8,6 +8,7 @@ the progress is visible; an equation can never become unbound unnoticed either.
 from __future__ import annotations
 
 import budget_core.environment.beta  # noqa: F401
+import budget_core.environment.ground_track  # noqa: F401
 import budget_core.link.evaluate  # noqa: F401
 import budget_core.mass.static_mass  # noqa: F401
 import budget_core.orbit_design  # noqa: F401

@@ -436,6 +436,16 @@ EQUATIONS: dict[str, Equation] = {
             "Constants in budget_core.environment.constants (decision D-054).",
         ),
         Equation(
+            "ENV-SUBPOINT",
+            "Sub-satellite point (ground track)",
+            "p = hypot(x, y); phi = atan2(z + e2 N sin(phi), p) iterated; lam = atan2(y, x); "
+            "h = p cos(phi) + z sin(phi) - a sqrt(1 - e2 sin2(phi))",
+            "WGS 84 (NIMA TR8350.2) ellipsoid definition",
+            "Inverse of ENV-GEODETIC on the same ellipsoid, applied to the Earth-fixed position "
+            "(ENV-GMST rotation, no polar motion). Textbook method; checked by the round trip "
+            "and by the latitude of a known inclination.",
+        ),
+        Equation(
             "ENV-TOPO",
             "Elevation, azimuth and range from a site",
             "local east-north-up basis at the geodetic latitude and longitude of the site",
