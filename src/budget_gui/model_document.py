@@ -479,6 +479,8 @@ def _models_of(project: Project) -> Iterable[tuple[str, BudgetModel]]:
         yield f"units/{unit_id}.yaml", unit
     for mode_id, mode in project.modes.items():
         yield f"modes/{mode_id}.yaml", mode
+    for orbit_id, orbit in project.orbits.items():
+        yield f"orbits/{orbit_id}.yaml", orbit  # the orbit helper edits the elements (D-228)
     for scenario_id, scenario in project.scenarios.items():
         yield f"scenarios/{scenario_id}.yaml", scenario
     for link_id, link in project.links.items():

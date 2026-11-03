@@ -88,6 +88,7 @@ from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.model_document import ModelDocument
 from budget_gui.model_pages import InputsPage, PowerModesPage, SpacecraftModesPage, UnitsPage
+from budget_gui.orbit_helper_dialog import OrbitHelperDialog, OrbitHelperValues
 from budget_gui.privacy import disable_settings_files
 from budget_gui.problem_class import ProblemClass
 from budget_gui.problems_panel import ProblemsPanel
@@ -423,6 +424,10 @@ class MainWindow(QMainWindow):
         self.add_scenario_action.setShortcut(QKeySequence("Ctrl+Shift+O"))
         self.add_scenario_action.triggered.connect(self.add_scenario)
         edit_menu.addAction(self.add_scenario_action)
+        self.orbit_helper_action = QAction("Orbit &helper…", self)
+        self.orbit_helper_action.setShortcut(QKeySequence("Ctrl+Shift+H"))
+        self.orbit_helper_action.triggered.connect(self.orbit_helper)
+        edit_menu.addAction(self.orbit_helper_action)
         edit_menu.addSeparator()
         self.add_expendable_action = QAction("Add e&xpendable…", self)
         self.add_expendable_action.setShortcut(QKeySequence("Ctrl+Shift+X"))
@@ -745,6 +750,7 @@ class MainWindow(QMainWindow):
             self.add_mode_action,
             self.remove_mode_action,
             self.add_scenario_action,
+            self.orbit_helper_action,
             self.add_expendable_action,
             self.add_ground_station_action,
             self.add_imaging_target_action,
@@ -761,6 +767,64 @@ class MainWindow(QMainWindow):
         if dialog.exec() != QDialog.DialogCode.Accepted:
             return None
         return dialog.answers()
+
+    def _ask_orbit_helper(self, orbits: list[str]) -> tuple[str, OrbitHelperValues] | None:
+        """The dialog; the tests put their own answers here."""
+        first = self.document.data(f"orbits/{orbits[0]}.yaml").get("elements") or {}
+        dialog = OrbitHelperDialog(orbits, self, epoch=str(first.get("epoch_utc") or ""))
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        values = dialog.values()
+        return None if values is None else (dialog.target_orbit(), values)
+
+    def orbit_helper(self) -> bool:
+        """Edit > Orbit helper: sun-synchronous, repeat ground track or local time of the node,
+        written as the elements of an orbit in one undo step (a TLE orbit is not offered)."""
+        if self.session.project is None:
+            return False
+        document = self.document
+        orbits = [
+            rel.removeprefix("orbits/").removesuffix(".yaml")
+            for rel in document.rels("orbits/")
+            if document.data(rel).get("elements")
+        ]
+        if not orbits:
+            self.statusBar().showMessage(
+                "The helper writes the elements of an orbit, and this project has none (a TLE "
+                "cannot be designed): add a scenario first (Edit > Add scenario)."
+            )
+            return False
+        answer = self._ask_orbit_helper(orbits)
+        if answer is None:
+            return False
+        orbit_id, values = answer
+        rel = f"orbits/{orbit_id}.yaml"
+
+        def change(data: dict[str, Any]) -> None:
+            elements = data.setdefault("elements", {})
+            elements["epoch_utc"] = values.epoch_utc
+            elements["semi_major_axis_m"] = values.semi_major_axis_m
+            elements["eccentricity_ratio"] = values.eccentricity
+            elements["inclination_deg"] = values.inclination_deg
+            written = ["semi_major_axis_m", "inclination_deg"]
+            if values.raan_deg is not None:
+                elements["raan_deg"] = values.raan_deg
+                written.append("raan_deg")
+            notes = data.setdefault("provenance", {})
+            for field in written:
+                notes[f"elements.{field}"] = {
+                    "source": values.note,
+                    "note": "Derived with the orbit helper; mean elements (DV-E2, DV-E6).",
+                    "status": "estimate",
+                }
+
+        if not document.edit([(rel, change)], f"Orbit helper: {orbit_id}"):
+            self.statusBar().showMessage("The orbit already has these elements.")
+            return False
+        self.statusBar().showMessage(
+            f"Orbit {orbit_id}: elements set by the orbit helper. Undo with Ctrl+Z; Save writes."
+        )
+        return True
 
     def add_scenario(self) -> bool:
         """Edit > Add scenario: an orbit and a scenario from a form, from any area. The orbit file
