@@ -149,7 +149,7 @@ LEGEND_MIN = (680, 460)
 PLOT_MIN_HEIGHT = 220
 MAP_MARGINS = (44, 12, 10, 26)  # left (the latitudes), right, top, bottom (the longitudes)
 MAP_MARKER = 5  # the half size of a station or target marker on the ground track map
-MAP_MIN_HEIGHT = 260
+MAP_MIN_HEIGHT = 120
 # the painted plots (budget plots and the scenario strips); base sizes at 100 %, applied with px()
 PLOT_MARGINS = (64, 14, 8, 36)  # left (the value labels), right, top, bottom (the time labels)
 PLOT_GAP = 26  # between two panels

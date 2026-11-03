@@ -117,8 +117,12 @@ def test_export_runs_in_a_worker_and_writes_files(
         "link_static.xlsx",
         "mass_static.json",
         "mass_static.xlsx",
+        "pointing.json",
+        "pointing.xlsx",
         "power_static.json",
         "power_static.xlsx",
+        "propulsion.json",
+        "propulsion.xlsx",
         "thermal_static.json",
         "thermal_static.xlsx",
     ]

@@ -1063,12 +1063,19 @@ class MainWindow(QMainWindow):
             }
 
         scenarios, links = data_of("scenarios/"), data_of("links/")
+        propulsion = (
+            document.data("config/propulsion.yaml")
+            if document.has("config/propulsion.yaml")
+            else None
+        )
         items: dict[str, dict[str, str]] = {}
         for kind in KINDS:
             prefix = rel_of(kind, "")[: -len(".yaml")]
             found: dict[str, str] = {}
             for item_id in data_of(prefix):
-                users = users_of(kind, item_id, scenarios=scenarios, links=links)
+                users = users_of(
+                    kind, item_id, scenarios=scenarios, links=links, propulsion=propulsion
+                )
                 found[item_id] = blocked_message(kind, item_id, users) or ""
             if found:
                 items[kind] = found
