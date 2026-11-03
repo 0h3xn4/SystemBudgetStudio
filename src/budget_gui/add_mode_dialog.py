@@ -79,7 +79,7 @@ class AddModeDialog(QDialog):
         self.error_label = QLabel("")
         self.error_label.setWordWrap(True)
         self.error_label.setProperty("role", "error")
-        self.add_button = Button("Add mode", "primary")
+        self.add_button = Button("Add spacecraft mode", "primary")
         cancel = Button("Cancel")
         self.add_button.setDefault(True)
         self.add_button.clicked.connect(self.accept)

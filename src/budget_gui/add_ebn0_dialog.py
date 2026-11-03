@@ -45,16 +45,34 @@ class AddEbn0Dialog(QDialog):
         self.coding_edit.setPlaceholderText("for example rate 1/2, or none")
         self.coding_edit.setAccessibleName("Coding")
 
+        self.ber_edit = QLineEdit()
+        self.ber_edit.setPlaceholderText("optional, for example 1e-5")
+        self.ber_edit.setAccessibleName("Bit error rate (optional)")
+        self.ber_edit.setToolTip(
+            "The bit error rate the required Eb/N0 refers to, from the standard or data sheet "
+            "you take it from. You supply it; the tool never fills it in."
+        )
+        self.fer_edit = QLineEdit()
+        self.fer_edit.setPlaceholderText("optional, for example 1e-7")
+        self.fer_edit.setAccessibleName("Frame error rate (optional)")
+        self.fer_edit.setToolTip(
+            "The frame error rate the required Eb/N0 refers to, from the standard or data "
+            "sheet you take it from. You supply it; the tool never fills it in."
+        )
+
         form = QFormLayout()
         form.setHorizontalSpacing(theme.gap(2))
         form.setVerticalSpacing(theme.gap(1))
         form.addRow("Modulation", self.modulation_edit)
         form.addRow("Coding", self.coding_edit)
+        form.addRow("Bit error rate", self.ber_edit)
+        form.addRow("Frame error rate", self.fer_edit)
 
         self.intro = QLabel(
             "A link names a modulation and a coding, and the project's Eb/N0 table must list "
             "the pair. The Eb/N0 that the pair requires comes from a standard or a data sheet, "
             "so it is written as a placeholder (source TBD) and filled in under Model > Inputs; "
+            "the bit and frame error rate it refers to are optional and are yours to give; "
             "until then the link results that need it are not available. The text is compared "
             "exactly when a link is loaded: write it as the link will."
         )
@@ -84,19 +102,31 @@ class AddEbn0Dialog(QDialog):
 
         self.modulation_edit.textChanged.connect(self._refresh)
         self.coding_edit.textChanged.connect(self._refresh)
+        self.ber_edit.textChanged.connect(self._refresh)
+        self.fer_edit.textChanged.connect(self._refresh)
         self.resize(*theme.scaled(theme.PALETTE_SIZE))
         self._refresh()
 
     # ---- the answers -------------------------------------------------------------------------
     def answers(self) -> Ebn0Answers:
-        return Ebn0Answers(self.modulation_edit.text(), self.coding_edit.text())
+        return Ebn0Answers(
+            self.modulation_edit.text(),
+            self.coding_edit.text(),
+            self.ber_edit.text().strip(),
+            self.fer_edit.text().strip(),
+        )
 
     def issues(self) -> list[Issue]:
         return check_ebn0(self.answers(), existing_pairs=self._existing)
 
     def _refresh(self, *_args: object) -> None:
         issues = self.issues()
-        started = bool(self.modulation_edit.text().strip() or self.coding_edit.text().strip())
+        started = bool(
+            self.modulation_edit.text().strip()
+            or self.coding_edit.text().strip()
+            or self.ber_edit.text().strip()
+            or self.fer_edit.text().strip()
+        )
         # say what is missing only once the user began, so the empty form is not an error
         self.error_label.setText(issues[0].message if issues and started else "")
         self.add_button.setEnabled(not issues)

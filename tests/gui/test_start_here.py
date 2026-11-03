@@ -122,7 +122,7 @@ def test_the_steps_tick_as_the_model_is_built_and_the_panel_goes_when_all_are_do
     )
     panel.next_button.click()  # the button does what Edit > Add unit does
     assert UNIT in panel.done_keys() and panel.buttons[MODE].isEnabled()
-    assert panel.next_button.text() == "Add mode…"
+    assert panel.next_button.text() == "Add spacecraft mode…"
     assert panel.buttons[UNIT].accessibleName() == "Add a unit, done"
 
     window.spacecraft_modes_page._ask = lambda *_a: ModeAnswers(  # type: ignore[method-assign]

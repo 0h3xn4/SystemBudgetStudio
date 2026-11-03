@@ -21,7 +21,7 @@ config/power_system.yaml       kind: power_system        design_life_yr, solar_a
 config/thermal_model.yaml      kind: thermal_model       nodes{id: {name, heat_capacity_jperk?}}, conductances[{first_node, second_node, conductance_wk}], surfaces[...]   (optional)
 config/thermal_environment.yaml kind: thermal_environment space_temperature_k, temperature_margin_k, cases{name: {...}}   (optional)
 links/<id>.yaml         kind: link               name, direction, peer?, frequency_hz, transmitter{}, receiver{}, modulation, coding, data_rates_bps[], required_margin_db, ..._loss_db, attenuation[], active_modes[], max_elevation_deg?, static_points[]
-config/ebn0_table.yaml         kind: ebn0_table          entries[{modulation, coding, required_ebn0_db}]
+config/ebn0_table.yaml         kind: ebn0_table          entries[{modulation, coding, required_ebn0_db, target_ber?, target_fer?}]
 config/attenuation_table.yaml  kind: attenuation_table   entries[{name, attenuation_kind, freq_hz, elevation_deg, loss_db}]
 ```
 
@@ -194,6 +194,8 @@ JSON Schemas for all kinds: `budget export-schemas <dir>` (also committed in `sr
 ## Sources, statuses and required features (schema revision D-213)
 
 The scenario went up one more version in the step that added the model choices `earth_model` and `irradiance_model` ([choices](models/choices.md)): version 4, an older file reads unchanged. The revision for provenance added three optional things and moved every kind up one schema version (`unit`, `scenario` and `margin_policy` to 3, all others to 2). Files of the older versions migrate in memory unchanged (`FILE_MIGRATED`); a tool of an earlier release reads a new file as `SCHEMA_TOO_NEW`. None of them is used by an equation, none changes a result, and none is part of the model digest. The design is in [transparency_p3_design.md](transparency_p3_design.md).
+
+The Eb/N0 table went up to version 3 in 2.1.0: an entry may record the error rates its required Eb/N0 refers to, `target_ber` and `target_fer` (each above 0 and below 1, as the standard or data sheet gives them; the tool never supplies one). The Explain panel and the configuration table of the link report show them next to the number ("Required Eb/N0, QPSK rate 1/2 at BER 1e-05"); no result depends on them. An older file reads unchanged (`FILE_MIGRATED`); an earlier release reads a new file as `SCHEMA_TOO_NEW`.
 
 **`provenance:` in the file of an entity** (`spacecraft.yaml`, units, spacecraft modes, expendables, orbits, ground stations, targets, scenarios, links) says where a plain input came from, without changing the shape of any value:
 

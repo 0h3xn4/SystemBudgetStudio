@@ -3153,7 +3153,7 @@
       },
       {
         "path": "config/ebn0_table.yaml",
-        "sha256": "3d2a0bd5ef34961b176d02fd4310489e3a63bdb8d27970a81478bf691ac9047f",
+        "sha256": "9c9b07993abeaa9dd7f5eee533bd91e4cacbfbafdae1774afc14c843aa6deed3",
         "size": 350
       },
       {
@@ -3352,7 +3352,7 @@
         "size": 632
       }
     ],
-    "inputs_digest": "sha256:22a87921c950b10bd138ed4bf82acadb344c1a8257f4aaf345f7733c5ead6a6b",
+    "inputs_digest": "sha256:802ab54d09174cce4d169bac254b9bb10c0f9977fd759c46be3a0a03c342dd8e",
     "libraries": [
       [
         "pinned",
@@ -3365,7 +3365,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.0.0",
+    "tool_version": "2.1.0",
     "user": "Golden User"
   },
   "result_format": {

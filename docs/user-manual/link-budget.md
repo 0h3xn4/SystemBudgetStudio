@@ -38,7 +38,7 @@ static_points:
   - {name: 5 deg elevation, elevation_deg: 5, range_m: 2200000}
 ```
 
-The required [Eb/N0](../glossary.md#ebn0) comes from `config/ebn0_table.yaml` (an entry with the same modulation and coding); losses by name from `config/attenuation_table.yaml`. A project can hold several links (telemetry, payload data, inter-satellite), uplink and downlink. Every field is in the [file format](../FILE_FORMAT.md#links-decisions-d-077-to-d-083).
+The required [Eb/N0](../glossary.md#ebn0) comes from `config/ebn0_table.yaml` (an entry with the same modulation and coding). An entry may also say which error rate its Eb/N0 is for: `target_ber` (bit error rate) and `target_fer` (frame error rate), each a number above 0 and below 1, for example `target_ber: 1.0e-5`. You give them from the standard or data sheet the Eb/N0 comes from; the tool never fills them in, and no result depends on them. The Explain panel and the configuration table of the link report show them next to the number. The *Add Eb/N0 entry* form asks for them as optional fields; losses by name from `config/attenuation_table.yaml`. A project can hold several links (telemetry, payload data, inter-satellite), uplink and downlink. Every field is in the [file format](../FILE_FORMAT.md#links-decisions-d-077-to-d-083).
 
 ## How do I get the margin at a chosen range?
 

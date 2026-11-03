@@ -138,15 +138,15 @@
 ## sheet Provenance rows=14 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
-3: 'Tool' | 'System Budget Studio 2.0.0'
+3: 'Tool' | 'System Budget Studio 2.1.0'
 4: 'Python' | '3.x'
 5: 'Libraries' | 'pinned for-golden-tests'
 6: 'Project' | 'Example 150 kg microsatellite'
 7: 'Project revision' | '1'
 8: 'Scenario' | 'static (no scenario)'
 9: 'Run parameters' | 'Environment source elements; Shadow model conical; Earth model WGS-84; Irradiance model constant; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s'
-10: 'Inputs digest (model)' | 'sha256:fb65b9099dee83c766c28438de05727543e1c5b8f8ea32200abd15c0f0db8ba0'
-11: 'Input files' | '40 files, sha256:2ca5fd58e480674fe8b6e38d5b23446bb8ae84b38c0fa7007979d3307add2740'
+10: 'Inputs digest (model)' | 'sha256:2f74319b5e655afbaf5a8e0f195acb63441b30cfbf44b51ac7728ad2eb0f8d39'
+11: 'Input files' | '40 files, sha256:e0bb1101b8e2fdf43fbdb17965d8d764a6c6c3a68642ba019184a6e7f998e1c3'
 12: 'Illustrative inputs' | '466'
 13: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 14: 'User' | 'Golden User'

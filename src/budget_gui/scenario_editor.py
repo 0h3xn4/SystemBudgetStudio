@@ -44,8 +44,8 @@ SHADOW_MODELS = ("cylindrical", "conical")
 CHOICE_FIELDS = ("shadow_model", "earth_model", "irradiance_model")
 WHEN = {
     "during_pass": "during every pass over",
-    "in_eclipse": "while in eclipse",
-    "in_sunlight": "while in sunlight",
+    "in_eclipse": "throughout every eclipse",
+    "in_sunlight": "throughout every sunlit period",
 }
 MAX_SECONDS = 10_000_000.0
 MAX_SPAN_SECONDS = 200_000_000.0  # above the longest scenario the model accepts (180 days)
@@ -145,6 +145,12 @@ class _RuleRow(_Row):
             (self.lag, "Seconds after the pass"),
         ):
             widget.setAccessibleName(name)
+        self.mode.setToolTip("The spacecraft mode that is active while the rule applies")
+        self.when.setToolTip(
+            "When the rule applies. 'throughout every eclipse' (or sunlit period) keeps the mode "
+            "for the whole eclipse, from entry to exit; to limit it to part of one, use a manual "
+            "segment or a rule for a pass."
+        )
         for widget in (self.mode, self.when, self.site):
             self.sentence.addWidget(widget)
         self.sentence.addStretch(1)

@@ -128,15 +128,15 @@ Provenance
 Provenance
 ## table
 Item | Value
-Tool | System Budget Studio 2.0.0
+Tool | System Budget Studio 2.1.0
 Python | 3.x
 Libraries | numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
 Project | Example 250 kg minisatellite, complete power and thermal inputs
 Project revision | 1
 Scenario | static vs static
-Run parameters | Side A inputs digest sha256:635d70e102d4c3eba8d63b08915e8a053652b9dcf1793250978db1ee2f8cca46; Side B inputs digest sha256:81227a66c68e6221c6353c2108d73fa6d857c1a481334a32fb15db330e6cb502; Side A files sha256:189a805733197a009ff1cbba583cfa6c3387bc6bd10af4f14aba1b4ee02c4b77; Side B files sha256:ca23c8ead1266f736ea737a9d593ef30f319ea3f371f003dd7eee8308d778d00
-Inputs digest (model) | sha256:635d70e102d4c3eba8d63b08915e8a053652b9dcf1793250978db1ee2f8cca46
-Input files | 41 files, sha256:189a805733197a009ff1cbba583cfa6c3387bc6bd10af4f14aba1b4ee02c4b77
+Run parameters | Side A inputs digest sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6; Side B inputs digest sha256:24da0a7c32bf01b79c12fbacdb667238b5b1d35a39d49cf26d64fd7563431dc0; Side A files sha256:22914f367bf995b59d08289e5cfd0fe184afcececf2bd1716dc6add481f897f1; Side B files sha256:1b90b502e07862904959c18be9269a473a2b7c6fb0007da9388ea92c66e600d7
+Inputs digest (model) | sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6
+Input files | 41 files, sha256:22914f367bf995b59d08289e5cfd0fe184afcececf2bd1716dc6add481f897f1
 Illustrative inputs | 657
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

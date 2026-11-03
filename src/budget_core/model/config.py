@@ -49,6 +49,19 @@ class Ebn0Entry(BudgetModel):
     modulation: str = Field(min_length=1)
     coding: str = Field(min_length=1)
     required_ebn0_db: Sourced
+    # the error rates the required Eb/N0 refers to, as the standard or data sheet gives them; the
+    # tool records and shows them and never supplies one (2.1.0)
+    target_ber: float | None = Field(default=None, gt=0, lt=1)
+    target_fer: float | None = Field(default=None, gt=0, lt=1)
+
+    def reference_text(self) -> str:
+        """'BER 1e-05, FER 1e-07' (only what is recorded; empty when nothing is)."""
+        parts = [
+            f"{name} {value:g}"
+            for name, value in (("BER", self.target_ber), ("FER", self.target_fer))
+            if value is not None
+        ]
+        return ", ".join(parts)
 
 
 class Ebn0Table(BudgetModel):

@@ -49,7 +49,7 @@ STEP_TEXTS: tuple[StepText, ...] = (
         "Add a spacecraft mode",
         "Spacecraft mode",
         "A spacecraft mode says what every unit is doing at a time, for example safe or science.",
-        "Add mode…",
+        "Add spacecraft mode…",
         "Ctrl+Shift+M",
         "Add a unit first.",
     ),

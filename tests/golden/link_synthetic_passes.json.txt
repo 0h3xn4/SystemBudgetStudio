@@ -133,7 +133,7 @@
     "generated": "2026-01-02T03:04:05Z",
     "illustrative_inputs": 0,
     "input_files": [],
-    "inputs_digest": "sha256:72ac95b7cf40a37737b4042fd7685258927479f23b96763af59d7814d2c083b4",
+    "inputs_digest": "sha256:c147c221a80b2203d7c3d8462fca9346d64ae4b8126799102aa3c1dae9b7e491",
     "libraries": [
       [
         "pinned",
@@ -175,7 +175,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.0.0",
+    "tool_version": "2.1.0",
     "user": "Golden User"
   },
   "result_format": {
