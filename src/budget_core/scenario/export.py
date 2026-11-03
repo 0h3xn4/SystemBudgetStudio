@@ -14,6 +14,7 @@ from budget_core.reports.csvutil import csv_writer, provenance_csv
 from budget_core.reports.files import write_file
 from budget_core.result_format import result_format
 from budget_core.scenario.run import ScenarioRun, run_parameters
+from budget_core.scenario.statistics import scenario_statistics
 from budget_core.timeutil import format_utc
 
 
@@ -112,6 +113,7 @@ def environment_json(run: ScenarioRun, provenance: Provenance) -> str:
             "samples": env.grid.count,
         },
         "eclipse_fraction": round(env.eclipse_fraction, 6),
+        "statistics": scenario_statistics(env).to_dict(),
         "eclipses": [
             {
                 "start_s": round(e.start_s, 3),

@@ -7,6 +7,7 @@ or the default mode only rebuilds the timeline from the existing environment (it
 
 from __future__ import annotations
 
+import math
 from collections.abc import Collection, Mapping
 from datetime import timedelta
 from pathlib import Path
@@ -40,6 +41,7 @@ from budget_core.scenario.run import (
     rebuild_timeline,
     run_scenario,
 )
+from budget_core.scenario.statistics import DurationStats, scenario_statistics
 from budget_core.timeutil import format_utc
 from budget_gui import theme
 from budget_gui.cancel_support import (
@@ -89,6 +91,12 @@ class ScenarioWorker(QThread):
 
 _READ_ONLY = Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
 SIZED_ROWS = 60  # rows measured to size the columns
+ALL_SITES = "All sites"
+
+
+def _s(value: float | None) -> str:
+    """A figure with one decimal, or `n/a` when there is none (no pass, no elevation)."""
+    return NA if value is None else f"{value:.1f}"
 
 
 def fill_table(
@@ -191,7 +199,32 @@ class ScenarioView(QWidget):
         scroll.setWidget(self.editor)
         tabs.addTab(scroll, "Rules and segments")
         tabs.addTab(self.eclipse_table, "Eclipses")
-        tabs.addTab(self.passes_table, "Passes")
+        # the passes of one station or of all (2.1.0)
+        self.passes_filter = QComboBox()
+        self.passes_filter.setAccessibleName("Passes of")
+        self.passes_filter.setToolTip("Show the passes of one station or target, or of all")
+        self.passes_filter.addItem(ALL_SITES)
+        self.passes_filter.currentIndexChanged.connect(self._fill_passes)
+        passes_page = QWidget()
+        passes_layout = QVBoxLayout(passes_page)
+        passes_bar = QHBoxLayout()
+        passes_bar.addWidget(QLabel("Passes of"))
+        passes_bar.addWidget(self.passes_filter)
+        passes_bar.addStretch(1)
+        passes_layout.addLayout(passes_bar)
+        passes_layout.addWidget(self.passes_table)
+        tabs.addTab(passes_page, "Passes")
+        # min, mean and max of the eclipses and of the passes of each site (2.1.0)
+        self.eclipse_stats_label = QLabel()
+        self.eclipse_stats_label.setWordWrap(True)
+        self.eclipse_stats_label.setAccessibleName("Eclipse statistics")
+        self.site_stats_table = QTableWidget()
+        self.site_stats_table.setTabKeyNavigation(False)
+        stats_page = QWidget()
+        stats_layout = QVBoxLayout(stats_page)
+        stats_layout.addWidget(self.eclipse_stats_label)
+        stats_layout.addWidget(self.site_stats_table, 1)
+        tabs.addTab(stats_page, "Statistics")
         tabs.addTab(self.timeline_table, "Mode timeline")
 
         self.body = QSplitter(Qt.Orientation.Vertical)
@@ -396,8 +429,15 @@ class ScenarioView(QWidget):
         modes = sorted(self.project.modes) if self.project else []
         self.timeline.set_run(run, modes)
         if run is None:
-            for table in (self.eclipse_table, self.passes_table, self.timeline_table):
+            for table in (
+                self.eclipse_table,
+                self.passes_table,
+                self.timeline_table,
+                self.site_stats_table,
+            ):
                 table.setRowCount(0)
+            self.eclipse_stats_label.setText("")
+            self._set_filter_sites([])
             return
         start = run.env.grid.start
 
@@ -412,6 +452,36 @@ class ScenarioView(QWidget):
                 for e in run.env.eclipses
             ],
         )
+        self._set_filter_sites(sorted(run.env.sites))
+        self._fill_passes()
+        self._show_statistics(run)
+        fill_table(
+            self.timeline_table,
+            ["Start (s)", "End (s)", "Duration (s)", "Mode"],
+            [
+                [f"{s.start_s:.1f}", f"{s.end_s:.1f}", f"{s.duration_s:.1f}", s.mode]
+                for s in run.timeline
+            ],
+        )
+
+    def _set_filter_sites(self, sites: list[str]) -> None:
+        """The sites of the filter; the chosen one stays when the new run still has it."""
+        chosen = self.passes_filter.currentText()
+        self.passes_filter.blockSignals(True)
+        try:
+            self.passes_filter.clear()
+            self.passes_filter.addItem(ALL_SITES)
+            self.passes_filter.addItems(sites)
+            index = self.passes_filter.findText(chosen)
+            self.passes_filter.setCurrentIndex(max(index, 0))
+        finally:
+            self.passes_filter.blockSignals(False)
+
+    def _fill_passes(self) -> None:
+        run = self.last_run
+        if run is None:
+            return
+        chosen = self.passes_filter.currentText()
         fill_table(
             self.passes_table,
             ["Site", "Kind", "AOS (s)", "LOS (s)", "Duration (s)", "Max elevation (deg)"],
@@ -422,19 +492,66 @@ class ScenarioView(QWidget):
                     f"{p.aos_s:.1f}",
                     f"{p.los_s:.1f}",
                     f"{p.duration_s:.1f}",
-                    f"{p.max_elevation_deg:.1f}",
+                    NA if math.isnan(p.max_elevation_deg) else f"{p.max_elevation_deg:.1f}",
                 ]
                 for sid, vis in sorted(run.env.sites.items())
+                if chosen in ("", ALL_SITES, sid)
                 for p in vis.passes
             ],
+            numeric=range(2, 6),
         )
-        fill_table(
-            self.timeline_table,
-            ["Start (s)", "End (s)", "Duration (s)", "Mode"],
+
+    def _show_statistics(self, run: ScenarioRun) -> None:
+        stats = scenario_statistics(run.env)
+        ecl = stats.eclipses
+        if ecl.durations.count:
+            self.eclipse_stats_label.setText(
+                f"{ecl.durations.count} eclipse(s): shortest {_s(ecl.durations.min_s)} s, "
+                f"mean {_s(ecl.durations.mean_s)} s, longest {_s(ecl.durations.max_s)} s; "
+                f"{ecl.fraction * 100:.1f} % of the scenario in eclipse; "
+                f"longest stretch of sunlight {ecl.longest_sunlight_s:.1f} s"
+            )
+        else:
+            self.eclipse_stats_label.setText(
+                f"No eclipse in the scenario; sunlight for all {stats.duration_s:.1f} s"
+            )
+
+        def figures(d: DurationStats) -> list[str]:
+            return [_s(d.min_s), _s(d.mean_s), _s(d.max_s)]
+
+        rows = [
             [
-                [f"{s.start_s:.1f}", f"{s.end_s:.1f}", f"{s.duration_s:.1f}", s.mode]
-                for s in run.timeline
+                site.site_id,
+                site.kind,
+                str(site.passes.count),
+                f"{site.passes.total_s:.1f}",
+                f"{site.contact_fraction * 100:.1f}",
+                *figures(site.passes),
+                f"{site.largest_gap_s:.1f}",
+                _s(site.elevation_min_deg),
+                _s(site.elevation_mean_deg),
+                _s(site.elevation_max_deg),
+            ]
+            for site in stats.sites
+        ]
+        fill_table(
+            self.site_stats_table,
+            [
+                "Site",
+                "Kind",
+                "Passes",
+                "Contact (s)",
+                "Contact (%)",
+                "Shortest pass (s)",
+                "Mean pass (s)",
+                "Longest pass (s)",
+                "Largest gap (s)",
+                "Elevation min (deg)",
+                "Elevation mean (deg)",
+                "Elevation max (deg)",
             ],
+            rows,
+            numeric=range(2, 12),
         )
 
     def _range_selected(self, start: float, end: float) -> None:
