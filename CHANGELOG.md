@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Documentation sweep after 2.1.0.** The README, the user manual (scenarios, the window, describing the spacecraft, link budget, command line), the FAQ (the two kinds of mode, the eclipse and pass statistics, editing the time span), the tips, the glossary (*BER and FER*, *Largest gap*, *Statistics*), the troubleshooting entry on the inputs digest, the file format, the model pages, the architecture and design notes and two chapters of the in-app guide (scenarios, link budget) are brought up to date with the program as built. Three screenshots are retaken (the scenario page with its new fields, the Power modes page, and the new Statistics tab). No code changed.
+
 ## [2.1.0] - 2026-11-03
 
 A usability and quick-insight release, from the feedback of a systems engineer who tried the tool on a real mission. **No result changed**: a project gives the same numbers as with 2.0.0. What changes for you: the scenario's start, duration and step are fields in the window; a new Statistics tab and a station filter answer the usual questions about eclipses and passes without a spreadsheet; the two kinds of mode are named apart and the rules read more clearly; an Eb/N0 entry can record the error rate it is for. The Eb/N0 table goes up to schema version 3 (older files read unchanged), so the inputs digest of a project with a table is a new value once more ([changes.md](docs/changes.md)).
