@@ -29,7 +29,7 @@ The data volume equation (LNK-VOLUME) belongs to the passes: [link passes](link-
 | `L_atm` | `attenuation` (names) with `config/attenuation_table.yaml`, `entries[k].loss_db` | entries for the link frequency (within 1 %); sourced |
 | `L_point`, `L_pol`, `L_impl` | `pointing_loss_db`, `polarisation_loss_db`, `implementation_loss_db` | sourced |
 | `R_b` | `data_rates_bps[i]` | plain inputs |
-| `Eb/N0_required` | `config/ebn0_table.yaml`, `entries[i].required_ebn0_db` for the link's modulation and coding | sourced |
+| `Eb/N0_required` | `config/ebn0_table.yaml`, `entries[i].required_ebn0_db` for the link's modulation and coding; the entry may record the error rates it is quoted for (`target_ber`, `target_fer`), which the report and Explain show next to it and no equation reads | sourced |
 | required margin | `required_margin_db` | sourced |
 
 ## Order of the computation

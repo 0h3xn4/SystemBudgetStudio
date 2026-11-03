@@ -40,7 +40,7 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
                       steady_state.py (nodal heat balance, pure function)
   link/               budget.py (equations, pure functions), evaluate.py (static table, pass series,
                       data volume), constants.py (c, k with sources)
-  scenario/           timeline model, rule-based generation (downlink-on-pass, ...)
+  scenario/           timeline model, rule-based generation (downlink-on-pass, ...), statistics of the eclipses and passes (statistics.py, D-224)
   problems.py         Problem(severity, code, message, location) — shared by validate/solvers
   reports/            xlsx, docx, pdf, csv, json; provenance block; figures
   provenance.py       tool/library versions, project revision, scenario, date, user

@@ -11,7 +11,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget new FOLDER --bus-voltage-v VOLTS [--name TEXT] [--bus-name TEXT] [--spacecraft-name TEXT]` | Create a blank project: one bus, placeholder configuration, no units ([create a project](create-a-project.md#how-do-i-start-a-blank-project)); the folder must not exist |
 | `budget validate PROJECT [--format text\|json] [--strict]` | Check a project folder and list problems |
 | `budget run PROJECT [--budget power\|mass\|thermal\|link\|all] [--report …] [--out DIR]` | Compute the static budgets and write reports (default: all budgets, all report kinds) |
-| `budget scenario PROJECT [--scenario ID] [--out DIR]` | Compute a scenario's eclipses, passes and mode timeline |
+| `budget scenario PROJECT [--scenario ID] [--out DIR]` | Compute a scenario's eclipses, passes and mode timeline (the JSON also carries their statistics) |
 | `budget power-timeline PROJECT [--scenario ID] [--case bol\|eol\|both] [--load-basis nominal\|margined] [--phase NAME] [--series-every N] [--no-plots] [--report …] [--out DIR]` | Time-domain power budget of a scenario |
 | `budget link-passes PROJECT [--scenario ID] [--no-plots] [--report …] [--out DIR]` | Link margin, selected data rate and data volume over every pass |
 | `budget compare PROJECT [OTHER] [--scenario ID] [--scenario-a ID] [--scenario-b ID] [--budget …] [--report …] [--max-rows N] [--out DIR]` | Compare two revisions or two scenarios |

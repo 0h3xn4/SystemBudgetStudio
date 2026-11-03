@@ -6,7 +6,7 @@ In the window, **Edit > Add link** (Ctrl+Shift+L) writes the link file from a fo
 
 ## Static table
 
-For every *static point* (a chosen elevation and slant range) and every listed data rate the table shows EIRP, path loss, G/T, other losses, C/N0, Eb/N0 and the margin over the required Eb/N0 from `config/ebn0_table.yaml`, and the highest rate that closes with the required margin.
+For every *static point* (a chosen elevation and slant range) and every listed data rate the table shows EIRP, path loss, G/T, other losses, C/N0, Eb/N0 and the margin over the required Eb/N0 from `config/ebn0_table.yaml`, and the highest rate that closes with the required margin. An entry of that table may record the bit and frame error rate its Eb/N0 is quoted for (`target_ber`, `target_fer`); you supply them, they are shown next to the number in Explain and in the report, and no result depends on them.
 
 ## Pass series
 
