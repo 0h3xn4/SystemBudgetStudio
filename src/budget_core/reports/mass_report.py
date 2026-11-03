@@ -54,6 +54,20 @@ def _summary(result: StaticMassResult) -> Table:
     )
 
 
+def _cog_shift(result: StaticMassResult) -> Table | None:
+    shifts = result.cog_shifts
+    if len(shifts) < 2:
+        return None
+    return Table(
+        f"Centre-of-gravity shift from the first phase ({shifts[0].phase})",
+        (Column("Phase"), _m("Shift x"), _m("Shift y"), _m("Shift z"), _m("Distance")),
+        tuple((s.phase, *s.delta_m, s.distance_m) for s in shifts),
+        note="The centre of gravity of each phase minus that of the first phase, from the "
+        "nominal masses of the items with a position. An expendable may give the position of its "
+        "centre of mass for each phase (phase_positions_m), so that a tank that empties moves it.",
+    )
+
+
 def _limits(result: StaticMassResult) -> Table:
     rows: list[tuple[Cell, ...]] = []
     for p in result.phases:
@@ -185,7 +199,7 @@ def build_mass_report(
         Section(
             "Summary",
             sheet_name("Summary", used),
-            tables=(_summary(result), _limits(result)),
+            tables=tuple(t for t in (_summary(result), _limits(result), _cog_shift(result)) if t),
             paragraphs=(f"Body frame: {project.spacecraft.body_frame or 'not described'}",),
         )
     ]

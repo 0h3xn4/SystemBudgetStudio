@@ -342,6 +342,76 @@ EQUATIONS: dict[str, Equation] = {
             "Checked against the library function in the tests.",
         ),
         Equation(
+            "ORB-J2-RATES",
+            "Secular rates of a mean orbit under J2",
+            "k = 1.5 J2 (Re / p)^2 n; node: -k cos i; perigee: k (2 - 2.5 sin^2 i); mean anomaly: "
+            "n + k sqrt(1 - e^2) (1 - 1.5 sin^2 i); p = a (1 - e^2), n = sqrt(mu / a^3)",
+            None,
+            "First-order secular J2 theory, a textbook relation; the reference text is not "
+            "available to the tool, owner to confirm. Re, mu and J2 are those of the Earth model "
+            "of the scenario. SGP4 includes higher orders (DEVIATIONS DV-E6).",
+        ),
+        Equation(
+            "ORB-SSO",
+            "Sun-synchronous condition",
+            "cos i = -w_sun / (1.5 J2 (Re / p)^2 n), with w_sun the rate of the mean Sun "
+            "(360 deg per tropical year)",
+            None,
+            "The node has to move at the rate of the mean Sun (ORB-J2-RATES); textbook relation, "
+            "owner to confirm the reference. w_sun is the coefficient of the low-precision Sun "
+            "(ENV-SUN), so the local time stays constant in the tool.",
+        ),
+        Equation(
+            "ORB-LTAN",
+            "Mean local solar time of the ascending node",
+            "LTAN = UT + (RAAN - GMST) / 15 deg per hour (mod 24 h), GMST from ENV-GMST",
+            None,
+            "Mean solar time is universal time plus the longitude over 15 degrees per hour; the "
+            "longitude of the node is its right ascension minus Greenwich sidereal time. The "
+            "equation of time is not applied (D-226); UTC is taken as UT1 (DV-E1).",
+        ),
+        Equation(
+            "ORB-REPEAT",
+            "Repeat ground track",
+            "(w_perigee + w_mean-anomaly) / (w_earth - w_node) = N / D, solved for a",
+            None,
+            "N nodal periods fit D nodal days (days of the Earth turning once relative to the "
+            "node); the rates are those of ORB-J2-RATES, w_earth that of ENV-GMST. Textbook "
+            "relation, owner to confirm the reference.",
+        ),
+        Equation(
+            "ORB-FRAME",
+            "J2000 to TEME rotation",
+            "r_TEME = R3(eq) R1(-(eps+deps)) R3(-dpsi) R1(eps) R3(-z) R2(theta) R3(-zeta) r_J2000; "
+            "zeta, theta, z: IAU-76 precession; dpsi, deps: the ten largest terms of the IAU-1980 "
+            "nutation; eq = dpsi cos(eps)",
+            None,
+            "IAU-76 precession and IAU-1980 nutation as in the usual astrodynamics texts, "
+            "reproduced from memory (text not available); checked against the GCRS to TEME "
+            "transformation of astropy at four dates, 0.7 to 2.4 m at a radius of 7000 km "
+            "(DEVIATIONS DV-E7). Owner to verify against the source.",
+        ),
+        Equation(
+            "ORB-STATE-FIT",
+            "Mean elements of a state vector",
+            "find x = (a, f, g, h, k, L) with SGP4(x, epoch) = (r, v) by Newton's method, "
+            "finite-difference Jacobian; (f, g) = e (cos, sin)(RAAN + argp), "
+            "(h, k) = tan(i/2) (cos, sin) RAAN, L = RAAN + argp + M",
+            None,
+            "A numerical fit to the tool's own propagator, not a published theory: the mean "
+            "elements are those whose SGP4 state at the epoch is the given one (DEVIATIONS DV-E7).",
+        ),
+        Equation(
+            "ORB-BETA",
+            "Beta angle",
+            "beta = asin((r x v) / |r x v| . s), s the unit vector to the Sun; critical angle "
+            "asin(Re / r) for a circular orbit of radius r (cylindrical shadow)",
+            None,
+            "Textbook definition: the angle between the Sun direction and the orbit plane. r and v "
+            "are the TEME state of the propagator, s the Sun model (ENV-SUN). Owner to confirm "
+            "the reference.",
+        ),
+        Equation(
             "ENV-SHADOW-CYL",
             "Cylindrical Earth shadow",
             "in shadow when r.s < 0 and |r - (r.s) s| < R_Earth (s: unit vector to the Sun)",
@@ -364,6 +434,63 @@ EQUATIONS: dict[str, Equation] = {
             "z = (N (1 - e2) + h) sin phi",
             "WGS 84 (NIMA TR8350.2) ellipsoid definition",
             "Constants in budget_core.environment.constants (decision D-054).",
+        ),
+        Equation(
+            "POINT-SLEW",
+            "Rest-to-rest slew time",
+            "alpha = T / I; t = 2 sqrt(theta / alpha), peak rate sqrt(theta alpha); with a rate "
+            "limit w_max below that: t = theta / w_max + w_max / alpha",
+            None,
+            "Classical bang-bang rigid-body slew about a principal axis (the torque is the only "
+            "limit, no flexible modes, no cross-axis coupling): DEVIATIONS DV-P2.",
+        ),
+        Equation(
+            "POINT-MOMENTUM",
+            "Peak angular momentum of a slew",
+            "h = I w_peak, compared with the momentum capacity of the actuators",
+            None,
+            "Definition of angular momentum about the slew axis.",
+        ),
+        Equation(
+            "POINT-ENERGY",
+            "Electrical energy of a slew",
+            "E = P t / 3600 (Wh), P the actuator set's mean power while slewing",
+            None,
+            "Definition of energy; the power is the project's input, not derived from the torque.",
+        ),
+        Equation(
+            "PROP-ROCKET",
+            "Rocket equation (Tsiolkovsky)",
+            "m_before = m_after exp(dv / (Isp g0)); propellant = m_before - m_after, the "
+            "manoeuvres worked backwards from the dry mass",
+            None,
+            "Classical rocket dynamics, constant specific impulse; g0 is the standard gravity "
+            "(3rd CGPM). Instantaneous burns, no gravity or steering loss (DEVIATIONS DV-P1).",
+        ),
+        Equation(
+            "PROP-BURN",
+            "Burn time at constant thrust",
+            "t = m_propellant Isp g0 / F (mass flow F / (Isp g0))",
+            None,
+            "Classical rocket dynamics; the thrust is taken as constant.",
+        ),
+        Equation(
+            "PROP-ENERGY",
+            "Electric thrusting energy",
+            "E = P t / 3600 (Wh), P the power drawn while thrusting",
+            None,
+            "Definition of energy; the power is the project's input, not derived from the "
+            "thrust and the specific impulse.",
+        ),
+        Equation(
+            "ENV-SUBPOINT",
+            "Sub-satellite point (ground track)",
+            "p = hypot(x, y); phi = atan2(z + e2 N sin(phi), p) iterated; lam = atan2(y, x); "
+            "h = p cos(phi) + z sin(phi) - a sqrt(1 - e2 sin2(phi))",
+            "WGS 84 (NIMA TR8350.2) ellipsoid definition",
+            "Inverse of ENV-GEODETIC on the same ellipsoid, applied to the Earth-fixed position "
+            "(ENV-GMST rotation, no polar motion). Textbook method; checked by the round trip "
+            "and by the latitude of a known inclination.",
         ),
         Equation(
             "ENV-TOPO",

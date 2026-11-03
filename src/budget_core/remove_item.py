@@ -36,6 +36,7 @@ class Users:
 
     scenarios: list[str] = field(default_factory=list)
     links: list[str] = field(default_factory=list)
+    propulsion: list[str] = field(default_factory=list)  # propulsion systems that load it
 
 
 def rel_of(kind: str, item_id: str) -> str:
@@ -66,6 +67,7 @@ def users_of(
     *,
     scenarios: Mapping[str, Any],
     links: Mapping[str, Any],
+    propulsion: Mapping[str, Any] | None = None,
 ) -> Users:
     """Who names this item. `scenarios` and `links` are the plain data of the files, by id (the
     window passes the data as it is now, edits that are not saved yet included)."""
@@ -84,19 +86,33 @@ def users_of(
             for link_id in sorted(links)
             if isinstance(links[link_id], Mapping) and links[link_id].get("peer") == item_id
         ]
-    return Users(named_by_scenarios, named_by_links)
+    named_by_propulsion: list[str] = []
+    if kind == "expendable" and isinstance(propulsion, Mapping):
+        systems = propulsion.get("systems")
+        if isinstance(systems, Mapping):
+            named_by_propulsion = [
+                str(system_id)
+                for system_id in sorted(systems)
+                if isinstance(systems[system_id], Mapping)
+                and systems[system_id].get("propellant") == item_id
+            ]
+    return Users(named_by_scenarios, named_by_links, named_by_propulsion)
 
 
 def blocked_message(kind: str, item_id: str, users: Users) -> str | None:
     """Why the item cannot be removed, or None when nothing names it."""
-    if not users.scenarios and not users.links:
+    if not users.scenarios and not users.links and not users.propulsion:
         return None
     who: list[str] = []
     if users.scenarios:
         who.append(f"the scenario(s) {', '.join(users.scenarios)}")
     if users.links:
         who.append(f"the link(s) {', '.join(users.links)}")
-    if users.scenarios:
+    if users.propulsion:
+        who.append(f"the propulsion system(s) {', '.join(users.propulsion)}")
+    if users.propulsion and not users.scenarios and not users.links:
+        where = "remove `propellant` from the system in config/propulsion.yaml"
+    elif users.scenarios:
         where = "Model > Scenario; for a link, remove it first or set its peer in its file"
     else:
         where = "remove the link first, or set its peer in the link file"

@@ -8,6 +8,7 @@ body frame. An item without an inertia is a point mass.
 
 from __future__ import annotations
 
+import math
 from typing import Literal
 
 from pydantic import Field, field_validator, model_validator
@@ -96,6 +97,19 @@ class Expendable(ProvenancedModel):
     maturity: str = Field(min_length=1)
     masses_kg: dict[str, float]
     mass_properties: MassProperties | None = None
+    # where the centre of mass of the expendable is in each mission phase (a tank empties towards
+    # its outlet, so the centre moves); a phase without an entry uses mass_properties.position_m
+    phase_positions_m: dict[str, list[float]] = Field(default_factory=dict)
+
+    @field_validator("phase_positions_m")
+    @classmethod
+    def _positions(cls, value: dict[str, list[float]]) -> dict[str, list[float]]:
+        for position in value.values():
+            if len(position) != 3 or not all(math.isfinite(c) for c in position):
+                raise PydanticCustomError(
+                    "position_invalid", "a position is three finite numbers: x, y, z"
+                )
+        return dict(sorted(value.items()))
 
     @field_validator("masses_kg")
     @classmethod

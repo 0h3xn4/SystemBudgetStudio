@@ -1,7 +1,7 @@
-pages=15
+pages=17
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Mass budget (static): Example 250 kg minisatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
@@ -56,6 +56,29 @@ Launch mass
  n/a
  n/a
 n/a
+Centre-of-gravity shift from the first phase (launch)
+Phase
+Shift x (m)
+Shift y (m)
+Shift z (m)
+Distance (m)
+launch
+ 0.0000
+ 0.0000
+ 0.0000
+ 0.0000
+bol
+ -0.0003
+ 0.0001
+ 0.0101
+ 0.0101
+eol
+ -0.0006
+ 0.0003
+ 0.0132
+ 0.0132
+The centre of gravity of each phase minus that of the first phase, from the nominal masses of the items with a position. An expendable may give the position of its centre of mass for each phase
+(phase_positions_m), so that a tank that empties moves it.
 Phase: launch
 Items
 Item
@@ -145,6 +168,25 @@ class_b
  -0.2500
  1.1000
 no
+## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 2
+Item
+Name
+Kind
+Subsystem
+Maturity
+Mass
+(kg)
+Margin
+With margin
+(kg)
+x (m)
+y (m)
+z (m)
+Own
+inertia
 harness
 Harness
 unit
@@ -241,25 +283,6 @@ class_b
  0.0000
  0.5500
 yes
-## page 2
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 2
-Item
-Name
-Kind
-Subsystem
-Maturity
-Mass
-(kg)
-Margin
-With margin
-(kg)
-x (m)
-y (m)
-z (m)
-Own
-inertia
 star_tracker
 Star tracker
 unit
@@ -365,6 +388,10 @@ Centre of gravity z (m)
  0.5695
 Mass in the CG calculation (kg)
  250.0000
+## page 3
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 3
 Inertia tensor
 Entry
 About CG (kg m2)
@@ -381,13 +408,6 @@ Izz
 Ixy
  0.17285
  0.20750
-## page 3
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 3
-Entry
-About CG (kg m2)
-About origin (kg m2)
 Ixz
  -1.17272
  1.45850
@@ -629,6 +649,10 @@ class_c
  0.4000
 no
 By subsystem
+## page 4
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 4
 Subsystem
 Mass (kg)
 With margin (kg)
@@ -647,13 +671,6 @@ PL
 PROP
  4.800
  n/a
-## page 4
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 4
-Subsystem
-Mass (kg)
-With margin (kg)
 STRUCT
  106.500
  n/a
@@ -732,6 +749,25 @@ class_b
  -0.1500
  0.4500
 yes
+## page 5
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 5
+Item
+Name
+Kind
+Subsystem
+Maturity
+Mass
+(kg)
+Margin
+With margin
+(kg)
+x (m)
+y (m)
+z (m)
+Own
+inertia
 battery
 Battery pack
 unit
@@ -792,25 +828,6 @@ class_b
  0.0000
  0.5500
 no
-## page 5
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 5
-Item
-Name
-Kind
-Subsystem
-Maturity
-Mass
-(kg)
-Margin
-With margin
-(kg)
-x (m)
-y (m)
-z (m)
-Own
-inertia
 heaters
 Thermal heaters
 unit
@@ -992,6 +1009,12 @@ Total, with unit margins
  n/a
 Total, with system margin
  n/a
+## page 6
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 6
+Quantity
+Value
 Centre of gravity x (m)
  -0.0191
 Centre of gravity y (m)
@@ -1000,10 +1023,6 @@ Centre of gravity z (m)
  0.5827
 Mass in the CG calculation (kg)
  241.6000
-## page 6
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 6
 Inertia tensor
 Entry
 About CG (kg m2)
@@ -1082,6 +1101,10 @@ I = sum(I_i + m_i (|d_i|^2 E - d_i d_i^T)), d_i = r_i - r_ref
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems
+## page 7
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 7
 Problems and open items
 Severity
 Code
@@ -1113,16 +1136,6 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
-## page 7
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 7
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1260,6 +1273,16 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
+## page 8
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 8
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1282,16 +1305,6 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
-## page 8
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 8
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1327,6 +1340,138 @@ CONFIG_PLACEHOL
 DER
 config/mass_limits.yaml:7
 limits[0].limit_kg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:7
+actuators.wheels.max_torque_nm
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:11
+actuators.wheels.max_rate_deg_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:15
+actuators.wheels.momentum_capacity_
+nms
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:19
+actuators.wheels.slew_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:27
+modes.nadir.accuracy_deg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:32
+modes.nadir.hold_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:39
+modes.target.accuracy_deg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:44
+modes.target.hold_power_w
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+## page 9
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 9
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:52
+slews[0].angle_deg
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:58
+slews[0].inertia_kgm2
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/pointing.yaml:62
+slews[0].settle_s
 This number is a placeholder (no value or
 source 'TBD'); results that use it are not
 trustworthy.
@@ -1443,16 +1588,6 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
-## page 9
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 9
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1464,6 +1599,16 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
+## page 10
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 10
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1599,6 +1744,82 @@ source.
 warning
 CONFIG_PLACEHOL
 DER
+config/propulsion.yaml:8
+systems.thruster.isp_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/propulsion.yaml:12
+systems.thruster.thrust_n
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+## page 11
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 11
+Severity
+Code
+Location
+Path
+Message
+Hint
+warning
+CONFIG_PLACEHOL
+DER
+config/propulsion.yaml:20
+maneuvers[0].delta_v_m_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/propulsion.yaml:27
+maneuvers[1].delta_v_m_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/propulsion.yaml:34
+maneuvers[2].delta_v_m_s
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
+config/propulsion.yaml:39
+delta_v_margin_ratio
+This number is a placeholder (no value or
+source 'TBD'); results that use it are not
+trustworthy.
+Replace it with a value from your margin
+policy, standard or data sheet and cite the
+source.
+warning
+CONFIG_PLACEHOL
+DER
 config/thermal_environment.ya
 ml:4
 space_temperature_k
@@ -1608,16 +1829,6 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
-## page 10
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 10
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1724,6 +1935,16 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
+## page 12
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 12
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1779,16 +2000,6 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
-## page 11
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 11
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1896,6 +2107,16 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
+## page 13
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 13
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -1959,16 +2180,6 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
-## page 12
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 12
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -2084,6 +2295,16 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
+## page 14
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 14
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -2147,16 +2368,6 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
-## page 13
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 13
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -2270,6 +2481,16 @@ trustworthy.
 Replace it with a value from your margin
 policy, standard or data sheet and cite the
 source.
+## page 15
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 15
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -2329,16 +2550,6 @@ expendables/propellant.yaml
 mass_properties
 'propellant' has no own inertia; it is treated as
 a point mass.
-## page 14
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 14
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -2429,6 +2640,16 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from the data sheet or
 requirement and cite the source.
+## page 16
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 16
+Severity
+Code
+Location
+Path
+Message
+Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -2478,16 +2699,6 @@ source 'TBD'); results that use it are not
 trustworthy.
 Replace it with a value from the data sheet or
 requirement and cite the source.
-## page 15
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.1.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 15
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOL
 DER
@@ -2541,7 +2752,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 2.1.0
+System Budget Studio 2.2.0
 Python
 3.x
 Libraries
@@ -2553,9 +2764,15 @@ Project revision
 Scenario
 static (no scenario)
 Inputs digest (model)
-sha256:802ab54d09174cce4d169bac254b9bb10c0f9977fd759c46be3a0a03c342dd8e
+sha256:6a40a91be7b8095916a7ccf10517406192af2be418c11c9f4e56bfe6ffff57c0
+## page 17
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.2.0 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 17
+Item
+Value
 Input files
-41 files, sha256:dce389defccf3899e337427d40dd044bc8b4f6cff27e3b94d849c0cfc5866ce9
+43 files, sha256:5c814d5def781ecbfa4e290a509c7570a4179339b6e8c60495b2d9c87cf1c195
 Illustrative inputs
 480
 Generated (UTC)

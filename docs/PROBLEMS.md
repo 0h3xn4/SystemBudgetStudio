@@ -254,6 +254,38 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** The class decides the margin applied to its power and mass.
 - **What to do.** Use a class listed under `classes` in config/margin_policy.yaml, or add the class.
 
+### REF_UNKNOWN_PROPULSION_SYSTEM
+
+**A manoeuvre names a propulsion system that is not defined** (error)
+
+- **Rule.** Every manoeuvre of config/propulsion.yaml must name a system listed under `systems`.
+- **Why it matters.** The propellant of a manoeuvre cannot be worked out without its specific impulse.
+- **What to do.** Use an id listed under `systems` in config/propulsion.yaml, or add the system.
+
+### REF_UNKNOWN_EXPENDABLE
+
+**A propulsion system names a propellant expendable that does not exist** (error)
+
+- **Rule.** The `propellant` of a system must be the id of a file in expendables/.
+- **Why it matters.** The propellant needed could not be compared with the propellant loaded.
+- **What to do.** Use the file name (without .yaml) of an expendable, or leave `propellant` out.
+
+### REF_UNKNOWN_POINTING_MODE
+
+**A slew names a pointing mode that is not defined** (error)
+
+- **Rule.** The `from_mode` and `to_mode` of a slew must be listed under `modes` in config/pointing.yaml.
+- **Why it matters.** A slew between modes that do not exist cannot be tied to what it points at.
+- **What to do.** Use an id listed under `modes` in config/pointing.yaml, or add the pointing mode.
+
+### REF_UNKNOWN_ACTUATOR
+
+**A pointing mode or slew names an actuator that is not defined** (error)
+
+- **Rule.** The `actuator` of a pointing mode or a slew must be listed under `actuators` in config/pointing.yaml.
+- **Why it matters.** The torque, momentum and power of the slew come from the actuator.
+- **What to do.** Use an id listed under `actuators` in config/pointing.yaml, or add the actuator.
+
 ### REF_UNKNOWN_UNIT
 
 **A spacecraft mode names a unit that does not exist** (error)
@@ -692,17 +724,17 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 
 ### IMPORT_FIELD_MISSING
 
-**A row has no power mode name** (error)
+**A row has no power mode name or key** (error)
 
-- **Rule.** Each row names the power mode it describes.
-- **Why it matters.** A row without it cannot be matched.
-- **What to do.** Give the name of the power mode, as in the exported template.
+- **Rule.** Each row names the power mode (unit table) or the key cells (modulation and coding; name, kind and frequency) it describes.
+- **Why it matters.** A row without them cannot be matched.
+- **What to do.** Give the cell, as in the exported template.
 
 ### IMPORT_DUPLICATE_ROW
 
-**A unit and power mode appear twice** (error)
+**A unit and power mode, or a table key, appears twice** (error)
 
-- **Rule.** A unit and power mode pair may appear once.
+- **Rule.** A unit and power mode pair, or the key of a table entry, may appear once.
 - **Why it matters.** Two rows would disagree about the same numbers.
 - **What to do.** Keep one row per power mode.
 
@@ -713,6 +745,24 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Rule.** Each cell must be a number, or a number with a unit of the right dimension.
 - **Why it matters.** The value would otherwise change the unit's power silently.
 - **What to do.** Write a number or a value with a matching unit such as `2.5 W`; the message says what the field requires.
+
+### IMPORT_SOURCE_MISSING
+
+**A new or changed value has no source** (error)
+
+- **Rule.** A value in an Eb/N0 or attenuation table needs the source of that value in the same row.
+- **Why it matters.** The tool never attributes a number to the source of another one.
+- **What to do.** Name the standard or data sheet in the `source` column, or leave the value empty.
+
+## Pointing and propulsion
+
+### POINTING_MOMENTUM_EXCEEDED
+
+**A slew needs more momentum than the actuators can store** (warning)
+
+- **Rule.** The peak angular momentum of a slew (inertia times the peak rate) must not exceed the momentum capacity of the actuators.
+- **Why it matters.** Beyond the capacity the actuators saturate and the slew cannot be flown as planned.
+- **What to do.** Lower the rate limit, slew a smaller angle, or use actuators that store more momentum.
 
 ## Other
 

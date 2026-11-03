@@ -24,6 +24,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="ber-and-fer"></a>
 **BER and FER**: bit error rate and frame error rate, the share of bits or frames received wrongly. An entry of the Eb/N0 table may record the error rates its required [Eb/N0](#ebn0) is quoted for (`target_ber`, `target_fer`); you give them from the standard or data sheet, the tool never supplies one and no result depends on them.
 
+<a id="beta-angle"></a>
+**Beta angle**: the angle between the direction to the Sun and the orbit plane, from −90° to +90°. Near 0° the Sun is in the orbit plane and the eclipses are longest; above the *critical beta angle* (64° at 700 km) a circular orbit has no eclipse. Shown on the Scenario page ([orbit design](models/orbit-design.md#beta-angle)).
+
 **Blank project**: a project with one bus, every configuration number a [placeholder](#placeholder), empty tables and no units, modes, orbits, scenarios or links: a spacecraft you describe yourself instead of a copy of a sample. Made by `budget new` or by the *Blank project* choice of the guided wizard. See [create a project](user-manual/create-a-project.md#how-do-i-start-a-blank-project).
 
 <a id="body-frame"></a>
@@ -68,6 +71,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **Earth model** (`earth_model`): the set of Earth constants (equatorial radius and gravitational parameter) used to propagate an orbit given as elements and for the Earth sphere of the shadow: WGS-84 (the default) or WGS-72. The two differ by 2 m in the radius and 0.3 km³/s² in mu. A TLE is always propagated on WGS-72, the set SGP4 is defined on; ground sites stay WGS-84 geodetic coordinates. Chosen per scenario; see [model choices](models/choices.md).
 
 <a id="eclipse"></a>
+**Specific impulse (Isp)**: the thrust a propellant gives per unit weight flow, in seconds; the exhaust velocity is Isp times the standard gravity. About 200 to 320 s for chemical and 1000 s or more for electric thrusters; the values for your thrusters come from their data sheets ([propulsion](models/propulsion.md)).
+
 **Eclipse**: the time the satellite is in the Earth's shadow, so the solar array produces nothing. The tool computes eclipses from the orbit.
 
 <a id="ecss"></a>
@@ -80,6 +85,12 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **Elevation**: the angle of the satellite above the horizon as seen from a ground station. Low elevation means a long path and more atmospheric loss.
 
 <a id="expendable"></a>
+**Pointing mode**: what the spacecraft points at (nadir, the Sun, an inertial direction, a target), how well, and the actuators that hold it. It is not a [spacecraft mode](#spacecraft-mode); see [pointing](models/pointing.md).
+
+**Slew**: a turn of the spacecraft from one pointing attitude to another. The pointing budget gives its time, peak rate, momentum and energy ([pointing](models/pointing.md)).
+
+**Delta-v**: the change of velocity a manoeuvre gives the spacecraft, in m/s. The propulsion budget takes the delta-v of each manoeuvre from you and works out the propellant with the rocket equation ([propulsion](models/propulsion.md)).
+
 **Expendable**: something whose mass changes during the mission, such as propellant or jettisoned equipment. It has a mass for every [mission phase](#mission-phase).
 
 <a id="explain"></a>
@@ -131,6 +142,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="link-margin"></a>
 <a id="largest-gap"></a>
 **Largest gap**: for a ground station or imaging target, the longest stretch of the scenario with no pass, the start and the end of the scenario included. It is one of the figures of the Statistics tab ([scenarios](user-manual/scenarios.md#statistics-of-the-eclipses-and-the-passes)).
+
+**LTAN and LTDN**: the local time of the ascending (or descending) node of an orbit, in hours (for example 10:30): the time of day, by the mean Sun, at which the satellite crosses the equator going north (south). In a sun-synchronous orbit it stays the same all year. `budget orbit ltan` converts it to and from the right ascension (RAAN); see [orbit design](models/orbit-design.md).
 
 **Link margin**: the [Eb/N0](#ebn0) you have minus the Eb/N0 required, in dB. A link **closes** at a data rate when its margin is at least the **required margin** you set in the link file (a safety allowance). See [link budget](user-manual/link-budget.md).
 
@@ -209,6 +222,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **SGP4**: the standard algorithm that turns a [TLE](#tle) or mean orbital elements into a satellite position. The tool uses the `sgp4` library.
 
 <a id="source"></a>
+**Sun-synchronous orbit**: a retrograde, near-polar orbit whose node moves east at the rate of the mean Sun (about 0.9856 degrees a day, from the oblateness of the Earth), so the satellite passes over a place at the same local time all year. It exists below about 5,974 km; `budget orbit sso` gives the inclination of an altitude.
+
 **Source**: the `source` text next to every sourced number: where the number comes from (document, data sheet, test). Printed in the reports.
 
 <a id="spacecraft-mode"></a>
@@ -223,6 +238,10 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **State of charge (SoC)**: how full the battery is, as a share of its capacity.
 
 **Statistics (of a scenario)**: the Statistics tab after Compute: the number, shortest, mean and longest eclipse, the share of the scenario in eclipse and the longest sunlight, and per station the number of passes, the contact time, the shortest, mean and longest pass, the [largest gap](#largest-gap) and the peak elevations. Read from the computed eclipses and passes; they change no result.
+
+**Repeat ground track**: an orbit whose track on the ground repeats after N revolutions in D days. `budget orbit repeat` finds the altitude of a cycle and `repeats` lists every cycle in an altitude window.
+
+**State vector**: a position and a velocity at an epoch, the other way to give an orbit. The orbit file takes it as `state:` with its frame, `j2000` or `teme` ([scenarios](user-manual/scenarios.md#how-do-i-define-an-orbit)).
 
 **Static budget**: a budget per mode without an orbit: the classic table for early design. Compare **time-domain budget**: over a scenario.
 

@@ -1,0 +1,284 @@
+{
+  "$defs": {
+    "Actuator": {
+      "additionalProperties": false,
+      "properties": {
+        "max_rate_deg_s": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_torque_nm": {
+          "$ref": "#/$defs/Sourced"
+        },
+        "momentum_capacity_nms": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "slew_power_w": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "max_torque_nm"
+      ],
+      "title": "Actuator",
+      "type": "object"
+    },
+    "PointingMode": {
+      "additionalProperties": false,
+      "properties": {
+        "accuracy_deg": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "actuator": {
+          "minLength": 1,
+          "title": "Actuator",
+          "type": "string"
+        },
+        "hold_power_w": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "reference": {
+          "enum": [
+            "nadir",
+            "sun",
+            "inertial",
+            "target",
+            "other"
+          ],
+          "title": "Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "reference",
+        "actuator"
+      ],
+      "title": "PointingMode",
+      "type": "object"
+    },
+    "Slew": {
+      "additionalProperties": false,
+      "properties": {
+        "actuator": {
+          "minLength": 1,
+          "title": "Actuator",
+          "type": "string"
+        },
+        "angle_deg": {
+          "$ref": "#/$defs/Sourced"
+        },
+        "axis": {
+          "enum": [
+            "x",
+            "y",
+            "z"
+          ],
+          "title": "Axis",
+          "type": "string"
+        },
+        "from_mode": {
+          "minLength": 1,
+          "title": "From Mode",
+          "type": "string"
+        },
+        "inertia_kgm2": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "per_day": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Per Day",
+          "type": "integer"
+        },
+        "settle_s": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "to_mode": {
+          "minLength": 1,
+          "title": "To Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "from_mode",
+        "to_mode",
+        "angle_deg",
+        "axis",
+        "actuator"
+      ],
+      "title": "Slew",
+      "type": "object"
+    },
+    "Sourced": {
+      "additionalProperties": false,
+      "description": "A number from a standard, policy or data sheet. `source: TBD` or a null value marks a\nplaceholder that must be replaced before results are trusted (spec constraint 15). `status`\nsays what kind of number it is; it changes no result (D-213).",
+      "properties": {
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "title": "Sourced",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actuators": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Actuator"
+      },
+      "title": "Actuators",
+      "type": "object"
+    },
+    "kind": {
+      "const": "pointing",
+      "default": "pointing",
+      "title": "Kind",
+      "type": "string"
+    },
+    "mass_phase": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mass Phase"
+    },
+    "modes": {
+      "additionalProperties": {
+        "$ref": "#/$defs/PointingMode"
+      },
+      "title": "Modes",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "slews": {
+      "items": {
+        "$ref": "#/$defs/Slew"
+      },
+      "title": "Slews",
+      "type": "array"
+    }
+  },
+  "required": [
+    "kind",
+    "schema_version"
+  ],
+  "title": "System Budget Studio pointing",
+  "type": "object"
+}

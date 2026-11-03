@@ -2604,7 +2604,7 @@
   ],
   "provenance": {
     "generated": "2026-01-02T03:04:05Z",
-    "illustrative_inputs": 657,
+    "illustrative_inputs": 675,
     "input_files": [
       {
         "path": "config/attenuation_table.yaml",
@@ -2627,6 +2627,11 @@
         "size": 189
       },
       {
+        "path": "config/pointing.yaml",
+        "sha256": "f5f0219cebe550504285fd72ad3ced4d9ad19b609969d4a68ea9dbaab6dbc961",
+        "size": 1895
+      },
+      {
         "path": "config/power_config.yaml",
         "sha256": "435248fe4c0aafefaf332c3a3c0c2cde0016829a364b59718015cb67c4c817ec",
         "size": 446
@@ -2635,6 +2640,11 @@
         "path": "config/power_system.yaml",
         "sha256": "0ab37c73273b4025838141f1a844a9e2902acaf42e00b2731217881964850b0d",
         "size": 3654
+      },
+      {
+        "path": "config/propulsion.yaml",
+        "sha256": "1006a49b59c27102d05068869d71bdce0c37da52a0cf7020045721bf79b5894e",
+        "size": 1247
       },
       {
         "path": "config/thermal_environment.yaml",
@@ -2648,7 +2658,7 @@
       },
       {
         "path": "expendables/propellant.yaml",
-        "sha256": "3d2b5580134dfd1ebccd584181dced8cdc8ea15144fcf0fb8ee13b453b723575",
+        "sha256": "c94aeddf3ed514095cfe7920ee7ebb41c3d67094563ab8439ee06fb09ab57e4d",
         "size": 273
       },
       {
@@ -2698,7 +2708,7 @@
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "40581956d6e4e37039504a9975e117960ab60eaf934c9bd6c7cb5498df8614bb",
+        "sha256": "120ee56df65852c002015a21b439b6372a5fe02b3a044f9a0d4c68c37f9b0bdb",
         "size": 359
       },
       {
@@ -2812,7 +2822,7 @@
         "size": 754
       }
     ],
-    "inputs_digest": "sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6",
+    "inputs_digest": "sha256:6c84f8d0689fe9f09bead3abca05fed4f31f3a52252e4c6741280c0e54d46c86",
     "libraries": [
       [
         "pinned",
@@ -2825,7 +2835,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.1.0",
+    "tool_version": "2.2.0",
     "user": "Golden User"
   },
   "result_format": {

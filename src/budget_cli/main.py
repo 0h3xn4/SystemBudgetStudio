@@ -1,5 +1,6 @@
 """`budget` command: new, validate, run, scenario, power-timeline, link-passes, compare, guide,
-self-test, export-schemas, units-export, units-import, export-examples."""
+self-test, export-schemas, units-export, units-import, tables-export, tables-import,
+export-examples."""
 
 from __future__ import annotations
 
@@ -13,6 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from budget_cli import orbit as orbit_cli
 from budget_core import APP_NAME, __version__
 from budget_core.assumptions_view import ASSUMPTION_SECTIONS
 from budget_core.assumptions_view import assumptions as list_assumptions
@@ -27,6 +29,7 @@ from budget_core.input_sources import (
     set_source,
     status_counts,
 )
+from budget_core.io import entry_tables
 from budget_core.io.project_loader import LoadResult, load_project
 from budget_core.io.unit_table import (
     apply_plan,
@@ -43,10 +46,12 @@ from budget_core.model_choices import BY_ID as CHOICES_BY_ID
 from budget_core.model_choices import REGISTRY as CHOICES_REGISTRY
 from budget_core.model_choices import SCOPE_TEXT as CHOICES_SCOPE_TEXT
 from budget_core.model_choices import render_markdown as render_choices_markdown
+from budget_core.pointing.budget import pointing_budget
 from budget_core.power.static_budget import static_power_budget
 from budget_core.power.time_domain import time_domain_budget, violation_problems
 from budget_core.problem_catalogue import CATALOGUE, describe, render_markdown
 from budget_core.problems import Problem, Severity, sort_problems
+from budget_core.propulsion.budget import propulsion_budget
 from budget_core.provenance import ProvenanceError, make_provenance
 from budget_core.reports.files import OutputError, write_file
 from budget_core.reports.run import (
@@ -54,7 +59,9 @@ from budget_core.reports.run import (
     BudgetOutput,
     link_output,
     mass_output,
+    pointing_output,
     power_output,
+    propulsion_output,
     thermal_output,
     timeline_output,
     write_outputs,
@@ -163,7 +170,7 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
     run.add_argument(
         "--budget",
-        choices=("power", "mass", "thermal", "link", "all"),
+        choices=("power", "mass", "thermal", "propulsion", "pointing", "link", "all"),
         default="all",
         help="Budget to compute (default: all).",
     )
@@ -385,6 +392,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write the page of all choices (docs/models/choices.md) to standard output.",
     )
 
+    orbit_cli.add_parser(sub)
+
     asm = sub.add_parser(
         "assumptions",
         help="List everything that is active for a project: numbers, settings, model choices.",
@@ -467,6 +476,31 @@ def build_parser() -> argparse.ArgumentParser:
         "--apply",
         action="store_true",
         help="Write the changes into the unit files (without it nothing is written).",
+    )
+
+    te = sub.add_parser(
+        "tables-export",
+        help="Write the Eb/N0 or attenuation table as a CSV or XLSX to fill in outside the tool.",
+    )
+    te.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    te.add_argument("table", choices=sorted(entry_tables.TABLES), help="Which table.")
+    te.add_argument(
+        "--out",
+        type=Path,
+        help="Output file, .csv or .xlsx (default: <project>/results/<table>_table.csv).",
+    )
+
+    ti = sub.add_parser(
+        "tables-import",
+        help="Read a filled-in Eb/N0 or attenuation table; show, or with --apply write, changes.",
+    )
+    ti.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    ti.add_argument("table", choices=sorted(entry_tables.TABLES), help="Which table.")
+    ti.add_argument("file", type=Path, help="The filled-in table, .csv or .xlsx.")
+    ti.add_argument(
+        "--apply",
+        action="store_true",
+        help="Write the changes into the table file (without it nothing is written).",
     )
 
     exa = sub.add_parser(
@@ -796,6 +830,65 @@ def _units_import(args: argparse.Namespace) -> int:
     return 0
 
 
+def _tables_export(args: argparse.Namespace) -> int:
+    out = args.out or (args.project / "results" / f"{args.table}_table.csv")
+    kind = out.suffix.lower()
+    if kind not in (".csv", ".xlsx"):
+        _fail("The output file must end in .csv or .xlsx.")
+        return 2
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    data = (
+        b"\xef\xbb\xbf" + entry_tables.table_csv(project, args.table).encode("utf-8")
+        if kind == ".csv"
+        else entry_tables.table_xlsx(project, args.table)
+    )
+    path = write_file(out.parent, out.name, data, sanitise=False)
+    print(f"Wrote {path}")
+    return 0
+
+
+def _shown(value: str | float | None) -> str:
+    return "(new)" if value is None else f"{value:g}" if isinstance(value, float) else str(value)
+
+
+def _tables_import(args: argparse.Namespace) -> int:
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    spec = entry_tables.TABLES[args.table]
+    table = entry_tables.read_entry_table(args.file, args.table)
+    plan = entry_tables.plan_entry_import(project, args.table, table, args.file.name)
+    if not plan.ok:
+        for problem in plan.problems:
+            _fail(problem.format())
+        errors = sum(1 for p in plan.problems if p.severity is Severity.ERROR)
+        _fail(f"{_plural(errors, 'error')}; nothing was written.")
+        return 1
+    for problem in plan.problems:
+        print(problem.format())
+    if not plan.changes:
+        print(f"No change: {_plural(plan.unchanged, 'entry')} already as in the table.")
+        return 0
+    for change in plan.changes:
+        print(
+            f"{change.key}: {change.field} {_shown(change.old)} -> {_shown(change.new)} "
+            f"({change.kind}, row {change.line})"
+        )
+    rows = {c.key for c in plan.changes}
+    print(
+        f"{_plural(len(plan.changes), 'value')} in {_plural(len(rows), 'entry')} "
+        f"{'changed' if args.apply else 'would change'}; {plan.unchanged} already as in the table."
+    )
+    if not args.apply:
+        print("Nothing was written. Add --apply to write the changes.")
+        return 0
+    for path in entry_tables.apply_entry_plan(args.project, args.table, plan):
+        print(f"Wrote {spec.file}" if path.name == Path(spec.file).name else f"Wrote {path.name}")
+    return 0
+
+
 # Warnings that every placeholder produces: the INCOMPLETE banner and the reports list them, so
 # the command line only counts them (`budget validate` lists them one by one).
 _COUNTED_ONLY = frozenset({"CONFIG_PLACEHOLDER", "RESULT_INCOMPLETE"})
@@ -873,6 +966,24 @@ def _run(args: argparse.Namespace) -> int:
         thermal = static_thermal_budget(project)
         outputs.append(thermal_output(project, thermal, provenance, loaded.problems))
         problems += thermal.problems
+
+    if args.budget == "propulsion" and project.config.propulsion is None:
+        _fail("The project has no config/propulsion.yaml; no propulsion budget was computed.")
+        return 1
+    if args.budget in ("propulsion", "all"):
+        propulsion = propulsion_budget(project)
+        if propulsion is not None:
+            outputs.append(propulsion_output(project, propulsion, provenance, loaded.problems))
+            problems += propulsion.problems
+
+    if args.budget == "pointing" and project.config.pointing is None:
+        _fail("The project has no config/pointing.yaml; no pointing budget was computed.")
+        return 1
+    if args.budget in ("pointing", "all"):
+        pointing = pointing_budget(project)
+        if pointing is not None:
+            outputs.append(pointing_output(project, pointing, provenance, loaded.problems))
+            problems += pointing.problems
 
     if args.budget in ("link", "all") and project.links:
         link = link_static_budget(project)
@@ -1147,6 +1258,8 @@ def _dispatch(
         return _settings(args)
     if args.command == "choices":
         return _choices(args)
+    if args.command == "orbit":
+        return orbit_cli.run(args)
     if args.command == "assumptions":
         return _assumptions(args)
     if args.command == "verify":
@@ -1161,6 +1274,10 @@ def _dispatch(
         return _units_export(args)
     if args.command == "units-import":
         return _units_import(args)
+    if args.command == "tables-export":
+        return _tables_export(args)
+    if args.command == "tables-import":
+        return _tables_import(args)
     if args.command == "export-schemas":
         for path in export_schemas(args.out_dir):
             print(path.name)

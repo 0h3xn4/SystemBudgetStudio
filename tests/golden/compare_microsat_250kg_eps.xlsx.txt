@@ -2,7 +2,7 @@
 1: 'Comparison: Example 250 kg minisatellite, complete power and thermal inputs rev 1 and Example 250 kg minisatellite, complete power and thermal inputs rev 2' |  | 
 2: 'INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.' |  | 
 4: 'rev 1 compared with rev 2.' |  | 
-5: '74 value(s) differ out of 3608 compared.' |  | 
+5: '74 value(s) differ out of 3620 compared.' |  | 
 6: 'Values that look equal at the displayed precision are not reported as differences.' |  | 
 7: 'Compared sides' |  | 
 8: 'Item' | 'rev 1' | 'rev 2'
@@ -119,15 +119,15 @@
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
-5: 'Tool' | 'System Budget Studio 2.1.0'
+5: 'Tool' | 'System Budget Studio 2.2.0'
 6: 'Python' | '3.x'
 7: 'Libraries' | 'numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests'
 8: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static vs static'
-11: 'Run parameters' | 'Side A inputs digest sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6; Side B inputs digest sha256:24da0a7c32bf01b79c12fbacdb667238b5b1d35a39d49cf26d64fd7563431dc0; Side A files sha256:22914f367bf995b59d08289e5cfd0fe184afcececf2bd1716dc6add481f897f1; Side B files sha256:1b90b502e07862904959c18be9269a473a2b7c6fb0007da9388ea92c66e600d7'
-12: 'Inputs digest (model)' | 'sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6'
-13: 'Input files' | '41 files, sha256:22914f367bf995b59d08289e5cfd0fe184afcececf2bd1716dc6add481f897f1'
-14: 'Illustrative inputs' | '657'
+11: 'Run parameters' | 'Side A inputs digest sha256:6c84f8d0689fe9f09bead3abca05fed4f31f3a52252e4c6741280c0e54d46c86; Side B inputs digest sha256:b2437e966f486de6dd67713323cccef33858b566b621d267cc3bafa013590ed7; Side A files sha256:7b33a1092e1b3e08b8d612a1a1c0d21255c05173e9a6c4666df235b34fd87129; Side B files sha256:a837e6ccb64078c98ccc28bbe188b7c20604b7e5d12a1af71ee00218b6e47cca'
+12: 'Inputs digest (model)' | 'sha256:6c84f8d0689fe9f09bead3abca05fed4f31f3a52252e4c6741280c0e54d46c86'
+13: 'Input files' | '43 files, sha256:7b33a1092e1b3e08b8d612a1a1c0d21255c05173e9a6c4666df235b34fd87129'
+14: 'Illustrative inputs' | '675'
 15: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 16: 'User' | 'Golden User'

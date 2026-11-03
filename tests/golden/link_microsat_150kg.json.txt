@@ -1125,7 +1125,7 @@
       },
       {
         "path": "expendables/propellant.yaml",
-        "sha256": "35c67f6892e78fc19889248226ee25f261b39626e50b46c8074c40cca638cd22",
+        "sha256": "db72ad84a08b37342cd70b4bc5b1e370f16dddc797750290075b297146299823",
         "size": 274
       },
       {
@@ -1175,7 +1175,7 @@
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "40581956d6e4e37039504a9975e117960ab60eaf934c9bd6c7cb5498df8614bb",
+        "sha256": "120ee56df65852c002015a21b439b6372a5fe02b3a044f9a0d4c68c37f9b0bdb",
         "size": 359
       },
       {
@@ -1284,7 +1284,7 @@
         "size": 641
       }
     ],
-    "inputs_digest": "sha256:2f74319b5e655afbaf5a8e0f195acb63441b30cfbf44b51ac7728ad2eb0f8d39",
+    "inputs_digest": "sha256:1c69ef4747ebab29e5df4f9594c7c46a6c3059ee743176bed517b336ce180f54",
     "libraries": [
       [
         "pinned",
@@ -1297,7 +1297,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.1.0",
+    "tool_version": "2.2.0",
     "user": "Golden User"
   },
   "result_format": {

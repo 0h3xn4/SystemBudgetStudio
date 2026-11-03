@@ -25,6 +25,7 @@ from budget_core.new_scenario import ScenarioAnswers, check_scenario, id_from_na
 from budget_core.wizard import Issue
 from budget_gui import theme
 from budget_gui.components import Button
+from budget_gui.orbit_helper_dialog import OrbitHelperDialog, OrbitHelperValues
 
 
 def _number(text: str) -> float | None:
@@ -111,6 +112,16 @@ class AddScenarioDialog(QDialog):
             widget.setAccessibleName(accessible)
             form.addRow(label, widget)
 
+        self.helper_button = Button("Orbit helper…", "ghost", compact=True)
+        self.helper_button.set_tip(
+            "Derive the altitude, inclination and RAAN from a sun-synchronous orbit, a repeat "
+            "ground track or a local time of the node"
+        )
+        self.helper_button.clicked.connect(self.open_orbit_helper)
+        helper_row = QHBoxLayout()
+        helper_row.addWidget(self.helper_button)
+        helper_row.addStretch(1)
+
         intro = QLabel(
             "A scenario is a stretch of time on an orbit, up to 180 days, with one spacecraft mode "
             "the whole time. The orbit is near-circular from three numbers; give an apogee "
@@ -138,6 +149,7 @@ class AddScenarioDialog(QDialog):
         layout.setSpacing(theme.gap(2))
         layout.addWidget(intro)
         layout.addLayout(form)
+        layout.addLayout(helper_row)
         layout.addWidget(self.error_label)
         layout.addLayout(buttons)
 
@@ -185,6 +197,26 @@ class AddScenarioDialog(QDialog):
             existing_orbit_ids=self._orbits,
             mode_ids=self._modes,
         )
+
+    # ---- the orbit helper ----------------------------------------------------------------------
+    def _ask_helper(self, epoch: str) -> OrbitHelperValues | None:
+        """The helper dialog; the tests put their own values here."""
+        dialog = OrbitHelperDialog([], self, epoch=epoch)
+        if dialog.exec() != QDialog.DialogCode.Accepted:
+            return None
+        return dialog.values()
+
+    def open_orbit_helper(self) -> None:
+        """Fill the altitude, inclination and RAAN (and the start, when empty) from the helper."""
+        values = self._ask_helper(self.start_edit.text().strip())
+        if values is None:
+            return
+        self.altitude_edit.setText(f"{values.altitude_km:.3f}")
+        self.inclination_edit.setText(f"{values.inclination_deg:.4f}")
+        if values.raan_deg is not None:
+            self.raan_edit.setText(f"{values.raan_deg:.4f}")
+        if not self.start_edit.text().strip():
+            self.start_edit.setText(values.epoch_utc)
 
     # ---- reacting to typing ------------------------------------------------------------------
     def _name_edited(self, text: str) -> None:

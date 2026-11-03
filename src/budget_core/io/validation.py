@@ -151,6 +151,8 @@ def validate_references(
     out.extend(_environment_references(project, lines, failed))
     out.extend(_power_system_references(project, lines, failed))
     out.extend(_thermal_references(project, lines, failed))
+    out.extend(_propulsion_references(project, lines, failed))
+    out.extend(_pointing_references(project, lines))
     out.extend(_link_references(project, lines, failed))
     out.extend(_value_ranges(project, lines))
 
@@ -163,6 +165,8 @@ def validate_references(
         "power_system",
         "thermal_model",
         "thermal_environment",
+        "propulsion",
+        "pointing",
     ):
         model = getattr(project.config, kind)
         if model is None:
@@ -319,6 +323,71 @@ def _value_ranges(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
                 0.0,
                 1e9,
                 lo_open=True,
+            )
+    pointing = project.config.pointing
+    if pointing is not None:
+        f = "config/pointing.yaml"
+        for aid, act in pointing.actuators.items():
+            check(
+                f,
+                ("actuators", aid, "max_torque_nm"),
+                act.max_torque_nm,
+                "A torque",
+                0.0,
+                1e6,
+                True,
+            )
+            for field, what, hi in (
+                ("max_rate_deg_s", "A rate limit", 1e4),
+                ("momentum_capacity_nms", "A momentum capacity", 1e9),
+                ("slew_power_w", "A power", 1e9),
+            ):
+                item = getattr(act, field)
+                if item is not None:
+                    check(f, ("actuators", aid, field), item, what, 0.0, hi, True)
+        for index, slew in enumerate(pointing.slews):
+            check(
+                f, ("slews", index, "angle_deg"), slew.angle_deg, "A slew angle", 0.0, 360.0, True
+            )
+            if slew.inertia_kgm2 is not None:
+                check(
+                    f,
+                    ("slews", index, "inertia_kgm2"),
+                    slew.inertia_kgm2,
+                    "An inertia",
+                    0.0,
+                    1e9,
+                    True,
+                )
+    propulsion = project.config.propulsion
+    if propulsion is not None:
+        f = "config/propulsion.yaml"
+        for sid, engine in propulsion.systems.items():
+            check(f, ("systems", sid, "isp_s"), engine.isp_s, "A specific impulse", 0.0, 1e5, True)
+            if engine.thrust_n is not None:
+                check(f, ("systems", sid, "thrust_n"), engine.thrust_n, "A thrust", 0.0, 1e8, True)
+            if engine.power_w is not None:
+                check(f, ("systems", sid, "power_w"), engine.power_w, "A power", 0.0, 1e9, True)
+        for index, maneuver in enumerate(propulsion.maneuvers):
+            check(
+                f,
+                ("maneuvers", index, "delta_v_m_s"),
+                maneuver.delta_v_m_s,
+                "A delta-v",
+                0.0,
+                1e5,
+                True,
+            )
+        if propulsion.dry_mass_kg is not None:
+            check(f, ("dry_mass_kg",), propulsion.dry_mass_kg, "The dry mass", 0.0, 1e9, True)
+        if propulsion.delta_v_margin_ratio is not None:
+            check(
+                f,
+                ("delta_v_margin_ratio",),
+                propulsion.delta_v_margin_ratio,
+                "The delta-v margin",
+                0.0,
+                10.0,
             )
     power = project.config.power_config
     if power is not None:
@@ -791,6 +860,108 @@ def _inside_dir(root: FsPath, rel: str) -> bool:
     return found is not None and found.is_dir()
 
 
+def _pointing_references(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
+    out: list[Problem] = []
+    config = project.config.pointing
+    if config is None:
+        return out
+    file = "config/pointing.yaml"
+    err = Severity.ERROR
+    for mid, mode in config.modes.items():
+        if mode.actuator not in config.actuators:
+            out.append(
+                _p(
+                    err,
+                    "REF_UNKNOWN_ACTUATOR",
+                    "The pointing mode names an actuator that is not defined.",
+                    file,
+                    ("modes", mid, "actuator"),
+                    lines,
+                    "Use an id listed under 'actuators' in config/pointing.yaml.",
+                )
+            )
+    for index, slew in enumerate(config.slews):
+        for field in ("from_mode", "to_mode"):
+            if getattr(slew, field) not in config.modes:
+                out.append(
+                    _p(
+                        err,
+                        "REF_UNKNOWN_POINTING_MODE",
+                        "The slew names a pointing mode that is not defined.",
+                        file,
+                        ("slews", index, field),
+                        lines,
+                        "Use an id listed under 'modes' in config/pointing.yaml.",
+                    )
+                )
+        if slew.actuator not in config.actuators:
+            out.append(
+                _p(
+                    err,
+                    "REF_UNKNOWN_ACTUATOR",
+                    "The slew names an actuator that is not defined.",
+                    file,
+                    ("slews", index, "actuator"),
+                    lines,
+                    "Use an id listed under 'actuators' in config/pointing.yaml.",
+                )
+            )
+        if config.mass_phase is not None and config.mass_phase not in project.phases:
+            out.append(
+                _p(
+                    err,
+                    "REF_UNKNOWN_PHASE",
+                    "The mass phase of the pointing file is not a mission phase.",
+                    file,
+                    ("mass_phase",),
+                    lines,
+                    "Use a phase listed under 'mission_phases' in spacecraft.yaml.",
+                )
+            )
+            break
+    return out
+
+
+def _propulsion_references(
+    project: Project, lines: dict[str, LineMap], failed: Failed | None = None
+) -> list[Problem]:
+    out: list[Problem] = []
+    config = project.config.propulsion
+    if config is None:
+        return out
+    file = "config/propulsion.yaml"
+    broken = _failed(failed, "expendables")
+    for index, maneuver in enumerate(config.maneuvers):
+        if maneuver.system not in config.systems:
+            out.append(
+                _p(
+                    Severity.ERROR,
+                    "REF_UNKNOWN_PROPULSION_SYSTEM",
+                    "The manoeuvre names a propulsion system that is not defined.",
+                    file,
+                    ("maneuvers", index, "system"),
+                    lines,
+                    "Use an id listed under 'systems' in config/propulsion.yaml.",
+                )
+            )
+    for sid, system in config.systems.items():
+        if system.propellant and system.propellant not in project.expendables:
+            if system.propellant in broken:
+                continue
+            out.append(
+                _p(
+                    Severity.ERROR,
+                    "REF_UNKNOWN_EXPENDABLE",
+                    "The propulsion system names a propellant expendable that does not exist.",
+                    file,
+                    ("systems", sid, "propellant"),
+                    lines,
+                    "Use the file name (without .yaml) of a file in expendables/.",
+                )
+            )
+    return out
+
+
 def _thermal_references(
     project: Project, lines: dict[str, LineMap], failed: Failed | None = None
 ) -> list[Problem]:
@@ -999,19 +1170,23 @@ def _mass_references(project: Project, lines: dict[str, LineMap]) -> list[Proble
                         "is not present).",
                     )
                 )
-        for phase in exp.masses_kg:
-            if phase not in phases:
-                out.append(
-                    _p(
-                        err,
-                        "REF_UNKNOWN_PHASE",
-                        "This phase is not a mission phase.",
-                        file,
-                        ("masses_kg", phase),
-                        lines,
-                        "Use a name listed under 'mission_phases' in spacecraft.yaml.",
+        for field, names in (
+            ("masses_kg", exp.masses_kg),
+            ("phase_positions_m", exp.phase_positions_m),
+        ):
+            for phase in names:
+                if phase not in phases:
+                    out.append(
+                        _p(
+                            err,
+                            "REF_UNKNOWN_PHASE",
+                            "This phase is not a mission phase.",
+                            file,
+                            (field, phase),
+                            lines,
+                            "Use a name listed under 'mission_phases' in spacecraft.yaml.",
+                        )
                     )
-                )
 
     limits = project.config.mass_limits
     for index, limit in enumerate(limits.limits if limits else []):
@@ -1064,7 +1239,7 @@ def _environment_references(
                     "ORBIT_INVALID",
                     f"{reason}.",
                     f"orbits/{oid}.yaml",
-                    ("elements",) if orbit.elements else ("tle",),
+                    ("elements",) if orbit.elements else ("state",) if orbit.state else ("tle",),
                     lines,
                     "Check the elements (a perigee below the Earth's surface is not valid) "
                     "or the TLE.",

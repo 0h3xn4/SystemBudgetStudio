@@ -373,14 +373,14 @@ Provenance
 Provenance
 ## table
 Item | Value
-Tool | System Budget Studio 2.1.0
+Tool | System Budget Studio 2.2.0
 Python | 3.x
 Libraries | pinned for-golden-tests
 Project | Example 250 kg minisatellite, complete power and thermal inputs
 Project revision | 1
 Scenario | static (no scenario)
-Inputs digest (model) | sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6
-Input files | 41 files, sha256:22914f367bf995b59d08289e5cfd0fe184afcececf2bd1716dc6add481f897f1
-Illustrative inputs | 657
+Inputs digest (model) | sha256:6c84f8d0689fe9f09bead3abca05fed4f31f3a52252e4c6741280c0e54d46c86
+Input files | 43 files, sha256:7b33a1092e1b3e08b8d612a1a1c0d21255c05173e9a6c4666df235b34fd87129
+Illustrative inputs | 675
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User

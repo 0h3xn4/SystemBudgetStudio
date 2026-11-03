@@ -107,7 +107,7 @@ def test_the_dialog_gets_every_item_with_the_reason_for_those_that_are_used(  # 
     window._ask_removal = ask  # type: ignore[method-assign]
     assert window.remove_item() is False
     items = seen[0]
-    assert items["expendable"] == {"propellant": ""}
+    assert "thruster" in items["expendable"]["propellant"]  # the propulsion system loads it
     assert items["link"] == {"sband_down": "", "xband_down": ""}
     assert "one_day" in items["ground_station"]["gs_north"]
     assert "sband_down" in items["ground_station"]["gs_north"]
@@ -129,6 +129,8 @@ def test_a_used_item_is_not_removed_even_if_the_dialog_returned_it(  # type: ign
 def test_an_unused_expendable_and_link_are_removed_in_one_undo_step_each_and_save_deletes_them(  # type: ignore[no-untyped-def]
     qtbot, project: Path
 ) -> None:
+    # the example's propulsion system loads this propellant: it is not unused until that goes
+    (project / "config" / "propulsion.yaml").unlink()
     window = _window(qtbot, project)
     document = window.document
     window._ask_removal = lambda _items: ("expendable", "propellant")  # type: ignore[method-assign]
@@ -220,3 +222,12 @@ def test_a_station_that_is_removed_is_no_longer_offered_as_the_peer_of_a_new_lin
     window._ask_link = ask_link  # type: ignore[method-assign]
     assert window.add_link()
     assert seen[0] == ["gs_north"]
+
+
+def test_a_propellant_that_a_propulsion_system_loads_cannot_be_removed(
+    qtbot, project: Path
+) -> None:  # type: ignore[no-untyped-def]
+    window = _window(qtbot, project)
+    items = window._removable_items()
+    reason = items["expendable"]["propellant"]
+    assert "thruster" in reason and "config/propulsion.yaml" in reason

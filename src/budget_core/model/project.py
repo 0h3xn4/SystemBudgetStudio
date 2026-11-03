@@ -15,7 +15,9 @@ from budget_core.model.environment import GroundStation, Orbit, Scenario, Target
 from budget_core.model.equipment import Spacecraft, SpacecraftMode, Unit
 from budget_core.model.link import Link
 from budget_core.model.mass import Expendable, MassLimits
+from budget_core.model.pointing import PointingConfig
 from budget_core.model.power_system import PowerSystem
+from budget_core.model.propulsion import PropulsionConfig
 from budget_core.model.thermal import ThermalEnvironment, ThermalModel
 from budget_core.model.versions import CURRENT_VERSIONS
 
@@ -42,6 +44,8 @@ class ProjectConfig:
     power_system: PowerSystem | None = None
     thermal_model: ThermalModel | None = None
     thermal_environment: ThermalEnvironment | None = None
+    propulsion: PropulsionConfig | None = None
+    pointing: PointingConfig | None = None
 
 
 @dataclass(frozen=True)

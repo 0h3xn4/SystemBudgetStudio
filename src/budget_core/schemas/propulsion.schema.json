@@ -1,0 +1,198 @@
+{
+  "$defs": {
+    "Maneuver": {
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "default": 1,
+          "minimum": 1,
+          "title": "Count",
+          "type": "integer"
+        },
+        "delta_v_m_s": {
+          "$ref": "#/$defs/Sourced"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "system": {
+          "minLength": 1,
+          "title": "System",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "system",
+        "delta_v_m_s"
+      ],
+      "title": "Maneuver",
+      "type": "object"
+    },
+    "PropulsionSystem": {
+      "additionalProperties": false,
+      "properties": {
+        "isp_s": {
+          "$ref": "#/$defs/Sourced"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "power_w": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "propellant": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Propellant"
+        },
+        "thrust_n": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "type": {
+          "enum": [
+            "chemical",
+            "electric"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "isp_s"
+      ],
+      "title": "PropulsionSystem",
+      "type": "object"
+    },
+    "Sourced": {
+      "additionalProperties": false,
+      "description": "A number from a standard, policy or data sheet. `source: TBD` or a null value marks a\nplaceholder that must be replaced before results are trusted (spec constraint 15). `status`\nsays what kind of number it is; it changes no result (D-213).",
+      "properties": {
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "source": {
+          "minLength": 1,
+          "title": "Source",
+          "type": "string"
+        },
+        "status": {
+          "default": "sourced",
+          "enum": [
+            "sourced",
+            "estimate",
+            "illustrative"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "source"
+      ],
+      "title": "Sourced",
+      "type": "object"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "delta_v_margin_ratio": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sourced"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "dry_mass_kg": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sourced"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "kind": {
+      "const": "propulsion",
+      "default": "propulsion",
+      "title": "Kind",
+      "type": "string"
+    },
+    "maneuvers": {
+      "items": {
+        "$ref": "#/$defs/Maneuver"
+      },
+      "title": "Maneuvers",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": 1,
+      "default": 1,
+      "title": "Schema Version",
+      "type": "integer"
+    },
+    "systems": {
+      "additionalProperties": {
+        "$ref": "#/$defs/PropulsionSystem"
+      },
+      "title": "Systems",
+      "type": "object"
+    }
+  },
+  "required": [
+    "kind",
+    "schema_version"
+  ],
+  "title": "System Budget Studio propulsion",
+  "type": "object"
+}

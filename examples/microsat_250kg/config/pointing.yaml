@@ -1,0 +1,65 @@
+schema_version: 1
+kind: pointing
+actuators:
+  wheels:
+    name: Reaction wheels
+    max_torque_nm:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    max_rate_deg_s:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    momentum_capacity_nms:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    slew_power_w:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+modes:
+  nadir:
+    name: Nadir pointing
+    reference: nadir
+    accuracy_deg:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    actuator: wheels
+    hold_power_w:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+  target:
+    name: Target tracking
+    reference: target
+    accuracy_deg:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    actuator: wheels
+    hold_power_w:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+slews:
+  - name: Nadir to target
+    from_mode: nadir
+    to_mode: target
+    angle_deg:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    axis: y
+    actuator: wheels
+    inertia_kgm2:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    settle_s:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    per_day: 6

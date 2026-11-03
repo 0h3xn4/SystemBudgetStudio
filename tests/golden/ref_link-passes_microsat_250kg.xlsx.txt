@@ -79,7 +79,7 @@
 39: 'LNK-ATT' | 'Atmospheric attenuation' | 'L_atm = sum of the named table entries, linear interpolation by elevation' | 'SOURCE_MISSING' | 
 40: 'LNK-NADIR' | 'Angle from nadir at the spacecraft' | 'sin(eta) = R cos(el) / r,  r^2 = R^2 + d^2 + 2 R d sin(el)' | 'SOURCE_MISSING' | 
 ...
-## sheet Problems rows=159 cols=6
+## sheet Problems rows=176 cols=6
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' |  |  |  |  | 
 3: 'Problems and open items' |  |  |  |  | 
 4: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
@@ -111,28 +111,28 @@
 30: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:32' | 'system_power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 31: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:36' | 'system_mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 32: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/mass_limits.yaml:7' | 'limits[0].limit_kg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-33: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:4' | 'distribution_loss_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-34: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:9' | 'converter_efficiency_ratio.main' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-35: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_config.yaml:13' | 'converter_efficiency_ratio.payload' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-36: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:4' | 'design_life_yr' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-37: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:45' | 'solar_array.solar_irradiance_wm2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-38: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:49' | 'solar_array.cell_area_m2' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-39: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:53' | 'solar_array.cell_efficiency_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
-40: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/power_system.yaml:57' | 'solar_array.reference_temperature_k' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+33: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:7' | 'actuators.wheels.max_torque_nm' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+34: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:11' | 'actuators.wheels.max_rate_deg_s' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+35: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:15' | 'actuators.wheels.momentum_capacity_nms' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+36: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:19' | 'actuators.wheels.slew_power_w' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+37: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:27' | 'modes.nadir.accuracy_deg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+38: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:32' | 'modes.nadir.hold_power_w' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+39: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:39' | 'modes.target.accuracy_deg' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
+40: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/pointing.yaml:44' | 'modes.target.hold_power_w' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 ...
 ## sheet Provenance rows=16 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
-5: 'Tool' | 'System Budget Studio 2.1.0'
+5: 'Tool' | 'System Budget Studio 2.2.0'
 6: 'Python' | '3.x'
 7: 'Libraries' | 'pinned for-golden-tests'
 8: 'Project' | 'Example 250 kg minisatellite'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
 11: 'Run parameters' | 'Environment source elements; Shadow model cylindrical; Earth model WGS-84; Irradiance model constant; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s'
-12: 'Inputs digest (model)' | 'sha256:802ab54d09174cce4d169bac254b9bb10c0f9977fd759c46be3a0a03c342dd8e'
-13: 'Input files' | '41 files, sha256:dce389defccf3899e337427d40dd044bc8b4f6cff27e3b94d849c0cfc5866ce9'
+12: 'Inputs digest (model)' | 'sha256:6a40a91be7b8095916a7ccf10517406192af2be418c11c9f4e56bfe6ffff57c0'
+13: 'Input files' | '43 files, sha256:5c814d5def781ecbfa4e290a509c7570a4179339b6e8c60495b2d9c87cf1c195'
 14: 'Illustrative inputs' | '480'
 15: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 16: 'User' | 'Golden User'

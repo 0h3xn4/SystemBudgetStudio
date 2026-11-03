@@ -62,6 +62,16 @@ def test_an_expendable_and_a_link_are_used_by_nothing() -> None:
         assert blocked_message(kind, item_id, users) is None
 
 
+def test_an_expendable_that_a_propulsion_system_loads_is_in_use() -> None:
+    propulsion = {"systems": {"main": {"propellant": "oxidizer"}, "ion": {}}}
+    users = users_of("expendable", "oxidizer", scenarios={}, links={}, propulsion=propulsion)
+    assert users.propulsion == ["main"]
+    message = blocked_message("expendable", "oxidizer", users)
+    assert message is not None and "main" in message and "config/propulsion.yaml" in message
+    free = users_of("expendable", "other", scenarios={}, links={}, propulsion=propulsion)
+    assert blocked_message("expendable", "other", free) is None
+
+
 def test_a_used_item_gives_a_message_that_names_the_users_and_where_to_change_them() -> None:
     users = users_of("ground_station", "gs_north", scenarios=SCENARIOS, links=LINKS)
     message = blocked_message("ground_station", "gs_north", users)

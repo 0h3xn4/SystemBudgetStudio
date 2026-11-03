@@ -10,14 +10,18 @@ from typing import Any
 from budget_core.link.evaluate import LinkSeriesResult, StaticLinkResult
 from budget_core.mass.static_mass import StaticMassResult
 from budget_core.model import Project
+from budget_core.pointing.budget import PointingResult
 from budget_core.power.static_budget import StaticPowerResult
 from budget_core.power.time_domain import TimeDomainResult
 from budget_core.problems import Problem
+from budget_core.propulsion.budget import PropulsionResult
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import provenance_csv
 from budget_core.reports.document import ReportDocument
 from budget_core.reports.export import (
     mass_csv,
+    pointing_csv,
+    propulsion_csv,
     result_csv,
     result_json,
     thermal_case_csv,
@@ -34,7 +38,9 @@ from budget_core.reports.link_export import (
 )
 from budget_core.reports.link_report import build_link_report
 from budget_core.reports.mass_report import build_mass_report
+from budget_core.reports.pointing_report import build_pointing_report
 from budget_core.reports.power_report import build_power_report
+from budget_core.reports.propulsion_report import build_propulsion_report
 from budget_core.reports.thermal_report import build_thermal_report
 from budget_core.reports.timeline_export import (
     balance_csv,
@@ -109,6 +115,32 @@ def thermal_output(
         provenance,
         csvs,
         load_problems=tuple(load_problems),
+    )
+
+
+def propulsion_output(
+    project: Project,
+    propulsion: PropulsionResult,
+    provenance: Provenance,
+    load_problems: Sequence[Problem] = (),
+) -> BudgetOutput:
+    document = build_propulsion_report(project, propulsion, provenance, list(load_problems))
+    csvs = (("propulsion_maneuvers.csv", propulsion_csv(propulsion)),)
+    return BudgetOutput(
+        "propulsion", document, propulsion, provenance, csvs, load_problems=tuple(load_problems)
+    )
+
+
+def pointing_output(
+    project: Project,
+    pointing: PointingResult,
+    provenance: Provenance,
+    load_problems: Sequence[Problem] = (),
+) -> BudgetOutput:
+    document = build_pointing_report(project, pointing, provenance, list(load_problems))
+    csvs = (("pointing_slews.csv", pointing_csv(pointing)),)
+    return BudgetOutput(
+        "pointing", document, pointing, provenance, csvs, load_problems=tuple(load_problems)
     )
 
 

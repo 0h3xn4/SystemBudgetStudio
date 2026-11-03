@@ -174,8 +174,10 @@ def test_export_writes_the_scenario_files(window: MainWindow, qtbot, tmp_path: P
     compute(window, qtbot)
     written = window.scenario_view.export_to(tmp_path / "out")
     assert sorted(p.name for p in written) == [
+        "one_day_beta.csv",
         "one_day_eclipses.csv",
         "one_day_environment.json",
+        "one_day_groundtrack.csv",
         "one_day_passes.csv",
         "one_day_provenance.csv",
         "one_day_timeline.csv",
@@ -217,8 +219,10 @@ def test_the_file_menu_exports_the_scenario_results(
     monkeypatch.setattr(QFileDialog, "getExistingDirectory", lambda *a, **k: str(out))
     _menu_action(window, "Export scenario results…").trigger()
     assert sorted(p.name for p in out.iterdir()) == [
+        "one_day_beta.csv",
         "one_day_eclipses.csv",
         "one_day_environment.json",
+        "one_day_groundtrack.csv",
         "one_day_passes.csv",
         "one_day_provenance.csv",
         "one_day_timeline.csv",

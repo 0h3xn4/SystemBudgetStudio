@@ -34,6 +34,7 @@ _REF = "References between files"
 _SCEN = "Scenarios and environment"
 _MASS = "Mass budget"
 _THERM = "Thermal budget"
+_POINT = "Pointing and propulsion"
 _POWER = "Power timeline"
 _LINK = "Link budget"
 _IMPORT = "Unit tables (import)"
@@ -340,6 +341,44 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "The maturity class of a unit or expendable must be a class of the margin policy.",
         "The class decides the margin applied to its power and mass.",
         "Use a class listed under `classes` in config/margin_policy.yaml, or add the class.",
+    ),
+    _e(
+        "REF_UNKNOWN_PROPULSION_SYSTEM",
+        ERR,
+        _REF,
+        "A manoeuvre names a propulsion system that is not defined",
+        "Every manoeuvre of config/propulsion.yaml must name a system listed under `systems`.",
+        "The propellant of a manoeuvre cannot be worked out without its specific impulse.",
+        "Use an id listed under `systems` in config/propulsion.yaml, or add the system.",
+    ),
+    _e(
+        "REF_UNKNOWN_EXPENDABLE",
+        ERR,
+        _REF,
+        "A propulsion system names a propellant expendable that does not exist",
+        "The `propellant` of a system must be the id of a file in expendables/.",
+        "The propellant needed could not be compared with the propellant loaded.",
+        "Use the file name (without .yaml) of an expendable, or leave `propellant` out.",
+    ),
+    _e(
+        "REF_UNKNOWN_POINTING_MODE",
+        ERR,
+        _REF,
+        "A slew names a pointing mode that is not defined",
+        "The `from_mode` and `to_mode` of a slew must be listed under `modes` in "
+        "config/pointing.yaml.",
+        "A slew between modes that do not exist cannot be tied to what it points at.",
+        "Use an id listed under `modes` in config/pointing.yaml, or add the pointing mode.",
+    ),
+    _e(
+        "REF_UNKNOWN_ACTUATOR",
+        ERR,
+        _REF,
+        "A pointing mode or slew names an actuator that is not defined",
+        "The `actuator` of a pointing mode or a slew must be listed under `actuators` in "
+        "config/pointing.yaml.",
+        "The torque, momentum and power of the slew come from the actuator.",
+        "Use an id listed under `actuators` in config/pointing.yaml, or add the actuator.",
     ),
     _e(
         "REF_UNKNOWN_UNIT",
@@ -847,17 +886,18 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "IMPORT_FIELD_MISSING",
         ERR,
         _IMPORT,
-        "A row has no power mode name",
-        "Each row names the power mode it describes.",
-        "A row without it cannot be matched.",
-        "Give the name of the power mode, as in the exported template.",
+        "A row has no power mode name or key",
+        "Each row names the power mode (unit table) or the key cells (modulation and coding; "
+        "name, kind and frequency) it describes.",
+        "A row without them cannot be matched.",
+        "Give the cell, as in the exported template.",
     ),
     _e(
         "IMPORT_DUPLICATE_ROW",
         ERR,
         _IMPORT,
-        "A unit and power mode appear twice",
-        "A unit and power mode pair may appear once.",
+        "A unit and power mode, or a table key, appears twice",
+        "A unit and power mode pair, or the key of a table entry, may appear once.",
         "Two rows would disagree about the same numbers.",
         "Keep one row per power mode.",
     ),
@@ -870,6 +910,25 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "The value would otherwise change the unit's power silently.",
         "Write a number or a value with a matching unit such as `2.5 W`; the message says what "
         "the field requires.",
+    ),
+    _e(
+        "IMPORT_SOURCE_MISSING",
+        ERR,
+        _IMPORT,
+        "A new or changed value has no source",
+        "A value in an Eb/N0 or attenuation table needs the source of that value in the same row.",
+        "The tool never attributes a number to the source of another one.",
+        "Name the standard or data sheet in the `source` column, or leave the value empty.",
+    ),
+    _e(
+        "POINTING_MOMENTUM_EXCEEDED",
+        WARN,
+        _POINT,
+        "A slew needs more momentum than the actuators can store",
+        "The peak angular momentum of a slew (inertia times the peak rate) must not exceed the "
+        "momentum capacity of the actuators.",
+        "Beyond the capacity the actuators saturate and the slew cannot be flown as planned.",
+        "Lower the rate limit, slew a smaller angle, or use actuators that store more momentum.",
     ),
     # ---- other ----
     _e(

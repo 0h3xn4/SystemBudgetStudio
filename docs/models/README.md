@@ -10,8 +10,11 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | How a number was obtained (`budget explain`) | [explain.md](explain.md) | written for static power, mass, thermal, link, the power timeline and the link passes |
 | Time-domain power (array, battery, modes, edges) | [power-timeline.md](power-timeline.md) | written |
 | Model choices (shadow geometry, environment source, load basis; the models that are fixed and why) | [choices.md](choices.md) | written (generated from the registry); the Earth constants and the array irradiance are selectable per scenario since 2.0.0 |
+| Orbit design helpers (LTAN, sun-synchronous, repeat ground track) | [orbit-design.md](orbit-design.md) | written |
 | Orbit, eclipse and Sun geometry (gravity models, shadow models) | (planned) | planned |
 | Mass budget (margins, centre of mass, inertia, expendables) | [mass-static.md](mass-static.md) | written |
+| Propulsion and delta-v (rocket equation, burn time, electric power) | [propulsion.md](propulsion.md) | written |
+| Pointing and slew (bang-bang slew time, momentum, energy) | [pointing.md](pointing.md) | written |
 | Thermal (network, steady state, environment) | [thermal-static.md](thermal-static.md) | written |
 | RF link (EIRP, G/T, losses, rate selection, volume) | [link-static.md](link-static.md), [link-passes.md](link-passes.md) | written |
 | Units and conversions (accepted units, canonical units, refused words) | (planned) | planned |

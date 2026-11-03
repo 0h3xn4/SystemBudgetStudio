@@ -28,8 +28,10 @@ def test_writes_environment_eclipses_passes_and_timeline(
     out = tmp_path / "out"
     assert run(root, out) == 0
     assert sorted(p.name for p in out.iterdir()) == [
+        "day_beta.csv",
         "day_eclipses.csv",
         "day_environment.json",
+        "day_groundtrack.csv",
         "day_passes.csv",
         "day_provenance.csv",
         "day_timeline.csv",

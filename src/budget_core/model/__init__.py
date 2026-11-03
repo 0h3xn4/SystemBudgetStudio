@@ -18,6 +18,7 @@ from budget_core.model.environment import (
     Scenario,
     ScenarioRule,
     ScenarioSegment,
+    StateVector,
     Target,
 )
 from budget_core.model.equipment import (
@@ -44,6 +45,7 @@ from budget_core.model.mass import (
     MassProperties,
     inertia_is_physical,
 )
+from budget_core.model.pointing import Actuator, PointingConfig, PointingMode, Slew
 from budget_core.model.power_system import (
     ArrayFace,
     Attitude,
@@ -53,6 +55,7 @@ from budget_core.model.power_system import (
     SolarArray,
 )
 from budget_core.model.project import Project, ProjectConfig, ProjectMeta
+from budget_core.model.propulsion import Maneuver, PropulsionConfig, PropulsionSystem
 from budget_core.model.thermal import (
     Conductance,
     Exposure,
@@ -66,6 +69,13 @@ from budget_core.model.versions import CURRENT_VERSIONS
 
 __all__ = [
     "CURRENT_VERSIONS",
+    "Actuator",
+    "PointingConfig",
+    "PointingMode",
+    "Slew",
+    "Maneuver",
+    "PropulsionConfig",
+    "PropulsionSystem",
     "AttenuationEntry",
     "Antenna",
     "AntennaPattern",
@@ -79,6 +89,7 @@ __all__ = [
     "Exposure",
     "Ebn0Entry",
     "Elements",
+    "StateVector",
     "GroundSite",
     "GroundStation",
     "Orbit",

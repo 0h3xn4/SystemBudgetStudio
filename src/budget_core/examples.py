@@ -17,6 +17,7 @@ from typing import Any
 
 from budget_core.io.project_loader import write_project
 from budget_core.model import (
+    Actuator,
     Antenna,
     AntennaPattern,
     ArrayFace,
@@ -35,12 +36,15 @@ from budget_core.model import (
     GroundStation,
     Inertia,
     Link,
+    Maneuver,
     MarginPolicy,
     MassLimit,
     MassLimits,
     MassProperties,
     MaturityClass,
     Orbit,
+    PointingConfig,
+    PointingMode,
     PowerConfig,
     PowerLimits,
     PowerMode,
@@ -48,10 +52,13 @@ from budget_core.model import (
     Project,
     ProjectConfig,
     ProjectMeta,
+    PropulsionConfig,
+    PropulsionSystem,
     Receiver,
     Scenario,
     ScenarioRule,
     ScenarioSegment,
+    Slew,
     SolarArray,
     Sourced,
     Spacecraft,
@@ -149,6 +156,8 @@ def _config(
     filled_power: bool = False,
     thermal: tuple[ThermalModel, ThermalEnvironment] | None = None,
     link_tables: tuple[Ebn0Table, AttenuationTable] | None = None,
+    propulsion: PropulsionConfig | None = None,
+    pointing: PointingConfig | None = None,
 ) -> ProjectConfig:
     """Margin policy and power configuration: placeholders, or (for the complete power example)
     invented round values. Mass numbers and tables stay placeholders in every example."""
@@ -159,6 +168,8 @@ def _config(
     margins = {"class_a": 0.05, "class_b": 0.10, "class_c": 0.20}
     return ProjectConfig(
         power_system=power_system,
+        propulsion=propulsion,
+        pointing=pointing,
         thermal_model=thermal[0] if thermal else None,
         thermal_environment=thermal[1] if thermal else None,
         margin_policy=MarginPolicy(
@@ -1023,6 +1034,82 @@ MINISAT_POINTING: dict[str, Pointing] = {
 }
 
 
+def _minisat_propulsion(complete: bool) -> PropulsionConfig:
+    """A monopropellant system and three manoeuvres with invented round values (placeholders
+    when the example is not complete, so the budget shows n/a)."""
+
+    def v(value: float) -> Sourced:
+        return _val(value) if complete else _tbd()
+
+    return PropulsionConfig(
+        systems={
+            "thruster": PropulsionSystem(
+                name="Monopropellant thrusters",
+                type="chemical",
+                isp_s=v(220.0),
+                thrust_n=v(4.0),
+                propellant="propellant",
+            )
+        },
+        maneuvers=[
+            Maneuver(name="Orbit trim", system="thruster", delta_v_m_s=v(12.0)),
+            Maneuver(name="Station-keeping", system="thruster", delta_v_m_s=v(1.5), count=6),
+            Maneuver(name="Deorbit", system="thruster", delta_v_m_s=v(8.0)),
+        ],
+        dry_mass_kg=v(236.0) if complete else None,
+        delta_v_margin_ratio=v(0.10),
+    )
+
+
+def _minisat_pointing(complete: bool) -> PointingConfig:
+    """Two pointing modes and a slew between them with invented round values (placeholders when
+    the example is not complete). The inertia is given for the slew."""
+
+    def v(value: float) -> Sourced:
+        return _val(value) if complete else _tbd()
+
+    return PointingConfig(
+        actuators={
+            "wheels": Actuator(
+                name="Reaction wheels",
+                max_torque_nm=v(0.05),
+                max_rate_deg_s=v(1.5),
+                momentum_capacity_nms=v(12.0),
+                slew_power_w=v(45.0),
+            )
+        },
+        modes={
+            "nadir": PointingMode(
+                name="Nadir pointing",
+                reference="nadir",
+                accuracy_deg=v(0.5),
+                actuator="wheels",
+                hold_power_w=v(15.0),
+            ),
+            "target": PointingMode(
+                name="Target tracking",
+                reference="target",
+                accuracy_deg=v(0.1),
+                actuator="wheels",
+                hold_power_w=v(30.0),
+            ),
+        },
+        slews=[
+            Slew(
+                name="Nadir to target",
+                from_mode="nadir",
+                to_mode="target",
+                angle_deg=v(60.0),
+                axis="y",
+                actuator="wheels",
+                inertia_kgm2=v(95.0),
+                settle_s=v(20.0),
+                per_day=6,
+            )
+        ],
+    )
+
+
 def _minisat(*, complete: bool) -> Project:
     """The 250 kg satellite. Without `complete` every configuration number is a placeholder (what a
     project with `n/a` looks like); with it the power, thermal and link inputs have invented round
@@ -1073,6 +1160,8 @@ def _minisat(*, complete: bool) -> Project:
             filled_power=complete,
             thermal=_thermal(units, "imaging", "safe", 0.5, complete),
             link_tables=_microsat_link_tables(complete),
+            propulsion=_minisat_propulsion(complete),
+            pointing=_minisat_pointing(complete),
         ),
         links=_microsat_links(complete),
         expendables={"propellant": propellant},

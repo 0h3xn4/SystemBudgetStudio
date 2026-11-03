@@ -2,7 +2,7 @@
 
 This page shows how to place the spacecraft in an orbit for a span of time and decide which spacecraft mode is active when; the time-domain power budget and the link passes need a scenario.
 
-**Contents:** [Orbit](#how-do-i-define-an-orbit) · [Ground stations and targets](#how-do-i-add-a-ground-station-or-an-imaging-target) · [The scenario file](#how-do-i-write-a-scenario) · [Mode rules](#how-do-i-switch-modes-automatically) · [Compute and look](#how-do-i-see-eclipses-passes-and-the-timeline) · [SpaceMissionStudio](#how-do-i-use-orbit-data-from-spacemissionstudio)
+**Contents:** [Orbit](#how-do-i-define-an-orbit) · [Orbit design](#how-do-i-design-the-orbit-local-time-sun-synchronous-repeat-ground-track) · [Ground stations and targets](#how-do-i-add-a-ground-station-or-an-imaging-target) · [The scenario file](#how-do-i-write-a-scenario) · [Mode rules](#how-do-i-switch-modes-automatically) · [Compute and look](#how-do-i-see-eclipses-passes-and-the-timeline) · [SpaceMissionStudio](#how-do-i-use-orbit-data-from-spacemissionstudio)
 
 ## How do I add an orbit and a scenario in the window?
 
@@ -26,7 +26,40 @@ elements:
   mean_anomaly_deg: 0.0
 ```
 
+Instead of a TLE or elements an orbit may be a **state vector**, a position and velocity at an epoch:
+
+```yaml
+schema_version: 3
+kind: orbit
+name: Orbit from a state vector
+state:
+  epoch_utc: '2026-06-01T00:00:00Z'
+  frame: j2000                      # j2000 or teme; required, there is no default
+  position_m: [6871000.0, 1200000.0, 800000.0]
+  velocity_m_s: [-900.0, 7100.0, 1500.0]
+```
+
+The scenario converts it to the mean elements whose SGP4 state at the epoch is this state, so the orbit starts exactly where you put it; after the epoch it is SGP4's orbit. `budget orbit from-state` prints those elements and how far the osculating orbit of the state is from them (for a 600 km orbit the semi-major axis differs by about 12 km: elements copied from an osculating source and typed as `elements:` would start 10 km off, a state vector does not). **J2000** is the frame most tools export; **TEME** is what SGP4 works in; the two differ by up to a degree. A state that is not a bound orbit, or whose perigee is below the surface, is refused ([deviation DV-E7](../DEVIATIONS.md)). In the window the orbit helper's fourth request, *Mean elements of a state vector*, writes the six elements to an elements orbit.
+
 Positions come from the [SGP4](../glossary.md#sgp4) propagator (Earth only; elements are used as SGP4 mean elements, without drag: see [deviation DV-E2](../DEVIATIONS.md)). The guided wizard writes a near-circular orbit for you from altitude, inclination and [RAAN](../glossary.md#raan).
+
+## How do I design the orbit (local time, sun-synchronous, repeat ground track)?
+
+An orbit file takes inclination and right ascension (RAAN). A mission is usually described by other numbers: the **local time of the ascending node** (LTAN, for example 10:30 or 22:30), a **sun-synchronous** orbit at some altitude, or a **repeat ground track**. `budget orbit` works out the elements from those; it reads no project and changes none. All times are *mean* local solar time (the equation of time is not applied), and the Earth constants are those of the scenario's Earth model (`--earth-model`, WGS-84 by default).
+
+```bash
+# a sun-synchronous orbit at 600 km with the node at 10:30 mean local time on 2026-06-01
+budget orbit sso --altitude-km 600 --ltan 10:30 --epoch 2026-06-01T00:00:00Z
+
+# the right ascension of a node at a local time (and the other way: --raan DEG)
+budget orbit ltan --epoch 2026-06-01T00:00:00Z --ltan 10:30
+
+# the sun-synchronous orbit with 15 revolutions in one day, and every repeat cycle between 500 and 800 km
+budget orbit repeat --revolutions 15 --days 1 --sso
+budget orbit repeats --altitude-min-km 500 --altitude-max-km 800 --max-days 5 --sso
+```
+
+In the window, **Edit → Orbit helper…** (**Ctrl+Shift+H**) does the same in a dialog: choose *Sun-synchronous orbit*, *Repeat ground track* or *Local time of the node of a given orbit*, type the epoch (UTC) and the numbers, and the dialog shows the inclination, the RAAN, the nodal period and the local time of both nodes, or says in words why there is no such orbit. **Write to orbit** sets the elements of the orbit you choose (epoch, semi-major axis, eccentricity, inclination and, when you gave a local time, the RAAN) as one undo step and records how they were derived in the orbit file's `provenance:`; the argument of perigee and the mean anomaly stay as they are, and an orbit given as a TLE is not offered. The *Add orbit and scenario* form has an **Orbit helper…** button that fills the altitude, inclination and RAAN (and the start, when empty) instead. From the command line, put the inclination and the RAAN it prints into the orbit file (`elements:`, with the epoch you gave). A sun-synchronous orbit is retrograde (inclination above 90°) and only exists below about 5,974 km; a request with no solution says so. The tool treats the elements as mean elements (DEVIATIONS DV-E2), so the node of the orbit it then propagates keeps its local time to about 11 seconds in 30 days, and sits about two minutes of local time from the designed one; the equations, the checks and the limits are in [orbit design](../models/orbit-design.md).
 
 ## How do I add a ground station or an imaging target?
 
@@ -104,11 +137,15 @@ budget scenario my_satellite --out out
 Scenario one_day (elements): 15 eclipse(s); passes: gs_north 11, gs_south 4, tgt_plains 1; 62 timeline segment(s).
 ```
 
-It writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>_timeline.csv` and a provenance file. Passes and eclipses are detected on a fixed 20 s grid (a pass of a few seconds between two samples is found from the elevation maximum, and an eclipse of a few seconds from the maximum of how far inside the shadow the satellite is) and their edges are refined to about 1 ms, so they do not depend on `step_s`. The window's **Scenario** tab shows the same tables after **Compute**; to write the same files from the window use **File → Export scenario results**.
+It writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>_timeline.csv`, `<id>_beta.csv` (the beta angle over the scenario), `<id>_groundtrack.csv` (the sub-satellite point) and a provenance file. Passes and eclipses are detected on a fixed 20 s grid (a pass of a few seconds between two samples is found from the elevation maximum, and an eclipse of a few seconds from the maximum of how far inside the shadow the satellite is) and their edges are refined to about 1 ms, so they do not depend on `step_s`. The window's **Scenario** tab shows the same tables after **Compute**; to write the same files from the window use **File → Export scenario results**.
 
 ### Statistics of the eclipses and the passes
 
 After **Compute**, the **Statistics** tab gives a quick insight without a spreadsheet. Above the table: the number of eclipses, the shortest, the mean and the longest, the share of the scenario in eclipse and the longest stretch of sunlight. The table has a row for every ground station and imaging target: the number of passes, the time in contact (seconds and percent of the scenario), the shortest, mean and longest pass, the **largest gap** (the longest time without a pass, the start and the end of the scenario included) and the lowest, mean and highest peak elevation. A pass cut by the start or the end of the scenario counts with its clipped length, and an imported pass without a peak elevation is left out of the elevation figures (`n/a`). ![The Statistics tab after Compute: the eclipse figures above a table with a row per ground station and imaging target](../images/ui-overhaul/scenario-statistics-light.png)
+
+Under the eclipse line, the **beta angle** (the angle between the Sun and the orbit plane) is given as its minimum, mean and maximum over the scenario, with the **critical beta angle**: above it a circular orbit of the mean radius has no eclipse at all (cylindrical shadow). The **Beta angle** tab plots it against time with the two critical lines, and `<id>_beta.csv` has the series (one row every ten minutes, or every step if that is longer). The beta angle comes from the angular momentum of the propagated orbit and the Sun model, so it is also given for a TLE; for an imported orbit it is taken from the imported positions. See [orbit design](../models/orbit-design.md#beta-angle).
+
+The **Ground track** tab draws the sub-satellite point (geodetic latitude and longitude on the WGS-84 ellipsoid) on a 30-degree graticule with the stations (diamonds) and targets (squares) marked; the start is a filled circle and the end an open one, and the line is cut where it crosses the date line. The tool ships no coastline data, so there is no map of the continents. The Statistics tab adds the latitude range, the number of ascending equator crossings and how far the longitude shifts between two of them (about -24 degrees a revolution for a low orbit: the Earth turns under the orbit), and `<id>_groundtrack.csv` has the series (`time_s`, `utc`, `latitude_deg`, `longitude_deg`, `altitude_m`; one row a minute, or every step if that is longer). The longitude is east positive from -180 to 180 degrees; the Earth is rotated by the sidereal angle without polar motion, as for the station geometry (deviation DV-E1), so the point is good to about half a kilometre (the limit of DV-E1), not to survey accuracy. It is read from the computed positions and changes no result.
 
 The **Passes** tab has a **Passes of** drop-down to show the passes of one station or target, or of all. `<id>_environment.json` carries the same figures under `statistics`. They are read from the computed eclipses and passes, so they change no result.
 

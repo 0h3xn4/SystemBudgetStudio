@@ -1,0 +1,41 @@
+schema_version: 1
+kind: propulsion
+systems:
+  thruster:
+    name: Monopropellant thrusters
+    type: chemical
+    isp_s:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    thrust_n:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    propellant: propellant
+maneuvers:
+  - name: Orbit trim
+    system: thruster
+    delta_v_m_s:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    count: 1
+  - name: Station-keeping
+    system: thruster
+    delta_v_m_s:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    count: 6
+  - name: Deorbit
+    system: thruster
+    delta_v_m_s:
+      value: null
+      source: TBD
+      note: "Placeholder: supply the project's value."
+    count: 1
+delta_v_margin_ratio:
+  value: null
+  source: TBD
+  note: "Placeholder: supply the project's value."

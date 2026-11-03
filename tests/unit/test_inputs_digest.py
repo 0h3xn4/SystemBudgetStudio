@@ -251,7 +251,7 @@ def test_every_json_result_names_its_format_and_kind(eps: Path, tmp_path: Path) 
 
     out = tmp_path / "out"
     scenario = next((eps / "scenarios").glob("*.yaml")).stem
-    for budget in ("power", "mass", "thermal", "link"):
+    for budget in ("power", "mass", "thermal", "propulsion", "pointing", "link"):
         main(["run", str(eps), "--budget", budget, "--report", "json", "--out", str(out)])
     main(["scenario", str(eps), "--scenario", scenario, "--out", str(out)])
     main(

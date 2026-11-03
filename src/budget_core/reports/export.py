@@ -155,3 +155,78 @@ def thermal_case_csv(case: CaseThermal) -> str:
         values = asdict(node)
         writer.writerow([_cell(values[c]) for c in columns])
     return buffer.getvalue()
+
+
+PROPULSION_CSV_COLUMNS = (
+    "maneuver",
+    "system",
+    "burns",
+    "delta_v_total_m_s",
+    "mass_before_kg",
+    "mass_after_kg",
+    "propellant_kg",
+)
+
+
+def propulsion_csv(result: Any) -> str:
+    """The manoeuvres of a propulsion budget in mission order. Unavailable values (placeholders)
+    are empty cells."""
+    buffer = io.StringIO()
+    writer = csv_writer(buffer)
+    writer.writerow(PROPULSION_CSV_COLUMNS)
+    for m in result.maneuvers:
+        values = [
+            m.name,
+            m.system_id,
+            m.count,
+            m.delta_v_total_m_s,
+            m.mass_before_kg,
+            m.mass_after_kg,
+            m.propellant_kg,
+        ]
+        writer.writerow(["" if v is None else _cell(v) for v in values])
+    return buffer.getvalue()
+
+
+POINTING_CSV_COLUMNS = (
+    "slew",
+    "from_mode",
+    "to_mode",
+    "axis",
+    "angle_deg",
+    "inertia_kgm2",
+    "slew_time_s",
+    "total_time_s",
+    "peak_rate_deg_s",
+    "peak_momentum_nms",
+    "momentum_margin_nms",
+    "energy_wh",
+    "per_day",
+    "energy_per_day_wh",
+)
+
+
+def pointing_csv(result: Any) -> str:
+    """The slews of a pointing budget. Unavailable values (placeholders) are empty cells."""
+    buffer = io.StringIO()
+    writer = csv_writer(buffer)
+    writer.writerow(POINTING_CSV_COLUMNS)
+    for s in result.slews:
+        values = [
+            s.name,
+            s.from_mode,
+            s.to_mode,
+            s.axis,
+            s.angle_deg,
+            s.inertia_kgm2,
+            s.slew_time_s,
+            s.total_time_s,
+            s.peak_rate_deg_s,
+            s.peak_momentum_nms,
+            s.momentum_margin_nms,
+            s.energy_wh,
+            s.per_day,
+            s.energy_per_day_wh,
+        ]
+        writer.writerow(["" if v is None else _cell(v) for v in values])
+    return buffer.getvalue()

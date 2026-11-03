@@ -144,6 +144,16 @@
       "title": "Name",
       "type": "string"
     },
+    "phase_positions_m": {
+      "additionalProperties": {
+        "items": {
+          "type": "number"
+        },
+        "type": "array"
+      },
+      "title": "Phase Positions M",
+      "type": "object"
+    },
     "provenance": {
       "additionalProperties": {
         "$ref": "#/$defs/ProvenanceEntry"
@@ -152,8 +162,8 @@
       "type": "object"
     },
     "schema_version": {
-      "const": 2,
-      "default": 2,
+      "const": 3,
+      "default": 3,
       "title": "Schema Version",
       "type": "integer"
     },

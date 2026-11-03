@@ -29,7 +29,9 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core.control import Cancelled, RunControl
+from budget_core.environment.ground_track import ground_track
 from budget_core.model import Project
+from budget_core.plots.beta import beta_plot
 from budget_core.provenance import make_provenance
 from budget_core.reports.document import NA
 from budget_core.reports.files import OutputError
@@ -54,7 +56,9 @@ from budget_gui.cancel_support import (
 )
 from budget_gui.components import Button
 from budget_gui.delegates import NUMERIC_ROLE, STATE_ROLE
+from budget_gui.ground_track_widget import GroundTrackWidget, MapSite
 from budget_gui.model_document import ModelDocument
+from budget_gui.plot_widget import PlotWidget
 from budget_gui.scenario_editor import ScenarioEditor
 from budget_gui.theme import Status
 from budget_gui.timeline import TimelineWidget
@@ -222,9 +226,39 @@ class ScenarioView(QWidget):
         self.site_stats_table.setTabKeyNavigation(False)
         stats_page = QWidget()
         stats_layout = QVBoxLayout(stats_page)
+        self.beta_label = QLabel()
+        self.beta_label.setWordWrap(True)
+        self.beta_label.setAccessibleName("Beta angle statistics")
         stats_layout.addWidget(self.eclipse_stats_label)
+        stats_layout.addWidget(self.beta_label)
+        self.ground_track_label = QLabel()
+        self.ground_track_label.setWordWrap(True)
+        self.ground_track_label.setAccessibleName("Ground track statistics")
+        stats_layout.addWidget(self.ground_track_label)
         stats_layout.addWidget(self.site_stats_table, 1)
         tabs.addTab(stats_page, "Statistics")
+        # the angle between the Sun and the orbit plane over the scenario (2.2.0)
+        self.beta_plot_widget = PlotWidget()
+        self.beta_plot_widget.setAccessibleName("Beta angle plot")
+        tabs.addTab(self.beta_plot_widget, "Beta angle")
+        # the sub-satellite point on a latitude-longitude grid (2.2.0)
+        self.ground_track_widget = GroundTrackWidget()
+        self.ground_track_widget.setAccessibleName("Ground track map")
+        self.ground_track_widget.setAccessibleDescription(
+            "Latitude and longitude of the sub-satellite point with the stations and targets"
+        )
+        ground_page = QWidget()
+        ground_layout = QVBoxLayout(ground_page)
+        legend = QLabel(
+            "Line: sub-satellite point (filled circle: start, open circle: end). "
+            "Diamond: ground station. Square: target. A graticule of 30 degrees; "
+            "no coastlines are drawn."
+        )
+        legend.setWordWrap(True)
+        legend.setAccessibleName("Ground track legend")
+        ground_layout.addWidget(legend)
+        ground_layout.addWidget(self.ground_track_widget, 1)
+        tabs.addTab(ground_page, "Ground track")
         tabs.addTab(self.timeline_table, "Mode timeline")
 
         self.body = QSplitter(Qt.Orientation.Vertical)
@@ -437,6 +471,10 @@ class ScenarioView(QWidget):
             ):
                 table.setRowCount(0)
             self.eclipse_stats_label.setText("")
+            self.beta_label.setText("")
+            self.ground_track_label.setText("")
+            self.beta_plot_widget.set_spec(None)
+            self.ground_track_widget.set_track(None)
             self._set_filter_sites([])
             return
         start = run.env.grid.start
@@ -502,7 +540,39 @@ class ScenarioView(QWidget):
         )
 
     def _show_statistics(self, run: ScenarioRun) -> None:
-        stats = scenario_statistics(run.env)
+        track = ground_track(run.env)
+        stats = scenario_statistics(run.env, track)
+        beta = stats.beta
+        self.beta_label.setText(
+            ""
+            if beta is None
+            else f"Beta angle: {beta.min_deg:.1f} to {beta.max_deg:.1f} deg (mean "
+            f"{beta.mean_deg:.1f}); no eclipse above |beta| = {beta.critical_deg:.1f} deg "
+            "(circular orbit of the mean radius, cylindrical shadow)"
+        )
+        self.beta_plot_widget.set_spec(beta_plot(run.env))
+        gt = stats.ground_track
+        shift = (
+            ""
+            if gt is None or gt.mean_node_shift_deg is None or gt.mean_node_spacing_s is None
+            else (
+                f"; between ascending nodes the longitude shifts {gt.mean_node_shift_deg:.2f} deg "
+                f"every {gt.mean_node_spacing_s / 60.0:.2f} min"
+            )
+        )
+        self.ground_track_label.setText(
+            ""
+            if gt is None
+            else f"Ground track: latitude {gt.min_latitude_deg:.1f} to {gt.max_latitude_deg:.1f} "
+            f"deg (geodetic); {gt.ascending_nodes} ascending equator crossing(s){shift}"
+        )
+        self.ground_track_widget.set_track(
+            track,
+            [
+                MapSite(sid, vis.site.kind, vis.site.latitude_deg, vis.site.longitude_deg)
+                for sid, vis in sorted(run.env.sites.items())
+            ],
+        )
         ecl = stats.eclipses
         if ecl.durations.count:
             self.eclipse_stats_label.setText(

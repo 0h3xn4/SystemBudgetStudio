@@ -8,11 +8,11 @@ A project is a folder of YAML files (LF line endings). Every file starts with `s
 project.yaml            kind: project            name, revision, description, requires[]?
 spacecraft.yaml         kind: spacecraft         name, buses[{name, nominal_voltage_v}], mission_phases[], body_frame
 units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, maturity, modes[], mass_properties?, phases[]?, thermal_node?, temperature_limits?, catalogue_ref?
-orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...}   (see ENVIRONMENT_FORMAT.md)
+orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...} or state{epoch_utc, frame, position_m[3], velocity_m_s[3]}   (see ENVIRONMENT_FORMAT.md)
 ground_stations/<id>.yaml kind: ground_station   name, latitude_deg, longitude_deg, altitude_m, min_elevation_deg
 targets/<id>.yaml       kind: target             same fields as a ground station (imaging target)
 scenarios/<id>.yaml     kind: scenario (v4)      orbit, start_utc, duration_s, step_s, shadow_model?, earth_model?, irradiance_model?, sites, mission_phase?, default_mode, rules[], segments[]
-expendables/<id>.yaml   kind: expendable         name, subsystem, maturity, masses_kg{phase: kg}, mass_properties?
+expendables/<id>.yaml   kind: expendable (v3)    name, subsystem, maturity, masses_kg{phase: kg}, mass_properties?, phase_positions_m{phase: [x, y, z]}?
 modes/<id>.yaml         kind: spacecraft_mode    name, description, assignments{unit id: power mode name}
 config/margin_policy.yaml      kind: margin_policy (v2)  classes{name: {power_margin_ratio, mass_margin_ratio}}, system_power_margin_ratio, system_mass_margin_ratio
 config/mass_limits.yaml        kind: mass_limits         limits[{name, phase?, limit_kg}]
@@ -23,7 +23,15 @@ config/thermal_environment.yaml kind: thermal_environment space_temperature_k, t
 links/<id>.yaml         kind: link               name, direction, peer?, frequency_hz, transmitter{}, receiver{}, modulation, coding, data_rates_bps[], required_margin_db, ..._loss_db, attenuation[], active_modes[], max_elevation_deg?, static_points[]
 config/ebn0_table.yaml         kind: ebn0_table          entries[{modulation, coding, required_ebn0_db, target_ber?, target_fer?}]
 config/attenuation_table.yaml  kind: attenuation_table   entries[{name, attenuation_kind, freq_hz, elevation_deg, loss_db}]
+config/pointing.yaml           kind: pointing            actuators{id: {name, max_torque_nm, max_rate_deg_s?, momentum_capacity_nms?, slew_power_w?}}, modes{id: {name, reference, accuracy_deg?, actuator, hold_power_w?}}, slews[{name, from_mode, to_mode, angle_deg, axis, actuator, inertia_kgm2?, settle_s?, per_day?}], mass_phase?   (optional)
+config/propulsion.yaml         kind: propulsion          systems{id: {name, type, isp_s, thrust_n?, power_w?, propellant?}}, maneuvers[{name, system, delta_v_m_s, count?}], dry_mass_kg?, delta_v_margin_ratio?   (optional)
 ```
+
+`config/propulsion.yaml` (2.2.0, schema version 1) holds the propulsion and delta-v budget: `systems` (each `type` is `chemical` or `electric`; `isp_s`, `thrust_n` and `power_w` are sourced numbers, `power_w` only for an electric system; `propellant` is the id of an expendable), `maneuvers` in mission order (`delta_v_m_s` sourced, `count` of identical burns, default 1), `dry_mass_kg` and `delta_v_margin_ratio` (both sourced and optional). See [propulsion](user-manual/propulsion.md).
+
+`config/pointing.yaml` (2.2.0, schema version 1) holds the pointing and slew budget: `actuators` (sourced `max_torque_nm`, optional `max_rate_deg_s`, `momentum_capacity_nms`, `slew_power_w`), pointing `modes` (`reference` is `nadir`, `sun`, `inertial`, `target` or `other`; optional sourced `accuracy_deg` and `hold_power_w`), `slews` (sourced `angle_deg`, `axis` is `x`, `y` or `z`, optional `inertia_kgm2` and `settle_s`, `per_day` default 1) and the optional `mass_phase`. See [pointing](user-manual/pointing.md).
+
+The two tables can be written and filled as a spreadsheet with `budget tables-export` and `budget tables-import` ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet), decision D-231); the file stays the source of truth.
 
 `catalogue_ref` (a unit, optional text) is **reserved** for a shared equipment catalogue (decision D-009): it is read and written back unchanged and no computation uses it.
 
@@ -194,6 +202,8 @@ JSON Schemas for all kinds: `budget export-schemas <dir>` (also committed in `sr
 ## Sources, statuses and required features (schema revision D-213)
 
 The scenario went up one more version in the step that added the model choices `earth_model` and `irradiance_model` ([choices](models/choices.md)): version 4, an older file reads unchanged. The revision for provenance added three optional things and moved every kind up one schema version (`unit`, `scenario` and `margin_policy` to 3, all others to 2). Files of the older versions migrate in memory unchanged (`FILE_MIGRATED`); a tool of an earlier release reads a new file as `SCHEMA_TOO_NEW`. None of them is used by an equation, none changes a result, and none is part of the model digest. The design is in [transparency_p3_design.md](transparency_p3_design.md).
+
+The expendable went up to version 3 in 2.2.0 for the optional `phase_positions_m` (the position of its centre of mass in each mission phase, so that a tank that empties moves the centre of gravity; a phase without an entry uses `mass_properties.position_m`; a phase that is not a mission phase is `REF_UNKNOWN_PHASE`); an older file reads unchanged. The orbit went up to version 3 in 2.2.0 for the optional `state` block, an orbit given as a position and velocity at an epoch in `j2000` or `teme` (the frame has no default); an older file reads unchanged (`FILE_MIGRATED`), and an earlier release reads a new file as `SCHEMA_TOO_NEW`. See [ENVIRONMENT_FORMAT.md](ENVIRONMENT_FORMAT.md).
 
 The Eb/N0 table went up to version 3 in 2.1.0: an entry may record the error rates its required Eb/N0 refers to, `target_ber` and `target_fer` (each above 0 and below 1, as the standard or data sheet gives them; the tool never supplies one). The Explain panel and the configuration table of the link report show them next to the number ("Required Eb/N0, QPSK rate 1/2 at BER 1e-05"); no result depends on them. An older file reads unchanged (`FILE_MIGRATED`); an earlier release reads a new file as `SCHEMA_TOO_NEW`.
 

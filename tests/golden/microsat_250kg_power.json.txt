@@ -2059,6 +2059,11 @@
         "size": 189
       },
       {
+        "path": "config/pointing.yaml",
+        "sha256": "87c79639b2e5cd020e2d8dd9f8ec5b1b76dd14817562d96d741560bc91002268",
+        "size": 1568
+      },
+      {
         "path": "config/power_config.yaml",
         "sha256": "11f1a696bbcf32d4025d8cd3f43b0accc4010a4c32f3086a3d84b2d2e586ddf3",
         "size": 358
@@ -2067,6 +2072,11 @@
         "path": "config/power_system.yaml",
         "sha256": "f681418f29ffc379edc69595111e7bd4a189a1ebbd9615dc9ed92ea44a78a438",
         "size": 3053
+      },
+      {
+        "path": "config/propulsion.yaml",
+        "sha256": "c21dcf2c42dd560329996fd9371f4328a7a2991dcff13c4e6289c2fca02be8d0",
+        "size": 947
       },
       {
         "path": "config/thermal_environment.yaml",
@@ -2080,7 +2090,7 @@
       },
       {
         "path": "expendables/propellant.yaml",
-        "sha256": "3d2b5580134dfd1ebccd584181dced8cdc8ea15144fcf0fb8ee13b453b723575",
+        "sha256": "c94aeddf3ed514095cfe7920ee7ebb41c3d67094563ab8439ee06fb09ab57e4d",
         "size": 273
       },
       {
@@ -2130,7 +2140,7 @@
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "40581956d6e4e37039504a9975e117960ab60eaf934c9bd6c7cb5498df8614bb",
+        "sha256": "120ee56df65852c002015a21b439b6372a5fe02b3a044f9a0d4c68c37f9b0bdb",
         "size": 359
       },
       {
@@ -2244,7 +2254,7 @@
         "size": 632
       }
     ],
-    "inputs_digest": "sha256:802ab54d09174cce4d169bac254b9bb10c0f9977fd759c46be3a0a03c342dd8e",
+    "inputs_digest": "sha256:6a40a91be7b8095916a7ccf10517406192af2be418c11c9f4e56bfe6ffff57c0",
     "libraries": [
       [
         "pinned",
@@ -2257,7 +2267,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.1.0",
+    "tool_version": "2.2.0",
     "user": "Golden User"
   },
   "result_format": {

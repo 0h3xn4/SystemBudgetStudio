@@ -50,6 +50,20 @@ mass_properties:
     iyz_kgm2: 0.0
 ```
 
+**The centre of gravity moves as a tank empties.** An expendable may give the position of its centre of mass for each phase, so that the centre of gravity of the spacecraft follows it:
+
+```yaml
+masses_kg: {launch: 5.0, bol: 4.8, eol: 0.6}
+mass_properties:
+  position_m: [0.0, 0.0, 0.4]        # used for a phase without an entry below
+phase_positions_m:
+  launch: [0.0, 0.0, 0.40]
+  bol:    [0.0, 0.0, 0.38]
+  eol:    [0.0, 0.0, 0.30]
+```
+
+The position of the centre of mass of the remaining propellant comes from the tank (its geometry, the fill level), not from the tool: you give it per phase. The Summary sheet of the mass report has a table *Centre-of-gravity shift from the first phase* with the shift of the centre of gravity of every phase in x, y and z and its distance, so the move from launch to end of life is one row. A phase that is not a mission phase is refused (`REF_UNKNOWN_PHASE`).
+
 An expendable's own inertia is the same in every phase, whatever its mass in the phase; the tool warns (`MASS_INERTIA_NOT_SCALED`) when an expendable with an inertia has more than one mass (see [deviation DV-M4](../DEVIATIONS.md)). A mass limit that is met exactly is met (rounding noise is ignored).
 
 The tool computes the centre of gravity (mass-weighted mean of positions) and the inertia about it with the parallel-axis theorem, for each phase. Items without a position are left out and reported (`MASS_PROPS_MISSING`, with the share of mass covered); an item without inertia counts as a point mass. Centre of gravity and inertia use the **nominal** mass (margin mass has no position; see [deviation DV-M1](../DEVIATIONS.md)).
