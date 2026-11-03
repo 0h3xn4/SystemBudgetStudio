@@ -188,7 +188,7 @@ def test_null_value_is_a_placeholder(root: Path) -> None:
 def test_missing_config_and_empty_tables_are_warnings(root: Path) -> None:
     (root / "config" / "margin_policy.yaml").unlink()
     write = root / "config" / "ebn0_table.yaml"
-    write.write_text("schema_version: 2\nkind: ebn0_table\nentries: []\n", encoding="utf-8")
+    write.write_text("schema_version: 3\nkind: ebn0_table\nentries: []\n", encoding="utf-8")
     problems = load_project(root).problems
     assert only(problems, "CONFIG_MISSING").file == "config/margin_policy.yaml"
     assert only(problems, "CONFIG_EMPTY_TABLE").file == "config/ebn0_table.yaml"
