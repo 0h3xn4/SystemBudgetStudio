@@ -132,6 +132,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="largest-gap"></a>
 **Largest gap**: for a ground station or imaging target, the longest stretch of the scenario with no pass, the start and the end of the scenario included. It is one of the figures of the Statistics tab ([scenarios](user-manual/scenarios.md#statistics-of-the-eclipses-and-the-passes)).
 
+**LTAN and LTDN**: the local time of the ascending (or descending) node of an orbit, in hours (for example 10:30): the time of day, by the mean Sun, at which the satellite crosses the equator going north (south). In a sun-synchronous orbit it stays the same all year. `budget orbit ltan` converts it to and from the right ascension (RAAN); see [orbit design](models/orbit-design.md).
+
 **Link margin**: the [Eb/N0](#ebn0) you have minus the Eb/N0 required, in dB. A link **closes** at a data rate when its margin is at least the **required margin** you set in the link file (a safety allowance). See [link budget](user-manual/link-budget.md).
 
 ## M
@@ -209,6 +211,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **SGP4**: the standard algorithm that turns a [TLE](#tle) or mean orbital elements into a satellite position. The tool uses the `sgp4` library.
 
 <a id="source"></a>
+**Sun-synchronous orbit**: a retrograde, near-polar orbit whose node moves east at the rate of the mean Sun (about 0.9856 degrees a day, from the oblateness of the Earth), so the satellite passes over a place at the same local time all year. It exists below about 5,974 km; `budget orbit sso` gives the inclination of an altitude.
+
 **Source**: the `source` text next to every sourced number: where the number comes from (document, data sheet, test). Printed in the reports.
 
 <a id="spacecraft-mode"></a>
@@ -223,6 +227,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **State of charge (SoC)**: how full the battery is, as a share of its capacity.
 
 **Statistics (of a scenario)**: the Statistics tab after Compute: the number, shortest, mean and longest eclipse, the share of the scenario in eclipse and the longest sunlight, and per station the number of passes, the contact time, the shortest, mean and longest pass, the [largest gap](#largest-gap) and the peak elevations. Read from the computed eclipses and passes; they change no result.
+
+**Repeat ground track**: an orbit whose track on the ground repeats after N revolutions in D days. `budget orbit repeat` finds the altitude of a cycle and `repeats` lists every cycle in an altitude window.
 
 **Static budget**: a budget per mode without an orbit: the classic table for early design. Compare **time-domain budget**: over a scenario.
 

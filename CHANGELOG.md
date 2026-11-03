@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Orbit design helpers: `budget orbit` (2.2.0, step A).** `budget orbit ltan` converts the mean local solar time of the ascending node and the right ascension at an epoch, both ways; `budget orbit sso` gives the sun-synchronous orbit of an altitude or an inclination (and, with a local time and an epoch, the RAAN); `budget orbit repeat` and `repeats` find the orbit of a repeat ground track, or every repeat cycle in an altitude window. The relations are first-order J2 with the Earth constants of the chosen Earth model, checked against the SGP4 propagation of the tool (the node of a designed orbit keeps its local time to 11 s in 30 days), the mean Sun and textbook values ([orbit design](docs/models/orbit-design.md), DEVIATIONS DV-E6). Four new equations (ORB-J2-RATES, ORB-SSO, ORB-LTAN, ORB-REPEAT; no citation yet, 42 of 45) and two registered constants (the mean longitude rate of the Sun, the Earth rotation rate). No result and no file changed. Decision D-226.
+
 - **Documentation sweep after 2.1.0.** The README, the user manual (scenarios, the window, describing the spacecraft, link budget, command line), the FAQ (the two kinds of mode, the eclipse and pass statistics, editing the time span), the tips, the glossary (*BER and FER*, *Largest gap*, *Statistics*), the troubleshooting entry on the inputs digest, the file format, the model pages, the architecture and design notes and two chapters of the in-app guide (scenarios, link budget) are brought up to date with the program as built. Three screenshots are retaken (the scenario page with its new fields, the Power modes page, and the new Statistics tab). No code changed.
 
 ## [2.1.0] - 2026-11-03

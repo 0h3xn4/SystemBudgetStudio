@@ -2,7 +2,7 @@
 
 This page shows how to place the spacecraft in an orbit for a span of time and decide which spacecraft mode is active when; the time-domain power budget and the link passes need a scenario.
 
-**Contents:** [Orbit](#how-do-i-define-an-orbit) · [Ground stations and targets](#how-do-i-add-a-ground-station-or-an-imaging-target) · [The scenario file](#how-do-i-write-a-scenario) · [Mode rules](#how-do-i-switch-modes-automatically) · [Compute and look](#how-do-i-see-eclipses-passes-and-the-timeline) · [SpaceMissionStudio](#how-do-i-use-orbit-data-from-spacemissionstudio)
+**Contents:** [Orbit](#how-do-i-define-an-orbit) · [Orbit design](#how-do-i-design-the-orbit-local-time-sun-synchronous-repeat-ground-track) · [Ground stations and targets](#how-do-i-add-a-ground-station-or-an-imaging-target) · [The scenario file](#how-do-i-write-a-scenario) · [Mode rules](#how-do-i-switch-modes-automatically) · [Compute and look](#how-do-i-see-eclipses-passes-and-the-timeline) · [SpaceMissionStudio](#how-do-i-use-orbit-data-from-spacemissionstudio)
 
 ## How do I add an orbit and a scenario in the window?
 
@@ -27,6 +27,24 @@ elements:
 ```
 
 Positions come from the [SGP4](../glossary.md#sgp4) propagator (Earth only; elements are used as SGP4 mean elements, without drag: see [deviation DV-E2](../DEVIATIONS.md)). The guided wizard writes a near-circular orbit for you from altitude, inclination and [RAAN](../glossary.md#raan).
+
+## How do I design the orbit (local time, sun-synchronous, repeat ground track)?
+
+An orbit file takes inclination and right ascension (RAAN). A mission is usually described by other numbers: the **local time of the ascending node** (LTAN, for example 10:30 or 22:30), a **sun-synchronous** orbit at some altitude, or a **repeat ground track**. `budget orbit` works out the elements from those; it reads no project and changes none. All times are *mean* local solar time (the equation of time is not applied), and the Earth constants are those of the scenario's Earth model (`--earth-model`, WGS-84 by default).
+
+```bash
+# a sun-synchronous orbit at 600 km with the node at 10:30 mean local time on 2026-06-01
+budget orbit sso --altitude-km 600 --ltan 10:30 --epoch 2026-06-01T00:00:00Z
+
+# the right ascension of a node at a local time (and the other way: --raan DEG)
+budget orbit ltan --epoch 2026-06-01T00:00:00Z --ltan 10:30
+
+# the sun-synchronous orbit with 15 revolutions in one day, and every repeat cycle between 500 and 800 km
+budget orbit repeat --revolutions 15 --days 1 --sso
+budget orbit repeats --altitude-min-km 500 --altitude-max-km 800 --max-days 5 --sso
+```
+
+Put the inclination and the RAAN it prints into the orbit file (`elements:`, with the epoch you gave). A sun-synchronous orbit is retrograde (inclination above 90°) and only exists below about 5,974 km; a request with no solution says so. The tool treats the elements as mean elements (DEVIATIONS DV-E2), so the node of the orbit it then propagates keeps its local time to about 11 seconds in 30 days, and sits about two minutes of local time from the designed one; the equations, the checks and the limits are in [orbit design](../models/orbit-design.md).
 
 ## How do I add a ground station or an imaging target?
 

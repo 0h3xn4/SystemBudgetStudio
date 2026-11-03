@@ -342,6 +342,44 @@ EQUATIONS: dict[str, Equation] = {
             "Checked against the library function in the tests.",
         ),
         Equation(
+            "ORB-J2-RATES",
+            "Secular rates of a mean orbit under J2",
+            "k = 1.5 J2 (Re / p)^2 n; node: -k cos i; perigee: k (2 - 2.5 sin^2 i); mean anomaly: "
+            "n + k sqrt(1 - e^2) (1 - 1.5 sin^2 i); p = a (1 - e^2), n = sqrt(mu / a^3)",
+            None,
+            "First-order secular J2 theory, a textbook relation; the reference text is not "
+            "available to the tool, owner to confirm. Re, mu and J2 are those of the Earth model "
+            "of the scenario. SGP4 includes higher orders (DEVIATIONS DV-E6).",
+        ),
+        Equation(
+            "ORB-SSO",
+            "Sun-synchronous condition",
+            "cos i = -w_sun / (1.5 J2 (Re / p)^2 n), with w_sun the rate of the mean Sun "
+            "(360 deg per tropical year)",
+            None,
+            "The node has to move at the rate of the mean Sun (ORB-J2-RATES); textbook relation, "
+            "owner to confirm the reference. w_sun is the coefficient of the low-precision Sun "
+            "(ENV-SUN), so the local time stays constant in the tool.",
+        ),
+        Equation(
+            "ORB-LTAN",
+            "Mean local solar time of the ascending node",
+            "LTAN = UT + (RAAN - GMST) / 15 deg per hour (mod 24 h), GMST from ENV-GMST",
+            None,
+            "Mean solar time is universal time plus the longitude over 15 degrees per hour; the "
+            "longitude of the node is its right ascension minus Greenwich sidereal time. The "
+            "equation of time is not applied (D-226); UTC is taken as UT1 (DV-E1).",
+        ),
+        Equation(
+            "ORB-REPEAT",
+            "Repeat ground track",
+            "(w_perigee + w_mean-anomaly) / (w_earth - w_node) = N / D, solved for a",
+            None,
+            "N nodal periods fit D nodal days (days of the Earth turning once relative to the "
+            "node); the rates are those of ORB-J2-RATES, w_earth that of ENV-GMST. Textbook "
+            "relation, owner to confirm the reference.",
+        ),
+        Equation(
             "ENV-SHADOW-CYL",
             "Cylindrical Earth shadow",
             "in shadow when r.s < 0 and |r - (r.s) s| < R_Earth (s: unit vector to the Sun)",

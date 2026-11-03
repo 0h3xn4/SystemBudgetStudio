@@ -37,7 +37,7 @@ def sun_direction_and_distance(jd: NDArray) -> tuple[NDArray, NDArray]:
     """ENV-SUN: unit vector to the Sun (mean equator and equinox of date, close to TEME) and its
     distance in metres. Accuracy about 0.01 degree (Astronomical Almanac, low precision)."""
     n = jd - 2451545.0
-    mean_longitude = np.radians(280.460 + 0.9856474 * n)
+    mean_longitude = np.radians(280.460 + c.MEAN_SUN_LONGITUDE_RATE.value * n)
     anomaly = np.radians(357.528 + 0.9856003 * n)
     longitude = (
         mean_longitude

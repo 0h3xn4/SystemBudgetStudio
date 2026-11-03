@@ -13,6 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from budget_cli import orbit as orbit_cli
 from budget_core import APP_NAME, __version__
 from budget_core.assumptions_view import ASSUMPTION_SECTIONS
 from budget_core.assumptions_view import assumptions as list_assumptions
@@ -384,6 +385,8 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Write the page of all choices (docs/models/choices.md) to standard output.",
     )
+
+    orbit_cli.add_parser(sub)
 
     asm = sub.add_parser(
         "assumptions",
@@ -1147,6 +1150,8 @@ def _dispatch(
         return _settings(args)
     if args.command == "choices":
         return _choices(args)
+    if args.command == "orbit":
+        return orbit_cli.run(args)
     if args.command == "assumptions":
         return _assumptions(args)
     if args.command == "verify":

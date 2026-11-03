@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import budget_core.link.evaluate  # noqa: F401
 import budget_core.mass.static_mass  # noqa: F401
+import budget_core.orbit_design  # noqa: F401
 import budget_core.power.static_budget  # noqa: F401
 import budget_core.power.time_domain  # noqa: F401
 import budget_core.thermal.static_thermal  # noqa: F401
