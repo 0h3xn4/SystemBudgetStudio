@@ -380,6 +380,28 @@ EQUATIONS: dict[str, Equation] = {
             "relation, owner to confirm the reference.",
         ),
         Equation(
+            "ORB-FRAME",
+            "J2000 to TEME rotation",
+            "r_TEME = R3(eq) R1(-(eps+deps)) R3(-dpsi) R1(eps) R3(-z) R2(theta) R3(-zeta) r_J2000; "
+            "zeta, theta, z: IAU-76 precession; dpsi, deps: the ten largest terms of the IAU-1980 "
+            "nutation; eq = dpsi cos(eps)",
+            None,
+            "IAU-76 precession and IAU-1980 nutation as in the usual astrodynamics texts, "
+            "reproduced from memory (text not available); checked against the GCRS to TEME "
+            "transformation of astropy at four dates, 0.7 to 2.4 m at a radius of 7000 km "
+            "(DEVIATIONS DV-E7). Owner to verify against the source.",
+        ),
+        Equation(
+            "ORB-STATE-FIT",
+            "Mean elements of a state vector",
+            "find x = (a, f, g, h, k, L) with SGP4(x, epoch) = (r, v) by Newton's method, "
+            "finite-difference Jacobian; (f, g) = e (cos, sin)(RAAN + argp), "
+            "(h, k) = tan(i/2) (cos, sin) RAAN, L = RAAN + argp + M",
+            None,
+            "A numerical fit to the tool's own propagator, not a published theory: the mean "
+            "elements are those whose SGP4 state at the epoch is the given one (DEVIATIONS DV-E7).",
+        ),
+        Equation(
             "ORB-BETA",
             "Beta angle",
             "beta = asin((r x v) / |r x v| . s), s the unit vector to the Sun; critical angle "

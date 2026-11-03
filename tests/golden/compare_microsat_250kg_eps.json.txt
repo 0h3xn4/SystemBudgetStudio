@@ -988,7 +988,7 @@
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "40581956d6e4e37039504a9975e117960ab60eaf934c9bd6c7cb5498df8614bb",
+        "sha256": "120ee56df65852c002015a21b439b6372a5fe02b3a044f9a0d4c68c37f9b0bdb",
         "size": 359
       },
       {
@@ -1102,7 +1102,7 @@
         "size": 754
       }
     ],
-    "inputs_digest": "sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6",
+    "inputs_digest": "sha256:36e3dfd7e0c765a51dcb3a90d23a7ff5fd8f60e26d83ba0656bf9a6018b8125d",
     "libraries": [
       [
         "numpy",
@@ -1144,19 +1144,19 @@
     "parameters": [
       [
         "Side A inputs digest",
-        "sha256:e2ee83880d9889d16eafd40d8f9aba3f01afda71c63c78a54faf6874196ff9e6"
+        "sha256:36e3dfd7e0c765a51dcb3a90d23a7ff5fd8f60e26d83ba0656bf9a6018b8125d"
       ],
       [
         "Side B inputs digest",
-        "sha256:24da0a7c32bf01b79c12fbacdb667238b5b1d35a39d49cf26d64fd7563431dc0"
+        "sha256:032a994358348bf81c8895ffe1c271e4abd687b650ebf064c599e487ed9c3b84"
       ],
       [
         "Side A files",
-        "sha256:22914f367bf995b59d08289e5cfd0fe184afcececf2bd1716dc6add481f897f1"
+        "sha256:55234168f4955e6329988df250009a62d4a234a0f8f16e9ed20d3fe5defa11f6"
       ],
       [
         "Side B files",
-        "sha256:1b90b502e07862904959c18be9269a473a2b7c6fb0007da9388ea92c66e600d7"
+        "sha256:5dd6cac2d70cd74cda2947a64bc2c61e575b5f486135ad261d9d85886721619e"
       ]
     ],
     "project_name": "Example 250 kg minisatellite, complete power and thermal inputs",

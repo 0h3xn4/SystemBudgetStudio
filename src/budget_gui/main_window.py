@@ -807,6 +807,10 @@ class MainWindow(QMainWindow):
             elements["eccentricity_ratio"] = values.eccentricity
             elements["inclination_deg"] = values.inclination_deg
             written = ["semi_major_axis_m", "inclination_deg"]
+            if values.arg_perigee_deg is not None and values.mean_anomaly_deg is not None:
+                elements["arg_perigee_deg"] = values.arg_perigee_deg
+                elements["mean_anomaly_deg"] = values.mean_anomaly_deg
+                written += ["arg_perigee_deg", "mean_anomaly_deg"]
             if values.raan_deg is not None:
                 elements["raan_deg"] = values.raan_deg
                 written.append("raan_deg")

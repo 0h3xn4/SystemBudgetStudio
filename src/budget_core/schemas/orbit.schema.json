@@ -88,6 +88,50 @@
       ],
       "title": "ProvenanceEntry",
       "type": "object"
+    },
+    "StateVector": {
+      "additionalProperties": false,
+      "description": "An orbit given as a position and a velocity at an epoch (D-229). The scenario propagates the\nmean elements whose SGP4 state at the epoch this is. `frame` says what the numbers are in:\n`j2000` (the mean equator and equinox of J2000) or `teme` (what SGP4 works in); it has no\ndefault, because the two differ by up to a degree.",
+      "properties": {
+        "epoch_utc": {
+          "title": "Epoch Utc",
+          "type": "string"
+        },
+        "frame": {
+          "enum": [
+            "j2000",
+            "teme"
+          ],
+          "title": "Frame",
+          "type": "string"
+        },
+        "position_m": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Position M",
+          "type": "array"
+        },
+        "velocity_m_s": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Velocity M S",
+          "type": "array"
+        }
+      },
+      "required": [
+        "epoch_utc",
+        "frame",
+        "position_m",
+        "velocity_m_s"
+      ],
+      "title": "StateVector",
+      "type": "object"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -123,10 +167,21 @@
       "type": "object"
     },
     "schema_version": {
-      "const": 2,
-      "default": 2,
+      "const": 3,
+      "default": 3,
       "title": "Schema Version",
       "type": "integer"
+    },
+    "state": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StateVector"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
     },
     "tle": {
       "anyOf": [

@@ -45,17 +45,20 @@ EDGE_TOLERANCE_S = 1e-3
 _SGP4_SETS = {"wgs84": WGS84, "wgs72": WGS72}
 
 
-def build_satrec(orbit: Orbit, earth_model: str = DEFAULT_EARTH_MODEL) -> Satrec:
-    """Create the sgp4 satellite record of an orbit definition. Elements use the gravity set of
-    `earth_model` (D-219); a TLE is on WGS-72, the set SGP4 is defined on, whatever the choice."""
-    if orbit.tle is not None:
-        return Satrec.twoline2rv(orbit.tle[0], orbit.tle[1])
-    el = orbit.elements
-    assert el is not None  # validated: exactly one source
-    jd, fr = geo.julian_date_parts(parse_utc(el.epoch_utc))
-    motion_rad_per_min = (
-        math.sqrt(EARTH_MODELS[earth_model].mu_m3s2 / el.semi_major_axis_m**3) * 60.0
-    )
+def satrec_from_values(
+    jd: float,
+    fr: float,
+    a_m: float,
+    e: float,
+    inclination_rad: float,
+    raan_rad: float,
+    arg_perigee_rad: float,
+    mean_anomaly_rad: float,
+    earth_model: str = DEFAULT_EARTH_MODEL,
+) -> Satrec:
+    """The sgp4 satellite record of mean elements at an epoch (whole and fractional Julian date),
+    with the gravity set of `earth_model`; no drag."""
+    motion_rad_per_min = math.sqrt(EARTH_MODELS[earth_model].mu_m3s2 / a_m**3) * 60.0
     sat = Satrec()
     sat.sgp4init(
         _SGP4_SETS[earth_model],
@@ -65,14 +68,61 @@ def build_satrec(orbit: Orbit, earth_model: str = DEFAULT_EARTH_MODEL) -> Satrec
         0.0,
         0.0,
         0.0,
-        el.eccentricity_ratio,
-        math.radians(el.arg_perigee_deg),
-        math.radians(el.inclination_deg),
-        math.radians(el.mean_anomaly_deg),
+        e,
+        arg_perigee_rad,
+        inclination_rad,
+        mean_anomaly_rad,
         motion_rad_per_min,
-        math.radians(el.raan_deg),
+        raan_rad,
     )
     return sat
+
+
+def build_satrec(orbit: Orbit, earth_model: str = DEFAULT_EARTH_MODEL) -> Satrec:
+    """Create the sgp4 satellite record of an orbit definition. Elements use the gravity set of
+    `earth_model` (D-219); a TLE is on WGS-72, the set SGP4 is defined on, whatever the choice.
+    A state vector is first made into the mean elements whose SGP4 state at its epoch it is
+    (D-229)."""
+    if orbit.tle is not None:
+        return Satrec.twoline2rv(orbit.tle[0], orbit.tle[1])
+    if orbit.state is not None:
+        from budget_core.orbit_state import mean_elements_from_state
+
+        state = orbit.state
+        epoch = parse_utc(state.epoch_utc)
+        fit = mean_elements_from_state(
+            epoch,
+            state.frame,
+            np.array(state.position_m, dtype=np.float64),
+            np.array(state.velocity_m_s, dtype=np.float64),
+            earth_model,
+        )
+        jd, fr = geo.julian_date_parts(epoch)
+        return satrec_from_values(
+            jd,
+            fr,
+            fit.semi_major_axis_m,
+            fit.eccentricity_ratio,
+            math.radians(fit.inclination_deg),
+            math.radians(fit.raan_deg),
+            math.radians(fit.arg_perigee_deg),
+            math.radians(fit.mean_anomaly_deg),
+            earth_model,
+        )
+    el = orbit.elements
+    assert el is not None  # validated: exactly one source
+    jd, fr = geo.julian_date_parts(parse_utc(el.epoch_utc))
+    return satrec_from_values(
+        jd,
+        fr,
+        el.semi_major_axis_m,
+        el.eccentricity_ratio,
+        math.radians(el.inclination_deg),
+        math.radians(el.raan_deg),
+        math.radians(el.arg_perigee_deg),
+        math.radians(el.mean_anomaly_deg),
+        earth_model,
+    )
 
 
 MAX_TLE_AGE_DAYS = 30.0

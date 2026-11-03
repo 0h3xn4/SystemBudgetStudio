@@ -15,6 +15,8 @@ import sys
 from datetime import datetime
 from typing import Any
 
+import numpy as np
+
 from budget_core.environment.constants import DEFAULT_EARTH_MODEL, EARTH_MODELS
 from budget_core.orbit_design import (
     OrbitDesignError,
@@ -28,6 +30,7 @@ from budget_core.orbit_design import (
     sun_synchronous_altitude_m,
     sun_synchronous_inclination_deg,
 )
+from budget_core.orbit_state import StateConversionError, mean_elements_from_state
 from budget_core.timeutil import parse_utc
 
 
@@ -102,6 +105,22 @@ def add_parser(sub: Any) -> None:
     repeat.add_argument("--eccentricity", type=float, default=0.0)
     common(repeat)
 
+    state = commands.add_parser(
+        "from-state",
+        help="The mean elements whose SGP4 state at the epoch is a position and velocity.",
+    )
+    state.add_argument("--epoch", required=True, help="UTC time of the state.")
+    state.add_argument(
+        "--frame",
+        choices=("j2000", "teme"),
+        help="What the numbers are in (required: j2000 or teme).",
+    )
+    state.add_argument("--position-m", nargs=3, type=float, metavar=("X", "Y", "Z"), required=True)
+    state.add_argument(
+        "--velocity-m-s", nargs=3, type=float, metavar=("VX", "VY", "VZ"), required=True
+    )
+    common(state)
+
     repeats = commands.add_parser(
         "repeats", help="Every repeat cycle that has an orbit in an altitude window."
     )
@@ -134,8 +153,12 @@ def _solution_dict(s: RepeatSolution) -> dict[str, Any]:
 
 
 _UNITS = {
-    "altitude_km": " km",
     "semi_major_axis_km": " km",
+    "osculating_semi_major_axis_km": " km",
+    "arg_perigee_deg": " deg",
+    "mean_anomaly_deg": " deg",
+    "position_residual_m": " m",
+    "altitude_km": " km",
     "inclination_deg": " deg",
     "raan_deg": " deg",
     "nodal_period_min": " min",
@@ -148,6 +171,13 @@ _LABELS = {
     "eccentricity": "Eccentricity",
     "inclination_deg": "Inclination",
     "raan_deg": "RAAN",
+    "arg_perigee_deg": "Argument of perigee",
+    "mean_anomaly_deg": "Mean anomaly",
+    "osculating_semi_major_axis_km": "Osculating semi-major axis",
+    "osculating_eccentricity": "Osculating eccentricity",
+    "iterations": "Iterations",
+    "position_residual_m": "Position residual",
+    "frame": "Frame",
     "ltan": "Ascending node local time (mean solar)",
     "ltdn": "Descending node local time (mean solar)",
     "nodal_period_min": "Nodal period",
@@ -223,6 +253,8 @@ def _dispatch(args: argparse.Namespace) -> int:
         return 0
     if command == "sso":
         return _sso(args, earth)
+    if command == "from-state":
+        return _from_state(args, earth)
     if command == "repeat":
         solution = repeat_ground_track(
             args.revolutions,
@@ -244,6 +276,43 @@ def _dispatch(args: argparse.Namespace) -> int:
         earth_model=earth,
     )
     _print([_solution_dict(s) for s in found], args.format)
+    return 0
+
+
+def _from_state(args: argparse.Namespace, earth: str) -> int:
+    if args.frame is None:
+        return _fail("Give the frame of the state, --frame j2000 or --frame teme.")
+    epoch = _epoch(args.epoch)
+    if isinstance(epoch, str) or epoch is None:
+        return _fail(epoch or "Give the epoch.")
+    try:
+        fit = mean_elements_from_state(
+            epoch,
+            args.frame,
+            np.array(args.position_m, dtype=np.float64),
+            np.array(args.velocity_m_s, dtype=np.float64),
+            earth,
+        )
+    except StateConversionError as exc:
+        return _fail(str(exc))
+    _print(
+        {
+            "epoch": args.epoch,
+            "frame": args.frame,
+            "semi_major_axis_km": _round(fit.semi_major_axis_m / 1000.0),
+            "eccentricity": _round(fit.eccentricity_ratio),
+            "inclination_deg": _round(fit.inclination_deg),
+            "raan_deg": _round(fit.raan_deg),
+            "arg_perigee_deg": _round(fit.arg_perigee_deg),
+            "mean_anomaly_deg": _round(fit.mean_anomaly_deg),
+            "osculating_semi_major_axis_km": _round(fit.osculating_semi_major_axis_m / 1000.0),
+            "osculating_eccentricity": _round(fit.osculating_eccentricity_ratio),
+            "iterations": fit.iterations,
+            "position_residual_m": float(f"{fit.position_residual_m:.3g}"),
+            "earth_model": earth,
+        },
+        args.format,
+    )
     return 0
 
 

@@ -191,3 +191,63 @@ def test_the_add_scenario_form_takes_the_values_of_the_helper(qtbot) -> None:  #
     assert float(dialog.inclination_edit.text()) == pytest.approx(97.79, abs=0.05)
     assert float(dialog.raan_edit.text()) == pytest.approx(values.raan_deg, abs=1e-3)
     assert dialog.start_edit.text() == EPOCH  # the epoch of the helper, when no start was typed
+
+
+# ---- from a state vector --------------------------------------------------------------------
+
+
+def _state_mode(dialog: OrbitHelperDialog) -> None:
+    dialog.mode_combo.setCurrentIndex(dialog.MODE_STATE)
+    dialog.epoch_edit.setText(EPOCH)
+    dialog.frame_combo.setCurrentText("teme")
+    dialog.position_edit.setText("6978137 0 0")
+    dialog.velocity_edit.setText("0 7500 0")
+
+
+def test_a_state_vector_gives_the_six_mean_elements(qtbot) -> None:  # type: ignore[no-untyped-def]
+    dialog = OrbitHelperDialog([])
+    qtbot.addWidget(dialog)
+    _state_mode(dialog)
+    values = dialog.values()
+    assert values is not None
+    assert values.arg_perigee_deg is not None and values.mean_anomaly_deg is not None
+    assert values.raan_deg is not None and 6.8e6 < values.semi_major_axis_m < 7.1e6
+    assert (
+        "mean" in dialog.result_label.text().lower()
+        and "osculating" in dialog.result_label.text().lower()
+    )
+
+
+def test_a_state_in_the_wrong_shape_is_said(qtbot) -> None:  # type: ignore[no-untyped-def]
+    dialog = OrbitHelperDialog([])
+    qtbot.addWidget(dialog)
+    _state_mode(dialog)
+    dialog.position_edit.setText("1 2")
+    assert "three numbers" in dialog.error_label.text() and not dialog.apply_button.isEnabled()
+    dialog.position_edit.setText("6978137 0 0")
+    dialog.velocity_edit.setText("0 12000 0")
+    assert "bound" in dialog.error_label.text()
+
+
+def test_writing_a_state_sets_all_six_elements(window: MainWindow, project: Path) -> None:
+    orbit_id = next(iter(load_project(project).project.orbits))  # type: ignore[union-attr]
+    rel = f"orbits/{orbit_id}.yaml"
+
+    def ask(orbits: list[str]):  # type: ignore[no-untyped-def]
+        dialog = OrbitHelperDialog(orbits)
+        _state_mode(dialog)
+        values = dialog.values()
+        assert values is not None
+        return orbit_id, values
+
+    window._ask_orbit_helper = ask  # type: ignore[method-assign]
+    assert window.orbit_helper()
+    el = window.document.data(rel)["elements"]
+    assert (
+        el["arg_perigee_deg"] != 90.0
+        and "elements.arg_perigee_deg" in window.document.data(rel)["provenance"]
+    )
+    assert window.save_model()
+    result = load_project(project)
+    assert result.project is not None
+    assert not [p for p in result.problems if p.severity.value == "error"]

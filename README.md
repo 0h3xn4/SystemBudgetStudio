@@ -102,7 +102,7 @@ Status: version 2.1.0, all planned milestones (M0 to M6) are done and tested ([p
 
 Known limits, stated plainly:
 
-- The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project, and 43 of the 46 equations still have no citation (`SOURCE_MISSING`; the references are yours to supply).
+- The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project, and 45 of the 48 equations still have no citation (`SOURCE_MISSING`; the references are yours to supply).
 - The tool's own settings, tolerances and constants are shown (Assumptions page) but cannot yet be changed per project; the orbit propagation, the Sun model and the thermal model are fixed simplifications ([deviations](docs/DEVIATIONS.md)).
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 9 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
 - The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 9.

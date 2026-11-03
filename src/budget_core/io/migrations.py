@@ -200,6 +200,8 @@ _PROVENANCE_STEPS = {
     # the Eb/N0 entry gains the optional `target_ber` and `target_fer` (2.1.0); an older file is
     # valid unchanged
     ("ebn0_table", 2): _annotated(3),
+    # the orbit gains the optional `state` block (D-229); an older file is valid unchanged
+    ("orbit", 2): _annotated(3),
 }
 
 DEFAULT_REGISTRY = MigrationRegistry(

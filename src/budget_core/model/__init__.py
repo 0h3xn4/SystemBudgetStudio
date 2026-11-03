@@ -18,6 +18,7 @@ from budget_core.model.environment import (
     Scenario,
     ScenarioRule,
     ScenarioSegment,
+    StateVector,
     Target,
 )
 from budget_core.model.equipment import (
@@ -79,6 +80,7 @@ __all__ = [
     "Exposure",
     "Ebn0Entry",
     "Elements",
+    "StateVector",
     "GroundSite",
     "GroundStation",
     "Orbit",

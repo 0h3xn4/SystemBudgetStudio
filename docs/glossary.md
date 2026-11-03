@@ -233,6 +233,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 
 **Repeat ground track**: an orbit whose track on the ground repeats after N revolutions in D days. `budget orbit repeat` finds the altitude of a cycle and `repeats` lists every cycle in an altitude window.
 
+**State vector**: a position and a velocity at an epoch, the other way to give an orbit. The orbit file takes it as `state:` with its frame, `j2000` or `teme` ([scenarios](user-manual/scenarios.md#how-do-i-define-an-orbit)).
+
 **Static budget**: a budget per mode without an orbit: the classic table for early design. Compare **time-domain budget**: over a scenario.
 
 <a id="status"></a>

@@ -1064,7 +1064,7 @@ def _environment_references(
                     "ORBIT_INVALID",
                     f"{reason}.",
                     f"orbits/{oid}.yaml",
-                    ("elements",) if orbit.elements else ("tle",),
+                    ("elements",) if orbit.elements else ("state",) if orbit.state else ("tle",),
                     lines,
                     "Check the elements (a perigee below the Earth's surface is not valid) "
                     "or the TLE.",

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 from datetime import UTC, datetime, timedelta
 from typing import Literal
 
@@ -78,12 +79,50 @@ class Elements(BudgetModel):
         return _utc(value)
 
 
+class StateVector(BudgetModel):
+    """An orbit given as a position and a velocity at an epoch (D-229). The scenario propagates the
+    mean elements whose SGP4 state at the epoch this is. `frame` says what the numbers are in:
+    `j2000` (the mean equator and equinox of J2000) or `teme` (what SGP4 works in); it has no
+    default, because the two differ by up to a degree."""
+
+    epoch_utc: str
+    frame: Literal["j2000", "teme"]
+    position_m: list[float] = Field(min_length=3, max_length=3)
+    velocity_m_s: list[float] = Field(min_length=3, max_length=3)
+
+    @field_validator("epoch_utc")
+    @classmethod
+    def _epoch(cls, value: str) -> str:
+        return _utc(value)
+
+    @field_validator("position_m", "velocity_m_s")
+    @classmethod
+    def _finite(cls, values: list[float]) -> list[float]:
+        if not all(math.isfinite(v) for v in values):
+            raise PydanticCustomError("not_finite", "a position and a velocity are finite numbers")
+        return values
+
+    @model_validator(mode="after")
+    def _plausible(self) -> StateVector:
+        radius = math.sqrt(sum(c * c for c in self.position_m))
+        if not SEMI_MAJOR_AXIS_RANGE_M[0] <= radius <= SEMI_MAJOR_AXIS_RANGE_M[1]:
+            raise PydanticCustomError(
+                "state_radius",
+                "the distance from the Earth's centre is outside the supported range",
+            )
+        speed = math.sqrt(sum(c * c for c in self.velocity_m_s))
+        if not 0.0 < speed < 20_000.0:
+            raise PydanticCustomError("state_speed", "the speed is outside the supported range")
+        return self
+
+
 class Orbit(ProvenancedModel):
     schema_version: int = CURRENT_VERSIONS["orbit"]
     kind: Literal["orbit"] = "orbit"
     name: str = Field(min_length=1)
     tle: list[str] | None = None
     elements: Elements | None = None
+    state: StateVector | None = None
 
     @field_validator("tle")
     @classmethod
@@ -109,10 +148,11 @@ class Orbit(ProvenancedModel):
 
     @model_validator(mode="after")
     def _one_source(self) -> Orbit:
-        if (self.tle is None) == (self.elements is None):
+        given = [name for name in ("tle", "elements", "state") if getattr(self, name) is not None]
+        if len(given) != 1:
             raise PydanticCustomError(
                 "orbit_source",
-                "give either 'tle' or 'elements', not both and not neither",
+                "give one of 'tle', 'elements' or 'state', not several and not none",
                 {"field": "tle"},
             )
         return self

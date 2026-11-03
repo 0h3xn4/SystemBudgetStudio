@@ -12,6 +12,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
+import numpy as np
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -33,6 +34,7 @@ from budget_core.orbit_design import (
     raan_from_ltan_deg,
     repeat_ground_track,
 )
+from budget_core.orbit_state import StateConversionError, mean_elements_from_state
 from budget_core.timeutil import parse_utc
 from budget_gui import theme
 from budget_gui.components import Button
@@ -49,6 +51,8 @@ class OrbitHelperValues:
     inclination_deg: float
     raan_deg: float | None  # None: no local time given, the node is left as it is
     note: str  # for the provenance of the inputs it sets
+    arg_perigee_deg: float | None = None  # only a state vector fixes these two
+    mean_anomaly_deg: float | None = None
 
 
 def _number(text: str) -> float | None:
@@ -80,7 +84,7 @@ def _clock(hours: float) -> str:
 
 
 class OrbitHelperDialog(QDialog):
-    MODE_SSO, MODE_REPEAT, MODE_LTAN = 0, 1, 2
+    MODE_SSO, MODE_REPEAT, MODE_LTAN, MODE_STATE = 0, 1, 2, 3
 
     def __init__(
         self,
@@ -99,6 +103,7 @@ class OrbitHelperDialog(QDialog):
                 "Sun-synchronous orbit (altitude and local time of the node)",
                 "Repeat ground track (revolutions in days)",
                 "Local time of the node of a given orbit (altitude and inclination)",
+                "Mean elements of a state vector (position and velocity)",
             ]
         )
         self.mode_combo.setAccessibleName("What the orbit is asked for")
@@ -128,6 +133,19 @@ class OrbitHelperDialog(QDialog):
         self.sso_check.setChecked(True)
         self.eccentricity_edit = QLineEdit("0")
         self.eccentricity_edit.setAccessibleName("Eccentricity")
+        self.frame_combo = QComboBox()
+        self.frame_combo.addItems(["j2000", "teme"])
+        self.frame_combo.setAccessibleName("Frame of the state vector")
+        self.frame_combo.setToolTip(
+            "j2000: the mean equator and equinox of J2000, what most tools export; "
+            "teme: what SGP4 works in. The two differ by up to a degree."
+        )
+        self.position_edit = QLineEdit()
+        self.position_edit.setPlaceholderText("x y z, metres")
+        self.position_edit.setAccessibleName("Position in metres")
+        self.velocity_edit = QLineEdit()
+        self.velocity_edit.setPlaceholderText("vx vy vz, metres per second")
+        self.velocity_edit.setAccessibleName("Velocity in metres per second")
 
         self._rows: dict[str, tuple[QLabel, QWidget]] = {}
         form = QFormLayout()
@@ -144,6 +162,9 @@ class OrbitHelperDialog(QDialog):
             ("sso", "", self.sso_check),
             ("ltan", "Local time of the node", self.ltan_edit),
             ("eccentricity", "Eccentricity", self.eccentricity_edit),
+            ("frame", "Frame", self.frame_combo),
+            ("position", "Position", self.position_edit),
+            ("velocity", "Velocity", self.velocity_edit),
         ):
             caption = QLabel(label)
             form.addRow(caption, widget)
@@ -202,8 +223,11 @@ class OrbitHelperDialog(QDialog):
             self.revolutions_edit,
             self.days_edit,
             self.eccentricity_edit,
+            self.position_edit,
+            self.velocity_edit,
         ):
             edit.textChanged.connect(self._refresh)
+        self.frame_combo.currentIndexChanged.connect(self._refresh)
         self.resize(*theme.scaled(theme.PALETTE_SIZE))
         self._refresh()
 
@@ -217,16 +241,19 @@ class OrbitHelperDialog(QDialog):
     # ---- working it out ----------------------------------------------------------------------
     def _show_rows(self) -> None:
         mode = self.mode_combo.currentIndex()
-        visible = {
-            "mode",
-            "epoch",
-            "earth",
-            "ltan",
-            "eccentricity",
-            *({"altitude"} if mode in (self.MODE_SSO, self.MODE_LTAN) else set()),
-            *({"inclination"} if mode == self.MODE_LTAN else set()),
-            *({"revolutions", "days", "sso"} if mode == self.MODE_REPEAT else set()),
-        }
+        if mode == self.MODE_STATE:
+            visible = {"mode", "epoch", "earth", "frame", "position", "velocity"}
+        else:
+            visible = {
+                "mode",
+                "epoch",
+                "earth",
+                "ltan",
+                "eccentricity",
+                *({"altitude"} if mode in (self.MODE_SSO, self.MODE_LTAN) else set()),
+                *({"inclination"} if mode == self.MODE_LTAN else set()),
+                *({"revolutions", "days", "sso"} if mode == self.MODE_REPEAT else set()),
+            }
         if mode == self.MODE_REPEAT and not self.sso_check.isChecked():
             visible.add("inclination")
         for key, (caption, widget) in self._rows.items():
@@ -243,6 +270,8 @@ class OrbitHelperDialog(QDialog):
                 self.ltan_edit,
                 self.revolutions_edit,
                 self.days_edit,
+                self.position_edit,
+                self.velocity_edit,
             )
         )
 
@@ -292,8 +321,55 @@ class OrbitHelperDialog(QDialog):
             raise OrbitDesignError(f"'{edit.accessibleName()}' is a number.")
         return value
 
+    def _vector(self, edit: QLineEdit, what: str) -> np.ndarray:
+        text = edit.text().replace(",", " ").split()
+        if not text:
+            raise _IncompleteError
+        numbers = [_number(t) for t in text]
+        if len(numbers) != 3 or any(n is None for n in numbers):
+            raise OrbitDesignError(f"The {what} is three numbers: x y z.")
+        return np.array(numbers, dtype=np.float64)
+
+    def _derive_state(self) -> tuple[OrbitHelperValues, str]:
+        earth = self.earth_combo.currentText()
+        epoch = self._epoch()
+        epoch_text = self.epoch_edit.text().strip()
+        position = self._vector(self.position_edit, "position")
+        velocity = self._vector(self.velocity_edit, "velocity")
+        frame = self.frame_combo.currentText()
+        try:
+            fit = mean_elements_from_state(epoch, frame, position, velocity, earth)
+        except StateConversionError as exc:
+            raise OrbitDesignError(str(exc)) from None
+        radius = EARTH_MODELS[earth].radius_m
+        values = OrbitHelperValues(
+            epoch_text,
+            (fit.semi_major_axis_m - radius) / 1000.0,
+            fit.semi_major_axis_m,
+            fit.eccentricity_ratio,
+            fit.inclination_deg,
+            fit.raan_deg,
+            f"Orbit helper: mean elements of a state vector in {frame} at {epoch_text}",
+            fit.arg_perigee_deg,
+            fit.mean_anomaly_deg,
+        )
+        text = (
+            f"Mean elements: semi-major axis {fit.semi_major_axis_m / 1000.0:.3f} km, "
+            f"eccentricity {fit.eccentricity_ratio:.6f}, "
+            f"inclination {fit.inclination_deg:.4f} deg, "
+            f"RAAN {fit.raan_deg:.4f} deg, argument of perigee {fit.arg_perigee_deg:.4f} deg, "
+            f"mean anomaly {fit.mean_anomaly_deg:.4f} deg.\n"
+            f"Osculating orbit of the state: semi-major axis "
+            f"{fit.osculating_semi_major_axis_m / 1000.0:.3f} km, eccentricity "
+            f"{fit.osculating_eccentricity_ratio:.6f}. SGP4 with these mean elements gives the "
+            f"state back at the epoch (residual {fit.position_residual_m:.2g} m)."
+        )
+        return values, text
+
     def _derive(self) -> tuple[OrbitHelperValues, str]:
         mode = self.mode_combo.currentIndex()
+        if mode == self.MODE_STATE:
+            return self._derive_state()
         earth = self.earth_combo.currentText()
         radius = EARTH_MODELS[earth].radius_m
         e = self._number(self.eccentricity_edit)

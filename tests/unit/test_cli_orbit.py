@@ -124,3 +124,57 @@ def test_the_earth_model_can_be_chosen(capsys: pytest.CaptureFixture[str]) -> No
         capsys, "sso", "--altitude-km", "600", "--earth-model", "wgs72", "--format", "json"
     )
     assert json.loads(a)["inclination_deg"] != json.loads(b)["inclination_deg"]
+
+
+# ---- from a state vector --------------------------------------------------------------------
+
+STATE = (
+    "--epoch",
+    EPOCH,
+    "--frame",
+    "teme",
+    "--position-m",
+    "6978137",
+    "0",
+    "0",
+    "--velocity-m-s",
+    "0",
+    "7500",
+    "0",
+)
+
+
+def test_from_state_gives_the_mean_elements(capsys: pytest.CaptureFixture[str]) -> None:
+    code, out, _ = _run(capsys, "from-state", *STATE, "--format", "json")
+    data = json.loads(out)
+    assert code == 0
+    assert data["frame"] == "teme" and data["epoch"] == EPOCH
+    assert 6.8e3 < data["semi_major_axis_km"] < 7.1e3 and 0.0 <= data["eccentricity"] < 0.1
+    assert data["position_residual_m"] < 1e-3
+    assert "osculating_semi_major_axis_km" in data and data["iterations"] >= 1
+
+
+def test_from_state_text_names_the_values(capsys: pytest.CaptureFixture[str]) -> None:
+    code, out, _ = _run(capsys, "from-state", *STATE)
+    assert code == 0 and "Semi-major axis" in out and "RAAN" in out and " deg" in out
+
+
+def test_from_state_needs_the_frame(capsys: pytest.CaptureFixture[str]) -> None:
+    args = [a for a in STATE if a not in ("--frame", "teme")]
+    code, _, err = _run(capsys, "from-state", *args)
+    assert code != 0 and "frame" in err.lower()
+
+
+def test_from_state_refuses_an_unbound_state(capsys: pytest.CaptureFixture[str]) -> None:
+    args = list(STATE)
+    args[args.index("7500")] = "12000"
+    code, _, err = _run(capsys, "from-state", *args)
+    assert code != 0 and "bound" in err
+
+
+def test_from_state_in_j2000_differs_from_teme(capsys: pytest.CaptureFixture[str]) -> None:
+    _, teme, _ = _run(capsys, "from-state", *STATE, "--format", "json")
+    args = list(STATE)
+    args[args.index("teme")] = "j2000"
+    _, j2000, _ = _run(capsys, "from-state", *args, "--format", "json")
+    assert json.loads(teme)["raan_deg"] != json.loads(j2000)["raan_deg"]

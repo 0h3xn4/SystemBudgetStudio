@@ -26,6 +26,21 @@ elements:
   mean_anomaly_deg: 0.0
 ```
 
+Instead of a TLE or elements an orbit may be a **state vector**, a position and velocity at an epoch:
+
+```yaml
+schema_version: 3
+kind: orbit
+name: Orbit from a state vector
+state:
+  epoch_utc: '2026-06-01T00:00:00Z'
+  frame: j2000                      # j2000 or teme; required, there is no default
+  position_m: [6871000.0, 1200000.0, 800000.0]
+  velocity_m_s: [-900.0, 7100.0, 1500.0]
+```
+
+The scenario converts it to the mean elements whose SGP4 state at the epoch is this state, so the orbit starts exactly where you put it; after the epoch it is SGP4's orbit. `budget orbit from-state` prints those elements and how far the osculating orbit of the state is from them (for a 600 km orbit the semi-major axis differs by about 12 km: elements copied from an osculating source and typed as `elements:` would start 10 km off, a state vector does not). **J2000** is the frame most tools export; **TEME** is what SGP4 works in; the two differ by up to a degree. A state that is not a bound orbit, or whose perigee is below the surface, is refused ([deviation DV-E7](../DEVIATIONS.md)). In the window the orbit helper's fourth request, *Mean elements of a state vector*, writes the six elements to an elements orbit.
+
 Positions come from the [SGP4](../glossary.md#sgp4) propagator (Earth only; elements are used as SGP4 mean elements, without drag: see [deviation DV-E2](../DEVIATIONS.md)). The guided wizard writes a near-circular orbit for you from altitude, inclination and [RAAN](../glossary.md#raan).
 
 ## How do I design the orbit (local time, sun-synchronous, repeat ground track)?

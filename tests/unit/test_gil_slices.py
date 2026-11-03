@@ -133,12 +133,12 @@ def test_an_orbit_that_cannot_be_propagated_is_still_an_error_in_slices(
         def __init__(self, _satellites: list[object]) -> None:
             pass
 
-        def sgp4(self, jd: np.ndarray, fr: np.ndarray) -> tuple[np.ndarray, np.ndarray, None]:
+        def sgp4(self, jd: np.ndarray, fr: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
             Failing.calls += 1
             error = np.zeros((1, len(fr)), dtype=int)
             if Failing.calls == 2:
                 error[0, 3] = 1
-            return error, np.zeros((1, len(fr), 3)), None
+            return error, np.zeros((1, len(fr), 3)), np.zeros((1, len(fr), 3))
 
     loaded = load_project(EXAMPLES / "microsat_250kg_eps").project
     assert loaded is not None
