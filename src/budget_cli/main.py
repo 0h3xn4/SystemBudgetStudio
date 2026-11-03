@@ -1,5 +1,6 @@
 """`budget` command: new, validate, run, scenario, power-timeline, link-passes, compare, guide,
-self-test, export-schemas, units-export, units-import, export-examples."""
+self-test, export-schemas, units-export, units-import, tables-export, tables-import,
+export-examples."""
 
 from __future__ import annotations
 
@@ -28,6 +29,7 @@ from budget_core.input_sources import (
     set_source,
     status_counts,
 )
+from budget_core.io import entry_tables
 from budget_core.io.project_loader import LoadResult, load_project
 from budget_core.io.unit_table import (
     apply_plan,
@@ -472,6 +474,31 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write the changes into the unit files (without it nothing is written).",
     )
 
+    te = sub.add_parser(
+        "tables-export",
+        help="Write the Eb/N0 or attenuation table as a CSV or XLSX to fill in outside the tool.",
+    )
+    te.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    te.add_argument("table", choices=sorted(entry_tables.TABLES), help="Which table.")
+    te.add_argument(
+        "--out",
+        type=Path,
+        help="Output file, .csv or .xlsx (default: <project>/results/<table>_table.csv).",
+    )
+
+    ti = sub.add_parser(
+        "tables-import",
+        help="Read a filled-in Eb/N0 or attenuation table; show, or with --apply write, changes.",
+    )
+    ti.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
+    ti.add_argument("table", choices=sorted(entry_tables.TABLES), help="Which table.")
+    ti.add_argument("file", type=Path, help="The filled-in table, .csv or .xlsx.")
+    ti.add_argument(
+        "--apply",
+        action="store_true",
+        help="Write the changes into the table file (without it nothing is written).",
+    )
+
     exa = sub.add_parser(
         "export-examples", help="Write the synthetic example projects (invented data)."
     )
@@ -796,6 +823,65 @@ def _units_import(args: argparse.Namespace) -> int:
         return 0
     for path in apply_plan(args.project, plan):
         print(f"Wrote units/{path.name}")
+    return 0
+
+
+def _tables_export(args: argparse.Namespace) -> int:
+    out = args.out or (args.project / "results" / f"{args.table}_table.csv")
+    kind = out.suffix.lower()
+    if kind not in (".csv", ".xlsx"):
+        _fail("The output file must end in .csv or .xlsx.")
+        return 2
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    data = (
+        b"\xef\xbb\xbf" + entry_tables.table_csv(project, args.table).encode("utf-8")
+        if kind == ".csv"
+        else entry_tables.table_xlsx(project, args.table)
+    )
+    path = write_file(out.parent, out.name, data, sanitise=False)
+    print(f"Wrote {path}")
+    return 0
+
+
+def _shown(value: str | float | None) -> str:
+    return "(new)" if value is None else f"{value:g}" if isinstance(value, float) else str(value)
+
+
+def _tables_import(args: argparse.Namespace) -> int:
+    project, code = _valid_project(args.project)
+    if project is None:
+        return code
+    spec = entry_tables.TABLES[args.table]
+    table = entry_tables.read_entry_table(args.file, args.table)
+    plan = entry_tables.plan_entry_import(project, args.table, table, args.file.name)
+    if not plan.ok:
+        for problem in plan.problems:
+            _fail(problem.format())
+        errors = sum(1 for p in plan.problems if p.severity is Severity.ERROR)
+        _fail(f"{_plural(errors, 'error')}; nothing was written.")
+        return 1
+    for problem in plan.problems:
+        print(problem.format())
+    if not plan.changes:
+        print(f"No change: {_plural(plan.unchanged, 'entry')} already as in the table.")
+        return 0
+    for change in plan.changes:
+        print(
+            f"{change.key}: {change.field} {_shown(change.old)} -> {_shown(change.new)} "
+            f"({change.kind}, row {change.line})"
+        )
+    rows = {c.key for c in plan.changes}
+    print(
+        f"{_plural(len(plan.changes), 'value')} in {_plural(len(rows), 'entry')} "
+        f"{'changed' if args.apply else 'would change'}; {plan.unchanged} already as in the table."
+    )
+    if not args.apply:
+        print("Nothing was written. Add --apply to write the changes.")
+        return 0
+    for path in entry_tables.apply_entry_plan(args.project, args.table, plan):
+        print(f"Wrote {spec.file}" if path.name == Path(spec.file).name else f"Wrote {path.name}")
     return 0
 
 
@@ -1166,6 +1252,10 @@ def _dispatch(
         return _units_export(args)
     if args.command == "units-import":
         return _units_import(args)
+    if args.command == "tables-export":
+        return _tables_export(args)
+    if args.command == "tables-import":
+        return _tables_import(args)
     if args.command == "export-schemas":
         for path in export_schemas(args.out_dir):
             print(path.name)

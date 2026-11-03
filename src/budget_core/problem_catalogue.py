@@ -847,17 +847,18 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "IMPORT_FIELD_MISSING",
         ERR,
         _IMPORT,
-        "A row has no power mode name",
-        "Each row names the power mode it describes.",
-        "A row without it cannot be matched.",
-        "Give the name of the power mode, as in the exported template.",
+        "A row has no power mode name or key",
+        "Each row names the power mode (unit table) or the key cells (modulation and coding; "
+        "name, kind and frequency) it describes.",
+        "A row without them cannot be matched.",
+        "Give the cell, as in the exported template.",
     ),
     _e(
         "IMPORT_DUPLICATE_ROW",
         ERR,
         _IMPORT,
-        "A unit and power mode appear twice",
-        "A unit and power mode pair may appear once.",
+        "A unit and power mode, or a table key, appears twice",
+        "A unit and power mode pair, or the key of a table entry, may appear once.",
         "Two rows would disagree about the same numbers.",
         "Keep one row per power mode.",
     ),
@@ -870,6 +871,15 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "The value would otherwise change the unit's power silently.",
         "Write a number or a value with a matching unit such as `2.5 W`; the message says what "
         "the field requires.",
+    ),
+    _e(
+        "IMPORT_SOURCE_MISSING",
+        ERR,
+        _IMPORT,
+        "A new or changed value has no source",
+        "A value in an Eb/N0 or attenuation table needs the source of that value in the same row.",
+        "The tool never attributes a number to the source of another one.",
+        "Name the standard or data sheet in the `source` column, or leave the value empty.",
     ),
     # ---- other ----
     _e(

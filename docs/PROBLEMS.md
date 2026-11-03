@@ -692,17 +692,17 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 
 ### IMPORT_FIELD_MISSING
 
-**A row has no power mode name** (error)
+**A row has no power mode name or key** (error)
 
-- **Rule.** Each row names the power mode it describes.
-- **Why it matters.** A row without it cannot be matched.
-- **What to do.** Give the name of the power mode, as in the exported template.
+- **Rule.** Each row names the power mode (unit table) or the key cells (modulation and coding; name, kind and frequency) it describes.
+- **Why it matters.** A row without them cannot be matched.
+- **What to do.** Give the cell, as in the exported template.
 
 ### IMPORT_DUPLICATE_ROW
 
-**A unit and power mode appear twice** (error)
+**A unit and power mode, or a table key, appears twice** (error)
 
-- **Rule.** A unit and power mode pair may appear once.
+- **Rule.** A unit and power mode pair, or the key of a table entry, may appear once.
 - **Why it matters.** Two rows would disagree about the same numbers.
 - **What to do.** Keep one row per power mode.
 
@@ -713,6 +713,14 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Rule.** Each cell must be a number, or a number with a unit of the right dimension.
 - **Why it matters.** The value would otherwise change the unit's power silently.
 - **What to do.** Write a number or a value with a matching unit such as `2.5 W`; the message says what the field requires.
+
+### IMPORT_SOURCE_MISSING
+
+**A new or changed value has no source** (error)
+
+- **Rule.** A value in an Eb/N0 or attenuation table needs the source of that value in the same row.
+- **Why it matters.** The tool never attributes a number to the source of another one.
+- **What to do.** Name the standard or data sheet in the `source` column, or leave the value empty.
 
 ## Other
 

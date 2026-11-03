@@ -25,6 +25,8 @@ config/ebn0_table.yaml         kind: ebn0_table          entries[{modulation, co
 config/attenuation_table.yaml  kind: attenuation_table   entries[{name, attenuation_kind, freq_hz, elevation_deg, loss_db}]
 ```
 
+The two tables can be written and filled as a spreadsheet with `budget tables-export` and `budget tables-import` ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet), decision D-231); the file stays the source of truth.
+
 `catalogue_ref` (a unit, optional text) is **reserved** for a shared equipment catalogue (decision D-009): it is read and written back unchanged and no computation uses it.
 
 Power mode: `name`, `avg_power_w`, `peak_power_w` (>= average), `duty_cycle_ratio` (0..1, default 1), `heat_dissipation_ratio` (0..1, optional, see Thermal), optional `min_duration_s`, `max_duration_s`. Effective average power = `avg_power_w * duty_cycle_ratio` (D-024).
