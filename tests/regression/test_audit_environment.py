@@ -65,9 +65,9 @@ def test_a_pass_of_a_few_seconds_is_found_at_every_step() -> None:
 
 
 def test_the_passes_of_a_site_do_not_depend_on_the_step() -> None:
-    reference = [(p.aos_s, p.los_s) for p in passes_at(10.0, SITE)]
+    reference = [t for p in passes_at(10.0, SITE) for t in (p.aos_s, p.los_s)]
     for step in (1.0, 60.0, 600.0):
-        got = [(p.aos_s, p.los_s) for p in passes_at(step, SITE)]
+        got = [t for p in passes_at(step, SITE) for t in (p.aos_s, p.los_s)]
         assert got == pytest.approx(reference, abs=0.01), step
 
 
