@@ -6,6 +6,18 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-03: the inputs digest changes once more (Eb/N0 table version 3)
+
+**What changed.** The Eb/N0 table went up to schema version 3 for the new optional fields `target_ber` and `target_fer` ([D-225](DECISIONS.md)), and the schema version is part of the model digest, so the digest of every project that has an Eb/N0 table is a new value. No result changed: the fields are not used by any equation. A required Eb/N0 that carries a reference is named with it in the configuration table of the link report ("Required Eb/N0, QPSK rate 1/2 at BER 1e-05").
+
+| Case | Before | After |
+|---|---|---|
+| Inputs digest of a project | value of 2.0.0 | a new value, the same for the old file and the new one |
+| An entry without `target_ber` or `target_fer` | not possible to add | unchanged results and unchanged names |
+| An entry with a reference | field refused as unknown | recorded and shown; no result changes |
+
+**Effect.** `budget verify` of an export made by an earlier release reports DIFFERENT for the digest although the inputs are the same; the file hashes tell which. The golden files change by the digest and file-hash lines.
+
 ## 2026-10-29: the inputs digest changes again, and reports name the Earth model (model choice)
 
 **What changed.** The scenario file went up to schema version 4 for the new optional field `earth_model` ([D-221](DECISIONS.md)), and the schema version is part of the model digest, so the digest of every project differs from the 1.9.0 value. (The format revision for provenance already changed it once; both changes are released together in 2.0.0, so a user sees one new value.) The provenance table of every report that has a scenario gains the row *Earth model* (`WGS-84` for every existing project), and the JSON environment blocks the key `earth_model`. No result changed: a scenario without the field, or with `earth_model: wgs84`, is computed on the same constants as before.

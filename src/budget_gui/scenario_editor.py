@@ -24,6 +24,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QVBoxLayout,
@@ -43,10 +44,11 @@ SHADOW_MODELS = ("cylindrical", "conical")
 CHOICE_FIELDS = ("shadow_model", "earth_model", "irradiance_model")
 WHEN = {
     "during_pass": "during every pass over",
-    "in_eclipse": "while in eclipse",
-    "in_sunlight": "while in sunlight",
+    "in_eclipse": "throughout every eclipse",
+    "in_sunlight": "throughout every sunlit period",
 }
 MAX_SECONDS = 10_000_000.0
+MAX_SPAN_SECONDS = 200_000_000.0  # above the longest scenario the model accepts (180 days)
 
 
 def _seconds(value: object) -> str:
@@ -143,6 +145,12 @@ class _RuleRow(_Row):
             (self.lag, "Seconds after the pass"),
         ):
             widget.setAccessibleName(name)
+        self.mode.setToolTip("The spacecraft mode that is active while the rule applies")
+        self.when.setToolTip(
+            "When the rule applies. 'throughout every eclipse' (or sunlit period) keeps the mode "
+            "for the whole eclipse, from entry to exit; to limit it to part of one, use a manual "
+            "segment or a rule for a pass."
+        )
         for widget in (self.mode, self.when, self.site):
             self.sentence.addWidget(widget)
         self.sentence.addStretch(1)
@@ -233,9 +241,25 @@ class ScenarioEditor(QWidget):
         self.shadow_model = self.choice_combos["shadow_model"]
         self.earth_model = self.choice_combos["earth_model"]
         self.irradiance_model = self.choice_combos["irradiance_model"]
+        # the time span of the scenario: start, duration and step (2.1.0); a value is written when
+        # the field is left, as one undo step, and an invalid one stays as typed with its problem
+        self.start_utc = QLineEdit()
+        self.start_utc.setAccessibleName("Start (UTC)")
+        self.start_utc.setPlaceholderText("2026-01-01T00:00:00Z")
+        self.start_utc.setToolTip("Start of the scenario, UTC, for example 2026-01-01T00:00:00Z")
+        self.duration_s = self._span_spin("Duration", decimals=1)
+        self.duration_s.setToolTip("Length of the scenario in seconds (86400 s is one day)")
+        self.step_s = self._span_spin("Step", decimals=3)
+        self.step_s.setToolTip(
+            "Time step of the results in seconds; it must not exceed the duration. Eclipses and "
+            "passes are detected on a finer grid whatever the step."
+        )
         self.sites_list = QListWidget()
         self.sites_list.setMaximumHeight(theme.px(theme.SITES_MAX_HEIGHT))
         form = QFormLayout()
+        form.addRow("Start (UTC)", self.start_utc)
+        form.addRow("Duration", self.duration_s)
+        form.addRow("Step", self.step_s)
         form.addRow("Default mode", self.default_mode)
         for field in CHOICE_FIELDS:
             form.addRow(_entry_of(field).title, self.choice_combos[field])
@@ -285,10 +309,20 @@ class ScenarioEditor(QWidget):
         self.add_rule_button.clicked.connect(lambda: self.add_rule())
         self.add_segment_button.clicked.connect(lambda: self.add_segment())
         self.default_mode.currentTextChanged.connect(self._default_mode_changed)
+        self.start_utc.editingFinished.connect(self._start_changed)
+        self.duration_s.editingFinished.connect(lambda: self._span_changed("duration_s"))
+        self.step_s.editingFinished.connect(lambda: self._span_changed("step_s"))
         for field, combo in self.choice_combos.items():
             combo.currentTextChanged.connect(lambda text, f=field: self._choice_changed(f, text))
         self.sites_list.itemChanged.connect(self._sites_changed)
         document.changed.connect(self._sync)
+
+    @staticmethod
+    def _span_spin(name: str, decimals: int) -> QDoubleSpinBox:
+        box = _spin(MAX_SPAN_SECONDS)
+        box.setDecimals(decimals)
+        box.setAccessibleName(name)
+        return box
 
     # ---- which scenario ----------------------------------------------------------------------
     @property
@@ -377,6 +411,11 @@ class ScenarioEditor(QWidget):
         self, data: dict[str, Any], rules: list[dict[str, Any]], segments: list[dict[str, Any]]
     ) -> None:
         _set_combo(self.default_mode, str(data.get("default_mode") or ""))
+        if not self.start_utc.hasFocus():
+            self.start_utc.setText(str(data.get("start_utc") or ""))
+        for field, box in (("duration_s", self.duration_s), ("step_s", self.step_s)):
+            value = data.get(field)
+            box.setValue(float(value) if isinstance(value, int | float) else 0.0)
         for field, combo in self.choice_combos.items():
             combo.setCurrentText(str(data.get(field) or _entry_of(field).default))
         chosen = set(data.get("sites") or [])
@@ -427,6 +466,15 @@ class ScenarioEditor(QWidget):
         if rel is None or self._loading:
             return False
         return self.document.edit([(rel, change)], f"Edit scenario {self._id}: {text}")
+
+    def _start_changed(self) -> None:
+        text = self.start_utc.text().strip()
+        self._edit(lambda data: set_at(data, ("start_utc",), text), "start")
+
+    def _span_changed(self, field: str) -> None:
+        box = self.duration_s if field == "duration_s" else self.step_s
+        value = box.value()
+        self._edit(lambda data: set_at(data, (field,), value), field.removesuffix("_s"))
 
     def _default_mode_changed(self, text: str) -> None:
         if text:

@@ -17,6 +17,6 @@ CURRENT_VERSIONS: dict[str, int] = {
     "thermal_model": 2,
     "thermal_environment": 2,
     "mass_limits": 2,
-    "ebn0_table": 2,
+    "ebn0_table": 3,
     "attenuation_table": 2,
 }

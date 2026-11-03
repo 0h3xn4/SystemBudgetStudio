@@ -346,6 +346,20 @@ class UnitsModel(GridModel):
         ),
     )
 
+    def column_tip(self, column: Column) -> str:
+        if column.key == "mass_kg":
+            return (
+                "Nominal mass of the unit in kilograms, before margin. The margin for its "
+                "maturity is added in the mass budget."
+            )
+        if column.key == "bus":
+            return (
+                "The power bus the unit draws from (a supply line of spacecraft.yaml with its "
+                "own voltage and converter efficiency). A voltage inside a unit, such as a "
+                "3.8 V rail, is not modelled."
+            )
+        return column.title
+
     def row_keys(self) -> list[tuple[str, int]]:
         return [(rel, 0) for rel in self.document.rels("units/")]
 

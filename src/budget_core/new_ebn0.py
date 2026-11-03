@@ -23,13 +23,25 @@ from budget_core.model import Ebn0Entry, Ebn0Table, Sourced
 from budget_core.new_unit import MAX_TEXT
 from budget_core.wizard import Issue
 
-__all__ = ["Ebn0Answers", "check_ebn0", "ebn0_entry_data", "ebn0_table_data"]
+__all__ = ["Ebn0Answers", "check_ebn0", "ebn0_entry_data", "ebn0_table_data", "rate_of"]
 
 
 @dataclass(frozen=True)
 class Ebn0Answers:
     modulation: str
     coding: str
+    # the error rates the entry's Eb/N0 refers to, as text (empty: not given); never invented
+    target_ber: str = ""
+    target_fer: str = ""
+
+
+def rate_of(text: str) -> float | None:
+    """An error rate typed as text: a number above 0 and below 1, else None."""
+    try:
+        value = float(text.strip())
+    except ValueError:
+        return None
+    return value if 0.0 < value < 1.0 else None
 
 
 def _key(modulation: str, coding: str) -> tuple[str, str]:
@@ -47,6 +59,14 @@ def check_ebn0(answers: Ebn0Answers, *, existing_pairs: Collection[tuple[str, st
             issues.append(Issue(field, f"Give the {label}."))
         elif len(text.strip()) > MAX_TEXT:
             issues.append(Issue(field, f"The {field} can have at most {MAX_TEXT} characters."))
+    for field, label, text in (
+        ("target_ber", "bit error rate", answers.target_ber),
+        ("target_fer", "frame error rate", answers.target_fer),
+    ):
+        if text.strip() and rate_of(text) is None:
+            issues.append(
+                Issue(field, f"The {label} is a number above 0 and below 1, for example 1e-5.")
+            )
     if not issues and _key(answers.modulation, answers.coding) in {
         _key(modulation, coding) for modulation, coding in existing_pairs
     }:
@@ -67,6 +87,8 @@ def _entry(answers: Ebn0Answers) -> Ebn0Entry:
         required_ebn0_db=Sourced(
             value=None, source="TBD", note="Placeholder: supply the project's value."
         ),
+        target_ber=rate_of(answers.target_ber) if answers.target_ber.strip() else None,
+        target_fer=rate_of(answers.target_fer) if answers.target_fer.strip() else None,
     )
 
 

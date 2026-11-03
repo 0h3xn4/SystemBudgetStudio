@@ -467,8 +467,10 @@ class _Chain:
                 )
             else:
                 i, entry = found
+                reference = entry.reference_text()
                 q = _sourced(
-                    f"required Eb/N0, {link.modulation} {link.coding}",
+                    f"required Eb/N0, {link.modulation} {link.coding}"
+                    + (f" at {reference}" if reference else ""),
                     entry.required_ebn0_db,
                     "dB",
                     EBN0_FILE,

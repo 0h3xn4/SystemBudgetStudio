@@ -211,12 +211,17 @@ class PowerModesPage(GridPage):
             document,
             what="power mode",
             filter_hint="Filter power modes (unit or mode name…)",
+            hint=(
+                "A power mode is an operating state of one unit, for example camera: Imaging. "
+                "A spacecraft mode (Model → Spacecraft modes) chooses the power mode of every "
+                "unit at once."
+            ),
         )
         self.add_button = self.bar.make_button(
-            "Add mode", "plus", "Add a power mode to the unit of the selected row"
+            "Add power mode", "plus", "Add a power mode to the unit of the selected row"
         )
         self.remove_button = self.bar.make_button(
-            "Remove mode", "trash-2", "Remove the selected power mode (Undo brings it back)"
+            "Remove power mode", "trash-2", "Remove the selected power mode (Undo brings it back)"
         )
         self.add_button.clicked.connect(self.add_mode)
         self.remove_button.clicked.connect(self.remove_mode)
@@ -276,16 +281,21 @@ class SpacecraftModesPage(GridPage):
             document,
             what="spacecraft mode",
             filter_hint="Filter (spacecraft mode, unit or power mode…)",
+            hint=(
+                "A spacecraft mode says what every unit is doing at a time: each row is a unit "
+                "and the power mode it is in. The power modes themselves are defined per unit "
+                "in Model → Power modes."
+            ),
         )
         self.assignments.refused.connect(self.show_message)
         self.add_button = self.bar.make_button(
-            "Add mode",
+            "Add spacecraft mode",
             "plus",
             "Add a spacecraft mode: it starts from a copy of another mode or with every unit off",
             "Ctrl+Shift+M",
         )
         self.remove_button = self.bar.make_button(
-            "Remove mode",
+            "Remove spacecraft mode",
             "trash-2",
             "Remove the spacecraft mode of the selected row (Undo brings it back; Save deletes "
             "its file)",

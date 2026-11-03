@@ -37,7 +37,10 @@ def editor(window: MainWindow) -> ScenarioEditor:
 
 
 def test_a_rule_reads_as_a_sentence() -> None:
-    assert rule_sentence({"kind": "in_eclipse", "mode": "nominal"}) == "Nominal while in eclipse"
+    assert (
+        rule_sentence({"kind": "in_eclipse", "mode": "nominal"})
+        == "Nominal throughout every eclipse"
+    )
     assert (
         rule_sentence({"kind": "during_pass", "mode": "downlink", "site": "gs_north"})
         == "Downlink during every pass over gs_north"
@@ -49,7 +52,8 @@ def test_a_rule_reads_as_a_sentence() -> None:
         == "Imaging during every pass over tgt, from 30 s before to 5.5 s after"
     )
     assert (
-        rule_sentence({"kind": "in_sunlight", "mode": "charging"}) == "Charging while in sunlight"
+        rule_sentence({"kind": "in_sunlight", "mode": "charging"})
+        == "Charging throughout every sunlit period"
     )
     assert (
         segment_sentence({"mode": "imaging", "start_s": 100.0, "duration_s": 300.0})
@@ -59,7 +63,7 @@ def test_a_rule_reads_as_a_sentence() -> None:
 
 def test_the_rules_of_the_example_are_shown_as_sentences(editor: ScenarioEditor) -> None:
     assert [editor.rule_text(i) for i in range(editor.rule_count())] == [
-        "Nominal while in eclipse",
+        "Nominal throughout every eclipse",
         "Imaging during every pass over tgt_plains, from 30 s before to 0 s after",
         "Downlink during every pass over gs_north",
         "Downlink during every pass over gs_south",

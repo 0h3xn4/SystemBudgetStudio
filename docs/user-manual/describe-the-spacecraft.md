@@ -37,7 +37,7 @@ A *unit* is one piece of equipment (the on-board computer, a radio, a camera).
 - the unit is in the grid at once, and **Save** (Ctrl+S) writes its file; **Undo** takes it back before that;
 - **it is put in every spacecraft mode** with the power mode you just gave, because every spacecraft mode has to say what every unit does (without that the project would have errors). Change the assignment where it is wrong: `modes/<name>.yaml` (open it from the project tree), for example set a camera to `off` in the safe mode;
 - with a thermal model in the project, the **subsystem must be the name of one of its nodes** (the form suggests them; a unit's thermal node is its subsystem unless it says otherwise), or add the node to `config/thermal_model.yaml` first;
-- more power modes, limits and the rest are edited in the grids afterwards (**Power modes → Add mode**).
+- more power modes, limits and the rest are edited in the grids afterwards (**Power modes → Add power mode**).
 
 **Remove unit** (**Ctrl+Shift+Delete**, **Edit → Remove unit**, or the button) takes the selected unit out of the grid and out of every spacecraft mode in one undo step; **Save** then asks before it deletes the file. A unit that is the only one of a spacecraft mode is not removed (a mode needs at least one unit).
 
@@ -65,8 +65,8 @@ modes:
 | Field | Meaning |
 |---|---|
 | `subsystem` | A label you choose; the budgets roll up by it. |
-| `mass_kg` | Mass of the unit. |
-| `bus` | A bus from `spacecraft.yaml`. |
+| `mass_kg` | Nominal mass of the unit, before margin; the margin for its maturity is added in the mass budget. |
+| `bus` | A bus from `spacecraft.yaml`: the power supply line the unit draws from, with its own voltage and converter efficiency. A voltage inside the unit (for example a 3.8 V rail) is not modelled. |
 | `maturity` | A [**maturity class**](../glossary.md#maturity-class) from the margin policy (`class_a`, …). It selects the margin added to this unit's power and mass. |
 | `modes` | The unit's [**power modes**](../glossary.md#power-mode). Each has an average power, a peak power (not below the average), an optional [duty cycle](../glossary.md#duty-cycle) (0 to 1, default 1) and, for the thermal budget, the share of the power that becomes heat. |
 

@@ -526,6 +526,7 @@ class GridPage(QWidget):
         *,
         what: str,
         filter_hint: str = "Filter rows",
+        hint: str = "",
     ) -> None:
         super().__init__()
         self.model = model
@@ -557,6 +558,11 @@ class GridPage(QWidget):
         self.problem_label.setProperty("role", "error")
         self.feedback_label = QLabel()
         self.feedback_label.setWordWrap(True)
+        # what a row of this page is, in one line above the grid (it stays when a message shows)
+        self.hint_label = QLabel(hint)
+        self.hint_label.setWordWrap(True)
+        self.hint_label.setProperty("role", "muted")
+        self.hint_label.setVisible(bool(hint))
         self.columns_button = Button("Optional columns", "ghost", compact=True)
         self.columns_button.setCheckable(True)
         self.columns_button.setChecked(True)
@@ -570,6 +576,7 @@ class GridPage(QWidget):
         self.tools.addWidget(self.bar)
         layout = QVBoxLayout(self)
         layout.addLayout(self.tools)
+        layout.addWidget(self.hint_label)
         layout.addWidget(self.table, 1)
         layout.addWidget(self.problem_label)
         layout.addWidget(self.feedback_label)

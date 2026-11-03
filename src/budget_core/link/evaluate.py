@@ -540,8 +540,10 @@ def _required_ebn0(project: Project, link: Link, file: str, notes: _Notes) -> fl
         )
         return None
     i, entry = entries[0]
+    reference = entry.reference_text()
     return notes.get(
-        f"Required Eb/N0, {link.modulation} {link.coding}",
+        f"Required Eb/N0, {link.modulation} {link.coding}"
+        + (f" at {reference}" if reference else ""),
         entry.required_ebn0_db,
         "dB",
         "config/ebn0_table.yaml",
