@@ -108,7 +108,9 @@ It writes `<id>_environment.json`, `<id>_eclipses.csv`, `<id>_passes.csv`, `<id>
 
 ### Statistics of the eclipses and the passes
 
-After **Compute**, the **Statistics** tab gives a quick insight without a spreadsheet. Above the table: the number of eclipses, the shortest, the mean and the longest, the share of the scenario in eclipse and the longest stretch of sunlight. The table has a row for every ground station and imaging target: the number of passes, the time in contact (seconds and percent of the scenario), the shortest, mean and longest pass, the **largest gap** (the longest time without a pass, the start and the end of the scenario included) and the lowest, mean and highest peak elevation. A pass cut by the start or the end of the scenario counts with its clipped length, and an imported pass without a peak elevation is left out of the elevation figures (`n/a`). The **Passes** tab has a **Passes of** drop-down to show the passes of one station or target, or of all. `<id>_environment.json` carries the same figures under `statistics`. They are read from the computed eclipses and passes, so they change no result.
+After **Compute**, the **Statistics** tab gives a quick insight without a spreadsheet. Above the table: the number of eclipses, the shortest, the mean and the longest, the share of the scenario in eclipse and the longest stretch of sunlight. The table has a row for every ground station and imaging target: the number of passes, the time in contact (seconds and percent of the scenario), the shortest, mean and longest pass, the **largest gap** (the longest time without a pass, the start and the end of the scenario included) and the lowest, mean and highest peak elevation. A pass cut by the start or the end of the scenario counts with its clipped length, and an imported pass without a peak elevation is left out of the elevation figures (`n/a`). ![The Statistics tab after Compute: the eclipse figures above a table with a row per ground station and imaging target](../images/ui-overhaul/scenario-statistics-light.png)
+
+The **Passes** tab has a **Passes of** drop-down to show the passes of one station or target, or of all. `<id>_environment.json` carries the same figures under `statistics`. They are read from the computed eclipses and passes, so they change no result.
 
 ## How do I use orbit data from SpaceMissionStudio?
 
@@ -119,7 +121,7 @@ Set `environment_source: spacemissionstudio` and `import_dir:` (a folder inside 
 
 In **Model → Scenario**, the lower part shows the rules as sentences you can change in place:
 
-![Model → Scenario with the model choices, the sites and the rules as sentences](../images/ui-overhaul/model-scenario-light.png)
+![Model → Scenario: the start, duration and step, the default mode, the model choices, the sites and the rules as sentences](../images/ui-overhaul/model-scenario-light.png)
 
 - A rule reads *Downlink during every pass over gs_north*, and for a pass rule *Start it 30 s before the pass and keep it 0 s after it*. Its parts are the controls: the spacecraft mode, **during every pass over** / **throughout every eclipse** / **throughout every sunlit period**, the site, and the lead and lag (pass rules only). *Throughout every eclipse* keeps the mode for the whole eclipse, from entry to exit; to limit a mode to part of an eclipse use a manual segment, or a pass rule. Hover over the mode and the *when* drop-down for the same hints. Changing the kind keeps the rule valid (a pass rule gets a site; the other kinds lose the site, lead and lag).
 - The order matters: **a later rule wins** over an earlier one, so every row has an **up** and a **down** arrow (hover for the tooltip). **Add rule** adds a pass rule with the default mode and the first listed site; the **bin** removes one.

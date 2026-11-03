@@ -124,7 +124,7 @@ Reports include the generation time and the user. Pass `--user` and `--date` to 
 
 ### `budget verify` says DIFFERENT for the inputs digest, but I changed nothing
 
-The export was made by a version before 2.0.0. The digest is taken from the project as loaded and includes the schema version of each file, which 2.0.0 moved up, so every project has a new digest although its inputs are the same. The file hashes tell which files differ (`budget verify` names them); a project that was only re-saved shows the same numbers. Regenerate the export with 2.0.0 to get a digest that `verify` can match ([what changed](changes.md)).
+The export was made by an earlier version. The digest is taken from the project as loaded and includes the schema version of each file, which 2.0.0 moved up for every file kind and 2.1.0 moved up once more for the Eb/N0 table, so a project has a new digest although its inputs are the same. The file hashes tell which files differ (`budget verify` names them); a project that was only re-saved shows the same numbers. Regenerate the export with the current version to get a digest that `verify` can match ([what changed](changes.md)).
 
 ### A project is refused: `SCHEMA_TOO_NEW` or `FEATURE_UNSUPPORTED`
 

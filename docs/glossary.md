@@ -21,6 +21,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 ## B
 
 <a id="blank-project"></a>
+<a id="ber-and-fer"></a>
+**BER and FER**: bit error rate and frame error rate, the share of bits or frames received wrongly. An entry of the Eb/N0 table may record the error rates its required [Eb/N0](#ebn0) is quoted for (`target_ber`, `target_fer`); you give them from the standard or data sheet, the tool never supplies one and no result depends on them.
+
 **Blank project**: a project with one bus, every configuration number a [placeholder](#placeholder), empty tables and no units, modes, orbits, scenarios or links: a spacecraft you describe yourself instead of a copy of a sample. Made by `budget new` or by the *Blank project* choice of the guided wizard. See [create a project](user-manual/create-a-project.md#how-do-i-start-a-blank-project).
 
 <a id="body-frame"></a>
@@ -126,6 +129,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 ## L
 
 <a id="link-margin"></a>
+<a id="largest-gap"></a>
+**Largest gap**: for a ground station or imaging target, the longest stretch of the scenario with no pass, the start and the end of the scenario included. It is one of the figures of the Statistics tab ([scenarios](user-manual/scenarios.md#statistics-of-the-eclipses-and-the-passes)).
+
 **Link margin**: the [Eb/N0](#ebn0) you have minus the Eb/N0 required, in dB. A link **closes** at a data rate when its margin is at least the **required margin** you set in the link file (a safety allowance). See [link budget](user-manual/link-budget.md).
 
 ## M
@@ -215,6 +221,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 
 <a id="soc"></a>
 **State of charge (SoC)**: how full the battery is, as a share of its capacity.
+
+**Statistics (of a scenario)**: the Statistics tab after Compute: the number, shortest, mean and longest eclipse, the share of the scenario in eclipse and the longest sunlight, and per station the number of passes, the contact time, the shortest, mean and longest pass, the [largest gap](#largest-gap) and the peak elevations. Read from the computed eclipses and passes; they change no result.
 
 **Static budget**: a budget per mode without an orbit: the classic table for early design. Compare **time-domain budget**: over a scenario.
 

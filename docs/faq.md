@@ -70,6 +70,18 @@ Yes: the **Edit** menu has **Add expendable** (Ctrl+Shift+X), **Add ground stati
 
 No: turn on **View → Open with a single click** (also in *Settings*). A click on an item of the project tree then opens it, and a click on a selected cell of a grid edits it. The Problems panel still jumps with a double-click or Enter.
 
+### What is the difference between a power mode and a spacecraft mode?
+
+A **power mode** is an operating state of one unit (the camera: *Off*, *Standby*, *Imaging*) with its own average and peak power; you add it under *Model → Power modes* (**Add power mode**). A **spacecraft mode** is a state of the whole spacecraft (*Safe*, *Imaging*, *Downlink*) that says which power mode each unit is in; you add it under *Model → Spacecraft modes* (**Add spacecraft mode**, Ctrl+Shift+M). A scenario switches between spacecraft modes ([glossary](glossary.md#power-mode)).
+
+### How long is the longest eclipse, and how long does a station go without seeing the satellite?
+
+Press **Compute** on *Model → Scenario* and open the **Statistics** tab: the eclipse line gives the shortest, mean and longest eclipse and the longest stretch of sunlight, and every ground station and imaging target has a row with its passes, contact time and **largest gap** ([scenarios](user-manual/scenarios.md#statistics-of-the-eclipses-and-the-passes)). The same figures are in `<id>_environment.json` under `statistics`.
+
+### Can I change the start time, the duration or the step in the window?
+
+Yes. They are the first fields of the scenario editor (*Model → Scenario*); each change is one undo step, and a value the model refuses stays as typed with its problem shown under the editor.
+
 ### Why is my power timeline `n/a`?
 
 It needs a complete `config/power_system.yaml`, a scenario and a mission phase. See [troubleshooting](troubleshooting.md#bol-na-inputs-missing-see-the-problems-below).

@@ -12,7 +12,8 @@ Shortcuts, working habits and ways to connect System Budget Studio to your other
 - **Pin a second cursor** on a plot with a click to read the difference between two times; Escape removes it.
 - **Give a plot the whole page**: on *Power → Timeline* and *Link → Passes* the **Table** button folds the table under the plots away.
 - **Make the window easier to read**: *View → UI size* (90 to 125 %), *View → Theme*, *View → Reduce motion*; a small laptop screen (1366 x 768) fits every size up to 110 %.
-- **Explore with a coarse time step.** While you are trying ideas, set `step_s: 60` in the scenario; the results do not depend on the step in a way that hides a violation, so the numbers stay honest. Set it back for the final run.
+- **Read the Statistics tab before you read the plots**: after **Compute** it gives the longest eclipse, the share of the orbit in eclipse and the largest gap of every station, which is what most first questions about a scenario are.
+- **Explore with a coarse time step.** While you are trying ideas, set the **Step** field of *Model → Scenario* (or `step_s: 60` in the file) to 60 s; the results do not depend on the step in a way that hides a violation, so the numbers stay honest. Set it back for the final run.
 - **Get supplier data in without typing**: export the unit power modes with `budget units-export`, let the supplier fill the table, and import it with `budget units-import` (a preview first; `--apply` writes) ([unit tables](user-manual/unit-tables.md)).
 - **Run only what you need**: `--budget power`, `--report csv`, `--no-plots` make a run much faster.
 - **Start from an example or a blank project**, not from an empty folder: copy the closest one from [`examples/`](../examples/README.md) and replace the numbers, or `budget new` and add your units.

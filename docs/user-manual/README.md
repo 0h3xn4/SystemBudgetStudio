@@ -13,7 +13,7 @@ This is the task-by-task manual for System Budget Studio: each page answers a fe
 | [Mass budget](mass-budget.md) | How do I get mass, centre of gravity and inertia, per phase, against a limit? How do I add propellant or an oxidizer? |
 | [Thermal budget](thermal-budget.md) | How do I get heat dissipation and unit temperatures for a hot and a cold case? |
 | [Link budget](link-budget.md) | How do I add a link in the window? How do I get link margin at a chosen range, and data volume over the passes? |
-| [Scenarios](scenarios.md) | How do I add an orbit and a scenario (up to 180 days, circular or elliptical) in the window? How do I add ground stations and imaging targets, and which mode runs when? How do I use SpaceMissionStudio data? |
+| [Scenarios](scenarios.md) | How do I add an orbit and a scenario (up to 180 days, circular or elliptical) in the window? How do I set the start, duration and step, and read the eclipse and pass statistics? How do I add ground stations and imaging targets, and which mode runs when? How do I use SpaceMissionStudio data? |
 | [Reports and exports](reports-and-exports.md) | Which files do I get, and how do I regenerate a report exactly? |
 | [Compare](compare.md) | How do I see what changed between two revisions or two scenarios? |
 | [Read and fix problems](read-and-fix-problems.md) | What do the messages mean, and how do I jump to the cause? |
