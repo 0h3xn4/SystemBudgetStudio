@@ -140,25 +140,33 @@ class ElementsPropagator:
 
     def _positions(self, start: datetime, times_s: NDArray) -> tuple[NDArray, NDArray]:
         """TEME positions (N, 3) in m and the Julian dates (N,) of a set of times."""
+        positions, _, jd = self._states(start, times_s)
+        return positions, jd
+
+    def _states(self, start: datetime, times_s: NDArray) -> tuple[NDArray, NDArray, NDArray]:
+        """TEME positions (N, 3) in m, velocities (N, 3) in m/s and the Julian dates (N,)."""
         jd0, fr0 = geo.julian_date_parts(start)
         fractions = fr0 + times_s / 86400.0
         satellites = SatrecArray([self.sat])
         parts = []
+        speeds = []
         for first in range(0, len(times_s), SLICE):  # one call over a week holds the lock 0.4 s
             part = fractions[first : first + SLICE]
-            error, pos, _ = satellites.sgp4(np.full(len(part), jd0), part)
+            error, pos, vel = satellites.sgp4(np.full(len(part), jd0), part)
             if np.any(error):
                 raise PropagationError("the orbit cannot be propagated over the whole scenario")
             parts.append(np.asarray(pos[0]))
+            speeds.append(np.asarray(vel[0]))
         positions = np.concatenate(parts) if parts else np.empty((0, 3))
-        return positions * 1000.0, jd0 + fractions
+        velocities = np.concatenate(speeds) if speeds else np.empty((0, 3))
+        return positions * 1000.0, velocities * 1000.0, jd0 + fractions
 
     # ---- environment ---------------------------------------------------------------------------
     def compute(
         self, grid: TimeGrid, sites: Sequence[SiteDef], shadow_model: str
     ) -> EnvironmentData:
         times = grid.times_s
-        pos, jd = self._positions(grid.start, times)
+        pos, vel, jd = self._states(grid.start, times)
         sun_dir, sun_dist = geo.sun_direction_and_distance(jd)
         ratio = geo.sun_visibility(
             pos, sun_dir * sun_dist[:, None], shadow_model, self.earth_radius_m
@@ -244,6 +252,7 @@ class ElementsPropagator:
             shadow_model=shadow_model,
             earth_model=self.earth_model,
             sun_distance_m=sun_dist,
+            velocity_m_s=vel,
             position_m=pos,
             sun_direction=sun_dir,
             sunlight_ratio=ratio,

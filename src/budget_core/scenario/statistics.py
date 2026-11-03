@@ -16,6 +16,10 @@ from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
+import numpy as np
+
+from budget_core.environment.beta import BetaStatistics, beta_angle_deg, beta_statistics
+from budget_core.environment.constants import EARTH_MODELS
 from budget_core.environment.data import EnvironmentData, Pass
 from budget_core.environment.intervals import Interval, merge_intervals
 
@@ -81,13 +85,17 @@ class ScenarioStatistics:
     duration_s: float
     eclipses: EclipseStats
     sites: tuple[SiteStats, ...]
+    beta: BetaStatistics | None = None  # None: no orbit plane known (nothing to compute from)
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        out: dict[str, Any] = {
             "duration_s": round(self.duration_s, 3),
             "eclipses": self.eclipses.to_dict(),
             "sites": [s.to_dict() for s in self.sites],
         }
+        if self.beta is not None:
+            out["beta"] = self.beta.to_dict()
+        return out
 
 
 def _r(value: float | None) -> float | None:
@@ -147,4 +155,24 @@ def scenario_statistics(env: EnvironmentData) -> ScenarioStatistics:
         site_statistics(site_id, vis.site.kind, vis.passes, span)
         for site_id, vis in sorted(env.sites.items())
     )
-    return ScenarioStatistics(span, eclipses, sites)
+    return ScenarioStatistics(span, eclipses, sites, beta_of(env))
+
+
+def beta_series_deg(env: EnvironmentData) -> Any:
+    """The beta angle on the scenario grid (NaN where the orbit plane is not known)."""
+    if len(env.position_m) == 0:
+        return None
+    return beta_angle_deg(env.position_m, env.velocity_m_s, env.sun_direction, env.grid.times_s)
+
+
+def _earth_radius_m(env: EnvironmentData) -> float:
+    model = env.earth_model if env.earth_model in EARTH_MODELS else "wgs84"
+    return EARTH_MODELS[model].radius_m
+
+
+def beta_of(env: EnvironmentData) -> BetaStatistics | None:
+    series = beta_series_deg(env)
+    if series is None:
+        return None
+    radius = float(np.mean(np.linalg.norm(env.position_m, axis=1)))
+    return beta_statistics(series, mean_radius_m=radius, earth_radius_m=_earth_radius_m(env))

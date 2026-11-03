@@ -4,17 +4,20 @@ from __future__ import annotations
 
 import io
 import json
+import math
 from dataclasses import replace
 from datetime import timedelta
 from pathlib import Path
 from typing import Any
+
+import numpy as np
 
 from budget_core.provenance import Provenance
 from budget_core.reports.csvutil import csv_writer, provenance_csv
 from budget_core.reports.files import write_file
 from budget_core.result_format import result_format
 from budget_core.scenario.run import ScenarioRun, run_parameters
-from budget_core.scenario.statistics import scenario_statistics
+from budget_core.scenario.statistics import beta_series_deg, scenario_statistics
 from budget_core.timeutil import format_utc
 
 
@@ -78,6 +81,29 @@ def passes_csv(run: ScenarioRun) -> str:
             "partial_end",
         ],
         rows,
+    )
+
+
+BETA_CSV_SAMPLE_S = 600.0  # the rows of the beta angle file: no finer than this (settings.py)
+
+
+def beta_csv(run: ScenarioRun) -> str | None:
+    """The beta angle over the scenario, one row every ten minutes or every step if that is
+    longer, the last time included; None when the orbit plane is not known."""
+    series = beta_series_deg(run.env)
+    if series is None or not np.isfinite(series).any():
+        return None
+    grid = run.env.grid
+    stride = max(1, math.ceil(BETA_CSV_SAMPLE_S / grid.step_s))
+    picks = sorted(set(range(0, len(series), stride)) | {len(series) - 1})
+    times = grid.times_s
+    return _csv(
+        ["time_s", "utc", "beta_deg"],
+        [
+            [f"{times[k]:.3f}", _t(run, float(times[k])), f"{series[k]:.4f}"]
+            for k in picks
+            if np.isfinite(series[k])
+        ],
     )
 
 
@@ -187,6 +213,9 @@ def write_scenario_outputs(run: ScenarioRun, provenance: Provenance, out_dir: Pa
         f"{sid}_eclipses.csv": eclipses_csv(run),
         f"{sid}_passes.csv": passes_csv(run),
         f"{sid}_timeline.csv": timeline_csv(run),
-        f"{sid}_provenance.csv": provenance_csv(provenance),
     }
+    beta = beta_csv(run)
+    if beta is not None:
+        files[f"{sid}_beta.csv"] = beta
+    files[f"{sid}_provenance.csv"] = provenance_csv(provenance)
     return [write_file(out_dir, name, text) for name, text in files.items()]

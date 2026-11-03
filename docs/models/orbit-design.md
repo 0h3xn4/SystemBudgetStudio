@@ -11,6 +11,7 @@
 | ORB-J2-RATES | Secular rates of a mean orbit under J2 | `k = 1.5 J2 (Re/p)² n`; node `Ω̇ = −k cos i`; perigee `ω̇ = k (2 − 2.5 sin² i)`; mean anomaly `Ṁ = n + k √(1−e²) (1 − 1.5 sin² i)`; `p = a (1−e²)`, `n = √(μ/a³)` | first-order secular J2 theory, a textbook relation; citation to be supplied (SOURCE_MISSING) |
 | ORB-SSO | Sun-synchronous condition | `cos i = −ω_sun / (1.5 J2 (Re/p)² n)`; `ω_sun` the rate of the mean Sun (360° per tropical year) | same; `ω_sun` is the coefficient of the Sun model (ENV-SUN) |
 | ORB-LTAN | Mean local solar time of the ascending node | `LTAN = UT + (Ω − GMST) / 15°/h` (mod 24 h), GMST from ENV-GMST | mean solar time is universal time plus longitude over 15° per hour; the equation of time is not applied |
+| ORB-BETA | Beta angle | `β = asin((r × v)/|r × v| · s)`; critical angle `asin(Re / r)` | textbook definition; citation to be supplied (SOURCE_MISSING) |
 | ORB-REPEAT | Repeat ground track | `(ω̇ + Ṁ) / (ω_earth − Ω̇) = N / D`, solved for `a` by bisection | textbook relation; citation to be supplied (SOURCE_MISSING) |
 
 `Re`, `μ` and `J2` are those of the Earth model of the scenario, WGS-84 or WGS-72 ([model choices](choices.md)); `ω_earth` is the rate of the GMST polynomial the tool uses for the Earth rotation (7.2921158553e-5 rad/s), `ω_sun` that of the Sun model (0.9856474 °/day). Both are listed with the other constants in [settings](settings.md).
@@ -20,6 +21,12 @@
 1. **LTAN and RAAN.** The local time is `UT + (Ω − GMST)/15`, so the right ascension for a wanted local time at an epoch is `GMST + 15 (LTAN − UT)`. UTC is taken as UT1 (DV-E1, at most 0.9 s, 0.004° of node).
 2. **Sun-synchronous inclination.** ORB-SSO gives the inclination of an altitude and eccentricity (always above 90°); above about 5,974 km (circular) the node cannot move fast enough and there is no solution. The altitude of an inclination is the same relation solved for `a`.
 3. **Repeat ground track.** A nodal day is the time the Earth takes to turn once relative to the node, `2π / (ω_earth − Ω̇)`. An orbit repeats after N nodal periods in D nodal days when the angular rate from the node over that angular rate is N/D; the semi-major axis is found by bisection between a perigee 100 km above the surface and the highest orbit that fits (for a sun-synchronous orbit, the one with `cos i = −1`). The tracks of a repeat cycle are spaced `2π Re / N` apart at the equator. For a sun-synchronous orbit the nodal day is exactly 24 mean solar hours, so 15 revolutions per day is a nodal period of 96.000 min.
+
+## Beta angle
+
+The beta angle of a scenario is `asin((r × v)/|r × v| · s)` (ORB-BETA): the angle between the Sun direction `s` and the orbit plane, positive when the Sun is on the side the orbit normal points to, from −90° to +90°. `r` and `v` are the TEME state the propagator gives at every step, `s` the Sun model (ENV-SUN). It is shown as a plot and as minimum, mean and maximum on the Scenario page, and written as `<id>_beta.csv` (every ten minutes or every step if that is longer, [settings](settings.md)) and under `statistics.beta` in the environment JSON. The **critical angle** is `asin(Re / r)` at the mean radius: with the Earth as a cylinder of shadow, a circular orbit has no eclipse while |β| is above it (64° at 700 km). It is exact for a circular orbit; for an eccentric one the eclipse-free condition depends on where the Sun lies and the figure is an approximation at the mean radius. For an imported environment (no velocity) the plane is taken from the imported positions, `v = dr/dt`.
+
+Checked against the closed form of the elements, `sin β = s · (sin Ω sin i, −cos Ω sin i, cos i)` (0.002° at the start, 0.05° over a day once the node's motion is included), and against the eclipses of the scenario: a dawn-dusk sun-synchronous orbit in June has |β| above the critical angle and no eclipse, a noon-midnight orbit at the equinox has |β| below it and an eclipse every orbit.
 
 ## How it was checked
 

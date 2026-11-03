@@ -222,6 +222,19 @@ CATALOGUE: tuple[SettingSpec, ...] = (
         "A large file is identified by its size, time and its first and last megabyte (D-212).",
         "Whether a computed environment can be reused.",
     ),
+    _s(
+        "environment.beta_csv_sample_s",
+        "format",
+        "Sampling of the beta angle file",
+        "s",
+        600.0,
+        "scenario.export:BETA_CSV_SAMPLE_S",
+        "The beta angle changes by a degree or less in a day, so a sample every ten minutes "
+        "shows it fully and keeps a long scenario's file small; the statistics use every "
+        "step.",
+        "The rows of <id>_beta.csv (the finer of the scenario step and this, the last time "
+        "included).",
+    ),
     # ---- power -------------------------------------------------------------------------------
     _s(
         "power.ratio_tolerance",

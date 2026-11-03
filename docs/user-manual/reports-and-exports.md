@@ -24,7 +24,7 @@ Commands and what they write (prefix is the file name start):
 | `budget run --budget link` | `link_static` |
 | `budget power-timeline` | `power_time_<scenario>` (series per case, orbits, violations) |
 | `budget link-passes` | `link_passes_<scenario>` |
-| `budget scenario` | `<scenario>_environment.json`, `_eclipses.csv`, `_passes.csv`, `_timeline.csv` |
+| `budget scenario` | `<scenario>_environment.json`, `_beta.csv`, `_eclipses.csv`, `_passes.csv`, `_timeline.csv` |
 | `budget compare` | `compare` and `compare_differences.csv` |
 
 All of them write to `<project>/results` unless you give `--out`.

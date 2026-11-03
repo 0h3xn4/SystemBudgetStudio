@@ -91,6 +91,8 @@ class EnvironmentData:
     # Earth-Sun distance on the scenario grid, from the Sun model (used by the seasonal
     # irradiance model, D-219)
     sun_distance_m: NDArray | None = None
+    # TEME velocity on the grid, when the source has one (the beta angle needs the orbit plane)
+    velocity_m_s: NDArray | None = None
 
     @property
     def eclipse_fraction(self) -> float:

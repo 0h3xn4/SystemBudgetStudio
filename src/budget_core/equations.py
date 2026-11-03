@@ -380,6 +380,16 @@ EQUATIONS: dict[str, Equation] = {
             "relation, owner to confirm the reference.",
         ),
         Equation(
+            "ORB-BETA",
+            "Beta angle",
+            "beta = asin((r x v) / |r x v| . s), s the unit vector to the Sun; critical angle "
+            "asin(Re / r) for a circular orbit of radius r (cylindrical shadow)",
+            None,
+            "Textbook definition: the angle between the Sun direction and the orbit plane. r and v "
+            "are the TEME state of the propagator, s the Sun model (ENV-SUN). Owner to confirm "
+            "the reference.",
+        ),
+        Equation(
             "ENV-SHADOW-CYL",
             "Cylindrical Earth shadow",
             "in shadow when r.s < 0 and |r - (r.s) s| < R_Earth (s: unit vector to the Sun)",

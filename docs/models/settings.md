@@ -27,6 +27,7 @@ Today every setting is at its default: the project file that changes the setting
 | `environment.imported_max_pass_rows` | Input limit | 100 000 | rows | A file is read whole, so it is bounded. | Import of eclipse.csv and passes_<site>.csv. |
 | `environment.full_hash_bytes` | Internal | 16 777 216 | bytes | Up to this size the content is hashed whole (D-212); larger files by size, time and ends. | Whether a computed environment can be reused. |
 | `environment.edge_hash_bytes` | Internal | 1 048 576 | bytes | A large file is identified by its size, time and its first and last megabyte (D-212). | Whether a computed environment can be reused. |
+| `environment.beta_csv_sample_s` | Output format | 600 | s | The beta angle changes by a degree or less in a day, so a sample every ten minutes shows it fully and keeps a long scenario's file small; the statistics use every step. | The rows of <id>_beta.csv (the finer of the scenario step and this, the last time included). |
 
 ## Power
 

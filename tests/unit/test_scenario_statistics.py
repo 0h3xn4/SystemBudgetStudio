@@ -103,7 +103,7 @@ def test_the_statistics_are_in_the_dictionary_for_the_json_file() -> None:
     assert project is not None
     run = run_scenario(project, sorted(project.scenarios)[0])
     data = st.scenario_statistics(run.env).to_dict()
-    assert set(data) == {"duration_s", "eclipses", "sites"}
+    assert set(data) == {"duration_s", "eclipses", "sites", "beta"}
     assert set(data["eclipses"]) >= {"count", "min_s", "mean_s", "max_s", "fraction"}
     assert all(
         set(s) >= {"site", "kind", "passes", "contact_fraction", "largest_gap_s"}

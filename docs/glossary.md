@@ -24,6 +24,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="ber-and-fer"></a>
 **BER and FER**: bit error rate and frame error rate, the share of bits or frames received wrongly. An entry of the Eb/N0 table may record the error rates its required [Eb/N0](#ebn0) is quoted for (`target_ber`, `target_fer`); you give them from the standard or data sheet, the tool never supplies one and no result depends on them.
 
+<a id="beta-angle"></a>
+**Beta angle**: the angle between the direction to the Sun and the orbit plane, from −90° to +90°. Near 0° the Sun is in the orbit plane and the eclipses are longest; above the *critical beta angle* (64° at 700 km) a circular orbit has no eclipse. Shown on the Scenario page ([orbit design](models/orbit-design.md#beta-angle)).
+
 **Blank project**: a project with one bus, every configuration number a [placeholder](#placeholder), empty tables and no units, modes, orbits, scenarios or links: a spacecraft you describe yourself instead of a copy of a sample. Made by `budget new` or by the *Blank project* choice of the guided wizard. See [create a project](user-manual/create-a-project.md#how-do-i-start-a-blank-project).
 
 <a id="body-frame"></a>
