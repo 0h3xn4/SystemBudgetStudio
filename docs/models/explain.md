@@ -2,6 +2,8 @@
 
 **What it is for.** Any number in a budget table can be traced to its equation, its inputs with units and where each input comes from, and every intermediate result. You can say in a design review where a number comes from without saying "the tool computed it".
 
+> **Not yet explained.** The propulsion and pointing tables and the *Pointing and propulsion load* table of the power timeline have no Explain rows (2.3.0); their equations are in [propulsion](propulsion.md), [pointing](pointing.md) and [the power timeline](power-timeline.md).
+
 ## Using it
 
 ```bash

@@ -85,6 +85,8 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **Elevation**: the angle of the satellite above the horizon as seen from a ground station. Low elevation means a long path and more atmospheric loss.
 
 <a id="expendable"></a>
+**Manoeuvre mode**: the spacecraft mode a manoeuvre of the propulsion file holds during its burn (`mode:` on the manoeuvre), applied when a scenario places the burn.
+
 **Pointing mode**: what the spacecraft points at (nadir, the Sun, an inertial direction, a target), how well, and the actuators that hold it. It is not a [spacecraft mode](#spacecraft-mode); see [pointing](models/pointing.md).
 
 **Slew**: a turn of the spacecraft from one pointing attitude to another. The pointing budget gives its time, peak rate, momentum and energy ([pointing](models/pointing.md)).

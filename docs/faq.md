@@ -94,6 +94,18 @@ It needs a complete `config/power_system.yaml`, a scenario and a mission phase. 
 
 Yes: exit codes, `--strict`, `--format json` and no network use are made for that ([command-line reference](user-manual/command-line.md#how-do-i-use-it-in-a-script-or-in-ci)).
 
+### Can I add the burns and the pointing of the spacecraft to the power budget?
+
+Yes, from 2.3.0. Fill in `config/pointing.yaml` and `config/propulsion.yaml` (the *Pointing* and *Propulsion* pages show their budgets), then give the scenario a `pointing_default`, `pointing_rules` and `maneuvers` (*Model → Scenario*, sections *Pointing* and *Manoeuvres*). The timeline adds the holding power, the slew power and the thrusting power of an electric system as its own line, with no margin. See [pointing and manoeuvres in a scenario](user-manual/scenarios.md#pointing-and-manoeuvres-in-a-scenario).
+
+### Can I give the orbit by its local time (LTAN) instead of the RAAN?
+
+Yes: an orbit file gives exactly one of `raan_deg` and `ltan_h`; with `ltan_h` the RAAN is derived at the epoch ([scenarios](user-manual/scenarios.md#how-do-i-give-the-orbit-by-its-local-time)).
+
+### Can I import the Eb/N0 or attenuation table from a spreadsheet?
+
+Yes: `budget tables-export` and `budget tables-import` (a dry run unless `--apply`). Every new or changed value needs its source in the same row; nothing is deleted ([command-line reference](user-manual/command-line.md)).
+
 ### Can I import my units from a spreadsheet?
 
 Yes, power-mode data: `budget units-export` writes the units' power modes as a CSV or XLSX table, you fill it in a spreadsheet, and `budget units-import` shows what would change and, with `--apply`, writes it ([unit tables](user-manual/unit-tables.md)). Creating whole units from a table is not supported; add the unit first (**Add unit** in *Model → Units*, or a file). You can read every result *out* as XLSX, CSV or JSON.

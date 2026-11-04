@@ -41,6 +41,7 @@ budget run project --report csv --report json --out out           # data for oth
 budget power-timeline project --out out || echo "power violations" # exit code 1 on a finding
 ```
 
+- `budget run project --budget propulsion` and `--budget pointing` run the two optional budgets alone; `budget tables-import` is a dry run until you add `--apply`.
 - Exit code 0/1/2 is documented in the [command-line reference](user-manual/command-line.md#exit-codes).
 - Pass `--user` and `--date` (or `BUDGET_USER` and `SOURCE_DATE_EPOCH`) so generated reports are reproducible and diff-able.
 - The tool writes only into the folder given by `--out`, and needs no network, so it runs in a locked-down build agent.

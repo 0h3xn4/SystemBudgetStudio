@@ -6,6 +6,14 @@ A scenario places the spacecraft in an orbit for a time span and decides which s
 
 An orbit is given as a two-line element set (TLE) or as mean orbital elements. Ground stations and imaging targets have a latitude, longitude, altitude and minimum elevation. The tool computes eclipses (cylindrical or conical shadow) and the passes over every site listed in the scenario. In the window, **Edit > Add scenario** (Ctrl+Shift+O) writes an orbit and a scenario of up to 180 days (an optional apogee altitude and argument of perigee make the orbit elliptical), and **Edit > Add ground station** (Ctrl+Shift+G) and **Add imaging target** (Ctrl+Shift+T) write the sites; a site is used once the scenario lists it under **Sites**.
 
+## Designing the orbit
+
+The elements of an orbit give either the right ascension of the ascending node (`raan_deg`) or the mean local solar time of the node (`ltan_h`, from which the RAAN is derived at the epoch). An orbit can also be given as a position and velocity at an epoch (`state:`, frame J2000 or TEME), which the tool turns into mean elements. `budget orbit` (and *Edit > Orbit helper*, Ctrl+Shift+H) gives the sun-synchronous orbit of an altitude or an inclination, the RAAN for a local time, and repeat-ground-track orbits (first-order J2, checked against the tool's own SGP4).
+
+## Pointing and manoeuvres
+
+A scenario may also hold a pointing mode (`pointing_default`, `pointing_rules`, independent of the spacecraft-mode rules) and place burns of the propulsion file (`maneuvers`). The power timeline carries their load; see *Power budget*.
+
 ## Models
 
 Three choices of a scenario change the environment and the array output, each with a default that is what earlier versions did: `shadow_model` (cylindrical or conical), `earth_model` (WGS-84, or WGS-72 for the gravity constants of an orbit given as elements and the Earth sphere of the shadow; a TLE is always on WGS-72) and `irradiance_model` (constant, or seasonal). They are drop-downs in **Model > Scenario**; every report names the models it used. See the chapter *Tracing a number*.

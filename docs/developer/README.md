@@ -79,7 +79,8 @@ When behaviour changes, change these in the same pull request:
 |---|---|
 | a CLI option or exit code | `--help` text, [command-line reference](../user-manual/command-line.md), [getting started](../getting-started.md) if shown there |
 | the file format | [FILE_FORMAT.md](../FILE_FORMAT.md), the schema version and a migration, the matching [user manual](../user-manual/README.md) page and the **in-app guide chapter** ([`src/budget_core/guide/chapters/`](../../src/budget_core/guide/chapters/)) |
-| a problem code | [FILE_FORMAT.md](../FILE_FORMAT.md) code list, guide chapter 11, [read and fix problems](../user-manual/read-and-fix-problems.md) |
+| an optional budget with its own config file (like propulsion or pointing) | the model (`model/<name>.py`, `CURRENT_VERSIONS`, `ProjectConfig`, `CONFIG_FILES`, `OPTIONAL_CONFIG`, the schema), validation (references and ranges), the budget (`<name>/budget.py`, equations bound with `@computes`), the report (`reports/<name>_report.py`, `reports/run.py`), `budget run --budget`, the result kind (`result_format.py`, [RESULT_FORMAT.md](../RESULT_FORMAT.md)), the window session (`budget_gui/session.py`) and a page, a small example in `examples.py`, and the manual, model and file-format pages |
+| a problem code | `problem_catalogue.py`, `budget problems --markdown > docs/PROBLEMS.md`, guide chapter 12, [read and fix problems](../user-manual/read-and-fix-problems.md) |
 | an example project | [examples/README.md](../../examples/README.md): its expected output |
 | a menu, an area of the window or a shortcut | [use the window](../user-manual/use-the-window.md), the screenshots in [`docs/images/`](../images/), the in-app guide chapter *Quick start* |
 | a colour, a font, a size or a component of the window | `budget_gui/theme/` and [DESIGN.md](../DESIGN.md) (its tables are checked by a test; a colour, a font family or a pixel size anywhere else in `budget_gui/` fails the build) |

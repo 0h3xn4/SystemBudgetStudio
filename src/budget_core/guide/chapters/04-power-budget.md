@@ -23,6 +23,10 @@ Add `config/power_system.yaml` (solar array faces, battery, attitude per mode, p
 
 Findings that fail the command (exit code 1) are `PEAK_POWER_EXCEEDED`, `BATTERY_DEPLETED`, `BATTERY_DOD_EXCEEDED` and `ORBIT_BALANCE_NEGATIVE`. Each comes with its first start time, the duration and the input to change. Select a row of the violations table to zoom the plot to that interval. A check that could not run (a placeholder limit, no mission phase, no complete orbit, a step longer than a quarter of the orbit) is listed as *Not evaluated*; an empty list of violations is only "No violations found" when every check ran. Beginning of life needs neither the array degradation nor the battery fade.
 
+## Pointing and burns
+
+A scenario can hold a pointing mode over its length, change it with rules and place the manoeuvres of the propulsion file (`pointing_default`, `pointing_rules`, `maneuvers`). The timeline then adds the holding power of the active pointing mode, the slew power for each change of mode and the thrusting power of an electric system for each burn, as its own series, *Pointing and propulsion load*. It is counted in the demand and by the peak-power check, no margin is applied to it, and a placeholder power makes the demand n/a. A scenario that places nothing gives the budget without it. See *Scenarios and environment* and the pointing and propulsion budgets in the user manual.
+
 ## Choices you make
 
 - **Demand basis**: nominal (default) or with unit and system margins.
