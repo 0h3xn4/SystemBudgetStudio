@@ -51,6 +51,8 @@ class _Computed:
     mass_document: ReportDocument | None = None
     thermal_document: ReportDocument | None = None
     link_document: ReportDocument | None = None
+    propulsion_document: ReportDocument | None = None
+    pointing_document: ReportDocument | None = None
     outputs: list[BudgetOutput] = field(default_factory=list)
     problems: list[Problem] = field(default_factory=list)
 
@@ -76,14 +78,16 @@ def _compute(path: Path) -> _Computed:
             out.thermal_document = thermal_out.document
             out.propulsion = propulsion_budget(project)
             if out.propulsion is not None:
-                out.outputs.append(
-                    propulsion_output(project, out.propulsion, out.provenance, load_problems)
+                propulsion_out = propulsion_output(
+                    project, out.propulsion, out.provenance, load_problems
                 )
+                out.outputs.append(propulsion_out)
+                out.propulsion_document = propulsion_out.document
             out.pointing = pointing_budget(project)
             if out.pointing is not None:
-                out.outputs.append(
-                    pointing_output(project, out.pointing, out.provenance, load_problems)
-                )
+                pointing_out = pointing_output(project, out.pointing, out.provenance, load_problems)
+                out.outputs.append(pointing_out)
+                out.pointing_document = pointing_out.document
             if project.links:
                 out.link = link_static_budget(project)
                 link_out = link_output(project, out.link, out.provenance, load_problems)
@@ -150,6 +154,8 @@ class ProjectSession(QObject):
         self.mass_document: ReportDocument | None = None
         self.thermal_document: ReportDocument | None = None
         self.link_document: ReportDocument | None = None
+        self.propulsion_document: ReportDocument | None = None
+        self.pointing_document: ReportDocument | None = None
         self.outputs: list[BudgetOutput] = []
         self.problems: list[Problem] = []
         # the last load of this folder that worked: when a later load fails (an error was typed),
@@ -260,6 +266,8 @@ class ProjectSession(QObject):
             self.provenance = keep.provenance
             self.document, self.mass_document = keep.document, keep.mass_document
             self.thermal_document, self.link_document = keep.thermal_document, keep.link_document
+            self.propulsion_document = keep.propulsion_document
+            self.pointing_document = keep.pointing_document
             self.outputs = []  # an export would describe inputs that are no longer in the files
             self.problems = list(computed.problems)
             self.changed.emit()
@@ -276,6 +284,8 @@ class ProjectSession(QObject):
             computed.thermal_document,
             computed.link_document,
         )
+        self.propulsion_document = computed.propulsion_document
+        self.pointing_document = computed.pointing_document
         self.outputs = list(computed.outputs)
         self.problems = list(computed.problems)
         self.changed.emit()

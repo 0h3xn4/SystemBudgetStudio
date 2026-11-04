@@ -51,7 +51,7 @@ def test_power_and_link_have_a_page_for_the_time_domain_results(window: MainWind
     power = window.workspace.widget(1)
     link = window.workspace.widget(4)
     assert isinstance(power, QTabWidget) and isinstance(link, QTabWidget)
-    assert [power.tabText(i) for i in range(power.count())] == ["Budget", "Timeline"]
+    assert [power.tabText(i) for i in range(power.count())] == ["Budget", "Timeline", "Pointing"]
     assert [link.tabText(i) for i in range(link.count())] == ["Budget", "Passes"]
 
 

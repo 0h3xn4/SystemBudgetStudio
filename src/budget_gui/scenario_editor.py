@@ -301,6 +301,10 @@ class ScenarioEditor(QWidget):
         add_segment.addWidget(self.add_segment_button)
         add_segment.addStretch(1)
         layout.addLayout(add_segment)
+        from budget_gui.scenario_ops_editor import ScenarioOpsEditor  # noqa: PLC0415 (a cycle)
+
+        self.ops = ScenarioOpsEditor(document)  # pointing and manoeuvres (2.3.0)
+        layout.addWidget(self.ops)
         layout.addWidget(self.error_label)
         layout.addWidget(self.note_label)
         layout.addStretch(1)
@@ -339,15 +343,23 @@ class ScenarioEditor(QWidget):
         return rel if self._id and self.document.has(rel) else None
 
     def show_scenario(
-        self, root: Path, scenario_id: str, modes: list[str], sites: list[str]
+        self,
+        root: Path,
+        scenario_id: str,
+        modes: list[str],
+        sites: list[str],
+        pointing_modes: list[str] | None = None,
+        maneuver_names: list[str] | None = None,
     ) -> None:
         self._root, self._id = root, scenario_id
         self._modes, self._sites = sorted(modes), sorted(sites)
         self._sync()
+        self.ops.show_scenario(scenario_id, sites, pointing_modes or [], maneuver_names or [])
 
     def clear(self) -> None:
         self._id = ""
         self._sync()
+        self.ops.clear()
 
     def is_modified(self) -> bool:
         rel = f"scenarios/{self._id}.yaml"

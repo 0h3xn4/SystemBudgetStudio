@@ -128,6 +128,14 @@ def _path_tokens(path: str) -> tuple[str | int, ...]:
 
 
 DEFAULT_VIEW = "focused"  # what a window with no saved layout starts in (D-191)
+NO_PROPULSION_TEXT = (
+    "This project has no propulsion file. Add config/propulsion.yaml (systems and manoeuvres) "
+    "and the propulsion and delta-v budget appears here."
+)
+NO_POINTING_TEXT = (
+    "This project has no pointing file. Add config/pointing.yaml (actuators, pointing modes and "
+    "slews) and the pointing and slew budget appears here."
+)
 LAYOUT_VERSION = 3  # the arrangement of the docks: a saved layout of another version is ignored
 
 
@@ -159,6 +167,8 @@ class MainWindow(QMainWindow):
         self.mass_view = PowerView()
         self.thermal_view = PowerView()
         self.link_view = PowerView()
+        self.propulsion_view = PowerView()  # the propulsion and delta-v budget (2.3.0)
+        self.pointing_view = PowerView()  # the pointing and slew budget (2.3.0)
         self._explainable_views = (
             self.power_view,
             self.mass_view,
@@ -200,10 +210,19 @@ class MainWindow(QMainWindow):
         self.reports_view = ReportsView()
         self.workspace = Workspace()
         self.workspace.add_page("Model", self.editors)
-        self.power_pages = SubTabs([("Budget", self.power_view), ("Timeline", self.timeline_view)])
+        self.power_pages = SubTabs(
+            [
+                ("Budget", self.power_view),
+                ("Timeline", self.timeline_view),
+                ("Pointing", self.pointing_view),
+            ]
+        )
+        self.mass_pages = SubTabs(
+            [("Budget", self.mass_view), ("Propulsion", self.propulsion_view)]
+        )
         self.link_pages = SubTabs([("Budget", self.link_view), ("Passes", self.link_passes_view)])
         self.workspace.add_page("Power", self.power_pages)
-        self.workspace.add_page("Mass", self.mass_view)
+        self.workspace.add_page("Mass", self.mass_pages)
         self.workspace.add_page("Thermal", self.thermal_view)
         self.workspace.add_page("Link", self.link_pages)
         self.workspace.add_page("Compare", self.compare_view)
@@ -1732,6 +1751,11 @@ class MainWindow(QMainWindow):
             self.link_passes_view,
         ):
             view.set_empty_text(reason)
+        for view, text in (
+            (self.propulsion_view, NO_PROPULSION_TEXT),
+            (self.pointing_view, NO_POINTING_TEXT),
+        ):
+            view.set_empty_text(reason or text)
 
     def show_first_error(self) -> None:
         """Select the first error in the Problems panel and open its file at the line."""
@@ -2048,6 +2072,8 @@ class MainWindow(QMainWindow):
         self.mass_view.set_document(session.mass_document)
         self.thermal_view.set_document(session.thermal_document)
         self.link_view.set_document(session.link_document)
+        self.propulsion_view.set_document(session.propulsion_document)
+        self.pointing_view.set_document(session.pointing_document)
         self.document.reload(session.path, project)
         self.assumptions_page.set_project(project)
         self.scenario_view.set_project(project)

@@ -1,5 +1,5 @@
-"""The heat of a burn in the thermal cases (2.3.0): a propulsion system that names a thermal node and
-a thrusting heat puts that heat into the node in every thermal case whose spacecraft mode is the
+"""The heat of a burn in the thermal cases (2.3.0): a propulsion system that names a thermal node
+and a thrusting heat puts that heat into the node in every thermal case whose spacecraft mode is the
 mode a manoeuvre of the system holds during its burn."""
 
 from __future__ import annotations
