@@ -224,24 +224,29 @@ class BetaView(QWidget):
         self.status = QLabel("")
         self.status.setWordWrap(True)
 
-        row = QHBoxLayout()
-        row.setSpacing(theme.gap(1))
+        # two short rows, so the page never asks the window for more width than the others do
+        first = QHBoxLayout()
+        first.setSpacing(theme.gap(1))
         for label, widget in (
             ("Case", self.case_combo),
             ("Heat loads", self.mode_combo),
             ("Beta from", self.beta_min),
             ("to", self.beta_max),
             ("step", self.beta_step),
-            ("Orbit", self.orbit_combo),
         ):
-            row.addWidget(QLabel(label))
-            row.addWidget(widget)
+            first.addWidget(QLabel(label))
+            first.addWidget(widget)
+        first.addStretch(1)
+        second = QHBoxLayout()
+        second.setSpacing(theme.gap(1))
+        second.addWidget(QLabel("Orbit"))
+        second.addWidget(self.orbit_combo)
         self.altitude_label = QLabel("at")
-        row.addWidget(self.altitude_label)
-        row.addWidget(self.altitude)
-        row.addWidget(self.compute_button)
-        row.addWidget(self.export_button)
-        row.addStretch(1)
+        second.addWidget(self.altitude_label)
+        second.addWidget(self.altitude)
+        second.addWidget(self.compute_button)
+        second.addWidget(self.export_button)
+        second.addStretch(1)
 
         self.plot = PlotWidget()
         self.plot.setAccessibleName("Beta sweep plot")
@@ -257,7 +262,8 @@ class BetaView(QWidget):
         self.empty = EmptyState(NO_THERMAL_TEXT, icon="thermometer")
 
         layout = QVBoxLayout(self)
-        layout.addLayout(row)
+        layout.addLayout(first)
+        layout.addLayout(second)
         layout.addWidget(self.status)
         layout.addWidget(self.body, 1)
         layout.addWidget(self.empty, 1)
