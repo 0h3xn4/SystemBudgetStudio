@@ -6,6 +6,18 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-04: the explanation of the demand with pointing and burns, and the margin policy as a spreadsheet (2.6.0)
+
+**What changed.** (1) The explanation (`budget explain`, *Explain this value*) of *Average demand at source*, *Energy demanded* and of a peak-power finding of the power timeline now includes the pointing holds, slews and burns a scenario places; before, it described only the modes' demand, and for such a scenario its cross-check line and the worst peak did not agree with the table. (2) `budget tables-export` and `tables-import` take `margins` ([D-249](DECISIONS.md)). No number of any budget, no file format and no inputs digest changed.
+
+| Case | Before | After |
+|---|---|---|
+| Any result of any project | the numbers of 2.5.0 | the same numbers |
+| Explain of the demand, a scenario with no pointing and no burn | steps as before | the same steps |
+| Explain of the demand, a scenario with pointing or burns | one step that left the load out; a cross-check that did not close | a step listing every event; a cross-check that closes |
+
+**Effect.** None on any result. Only the text of an explanation changes, and only for scenarios that place pointing or burns.
+
 ## 2026-11-04: more shapes for the centre of gravity of an imported model (2.5.0)
 
 **What changed.** The import now works out the centre of gravity and inertia of equipment whose shapes are whole cones, hollow cylinders, hollow cones with equal radii and tanks, as well as the shapes of 2.4.0 ([D-247](DECISIONS.md), deviation DV-IDM5). They are estimates, like the rest. Nothing else moved.

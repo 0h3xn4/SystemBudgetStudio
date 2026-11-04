@@ -1,4 +1,5 @@
-"""The Eb/N0 table and the attenuation table as spreadsheets (2.2.0, D-231).
+"""The Eb/N0 table, the attenuation table and the margin policy as spreadsheets (2.2.0, D-231;
+the margin policy 2.6.0, D-249).
 
 Export the table as a .csv or .xlsx, fill it with the values *and the sources* of a standard or a
 data sheet, and import it back. An import is planned first (`plan_entry_import` lists every change
@@ -44,7 +45,15 @@ from budget_core.io.unit_table import (
     _xlsx_rows,
 )
 from budget_core.io.yamlio import YamlSyntaxError, load_yaml_text
-from budget_core.model import CURRENT_VERSIONS, AttenuationTable, Ebn0Table, Project, Sourced
+from budget_core.model import (
+    CURRENT_VERSIONS,
+    AttenuationTable,
+    BudgetModel,
+    Ebn0Table,
+    MarginPolicy,
+    Project,
+    Sourced,
+)
 from budget_core.problems import Problem, Severity
 from budget_core.reports.csvutil import csv_writer, defuse
 from budget_core.reports.files import OutputError, write_file
@@ -108,8 +117,24 @@ TABLES: dict[str, TableSpec] = {
         ),
         "Attenuation table",
     ),
+    # one row for each margin of the policy: a class and its power or mass margin, or the system
+    # margin (item "system"); the same columns and rules as the other tables (D-249)
+    "margins": TableSpec(
+        "margins",
+        "config/margin_policy.yaml",
+        "margin_policy",
+        ("item", "quantity"),
+        ("item", "quantity"),
+        (),
+        "margin_ratio",
+        ("item", "quantity", "margin_ratio", "source", "status", "note"),
+        "Margin policy",
+    ),
 }
 _OPTIONAL_KEY = {"elevation_deg"}
+MARGIN_QUANTITIES = ("power_margin_ratio", "mass_margin_ratio")
+SYSTEM_ITEM = "system"
+MARGIN_RATIO_MAX = 10.0  # the upper end of the range that `budget validate` accepts
 
 
 def _spec(name: str) -> TableSpec:
@@ -119,7 +144,35 @@ def _spec(name: str) -> TableSpec:
 # ---- export -----------------------------------------------------------------------------------
 
 
+def _margin_entries(project: Project) -> list[dict[str, Any]]:
+    """The margins of the policy, one row each: every class, then the system."""
+    policy = project.config.margin_policy
+    out: list[dict[str, Any]] = []
+
+    def row(item: str, quantity: str, sourced: Sourced) -> None:
+        out.append(
+            {
+                "item": item,
+                "quantity": quantity,
+                "margin_ratio": sourced.value,
+                "source": sourced.source,
+                "status": sourced.status,
+                "note": sourced.note,
+            }
+        )
+
+    if policy is not None:
+        for name, cls in policy.classes.items():
+            for quantity in MARGIN_QUANTITIES:
+                row(name, quantity, getattr(cls, quantity))
+        for quantity in MARGIN_QUANTITIES:
+            row(SYSTEM_ITEM, quantity, getattr(policy, f"system_{quantity}"))
+    return out
+
+
 def _entries(project: Project, spec: TableSpec) -> list[dict[str, Any]]:
+    if spec.name == "margins":
+        return _margin_entries(project)
     table = project.config.ebn0_table if spec.name == "ebn0" else project.config.attenuation_table
     out: list[dict[str, Any]] = []
     for entry in table.entries if table else []:
@@ -506,6 +559,8 @@ def _build(
         "note": sourced.get("note")
         or ("" if value is not None else "Placeholder: supply the project's value."),
     }
+    if spec.name == "margins":
+        return _build_margin(key, data[spec.value])
     model = Ebn0Table if spec.name == "ebn0" else AttenuationTable
     try:
         model.model_validate({"entries": [_without_none(data)]})
@@ -513,6 +568,21 @@ def _build(
         columns = sorted({str(e["loc"][2]) for e in exc.errors() if len(e["loc"]) > 2})
         which = ", ".join(f"'{c}'" for c in columns) or "a column"
         return f"The value of {which} is not valid or is outside its range."
+    return None
+
+
+def _build_margin(key: tuple[Any, ...], sourced: dict[str, Any]) -> str | None:
+    """None if the margin the plan makes is valid, else a message naming the column."""
+    _item, quantity = key
+    if quantity not in MARGIN_QUANTITIES:
+        return "The value of 'quantity' is not valid; use " + " or ".join(MARGIN_QUANTITIES) + "."
+    value = sourced.get("value")
+    if value is not None and not 0.0 <= value <= MARGIN_RATIO_MAX:
+        return "The value of 'margin_ratio' is not valid or is outside its range."
+    try:
+        Sourced.model_validate(sourced)
+    except ValidationError:
+        return "The value of 'margin_ratio' is not valid or is outside its range."
     return None
 
 
@@ -557,6 +627,53 @@ def _set_sourced(target: CommentedMap, field_name: str, sourced: dict[str, Any],
             node["status"] = sourced["status"]
 
 
+def _placeholder() -> CommentedMap:
+    node = CommentedMap()
+    node["value"] = None
+    node["source"] = "TBD"
+    node["note"] = "Placeholder: supply the project's value."
+    return node
+
+
+def _edited_margin_text(text: str, yaml: YAML, edits: Iterable[_EntryEdit]) -> str:
+    """The margin policy with the planned edits: a class is a mapping of its two margins (a new
+    one gets the other margin as a placeholder), the system margins are two top-level fields."""
+    if text.strip():
+        document = yaml.load(text)
+    else:
+        document = CommentedMap()
+        document["schema_version"] = CURRENT_VERSIONS["margin_policy"]
+        document["kind"] = "margin_policy"
+    classes = document.get("classes")
+    if not isinstance(classes, CommentedMap):
+        classes = CommentedMap()
+        document["classes"] = classes
+    for quantity in MARGIN_QUANTITIES:
+        if f"system_{quantity}" not in document:
+            document[f"system_{quantity}"] = _placeholder()
+    for edit in edits:
+        item, quantity = edit.key
+        if item == SYSTEM_ITEM:
+            parent, name = document, f"system_{quantity}"
+        else:
+            parent = classes.get(item)
+            if not isinstance(parent, CommentedMap):
+                if not edit.is_new:
+                    raise OutputError(
+                        "The table file no longer matches the plan; plan the import again."
+                    )
+                parent = CommentedMap()
+                for other in MARGIN_QUANTITIES:
+                    parent[other] = _placeholder()
+                classes[item] = parent
+            name = quantity
+        # a margin that already stands in the file (a placeholder too) is edited, never replaced
+        _set_sourced(parent, name, edit.sourced, edit.is_new and name not in parent)
+    buffer = io.StringIO()
+    yaml.dump(document, buffer)
+    return buffer.getvalue()
+
+
 def _edited_text(text: str, spec: TableSpec, edits: Iterable[_EntryEdit]) -> str:
     yaml = YAML(typ="rt")
     yaml.preserve_quotes = True
@@ -564,6 +681,8 @@ def _edited_text(text: str, spec: TableSpec, edits: Iterable[_EntryEdit]) -> str
     mapping, sequence, offset = _detect_indent(text)
     yaml.indent(mapping=mapping, sequence=sequence, offset=offset)
     yaml.width = 4096
+    if spec.name == "margins":
+        return _edited_margin_text(text, yaml, edits)
     if text.strip():
         document = yaml.load(text)
     else:
@@ -610,7 +729,12 @@ def apply_entry_plan(root: Path, name: str, plan: EntryPlan) -> list[Path]:
             load_yaml_text(text)
         new_text = _edited_text(text, spec, plan.edits)
         loaded = load_yaml_text(new_text).data
-        (Ebn0Table if name == "ebn0" else AttenuationTable).model_validate(_plain(loaded))
+        models: dict[str, type[BudgetModel]] = {
+            "ebn0": Ebn0Table,
+            "attenuation": AttenuationTable,
+            "margins": MarginPolicy,
+        }
+        models[name].model_validate(_plain(loaded))
     except (
         OSError,
         UnicodeDecodeError,

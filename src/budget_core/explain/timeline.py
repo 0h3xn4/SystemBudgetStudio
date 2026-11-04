@@ -390,6 +390,41 @@ def _mode_rows(ctx: _Ctx) -> tuple[str, str, str]:
     return "Load, nominal", "Source, nominal", "nominal"
 
 
+def _event_quantities(ctx: _Ctx) -> tuple[Quantity, ...]:
+    """One input for each pointing hold, slew and burn the scenario places (D-235)."""
+    loads = ctx.result.extra
+    if loads is None:
+        return ()
+    names = {"hold": "pointing hold", "slew": "slew", "burn": "burn"}
+    return tuple(
+        Quantity(
+            f"{names[e.kind]} {e.label}, {format_offset(e.start_s)} to {format_offset(e.end_s)}",
+            e.power_w,
+            "W",
+            "config/pointing.yaml" if e.kind != "burn" else "config/propulsion.yaml",
+        )
+        for e in loads.events
+    )
+
+
+def _extra_step(ctx: _Ctx) -> Step | None:
+    """The pointing and burn load, which is added to the modes' demand as it is (no margin)."""
+    loads = ctx.result.extra
+    if loads is None:
+        return None
+    energy = loads.energy_wh()
+    return Step(
+        "Pointing and burn load",
+        _event_quantities(ctx),
+        Quantity("pointing and burn energy", energy, "Wh", "this step"),
+        logic="The actuators' holding and slew power and the electric thrusters' burn power the "
+        "scenario places (config/pointing.yaml, config/propulsion.yaml) are added to the demand "
+        "of the modes as they are, at the source, with no margin: put the margin in the input. "
+        "Energy = sum of power x duration of the events / 3600. A power that is a placeholder "
+        "makes the load, and so the demand, unknown (n/a), never zero.",
+    )
+
+
 def _demand_cell(ctx: _Ctx, average: bool) -> Cell:
     _load_row, source_row, basis = _mode_rows(ctx)
     inputs: list[Quantity] = []
@@ -404,32 +439,61 @@ def _demand_cell(ctx: _Ctx, average: bool) -> Cell:
         )
         inputs.append(Quantity(f"time in mode {m.mode_id}", m.duration_s, "s", "scenario timeline"))
     demand = ctx.demand()
-    largest = Quantity(
-        "largest demand of any step",
-        None if demand is None else float(np.max(demand)),
+    extra_w = None if ctx.result.extra is None else ctx.result.extra.mean_power(ctx.detail.redges_s)
+    base = demand if extra_w is None or demand is None else demand - extra_w
+    extra = _extra_step(ctx)
+    largest_modes = Quantity(
+        "largest demand of the modes in any step" if extra else "largest demand of any step",
+        None if base is None else float(np.max(base)),
         "W",
         "this step",
     )
     steps = [
         Step(
-            "Demand at the source of each step",
+            "Demand at the source of each step" if not extra else "Demand of the modes",
             tuple(inputs),
-            largest,
+            largest_modes,
             "TDP-DEMAND",
             f"Basis: {basis}. Every solver step lies in one mode (steps are cut at each mode "
             "change), so its demand is the demand at the source of that mode (converter "
             "efficiency and distribution loss applied, explained in the static power budget).",
         )
     ]
+    largest = largest_modes
+    if extra is not None:
+        steps.append(extra)
+        largest = Quantity(
+            "largest demand of any step",
+            None if demand is None else float(np.max(demand)),
+            "W",
+            "this step",
+        )
+        steps.append(
+            Step(
+                "Demand at the source of each step",
+                (largest_modes, extra.result),
+                largest,
+                logic="In every solver step: demand of the mode + mean power of the pointing and "
+                "burn events inside the step. The largest of the steps is shown.",
+            )
+        )
     energy = _energy_step(ctx, "Energy demanded", demand, "energy demanded", largest)
     steps.append(energy)
     note = ""
     if all(m.demand_w is not None for m in ctx.result.modes):
         by_mode = math.fsum(float(m.demand_w or 0.0) * m.duration_s for m in ctx.result.modes)
-        note = (
-            f" Cross-check: the mode table gives {by_mode / 3600.0:.6g} Wh "
-            "(demand x time of each mode), the same to rounding."
-        )
+        extra_wh = None if ctx.result.extra is None else ctx.result.extra.energy_wh()
+        if ctx.result.extra is None:
+            note = (
+                f" Cross-check: the mode table gives {by_mode / 3600.0:.6g} Wh "
+                "(demand x time of each mode), the same to rounding."
+            )
+        elif extra_wh is not None:
+            note = (
+                f" Cross-check: the mode table gives {by_mode / 3600.0:.6g} Wh (demand x time of "
+                f"each mode) and the pointing and burn load {extra_wh:.6g} Wh, "
+                f"{(by_mode / 3600.0 + extra_wh):.6g} Wh together, the same to rounding."
+            )
     steps[-1] = replace(energy, logic=energy.logic + note)
     if average:
         steps.append(_average_step(ctx, energy.result, "demand at the source"))
@@ -987,17 +1051,20 @@ def _worst_cell(
     if v.code == PEAK_POWER_EXCEEDED:
         tol = POWER_TOL_W
         limit_w = float(v.limit or 0.0)
-        over = [
-            (s.mode, m.peak_demand_w)
-            for s in result.run.timeline
-            for m in result.modes
-            if m.mode_id == s.mode
-            and m.peak_demand_w is not None
-            and m.peak_demand_w > limit_w + tol
-            and s.start_s >= v.start_s - 1e-9
-            and s.end_s <= v.end_s + 1e-9
-        ]
-        modes = sorted({mode for mode, _ in over})
+        loads = result.extra
+        over: list[tuple[str, float, float]] = []  # mode, mode peak, extra peak in its segment
+        for s in result.run.timeline:
+            for m in result.modes:
+                if m.mode_id != s.mode or m.peak_demand_w is None:
+                    continue
+                more = 0.0 if loads is None else loads.peak_between(s.start_s, s.end_s)
+                if (
+                    m.peak_demand_w + more > limit_w + tol
+                    and s.start_s >= v.start_s - 1e-9
+                    and s.end_s <= v.end_s + 1e-9
+                ):
+                    over.append((s.mode, m.peak_demand_w, more))
+        modes = sorted({mode for mode, _, _ in over})
         inputs = [
             Quantity(
                 f"peak demand at the source in mode {m.mode_id}",
@@ -1008,15 +1075,31 @@ def _worst_cell(
             for m in result.modes
             if m.mode_id in modes
         ]
-        q = Quantity("worst peak", max((p for _, p in over), default=v.extreme), "W", "this step")
+        extra_peak = max((more for _, _, more in over), default=0.0)
+        if loads is not None:
+            inputs.append(
+                Quantity(
+                    "largest pointing and burn power inside the segments",
+                    extra_peak,
+                    "W",
+                    "pointing and burn events of the scenario",
+                )
+            )
+        q = Quantity(
+            "worst peak", max((p + e for _, p, e in over), default=v.extreme), "W", "this step"
+        )
         return [
             Step(
                 "Largest peak demand of the modes in the interval",
                 (*inputs, limit),
                 q,
                 "TDP-PEAK",
-                "A mode whose peak demand at the source is above the limit is a finding for as "
-                "long as the timeline stays in it (neighbouring segments are one finding).",
+                "A mode whose peak demand at the source, plus the pointing and burn power "
+                "placed in the same segment, is above the limit is a finding for as long as the "
+                "timeline stays in it (neighbouring segments are one finding)."
+                if loads is not None
+                else "A mode whose peak demand at the source is above the limit is a finding for "
+                "as long as the timeline stays in it (neighbouring segments are one finding).",
             )
         ], q
     q = Quantity("worst value", v.extreme, v.unit, "result")

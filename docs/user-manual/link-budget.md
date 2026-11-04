@@ -59,6 +59,8 @@ The columns are the fields of the entry: for the Eb/N0 table `modulation`, `codi
 - A value may carry a unit (`26.5 GHz` in `freq_hz`); a spreadsheet formula is never evaluated; a cell that is wrong is named by its row and column, never by its value.
 - Without `--apply` nothing is written; with it the file is edited in place and keeps its comments, or is created if the project has no table yet. The project must be valid before an import starts.
 
+The **margin policy** works the same way (`budget tables-export my_satellite margins`, 2.6.0): one row for each margin, with the columns `item`, `quantity`, `margin_ratio`, `source`, `status`, `note`. The `item` is a maturity class or `system`; the `quantity` is `power_margin_ratio` or `mass_margin_ratio`; a ratio is between 0 and 10. A row with a new class adds the class with its other margin as a placeholder; an import never deletes a class. The margins are a project decision, so the tool never supplies a value: every new or changed ratio needs its source in the same row.
+
 ## How do I get the margin at a chosen range?
 
 ```bash

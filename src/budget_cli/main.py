@@ -522,6 +522,8 @@ def _count(problems: list[Problem], severity: Severity) -> int:
 
 
 def _plural(n: int, word: str) -> str:
+    if n != 1 and word.endswith("y") and word[-2:-1] not in "aeiou":
+        return f"{n} {word[:-1]}ies"
     return f"{n} {word}" + ("" if n == 1 else "s")
 
 

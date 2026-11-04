@@ -249,3 +249,58 @@ def test_a_placeholder_input_makes_the_cells_n_a_and_the_explanation_says_so(mis
         assert na > 0
     capacity = explainer.explain("timeline:cases", ("Battery capacity",), "BOL")
     assert capacity.complete is (missing != "battery")
+
+
+# ---- the pointing and burn load (2.3.0, D-235) is explained and agrees ---------------------------
+
+
+def _with_extra_loads() -> Project:
+    from tests.unit.test_extra_loads import make
+
+    return make(
+        _project("microsat_250kg_eps"),
+        pointing_default="nadir",
+        pointing_rules=[{"kind": "in_eclipse", "mode": "target"}],
+        maneuvers=[{"name": "Raise", "start_s": 3600.0}],
+    )
+
+
+def test_every_cell_agrees_when_the_scenario_places_pointing_and_a_burn() -> None:
+    project = _with_extra_loads()
+    explainer = Explainer(project, scenario="one_day", load_basis="nominal")
+    assert explainer.timeline_result().extra is not None
+    count = 0
+    for table_id, key, header, value in _cells(explainer):
+        explanation = explainer.explain(table_id, key, header)
+        assert explanation.result.value == value, (table_id, key, header)
+        count += 1
+    assert count > 60
+
+
+def test_the_demand_explanation_lists_the_events_and_the_cross_check_adds_them() -> None:
+    project = _with_extra_loads()
+    explainer = Explainer(project, scenario="one_day", load_basis="nominal")
+    result = explainer.timeline_result()
+    assert result.extra is not None
+    exp = explainer.explain("timeline:cases", ("Energy demanded",), "BOL")
+    labels = [s.label for s in exp.steps]
+    assert labels[:3] == [
+        "Demand of the modes",
+        "Pointing and burn load",
+        "Demand at the source of each step",
+    ]
+    load = exp.steps[1]
+    assert any(q.name.startswith("burn Raise") and q.value == 800.0 for q in load.inputs)
+    assert any(q.name.startswith("slew ") and q.value == 45.0 for q in load.inputs)
+    assert load.result.value == pytest.approx(result.extra.energy_wh())
+    # the energy of the modes plus the load is the energy demanded
+    by_mode = (
+        sum(m.demand_w * m.duration_s for m in result.modes if m.demand_w is not None) / 3600.0
+    )
+    assert by_mode + load.result.value == pytest.approx(exp.result.value, rel=1e-9)  # type: ignore[operator]
+    assert "the same to rounding" in exp.steps[3].logic
+
+
+def test_without_pointing_or_burns_the_demand_explanation_has_no_load_step() -> None:
+    exp = _explainer("microsat_250kg_eps").explain("timeline:cases", ("Energy demanded",), "BOL")
+    assert "Pointing and burn load" not in [s.label for s in exp.steps]

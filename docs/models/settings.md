@@ -112,6 +112,7 @@ Today every setting is at its default: the project file that changes the setting
 | `files.unit_table_max_unpacked_bytes` | Input limit | 50 000 000 | bytes | An .xlsx is a zip; one that unpacks to something huge is refused. | budget units-import and the window's import. |
 | `files.unit_table_max_rows` | Input limit | 100 000 | rows | Far beyond any spacecraft. | budget units-import and the window's import. |
 | `files.unit_table_max_columns` | Input limit | 50 | columns | Far beyond the columns the table has. | budget units-import and the window's import. |
+| `files.margin_ratio_max` | Input limit | 10 | ratio | The same upper end of the range that `budget validate` accepts for a margin ratio (1000 %). | budget tables-import PROJECT margins. |
 
 ## Units
 

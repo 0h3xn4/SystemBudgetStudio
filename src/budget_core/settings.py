@@ -738,6 +738,17 @@ CATALOGUE: tuple[SettingSpec, ...] = (
         "budget units-import and the window's import.",
     ),
     _s(
+        "files.margin_ratio_max",
+        "limit",
+        "Largest margin ratio of the margin policy table",
+        "ratio",
+        10.0,
+        "io.entry_tables:MARGIN_RATIO_MAX",
+        "The same upper end of the range that `budget validate` accepts for a margin ratio "
+        "(1000 %).",
+        "budget tables-import PROJECT margins.",
+    ),
+    _s(
         "units.max_magnitude",
         "limit",
         "Largest magnitude of a number with a unit",
