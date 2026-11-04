@@ -124,15 +124,15 @@
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
-5: 'Tool' | 'System Budget Studio 2.6.0'
+5: 'Tool' | 'System Budget Studio 2.7.0'
 6: 'Python' | '3.x'
 7: 'Libraries' | 'pinned for-golden-tests'
 8: 'Project' | 'Example 250 kg minisatellite'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
 11: 'Run parameters' | 'Environment source elements; Shadow model cylindrical; Earth model WGS-84; Irradiance model constant; Start (UTC) 2026-06-01T00:00:00Z; Duration 86400 s; Step 10 s'
-12: 'Inputs digest (model)' | 'sha256:e77bf7c0701fb93fb9ccd8e6288d6c1e02472b88b887aaa43253c4097206921b'
-13: 'Input files' | '43 files, sha256:69ba90c6d5f67e076e4cb3788432c68439c76358cd2aa5132cd98bc5525d35de'
+12: 'Inputs digest (model)' | 'sha256:45c31de162669b2befb105b0fab3451ccece7250fe2eee0074b7dd20fe981c4f'
+13: 'Input files' | '43 files, sha256:84d1dec608057473f0f9486de845603f36ed8c2e1b6f4f765e749b1bfe9821ff'
 14: 'Illustrative inputs' | '480'
 15: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 16: 'User' | 'Golden User'

@@ -9388,8 +9388,8 @@
       },
       {
         "path": "config/thermal_model.yaml",
-        "sha256": "57c514520ca769d2019a5bee738263bc52754f92438820508c89366b28d8f174",
-        "size": 8010
+        "sha256": "602d9bf36d4f5471f6bcb30f3698e61180905ea6c3a724b2defdb1ca08d23f6d",
+        "size": 8439
       },
       {
         "path": "ground_stations/gs_north.yaml",
@@ -10452,7 +10452,7 @@
         "size": 1102
       }
     ],
-    "inputs_digest": "sha256:0af9c5c21478f72ad8eb67b1a352a3d90eec82cc95e92fd95fd3ebd6c395f478",
+    "inputs_digest": "sha256:1ab2af8d03030a54f3a06540f12e17cbe56c1e349d88ad63a07d4047316dbc93",
     "libraries": [
       [
         "pinned",
@@ -10465,7 +10465,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.6.0",
+    "tool_version": "2.7.0",
     "user": "Golden User"
   },
   "result_format": {

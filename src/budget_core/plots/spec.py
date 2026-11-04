@@ -68,6 +68,8 @@ class PlotSpec:
     bands: tuple[Band, ...] = field(default_factory=tuple)
     x_min_s: float = 0.0
     x_max_s: float = 1.0
+    # an x axis that is not time (the beta angle): its full label, ticks as they are (D-250)
+    x_label: str | None = None
 
 
 def time_axis(span_s: float) -> tuple[float, str]:

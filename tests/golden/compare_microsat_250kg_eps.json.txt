@@ -943,8 +943,8 @@
       },
       {
         "path": "config/thermal_model.yaml",
-        "sha256": "ddb95c016dcf4ea608c4e961b20bc94122f46392c05e60d4532501411bad8633",
-        "size": 8374
+        "sha256": "2d2117846dc21712786c2b677c0ff05a5c346c9fae20dacb320c18bf6b5f6188",
+        "size": 8749
       },
       {
         "path": "expendables/propellant.yaml",
@@ -1112,7 +1112,7 @@
         "size": 754
       }
     ],
-    "inputs_digest": "sha256:d547f871cd10ce48b9ed33ddd7c833531932d671e001a9ac254a3d3ada57ae11",
+    "inputs_digest": "sha256:ce0862a7c8c632ffa92e9fa10fca34d0e297d6688de7d64c0ce8bd420623c076",
     "libraries": [
       [
         "numpy",
@@ -1154,19 +1154,19 @@
     "parameters": [
       [
         "Side A inputs digest",
-        "sha256:d547f871cd10ce48b9ed33ddd7c833531932d671e001a9ac254a3d3ada57ae11"
+        "sha256:ce0862a7c8c632ffa92e9fa10fca34d0e297d6688de7d64c0ce8bd420623c076"
       ],
       [
         "Side B inputs digest",
-        "sha256:bc3affff74cf71eb826b5ab4d49e2e0576917067d00f11aa4d3d8e0c632057d0"
+        "sha256:432bcaf78d6766353d233e7796d5690ef165472ba85600bfd42afbe6cf4cced5"
       ],
       [
         "Side A files",
-        "sha256:e1508b9004b68ae3cddacca71cf273e8e493f077a3f91f5495fd21e92c991544"
+        "sha256:939dfad4eb73644bdbd1b313fec6e1c09ce9399dd3d6936a01ddecc811bcc53b"
       ],
       [
         "Side B files",
-        "sha256:4ab32dcb407860dcd23f94f77c54a5021e9ff120a117ee921b4ffb1edc294203"
+        "sha256:daec5545947d7183e6a82a9d89e67d4e118c39f9e7281e905525ee4eccc2a5a1"
       ]
     ],
     "project_name": "Example 250 kg minisatellite, complete power and thermal inputs",
@@ -1174,7 +1174,7 @@
     "python_version": "3.x",
     "scenario": "static vs static",
     "tool": "System Budget Studio",
-    "tool_version": "2.6.0",
+    "tool_version": "2.7.0",
     "user": "Golden User"
   },
   "result_format": {

@@ -259,6 +259,7 @@ def test_every_json_result_names_its_format_and_kind(eps: Path, tmp_path: Path) 
     )
     main(["link-passes", str(eps), "--scenario", scenario, "--report", "json", "--out", str(out)])
     main(["compare", str(eps), str(eps), "--report", "json", "--out", str(out)])
+    main(["thermal-beta", str(eps), "--mode", "average", "--no-plots", "--out", str(out)])
     seen = set()
     for path in sorted(out.glob("*.json")):
         fmt = json.loads(path.read_text(encoding="utf-8"))["result_format"]

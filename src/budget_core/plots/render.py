@@ -86,7 +86,7 @@ def render_png(spec: PlotSpec, width_px: int = WIDTH_PX) -> bytes:
     image = Image.new("RGB", (width_px * SCALE, height * SCALE), "white")
     draw = ImageDraw.Draw(image)
     regular, bold = _font("IBMPlexSans-Regular.ttf", 13), _font("IBMPlexSans-SemiBold.ttf", 15)
-    divisor, unit = time_axis(spec.x_max_s - spec.x_min_s)
+    divisor, unit = (1.0, "") if spec.x_label else time_axis(spec.x_max_s - spec.x_min_s)
     plot_w = width_px - LEFT - RIGHT
 
     def sx(t: float) -> float:
@@ -173,7 +173,7 @@ def _panel(
             draw.text((x, bottom_px + 6 * SCALE), label, fill=INK, font=regular, anchor="ma")
     draw.rectangle((left_px, top_px, right_px, bottom_px), outline=INK, width=SCALE)
     if last:
-        label = f"Time since scenario start ({unit})"
+        label = spec.x_label or f"Time since scenario start ({unit})"
         draw.text(
             ((left_px + right_px) / 2, bottom_px + 30 * SCALE),
             label,
