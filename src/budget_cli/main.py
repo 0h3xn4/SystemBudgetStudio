@@ -1,6 +1,6 @@
 """`budget` command: new, validate, run, scenario, power-timeline, link-passes, compare, guide,
 self-test, export-schemas, units-export, units-import, tables-export, tables-import,
-export-examples."""
+import, export-examples."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from budget_cli import idm_import as idm_cli
 from budget_cli import orbit as orbit_cli
 from budget_core import APP_NAME, __version__
 from budget_core.assumptions_view import ASSUMPTION_SECTIONS
@@ -393,6 +394,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     orbit_cli.add_parser(sub)
+    idm_cli.add_parser(sub)
 
     asm = sub.add_parser(
         "assumptions",
@@ -1260,6 +1262,8 @@ def _dispatch(
         return _choices(args)
     if args.command == "orbit":
         return orbit_cli.run(args)
+    if args.command == "import":
+        return idm_cli.run(args)
     if args.command == "assumptions":
         return _assumptions(args)
     if args.command == "verify":

@@ -1064,6 +1064,203 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "A unit of another kind would be skipped silently otherwise.",
         "Check the summary; the unit is named in the problem.",
     ),
+    _e(
+        "IDM_MASS_UNRESOLVED",
+        WARN,
+        _IDM,
+        "An equipment occurrence is not imported because its mass is not known",
+        "The mass of an occurrence comes from the mass entered for the equipment or from the "
+        "masses of its shapes (mass type Total); a mass that needs the geometry, or that the "
+        "model does not give, is not estimated. With margins applied, the margin must be known.",
+        "A unit without a mass would make the mass budget wrong without saying so.",
+        "Enter the mass in IDM-CIC, or add the unit by hand in the project.",
+    ),
+    _e(
+        "IDM_POWER_UNRESOLVED",
+        WARN,
+        _IDM,
+        "A power mode or a mode mapping could not be taken over",
+        "Each system mode needs, for every powered occurrence, a power mode (or a custom power) "
+        "through its element mode or directly; a power mode needs a power value.",
+        "A unit that is not assigned a power mode in a spacecraft mode is reported as an error "
+        "by the project check, so the missing mapping is not hidden.",
+        "Complete the mapping in IDM-CIC, or assign the unit a power mode in the project.",
+    ),
+    _e(
+        "IDM_DISSIPATION_UNRESOLVED",
+        WARN,
+        _IDM,
+        "The heat share of a power mode cannot be formed",
+        "The heat share is dissipation divided by power; it must lie between 0 and 1.",
+        "A dissipation above the power, or a dissipation with no power, is not a share.",
+        "Check the dissipation of the power mode in IDM-CIC; thermal results stay n/a.",
+    ),
+    _e(
+        "IDM_NEVER_ENABLED",
+        INFO,
+        _IDM,
+        "An equipment occurrence is not enabled in any configuration",
+        "An optional unit that is disabled by default and in every configuration, or whose "
+        "element is never enabled, is left out of the project.",
+        "It is not part of the satellite in any configuration of the model.",
+        "Nothing, unless it should be part of a configuration.",
+    ),
+    _e(
+        "IDM_TANK_UNRESOLVED",
+        WARN,
+        _IDM,
+        "A tank is not imported",
+        "A tank needs its capacity and a filling for the reference configuration.",
+        "The propellant mass is capacity times filling; it is not estimated.",
+        "Complete the tank in IDM-CIC, or add the propellant as an expendable by hand.",
+    ),
+    _e(
+        "IDM_FORCED_MASS_IGNORED",
+        WARN,
+        _IDM,
+        "A forced mass is not applied",
+        "A forced mass of a subsystem or of the propellant of an element replaces a calculated "
+        "mass in IDM-CIC; the project has no such override.",
+        "The imported masses differ from the totals of IDM-CIC by the forced amount.",
+        "Compare the totals with IDM-CIC and add the difference by hand if it matters.",
+    ),
+    _e(
+        "IDM_FORMULA_STALE",
+        WARN,
+        _IDM,
+        "A formula of the model is marked not valid",
+        "A formula that IDM-CIC marks as not valid does not give the stored value of its target.",
+        "The stored value, which is what is imported, may be out of date.",
+        "Open the model in IDM-CIC, fix the formula and save again.",
+    ),
+    _e(
+        "IDM_MARGIN_NOT_APPLIED",
+        INFO,
+        _IDM,
+        "A margin or target of an element is not applied",
+        "Mass and power margins of an element, and its mass target, have no counterpart in the "
+        "project (margins are per maturity class); they are not applied and not a limit.",
+        "The totals of the project can differ from those of IDM-CIC by these margins.",
+        "Compare with IDM-CIC; set the system margins or a mass limit by hand if wanted.",
+    ),
+    _e(
+        "IDM_TEMPERATURE_IGNORED",
+        INFO,
+        _IDM,
+        "A temperature band is not imported",
+        "A band is imported only when its minimum is below its maximum, and a survival band "
+        "must enclose the operating band; the model also uses 0 and 0 for a band not set.",
+        "A band that is not a band cannot be checked against a temperature.",
+        "Enter the limits in IDM-CIC, or in the unit file of the project.",
+    ),
+    _e(
+        "IDM_CUSTOM_DATA_UNMAPPED",
+        INFO,
+        _IDM,
+        "Data of the model with no counterpart in the project",
+        "System mode duty cycles and additional properties are reported, not mapped.",
+        "The project takes the time share of a mode from a scenario.",
+        "Nothing, unless you want to use them by hand.",
+    ),
+    _e(
+        "IDM_MODE_MAP_INVALID",
+        ERR,
+        _IDM,
+        "The mode map is not valid",
+        "idm/mode_map.yaml has kind idm_mode_map, schema_version 1 and a system_modes mapping; "
+        "each entry has a name and a mode (a file name in modes/, or null to skip the system "
+        "mode).",
+        "The map says what each system mode of the model becomes; a wrong map would put the "
+        "modes in the wrong place.",
+        "Fix the file, or delete it to have a draft written again at the next import.",
+    ),
+    _e(
+        "IDM_STATE_INVALID",
+        ERR,
+        _IDM,
+        "The import state file is not valid",
+        "idm/import_state.yaml is written by the import and has kind idm_import_state and "
+        "schema_version 1.",
+        "It records what the import wrote, which is how a later import tells the user's edits "
+        "from the model's changes.",
+        "Restore it from version control, or delete it to import again as a first import "
+        "(existing files with the same names are then left alone and reported).",
+    ),
+    _e(
+        "IDM_OPTION_INVALID",
+        ERR,
+        _IDM,
+        "An option of the import is not valid",
+        "The margins option is raw or applied.",
+        "Another value could apply margins twice or not at all.",
+        "Use --margins raw or --margins applied.",
+    ),
+    _e(
+        "IDM_PROJECT_UNUSABLE",
+        ERR,
+        _IDM,
+        "The project cannot be loaded, so nothing is imported into it",
+        "A model is merged only into a project that loads without errors.",
+        "A merge into a project with errors could hide or add to them.",
+        "Fix the errors listed with this one (budget validate), then import again.",
+    ),
+    _e(
+        "IDM_BUS_UNKNOWN",
+        ERR,
+        _IDM,
+        "The bus is not a bus of the project",
+        "Every imported unit is on the bus given with --bus, which must be a bus of "
+        "spacecraft.yaml.",
+        "A unit needs a bus to have a supply voltage and a converter efficiency.",
+        "Give the name of a bus of the project, or add the bus first.",
+    ),
+    _e(
+        "IDM_NEW_PROJECT_INCOMPLETE",
+        ERR,
+        _IDM,
+        "A new project needs the voltage of its bus",
+        "A project made by the import needs --bus-voltage-v; the model does not give one.",
+        "The nominal bus voltage is a number a spacecraft cannot do without and is not invented.",
+        "Give --bus-voltage-v with the nominal voltage in volts.",
+    ),
+    _e(
+        "IDM_FILE_EXISTS_NOT_IMPORTED",
+        WARN,
+        _IDM,
+        "A file with the name of an imported object already exists and is left alone",
+        "The import overwrites or merges only files that it wrote itself (listed in "
+        "idm/import_state.yaml).",
+        "Replacing a file the user made could lose their work.",
+        "Rename or remove your file, or delete the state entry, then import again.",
+    ),
+    _e(
+        "IDM_DELETED_BY_USER",
+        INFO,
+        _IDM,
+        "A file the import wrote earlier was deleted and is not recreated",
+        "A file that the import wrote and the user deleted stays deleted.",
+        "Recreating it would undo the user's decision.",
+        "Delete its entry in idm/import_state.yaml to have it written again.",
+    ),
+    _e(
+        "IDM_KEPT_USER_VALUE",
+        INFO,
+        _IDM,
+        "A value you changed was kept although the model changed it too",
+        "When both the file and the model changed a value since the last import, the file wins.",
+        "The import never overwrites a value the user entered.",
+        "Compare with the model; edit the file if the model's value is the right one.",
+    ),
+    _e(
+        "IDM_REMOVED_IN_MODEL",
+        WARN,
+        _IDM,
+        "An object the import wrote is no longer produced by the model",
+        "The object is no longer in the model, or can no longer be taken over; its file is kept "
+        "and flagged in idm/import_state.yaml, not deleted.",
+        "Deleting would silently remove part of the satellite from the budgets.",
+        "Delete the file if the object is really gone.",
+    ),
     # ---- other ----
     _e(
         "INTERNAL_ERROR",

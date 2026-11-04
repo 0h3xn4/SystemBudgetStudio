@@ -248,6 +248,20 @@ provenance:
 
 The tool writes `provenance`, `status` and `requires` only when they are not at their default, and `provenance` and `requires` last in the file. Marking inputs changes the manifest (the files differ) but not the model digest ([provenance.md](models/provenance.md)).
 
+## Files of the IDM-CIC import (2.4.0)
+
+`budget import idm` ([manual](user-manual/idm-import.md), decisions D-240 to D-242) keeps two small files in the folder `idm/` of the project. The project loader ignores the folder; only the importer reads them. Neither is part of the model digest, and they have versions of their own.
+
+```
+idm/mode_map.yaml       kind: idm_mode_map (version 1)      system_modes{<system mode id>: {mode, name}}
+idm/import_state.yaml   kind: idm_import_state (version 1)  source{file, sha256, supported_format, file_format}, options{margins, bus},
+                                                            units|modes|expendables{<id>: {full_id, status, imported}}, margin_classes{}, phases[]
+```
+
+- `mode` in the mode map is the file name (without `.yaml`) in `modes/`, or `null` to skip the system mode; `name` is the name of the spacecraft mode. The file is drafted at the first import, edited by the user, and only extended later.
+- In the state file, `full_id` is the object's identifier in the IDM-CIC model, `status` is `current`, `removed` (no longer in the model), `not_imported` (still in the model but not taken over now) or `deleted` (the user deleted the file), and `imported` is the data as the importer wrote it (the base of the three-way merge). Do not edit it by hand; delete an entry to have the object imported again.
+- The import writes ordinary project files (`units/`, `modes/`, `expendables/`, `config/`), with `provenance:` entries that name the model file, its revision and the object.
+
 ## Problem codes (`budget validate`)
 
 The rule, the reason and the remedy of every code are in [PROBLEMS.md](PROBLEMS.md) (or `budget problems CODE`). The list below groups the codes by when they occur.

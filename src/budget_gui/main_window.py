@@ -75,6 +75,7 @@ from budget_gui.explain_panel import ExplainPanel
 from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
 from budget_gui.help_view import GuideDialog
+from budget_gui.idm_import import import_idm_model
 from budget_gui.inspector import CellInfo, InspectorPanel, SourceInfo
 from budget_gui.layout_settings import (
     MOTION,
@@ -393,6 +394,7 @@ class MainWindow(QMainWindow):
         file_menu.addSeparator()
         add("Export &unit table…", QKeySequence(), lambda: export_unit_table(self))
         add("&Import unit table…", QKeySequence(), lambda: import_unit_table(self))
+        add("Import I&DM-CIC model…", QKeySequence(), lambda: import_idm_model(self))
         file_menu.addSeparator()
         add("&Quit", QKeySequence.StandardKey.Quit, self.close)
         self._build_edit_menu()

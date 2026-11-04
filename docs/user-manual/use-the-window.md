@@ -90,6 +90,7 @@ In the focused view only the summary line is shown, with a **Show problems** but
 | Ctrl+Shift+B | **Edit → Add Eb/N0 entry**, from any area: a modulation and coding pair of the Eb/N0 table that a link can name, with the Eb/N0 it requires as a placeholder and, optionally, the bit and frame error rate it refers to ([how](link-budget.md#how-do-i-describe-a-link)) |
 | Ctrl+Shift+R | **Edit → Remove from project**, from any area: an expendable, a ground station, an imaging target or a link, chosen in a small form; refused while a scenario or a link names it |
 | Ctrl+Shift+X | **Edit → Add expendable**, from any area: propellant, an oxidizer, a pressurant or the like from a form, with a mass for every mission phase ([how](mass-budget.md#how-do-i-handle-mission-phases-and-propellant)) |
+| (menu only) | File → Import IDM-CIC model: start a project from a model made with IDM-CIC, or update the open one, after a preview ([IDM-CIC import](idm-import.md#in-the-window)) |
 | (menu only) | File → Export unit table / Import unit table: the unit power modes as a CSV or XLSX table, imported with a preview ([unit tables](unit-tables.md)) |
 | (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
 | (menu only) | View → Theme (light, dark, same as the system), UI size (90, 100, 110 or 125 %), Reduce motion, Cell styles (what every cell style means), the panel toggles, Reset layout |

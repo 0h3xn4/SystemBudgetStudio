@@ -6,6 +6,7 @@ This is the task-by-task manual for System Budget Studio: each page answers a fe
 |---|---|
 | [Create a project](create-a-project.md) | How do I start a new project, from a sample or a blank one? What is in a project folder? How do I keep revisions? |
 | [Describe the spacecraft](describe-the-spacecraft.md) | How do I add or remove a unit, its power modes and a spacecraft mode? How do I type units? |
+| [Start from an IDM-CIC model](idm-import.md) | How do I start a project from a model made with IDM-CIC? How are margins and modes handled? What happens when I import the model again? |
 | [Unit data in a spreadsheet](unit-tables.md) | How do I export the unit power modes to a table, fill it in, and import it back safely? |
 | [Placeholders and sources](placeholders-and-sources.md) | What does *n/a* or INCOMPLETE mean? How do I fill in a margin or an efficiency properly? |
 | [Trace a number](trace-a-number.md) | How do I see how a number was worked out? Where did an input come from? What does the tool assume that I did not type? Which model is used, and can I choose another? |
