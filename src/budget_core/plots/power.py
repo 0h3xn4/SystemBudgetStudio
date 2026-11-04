@@ -10,6 +10,7 @@ from budget_core.plots.spec import (
     GREY,
     PURPLE,
     RED,
+    TEAL,
     Band,
     HLine,
     Panel,
@@ -44,6 +45,10 @@ def power_plot(result: TimeDomainResult, case: str, *, shading: bool = True) -> 
         power_series.append(Series("Demand at source", steps, result.demand_w, BLUE, True, end))
     elif result.load_w is not None:
         power_series.append(Series("Load (source side n/a)", steps, result.load_w, GREY, True, end))
+    if result.extra_w is not None:  # already part of the demand, shown apart (2.3.0)
+        power_series.append(
+            Series("Pointing and propulsion load", steps, result.extra_w, TEAL, True, end)
+        )
     panels = [
         Panel(
             "Power",
