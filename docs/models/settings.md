@@ -6,7 +6,7 @@ Generated from the catalogue in `budget_core/settings.py` (`budget settings --ma
 
 Today every setting is at its default: the project file that changes the settings meant to be changed (kind *Setting*) is a later step of the plan ([transparency_p4_design.md](../transparency_p4_design.md)).
 
-**Contents:** [Environment: orbit, passes, eclipses, scenarios](#environment-orbit-passes-eclipses-scenarios) · [Power](#power) · [Thermal](#thermal) · [Mass](#mass) · [RF link](#rf-link) · [Comparison](#comparison) · [Reports and plots](#reports-and-plots) · [Project files and tables](#project-files-and-tables) · [Units](#units) · [Creation: guided mode and forms](#creation-guided-mode-and-forms) · [Internal](#internal)
+**Contents:** [Environment: orbit, passes, eclipses, scenarios](#environment-orbit-passes-eclipses-scenarios) · [Power](#power) · [Thermal](#thermal) · [Mass](#mass) · [RF link](#rf-link) · [Comparison](#comparison) · [Reports and plots](#reports-and-plots) · [Project files and tables](#project-files-and-tables) · [Units](#units) · [Reading IDM-CIC models](#reading-idm-cic-models) · [Creation: guided mode and forms](#creation-guided-mode-and-forms) · [Internal](#internal)
 
 ## Environment: orbit, passes, eclipses, scenarios
 
@@ -118,6 +118,16 @@ Today every setting is at its default: the project file that changes the setting
 | Id | Kind | Value | Unit | Why | Acts on |
 |---|---|---|---|---|---|
 | `units.max_magnitude` | Input limit | 1e+20 | canonical unit | Far beyond every physical quantity here, but small enough that squares stay finite. | Every field whose name carries a unit. |
+
+## Reading IDM-CIC models
+
+| Id | Kind | Value | Unit | Why | Acts on |
+|---|---|---|---|---|---|
+| `idm.file_max_bytes` | Input limit | 200 000 000 | bytes | A real model file is a few megabytes; a far larger one is not a model. | Reading a model archive (D-237). |
+| `idm.model_xml_max_bytes` | Input limit | 100 000 000 | bytes | The size is checked while the entry is read, not by the size the archive claims. | Reading a model archive (D-237). |
+| `idm.archive_max_entries` | Input limit | 20 000 | entries | Pictures and files of other programs are entries; none of them is read. | Reading a model archive (D-237). |
+| `idm.xml_max_depth` | Input limit | 200 | levels | Real models nest about 25 levels; the bound stops a hostile file early. | Reading the XML model (D-237). |
+| `idm.xml_max_nodes` | Input limit | 5 000 000 | elements | The largest model seen has about 100,000 elements. | Reading the XML model (D-237). |
 
 ## Creation: guided mode and forms
 
