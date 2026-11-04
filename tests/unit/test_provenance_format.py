@@ -47,7 +47,7 @@ def test_every_kind_moves_up_one_version() -> None:
         "spacecraft": 2,
         "unit": 3,
         "expendable": 3,
-        "orbit": 3,
+        "orbit": 4,
         "ground_station": 2,
         "target": 2,
         "scenario": 5,  # 3 provenance, 4 earth_model (D-221), 5 pointing and manoeuvres (D-235)

@@ -69,7 +69,10 @@ class Elements(BudgetModel):
     semi_major_axis_m: float = Field(ge=SEMI_MAJOR_AXIS_RANGE_M[0], le=SEMI_MAJOR_AXIS_RANGE_M[1])
     eccentricity_ratio: float = Field(ge=0, lt=1)
     inclination_deg: float = Field(ge=0, le=180)
-    raan_deg: float = Field(ge=0, lt=360)
+    # exactly one of the right ascension of the ascending node and the mean local solar time of
+    # that node in hours (2.3.0, D-236); the node is then derived at the epoch
+    raan_deg: float | None = Field(default=None, ge=0, lt=360)
+    ltan_h: float | None = Field(default=None, ge=0, lt=24)
     arg_perigee_deg: float = Field(ge=0, lt=360)
     mean_anomaly_deg: float = Field(ge=0, lt=360)
 
@@ -77,6 +80,16 @@ class Elements(BudgetModel):
     @classmethod
     def _epoch(cls, value: str) -> str:
         return _utc(value)
+
+    @model_validator(mode="after")
+    def _one_node(self) -> Elements:
+        if (self.raan_deg is None) == (self.ltan_h is None):
+            raise PydanticCustomError(
+                "node_source",
+                "give either raan_deg or ltan_h, not both and not neither",
+                {"field": "raan_deg"},
+            )
+        return self
 
 
 class StateVector(BudgetModel):

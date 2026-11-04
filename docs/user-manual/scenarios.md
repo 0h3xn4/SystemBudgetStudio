@@ -43,6 +43,23 @@ The scenario converts it to the mean elements whose SGP4 state at the epoch is t
 
 Positions come from the [SGP4](../glossary.md#sgp4) propagator (Earth only; elements are used as SGP4 mean elements, without drag: see [deviation DV-E2](../DEVIATIONS.md)). The guided wizard writes a near-circular orbit for you from altitude, inclination and [RAAN](../glossary.md#raan).
 
+## How do I give the orbit by its local time?
+
+Instead of `raan_deg` the elements may give `ltan_h`, the **mean local solar time of the ascending node** in hours (10.5 is 10:30), and the tool derives the RAAN at the epoch. Exactly one of the two is given:
+
+```yaml
+elements:
+  epoch_utc: "2026-06-01T00:00:00Z"
+  semi_major_axis_m: 7028137.0
+  eccentricity_ratio: 0.0011
+  inclination_deg: 97.9
+  ltan_h: 10.5              # instead of raan_deg
+  arg_perigee_deg: 90.0
+  mean_anomaly_deg: 0.0
+```
+
+The local time is mean solar time without the equation of time ([deviation DV-E6](../DEVIATIONS.md)). The RAAN follows the epoch: the same `ltan_h` at another epoch is another RAAN, because the Sun has moved. The scenario notes say which RAAN was derived.
+
 ## How do I design the orbit (local time, sun-synchronous, repeat ground track)?
 
 An orbit file takes inclination and right ascension (RAAN). A mission is usually described by other numbers: the **local time of the ascending node** (LTAN, for example 10:30 or 22:30), a **sun-synchronous** orbit at some altitude, or a **repeat ground track**. `budget orbit` works out the elements from those; it reads no project and changes none. All times are *mean* local solar time (the equation of time is not applied), and the Earth constants are those of the scenario's Earth model (`--earth-model`, WGS-84 by default).

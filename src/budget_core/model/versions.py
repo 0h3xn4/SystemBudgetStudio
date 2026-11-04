@@ -5,7 +5,7 @@ CURRENT_VERSIONS: dict[str, int] = {
     "spacecraft": 2,
     "unit": 3,
     "expendable": 3,
-    "orbit": 3,
+    "orbit": 4,
     "ground_station": 2,
     "target": 2,
     "scenario": 5,

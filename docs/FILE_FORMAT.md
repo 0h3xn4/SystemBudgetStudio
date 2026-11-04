@@ -8,7 +8,7 @@ A project is a folder of YAML files (LF line endings). Every file starts with `s
 project.yaml            kind: project            name, revision, description, requires[]?
 spacecraft.yaml         kind: spacecraft         name, buses[{name, nominal_voltage_v}], mission_phases[], body_frame
 units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, maturity, modes[], mass_properties?, phases[]?, thermal_node?, temperature_limits?, catalogue_ref?
-orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...} or state{epoch_utc, frame, position_m[3], velocity_m_s[3]}   (see ENVIRONMENT_FORMAT.md)
+orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{epoch_utc, semi_major_axis_m, eccentricity_ratio, inclination_deg, raan_deg or ltan_h, arg_perigee_deg, mean_anomaly_deg} or state{epoch_utc, frame, position_m[3], velocity_m_s[3]}   (see ENVIRONMENT_FORMAT.md)
 ground_stations/<id>.yaml kind: ground_station   name, latitude_deg, longitude_deg, altitude_m, min_elevation_deg
 targets/<id>.yaml       kind: target             same fields as a ground station (imaging target)
 scenarios/<id>.yaml     kind: scenario (v5)      orbit, start_utc, duration_s, step_s, shadow_model?, earth_model?, irradiance_model?, sites, mission_phase?, default_mode, rules[], segments[], pointing_default?, pointing_rules[]?, maneuvers[]?
