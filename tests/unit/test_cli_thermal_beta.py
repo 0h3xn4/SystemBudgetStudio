@@ -107,7 +107,7 @@ def test_a_project_without_normals_says_so(
         if line.strip().startswith("normal_lvlh:"):
             skip = True
             continue
-        if skip and line.strip().startswith("- "):
+        if skip and re.fullmatch(r"- -?\d+(\.\d+)?", line.strip()):
             continue
         skip = False
         kept.append(line)
