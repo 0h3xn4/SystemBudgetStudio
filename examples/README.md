@@ -23,6 +23,8 @@ The copy is identical to this folder. (A test fails if the two ever differ, so t
 | [`microsat_150kg`](microsat_150kg) | A 150 kg satellite with 17 units, propellant ([mass phases](../docs/glossary.md#mission-phase)) and **two links** (S-band and X-band downlinks), two ground stations and an imaging target | link budget, link passes, mass | seconds |
 | [`stress_200_units`](stress_200_units) | 200 units and a **one-week scenario at 1 s** (604,801 steps): a performance and scale check | scenario, static budgets | about 10 s per run |
 
+`microsat_250kg` and `microsat_250kg_eps` also carry a small `config/propulsion.yaml` (a monopropellant system and three manoeuvres) and `config/pointing.yaml` (two pointing modes and a slew) with invented values, so that `budget run --budget propulsion` and `--budget pointing` have something to show (in the first they are placeholders: n/a). They place nothing in the scenario; see [pointing and manoeuvres in a scenario](../docs/user-manual/scenarios.md#pointing-and-manoeuvres-in-a-scenario) to try it on a copy.
+
 Every example leaves some numbers as [placeholders](../docs/glossary.md#placeholder) on purpose (the margin policy, the [Eb/N0](../docs/glossary.md#ebn0) table, mass limits and so on): the tool will not invent standards values, so each result that needs one shows *n/a* until you supply it with a source. Reports say so in an INCOMPLETE banner.
 
 ## microsat_250kg: placeholders everywhere

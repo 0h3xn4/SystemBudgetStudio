@@ -142,6 +142,10 @@ A week at 1 s with 200 units takes about ten seconds; the orbit computation domi
 
 A computation or an export is still running in the background; stopping it half way could damage the output, so the window waits and closes by itself when the job has finished (a long timeline can take a minute). Quitting again does nothing harmful.
 
+### A burn or a pointing change adds nothing to the power timeline
+
+Check the Problems panel. `POINTING_SLEW_MISSING` means no slew is defined between the two pointing modes (the change costs nothing, never a guessed amount); a chemical system draws no power; a manoeuvre not placed in the scenario's `maneuvers` is not on the timeline. `POINTING_SLEW_TOO_LONG` and `MANEUVER_CUT` say that an event does not fit the interval ([problem list](PROBLEMS.md)).
+
 ### Export is switched off, or says "out of date" / "changed since this result was computed"
 
 The result on screen was computed from different inputs than the ones set now: edits are not saved yet (a run reads the saved files), the project was reloaded or saved, another scenario or demand basis is selected, or the other folder in **Compare** changed. The run status in the top bar says **Out of date**. Press **Run** (or **Compute** in the view, or **Compare**) again, then export.

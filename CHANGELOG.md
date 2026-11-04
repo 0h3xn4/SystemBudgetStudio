@@ -4,6 +4,12 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+Documentation sweep after 2.3.0; no code changed.
+
+- The in-app guide (power, mass, link, scenarios, troubleshooting chapters) and the manual now describe pointing and burns on the timeline, the propulsion budget, the spreadsheet tables and the orbit design inputs (LTAN, state vector).
+- The ten problem codes added in 2.2.0 and 2.3.0 are in both troubleshooting pages.
+- README features, ARCHITECTURE (CLI list, new packages, window areas), the developer guide (a recipe for an optional budget, the problem-code row now points at guide chapter 12), the examples README, glossary, FAQ, tips and the Explain page (the new tables have no Explain rows) are brought up to date.
+
 ## [2.3.0] - 2026-11-04
 
 Pointing and burns reach the power budget. In 2.2.0 the pointing and propulsion budgets computed their power by themselves; now a scenario can place pointing modes and manoeuvres and the power timeline carries their load, as its own series. **A project that places nothing gives the numbers of 2.2.0.** What changes for you: the scenario goes to schema version 5, the orbit to 4, the pointing and propulsion files to 2 (older files read unchanged), so the inputs digest is a new value once more ([changes.md](docs/changes.md)).

@@ -41,7 +41,7 @@ In the window, double-click (or press Enter on) a row of the **Problems** panel,
 | `FIELD_UNKNOWN` | A field name is misspelled or does not exist | Compare with the [file format](../FILE_FORMAT.md) |
 | `UNIT_INVALID` | A unit is unknown, or of the wrong kind (a `dBW` in a watt field) | Write a plain number in the field's unit, or a value with a matching unit such as `2.5 W` |
 | `UNIT_NOT_MAPPED` | A unit is missing from a spacecraft mode | Add it under `assignments` in `modes/<id>.yaml` |
-| `REF_UNKNOWN_*` | A name points at something that does not exist (bus, maturity class, unit, phase, station, orbit, mode) | Fix the spelling, or create the file |
+| `REF_UNKNOWN_*` | A name points at something that does not exist (bus, maturity class, unit, phase, station, orbit, mode, expendable, propulsion system, manoeuvre, pointing mode, actuator) | Fix the spelling, or create the file |
 | `SOURCE_MISSING` | A sourced number has no `source` | Write the source, or `TBD` |
 | `SCHEMA_TOO_NEW` | The file was written by a newer version of the tool | Upgrade the tool |
 | `PEAK_POWER_EXCEEDED`, `BATTERY_DOD_EXCEEDED`, `BATTERY_DEPLETED`, `ORBIT_BALANCE_NEGATIVE` | The power timeline found a violation | [Power budget](power-budget.md#what-are-the-violations) |
@@ -50,7 +50,8 @@ In the window, double-click (or press Enter on) a row of the **Problems** panel,
 | `LINK_NOT_CLOSED`, `LINK_SITE_NOT_IN_SCENARIO` | No data rate closes; or the link's station is not in the scenario's `sites` | [Link budget](link-budget.md) |
 | `ENV_INPUT_INVALID`, `ENV_PROPAGATION_FAILED`, `SCENARIO_TOO_LARGE`, `SCENARIO_UNKNOWN` | An imported file is invalid; the orbit cannot be propagated; the scenario needs too much memory; or no such scenario | [Scenarios](scenarios.md) |
 | `ORBIT_EPOCH_FAR`, `ORBIT_BALANCE_NOT_EVALUATED`, `POWER_REFINEMENT_INCOMPLETE`, `MASS_INERTIA_NOT_SCALED`, `LINK_NEVER_ACTIVE`, `LINK_PER_DAY_NOT_GIVEN` | A TLE is more than 30 days from the scenario start; the step is too coarse to find the orbits; the battery's full and empty instants were still moving after the last refinement round; an expendable's inertia does not follow its mass; a link has no active pass; no per-day volume for a short scenario | [Scenarios](scenarios.md), [Power budget](power-budget.md), [Mass budget](mass-budget.md), [Link budget](link-budget.md) |
-| `IMPORT_*` | A unit table could not be imported (row and column are named) | [Unit tables](unit-tables.md#what-if-the-import-reports-a-problem) |
+| `IMPORT_*` | A unit table, or an Eb/N0 or attenuation table, could not be imported (row and column are named; `IMPORT_SOURCE_MISSING`: a value needs its source in the same row) | [Unit tables](unit-tables.md#what-if-the-import-reports-a-problem), [link budget](link-budget.md#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet) |
+| `POINTING_*`, `MANEUVER_CUT` | A change of pointing mode has no slew, a slew is too long or needs more momentum than the actuators store, or a burn runs past the scenario | [Pointing](pointing.md), [scenarios](scenarios.md#pointing-and-manoeuvres-in-a-scenario) |
 | `INTERNAL_ERROR` | An unexpected error (a bug). The message names only the kind of error | Run `budget validate` on the folder to see the details, then report it |
 
 ## Where are all the codes?

@@ -20,7 +20,7 @@
 
 ## Steps
 
-1. **LTAN and RAAN.** The local time is `UT + (Ω − GMST)/15`, so the right ascension for a wanted local time at an epoch is `GMST + 15 (LTAN − UT)`. UTC is taken as UT1 (DV-E1, at most 0.9 s, 0.004° of node).
+1. **LTAN and RAAN.** An orbit file may store the local time (`ltan_h`) instead of the RAAN; the RAAN of the epoch is then derived by this step ([ENVIRONMENT_FORMAT.md](../ENVIRONMENT_FORMAT.md)). The local time is `UT + (Ω − GMST)/15`, so the right ascension for a wanted local time at an epoch is `GMST + 15 (LTAN − UT)`. UTC is taken as UT1 (DV-E1, at most 0.9 s, 0.004° of node).
 2. **Sun-synchronous inclination.** ORB-SSO gives the inclination of an altitude and eccentricity (always above 90°); above about 5,974 km (circular) the node cannot move fast enough and there is no solution. The altitude of an inclination is the same relation solved for `a`.
 3. **Repeat ground track.** A nodal day is the time the Earth takes to turn once relative to the node, `2π / (ω_earth − Ω̇)`. An orbit repeats after N nodal periods in D nodal days when the angular rate from the node over that angular rate is N/D; the semi-major axis is found by bisection between a perigee 100 km above the surface and the highest orbit that fits (for a sun-synchronous orbit, the one with `cos i = −1`). The tracks of a repeat cycle are spaced `2π Re / N` apart at the equator. For a sun-synchronous orbit the nodal day is exactly 24 mean solar hours, so 15 revolutions per day is a nodal period of 96.000 min.
 

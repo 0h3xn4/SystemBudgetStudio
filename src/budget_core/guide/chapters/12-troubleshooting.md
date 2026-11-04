@@ -17,6 +17,7 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `SOURCE_MISSING` | A sourced number has no `source`. Write the source, or `TBD` if you do not have it yet. |
 | `REF_UNKNOWN_BUS`, `REF_UNKNOWN_MATURITY`, `REF_UNKNOWN_UNIT`, `REF_UNKNOWN_UNIT_MODE`, `UNIT_NOT_MAPPED`, `REF_UNKNOWN_PHASE`, `PHASE_MASS_MISSING` | A name points to something that does not exist, or a unit is not in a spacecraft mode. |
 | `CONFIG_VALUE_INVALID`, `CONFIG_MISSING`, `CONFIG_PLACEHOLDER`, `CONFIG_EMPTY_TABLE` | A configuration number is invalid, a file is absent, a number is still a placeholder, or a table is empty. |
+| `REF_UNKNOWN_PROPULSION_SYSTEM`, `REF_UNKNOWN_EXPENDABLE`, `REF_UNKNOWN_POINTING_MODE`, `REF_UNKNOWN_ACTUATOR`, `REF_UNKNOWN_MANEUVER` | A manoeuvre, a propulsion system, a pointing mode, a slew or a scenario names something the propulsion or pointing file (or `expendables/`) does not define. Use an id or a name listed there, or add it. |
 | `THERMAL_NODE_UNKNOWN`, `REF_UNKNOWN_CASE` | A thermal node or case name is not defined. |
 | `SCENARIO_OPTION_IGNORED` | (Warning) A scenario option does not apply to its environment source (an `import_dir` with orbit elements, an `orbit` with an imported environment). |
 | `MODEL_CHOICE_IGNORED` | (Warning) The Earth model does not apply to an orbit given as a TLE, which is propagated on WGS-72. Remove the option or give the orbit as elements. |
@@ -44,6 +45,10 @@ Every problem has a code, a file and field, a plain-language message and a hint.
 | `IMPORT_FILE_UNREADABLE`, `IMPORT_FILE_TOO_LARGE`, `IMPORT_COLUMN_MISSING` | The unit table is not a .csv (UTF-8) or .xlsx file, is too large, or lacks the `unit_id` or `power_mode` column. Start from the template written by `budget units-export`. |
 | `IMPORT_COLUMN_IGNORED` | (Warning) A column of the unit table is not part of the template and is skipped. |
 | `IMPORT_UNKNOWN_UNIT`, `IMPORT_DUPLICATE_ROW`, `IMPORT_FIELD_MISSING`, `IMPORT_VALUE_INVALID` | A row names a unit the project does not have, repeats a power mode, lacks average or peak power for a new mode, or has a value the file format does not accept. The message gives the row and column. |
+| `IMPORT_SOURCE_MISSING` | A value of an Eb/N0 or attenuation table import has no source in its row. Name the standard or data sheet in the `source` column, or leave the value empty; nothing was written. |
+| `POINTING_SLEW_MISSING`, `POINTING_SLEW_TOO_LONG` | (Warnings) The pointing mode changes where `config/pointing.yaml` defines no slew between the two modes (the change costs nothing), or a slew is longer than the mode it leads to (it is cut). Add the slew, use fewer changes, or a faster slew. |
+| `POINTING_MOMENTUM_EXCEEDED` | (Warning) A slew needs more angular momentum than the actuators can store. Lower the rate limit, slew a smaller angle, or use actuators that store more. |
+| `MANEUVER_CUT` | (Warning) A placed manoeuvre starts after the scenario ends or runs past its end; only the part inside is counted. Start it earlier or lengthen the scenario. |
 | `INTERNAL_ERROR` | An unexpected error; the message names only its kind. Run `budget validate` on the folder to see the details, then report it. |
 
 ## The files of a run are missing or a name is refused

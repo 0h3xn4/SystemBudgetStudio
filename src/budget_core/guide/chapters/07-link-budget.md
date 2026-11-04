@@ -16,6 +16,10 @@ For every *static point* (a chosen elevation and slant range) and every listed d
 
 Use a constant `gain_dbi`, a `pattern` table (angle from nadir to gain, linear interpolation) or a `pattern_file` CSV with its `pattern_source`. A ground antenna must have a constant gain.
 
+## Tables from a spreadsheet
+
+The Eb/N0 table and the attenuation table can be written as a CSV or XLSX and read back: `budget tables-export PROJECT ebn0` (or `attenuation`), fill in the values with their sources, `budget tables-import PROJECT ebn0 FILE` (it shows every change and writes nothing; `--apply` writes). A value that is new or changed needs its source in the same row. The tool ships no standards values; this is how you load the ones you may use.
+
 ## What stays open
 
 Transmit powers, gains, G/T, losses, required Eb/N0 and attenuation are your numbers; the examples contain invented values.
