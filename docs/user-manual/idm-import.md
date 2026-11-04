@@ -40,7 +40,7 @@ Add `--apply` to write the project. A new project needs `--bus-voltage-v`: the m
 What you get:
 
 - one **unit** for every physical copy of an equipment (an equipment placed twice is two units; the equipment inside a placed assembly counts once for each placed copy). The unit id is made from the object's identifier in the model, the name from the element, the assembly and the equipment;
-- the **mass** of the equipment, its **power modes** (power as average and as peak, with the peak marked as an estimate because the model gives one number; the heat share is dissipation divided by power), its **temperature limits** (degrees Celsius in the model, kelvin in the project) and its **thermal node**;
+- the **mass** of the equipment, its **centre of gravity and inertia** where they can be worked out (estimates), its **power modes** (power as average and as peak, with the peak marked as an estimate because the model gives one number; the heat share is dissipation divided by power), its **temperature limits** (degrees Celsius in the model, kelvin in the project) and its **thermal node**;
 - one **spacecraft mode** for every system mode, with the power mode of every unit;
 - **maturity classes** `idm_…` in `config/margin_policy.yaml`, **thermal nodes** in `config/thermal_model.yaml`, a **mission phase** for every configuration of the model (and `reference`, the defaults), and an **expendable** for every tank;
 - `idm/mode_map.yaml` and `idm/import_state.yaml`, see below.
@@ -97,11 +97,13 @@ The sources record the revision of the model, so a new revision rewrites the sou
 
 ## What is not imported?
 
-Not in this version: the centre of gravity and the inertia of the equipment (they need the placement of every equipment in the satellite; the mass properties stay empty and the budget lists them as missing, `MASS_PROPS_MISSING`); masses that the model computes from the area or volume of a shape; the system-mode duty cycles; element margins and mass targets; forced masses; additional properties; scenarios, trajectories and attitude files; solar array, battery, radios, antennas, ground stations and orbit (the model has none of them; they stay as they are in the project, or placeholders).
+Not imported: masses that the model computes from the area or volume of a shape; the system-mode duty cycles; element margins and mass targets; forced masses; additional properties; scenarios, trajectories and attitude files; the position of the propellant in a tank; solar array, battery, radios, antennas, ground stations and orbit (the model has none of them; they stay as they are in the project, or placeholders).
+
+**Centre of gravity and inertia are imported as estimates.** Each unit's centre of gravity and inertia are worked out from where its equipment is placed and from its shapes (boxes, whole cylinders, triangular and quadrangular prisms) or from the values entered in the model. The way positions and rotations combine and where a shape has its origin are not written out in words in the published description of the format, so the tool uses conventions that it inferred from the models and checked on them, and marks every such number as an *estimate* with a note ([how, and what is covered](../models/idm-import.md#centre-of-gravity-and-inertia)). Units whose shapes are other kinds, or whose placement goes through an articulation that is not at 0, get none, and the mass budget lists them as missing. Compare the centre of gravity of the whole satellite with the one IDM-CIC shows before relying on it; `--mass-properties none` leaves them all out.
 
 ## What do the messages mean?
 
-Every code has a page entry in [the problem list](../PROBLEMS.md#idm-cic-models-import). The usual ones: `IDM_MASS_UNRESOLVED` (the equipment's mass needs geometry or is not in the model, so the unit is not written), `IDM_POWER_UNRESOLVED` (a power mode or mapping could not be taken over), `IDM_TEMPERATURE_IGNORED` (a band was not given, or the survival band does not enclose the operating band), `IDM_NEVER_ENABLED` (an optional unit is off in every configuration).
+Every code has an entry in [the problem list](../PROBLEMS.md#idm-cic-models-import). The usual ones: `IDM_MASS_UNRESOLVED` (the equipment's mass needs geometry or is not in the model, so the unit is not written), `IDM_POWER_UNRESOLVED` (a power mode or mapping could not be taken over), `IDM_TEMPERATURE_IGNORED` (a band was not given, or the survival band does not enclose the operating band), `IDM_NEVER_ENABLED` (an optional unit is off in every configuration), `IDM_GEOMETRY_PLACEMENT` and `IDM_GEOMETRY_SHAPE` (no centre of gravity for that unit, see above).
 
 The format that is read, and what it means, is described in [models/idm-import.md](../models/idm-import.md).
 

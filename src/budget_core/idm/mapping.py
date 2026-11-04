@@ -24,10 +24,13 @@ from typing import Any
 
 from pydantic import ValidationError
 
+from budget_core.idm.geometry import GeometryError, Placement, occurrence_properties
 from budget_core.idm.model import Equipment, IdmModel, Occurrence, PowerMapping, TankContent
 from budget_core.io.project_loader import model_to_data
 from budget_core.model import (
     Expendable,
+    Inertia,
+    MassProperties,
     SpacecraftMode,
     TemperatureLimits,
     Unit,
@@ -40,6 +43,7 @@ from budget_core.problems import Problem, Severity
 from budget_core.reports.thermal_report import ABSOLUTE_ZERO_OFFSET_K as CELSIUS_OFFSET_K
 
 MARGINS = ("raw", "applied")
+MASS_PROPERTIES = ("geometry", "none")
 REFERENCE_PHASE = "reference"
 PASSIVE_MODE = "Passive"
 UNPLACED_NODE = "idm_unplaced"
@@ -60,6 +64,7 @@ _LEVEL_MARGIN = {
 class ImportOptions:
     margins: str = "raw"  # "raw": the project applies its margin classes; "applied": values here
     bus: str = "main"  # the power bus every imported unit is on
+    mass_properties: str = "geometry"  # "geometry": centre of gravity and inertia (D-245); "none"
 
 
 @dataclass(frozen=True)
@@ -316,6 +321,38 @@ def _passive_mode() -> UnitPowerMode:
     )
 
 
+_GEOMETRY_NOTE = (
+    "Computed from the placements and shapes of the model with conventions inferred from the "
+    "model itself (DV-IDM5); not checked against IDM-CIC."
+)
+
+
+def _mass_properties(
+    ctx: _Context, placement: Placement, occ: Occurrence, eq: Equipment
+) -> tuple[MassProperties | None, dict[str, ProvenanceEntry]]:
+    try:
+        found = occurrence_properties(placement, occ, eq)
+    except GeometryError as error:
+        ctx.add(Severity.INFO, error.code, occ.full_id)
+        return None, {}
+    if found is None:
+        return None, {}
+    entry = ProvenanceEntry(source=ctx.source, note=_GEOMETRY_NOTE, status="estimate")
+    prov = {"mass_properties.position_m": entry}
+    ixx, iyy, izz, ixy, ixz, iyz = found.inertia
+    try:
+        inertia: Inertia | None = Inertia(
+            ixx_kgm2=ixx, iyy_kgm2=iyy, izz_kgm2=izz, ixy_kgm2=ixy, ixz_kgm2=ixz, iyz_kgm2=iyz
+        )
+    except ValidationError, ValueError:
+        inertia = None
+        ctx.add(Severity.INFO, "IDM_GEOMETRY_SHAPE", occ.full_id)
+    if inertia is not None:
+        for name in ("ixx", "iyy", "izz", "ixy", "ixz", "iyz"):
+            prov[f"mass_properties.inertia.{name}_kgm2"] = entry
+    return MassProperties(position_m=list(found.position_m), inertia=inertia), prov
+
+
 def map_model(
     model: IdmModel,
     options: ImportOptions,
@@ -347,6 +384,7 @@ def map_model(
 
     taken: set[str] = set()
     sources_of_unit: dict[str, tuple[Occurrence, Equipment, dict[str, str]]] = {}
+    placement = Placement(model)
     for occ in model.occurrences:
         eq = ctx.equipment[occ.equipment_full_id]
         present = [p for p in phases if _present(model, occ, eq, p, ref)] if phases else []
@@ -411,11 +449,16 @@ def map_model(
             for part in (ctx.element_names.get(occ.element_id, occ.element_id), assembly, eq.name)
             if part
         )
+        properties = None
+        if options.mass_properties == "geometry":
+            properties, geometry_prov = _mass_properties(ctx, placement, occ, eq)
+            prov.update(geometry_prov)
         try:
             unit = Unit(
                 name=f"{name} [{label}]",
                 subsystem=ctx.subsystem_names.get(occ.subsystem_id, occ.subsystem_id),
                 mass_kg=mass * factor_m,
+                mass_properties=properties,
                 bus=options.bus,
                 maturity=_class_for(ctx, margin, power_margin),
                 modes=modes,

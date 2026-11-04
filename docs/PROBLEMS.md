@@ -1038,6 +1038,22 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** Deleting would silently remove part of the satellite from the budgets.
 - **What to do.** Delete the file if the object is really gone.
 
+### IDM_GEOMETRY_PLACEMENT
+
+**The centre of gravity of an equipment cannot be placed** (info)
+
+- **Rule.** The placement of an equipment is a chain of positions and coordinate systems; it is followed only with a transformation order of Translation_Rotation, a known rotation order and every articulation of the chain at 0.
+- **Why it matters.** Another reading could put the equipment in the wrong place, so none is guessed.
+- **What to do.** Put the articulation at 0 in IDM-CIC, or enter the position of the unit by hand.
+
+### IDM_GEOMETRY_SHAPE
+
+**The centre of gravity or the inertia of an equipment is not worked out** (info)
+
+- **Rule.** They are worked out from entered values, or from the shapes of mass type Total of a box, a whole cylinder, a triangular prism and a quadrangular prism; a shape of mass 0 is ignored. Other shapes, masses per area or volume and unphysical results are not.
+- **Why it matters.** A shape whose geometry is not known cannot give a centre of gravity.
+- **What to do.** Enter the centre of gravity and the inertia of the equipment in IDM-CIC, or give the unit its mass properties by hand.
+
 ## Other
 
 ### INTERNAL_ERROR

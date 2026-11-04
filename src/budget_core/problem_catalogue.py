@@ -1261,6 +1261,29 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "Deleting would silently remove part of the satellite from the budgets.",
         "Delete the file if the object is really gone.",
     ),
+    _e(
+        "IDM_GEOMETRY_PLACEMENT",
+        INFO,
+        _IDM,
+        "The centre of gravity of an equipment cannot be placed",
+        "The placement of an equipment is a chain of positions and coordinate systems; it is "
+        "followed only with a transformation order of Translation_Rotation, a known rotation "
+        "order and every articulation of the chain at 0.",
+        "Another reading could put the equipment in the wrong place, so none is guessed.",
+        "Put the articulation at 0 in IDM-CIC, or enter the position of the unit by hand.",
+    ),
+    _e(
+        "IDM_GEOMETRY_SHAPE",
+        INFO,
+        _IDM,
+        "The centre of gravity or the inertia of an equipment is not worked out",
+        "They are worked out from entered values, or from the shapes of mass type Total of a "
+        "box, a whole cylinder, a triangular prism and a quadrangular prism; a shape of mass "
+        "0 is ignored. Other shapes, masses per area or volume and unphysical results are not.",
+        "A shape whose geometry is not known cannot give a centre of gravity.",
+        "Enter the centre of gravity and the inertia of the equipment in IDM-CIC, or give the "
+        "unit its mass properties by hand.",
+    ),
     # ---- other ----
     _e(
         "INTERNAL_ERROR",

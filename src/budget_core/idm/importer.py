@@ -25,6 +25,7 @@ from budget_core.blank import BlankAnswers, build_blank
 from budget_core.idm import SPEC_VERSION
 from budget_core.idm.mapping import (
     CLASS_PREFIX,
+    MASS_PROPERTIES,
     ImportOptions,
     Mapped,
     ModeEntry,
@@ -293,6 +294,9 @@ def plan_import(
     if options.margins not in ("raw", "applied"):
         plan.problems.append(_error("IDM_OPTION_INVALID", "margins"))
         return plan
+    if options.mass_properties not in MASS_PROPERTIES:
+        plan.problems.append(_error("IDM_OPTION_INVALID", "mass_properties"))
+        return plan
     files = _Files(root)
     state, state_problems = read_state(root) if existing else (None, [])
     mode_map, map_problems = read_mode_map(root) if existing else (None, [])
@@ -330,7 +334,11 @@ def plan_import(
             "supported_format": SPEC_VERSION,
             "file_format": model.file_version,
         },
-        "options": {"margins": options.margins, "bus": options.bus},
+        "options": {
+            "margins": options.margins,
+            "bus": options.bus,
+            "mass_properties": options.mass_properties,
+        },
     }
 
     # --- the project-level files -------------------------------------------------------------
@@ -426,7 +434,12 @@ def _new_project_files(
     meta = blank.meta.model_copy(
         update={"description": f"Imported from {source}. Margins: {options.margins}."}
     )
-    spacecraft = blank.spacecraft.model_copy(update={"mission_phases": list(mapped.phases)})
+    spacecraft = blank.spacecraft.model_copy(
+        update={
+            "mission_phases": list(mapped.phases),
+            "body_frame": "The frame of the IDM-CIC model (origin and axes of its main system).",
+        }
+    )
     zero = Sourced(
         value=0.0,
         source=source,

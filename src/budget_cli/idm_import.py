@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from budget_core.idm.importer import ImportPlan, apply_plan, plan_import
-from budget_core.idm.mapping import MARGINS, ImportOptions, slug
+from budget_core.idm.mapping import MARGINS, MASS_PROPERTIES, ImportOptions, slug
 from budget_core.idm.reader import read_idm
 from budget_core.idm.summary import counts, plan_summary
 from budget_core.io.project_loader import load_project
@@ -47,6 +47,13 @@ def add_parser(sub: Any) -> None:
         "classes carry none. Margins are never applied twice.",
     )
     idm.add_argument(
+        "--mass-properties",
+        choices=MASS_PROPERTIES,
+        default="geometry",
+        help="geometry (default): work out the centre of gravity and the inertia of each unit "
+        "from the placements and shapes of the model, marked as estimates; none: leave them out.",
+    )
+    idm.add_argument(
         "--bus", default="main", help="Power bus of every imported unit (default main)."
     )
     idm.add_argument(
@@ -73,7 +80,9 @@ def run(args: argparse.Namespace) -> int:
         return _fail("The model could not be read; nothing was written.")
     model = read.model
     root = args.project or Path(slug(args.file.stem))
-    options = ImportOptions(margins=args.margins, bus=args.bus)
+    options = ImportOptions(
+        margins=args.margins, bus=args.bus, mass_properties=args.mass_properties
+    )
     plan = plan_import(model, root, options, bus_voltage_v=args.bus_voltage_v)
     errors = [p for p in plan.problems if p.severity is Severity.ERROR]
     if errors:

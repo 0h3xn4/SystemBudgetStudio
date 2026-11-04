@@ -99,3 +99,26 @@ def test_the_default_folder_is_named_after_the_file(
 def test_the_option_choices(model: Path) -> None:
     with pytest.raises(SystemExit):
         main(["import", "idm", str(model), "--margins", "both"])
+
+
+def test_mass_properties_reach_the_mass_budget_and_can_be_left_out(
+    tmp_path: Path, model: Path
+) -> None:
+    args = ["import", "idm", str(model), "--bus-voltage-v", "28", "--apply"]
+    with_props, without = tmp_path / "with", tmp_path / "without"
+    assert main([*args, "--project", str(with_props)]) == 0
+    assert main([*args, "--project", str(without), "--mass-properties", "none"]) == 0
+    a, b = load_project(with_props).project, load_project(without).project
+    assert a is not None and b is not None
+    placed = [u for u in a.units.values() if u.mass_properties is not None]
+    assert len(placed) >= 4  # the widgets, the slab and the reservoir are covered
+    assert all(u.mass_properties is None for u in b.units.values())
+    out = tmp_path / "out"
+    assert (
+        main(["run", str(with_props), "--budget", "mass", "--out", str(out), "--report", "json"])
+        == 0
+    )
+    import json
+
+    cog = json.loads((out / "mass_static.json").read_text(encoding="utf-8"))["phases"][0]["cog"]
+    assert cog["mass_kg"] > 0 and cog["coverage_ratio"] > 0.5

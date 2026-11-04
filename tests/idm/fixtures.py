@@ -29,10 +29,33 @@ def power_mode(mode_id: str, name: str, power: str, dissipation: str) -> str:
     )
 
 
+def position(
+    owner: str,
+    x: str = "0",
+    y: str = "0",
+    z: str = "0",
+    order: str = "Rx_Ry_Rz",
+    rotations: tuple[str, str, str] = ("0", "0", "0"),
+) -> str:
+    return (
+        f'<position><Position fullId="{owner}_pos">'
+        + _tag("x", x)
+        + _tag("y", y)
+        + _tag("z", z)
+        + _tag("rotationOrder", order)
+        + _tag("rotation1", rotations[0])
+        + _tag("rotation2", rotations[1])
+        + _tag("rotation3", rotations[2])
+        + _tag("transformationOrder", "Translation_Rotation")
+        + "</Position></position>"
+    )
+
+
 def shape(shape_id: str, owner: str, mass: str, body: str, mass_type: str = "Total") -> str:
     return (
         f'<Shape id="{shape_id}" fullId="{owner}_sh.{shape_id}">'
         + _tag("name", "Block " + shape_id)
+        + position(f"{owner}_sh.{shape_id}")
         + '<massDefinition><MassDefinition fullId="'
         + f'{owner}_sh.{shape_id}_massDefinition">'
         + _tag("massType", mass_type)
@@ -99,11 +122,18 @@ def mapping(owner: str, mode: str, power_mode: str) -> str:
 
 
 def instance(
-    eq_id: str, number: str, *, extra: str = "", tag: str = "EquipmentInstance", owner: str = EL
+    eq_id: str,
+    number: str,
+    *,
+    extra: str = "",
+    tag: str = "EquipmentInstance",
+    owner: str = EL,
+    where: str = "",
 ) -> str:
     full = f"{owner}_eqi.{eq_id}-{number}"
     return (
         f'<{tag} id="{eq_id}-{number}" fullId="{full}">'
+        + where
         + f'<unit><Equipment ref="{EL}_eq.{eq_id}" /></unit>'
         + extra
         + f"</{tag}>"
@@ -184,7 +214,11 @@ def model_xml(
     placed = (
         instance("1", "1", extra=widget_extra(f"{EL}_eqi.1-1"))
         + instance("1", "2", extra=widget_extra(f"{EL}_eqi.1-2"))
-        + instance("2", "1")
+        + instance(
+            "2",
+            "1",
+            where=position(f"{EL}_eqi.2-1", x="2", order="Rx_Ry_Rz", rotations=("0", "0", "90")),
+        )
         + instance("4", "1", extra=tank_content(f"{EL}_eqi.4-1"))
         + f'<AssemblyInstance id="5-1" fullId="{EL}_assi.5-1">'
         + f'<unit><Assembly ref="{EL}_ass.5" /></unit>'

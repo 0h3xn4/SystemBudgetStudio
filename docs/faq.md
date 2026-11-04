@@ -108,7 +108,7 @@ Yes: `budget tables-export` and `budget tables-import` (a dry run unless `--appl
 
 ### Can I start from a model made with IDM-CIC?
 
-Yes: `budget import idm model.idm --bus-voltage-v 28` shows what it would build and, with `--apply`, creates a project with a unit for every physical equipment, its masses and power modes, spacecraft modes from the system modes, thermal nodes and the propellant of the tanks, each value with its source. Import a newer version of the model into the same project later: your edits are kept and only the model's changes are taken ([IDM-CIC import](user-manual/idm-import.md)). Reads models from IDM-CIC (© CNES); the tool is independent of CNES.
+Yes: `budget import idm model.idm --bus-voltage-v 28` shows what it would build and, with `--apply`, creates a project with a unit for every physical equipment, its masses and power modes, spacecraft modes from the system modes, thermal nodes and the propellant of the tanks, each value with its source. Import a newer version of the model into the same project later: your edits are kept and only the model's changes are taken ([IDM-CIC import](user-manual/idm-import.md)). Reads models from IDM-CIC (© CNES); the tool is independent of CNES. Centre of gravity and inertia are worked out as estimates from the placements and shapes.
 
 ### Can I import my units from a spreadsheet?
 

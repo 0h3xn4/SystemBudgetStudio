@@ -29,10 +29,12 @@ from budget_core.idm.model import (
     Element,
     ElementMode,
     Equipment,
+    Frame,
     IdmModel,
     Inertia,
     Occurrence,
     Point,
+    Position,
     PowerMapping,
     PowerMode,
     RelatedSubsystem,
@@ -146,6 +148,65 @@ class _Reader:
     def ignore(self, kind: str) -> None:
         self.ignored[kind] = self.ignored.get(kind, 0) + 1
 
+    def position(self, node: ET.Element) -> Position | None:
+        inner = node.find("position/Position")
+        if inner is None:
+            return None
+        x, y, z = (self.number(inner, axis) for axis in ("x", "y", "z"))
+        angles = [self.number(inner, f"rotation{i}") for i in (1, 2, 3)]
+        order = self.text(inner, "rotationOrder")
+        transformation = self.text(inner, "transformationOrder")
+        if None in (x, y, z, order, transformation) or any(a is None for a in angles):
+            return None
+        assert x is not None and y is not None and z is not None
+        assert order is not None and transformation is not None
+        return Position(x, y, z, order, (angles[0], angles[1], angles[2]), transformation)  # type: ignore[arg-type]
+
+    def articulation(self, node: ET.Element) -> float | None:
+        """The reference value of the articulation of a coordinate system; NaN when it cannot
+        be read (it is then treated as not zero); None when there is no articulation."""
+        holder = node.find("articulation")
+        if holder is None or len(holder) == 0:
+            return None
+        art = holder[0]
+        if art.get("ref"):
+            art = self.index.get(art.get("ref", ""), art)
+        if art.tag in ("RotationDefinition", "TranslationDefinition", "Rotation", "Translation"):
+            value = self.number(art, "defaultValue")  # the reference configuration uses it
+            return 0.0 if value is None else value
+        return float("nan")
+
+    def frames(self) -> tuple[Frame, ...]:
+        out = []
+        occurrence_ids = {
+            full
+            for full, node in self.index.items()
+            if node.tag in _EQUIPMENT_TAGS + _ASSEMBLY_TAGS
+        }
+        for full_id in sorted(self.index):
+            node = self.index[full_id]
+            if node.tag in _EQUIPMENT_TAGS + _ASSEMBLY_TAGS:
+                kind, owner = "occurrence", None
+            elif node.tag in ("CoordinateSystem", "CoordinateSystemDefinition"):
+                kind = "coordinate_system"
+                prefix = full_id.rsplit("_co.", 1)[0]
+                owner = prefix if prefix in occurrence_ids else None
+            else:
+                continue
+            out.append(
+                Frame(
+                    full_id=full_id,
+                    kind=kind,
+                    position=self.position(node),
+                    parent=self.ref_child(node, "parentCoordinateSystem"),
+                    origin=self.ref_child(node, "originOccurrence")
+                    or self.ref_child(node, "originCoordinateSystem"),
+                    owner=owner,
+                    articulation=self.articulation(node) if kind == "coordinate_system" else None,
+                )
+            )
+        return tuple(out)
+
     # ---- definitions ------------------------------------------------------------------------
 
     def power_modes(self, equipment: ET.Element) -> tuple[PowerMode, ...]:
@@ -197,6 +258,7 @@ class _Reader:
                     kind=obj.tag if obj is not None else "",
                     parameters=tuple(parameters),
                     object_full_id=(obj.get("fullId", "") if obj is not None else ""),
+                    position=self.position(node),
                 )
             )
         return tuple(out)
@@ -546,6 +608,7 @@ def build_model(root: ET.Element, source_name: str, sha256: str) -> IdmRead:
         custom_properties=tuple(custom),
         stale_formula_targets=tuple(sorted(t for t in stale if t)),
         ignored_counts=tuple(sorted(reader.ignored.items())),
+        frames=reader.frames(),
     )
     return IdmRead(model, tuple(reader.problems))
 
