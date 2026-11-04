@@ -71,6 +71,7 @@ from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
 from budget_gui.components import PanelTitle, Toast
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
+from budget_gui.entry_tables import TABLE_TITLES, export_entry_table, import_entry_table
 from budget_gui.explain_panel import ExplainPanel
 from budget_gui.grid_view import GridPage
 from budget_gui.guided import GuidedWizard
@@ -394,6 +395,17 @@ class MainWindow(QMainWindow):
         file_menu.addSeparator()
         add("Export &unit table…", QKeySequence(), lambda: export_unit_table(self))
         add("&Import unit table…", QKeySequence(), lambda: import_unit_table(self))
+        for verb, mnemonic, run in (
+            ("Export", "Export t&ables", export_entry_table),
+            ("Import", "Import ta&bles", import_entry_table),
+        ):
+            submenu = file_menu.addMenu(mnemonic)
+            assert submenu is not None
+            for key, title in TABLE_TITLES.items():
+                entry = QAction(f"{title}…", self)
+                entry.setStatusTip(f"{verb} the {title.lower()} as a spreadsheet (.csv or .xlsx)")
+                entry.triggered.connect(lambda _checked=False, k=key, f=run: f(self, k))
+                submenu.addAction(entry)
         add("Import I&DM-CIC model…", QKeySequence(), lambda: import_idm_model(self))
         file_menu.addSeparator()
         add("&Quit", QKeySequence.StandardKey.Quit, self.close)
