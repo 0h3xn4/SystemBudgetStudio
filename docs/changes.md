@@ -6,6 +6,17 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-05: window pages for the beta sweep and the spreadsheet tables (2.8.0)
+
+**What changed.** The window gained the **Beta sweep** page of the Thermal area and the **File > Export tables / Import tables** entries ([D-251](DECISIONS.md)); they call the code the command line calls. No number of any result, no file format and no inputs digest changed.
+
+| Case | Before | After |
+|---|---|---|
+| Any result of any project | the numbers of 2.7.0 | the same numbers |
+| The beta sweep and the spreadsheet tables | command line only | also in the window, with a preview before an import writes |
+
+**Effect.** None on any result.
+
 ## 2026-11-05: the thermal model against the beta angle (2.7.0)
 
 **What changed.** A new command, `budget thermal-beta`, and a new optional field `normal_lvlh` on a surface of `config/thermal_model.yaml` (schema version 3, identity migration; [D-250](DECISIONS.md)). No existing number moved: the static thermal budget, the power timeline and every other result are computed as before.

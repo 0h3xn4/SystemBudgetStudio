@@ -4,6 +4,14 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.8.0] - 2026-11-05
+
+Two window pages for what 2.6.0 and 2.7.0 had on the command line only (decision D-251).
+
+- **Thermal > Beta sweep.** A second page of the Thermal area: choose the case, the heat loads (orbit average or worst instant), the range and step of the beta angle and the orbit (that of the scenario of the top bar, or a circular orbit at an altitude), press **Compute**. A worker solves the thermal model for every angle (**Cancel** stops it between two angles); the plot shows every node's temperature and the sunlit part of the orbit against the beta angle (the first plot of the window with an x axis that is not time, with its own readout) and the table has a row for each angle with the temperature of every node, the units beyond a limit and the smallest margin. **Export…** writes the files of `budget thermal-beta` (the command and the window share the code that makes them). A result goes stale when an input changes, as on the other result pages; a project with no thermal model, or with no surface that gives its `normal_lvlh`, shows an empty page that says what to add.
+- **File > Export tables / Import tables.** The Eb/N0 table, the attenuation table and the margin policy as a .csv or .xlsx, from the window: export writes the file; import reads it, checks it, shows every change (old and new value) and writes only when you say yes, keeping the comments of the file and reloading the project; it stops on a problem (a value without its source, a value that is not valid) and while files have unsaved edits. The entries are also in the Ctrl+K palette.
+- No result changed; nothing the window shows is computed any differently from the command line.
+
 ## [2.7.0] - 2026-11-05
 
 The thermal model against the beta angle (decision D-250; the design was reviewed as [thermal_beta_design.md](docs/thermal_beta_design.md)).

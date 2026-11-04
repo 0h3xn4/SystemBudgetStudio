@@ -4,7 +4,7 @@ Added in 2.7.0 (decision D-250, deviations DV-T4 and DV-T5). It builds on the [s
 
 ## What it computes
 
-For each beta angle in a range and for one thermal case: the steady-state temperature of every node, the check of every unit against its limits, and the sunlit part of the orbit. Command: `budget thermal-beta` ([manual](../user-manual/thermal-budget.md#how-do-the-temperatures-change-with-the-beta-angle)).
+For each beta angle in a range and for one thermal case: the steady-state temperature of every node, the check of every unit against its limits, and the sunlit part of the orbit. Command: `budget thermal-beta`, and the **Beta sweep** page of the Thermal area in the window (2.8.0), which asks the same code ([manual](../user-manual/thermal-budget.md#how-do-the-temperatures-change-with-the-beta-angle)).
 
 ## Equations
 

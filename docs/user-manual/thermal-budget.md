@@ -86,6 +86,8 @@ If a group of nodes has no path to space (no radiating surface), there is no equ
 
 ## How do the temperatures change with the beta angle?
 
+**In the window** (2.8.0): the **Thermal** area has a second page, **Beta sweep**. Choose the case, the heat loads (*Orbit average* or *Worst instant*), the range and step of the beta angle and the orbit (the one of the scenario chosen in the top bar, or a circular orbit at an altitude), then **Compute**. The plot shows the temperature of every node and the sunlit part of the orbit against the beta angle, and the table has a row for each angle: the sunlit part, the orbit angle of the worst instant, every node's temperature, how many units are beyond a limit and the smallest margin to a limit. **Export…** writes the same files as the command below. Changing an input makes the result stale (the page says so and the export is off) until you compute again. A project with no thermal model, or in which no surface gives its direction yet, shows an empty page that says what to add. The command line does the same:
+
 The *beta angle* is the angle between the orbit plane and the direction of the Sun. It decides how long a spacecraft is in sunlight and which of its faces the Sun reaches, so a thermal case typed for one beta angle does not hold for another. `budget thermal-beta` solves the model above for a range of beta angles (2.7.0):
 
 ```bash
