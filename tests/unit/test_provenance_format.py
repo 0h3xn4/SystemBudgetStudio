@@ -56,7 +56,7 @@ def test_every_kind_moves_up_one_version() -> None:
         "margin_policy": 3,
         "power_config": 2,
         "power_system": 2,
-        "thermal_model": 2,
+        "thermal_model": 3,  # 3: the optional `normal_lvlh` of a surface (D-250)
         "thermal_environment": 2,
         "mass_limits": 2,
         "ebn0_table": 3,
