@@ -74,6 +74,20 @@ class ExtraLoads:
             total += step_means([burn.start_s], [burn.end_s], [float(burn.power_w or 0.0)], edges)
         return total
 
+    def peak_between(self, start_s: float, end_s: float) -> float:
+        """The largest total power of the known events inside [start, end) (0 where none): the
+        pieces between the event edges are looked at one by one."""
+        inside = sorted(
+            {start_s, end_s}
+            | {t for e in self.events for t in (e.start_s, e.end_s) if start_s < t < end_s}
+        )
+        if len(inside) < 2:
+            return 0.0
+        known = ExtraLoads(
+            tuple(e for e in self.events if e.power_w is not None), (), False
+        ).mean_power(np.array(inside, dtype=np.float64))
+        return 0.0 if known is None or len(known) == 0 else float(np.max(known))
+
     def energy_wh(self) -> float | None:
         if self.incomplete or any(e.power_w is None for e in self.events):
             return None

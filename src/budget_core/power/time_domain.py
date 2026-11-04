@@ -28,6 +28,7 @@ from budget_core.power.orbits import orbit_windows_with_reason
 from budget_core.power.signals import integral_of_steps, step_edges, step_means
 from budget_core.power.static_budget import ModePowerResult, static_power_budget
 from budget_core.problems import Problem, Severity
+from budget_core.scenario.extra_loads import ExtraLoads, extra_loads
 from budget_core.scenario.run import ScenarioRun
 from budget_core.scenario.timeline import mode_index_on_grid
 
@@ -196,6 +197,11 @@ class TimeDomainResult:
     peak_limit_w: float | None = None
     dod_limit_ratio: float | None = None
     not_evaluated: tuple[NotEvaluated, ...] = field(default_factory=tuple)
+    # the pointing and propulsion load the scenario places (2.3.0): its events, and its mean power
+    # per step, which is already part of `load_w` and `demand_w` (None: nothing is placed, or a
+    # power is unknown)
+    extra: ExtraLoads | None = None
+    extra_w: NDArray | None = None
     detail: SolveDetail | None = None  # only with `keep_detail=True`
 
     @property
@@ -433,6 +439,10 @@ def time_domain_budget(
     cuts = [t for e in shadows for t in (e.start_s, e.end_s)]
     cuts += [t for s in timeline for t in (s.start_s, s.end_s)]
     cuts += [t for pair in windows for t in pair]
+    loads = extra_loads(project, run)
+    if loads is not None:
+        col.problems.extend(loads.problems)
+        cuts += [t for e in loads.events for t in (e.start_s, e.end_s)]
     redges = refined_edges(edges, cuts)
 
     # --- modes, demand ------------------------------------------------------------------
@@ -448,8 +458,17 @@ def time_domain_budget(
         values = [float(flows[s.mode][index] or 0.0) for s in timeline]
         return step_means(seg_starts, seg_ends, values, at)
 
-    load_w = per_step(0, edges)
-    demand_w = per_step(1, edges)
+    def with_extra(base: NDArray | None, at: NDArray) -> NDArray | None:
+        """The load of placed pointing and burns is added to the demand as it is: it is the
+        electrical power the project gives, at the source, with no margin (D-235)."""
+        if base is None or loads is None:
+            return base
+        extra = loads.mean_power(at)
+        return None if extra is None else base + extra
+
+    load_w = with_extra(per_step(0, edges), edges)
+    demand_w = with_extra(per_step(1, edges), edges)
+    extra_w = None if loads is None else loads.mean_power(edges)
     step_mode = mode_index_on_grid(timeline, edges[:-1], list(mode_ids))
     durations = {m: sum(s.duration_s for s in timeline if s.mode == m) for m in mode_ids}
     mode_rows = tuple(
@@ -484,7 +503,9 @@ def time_domain_budget(
             collector,
         )
         return _Prepared(
-            _GridMap(edges, dt, at, np.diff(at), grid_edge_at), per_step(1, at), generation
+            _GridMap(edges, dt, at, np.diff(at), grid_edge_at),
+            with_extra(per_step(1, at), at),
+            generation,
         )
 
     # --- array ----------------------------------------------------------------------------
@@ -514,7 +535,7 @@ def time_domain_budget(
         "The peak power limit",
     )
 
-    peak_violations = _peak_violations(run, mode_rows, peak_limit)
+    peak_violations = _peak_violations(run, mode_rows, peak_limit, loads)
 
     # The instants at which the battery becomes full or empty are edges too. They depend on the
     # state, so they are found by solving and then added; adding an edge inside a step of
@@ -580,6 +601,8 @@ def time_domain_budget(
         peak_limit_w=peak_limit,
         dod_limit_ratio=dod_limit,
         not_evaluated=not_evaluated,
+        extra=loads,
+        extra_w=extra_w,
         detail=SolveDetail(
             prepared.grid.redges,
             prepared.grid.rdt,
@@ -936,7 +959,10 @@ def _base_generation(
 
 @computes("TDP-PEAK")
 def _peak_violations(
-    run: ScenarioRun, modes: tuple[ModeRow, ...], limit: float | None
+    run: ScenarioRun,
+    modes: tuple[ModeRow, ...],
+    limit: float | None,
+    loads: ExtraLoads | None = None,
 ) -> list[Violation]:
     if limit is None:
         return []
@@ -944,7 +970,11 @@ def _peak_violations(
     out: list[Violation] = []
     for seg in run.timeline:
         peak = over.get(seg.mode)
-        if peak is None or peak <= limit + POWER_TOL_W:
+        if peak is None:
+            continue
+        if loads is not None:
+            peak += loads.peak_between(seg.start_s, seg.end_s)
+        if peak <= limit + POWER_TOL_W:
             continue
         if out and out[-1].end_s >= seg.start_s - 1e-9:
             previous = out[-1]
