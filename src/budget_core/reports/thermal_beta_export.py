@@ -117,3 +117,28 @@ def beta_json(
         "result_format": result_format("thermal_beta"),
     }
     return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+
+
+def beta_files(
+    sweep: BetaSweep,
+    provenance: Provenance,
+    load_problems: Sequence[Problem] = (),
+    *,
+    plots: bool = True,
+) -> list[tuple[str, bytes | str]]:
+    """The files of one sweep as (name, content): the CSV, the JSON, the provenance CSV and the
+    plot. The command line and the window write the same files."""
+    from budget_core.plots.render import render_png
+    from budget_core.plots.thermal_beta import thermal_beta_plot
+    from budget_core.reports.csvutil import provenance_csv
+
+    stem = f"thermal_beta_{sweep.case}_{sweep.mode}"
+    incomplete = any(not p.case.complete for p in sweep.points)
+    files: list[tuple[str, bytes | str]] = [
+        (f"{stem}.csv", "\ufeff" + beta_csv(sweep)),
+        (f"{stem}.json", beta_json(sweep, provenance, load_problems)),
+        (f"{stem}_provenance.csv", provenance_csv(provenance, incomplete=incomplete)),
+    ]
+    if plots:
+        files.append((f"{stem}.png", render_png(thermal_beta_plot(sweep))))
+    return files

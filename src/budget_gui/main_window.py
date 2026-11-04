@@ -67,6 +67,7 @@ from budget_gui.add_scenario_dialog import AddScenarioDialog
 from budget_gui.add_site_dialog import AddSiteDialog
 from budget_gui.assumptions_page import AssumptionsPage
 from budget_gui.banner import Banner
+from budget_gui.beta_view import BetaView
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
 from budget_gui.components import PanelTitle, Toast
@@ -205,6 +206,8 @@ class MainWindow(QMainWindow):
         self.timeline_view = PowerTimelineView()
         self.timeline_view.explain_requested.connect(self.explain_timeline_value)
         self.timeline_view.run_provider = self.scenario_view.reusable_run
+        self.beta_view = BetaView()  # the thermal model against the beta angle (2.8.0, D-250)
+        self.beta_view.run_provider = self.scenario_view.reusable_run
         self.link_passes_view = LinkPassesView()
         self.link_passes_view.explain_requested.connect(self.explain_link_pass_value)
         self.link_passes_view.run_provider = self.scenario_view.reusable_run
@@ -222,10 +225,13 @@ class MainWindow(QMainWindow):
         self.mass_pages = SubTabs(
             [("Budget", self.mass_view), ("Propulsion", self.propulsion_view)]
         )
+        self.thermal_pages = SubTabs(
+            [("Budget", self.thermal_view), ("Beta sweep", self.beta_view)]
+        )
         self.link_pages = SubTabs([("Budget", self.link_view), ("Passes", self.link_passes_view)])
         self.workspace.add_page("Power", self.power_pages)
         self.workspace.add_page("Mass", self.mass_pages)
-        self.workspace.add_page("Thermal", self.thermal_view)
+        self.workspace.add_page("Thermal", self.thermal_pages)
         self.workspace.add_page("Link", self.link_pages)
         self.workspace.add_page("Compare", self.compare_view)
         self.workspace.add_page("Reports", self.reports_view)
@@ -357,10 +363,11 @@ class MainWindow(QMainWindow):
         self._queue_active = False
         self.timeline_view.computed.connect(lambda _result: self._update_problems())
         self.link_passes_view.computed.connect(lambda _result: self._update_problems())
+        self.beta_view.computed.connect(lambda _result: self._update_problems())
         for computing in (self.scenario_view, self.timeline_view, self.link_passes_view):
             computing.computed.connect(lambda _result: self._mark_run())
         self.timeline_view.jump_requested.connect(self.jump_to_input)
-        for view in (self.timeline_view, self.link_passes_view, self.compare_view):
+        for view in (self.timeline_view, self.link_passes_view, self.beta_view, self.compare_view):
             view.export_finished.connect(self._view_export_done)
             view.export_failed.connect(self._view_export_failed)
         # after the slots above, so the message of a queued export is the last one shown
@@ -1717,6 +1724,7 @@ class MainWindow(QMainWindow):
         for combo in (self.timeline_view.scenario_combo, self.link_passes_view.scenario_combo):
             if combo.currentText() != chosen:
                 combo.setCurrentText(chosen)
+        self.beta_view.use_scenario(chosen)
         self.top_bar.set_scenario(chosen)
         self._update_run_state()
 
@@ -1763,6 +1771,7 @@ class MainWindow(QMainWindow):
             self.scenario_view,
             self.timeline_view,
             self.link_passes_view,
+            self.beta_view,
         ):
             view.set_empty_text(reason)
         for view, text in (
@@ -2094,6 +2103,7 @@ class MainWindow(QMainWindow):
         load_problems = session.load_result.problems if session.load_result else []
         self.timeline_view.set_project(project, load_problems)
         self.link_passes_view.set_project(project, load_problems)
+        self.beta_view.set_project(project, load_problems)
         self.compare_view.set_project(project)
         self._update_problems()
         self.editors.reload_clean_files()
@@ -2141,7 +2151,11 @@ class MainWindow(QMainWindow):
         known = {(p.code, p.file, p.path, p.message) for p in self.session.problems}
         extra = [
             p
-            for p in [*self.timeline_view.problems(), *self.link_passes_view.problems()]
+            for p in [
+                *self.timeline_view.problems(),
+                *self.link_passes_view.problems(),
+                *self.beta_view.problems(),
+            ]
             if (p.code, p.file, p.path, p.message) not in known
         ]
         located = [
@@ -2451,7 +2465,13 @@ class MainWindow(QMainWindow):
 
     def busy(self) -> bool:
         """A computation or an export is running in a background thread."""
-        views = (self.scenario_view, self.timeline_view, self.link_passes_view, self.compare_view)
+        views = (
+            self.scenario_view,
+            self.timeline_view,
+            self.link_passes_view,
+            self.beta_view,
+            self.compare_view,
+        )
         return (
             self._worker is not None
             or self._explain_worker is not None

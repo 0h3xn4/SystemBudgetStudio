@@ -18,8 +18,10 @@ from __future__ import annotations
 import math
 from collections.abc import Sequence
 from dataclasses import dataclass, replace
-from typing import Literal
+from typing import Any, Literal
 
+from budget_core.control import RunControl, checkpoint
+from budget_core.environment.constants import DEFAULT_EARTH_MODEL, EARTH_MODELS
 from budget_core.model import Project, Sourced
 from budget_core.model.thermal import Exposure, Surface
 from budget_core.problems import Problem
@@ -93,8 +95,10 @@ def thermal_beta_sweep(
     mode: Mode,
     earth_radius_m: float,
     orbit_radius_m: float,
+    control: RunControl | None = None,
 ) -> BetaSweep:
-    """The node temperatures of `case` at each beta angle. The project must be valid."""
+    """The node temperatures of `case` at each beta angle. The project must be valid. With a
+    `control` the window can stop it between two angles (nothing is returned then)."""
     model = project.config.thermal_model
     env = project.config.thermal_environment
     if model is None or env is None:
@@ -118,6 +122,7 @@ def thermal_beta_sweep(
     points: list[BetaPoint] = []
     problems: list[Problem] = []
     for beta in betas:
+        checkpoint(control)
         views, u_deg = _solar_views(
             with_normal, beta, mode, earth_radius_m, orbit_radius_m, problems
         )
@@ -220,6 +225,18 @@ def _unique(items: list[Problem]) -> list[Problem]:
     return out
 
 
+def orbit_of_run(run: Any) -> tuple[float, float]:
+    """(Earth radius, orbit radius) in metres of a scenario run: the Earth model of the run and
+    the mean radius of its propagated positions (the orbit is taken as a circle of that radius)."""
+    import numpy as np
+
+    positions = np.asarray(run.env.position_m)
+    if len(positions) == 0:
+        raise BetaSweepError("The scenario has no orbit positions.")
+    model_id = run.env.earth_model if run.env.earth_model in EARTH_MODELS else DEFAULT_EARTH_MODEL
+    return EARTH_MODELS[model_id].radius_m, float(np.mean(np.linalg.norm(positions, axis=1)))
+
+
 def node_temperatures(point: BetaPoint) -> dict[str, float]:
     return {n.node: n.temperature_k for n in point.case.nodes}
 
@@ -231,5 +248,6 @@ __all__ = [
     "NodeTemperature",
     "beta_range",
     "node_temperatures",
+    "orbit_of_run",
     "thermal_beta_sweep",
 ]

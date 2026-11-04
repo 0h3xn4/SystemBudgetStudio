@@ -61,6 +61,34 @@ class ElapsedAxis:
         return f"Time since scenario start ({time_axis(end_s - start_s)[1]})"
 
 
+class ValueAxis:
+    """An axis that is not time (the beta angle of the thermal sweep, D-250): round ticks on the
+    values, the title and the readout name the quantity and its unit."""
+
+    name = "value"
+
+    def __init__(self, quantity: str, unit: str) -> None:
+        self.quantity = quantity
+        self.unit = unit
+
+    def ticks(self, start_s: float, end_s: float) -> Ticks:
+        return [
+            (tick, _text(tick))
+            for tick in nice_ticks(start_s, end_s, 8)
+            if start_s - 1e-9 <= tick <= end_s + 1e-9
+        ]
+
+    def title(self, start_s: float, end_s: float) -> str:
+        return f"{self.quantity} ({self.unit})"
+
+    def describe(self, value: float) -> str:
+        """The first line of the readout at `value`."""
+        return f"{self.quantity} = {value:.1f} {self.unit}"
+
+    def describe_difference(self, pinned: float, value: float) -> str:
+        return f"pinned {pinned:.1f} {self.unit}, difference {value - pinned:+.1f} {self.unit}"
+
+
 class UtcAxis:
     """Clock times (UTC) on round minutes, hours or days; midnight carries the date."""
 
