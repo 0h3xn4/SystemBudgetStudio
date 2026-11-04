@@ -6,6 +6,18 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-04: more shapes for the centre of gravity of an imported model (2.5.0)
+
+**What changed.** The import now works out the centre of gravity and inertia of equipment whose shapes are whole cones, hollow cylinders, hollow cones with equal radii and tanks, as well as the shapes of 2.4.0 ([D-247](DECISIONS.md), deviation DV-IDM5). They are estimates, like the rest. Nothing else moved.
+
+| Case | Before | After |
+|---|---|---|
+| Any existing project | the numbers of 2.4.0 | the same numbers, the same files, the same inputs digest |
+| A model import of equipment with such a shape | no centre of gravity or inertia for that unit, a finding `IDM_GEOMETRY_SHAPE` | the unit has them, marked as an estimate; the mass budget no longer lists the unit as missing |
+| CIC-SAT V6 (sample of the owner) | 104 of 124 equipment placed | 118 of 123 units placed |
+
+**Effect.** None on existing projects. An import into a project made with 2.4.0 adds the new values to the units that had none (a value you changed is kept), so the centre of gravity of the whole satellite moves toward its real position.
+
 ## 2026-11-04: importing IDM-CIC models (2.4.0)
 
 **What changed.** The command `budget import idm` and *File > Import IDM-CIC model...* build or update a project from a model file ([D-237 to D-244](DECISIONS.md)). No file format of the project changed (no schema version moved), no budget changed and no existing result moved: the golden files differ only by the tool version.

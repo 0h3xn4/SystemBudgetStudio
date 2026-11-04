@@ -21,6 +21,12 @@ as an estimate, and anything they do not cover is left out, never guessed:
 * a box has its origin at a corner and extends along +x, +y, +z by d1, d2, d3; a cylinder has its
   axis along z from the origin to the height d3; a prism has its section in the x-y plane (a
   triangle or a quadrangle from the origin along x) and extends along +z by its thickness;
+* a cone and a hollow cylinder stand like the cylinder: base on the origin, axis along +z, whole
+  turn only; a hollow wall is measured across the radius (so a hollow cone is taken only when its
+  two radii are equal, where the radial and the normal thickness are the same thing); a tank is a
+  hollow cylinder with hemispherical ends, its straight part from the origin to d3 along +z and
+  the ends reaching beyond (the position of its origin along the axis is the least certain
+  convention here: for a straight part of height h it moves the centre of gravity by h / 2);
 * a shape of mass type Total is a body of uniform density; a shape of mass 0 is ignored.
 """
 
@@ -28,6 +34,7 @@ from __future__ import annotations
 
 import math
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
@@ -183,6 +190,79 @@ def _polygon_prism(points: list[tuple[float, float]], thickness: float, mass: fl
     return Body(mass, np.array([cx, cy, thickness / 2.0]), inertia)
 
 
+_GAUSS_X, _GAUSS_W = np.polynomial.legendre.leggauss(6)  # exact for polynomials up to degree 11
+
+
+def _revolution(r2: Callable[[Array], Array], z0: float, z1: float) -> Body:
+    """A solid of revolution about z of unit density, with the radius squared as a polynomial in z.
+
+    The mass of the returned body is its volume. The integrals are exact for the cones, cylinders
+    and spheres used here (the radius squared is a polynomial of degree 2 at most).
+    """
+    z = 0.5 * (z1 - z0) * _GAUSS_X + 0.5 * (z1 + z0)
+    w = 0.5 * (z1 - z0) * _GAUSS_W
+    q = r2(z)
+    volume = float(math.pi * (w * q).sum())
+    if volume <= 0.0:
+        raise GeometryError(SHAPE, "a shape with no volume")
+    zc = float(math.pi * (w * q * z).sum()) / volume
+    izz = float(math.pi * (w * q * q).sum()) / 2.0
+    ixx_o = float(math.pi * (w * (q * q / 4.0 + q * z * z)).sum())  # about the origin
+    ixx = ixx_o - volume * zc * zc
+    return Body(volume, np.array([0.0, 0.0, zc]), np.diag([ixx, ixx, izz]))
+
+
+def _scaled(body: Body, mass: float) -> Body:
+    k = mass / body.mass
+    return Body(mass, body.com, body.inertia * k)
+
+
+def _frustum(r1: float, r2: float, h: float) -> Body:
+    if h <= 0.0 or r1 < 0.0 or r2 < 0.0:
+        raise GeometryError(SHAPE, "a shape with no volume")
+    return _revolution(lambda z: (r1 + (r2 - r1) * z / h) ** 2, 0.0, h)
+
+
+def _whole_turn(shape: Shape) -> None:
+    start, end = _param(shape, "angle1", 0.0), _param(shape, "angle2", math.degrees(math.tau))
+    if not math.isclose(abs(end - start), math.degrees(math.tau)) or _param(shape, "s", 1.0) != 1.0:
+        raise GeometryError(SHAPE, "a shape that is not whole or is stretched")
+
+
+def _wall(shape: Shape, radius: float) -> float:
+    thickness = _param(shape, "d4")
+    if not 0.0 < thickness < radius:
+        raise GeometryError(SHAPE, "a wall that is not thinner than the radius")
+    return thickness
+
+
+def _sphere_section(centre: float, radius: float) -> Callable[[Array], Array]:
+    """The radius squared of a sphere centred at `centre` on the axis, as a function of z."""
+
+    def section(z: Array) -> Array:
+        return radius * radius - (z - centre) ** 2
+
+    return section
+
+
+def _tank_body(radius: float, height: float, thickness: float) -> Body:
+    """The empty tank: a cylindrical shell and two hemispherical shells, unit density."""
+    inner = radius - thickness
+    bodies: list[Body] = []
+    if height > 0.0:
+        bodies += [_frustum(radius, radius, height), _negative(_frustum(inner, inner, height))]
+    for centre, sign in ((0.0, -1.0), (height, 1.0)):  # the end below and the end above
+        for rad, factor in ((radius, 1.0), (inner, -1.0)):
+            lo, hi = sorted((centre, centre + sign * rad))
+            ball = _revolution(_sphere_section(centre, rad), lo, hi)
+            bodies.append(ball if factor > 0 else _negative(ball))
+    return _combine(bodies)
+
+
+def _negative(body: Body) -> Body:
+    return Body(-body.mass, body.com, -body.inertia)
+
+
 def shape_body(shape: Shape) -> Body:
     """The body of a shape of mass type Total, in the frame of the shape."""
     mass = shape.mass_total_kg
@@ -222,6 +302,23 @@ def shape_body(shape: Shape) -> Body:
             (d2 * math.cos(a1), d2 * math.sin(a1)),
         ]
         return _polygon_prism(quad, d4, mass)
+    if kind == "FilledCone":
+        _whole_turn(shape)
+        r1, r2, h = (_param(shape, k) for k in ("d1", "d2", "d3"))
+        return _scaled(_frustum(r1, r2, h), mass)
+    if kind in ("HollowCylinder", "HollowCone"):
+        _whole_turn(shape)
+        r1, h = _param(shape, "d1"), _param(shape, "d3")
+        r2 = _param(shape, "d2") if kind == "HollowCone" else r1
+        if not math.isclose(r1, r2):
+            raise GeometryError(SHAPE, "a hollow cone whose two radii differ")
+        t = _wall(shape, r1)
+        return _scaled(
+            _combine([_frustum(r1, r1, h), _negative(_frustum(r1 - t, r1 - t, h))]), mass
+        )
+    if kind == "Tank":
+        r, h = _param(shape, "d1"), _param(shape, "d3", 0.0)
+        return _scaled(_tank_body(r, h, _wall(shape, r)), mass)
     raise GeometryError(SHAPE, "a kind of shape that is not covered")
 
 
