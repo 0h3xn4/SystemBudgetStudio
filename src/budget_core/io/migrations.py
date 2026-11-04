@@ -204,6 +204,11 @@ _PROVENANCE_STEPS = {
     ("orbit", 2): _annotated(3),
     # the expendable gains the optional `phase_positions_m` (D-230)
     ("expendable", 2): _annotated(3),
+    # the scenario gains `pointing_default`, `pointing_rules` and `maneuvers`, the pointing file
+    # `control` and two references, the propulsion file `mode` and the thrusting heat (D-235)
+    ("scenario", 4): _annotated(5),
+    ("pointing", 1): _annotated(2),
+    ("propulsion", 1): _annotated(2),
 }
 
 DEFAULT_REGISTRY = MigrationRegistry(

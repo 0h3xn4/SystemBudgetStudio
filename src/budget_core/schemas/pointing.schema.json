@@ -71,6 +71,24 @@
           "title": "Actuator",
           "type": "string"
         },
+        "control": {
+          "anyOf": [
+            {
+              "enum": [
+                "three_axis",
+                "spin",
+                "bdot",
+                "sun_safe"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Control"
+        },
         "hold_power_w": {
           "anyOf": [
             {
@@ -93,6 +111,8 @@
             "sun",
             "inertial",
             "target",
+            "bdot",
+            "spin",
             "other"
           ],
           "title": "Reference",
@@ -262,8 +282,8 @@
       "type": "object"
     },
     "schema_version": {
-      "const": 1,
-      "default": 1,
+      "const": 2,
+      "default": 2,
       "title": "Schema Version",
       "type": "integer"
     },

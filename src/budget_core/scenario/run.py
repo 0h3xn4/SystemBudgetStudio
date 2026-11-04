@@ -24,9 +24,10 @@ from budget_core.environment.spacemissionstudio import (
 )
 from budget_core.io.paths import resolve_inside
 from budget_core.io.project_loader import model_to_data
-from budget_core.model import Project, Scenario
+from budget_core.model import Project, Scenario, ScenarioSegment
 from budget_core.power import array as arr
 from budget_core.problems import Problem, Severity
+from budget_core.scenario.extra_loads import maneuver_segments
 from budget_core.scenario.timeline import TimelineSegment, build_timeline
 from budget_core.timeutil import format_utc, parse_utc
 
@@ -47,6 +48,8 @@ class ScenarioRun:
     timeline: tuple[TimelineSegment, ...]
     notes: tuple[str, ...]
     problems: tuple[Problem, ...] = ()  # findings of the run itself (an old TLE)
+    # the spacecraft-mode segments of the burns the scenario places (2.3.0)
+    burns: tuple[ScenarioSegment, ...] = ()
 
 
 # what the report says of the Earth model the geometry was computed on (D-219)
@@ -212,8 +215,15 @@ def run_scenario(
         )
         if age is not None:
             problems.append(age)
+    burns = tuple(maneuver_segments(project, scenario))
     return ScenarioRun(
-        scenario_id, scenario, env, build_timeline(scenario, env), notes, tuple(problems)
+        scenario_id,
+        scenario,
+        env,
+        build_timeline(scenario, env, burns),
+        notes,
+        tuple(problems),
+        burns,
     )
 
 
@@ -279,7 +289,8 @@ def rebuild_timeline(run: ScenarioRun, scenario: Scenario) -> ScenarioRun:
         run.scenario_id,
         scenario,
         run.env,
-        build_timeline(scenario, run.env),
+        build_timeline(scenario, run.env, run.burns),
         run.notes,
         run.problems,
+        run.burns,
     )

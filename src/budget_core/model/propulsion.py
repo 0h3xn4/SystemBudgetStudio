@@ -23,9 +23,17 @@ class PropulsionSystem(BudgetModel):
     thrust_n: Sourced | None = None  # for the burn time
     power_w: Sourced | None = None  # electric: the power drawn while thrusting
     propellant: str | None = None  # the id of the expendable that holds this system's propellant
+    # the heat a burn puts into a thermal node (2.3.0): the power drawn while thrusting that does
+    # not leave as thrust, in the thermal cases of the manoeuvre's spacecraft mode
+    thermal_node: str | None = None
+    thrust_heat_w: Sourced | None = None
 
     @model_validator(mode="after")
     def _power_only_electric(self) -> PropulsionSystem:
+        if (self.thermal_node is None) != (self.thrust_heat_w is None):
+            raise PydanticCustomError(
+                "heat_node", "a thrusting heat needs its thermal node and the other way round"
+            )
         if self.power_w is not None and self.type != "electric":
             raise PydanticCustomError(
                 "power_not_electric", "only an electric system has a thrusting power"
@@ -38,6 +46,9 @@ class Maneuver(BudgetModel):
     system: str = Field(min_length=1)
     delta_v_m_s: Sourced
     count: int = Field(default=1, ge=1)  # identical burns (for example station-keeping)
+    # the spacecraft mode during the burn when it is placed in a scenario (2.3.0): the
+    # "Manoeuvre" mode; without it the scenario's own mode continues
+    mode: str | None = None
 
 
 class PropulsionConfig(BudgetModel):

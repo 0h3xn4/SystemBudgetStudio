@@ -11,7 +11,7 @@ units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, 
 orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{...} or state{epoch_utc, frame, position_m[3], velocity_m_s[3]}   (see ENVIRONMENT_FORMAT.md)
 ground_stations/<id>.yaml kind: ground_station   name, latitude_deg, longitude_deg, altitude_m, min_elevation_deg
 targets/<id>.yaml       kind: target             same fields as a ground station (imaging target)
-scenarios/<id>.yaml     kind: scenario (v4)      orbit, start_utc, duration_s, step_s, shadow_model?, earth_model?, irradiance_model?, sites, mission_phase?, default_mode, rules[], segments[]
+scenarios/<id>.yaml     kind: scenario (v5)      orbit, start_utc, duration_s, step_s, shadow_model?, earth_model?, irradiance_model?, sites, mission_phase?, default_mode, rules[], segments[], pointing_default?, pointing_rules[]?, maneuvers[]?
 expendables/<id>.yaml   kind: expendable (v3)    name, subsystem, maturity, masses_kg{phase: kg}, mass_properties?, phase_positions_m{phase: [x, y, z]}?
 modes/<id>.yaml         kind: spacecraft_mode    name, description, assignments{unit id: power mode name}
 config/margin_policy.yaml      kind: margin_policy (v2)  classes{name: {power_margin_ratio, mass_margin_ratio}}, system_power_margin_ratio, system_mass_margin_ratio
@@ -23,8 +23,8 @@ config/thermal_environment.yaml kind: thermal_environment space_temperature_k, t
 links/<id>.yaml         kind: link               name, direction, peer?, frequency_hz, transmitter{}, receiver{}, modulation, coding, data_rates_bps[], required_margin_db, ..._loss_db, attenuation[], active_modes[], max_elevation_deg?, static_points[]
 config/ebn0_table.yaml         kind: ebn0_table          entries[{modulation, coding, required_ebn0_db, target_ber?, target_fer?}]
 config/attenuation_table.yaml  kind: attenuation_table   entries[{name, attenuation_kind, freq_hz, elevation_deg, loss_db}]
-config/pointing.yaml           kind: pointing            actuators{id: {name, max_torque_nm, max_rate_deg_s?, momentum_capacity_nms?, slew_power_w?}}, modes{id: {name, reference, accuracy_deg?, actuator, hold_power_w?}}, slews[{name, from_mode, to_mode, angle_deg, axis, actuator, inertia_kgm2?, settle_s?, per_day?}], mass_phase?   (optional)
-config/propulsion.yaml         kind: propulsion          systems{id: {name, type, isp_s, thrust_n?, power_w?, propellant?}}, maneuvers[{name, system, delta_v_m_s, count?}], dry_mass_kg?, delta_v_margin_ratio?   (optional)
+config/pointing.yaml           kind: pointing            actuators{id: {name, max_torque_nm, max_rate_deg_s?, momentum_capacity_nms?, slew_power_w?}}, modes{id: {name, reference, control?, accuracy_deg?, actuator, hold_power_w?}}, slews[{name, from_mode, to_mode, angle_deg, axis, actuator, inertia_kgm2?, settle_s?, per_day?}], mass_phase?   (optional)
+config/propulsion.yaml         kind: propulsion          systems{id: {name, type, isp_s, thrust_n?, power_w?, propellant?, thermal_node?, thrust_heat_w?}}, maneuvers[{name, system, delta_v_m_s, count?, mode?}], dry_mass_kg?, delta_v_margin_ratio?   (optional)
 ```
 
 `config/propulsion.yaml` (2.2.0, schema version 1) holds the propulsion and delta-v budget: `systems` (each `type` is `chemical` or `electric`; `isp_s`, `thrust_n` and `power_w` are sourced numbers, `power_w` only for an electric system; `propellant` is the id of an expendable), `maneuvers` in mission order (`delta_v_m_s` sourced, `count` of identical burns, default 1), `dry_mass_kg` and `delta_v_margin_ratio` (both sourced and optional). See [propulsion](user-manual/propulsion.md).
@@ -178,6 +178,20 @@ static_points:                   # chosen elevation and range for the static tab
 - Receiver: `g_over_t_dbk` (dB/K), or `antenna` + `system_noise_temperature_k` + `feed_loss_db`.
 - Required Eb/N0 comes from `config/ebn0_table.yaml` (entry with the same modulation and coding); attenuation entries are chosen by name from `config/attenuation_table.yaml`.
 - Results: the static table at every static point (EIRP, G/T, losses, C/N0, Eb/N0 and margin at every listed rate, highest rate that closes), and with a scenario the margin, selected rate and data volume over every pass.
+
+## Pointing and manoeuvres in a scenario (2.3.0, schema version 5)
+
+A scenario may hold a pointing mode of `config/pointing.yaml` over its whole length and change it with rules, separately from the spacecraft modes, and may place burns of `config/propulsion.yaml`:
+
+```yaml
+pointing_default: nadir            # a pointing mode id
+pointing_rules:                    # the same kinds as `rules`; `mode` is a pointing mode id
+  - {kind: during_pass, site: tgt_plains, mode: target, lead_s: 30}
+maneuvers:                         # burns of config/propulsion.yaml, by the manoeuvre's name
+  - {name: Orbit trim, start_s: 3600}
+```
+
+`pointing_rules` need a `pointing_default`. A change of pointing mode flies the slew between the two modes (`REF_UNKNOWN_POINTING_MODE` for an unknown id, `POINTING_SLEW_MISSING` if the pointing file defines no slew between them). A placed manoeuvre starts `start_s` seconds after the scenario start and lasts its burn time (`REF_UNKNOWN_MANEUVER` for a name the propulsion file lacks). In `config/propulsion.yaml` a manoeuvre may name a spacecraft `mode` that holds for its burn (the manoeuvre mode), and a system may name a `thermal_node` with a `thrust_heat_w`, the heat a burn puts into it. In `config/pointing.yaml` a pointing mode may record how it is controlled (`control`: `three_axis`, `spin`, `bdot` or `sun_safe`; it changes no result) and its `reference` may also be `bdot` or `spin`. Empty `pointing_rules` and `maneuvers` are not written to a file. See [scenarios](user-manual/scenarios.md#pointing-and-manoeuvres-in-a-scenario) and [decision D-235](DECISIONS.md).
 
 ## Unit schema 2
 

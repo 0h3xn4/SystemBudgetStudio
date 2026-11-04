@@ -860,6 +860,65 @@ def _inside_dir(root: FsPath, rel: str) -> bool:
     return found is not None and found.is_dir()
 
 
+def _scenario_ops_references(
+    project: Project, sc: Scenario, file: str, lines: dict[str, LineMap]
+) -> list[Problem]:
+    """The pointing rules and the manoeuvres a scenario places (2.3.0)."""
+    out: list[Problem] = []
+    err = Severity.ERROR
+    pointing, propulsion = project.config.pointing, project.config.propulsion
+    modes = pointing.modes if pointing else {}
+    pointing_paths = [("pointing_default", sc.pointing_default)] if sc.pointing_default else []
+    pointing_paths += [
+        (f"pointing_rules.{i}.mode", r.mode) for i, r in enumerate(sc.pointing_rules)
+    ]
+    for path, mode in pointing_paths:
+        if mode not in modes:
+            parts = tuple(int(x) if x.isdigit() else x for x in path.split("."))
+            out.append(
+                _p(
+                    err,
+                    "REF_UNKNOWN_POINTING_MODE",
+                    "This is not a pointing mode of config/pointing.yaml.",
+                    file,
+                    parts,
+                    lines,
+                    "Use an id listed under 'modes' in config/pointing.yaml"
+                    + ("" if pointing else " (the project has no such file)")
+                    + ".",
+                )
+            )
+    for index, rule in enumerate(sc.pointing_rules):
+        if rule.site is not None and rule.site not in sc.sites:
+            out.append(
+                _p(
+                    err,
+                    "REF_UNKNOWN_SITE",
+                    "The pointing rule uses a site that the scenario does not list.",
+                    file,
+                    ("pointing_rules", index, "site"),
+                    lines,
+                    "Add the site to 'sites' of the scenario.",
+                )
+            )
+    names = {m.name for m in propulsion.maneuvers} if propulsion else set()
+    for index, placed in enumerate(sc.maneuvers):
+        if placed.name not in names:
+            out.append(
+                _p(
+                    err,
+                    "REF_UNKNOWN_MANEUVER",
+                    "This is not a manoeuvre of config/propulsion.yaml.",
+                    file,
+                    ("maneuvers", index, "name"),
+                    lines,
+                    "Use the name of a manoeuvre listed under 'maneuvers' in "
+                    "config/propulsion.yaml.",
+                )
+            )
+    return out
+
+
 def _pointing_references(project: Project, lines: dict[str, LineMap]) -> list[Problem]:
     out: list[Problem] = []
     config = project.config.pointing
@@ -942,6 +1001,53 @@ def _propulsion_references(
                     ("maneuvers", index, "system"),
                     lines,
                     "Use an id listed under 'systems' in config/propulsion.yaml.",
+                )
+            )
+    for index, maneuver in enumerate(config.maneuvers):
+        if (
+            maneuver.mode is not None
+            and maneuver.mode not in project.modes
+            and maneuver.mode not in _failed(failed, "modes")
+        ):
+            out.append(
+                _p(
+                    Severity.ERROR,
+                    "REF_UNKNOWN_MODE",
+                    "This is not a spacecraft mode in modes/.",
+                    file,
+                    ("maneuvers", index, "mode"),
+                    lines,
+                    "Defined modes: " + ", ".join(sorted(project.modes)) + ".",
+                )
+            )
+    names = [m.name for m in config.maneuvers]
+    for index, name in enumerate(names):
+        if name in names[:index]:
+            out.append(
+                _p(
+                    Severity.ERROR,
+                    "DUPLICATE_NAME",
+                    "Another manoeuvre has the same name.",
+                    file,
+                    ("maneuvers", index, "name"),
+                    lines,
+                    "A scenario places a manoeuvre by its name: give each a different name.",
+                )
+            )
+    thermal = project.config.thermal_model
+    for sid, system in config.systems.items():
+        if system.thermal_node is not None and (
+            thermal is None or system.thermal_node not in thermal.nodes
+        ):
+            out.append(
+                _p(
+                    Severity.ERROR,
+                    "THERMAL_NODE_UNKNOWN",
+                    "The thrusting heat names a thermal node that is not defined.",
+                    file,
+                    ("systems", sid, "thermal_node"),
+                    lines,
+                    "Use a node listed under 'nodes' in config/thermal_model.yaml.",
                 )
             )
     for sid, system in config.systems.items():
@@ -1358,6 +1464,7 @@ def _environment_references(
                         "Add the site to 'sites' of the scenario.",
                     )
                 )
+        out.extend(_scenario_ops_references(project, sc, file, lines))
         known = ", ".join(sorted(project.modes))
         wanted = [("default_mode", sc.default_mode)]
         wanted += [(f"rules[{i}].mode", r.mode) for i, r in enumerate(sc.rules)]

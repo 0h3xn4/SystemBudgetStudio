@@ -26,7 +26,9 @@ class Actuator(BudgetModel):
 
 class PointingMode(BudgetModel):
     name: str = Field(min_length=1)
-    reference: Literal["nadir", "sun", "inertial", "target", "other"]
+    reference: Literal["nadir", "sun", "inertial", "target", "bdot", "spin", "other"]
+    # how the attitude is controlled (2.3.0): recorded and shown, it changes no result
+    control: Literal["three_axis", "spin", "bdot", "sun_safe"] | None = None
     accuracy_deg: Sourced | None = None  # the requirement, not a result
     actuator: str = Field(min_length=1)
     hold_power_w: Sourced | None = None  # mean electrical power to hold the mode

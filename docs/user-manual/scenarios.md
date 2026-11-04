@@ -127,6 +127,25 @@ segments:                         # hand-built, applied last, must not overlap
 
 `lead_s` and `lag_s` start the mode earlier or end it later around a pass. In the window **Model → Scenario** shows the timeline and lets you edit rules and segments ([below](#how-do-i-edit-the-rules-in-the-window)); invalid edits are explained and nothing is written until you save.
 
+## Pointing and manoeuvres in a scenario
+
+Pointing changes and burns cost power, and the power budget should see them. A scenario can say which **pointing mode** holds when (separately from the spacecraft modes) and **place burns** of the propulsion file:
+
+```yaml
+pointing_default: nadir            # a pointing mode of config/pointing.yaml
+pointing_rules:                    # like the mode rules; `mode` is a pointing mode
+  - {kind: during_pass, site: tgt_plains, mode: target, lead_s: 30}
+maneuvers:                         # burns of config/propulsion.yaml, by name
+  - {name: Orbit trim, start_s: 3600}
+```
+
+- The **holding power** of the active pointing mode (`hold_power_w`) is added to the demand. A mode with no holding power is not modelled and adds nothing; a placeholder makes the load unknown (n/a), never zero.
+- Where the pointing mode changes, the **slew** between the two modes (from `config/pointing.yaml`) is flown: the actuators draw their slew power for the slew time, then the new mode's holding power takes over. A change with no slew defined is `POINTING_SLEW_MISSING` and costs nothing; a slew longer than the mode it leads to is cut (`POINTING_SLEW_TOO_LONG`).
+- A placed **manoeuvre** lasts its burn time (the propellant of the line at the system's constant thrust) from `start_s`. An electric system draws its thrusting power meanwhile; a chemical one draws none. A manoeuvre of the propulsion file that names a `mode` switches the scenario to that spacecraft mode for the burn (the manoeuvre mode). A burn past the end of the scenario is cut (`MANEUVER_CUT`). A line with several burns (`count`) is placed as one, lasting all its burns.
+- The load is shown on its own line, *Pointing and propulsion load*, in the power timeline, never mixed into the demand of the spacecraft modes. **No margin is applied to it**: put the margin in the inputs.
+
+The examples do not use these fields; add them to a copy to try them.
+
 ## How do I see eclipses, passes and the timeline?
 
 ```bash

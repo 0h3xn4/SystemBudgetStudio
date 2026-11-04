@@ -208,6 +208,15 @@ class ScenarioRule(BudgetModel):
         return self
 
 
+class ScenarioManeuver(BudgetModel):
+    """A burn of the propulsion file placed in the scenario (2.3.0): the manoeuvre of
+    `config/propulsion.yaml` with this name starts `start_s` seconds after the scenario start and
+    lasts as long as its propellant, specific impulse and thrust say."""
+
+    name: str = Field(min_length=1)
+    start_s: float = Field(ge=0)
+
+
 class Scenario(ProvenancedModel):
     """Parameters of a scenario; computed results are never stored in the project (D-057)."""
 
@@ -233,6 +242,13 @@ class Scenario(ProvenancedModel):
     default_mode: str = Field(min_length=1)
     rules: list[ScenarioRule] = Field(default_factory=list, max_length=MAX_RULES)
     segments: list[ScenarioSegment] = Field(default_factory=list, max_length=MAX_RULES)
+    # pointing modes of config/pointing.yaml, kept apart from the spacecraft modes (2.3.0): the
+    # default holds over the whole scenario and each rule paints a mode over the events it names
+    # (the `mode` of a pointing rule is a pointing mode id); a change of pointing mode costs the
+    # slew between the two modes
+    pointing_default: str | None = None
+    pointing_rules: list[ScenarioRule] = Field(default_factory=list, max_length=MAX_RULES)
+    maneuvers: list[ScenarioManeuver] = Field(default_factory=list, max_length=MAX_RULES)
 
     @field_validator("start_utc")
     @classmethod
@@ -265,6 +281,12 @@ class Scenario(ProvenancedModel):
         if self.duration_s / min(self.step_s, DETECTION_STEP_S) + 1 > MAX_SAMPLES:
             raise PydanticCustomError(
                 "scenario_too_large", "too many time steps; increase step_s", {"field": "step_s"}
+            )
+        if self.pointing_rules and not self.pointing_default:
+            raise PydanticCustomError(
+                "pointing_default",
+                "pointing rules need a pointing_default to hold between them",
+                {"field": "pointing_default"},
             )
         ordered = sorted(self.segments, key=lambda s: s.start_s)
         for first, second in zip(ordered, ordered[1:], strict=False):

@@ -381,6 +381,16 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "Use an id listed under `actuators` in config/pointing.yaml, or add the actuator.",
     ),
     _e(
+        "REF_UNKNOWN_MANEUVER",
+        ERR,
+        _REF,
+        "A scenario places a manoeuvre that is not defined",
+        "The `name` of a manoeuvre in a scenario must be one listed under `maneuvers` in "
+        "config/propulsion.yaml.",
+        "The burn time and the thrusting power come from the propulsion file.",
+        "Use the name of a manoeuvre of config/propulsion.yaml, or add the manoeuvre there.",
+    ),
+    _e(
         "REF_UNKNOWN_UNIT",
         ERR,
         _REF,
@@ -929,6 +939,34 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "momentum capacity of the actuators.",
         "Beyond the capacity the actuators saturate and the slew cannot be flown as planned.",
         "Lower the rate limit, slew a smaller angle, or use actuators that store more momentum.",
+    ),
+    _e(
+        "POINTING_SLEW_MISSING",
+        WARN,
+        _POINT,
+        "The pointing mode changes where no slew is defined",
+        "Every change of pointing mode in a scenario needs a slew between the two modes in "
+        "config/pointing.yaml (with the angle, the axis and the actuators).",
+        "Without it the power of the change is not counted, which understates the load.",
+        "Add a slew from the first pointing mode to the second to config/pointing.yaml.",
+    ),
+    _e(
+        "POINTING_SLEW_TOO_LONG",
+        WARN,
+        _POINT,
+        "A slew is longer than the pointing mode it leads to",
+        "A slew must finish before the next change of pointing mode.",
+        "A slew cut short means the spacecraft is not yet pointing as the mode needs.",
+        "Use fewer changes of pointing mode, or a faster slew (more torque, a smaller angle).",
+    ),
+    _e(
+        "MANEUVER_CUT",
+        WARN,
+        _POINT,
+        "A manoeuvre starts after the scenario ends or runs past its end",
+        "The burn of a placed manoeuvre should lie inside the scenario.",
+        "Only the part inside the scenario is counted in the power budget.",
+        "Start the manoeuvre earlier or lengthen the scenario.",
     ),
     # ---- other ----
     _e(
