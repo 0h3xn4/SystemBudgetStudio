@@ -64,7 +64,7 @@ EBN0_HEADER = [
 
 
 def test_the_tables_are_named() -> None:
-    assert set(TABLES) == {"ebn0", "attenuation"}
+    assert set(TABLES) == {"ebn0", "attenuation", "margins"}
 
 
 def test_the_ebn0_export_has_the_columns_and_the_entries(root: Path) -> None:
@@ -301,3 +301,130 @@ def test_the_attenuation_export_round_trips(root: Path, tmp_path: Path) -> None:
 def test_a_table_that_is_not_one_of_ours_is_refused(root: Path, tmp_path: Path) -> None:
     with pytest.raises(KeyError):
         table_csv(_project(root), "links")
+
+
+# ---- the margin policy (2.6.0, D-249) --------------------------------------------------------
+
+MARGIN_HEADER = ["item", "quantity", "margin_ratio", "source", "status", "note"]
+
+
+def test_the_margin_export_has_one_row_for_each_margin(root: Path) -> None:
+    rows = list(csv.reader(io.StringIO(table_csv(_project(root), "margins"))))
+    assert rows[0] == MARGIN_HEADER
+    policy = _project(root).config.margin_policy
+    assert policy is not None
+    assert len(rows) - 1 == 2 * len(policy.classes) + 2  # two margins a class, two for the system
+    assert rows[1][:3] == ["class_a", "power_margin_ratio", "0.05"]
+    assert rows[-1][:2] == ["system", "mass_margin_ratio"]
+
+
+def test_the_margin_export_reads_back_as_no_change(root: Path, tmp_path: Path) -> None:
+    csv_path = tmp_path / "m.csv"
+    csv_path.write_text(table_csv(_project(root), "margins"), encoding="utf-8")
+    plan = plan_entry_import(_project(root), "margins", read_entry_table(csv_path, "margins"), "m")
+    assert plan.ok and not plan.changes and plan.unchanged == 8
+    xlsx_path = tmp_path / "m.xlsx"
+    xlsx_path.write_bytes(table_xlsx(_project(root), "margins"))
+    plan = plan_entry_import(
+        _project(root), "margins", read_entry_table(xlsx_path, "margins"), "m.xlsx"
+    )
+    assert plan.ok and not plan.changes
+
+
+def test_a_mass_margin_with_its_source_is_filled_in_and_the_file_keeps_its_comments(
+    root: Path, tmp_path: Path
+) -> None:
+    path = root / "config" / "margin_policy.yaml"
+    path.write_text("# kept comment\n" + path.read_text(encoding="utf-8"), encoding="utf-8")
+    plan = _plan(
+        root,
+        "margins",
+        [
+            MARGIN_HEADER,
+            ["class_a", "mass_margin_ratio", "0.1", "Project margin policy rev B", "sourced", ""],
+            ["system", "mass_margin_ratio", "0.05", "Project margin policy rev B", "", ""],
+        ],
+        tmp_path,
+    )
+    assert plan.ok, [p.format() for p in plan.problems]
+    assert {c.key for c in plan.changes} == {
+        "class_a / mass_margin_ratio",
+        "system / mass_margin_ratio",
+    }
+    assert apply_entry_plan(root, "margins", plan)
+    text = path.read_text(encoding="utf-8")
+    assert text.startswith("# kept comment")
+    policy = _project(root).config.margin_policy
+    assert policy is not None
+    assert policy.classes["class_a"].mass_margin_ratio.value == 0.1
+    assert policy.classes["class_a"].mass_margin_ratio.source == "Project margin policy rev B"
+    assert policy.system_mass_margin_ratio.value == 0.05
+    assert policy.classes["class_b"].mass_margin_ratio.value is None  # untouched placeholder
+
+
+def test_a_new_class_gets_its_other_margin_as_a_placeholder(root: Path, tmp_path: Path) -> None:
+    plan = _plan(
+        root,
+        "margins",
+        [MARGIN_HEADER, ["class_d", "power_margin_ratio", "0.3", "Policy rev B", "sourced", ""]],
+        tmp_path,
+    )
+    assert plan.ok and plan.edits
+    apply_entry_plan(root, "margins", plan)
+    policy = _project(root).config.margin_policy
+    assert policy is not None
+    assert policy.classes["class_d"].power_margin_ratio.value == 0.3
+    other = policy.classes["class_d"].mass_margin_ratio
+    assert other.value is None and other.source == "TBD"
+
+
+def test_a_margin_value_needs_its_source_and_a_range_and_a_known_quantity(
+    root: Path, tmp_path: Path
+) -> None:
+    no_source = _plan(
+        root,
+        "margins",
+        [MARGIN_HEADER, ["class_a", "power_margin_ratio", "0.07", "", "", ""]],
+        tmp_path,
+    )
+    assert [p.code for p in no_source.problems] == ["IMPORT_SOURCE_MISSING"]
+    too_big = _plan(
+        root,
+        "margins",
+        [MARGIN_HEADER, ["class_a", "power_margin_ratio", "11", "x", "", ""]],
+        tmp_path,
+    )
+    assert [p.code for p in too_big.problems] == ["IMPORT_VALUE_INVALID"]
+    unknown = _plan(
+        root,
+        "margins",
+        [MARGIN_HEADER, ["class_a", "thermal_margin", "0.1", "x", "", ""]],
+        tmp_path,
+    )
+    assert [p.code for p in unknown.problems] == ["IMPORT_VALUE_INVALID"]
+    for plan in (no_source, too_big, unknown):
+        assert not plan.ok and apply_entry_plan(root, "margins", plan) == []
+        assert not any("0.07" in p.message or "thermal_margin" in p.message for p in plan.problems)
+
+
+def test_a_missing_margin_policy_is_created_with_placeholder_system_margins(
+    root: Path, tmp_path: Path
+) -> None:
+    (root / "config" / "margin_policy.yaml").unlink()
+    plan = _plan(
+        root,
+        "margins",
+        [MARGIN_HEADER, ["class_a", "power_margin_ratio", "0.05", "Policy rev B", "", ""]],
+        tmp_path,
+    )
+    assert plan.ok
+    apply_entry_plan(root, "margins", plan)
+    # the units of the example name other classes, so the project no longer loads: read the file
+    from budget_core.io.yamlio import load_yaml_text
+    from budget_core.model import MarginPolicy
+
+    data = load_yaml_text((root / "config" / "margin_policy.yaml").read_text("utf-8")).data
+    policy = MarginPolicy.model_validate(data)
+    assert policy.classes["class_a"].power_margin_ratio.value == 0.05
+    assert policy.system_power_margin_ratio.value is None
+    assert policy.system_power_margin_ratio.source == "TBD"
