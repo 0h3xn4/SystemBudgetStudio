@@ -4,6 +4,16 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-11-04
+
+The margin policy as a spreadsheet, a correction to the explanation of the demand, and the decisions on the optional items offered after 2.3.0 (D-248 to D-250).
+
+- **The margin policy as a spreadsheet (D-249).** `budget tables-export PROJECT margins` and `budget tables-import PROJECT margins FILE [--apply]` write and read the margin policy as a .csv or .xlsx, one row for each margin: the maturity class (or `system`), `power_margin_ratio` or `mass_margin_ratio`, the ratio, its source, status and note. The rules are those of the Eb/N0 and attenuation tables: a row is found by its key, an empty cell means unchanged, a number needs its source in the same row, nothing is deleted, comments are kept, a ratio outside 0 to 10 is refused as `budget validate` would. A new class gets its other margin as a placeholder.
+- **Explain: the pointing and burn load (correction).** With a scenario that places pointing modes or burns, the explanation of *Average demand at source*, *Energy demanded* and the peak-power findings did not include their load: its cross-check line said the mode table gave the same energy when it did not, and a peak-power finding showed the mode's peak without the load. The load now has its own step listing every hold, slew and burn with its power, the cross-check adds its energy, and the worst peak includes it. No number of any result changed; only the explanation did, and only for such scenarios.
+- **`budget tables-import`** wrote "8 entrys"; it now says "8 entries".
+- **Decided, not built:** no frozen-orbit helper, because SGP4 has no J3 evolution of the mean elements and the tool could not show or check a frozen orbit (D-248, the orbit design page); the links stay out of the spreadsheet import (D-249). **Proposed for review:** the thermal model against the beta angle ([design](docs/thermal_beta_design.md), D-250); nothing is built.
+- No existing result changed; no file format changed.
+
 ## [2.5.0] - 2026-11-04
 
 More shapes for the centre of gravity of an imported IDM-CIC model (decision D-247; reads models from IDM-CIC (c) CNES).
