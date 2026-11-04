@@ -808,6 +808,16 @@ CATALOGUE: tuple[SettingSpec, ...] = (
         "The state file holds a copy of every imported unit; it is read whole.",
         "Reading idm/import_state.yaml and idm/mode_map.yaml (D-241).",
     ),
+    _s(
+        "idm.summary_objects_per_code",
+        "setting",
+        "Objects named per finding in the import summary",
+        "objects",
+        5,
+        "idm.summary:SHOWN_PER_CODE",
+        "The summary names this many objects for each kind of finding and counts the rest.",
+        "The text of the IDM-CIC import plan; the JSON output lists every finding.",
+    ),
     # ---- creation defaults and limits of the forms -------------------------------------------
     _s(
         "creation.wizard_eccentricity_ratio",
