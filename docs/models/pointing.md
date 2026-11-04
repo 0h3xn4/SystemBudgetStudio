@@ -4,7 +4,7 @@ How long a turn from one pointing attitude to another takes, how fast the spacec
 
 ## Pointing modes are not spacecraft modes
 
-A [spacecraft mode](../glossary.md#spacecraft-mode) chooses the power mode of every unit. A **pointing mode** says what the spacecraft points at (`nadir`, `sun`, `inertial`, `target`, `other`), the accuracy required and the actuators that hold it. A project has both, and they are kept apart: the pointing file does not change a power budget. The power to hold a pointing mode (`hold_power_w`) and the power of a slew (`slew_power_w`) are reported here; to count them in the power budget, give them to the units that draw them (the wheels, the magnetorquers) in those units' power modes.
+A [spacecraft mode](../glossary.md#spacecraft-mode) chooses the power mode of every unit. A **pointing mode** says what the spacecraft points at (`nadir`, `sun`, `inertial`, `target`, `other`), the accuracy required and the actuators that hold it. A project has both, and they are kept apart: the pointing file does not change a spacecraft mode. The pointing budget on this page reports the power to hold each pointing mode (`hold_power_w`) and of each slew (`slew_power_w`) by itself. To put them on the **power timeline**, place the pointing modes in a scenario (`pointing_default` and `pointing_rules`): the timeline then adds the holding power of the active mode and, where the mode changes, the slew between the two modes, as its own series ([the scenario](../user-manual/scenarios.md#pointing-and-manoeuvres-in-a-scenario), decision D-235). A scenario that places nothing leaves the power budget as it was.
 
 ## The slew
 
@@ -42,4 +42,4 @@ Every number is a sourced value; a placeholder gives n/a, never zero.
 
 ## Outputs
 
-`budget run --budget pointing` (and `--budget all` when the file exists) writes `pointing.xlsx|pdf|docx|json` and `pointing_slews.csv`; the layout of the JSON is in [RESULT_FORMAT](../RESULT_FORMAT.md). The window computes it with the other budgets and the Reports page writes it.
+`budget run --budget pointing` (and `--budget all` when the file exists) writes `pointing.xlsx|pdf|docx|json` and `pointing_slews.csv`; the layout of the JSON is in [RESULT_FORMAT](../RESULT_FORMAT.md). In the window it is the **Pointing** page of the *Power* area, and the Reports page writes it. A pointing mode may also record how it is controlled (`control`: `three_axis`, `spin`, `bdot` or `sun_safe`); that changes no result, and its reference may be `bdot` or `spin` as well.

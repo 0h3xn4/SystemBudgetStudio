@@ -42,7 +42,7 @@ A mode or a slew that names an actuator or a pointing mode that is not defined i
 budget run my_satellite --budget pointing --out out
 ```
 
-`--budget all` includes it when the file exists. In the window the budget is computed with the others and written from the **Reports** page. The example `microsat_250kg_eps` has a small file with invented values.
+`--budget all` includes it when the file exists. In the window it is the **Pointing** page of the *Power* area, and the **Reports** page writes it. The example `microsat_250kg_eps` has a small file with invented values.
 
 ## How do I read the result?
 
@@ -50,6 +50,6 @@ budget run my_satellite --budget pointing --out out
 - **Slews:** the time of each slew and with settling, the peak rate (and whether the rate limit was reached), the inertia, the peak momentum against the capacity, the energy of one slew and per day.
 - The summary gives the slew time and energy per day.
 
-The holding and slewing power are *reported*, not added to the power budget: a pointing mode is not a spacecraft mode. Give the power to the units that draw it in their power modes.
+The pointing budget reports the holding and slewing power by itself. To see their effect on the power timeline, **place** the pointing modes in a scenario (`pointing_default`, `pointing_rules`; in the window: *Model → Scenario → Pointing*): the timeline adds the holding power of the active mode and the slew where it changes, as its own line, *Pointing and propulsion load* ([how](scenarios.md#pointing-and-manoeuvres-in-a-scenario)). A pointing mode is still not a spacecraft mode; the pointing rules are independent of the mode rules.
 
 Next: [Propulsion](propulsion.md) · [Mass budget](mass-budget.md) (the inertia).

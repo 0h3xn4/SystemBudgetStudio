@@ -117,14 +117,14 @@
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
-5: 'Tool' | 'System Budget Studio 2.2.0'
+5: 'Tool' | 'System Budget Studio 2.3.0'
 6: 'Python' | '3.x'
 7: 'Libraries' | 'pinned for-golden-tests'
 8: 'Project' | 'Example stress case (200 units)'
 9: 'Project revision' | '1'
 10: 'Scenario' | 'static (no scenario)'
-11: 'Inputs digest (model)' | 'sha256:8759d8825fd967f34346487b647c53719a1efc00439d5434170b5456c4f2cb65'
-12: 'Input files' | '220 files, sha256:f7d5ff9c3eafbc66bdcd5b8f67cd55a9a3a9c61f068bf5d635a4b30148095964'
+11: 'Inputs digest (model)' | 'sha256:0af9c5c21478f72ad8eb67b1a352a3d90eec82cc95e92fd95fd3ebd6c395f478'
+12: 'Input files' | '220 files, sha256:229f95146ccf9bb0d4b1f98c81d32cc153a542db47adbd20dcaa99b487276570'
 13: 'Illustrative inputs' | '6592'
 14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 ...

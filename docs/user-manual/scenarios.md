@@ -161,7 +161,7 @@ maneuvers:                         # burns of config/propulsion.yaml, by name
 - A placed **manoeuvre** lasts its burn time (the propellant of the line at the system's constant thrust) from `start_s`. An electric system draws its thrusting power meanwhile; a chemical one draws none. A manoeuvre of the propulsion file that names a `mode` switches the scenario to that spacecraft mode for the burn (the manoeuvre mode). A burn past the end of the scenario is cut (`MANEUVER_CUT`). A line with several burns (`count`) is placed as one, lasting all its burns.
 - The load is shown on its own line, *Pointing and propulsion load*, in the power timeline, never mixed into the demand of the spacecraft modes. **No margin is applied to it**: put the margin in the inputs.
 
-The examples do not use these fields; add them to a copy to try them.
+In the window, *Model → Scenario* has a **Pointing** section (the default pointing mode and the pointing rules) and a **Manoeuvres** section (the burns), each change one undo step. The examples do not use these fields; add them to a copy to try them.
 
 ## How do I see eclipses, passes and the timeline?
 

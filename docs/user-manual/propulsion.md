@@ -39,7 +39,7 @@ The delta-v of a manoeuvre is yours to give; the tool does not compute orbit tra
 budget run my_satellite --budget propulsion --out out
 ```
 
-`--budget all` includes it when the file exists. In the window the budget is computed with the others and written from the **Reports** page. The [example project](../../examples/README.md) `microsat_250kg_eps` has a small file with invented values.
+`--budget all` includes it when the file exists. In the window it is the **Propulsion** page of the *Mass* area, and the **Reports** page writes it. To put a burn on the power timeline, place it in a scenario ([how](scenarios.md#pointing-and-manoeuvres-in-a-scenario)). The [example project](../../examples/README.md) `microsat_250kg_eps` has a small file with invented values.
 
 ## How do I read the result?
 

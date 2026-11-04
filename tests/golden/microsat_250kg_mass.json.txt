@@ -1592,7 +1592,7 @@
       },
       {
         "path": "config/pointing.yaml",
-        "sha256": "87c79639b2e5cd020e2d8dd9f8ec5b1b76dd14817562d96d741560bc91002268",
+        "sha256": "99fa3af004420185d31491d35defbecb4d18d5ed15e19e46a45dd57e0144731d",
         "size": 1568
       },
       {
@@ -1607,7 +1607,7 @@
       },
       {
         "path": "config/propulsion.yaml",
-        "sha256": "c21dcf2c42dd560329996fd9371f4328a7a2991dcff13c4e6289c2fca02be8d0",
+        "sha256": "2b56f3e0fa1b48782395ac255bc64c300aba49d646becb5ec2ba3d34b6a21793",
         "size": 947
       },
       {
@@ -1672,7 +1672,7 @@
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "120ee56df65852c002015a21b439b6372a5fe02b3a044f9a0d4c68c37f9b0bdb",
+        "sha256": "0ea75f061050b2170b92e2846089133ab74fbb71fe066d06e9ceaba459ce7881",
         "size": 359
       },
       {
@@ -1682,7 +1682,7 @@
       },
       {
         "path": "scenarios/one_day.yaml",
-        "sha256": "b11923dd148470ac3f3633fc870d60cdaf08b834b4cc7aa41d6d00b69665c749",
+        "sha256": "ccbb9802fa0fcf8f20f74763d5b90dd4c88b7ce2f61821c7d357b50ad4d102fd",
         "size": 752
       },
       {
@@ -1786,7 +1786,7 @@
         "size": 632
       }
     ],
-    "inputs_digest": "sha256:6a40a91be7b8095916a7ccf10517406192af2be418c11c9f4e56bfe6ffff57c0",
+    "inputs_digest": "sha256:e77bf7c0701fb93fb9ccd8e6288d6c1e02472b88b887aaa43253c4097206921b",
     "libraries": [
       [
         "pinned",
@@ -1799,7 +1799,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.2.0",
+    "tool_version": "2.3.0",
     "user": "Golden User"
   },
   "result_format": {

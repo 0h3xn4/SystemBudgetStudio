@@ -6,6 +6,18 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-04: pointing and burns on the power timeline (scenario 5, orbit 4, pointing 2, propulsion 2)
+
+**What changed.** A scenario may now place pointing modes and manoeuvres ([D-235](DECISIONS.md)), the elements of an orbit may give the local time of the node instead of the RAAN ([D-236](DECISIONS.md)). The scenario, orbit, pointing and propulsion files went up one schema version each (older files read unchanged), and the schema versions are part of the model digest, so the inputs digest of every project is a new value.
+
+| Case | Before | After |
+|---|---|---|
+| A scenario that places no pointing and no manoeuvre | the power timeline of 2.2.0 | the same numbers, the same files |
+| A scenario that places them | not possible | the load is added to the demand as its own series |
+| Inputs digest of a project | value of 2.2.0 | a new value, the same for the old file and the new one |
+
+**Effect.** `budget verify` of an export made by an earlier release reports DIFFERENT for the digest although the inputs are the same; the file hashes tell which. The series CSV gains a last column, `pointing_propulsion_w`, only for a scenario that places something.
+
 ## 2026-11-03: the inputs digest changes once more (the propulsion and pointing files)
 
 **What changed.** A project may now hold `config/propulsion.yaml` and `config/pointing.yaml` ([D-233](DECISIONS.md), [D-234](DECISIONS.md)), two new file kinds at schema version 1. The model digest lists the schema version of every kind, so the digest of every project is a new value, and the example projects `microsat_250kg` and `microsat_250kg_eps` gain the file (their file hashes and digests change). No existing number changes: a project without the file gives the same budgets.
