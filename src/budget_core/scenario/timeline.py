@@ -6,13 +6,14 @@ then the hand-built segments. Segments are half-open [start, end).
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
 
 from budget_core.environment.data import EnvironmentData
-from budget_core.model import Scenario
+from budget_core.model import Scenario, ScenarioSegment
 
 NDArray = np.ndarray[Any, np.dtype[Any]]
 EPS = 1e-9
@@ -76,8 +77,11 @@ def _merge(segments: list[TimelineSegment]) -> tuple[TimelineSegment, ...]:
     return tuple(merged)
 
 
-def build_timeline(scenario: Scenario, env: EnvironmentData) -> tuple[TimelineSegment, ...]:
-    """The mode timeline over [0, duration]; contiguous, no gaps, no overlaps."""
+def build_timeline(
+    scenario: Scenario, env: EnvironmentData, burns: Sequence[ScenarioSegment] = ()
+) -> tuple[TimelineSegment, ...]:
+    """The mode timeline over [0, duration]; contiguous, no gaps, no overlaps. `burns` are the
+    segments of the manoeuvres a scenario places (2.3.0), painted last."""
     limit = scenario.duration_s
     segments = [TimelineSegment(0.0, limit, scenario.default_mode)]
     for rule in scenario.rules:
@@ -99,6 +103,8 @@ def build_timeline(scenario: Scenario, env: EnvironmentData) -> tuple[TimelineSe
                 cursor = max(cursor, e.end_s)
             segments = _paint(segments, cursor, limit, rule.mode, limit)
     for seg in scenario.segments:
+        segments = _paint(segments, seg.start_s, seg.start_s + seg.duration_s, seg.mode, limit)
+    for seg in burns:
         segments = _paint(segments, seg.start_s, seg.start_s + seg.duration_s, seg.mode, limit)
     return _merge(segments)
 

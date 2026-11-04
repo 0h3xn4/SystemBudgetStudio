@@ -47,10 +47,10 @@ def test_every_kind_moves_up_one_version() -> None:
         "spacecraft": 2,
         "unit": 3,
         "expendable": 3,
-        "orbit": 3,
+        "orbit": 4,
         "ground_station": 2,
         "target": 2,
-        "scenario": 4,  # 3 for the provenance, 4 for the model choice earth_model (D-221)
+        "scenario": 5,  # 3 provenance, 4 earth_model (D-221), 5 pointing and manoeuvres (D-235)
         "link": 2,
         "spacecraft_mode": 2,
         "margin_policy": 3,
@@ -61,12 +61,12 @@ def test_every_kind_moves_up_one_version() -> None:
         "mass_limits": 2,
         "ebn0_table": 3,
         "attenuation_table": 2,
-        "pointing": 1,
-        "propulsion": 1,  # new in 2.2.0: has no earlier version to migrate from
+        "pointing": 2,
+        "propulsion": 2,
     }
 
 
-@pytest.mark.parametrize("kind", sorted(set(CURRENT_VERSIONS) - {"propulsion", "pointing"}))
+@pytest.mark.parametrize("kind", sorted(CURRENT_VERSIONS))
 def test_a_file_of_the_previous_version_reads_unchanged_in_the_current_one(kind: str) -> None:
     current = CURRENT_VERSIONS[kind]
     # the oldest version a file of this kind ever had that has a chain of steps

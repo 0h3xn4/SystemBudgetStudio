@@ -41,6 +41,11 @@ class ManeuverRow:
     mass_before_kg: float | None
     mass_after_kg: float | None
     propellant_kg: float | None
+    # the time the line's burns last together at the system's constant thrust, and the spacecraft
+    # mode and the electrical power during them (2.3.0, for a scenario that places the manoeuvre)
+    burn_time_s: float | None = None
+    mode: str | None = None
+    power_w: float | None = None
 
 
 @dataclass(frozen=True)
@@ -177,6 +182,17 @@ def propulsion_budget(project: Project) -> PropulsionResult | None:
         before: float | None = None
         if after is not None and dv_total is not None and i is not None:
             before = mass_before_burn_kg(after, dv_total, i)
+        used = None if before is None or after is None else before - after
+        engine = systems.get(m.system)
+        thrust = _value(engine.thrust_n) if engine else None
+        burn = (
+            burn_time_s(used, i, thrust)
+            if used is not None and i is not None and thrust is not None
+            else None
+        )
+        power: float | None = None
+        if engine is not None:
+            power = _value(engine.power_w) if engine.type == "electric" else 0.0
         rows.append(
             ManeuverRow(
                 m.name,
@@ -186,7 +202,10 @@ def propulsion_budget(project: Project) -> PropulsionResult | None:
                 dv_total,
                 before,
                 after,
-                None if before is None or after is None else before - after,
+                used,
+                burn,
+                m.mode,
+                power,
             )
         )
         after = before  # unknown stays unknown for every earlier burn

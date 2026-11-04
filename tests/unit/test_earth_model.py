@@ -203,8 +203,8 @@ def test_an_older_scenario_file_reads_unchanged(tmp_path: Path) -> None:
     root = _project_with(tmp_path, None, requires=False)
     path = sorted((root / "scenarios").glob("*.yaml"))[0]
     text = path.read_text(encoding="utf-8")
-    assert "schema_version: 4" in text
-    path.write_text(text.replace("schema_version: 4", "schema_version: 3", 1), encoding="utf-8")
+    assert "schema_version: 5" in text
+    path.write_text(text.replace("schema_version: 5", "schema_version: 3", 1), encoding="utf-8")
     loaded = load_project(root)
     assert loaded.project is not None
     assert "FILE_MIGRATED" in {p.code for p in loaded.problems}

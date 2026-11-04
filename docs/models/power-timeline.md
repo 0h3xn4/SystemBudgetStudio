@@ -24,6 +24,10 @@ The sources are **SOURCE_MISSING** (textbook relations and project conventions; 
 
 Everything electrical is in `config/power_system.yaml` (`solar_array.*`, `battery.*`, `design_life_yr`, `attitude.*`, `limits.peak_power_w`), each a sourced number: a placeholder gives *n/a* in every result that needs it. The mode timeline, the orbit, the eclipses and the mission phase come from the scenario (`scenarios/<id>.yaml`), the demand of each mode from the static budget.
 
+## Pointing and burns (2.3.0)
+
+A scenario that places pointing modes or manoeuvres adds their electrical load to the demand, as given and with no maturity margin: the holding power of the active pointing mode, the slew power for each change of mode, the thrusting power of an electric system for each burn. It is added to both the load and the demand at the source, kept as its own series (`pointing_propulsion_w` in the series CSV, *Pointing and propulsion load* in the plot, `pointing_propulsion` in the JSON), counted by the peak-power check, and its event edges join the solver's edges so the result does not depend on the step ([decision D-235](../DECISIONS.md)). A placeholder power makes the demand n/a, never zero. A scenario that places nothing gives the numbers of 2.2.0.
+
 ## The solver grid
 
 The reported series are means over the scenario grid (`step_s`). The solver integrates on a finer grid: the scenario grid plus every eclipse edge, every mode-segment edge, every orbit-window edge and the instants at which the battery becomes full or empty, so a coarse step cannot average a discharge away (up to four refinement rounds; if the instants are still moving, `POWER_REFINEMENT_INCOMPLETE`). Every summary number (energy, extremes, balance, findings) comes from this finer grid.

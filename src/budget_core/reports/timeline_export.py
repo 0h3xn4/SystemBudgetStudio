@@ -48,6 +48,9 @@ SERIES_COLUMNS = (
 )
 
 
+EXTRA_COLUMN = "pointing_propulsion_w"  # only when the scenario places pointing or burns
+
+
 def _column(values: NDArray | None, count: int, every: int) -> tuple[str, list[Any]]:
     """(format, values) of a numeric column; a missing column is empty cells."""
     if values is None:
@@ -82,9 +85,13 @@ def series_csv(result: TimeDomainResult, case: str, every: int = 1) -> str:
         _column(c.soc_ratio, n, every),
         _column(c.dod_ratio, n, every),
     ]
+    names = list(SERIES_COLUMNS)
+    if result.extra is not None:  # the load of placed pointing and burns, last (2.3.0)
+        columns.append(_column(result.extra_w, n, every))
+        names.append(EXTRA_COLUMN)
     row_format = ",".join(f for f, _ in columns) + "\n"
     body = "".join(map(row_format.__mod__, zip(*(v for _, v in columns), strict=True)))
-    return ",".join(SERIES_COLUMNS) + "\n" + body
+    return ",".join(names) + "\n" + body
 
 
 def _csv(header: list[str], rows: list[list[str]]) -> str:
@@ -219,6 +226,7 @@ def timeline_json(
         "limits": {"peak_power_w": result.peak_limit_w, "dod_limit_ratio": result.dod_limit_ratio},
         "modes": [asdict(m) for m in result.modes],
         "cases": {c.case: _case_dict(c) for c in result.cases},
+        **_extra_block(result),
         "violations": [_violation_dict(v) for v in result.violations],
         "not_evaluated": [asdict(n) for n in result.not_evaluated],
         "assumptions": [asdict(a) for a in result.assumptions],
@@ -230,3 +238,28 @@ def timeline_json(
         "result_format": result_format("power_timeline"),
     }
     return json.dumps(clean_numbers(data), indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+
+
+def _extra_block(result: TimeDomainResult) -> dict[str, Any]:
+    """The events of the placed pointing and burns and their energy (absent without any)."""
+    loads = result.extra
+    if loads is None:
+        return {}
+    return {
+        "pointing_propulsion": {
+            "events": [
+                {
+                    "kind": e.kind,
+                    "label": e.label,
+                    "start_s": e.start_s,
+                    "end_s": e.end_s,
+                    "duration_s": e.duration_s,
+                    "power_w": e.power_w,
+                }
+                for e in loads.events
+                if e.kind != "hold" or e.duration_s > 0.0
+            ],
+            "energy_wh": loads.energy_wh(),
+            "complete": not loads.incomplete,
+        }
+    }

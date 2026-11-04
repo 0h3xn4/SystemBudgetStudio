@@ -26,6 +26,20 @@
           "title": "Inclination Deg",
           "type": "number"
         },
+        "ltan_h": {
+          "anyOf": [
+            {
+              "exclusiveMaximum": 24,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ltan H"
+        },
         "mean_anomaly_deg": {
           "exclusiveMaximum": 360,
           "minimum": 0,
@@ -33,10 +47,18 @@
           "type": "number"
         },
         "raan_deg": {
-          "exclusiveMaximum": 360,
-          "minimum": 0,
-          "title": "Raan Deg",
-          "type": "number"
+          "anyOf": [
+            {
+              "exclusiveMaximum": 360,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raan Deg"
         },
         "semi_major_axis_m": {
           "maximum": 100000000.0,
@@ -50,7 +72,6 @@
         "semi_major_axis_m",
         "eccentricity_ratio",
         "inclination_deg",
-        "raan_deg",
         "arg_perigee_deg",
         "mean_anomaly_deg"
       ],
@@ -167,8 +188,8 @@
       "type": "object"
     },
     "schema_version": {
-      "const": 3,
-      "default": 3,
+      "const": 4,
+      "default": 4,
       "title": "Schema Version",
       "type": "integer"
     },

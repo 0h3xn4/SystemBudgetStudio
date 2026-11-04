@@ -331,7 +331,16 @@ class ScenarioView(QWidget):
             sorted(project.modes),
             sorted(set(project.ground_stations) | set(project.targets)),
         )
-        self.editor.show_scenario(project.root, scenario_id, modes, sites)
+        pointing = project.config.pointing
+        propulsion = project.config.propulsion
+        self.editor.show_scenario(
+            project.root,
+            scenario_id,
+            modes,
+            sites,
+            list(pointing.modes) if pointing else [],
+            [m.name for m in propulsion.maneuvers] if propulsion else [],
+        )
 
         run = self.last_run
         if run is None or run.scenario_id != scenario_id:

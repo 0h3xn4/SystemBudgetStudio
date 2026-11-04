@@ -52,4 +52,8 @@ The tool does not compute the delta-v of a transfer, a plane change or a deorbit
 
 ## Outputs
 
-`budget run --budget propulsion` (and `--budget all` when the file exists) writes `propulsion.xlsx|pdf|docx|json` and `propulsion_maneuvers.csv`; the JSON layout is in [RESULT_FORMAT](../RESULT_FORMAT.md). The window computes it with the other budgets when the project is opened and includes it when you write the reports from the *Reports* page; the file is edited in the project tree under *Budget configuration*.
+`budget run --budget propulsion` (and `--budget all` when the file exists) writes `propulsion.xlsx|pdf|docx|json` and `propulsion_maneuvers.csv`; the JSON layout is in [RESULT_FORMAT](../RESULT_FORMAT.md). In the window it is the **Propulsion** page of the *Mass* area, and the *Reports* page writes it; the file is edited in the project tree under *Budget configuration*.
+
+## In a scenario and in the thermal budget
+
+A scenario can place the manoeuvres (`maneuvers`: the name and a start). An electric system then draws its thrusting power on the power timeline for the burn time of the line, and a manoeuvre that names a spacecraft `mode` switches the scenario to that mode for the burn (the manoeuvre mode) — [how](../user-manual/scenarios.md#pointing-and-manoeuvres-in-a-scenario). A system may name a `thermal_node` and a `thrust_heat_w`: the thermal cases whose spacecraft mode is the mode of a manoeuvre of the system then get that heat in that node (the static thermal budget has no time axis, so a case stands for "during the burn"). The heat of a slew is not modelled: the wheels are units with power modes of their own.

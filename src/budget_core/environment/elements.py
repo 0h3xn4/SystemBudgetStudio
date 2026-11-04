@@ -27,7 +27,8 @@ from budget_core.environment.data import (
 )
 from budget_core.environment.intervals import BoolArray, Interval, bisect_edge, mask_to_intervals
 from budget_core.model import Orbit
-from budget_core.model.environment import DETECTION_STEP_S, tle_epoch
+from budget_core.model.environment import DETECTION_STEP_S, Elements, tle_epoch
+from budget_core.orbit_design import raan_from_ltan_deg
 from budget_core.problems import Problem, Severity
 from budget_core.slices import SLICE
 from budget_core.timeutil import parse_utc
@@ -78,6 +79,16 @@ def satrec_from_values(
     return sat
 
 
+def derived_raan_deg(el: Elements) -> float:
+    """The right ascension of the ascending node of mean elements: the one given, or, for an orbit
+    given by the mean local solar time of its node, the one that has that time at the epoch
+    (ORB-LTAN, inverted)."""
+    if el.raan_deg is not None:
+        return el.raan_deg
+    assert el.ltan_h is not None  # validated: exactly one of the two
+    return raan_from_ltan_deg(el.ltan_h, parse_utc(el.epoch_utc))
+
+
 def build_satrec(orbit: Orbit, earth_model: str = DEFAULT_EARTH_MODEL) -> Satrec:
     """Create the sgp4 satellite record of an orbit definition. Elements use the gravity set of
     `earth_model` (D-219); a TLE is on WGS-72, the set SGP4 is defined on, whatever the choice.
@@ -112,13 +123,14 @@ def build_satrec(orbit: Orbit, earth_model: str = DEFAULT_EARTH_MODEL) -> Satrec
     el = orbit.elements
     assert el is not None  # validated: exactly one source
     jd, fr = geo.julian_date_parts(parse_utc(el.epoch_utc))
+    raan_deg = derived_raan_deg(el)
     return satrec_from_values(
         jd,
         fr,
         el.semi_major_axis_m,
         el.eccentricity_ratio,
         math.radians(el.inclination_deg),
-        math.radians(el.raan_deg),
+        math.radians(raan_deg),
         math.radians(el.arg_perigee_deg),
         math.radians(el.mean_anomaly_deg),
         earth_model,
@@ -178,6 +190,13 @@ class ElementsPropagator:
             DEFAULT_EARTH_MODEL if orbit.tle is not None else earth_model
         ].radius_m
         self.sat = build_satrec(orbit, earth_model)
+        self.notes: tuple[str, ...] = ()
+        el = orbit.elements
+        if el is not None and el.ltan_h is not None:
+            self.notes = (
+                f"The RAAN of the orbit, {derived_raan_deg(el):.4f} deg, was derived from the "
+                f"local time of the ascending node, {el.ltan_h:g} h, at the epoch.",
+            )
 
     # ---- states --------------------------------------------------------------------------------
     def state_teme(self, start: datetime, t_s: float) -> tuple[NDArray, NDArray]:

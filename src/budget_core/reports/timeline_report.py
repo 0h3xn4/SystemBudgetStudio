@@ -132,6 +132,41 @@ def _mode_table(result: TimeDomainResult) -> Table:
     )
 
 
+def _extra_table(result: TimeDomainResult) -> Table | None:
+    loads = result.extra
+    if loads is None:
+        return None
+    rows = tuple(
+        (
+            {"hold": "Holding", "slew": "Slew", "burn": "Burn"}[e.kind],
+            e.label,
+            e.start_s,
+            e.end_s,
+            e.duration_s,
+            e.power_w,
+            None if e.power_w is None else e.power_w * e.duration_s / 3600.0,
+        )
+        for e in loads.events
+        if e.duration_s > 0.0
+    )
+    energy = loads.energy_wh()
+    return Table(
+        "Pointing and propulsion load",
+        (
+            Column("What"),
+            Column("Pointing mode, slew or manoeuvre"),
+            Column("From (s)", "number", 1),
+            Column("To (s)", "number", 1),
+            Column("Time (s)", "number", 1),
+            Column("Power (W)", "number", 3),
+            Column("Energy (Wh)", "number", 3),
+        ),
+        rows,
+        note="Added to the demand as given, with no margin; shown apart in the series. "
+        + ("Total energy: n/a." if energy is None else f"Total energy: {energy:.3f} Wh."),
+    )
+
+
 def _balance_table(result: TimeDomainResult, case: CaseResult) -> Table:
     return Table(
         f"Orbit energy balance, {case.case.upper()}",
@@ -245,7 +280,11 @@ def build_timeline_report(
         Section(
             "Modes and orbits",
             sheet_name("Modes and orbits", used),
-            tables=(_mode_table(result), *(_balance_table(result, c) for c in result.cases)),
+            tables=(
+                _mode_table(result),
+                *(t for t in (_extra_table(result),) if t is not None),
+                *(_balance_table(result, c) for c in result.cases),
+            ),
         )
     )
     sections.append(

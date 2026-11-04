@@ -275,6 +275,40 @@ def dissipation_by_mode(project: Project) -> tuple[ModeHeat, ...]:
 # ---- steady state ---------------------------------------------------------------------------
 
 
+def _add_thrust_heat(
+    project: Project,
+    mode: str,
+    dissipation: NDArray,
+    index: dict[str, int],
+    notes: _Notes,
+) -> bool:
+    """Add the heat of a burn to its node when the case's spacecraft mode is the mode a manoeuvre
+    holds during its burn (2.3.0, D-235). False when a heat is a placeholder (the case cannot be
+    solved)."""
+    config = project.config.propulsion
+    if config is None:
+        return True
+    ok = True
+    wanted = {m.system for m in config.maneuvers if m.mode == mode}
+    for system_id in sorted(wanted):
+        system = config.systems.get(system_id)
+        if system is None or system.thrust_heat_w is None or system.thermal_node is None:
+            continue
+        watts = notes.get(
+            f"Thrusting heat, {system.name}",
+            system.thrust_heat_w,
+            "W",
+            "config/propulsion.yaml",
+            f"systems.{system_id}.thrust_heat_w",
+            "The thrusting heat",
+        )
+        if watts is None:
+            ok = False
+        elif system.thermal_node in index:
+            dissipation[index[system.thermal_node]] += watts
+    return ok
+
+
 def static_thermal_budget(project: Project) -> StaticThermalResult:
     """Dissipation of every spacecraft mode and the node temperatures of every case. The project
     must be valid."""
@@ -444,6 +478,9 @@ def _solve_case(
         for r in heat.rows:
             assert r.dissipation_w is not None
             dissipation[index[r.node]] += r.dissipation_w
+
+    if not _add_thrust_heat(project, case.spacecraft_mode, dissipation, index, notes):
+        complete = False
 
     absorbed = np.zeros(len(node_names))
     radiation = np.zeros(len(node_names))

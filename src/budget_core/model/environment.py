@@ -69,7 +69,10 @@ class Elements(BudgetModel):
     semi_major_axis_m: float = Field(ge=SEMI_MAJOR_AXIS_RANGE_M[0], le=SEMI_MAJOR_AXIS_RANGE_M[1])
     eccentricity_ratio: float = Field(ge=0, lt=1)
     inclination_deg: float = Field(ge=0, le=180)
-    raan_deg: float = Field(ge=0, lt=360)
+    # exactly one of the right ascension of the ascending node and the mean local solar time of
+    # that node in hours (2.3.0, D-236); the node is then derived at the epoch
+    raan_deg: float | None = Field(default=None, ge=0, lt=360)
+    ltan_h: float | None = Field(default=None, ge=0, lt=24)
     arg_perigee_deg: float = Field(ge=0, lt=360)
     mean_anomaly_deg: float = Field(ge=0, lt=360)
 
@@ -77,6 +80,16 @@ class Elements(BudgetModel):
     @classmethod
     def _epoch(cls, value: str) -> str:
         return _utc(value)
+
+    @model_validator(mode="after")
+    def _one_node(self) -> Elements:
+        if (self.raan_deg is None) == (self.ltan_h is None):
+            raise PydanticCustomError(
+                "node_source",
+                "give either raan_deg or ltan_h, not both and not neither",
+                {"field": "raan_deg"},
+            )
+        return self
 
 
 class StateVector(BudgetModel):
@@ -208,6 +221,15 @@ class ScenarioRule(BudgetModel):
         return self
 
 
+class ScenarioManeuver(BudgetModel):
+    """A burn of the propulsion file placed in the scenario (2.3.0): the manoeuvre of
+    `config/propulsion.yaml` with this name starts `start_s` seconds after the scenario start and
+    lasts as long as its propellant, specific impulse and thrust say."""
+
+    name: str = Field(min_length=1)
+    start_s: float = Field(ge=0)
+
+
 class Scenario(ProvenancedModel):
     """Parameters of a scenario; computed results are never stored in the project (D-057)."""
 
@@ -233,6 +255,13 @@ class Scenario(ProvenancedModel):
     default_mode: str = Field(min_length=1)
     rules: list[ScenarioRule] = Field(default_factory=list, max_length=MAX_RULES)
     segments: list[ScenarioSegment] = Field(default_factory=list, max_length=MAX_RULES)
+    # pointing modes of config/pointing.yaml, kept apart from the spacecraft modes (2.3.0): the
+    # default holds over the whole scenario and each rule paints a mode over the events it names
+    # (the `mode` of a pointing rule is a pointing mode id); a change of pointing mode costs the
+    # slew between the two modes
+    pointing_default: str | None = None
+    pointing_rules: list[ScenarioRule] = Field(default_factory=list, max_length=MAX_RULES)
+    maneuvers: list[ScenarioManeuver] = Field(default_factory=list, max_length=MAX_RULES)
 
     @field_validator("start_utc")
     @classmethod
@@ -265,6 +294,12 @@ class Scenario(ProvenancedModel):
         if self.duration_s / min(self.step_s, DETECTION_STEP_S) + 1 > MAX_SAMPLES:
             raise PydanticCustomError(
                 "scenario_too_large", "too many time steps; increase step_s", {"field": "step_s"}
+            )
+        if self.pointing_rules and not self.pointing_default:
+            raise PydanticCustomError(
+                "pointing_default",
+                "pointing rules need a pointing_default to hold between them",
+                {"field": "pointing_default"},
             )
         ordered = sorted(self.segments, key=lambda s: s.start_s)
         for first, second in zip(ordered, ordered[1:], strict=False):

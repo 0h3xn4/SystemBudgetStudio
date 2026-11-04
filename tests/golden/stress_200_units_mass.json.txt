@@ -9428,7 +9428,7 @@
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "120ee56df65852c002015a21b439b6372a5fe02b3a044f9a0d4c68c37f9b0bdb",
+        "sha256": "0ea75f061050b2170b92e2846089133ab74fbb71fe066d06e9ceaba459ce7881",
         "size": 359
       },
       {
@@ -9438,7 +9438,7 @@
       },
       {
         "path": "scenarios/stress_week.yaml",
-        "sha256": "4078a9ed0af757c3ffee777831bdce36edf0ee574b8ada420b4c8cf875fd1bad",
+        "sha256": "aa392a6e1a7298b21b8ac009465937090dcdea369b5e5746ee346061d87e415a",
         "size": 777
       },
       {
@@ -10452,7 +10452,7 @@
         "size": 1102
       }
     ],
-    "inputs_digest": "sha256:8759d8825fd967f34346487b647c53719a1efc00439d5434170b5456c4f2cb65",
+    "inputs_digest": "sha256:0af9c5c21478f72ad8eb67b1a352a3d90eec82cc95e92fd95fd3ebd6c395f478",
     "libraries": [
       [
         "pinned",
@@ -10465,7 +10465,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.2.0",
+    "tool_version": "2.3.0",
     "user": "Golden User"
   },
   "result_format": {

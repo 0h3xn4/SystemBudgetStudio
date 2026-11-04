@@ -32,6 +32,28 @@
       "title": "ProvenanceEntry",
       "type": "object"
     },
+    "ScenarioManeuver": {
+      "additionalProperties": false,
+      "description": "A burn of the propulsion file placed in the scenario (2.3.0): the manoeuvre of\n`config/propulsion.yaml` with this name starts `start_s` seconds after the scenario start and\nlasts as long as its propellant, specific impulse and thrust say.",
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "start_s": {
+          "minimum": 0,
+          "title": "Start S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "start_s"
+      ],
+      "title": "ScenarioManeuver",
+      "type": "object"
+    },
     "ScenarioRule": {
       "additionalProperties": false,
       "properties": {
@@ -173,6 +195,14 @@
       "title": "Kind",
       "type": "string"
     },
+    "maneuvers": {
+      "items": {
+        "$ref": "#/$defs/ScenarioManeuver"
+      },
+      "maxItems": 10000,
+      "title": "Maneuvers",
+      "type": "array"
+    },
     "mission_phase": {
       "anyOf": [
         {
@@ -202,6 +232,26 @@
       "default": null,
       "title": "Orbit"
     },
+    "pointing_default": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Pointing Default"
+    },
+    "pointing_rules": {
+      "items": {
+        "$ref": "#/$defs/ScenarioRule"
+      },
+      "maxItems": 10000,
+      "title": "Pointing Rules",
+      "type": "array"
+    },
     "provenance": {
       "additionalProperties": {
         "$ref": "#/$defs/ProvenanceEntry"
@@ -218,8 +268,8 @@
       "type": "array"
     },
     "schema_version": {
-      "const": 4,
-      "default": 4,
+      "const": 5,
+      "default": 5,
       "title": "Schema Version",
       "type": "integer"
     },

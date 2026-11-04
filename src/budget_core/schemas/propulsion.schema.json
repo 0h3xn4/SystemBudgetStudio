@@ -12,6 +12,18 @@
         "delta_v_m_s": {
           "$ref": "#/$defs/Sourced"
         },
+        "mode": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mode"
+        },
         "name": {
           "minLength": 1,
           "title": "Name",
@@ -64,6 +76,29 @@
           ],
           "default": null,
           "title": "Propellant"
+        },
+        "thermal_node": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thermal Node"
+        },
+        "thrust_heat_w": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sourced"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         },
         "thrust_n": {
           "anyOf": [
@@ -176,8 +211,8 @@
       "type": "array"
     },
     "schema_version": {
-      "const": 1,
-      "default": 1,
+      "const": 2,
+      "default": 2,
       "title": "Schema Version",
       "type": "integer"
     },

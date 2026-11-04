@@ -43,6 +43,23 @@ The scenario converts it to the mean elements whose SGP4 state at the epoch is t
 
 Positions come from the [SGP4](../glossary.md#sgp4) propagator (Earth only; elements are used as SGP4 mean elements, without drag: see [deviation DV-E2](../DEVIATIONS.md)). The guided wizard writes a near-circular orbit for you from altitude, inclination and [RAAN](../glossary.md#raan).
 
+## How do I give the orbit by its local time?
+
+Instead of `raan_deg` the elements may give `ltan_h`, the **mean local solar time of the ascending node** in hours (10.5 is 10:30), and the tool derives the RAAN at the epoch. Exactly one of the two is given:
+
+```yaml
+elements:
+  epoch_utc: "2026-06-01T00:00:00Z"
+  semi_major_axis_m: 7028137.0
+  eccentricity_ratio: 0.0011
+  inclination_deg: 97.9
+  ltan_h: 10.5              # instead of raan_deg
+  arg_perigee_deg: 90.0
+  mean_anomaly_deg: 0.0
+```
+
+The local time is mean solar time without the equation of time ([deviation DV-E6](../DEVIATIONS.md)). The RAAN follows the epoch: the same `ltan_h` at another epoch is another RAAN, because the Sun has moved. The scenario notes say which RAAN was derived.
+
 ## How do I design the orbit (local time, sun-synchronous, repeat ground track)?
 
 An orbit file takes inclination and right ascension (RAAN). A mission is usually described by other numbers: the **local time of the ascending node** (LTAN, for example 10:30 or 22:30), a **sun-synchronous** orbit at some altitude, or a **repeat ground track**. `budget orbit` works out the elements from those; it reads no project and changes none. All times are *mean* local solar time (the equation of time is not applied), and the Earth constants are those of the scenario's Earth model (`--earth-model`, WGS-84 by default).
@@ -126,6 +143,25 @@ segments:                         # hand-built, applied last, must not overlap
 ```
 
 `lead_s` and `lag_s` start the mode earlier or end it later around a pass. In the window **Model → Scenario** shows the timeline and lets you edit rules and segments ([below](#how-do-i-edit-the-rules-in-the-window)); invalid edits are explained and nothing is written until you save.
+
+## Pointing and manoeuvres in a scenario
+
+Pointing changes and burns cost power, and the power budget should see them. A scenario can say which **pointing mode** holds when (separately from the spacecraft modes) and **place burns** of the propulsion file:
+
+```yaml
+pointing_default: nadir            # a pointing mode of config/pointing.yaml
+pointing_rules:                    # like the mode rules; `mode` is a pointing mode
+  - {kind: during_pass, site: tgt_plains, mode: target, lead_s: 30}
+maneuvers:                         # burns of config/propulsion.yaml, by name
+  - {name: Orbit trim, start_s: 3600}
+```
+
+- The **holding power** of the active pointing mode (`hold_power_w`) is added to the demand. A mode with no holding power is not modelled and adds nothing; a placeholder makes the load unknown (n/a), never zero.
+- Where the pointing mode changes, the **slew** between the two modes (from `config/pointing.yaml`) is flown: the actuators draw their slew power for the slew time, then the new mode's holding power takes over. A change with no slew defined is `POINTING_SLEW_MISSING` and costs nothing; a slew longer than the mode it leads to is cut (`POINTING_SLEW_TOO_LONG`).
+- A placed **manoeuvre** lasts its burn time (the propellant of the line at the system's constant thrust) from `start_s`. An electric system draws its thrusting power meanwhile; a chemical one draws none. A manoeuvre of the propulsion file that names a `mode` switches the scenario to that spacecraft mode for the burn (the manoeuvre mode). A burn past the end of the scenario is cut (`MANEUVER_CUT`). A line with several burns (`count`) is placed as one, lasting all its burns.
+- The load is shown on its own line, *Pointing and propulsion load*, in the power timeline, never mixed into the demand of the spacecraft modes. **No margin is applied to it**: put the margin in the inputs.
+
+In the window, *Model → Scenario* has a **Pointing** section (the default pointing mode and the pointing rules) and a **Manoeuvres** section (the burns), each change one undo step. The examples do not use these fields; add them to a copy to try them.
 
 ## How do I see eclipses, passes and the timeline?
 

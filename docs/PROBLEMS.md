@@ -286,6 +286,14 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** The torque, momentum and power of the slew come from the actuator.
 - **What to do.** Use an id listed under `actuators` in config/pointing.yaml, or add the actuator.
 
+### REF_UNKNOWN_MANEUVER
+
+**A scenario places a manoeuvre that is not defined** (error)
+
+- **Rule.** The `name` of a manoeuvre in a scenario must be one listed under `maneuvers` in config/propulsion.yaml.
+- **Why it matters.** The burn time and the thrusting power come from the propulsion file.
+- **What to do.** Use the name of a manoeuvre of config/propulsion.yaml, or add the manoeuvre there.
+
 ### REF_UNKNOWN_UNIT
 
 **A spacecraft mode names a unit that does not exist** (error)
@@ -763,6 +771,30 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Rule.** The peak angular momentum of a slew (inertia times the peak rate) must not exceed the momentum capacity of the actuators.
 - **Why it matters.** Beyond the capacity the actuators saturate and the slew cannot be flown as planned.
 - **What to do.** Lower the rate limit, slew a smaller angle, or use actuators that store more momentum.
+
+### POINTING_SLEW_MISSING
+
+**The pointing mode changes where no slew is defined** (warning)
+
+- **Rule.** Every change of pointing mode in a scenario needs a slew between the two modes in config/pointing.yaml (with the angle, the axis and the actuators).
+- **Why it matters.** Without it the power of the change is not counted, which understates the load.
+- **What to do.** Add a slew from the first pointing mode to the second to config/pointing.yaml.
+
+### POINTING_SLEW_TOO_LONG
+
+**A slew is longer than the pointing mode it leads to** (warning)
+
+- **Rule.** A slew must finish before the next change of pointing mode.
+- **Why it matters.** A slew cut short means the spacecraft is not yet pointing as the mode needs.
+- **What to do.** Use fewer changes of pointing mode, or a faster slew (more torque, a smaller angle).
+
+### MANEUVER_CUT
+
+**A manoeuvre starts after the scenario ends or runs past its end** (warning)
+
+- **Rule.** The burn of a placed manoeuvre should lie inside the scenario.
+- **Why it matters.** Only the part inside the scenario is counted in the power budget.
+- **What to do.** Start the manoeuvre earlier or lengthen the scenario.
 
 ## Other
 

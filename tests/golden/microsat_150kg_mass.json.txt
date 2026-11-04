@@ -1617,7 +1617,7 @@
       },
       {
         "path": "orbits/leo.yaml",
-        "sha256": "120ee56df65852c002015a21b439b6372a5fe02b3a044f9a0d4c68c37f9b0bdb",
+        "sha256": "0ea75f061050b2170b92e2846089133ab74fbb71fe066d06e9ceaba459ce7881",
         "size": 359
       },
       {
@@ -1627,7 +1627,7 @@
       },
       {
         "path": "scenarios/commissioning_day.yaml",
-        "sha256": "296cc2ef406dd4e55438e255380cc47f8f78a161387752ddcb2a2c22ff08dd3a",
+        "sha256": "916d9dae6dceba7b8c0a3a20df6588b6323d6d57549134685ecf126536cfe5df",
         "size": 709
       },
       {
@@ -1726,7 +1726,7 @@
         "size": 641
       }
     ],
-    "inputs_digest": "sha256:1c69ef4747ebab29e5df4f9594c7c46a6c3059ee743176bed517b336ce180f54",
+    "inputs_digest": "sha256:ed70050c4c1c75cec51e032f1e0f31e5a39ca5e211184b904520e330f4399f64",
     "libraries": [
       [
         "pinned",
@@ -1739,7 +1739,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.2.0",
+    "tool_version": "2.3.0",
     "user": "Golden User"
   },
   "result_format": {
