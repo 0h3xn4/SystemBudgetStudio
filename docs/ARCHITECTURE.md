@@ -39,6 +39,7 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   propulsion/         budget.py: the delta-v and propellant budget of config/propulsion.yaml (rocket equation worked backwards, burn time, electric power; D-233)
   pointing/           budget.py: the slew budget of config/pointing.yaml (bang-bang slew, momentum, energy; D-234)
   scenario/           run.py (environment and timeline), timeline.py (mode rules), extra_loads.py (the pointing and burn load a scenario places, D-235), statistics.py, export.py
+  idm/                reading and mapping IDM-CIC models (D-237 to D-244): archive.py + xmltree.py (safe reading), reader.py (typed model, model.py), mapping.py (project data), merge.py (three-way merge), importer.py (plan, apply, state file), summary.py; reads models from IDM-CIC (c) CNES, no CNES code
   orbit_design.py     LTAN, sun-synchronous and repeat-ground-track relations (D-226); orbit_state.py: state vector to mean elements (D-229)
   thermal/            static_thermal.py (dissipation roll-up, cases, limit checks),
                       steady_state.py (nodal heat balance, pure function)
@@ -67,7 +68,7 @@ src/budget_core/      no GUI, no network imports (kept by convention and review;
   problem_catalogue.py   the rule, the reason and the remedy of every problem code; PROBLEMS.md is generated from it (D-207)
   settings.py, assumptions_view.py   the catalogue of the settings, tolerances, limits and constants the tool applies, and the one list of everything active for a project (D-217, D-218)
   model_choices.py    the registry of the modelling choices, selectable and fixed: the scenario fields, the run option, the equations and sources of each alternative; docs/models/choices.md is generated from it (D-219, D-220)
-src/budget_cli/       `budget new | validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | explain | problems | settings | choices | orbit | assumptions | verify | source | export-schemas | units-export | units-import | tables-export | tables-import | export-examples`
+src/budget_cli/       `budget new | validate | run | scenario | power-timeline | link-passes | compare | guide | self-test | explain | problems | settings | choices | orbit | import | assumptions | verify | source | export-schemas | units-export | units-import | tables-export | tables-import | export-examples`
 src/budget_gui/       PySide6; no logic beyond presentation; docs/DESIGN.md
                       theme/ (tokens, fonts, style sheet, scale: the only place for colours and sizes), components/ (Button, StatusBadge, Card ...)
                       shell: main_window.py, rail.py (navigation), top_bar.py, workspace.py (the seven areas), project_tree.py, problems_panel.py,

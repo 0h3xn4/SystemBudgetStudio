@@ -146,6 +146,10 @@ A computation or an export is still running in the background; stopping it half 
 
 Check the Problems panel. `POINTING_SLEW_MISSING` means no slew is defined between the two pointing modes (the change costs nothing, never a guessed amount); a chemical system draws no power; a manoeuvre not placed in the scenario's `maneuvers` is not on the timeline. `POINTING_SLEW_TOO_LONG` and `MANEUVER_CUT` say that an event does not fit the interval ([problem list](PROBLEMS.md)).
 
+### `budget import idm` says `IDM_FILE_UNREADABLE`, `IDM_MODEL_MISSING` or `IDM_VALUE_INVALID`
+
+The file is not an IDM-CIC model (a ZIP archive with `model.xml` at its root), is damaged, or holds a value in a format the reader does not accept (it will not guess a dot decimal or a thousands separator). Open the model in IDM-CIC and save it again. `IDM_NEW_PROJECT_INCOMPLETE` means a new project needs `--bus-voltage-v`. Nothing is written when the import has an error ([IDM-CIC import](user-manual/idm-import.md#what-do-the-messages-mean), [the problem list](PROBLEMS.md#idm-cic-models-import)).
+
 ### Export is switched off, or says "out of date" / "changed since this result was computed"
 
 The result on screen was computed from different inputs than the ones set now: edits are not saved yet (a run reads the saved files), the project was reloaded or saved, another scenario or demand basis is selected, or the other folder in **Compare** changed. The run status in the top bar says **Out of date**. Press **Run** (or **Compute** in the view, or **Compare**) again, then export.

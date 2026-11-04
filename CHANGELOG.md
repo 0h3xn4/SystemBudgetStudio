@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-11-04
+
 Importing models of IDM-CIC (reads models from IDM-CIC (c) CNES; decisions D-237 to D-244): the reader, the mapping, the command, re-import and the window entry. The centre of gravity and inertia are not imported (D-244).
 
 - **`budget import idm FILE [--project DIR] [--margins raw|applied] [--bus NAME] [--bus-voltage-v V] [--apply]`** builds or updates a project from a model: one unit per physical equipment (mass, power modes with the heat share, temperature limits in kelvin, thermal node), a spacecraft mode per system mode through an editable `idm/mode_map.yaml`, maturity classes `idm_*`, thermal nodes, mission phases from the configurations and an expendable per tank. A plan unless `--apply`; every value has a source (model file, revision, object). Nothing is estimated: a mass that needs geometry leaves the unit out and says so ([manual](docs/user-manual/idm-import.md)).
