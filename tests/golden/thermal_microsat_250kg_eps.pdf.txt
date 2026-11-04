@@ -1,6 +1,6 @@
 pages=12
 ## page 1
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Thermal budget (static): Example 250 kg minisatellite, complete power and thermal inputs
 Summary
@@ -158,7 +158,7 @@ THERM
  98.33
 ok
 ## page 2
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Unit
 Node
@@ -383,7 +383,7 @@ THERM
  14.78
 ok
 ## page 3
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Unit
 Node
@@ -652,7 +652,7 @@ off
  0.000
  0.000
 ## page 4
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 By subsystem
 Subsystem
@@ -819,7 +819,7 @@ downlink
  9.000
  14.000
 ## page 5
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Unit
 Name
@@ -973,7 +973,7 @@ off
  0.000
  0.000
 ## page 6
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Unit
 Name
@@ -1184,7 +1184,7 @@ PL
  36.000
  80.000
 ## page 7
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Node
 Dissipation (W)
@@ -1396,7 +1396,7 @@ STRUCT
  0.000
  0.000
 ## page 8
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 Subsystem
 Dissipation (W)
@@ -1602,7 +1602,7 @@ safe
  0.400
  0.500
 ## page 9
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
 Unit
 Name
@@ -1725,7 +1725,7 @@ W/K
 Synthetic example value; not from a data sheet or a standard.
 illustrative
 ## page 10
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 10
 Name
 Value
@@ -1903,7 +1903,7 @@ W/m2
 Synthetic example value; not from a data sheet or a standard.
 illustrative
 ## page 11
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 11
 Name
 Value
@@ -1987,16 +1987,32 @@ Formula
 Source
 TH-DISS
 Heat dissipated by a unit
-Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak: P_peak * ratio)
+Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak:
+P_peak * ratio)
 SOURCE_MISSING
 TH-ABS
 Heat absorbed by a surface
-Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth * E_IR)
+Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth *
+E_IR)
+SOURCE_MISSING
+TH-BETA-LI
+T
+Sunlit part of a circular orbit, by beta angle
+eclipse half-angle phi = acos(sqrt(1 - (Re / r)^2) / cos b) when |sin
+b| < Re / r, else none; sunlit fraction = 1 - phi / pi
+SOURCE_MISSING
+TH-BETA-S
+UN
+Solar exposure of a flat face, by beta angle
+f = (1 / 2 pi) integral over the sunlit orbit of max(0, n . s) du, with s =
+(-cos b sin u, -sin b, -cos b cos u) in the local-vertical frame (x
+velocity, y opposite the orbit normal, z nadir); the instant value is
+max(0, n . s)
 SOURCE_MISSING
 TH-BAL
 Steady-state node heat balance
-sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i
-= 0
+sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 -
+T_i^4) + Q_i = 0
 SOURCE_MISSING
 TH-SB
 Stefan-Boltzmann constant
@@ -2004,12 +2020,15 @@ sigma = 5.670374419e-8 W m^-2 K^-4
 CODATA 2018 / SI 2019 (exact from h, k, c)
 TH-LIMIT
 Unit temperature limit check
-exceeded when T < T_min or T > T_max; margin check when T - T_min or
-T_max - T < temperature_margin_k
+exceeded when T < T_min or T > T_max; margin check when T -
+T_min or T_max - T < temperature_margin_k
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems
 Problems and open items
+## page 12
+System Budget Studio 2.7.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 12
 Severity
 Code
 Location
@@ -2046,15 +2065,6 @@ This number is a placeholder (no value or source
 'TBD'); results that use it are not trustworthy.
 Replace it with a value from your margin policy,
 standard or data sheet and cite the source.
-## page 12
-System Budget Studio 2.6.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 12
-Severity
-Code
-Location
-Path
-Message
-Hint
 warning
 CONFIG_PLACEHOLDER
 config/margin_policy.yaml:
@@ -2087,7 +2097,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 2.6.0
+System Budget Studio 2.7.0
 Python
 3.x
 Libraries
@@ -2099,9 +2109,9 @@ Project revision
 Scenario
 static (no scenario)
 Inputs digest (model)
-sha256:d547f871cd10ce48b9ed33ddd7c833531932d671e001a9ac254a3d3ada57ae11
+sha256:ce0862a7c8c632ffa92e9fa10fca34d0e297d6688de7d64c0ce8bd420623c076
 Input files
-43 files, sha256:e1508b9004b68ae3cddacca71cf273e8e493f077a3f91f5495fd21e92c991544
+43 files, sha256:939dfad4eb73644bdbd1b313fec6e1c09ce9399dd3d6936a01ddecc811bcc53b
 Illustrative inputs
 675
 Generated (UTC)

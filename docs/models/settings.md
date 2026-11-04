@@ -56,6 +56,7 @@ Today every setting is at its default: the project file that changes the setting
 | `thermal.refined_k` | Numerical tolerance | 1e-07 | K | A correction below this is rounding: the temperatures are as good as they get. | The steady-state solution of the thermal network. |
 | `thermal.stefan_boltzmann_wm2k4` | Constant | 5.670374419e-08 | W/(m2 K4) | Exact in the 2019 SI (defined from h, k and c). | Radiation of every surface (TH-RAD). |
 | `thermal.celsius_offset_k` | Output format | 273.15 | K | Definition of the Celsius scale; used for display only, the model works in kelvin. | The Celsius columns of the thermal report. |
+| `thermal.surface_normal_tolerance` | Numerical tolerance | 1e-06 | ratio | A normal typed with six decimals is accepted; a vector that is not a direction is not. | Reading config/thermal_model.yaml (normal_lvlh). |
 
 ## Mass
 

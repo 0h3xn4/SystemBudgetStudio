@@ -84,8 +84,31 @@ Each case picks the `operating` or `survival` set. Every unit gets a status (in 
 
 If a group of nodes has no path to space (no radiating surface), there is no equilibrium and you get `THERMAL_SOLVE_FAILED` naming the nodes: give every connected group a surface. Every node must balance to its own heat, so a tiny isolated node beside a large body sits at the space temperature. A network whose conductances are many orders of magnitude above its radiation is refined with an exact residual; if that does not converge (conductances near 1e14 W/K or more), the tool says so instead of returning a wrong temperature. A limit or margin finding names the case (hot, cold, ...) it belongs to, and an environment file without any case gives `RESULT_INCOMPLETE`. In the window use the **Thermal budget** tab.
 
+## How do the temperatures change with the beta angle?
+
+The *beta angle* is the angle between the orbit plane and the direction of the Sun. It decides how long a spacecraft is in sunlight and which of its faces the Sun reaches, so a thermal case typed for one beta angle does not hold for another. `budget thermal-beta` solves the model above for a range of beta angles (2.7.0):
+
+```bash
+budget thermal-beta my_satellite --case hot --beta-min -90 --beta-max 90 --beta-step 15
+```
+
+It needs one new input: for each flat surface, its direction, `normal_lvlh`, in `config/thermal_model.yaml` (the outward unit normal in the local-vertical frame of a spacecraft that points to nadir: x along the velocity, y opposite to the orbit normal, z to nadir), or a face name `+x -x +y -y +z -z`:
+
+```yaml
+surfaces:
+  - name: EPS panel
+    node: EPS
+    area_m2: 0.02
+    normal_lvlh: [0, -1, 0]        # or  -y
+    ...
+```
+
+For every surface that gives its normal, the solar view ratio of the chosen case is taken from the beta angle instead of the typed one; everything else (the other surfaces, every Earth view and the albedo, the dissipation of the case's spacecraft mode, the fluxes, the limits) is yours as before. Two modes: **average** uses the orbit average of the sunlight each face gets, with the eclipse counted as zero (the temperatures of a spacecraft of large thermal inertia); **peak** uses the orbit angle at which the spacecraft absorbs the most sunlight in total (steady state at that instant, so every face has its own exposure at that angle); `--mode both` (the default) writes both. The orbit is a circle at the altitude of the scenario's orbit (`--scenario`) or at `--altitude-km`.
+
+It writes `thermal_beta_<case>_<mode>.csv` (one row for each beta angle: the sunlit part of the orbit, the temperature of every node, how many units are beyond a limit, the smallest headroom), the same as JSON, and a plot of the temperatures against the beta angle. A unit beyond a limit at some beta angle is a result in the table, not an error of the command; a missing input (an Earth view ratio for the case) leaves that beta angle n/a and is named, never filled in. Read [how it is computed](../models/thermal-beta.md) before relying on the numbers: circular orbit, nadir pointing, flat faces, no thermal capacity, and the Earth view and albedo stay typed.
+
 ## What the model does not do
 
-[Steady state only](../glossary.md#steady-state). No transient (time-domain) analysis, no finite elements, no ray-traced view factors: you give the view ratios. The tool ships templates with placeholder numbers; every flux, optical property, conductance and limit is yours to supply. [`docs/THERMAL_SOURCES.md`](../THERMAL_SOURCES.md) lists *candidate* reference sources for a thermal engineer to check; nothing from them is entered for you.
+[Steady state only](../glossary.md#steady-state). No transient (time-domain) analysis, no finite elements, no ray-traced view factors: you give the view ratios (the Sun's view of a flat face can come from the beta angle, `budget thermal-beta`). The tool ships templates with placeholder numbers; every flux, optical property, conductance and limit is yours to supply. [`docs/THERMAL_SOURCES.md`](../THERMAL_SOURCES.md) lists *candidate* reference sources for a thermal engineer to check; nothing from them is entered for you.
 
 Next: [Link budget](link-budget.md).

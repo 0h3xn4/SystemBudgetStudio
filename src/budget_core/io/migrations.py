@@ -211,6 +211,8 @@ _PROVENANCE_STEPS = {
     ("orbit", 3): _annotated(4),
     ("pointing", 1): _annotated(2),
     ("propulsion", 1): _annotated(2),
+    # the surface gains the optional `normal_lvlh` (D-250); an older file is valid unchanged
+    ("thermal_model", 2): _annotated(3),
 }
 
 DEFAULT_REGISTRY = MigrationRegistry(

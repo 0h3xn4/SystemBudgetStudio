@@ -44,8 +44,37 @@ class Exposure(BudgetModel):
     earth_view_ratio: Sourced
 
 
+FACES: dict[str, tuple[float, float, float]] = {
+    "+x": (1.0, 0.0, 0.0),
+    "-x": (-1.0, 0.0, 0.0),
+    "+y": (0.0, 1.0, 0.0),
+    "-y": (0.0, -1.0, 0.0),
+    "+z": (0.0, 0.0, 1.0),
+    "-z": (0.0, 0.0, -1.0),
+}
+NORMAL_TOLERANCE = 1e-6  # how far from length 1 a `normal_lvlh` may be
+
+
+def _normal(value: object) -> object:
+    """A face name (`+x` ... `-z`) is the unit vector of that axis; anything else is checked."""
+    if isinstance(value, str):
+        try:
+            return FACES[value.strip().lower()]
+        except KeyError:
+            raise PydanticCustomError(
+                "normal_face", "a face is one of +x, -x, +y, -y, +z, -z"
+            ) from None
+    return value
+
+
 class Surface(BudgetModel):
-    """An outer surface of a node: radiates to space, absorbs sunlight, albedo, Earth infrared."""
+    """An outer surface of a node: radiates to space, absorbs sunlight, albedo, Earth infrared.
+
+    `normal_lvlh` is the outward unit normal of a flat surface in the local-vertical frame of a
+    spacecraft that points to nadir (x along the velocity, y opposite to the orbit normal, z to
+    nadir), given as three numbers or as a face name. With it, `budget thermal-beta` takes the
+    solar exposure of the surface from the beta angle; without it the typed view ratios are used
+    (D-250). It is a design input (a direction), not a sourced property."""
 
     name: str = Field(min_length=1)
     node: str = Field(min_length=1)
@@ -53,6 +82,25 @@ class Surface(BudgetModel):
     emissivity_ratio: Sourced  # infrared
     absorptivity_ratio: Sourced  # solar
     exposure: dict[str, Exposure] = Field(default_factory=dict)  # by case name
+    normal_lvlh: tuple[float, float, float] | None = None
+
+    @field_validator("normal_lvlh", mode="before")
+    @classmethod
+    def _face_name(cls, value: object) -> object:
+        return _normal(value)
+
+    @field_validator("normal_lvlh")
+    @classmethod
+    def _unit_length(
+        cls, value: tuple[float, float, float] | None
+    ) -> tuple[float, float, float] | None:
+        if value is not None:
+            length = (value[0] ** 2 + value[1] ** 2 + value[2] ** 2) ** 0.5
+            if abs(length - 1.0) > NORMAL_TOLERANCE:
+                raise PydanticCustomError(
+                    "normal_length", "a surface normal is a unit vector (length 1)"
+                )
+        return value
 
     @field_validator("exposure")
     @classmethod

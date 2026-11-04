@@ -1,6 +1,6 @@
 # Design: the thermal model against the beta angle
 
-Status: **proposed, for the owner's review; nothing is implemented.** Decision record: D-250 in [DECISIONS.md](DECISIONS.md). It answers the item that every release since 2.3.0 lists as *"no multi-node thermal model against the beta angle"*.
+Status: **built in 2.7.0 as recommended in section 7 (the owner said to continue as recommended); the differences from this text are listed in D-250.** Decision record: D-250 in [DECISIONS.md](DECISIONS.md). It answers the item that every release since 2.3.0 lists as *"no multi-node thermal model against the beta angle"*.
 
 ## 1. What is missing, exactly
 

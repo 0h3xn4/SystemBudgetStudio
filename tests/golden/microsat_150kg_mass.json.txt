@@ -1562,8 +1562,8 @@
       },
       {
         "path": "config/thermal_model.yaml",
-        "sha256": "9241bf406abd881c99d86f0d11207186636e13c663e54261429b2e72bce448b6",
-        "size": 8004
+        "sha256": "3ba4ebd28ef60f39966e9add855a94972787baf0be0e859b9263e117a295ad8e",
+        "size": 8433
       },
       {
         "path": "expendables/propellant.yaml",
@@ -1726,7 +1726,7 @@
         "size": 641
       }
     ],
-    "inputs_digest": "sha256:ed70050c4c1c75cec51e032f1e0f31e5a39ca5e211184b904520e330f4399f64",
+    "inputs_digest": "sha256:616601f7ca26d924a79cb1462be49e588ecf4dc00bf2278583d5d83cba33cfb9",
     "libraries": [
       [
         "pinned",
@@ -1739,7 +1739,7 @@
     "python_version": "3.x",
     "scenario": "static (no scenario)",
     "tool": "System Budget Studio",
-    "tool_version": "2.6.0",
+    "tool_version": "2.7.0",
     "user": "Golden User"
   },
   "result_format": {

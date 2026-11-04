@@ -269,7 +269,7 @@
 38: 'STRUCT' | 0 | 0 |  |  |  |  |  | 
 39: 'THERM' | 6 | 16 |  |  |  |  |  | 
 40: 'TTC' | 6 | 8 |  |  |  |  |  | 
-## sheet Assumptions rows=67 cols=5
+## sheet Assumptions rows=69 cols=5
 1: 'Configuration numbers used' |  |  |  | 
 2: 'Name' | 'Value' | 'Unit' | 'Source' | 'Status'
 3: 'Space temperature' | 3 | 'K' | 'Synthetic example value; not from a data sheet or a standard.' | 'illustrative'
@@ -332,10 +332,12 @@
 61: 'ID' | 'Name' | 'Formula' | 'Source' | 
 62: 'TH-DISS' | 'Heat dissipated by a unit' | 'Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak: P_peak * ratio)' | 'SOURCE_MISSING' | 
 63: 'TH-ABS' | 'Heat absorbed by a surface' | 'Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth * E_IR)' | 'SOURCE_MISSING' | 
-64: 'TH-BAL' | 'Steady-state node heat balance' | 'sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i = 0' | 'SOURCE_MISSING' | 
-65: 'TH-SB' | 'Stefan-Boltzmann constant' | 'sigma = 5.670374419e-8 W m^-2 K^-4' | 'CODATA 2018 / SI 2019 (exact from h, k, c)' | 
-66: 'TH-LIMIT' | 'Unit temperature limit check' | 'exceeded when T < T_min or T > T_max; margin check when T - T_min or T_max - T < temperature_margin_k' | 'SOURCE_MISSING' | 
-67: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
+64: 'TH-BETA-LIT' | 'Sunlit part of a circular orbit, by beta angle' | 'eclipse half-angle phi = acos(sqrt(1 - (Re / r)^2) / cos b) when |sin b| < Re / r, else none; sunlit fraction = 1 - phi / pi' | 'SOURCE_MISSING' | 
+65: 'TH-BETA-SUN' | 'Solar exposure of a flat face, by beta angle' | 'f = (1 / 2 pi) integral over the sunlit orbit of max(0, n . s) du, with s = (-cos b sin u, -sin b, -cos b cos u) in the local-vertical frame (x velocity, y opposite the orbit normal, z nadir); the instant value is max(0, n . s)' | 'SOURCE_MISSING' | 
+66: 'TH-BAL' | 'Steady-state node heat balance' | 'sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i = 0' | 'SOURCE_MISSING' | 
+67: 'TH-SB' | 'Stefan-Boltzmann constant' | 'sigma = 5.670374419e-8 W m^-2 K^-4' | 'CODATA 2018 / SI 2019 (exact from h, k, c)' | 
+68: 'TH-LIMIT' | 'Unit temperature limit check' | 'exceeded when T < T_min or T > T_max; margin check when T - T_min or T_max - T < temperature_margin_k' | 'SOURCE_MISSING' | 
+69: 'SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).' |  |  |  | 
 ## sheet Problems rows=8 cols=6
 1: 'Problems and open items' |  |  |  |  | 
 2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
@@ -348,14 +350,14 @@
 ## sheet Provenance rows=13 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
-3: 'Tool' | 'System Budget Studio 2.6.0'
+3: 'Tool' | 'System Budget Studio 2.7.0'
 4: 'Python' | '3.x'
 5: 'Libraries' | 'pinned for-golden-tests'
 6: 'Project' | 'Example 250 kg minisatellite, complete power and thermal inputs'
 7: 'Project revision' | '1'
 8: 'Scenario' | 'static (no scenario)'
-9: 'Inputs digest (model)' | 'sha256:d547f871cd10ce48b9ed33ddd7c833531932d671e001a9ac254a3d3ada57ae11'
-10: 'Input files' | '43 files, sha256:e1508b9004b68ae3cddacca71cf273e8e493f077a3f91f5495fd21e92c991544'
+9: 'Inputs digest (model)' | 'sha256:ce0862a7c8c632ffa92e9fa10fca34d0e297d6688de7d64c0ce8bd420623c076'
+10: 'Input files' | '43 files, sha256:939dfad4eb73644bdbd1b313fec6e1c09ce9399dd3d6936a01ddecc811bcc53b'
 11: 'Illustrative inputs' | '675'
 12: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 13: 'User' | 'Golden User'

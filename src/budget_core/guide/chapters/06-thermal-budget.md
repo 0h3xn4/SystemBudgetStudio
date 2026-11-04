@@ -12,4 +12,4 @@ The tool solves the equilibrium temperatures of all nodes and compares each unit
 
 ## Scope
 
-The model is steady state only. Transient thermal analysis, finite elements and ray-traced view factors are out of scope for version 1. The tool ships *templates* with placeholder numbers; every flux, optical property, conductance and limit comes from you, with its source.
+The model is steady state only. For a range of beta angles, `budget thermal-beta` solves it with the solar view of every flat surface that gives its direction (`normal_lvlh`) taken from the angle: orbit average and worst instant, a circular orbit, nadir pointing, the Earth view and the albedo still typed. Transient thermal analysis, finite elements and ray-traced view factors are out of scope for version 1. The tool ships *templates* with placeholder numbers; every flux, optical property, conductance and limit comes from you, with its source.

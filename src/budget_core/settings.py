@@ -749,6 +749,16 @@ CATALOGUE: tuple[SettingSpec, ...] = (
         "budget tables-import PROJECT margins.",
     ),
     _s(
+        "thermal.surface_normal_tolerance",
+        "tolerance",
+        "How far a thermal surface normal may be from length 1",
+        "ratio",
+        1e-6,
+        "model.thermal:NORMAL_TOLERANCE",
+        "A normal typed with six decimals is accepted; a vector that is not a direction is not.",
+        "Reading config/thermal_model.yaml (normal_lvlh).",
+    ),
+    _s(
         "units.max_magnitude",
         "limit",
         "Largest magnitude of a number with a unit",

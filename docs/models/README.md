@@ -17,6 +17,7 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | Pointing and slew (bang-bang slew time, momentum, energy) | [pointing.md](pointing.md) | written |
 | Reading IDM-CIC models (archive, value formats, objects, physical occurrences) | [idm-import.md](idm-import.md) | written (reader, mapping, re-import) |
 | Thermal (network, steady state, environment) | [thermal-static.md](thermal-static.md) | written |
+| Thermal against the beta angle (Sun on the faces, sweep) | [thermal-beta.md](thermal-beta.md) | written |
 | RF link (EIRP, G/T, losses, rate selection, volume) | [link-static.md](link-static.md), [link-passes.md](link-passes.md) | written |
 | Units and conversions (accepted units, canonical units, refused words) | (planned) | planned |
 | Settings, tolerances, limits and constants (every number the code applies that no file shows) | [settings.md](settings.md) | written (generated from the catalogue) |

@@ -4,6 +4,17 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-11-05
+
+The thermal model against the beta angle (decision D-250; the design was reviewed as [thermal_beta_design.md](docs/thermal_beta_design.md)).
+
+- **`budget thermal-beta PROJECT [--case NAME] [--mode average|peak|both] [--beta-min/--beta-max/--beta-step DEG] [--scenario ID | --altitude-km KM]`** solves the existing multi-node steady-state thermal model for a range of beta angles and writes a CSV, a JSON and a plot: the temperature of every node, the sunlit part of the orbit, how many units are beyond a limit and the smallest headroom, for each angle. The solar view of every flat surface that gives its direction comes from the beta angle (the orbit average of the sunlight it gets, or its value at the orbit angle of the most absorbed sunlight in total); everything else is the case as typed.
+- **A surface may give its direction, `normal_lvlh`** (new optional field of `config/thermal_model.yaml`, schema version 3, an older file reads unchanged): the outward unit normal in the local-vertical frame of a nadir-pointing spacecraft (x velocity, y opposite the orbit normal, z nadir), or a face name `+x -x +y -y +z -z`. The examples carry invented directions.
+- **Exact geometry, checked four ways.** The sunlit part of a circular orbit and the exposure of a face are closed forms (`TH-BETA-LIT`, `TH-BETA-SUN`; no sampling). Tests compare them with textbook values, with brute-force sampling, with the orbit the tool propagates (its own SGP4 orbit, Sun and eclipse finder: within 0.004 for six faces at four beta angles) and with the existing static budget as a limiting case.
+- **What it does not do (DV-T4, DV-T5):** no thermal capacity; a circular orbit, nadir pointing and flat faces; the Earth view and the albedo stay typed per case. A surface without a direction keeps its typed ratios. Command line only.
+- A new result kind `thermal_beta` ([result format](docs/RESULT_FORMAT.md)); the plot can label an x axis that is not time; `budget settings` lists the surface-normal tolerance.
+- No existing result changed. The inputs digest of a project that sets `normal_lvlh` is a new value; one that does not is unchanged.
+
 ## [2.6.0] - 2026-11-04
 
 The margin policy as a spreadsheet, a correction to the explanation of the demand, and the decisions on the optional items offered after 2.3.0 (D-248 to D-250).

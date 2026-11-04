@@ -43,7 +43,7 @@ git clone https://github.com/0h3xn4/SystemBudgetStudio.git
 cd SystemBudgetStudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e .
-budget --version                                       # System Budget Studio 2.6.0
+budget --version                                       # System Budget Studio 2.7.0
 budget export-examples demo                            # four example projects with invented data
 budget validate demo/microsat_250kg_eps                    # check the project: 0 errors, a few warnings
 budget run demo/microsat_250kg_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
@@ -100,11 +100,11 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 
 Released under the [MIT licence](LICENSE) (decision D-140). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
 
-Status: version 2.6.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
+Status: version 2.7.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 
 Known limits, stated plainly:
 
-- The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project, and 52 of the 55 equations still have no citation (`SOURCE_MISSING`; the references are yours to supply).
+- The results are engineering estimates, only as good as the numbers and sources you enter; the equations are checked against hand calculations, not against a flight project, and 53 of the 57 equations still have no citation (`SOURCE_MISSING`; the references are yours to supply).
 - The tool's own settings, tolerances and constants are shown (Assumptions page) but cannot yet be changed per project; the orbit propagation, the Sun model and the thermal model are fixed simplifications ([deviations](docs/DEVIATIONS.md)).
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 9 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
 - The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 9.

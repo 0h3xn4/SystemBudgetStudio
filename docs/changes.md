@@ -6,6 +6,18 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-05: the thermal model against the beta angle (2.7.0)
+
+**What changed.** A new command, `budget thermal-beta`, and a new optional field `normal_lvlh` on a surface of `config/thermal_model.yaml` (schema version 3, identity migration; [D-250](DECISIONS.md)). No existing number moved: the static thermal budget, the power timeline and every other result are computed as before.
+
+| Case | Before | After |
+|---|---|---|
+| Any project that does not set `normal_lvlh` | the numbers of 2.6.0 | the same numbers, the same inputs digest |
+| A project that sets `normal_lvlh` | not possible | the same budgets; its inputs digest is a new value (the file changed) |
+| The 250 kg, 150 kg and stress examples | no directions on surfaces | invented directions; thermal results unchanged, inputs digest and golden files updated |
+
+**Effect.** None on any result. `budget verify` of an export made with 2.6.0 against an example of 2.7.0 reports DIFFERENT for the digest, since the example file gained the directions.
+
 ## 2026-11-04: the explanation of the demand with pointing and burns, and the margin policy as a spreadsheet (2.6.0)
 
 **What changed.** (1) The explanation (`budget explain`, *Explain this value*) of *Average demand at source*, *Energy demanded* and of a peak-power finding of the power timeline now includes the pointing holds, slews and burns a scenario places; before, it described only the modes' demand, and for such a scenario its cross-check line and the worst peak did not agree with the table. (2) `budget tables-export` and `tables-import` take `margins` ([D-249](DECISIONS.md)). No number of any budget, no file format and no inputs digest changed.

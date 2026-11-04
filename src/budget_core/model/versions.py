@@ -14,7 +14,7 @@ CURRENT_VERSIONS: dict[str, int] = {
     "margin_policy": 3,
     "power_config": 2,
     "power_system": 2,
-    "thermal_model": 2,
+    "thermal_model": 3,
     "thermal_environment": 2,
     "mass_limits": 2,
     "propulsion": 2,

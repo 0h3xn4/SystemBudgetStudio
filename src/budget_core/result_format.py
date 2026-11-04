@@ -23,6 +23,7 @@ KINDS = (
     "power_timeline",
     "scenario_environment",
     "comparison",
+    "thermal_beta",
 )
 
 _STATIC_KINDS = {

@@ -1,6 +1,6 @@
 pages=4
 ## page 1
-System Budget Studio 2.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Thermal budget (static): Thermal test
 Summary
@@ -116,7 +116,7 @@ B
 no limits
 Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
 ## page 2
-System Budget Studio 2.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Mode: Cold
 Units in mode Cold
@@ -218,7 +218,7 @@ B
  18.000
 Assumptions
 ## page 3
-System Budget Studio 2.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Configuration numbers used
 Name
@@ -308,16 +308,32 @@ Formula
 Source
 TH-DISS
 Heat dissipated by a unit
-Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak: P_peak * ratio)
+Q = P_avg * duty_cycle_ratio * heat_dissipation_ratio (peak:
+P_peak * ratio)
 SOURCE_MISSING
 TH-ABS
 Heat absorbed by a surface
-Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth * E_IR)
+Q = A * (alpha * f_sun * S + alpha * f_earth * a * S + eps * f_earth *
+E_IR)
+SOURCE_MISSING
+TH-BETA-LI
+T
+Sunlit part of a circular orbit, by beta angle
+eclipse half-angle phi = acos(sqrt(1 - (Re / r)^2) / cos b) when |sin
+b| < Re / r, else none; sunlit fraction = 1 - phi / pi
+SOURCE_MISSING
+TH-BETA-S
+UN
+Solar exposure of a flat face, by beta angle
+f = (1 / 2 pi) integral over the sunlit orbit of max(0, n . s) du, with s =
+(-cos b sin u, -sin b, -cos b cos u) in the local-vertical frame (x
+velocity, y opposite the orbit normal, z nadir); the instant value is
+max(0, n . s)
 SOURCE_MISSING
 TH-BAL
 Steady-state node heat balance
-sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i
-= 0
+sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 -
+T_i^4) + Q_i = 0
 SOURCE_MISSING
 TH-SB
 Stefan-Boltzmann constant
@@ -325,11 +341,14 @@ sigma = 5.670374419e-8 W m^-2 K^-4
 CODATA 2018 / SI 2019 (exact from h, k, c)
 TH-LIMIT
 Unit temperature limit check
-exceeded when T < T_min or T > T_max; margin check when T - T_min or
-T_max - T < temperature_margin_k
+exceeded when T < T_min or T > T_max; margin check when T -
+T_min or T_max - T < temperature_margin_k
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems
+## page 4
+System Budget Studio 2.7.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 4
 Problems and open items
 Severity
 Code
@@ -351,15 +370,12 @@ units/u2.yaml
 temperature_limits
 Unit 'u2' has no operating temperature limits; it is not checked.
 Add temperature_limits from the unit's data sheet.
-## page 4
-System Budget Studio 2.6.0 | Thermal test rev r1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 4
 Provenance
 Provenance
 Item
 Value
 Tool
-System Budget Studio 2.6.0
+System Budget Studio 2.7.0
 Python
 3.x
 Libraries
@@ -371,7 +387,7 @@ r1
 Scenario
 static (no scenario)
 Inputs digest (model)
-sha256:c51435aeae5340d1d83ab37bb984daa8b88f1964949527c668f624e6b21ad12e
+sha256:0ba70e3051ccea642cc81a3de6c587ad25eff787b8ae57f4b32597a65a4a23f0
 Illustrative inputs
 0
 Generated (UTC)
