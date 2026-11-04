@@ -1,4 +1,4 @@
-schema_version: 2
+schema_version: 3
 kind: thermal_model
 nodes:
   AOCS:
@@ -91,6 +91,10 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - 0.0
+      - 0.0
+      - -1.0
   - name: DH panel
     node: DH
     area_m2: 0.3
@@ -121,6 +125,10 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - 0.0
+      - -1.0
+      - 0.0
   - name: EPS panel
     node: EPS
     area_m2: 0.3
@@ -151,6 +159,10 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - 0.0
+      - 1.0
+      - 0.0
   - name: PL panel
     node: PL
     area_m2: 0.3
@@ -181,6 +193,10 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - 1.0
+      - 0.0
+      - 0.0
   - name: PL-DATA panel
     node: PL-DATA
     area_m2: 0.3
@@ -211,6 +227,10 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - -1.0
+      - 0.0
+      - 0.0
   - name: STRUCT panel
     node: STRUCT
     area_m2: 0.3
@@ -241,6 +261,10 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - 0.0
+      - 0.0
+      - 1.0
   - name: THERM panel
     node: THERM
     area_m2: 0.3
@@ -271,6 +295,10 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - 0.0
+      - 0.0
+      - -1.0
   - name: TTC panel
     node: TTC
     area_m2: 0.3
@@ -301,3 +329,7 @@ surfaces:
           value: null
           source: TBD
           note: "Placeholder: supply the project's value."
+    normal_lvlh:
+      - 0.0
+      - -1.0
+      - 0.0

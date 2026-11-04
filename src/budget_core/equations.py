@@ -145,6 +145,28 @@ def _thermal_equations() -> tuple[Equation, ...]:
             _TH_NOTE + " Constant view ratios per case, no view factors (DEVIATIONS DV-T2).",
         ),
         Equation(
+            "TH-BETA-LIT",
+            "Sunlit part of a circular orbit, by beta angle",
+            "eclipse half-angle phi = acos(sqrt(1 - (Re / r)^2) / cos b) when |sin b| < Re / r, "
+            "else none; sunlit fraction = 1 - phi / pi",
+            None,
+            "A circular orbit and the cylindrical shadow of the Earth (ENV-SHADOW-CYL); the "
+            "textbook relation, owner to confirm the reference. At beta 0 the eclipse lasts "
+            "asin(Re / r) / pi of the orbit (DEVIATIONS DV-T5).",
+        ),
+        Equation(
+            "TH-BETA-SUN",
+            "Solar exposure of a flat face, by beta angle",
+            "f = (1 / 2 pi) integral over the sunlit orbit of max(0, n . s) du, with "
+            "s = (-cos b sin u, -sin b, -cos b cos u) in the local-vertical frame (x velocity, "
+            "y opposite the orbit normal, z nadir); the instant value is max(0, n . s)",
+            None,
+            "The cosine of the angle between the face normal and the Sun, averaged over an "
+            "orbit with the eclipse counted as zero (the orbit-average solar view ratio of the "
+            "face), or taken at the orbit angle of the largest total absorbed sunlight (the "
+            "peak). Pure geometry: nadir pointing, flat faces (DEVIATIONS DV-T4, DV-T5).",
+        ),
+        Equation(
             "TH-BAL",
             "Steady-state node heat balance",
             "sum_j G_ij (T_j - T_i) + sum_surfaces eps sigma A (T_space^4 - T_i^4) + Q_i = 0",

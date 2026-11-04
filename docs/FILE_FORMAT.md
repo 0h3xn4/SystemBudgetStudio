@@ -121,6 +121,9 @@ surfaces:                      # outer surfaces: radiate to space, absorb sun, a
     absorptivity_ratio: {value: ..., source: ...}    # solar
     exposure:
       hot: {solar_view_ratio: {...}, earth_view_ratio: {...}}   # per case name
+    normal_lvlh: [0, 0, -1]        # optional, version 3 (2.7.0): the outward unit normal of a flat surface in the
+                                   # local-vertical frame (x velocity, y opposite the orbit normal, z nadir), or a
+                                   # face name +x -x +y -y +z -z; `budget thermal-beta` takes the solar exposure from it
 ```
 
 - `config/thermal_environment.yaml`:

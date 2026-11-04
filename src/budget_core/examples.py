@@ -76,6 +76,7 @@ from budget_core.model import (
 )
 from budget_core.model.annotations import ProvenancedModel, ProvenanceEntry
 from budget_core.model.power_system import Pointing
+from budget_core.model.thermal import FACES
 
 SYNTHETIC = "Synthetic example data; not a real spacecraft."
 CLASSES = ("class_a", "class_b", "class_c")
@@ -782,6 +783,9 @@ EXAMPLE_TARGETS = {
 }
 
 
+_EXAMPLE_FACES = ("-z", "-y", "+y", "+x", "-x", "+z")
+
+
 def _thermal(
     units: dict[str, Unit], hot_mode: str, cold_mode: str, area_m2: float, filled: bool
 ) -> tuple[ThermalModel, ThermalEnvironment]:
@@ -811,8 +815,10 @@ def _thermal(
                     case: Exposure(solar_view_ratio=n(s_), earth_view_ratio=n(e_))
                     for case, (s_, e_) in sun.items()
                 },
+                # invented geometry for the example of the beta sweep (D-250): one face each
+                normal_lvlh=FACES[_EXAMPLE_FACES[index % len(_EXAMPLE_FACES)]],
             )
-            for name in names
+            for index, name in enumerate(names)
         ],
     )
     environment = ThermalEnvironment(

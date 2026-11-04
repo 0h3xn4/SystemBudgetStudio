@@ -89,7 +89,7 @@
     },
     "Surface": {
       "additionalProperties": false,
-      "description": "An outer surface of a node: radiates to space, absorbs sunlight, albedo, Earth infrared.",
+      "description": "An outer surface of a node: radiates to space, absorbs sunlight, albedo, Earth infrared.\n\n`normal_lvlh` is the outward unit normal of a flat surface in the local-vertical frame of a\nspacecraft that points to nadir (x along the velocity, y opposite to the orbit normal, z to\nnadir), given as three numbers or as a face name. With it, `budget thermal-beta` takes the\nsolar exposure of the surface from the beta angle; without it the typed view ratios are used\n(D-250). It is a design input (a direction), not a sourced property.",
       "properties": {
         "absorptivity_ratio": {
           "$ref": "#/$defs/Sourced"
@@ -118,6 +118,31 @@
           "minLength": 1,
           "title": "Node",
           "type": "string"
+        },
+        "normal_lvlh": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Normal Lvlh"
         }
       },
       "required": [
@@ -184,8 +209,8 @@
       "type": "object"
     },
     "schema_version": {
-      "const": 2,
-      "default": 2,
+      "const": 3,
+      "default": 3,
       "title": "Schema Version",
       "type": "integer"
     },
