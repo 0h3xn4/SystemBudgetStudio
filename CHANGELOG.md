@@ -4,6 +4,13 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+Step 1 of importing models of IDM-CIC (decisions D-237 to D-239): the **reader**. No command and no window entry yet, and nothing is written into a project.
+
+- `budget_core/idm/` reads a model file (a ZIP archive holding `model.xml`; reads models from IDM-CIC (c) CNES) into a typed model: system, elements, subsystems, equipment, physical occurrences (the equipment in the satellite, not the templates inside assembly definitions), power modes and their mappings, thermal modules, configurations, tank contents. Values are parsed by explicit rules (comma decimals, exponents, `dd/mm/yyyy hh:mm:ss`); formulas are never evaluated.
+- Safe by construction: only `model.xml` is read and nothing is extracted; the sizes of the file, the unpacked model, the entries and the XML nesting are bounded (five registered settings); a document type or entity declaration is refused.
+- Ten new problem codes `IDM_*` ([the list](docs/PROBLEMS.md#idm-cic-models-import)); messages never contain text from the file.
+- Page: [docs/models/idm-import.md](docs/models/idm-import.md). `.gitignore` refuses `*.idm` outside `tests/fixtures/idm/`; the test models are synthetic and built by the tests.
+
 Documentation sweep after 2.3.0; no code changed.
 
 - The in-app guide (power, mass, link, scenarios, troubleshooting chapters) and the manual now describe pointing and burns on the timeline, the propulsion budget, the spreadsheet tables and the orbit design inputs (LTAN, state vector).

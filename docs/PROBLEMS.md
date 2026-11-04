@@ -796,6 +796,88 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** Only the part inside the scenario is counted in the power budget.
 - **What to do.** Start the manoeuvre earlier or lengthen the scenario.
 
+## IDM-CIC models (import)
+
+### IDM_FILE_UNREADABLE
+
+**The file is not a readable IDM-CIC archive** (error)
+
+- **Rule.** A model file is a ZIP archive that holds the model as an entry named model.xml.
+- **Why it matters.** Nothing can be imported from a file that cannot be opened.
+- **What to do.** Check that the file is a model saved by IDM-CIC (.idm) and that it is not damaged.
+
+### IDM_ARCHIVE_LIMIT
+
+**The archive or its model is larger than the tool reads** (error)
+
+- **Rule.** The archive, its number of entries, the unpacked model and the nesting of the model each stay within a bound (see the settings catalogue).
+- **Why it matters.** A hostile or wrong file could otherwise use all the memory of the computer.
+- **What to do.** Real models are a few megabytes; check that this is the right file.
+
+### IDM_MODEL_MISSING
+
+**The archive has no model.xml** (error)
+
+- **Rule.** The archive must have an entry named model.xml at its root.
+- **Why it matters.** The model is in that entry; without it there is nothing to import.
+- **What to do.** Open the file in IDM-CIC and save it again, or use the right file.
+
+### IDM_XML_INVALID
+
+**The model is not well-formed XML** (error)
+
+- **Rule.** The model must be well-formed XML in UTF-8.
+- **Why it matters.** A damaged model cannot be read reliably.
+- **What to do.** Save the model again in IDM-CIC.
+
+### IDM_XML_UNSAFE
+
+**The model declares a document type or entities** (error)
+
+- **Rule.** A model file has no use for a document type declaration or entity definitions, so a file that has one is refused before it is parsed.
+- **Why it matters.** Such declarations can make a small file expand into a very large one.
+- **What to do.** Use a model saved by IDM-CIC; do not edit the XML by hand.
+
+### IDM_STRUCTURE_INVALID
+
+**The model does not have the expected structure** (error)
+
+- **Rule.** The XML must have the nodes IDM, IdmData and MainSystem.
+- **Why it matters.** Without them the file is not an IDM-CIC model.
+- **What to do.** Check that the file is the right one.
+
+### IDM_VALUE_INVALID
+
+**A value is not in the format of the model file** (error)
+
+- **Rule.** Numbers use a comma as decimal separator and may carry an exponent, with no thousands separator; dates are dd/mm/yyyy hh:mm:ss; yes/no values are True or False.
+- **Why it matters.** A value in another format could be read as a different number, so none is guessed.
+- **What to do.** Save the model again in IDM-CIC; the object is named in the problem.
+
+### IDM_VERSION_NEWER
+
+**The file is from a newer version of IDM-CIC** (warning)
+
+- **Rule.** The file's format version has a newer minor version than the one the reader was written for.
+- **Why it matters.** Newer versions can rename or add objects; those are left out, not guessed.
+- **What to do.** Check the summary for left-out objects; ask for a tool version that knows the format.
+
+### IDM_REF_UNRESOLVED
+
+**A reference points at an object that is not in the model** (warning)
+
+- **Rule.** Every reference in the model names an object that is defined in the same file.
+- **Why it matters.** The object that holds the reference is left out because it cannot be completed.
+- **What to do.** Save the model again in IDM-CIC; the object is named in the problem.
+
+### IDM_UNIT_KIND_UNKNOWN
+
+**A unit of an unknown kind is left out** (warning)
+
+- **Rule.** Only equipment and assemblies are read as units.
+- **Why it matters.** A unit of another kind would be skipped silently otherwise.
+- **What to do.** Check the summary; the unit is named in the problem.
+
 ## Other
 
 ### INTERNAL_ERROR

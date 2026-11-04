@@ -38,6 +38,7 @@ _POINT = "Pointing and propulsion"
 _POWER = "Power timeline"
 _LINK = "Link budget"
 _IMPORT = "Unit tables (import)"
+_IDM = "IDM-CIC models (import)"
 _OTHER = "Other"
 
 
@@ -967,6 +968,101 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "The burn of a placed manoeuvre should lie inside the scenario.",
         "Only the part inside the scenario is counted in the power budget.",
         "Start the manoeuvre earlier or lengthen the scenario.",
+    ),
+    # ---- IDM-CIC models ----
+    _e(
+        "IDM_FILE_UNREADABLE",
+        ERR,
+        _IDM,
+        "The file is not a readable IDM-CIC archive",
+        "A model file is a ZIP archive that holds the model as an entry named model.xml.",
+        "Nothing can be imported from a file that cannot be opened.",
+        "Check that the file is a model saved by IDM-CIC (.idm) and that it is not damaged.",
+    ),
+    _e(
+        "IDM_ARCHIVE_LIMIT",
+        ERR,
+        _IDM,
+        "The archive or its model is larger than the tool reads",
+        "The archive, its number of entries, the unpacked model and the nesting of the model "
+        "each stay within a bound (see the settings catalogue).",
+        "A hostile or wrong file could otherwise use all the memory of the computer.",
+        "Real models are a few megabytes; check that this is the right file.",
+    ),
+    _e(
+        "IDM_MODEL_MISSING",
+        ERR,
+        _IDM,
+        "The archive has no model.xml",
+        "The archive must have an entry named model.xml at its root.",
+        "The model is in that entry; without it there is nothing to import.",
+        "Open the file in IDM-CIC and save it again, or use the right file.",
+    ),
+    _e(
+        "IDM_XML_INVALID",
+        ERR,
+        _IDM,
+        "The model is not well-formed XML",
+        "The model must be well-formed XML in UTF-8.",
+        "A damaged model cannot be read reliably.",
+        "Save the model again in IDM-CIC.",
+    ),
+    _e(
+        "IDM_XML_UNSAFE",
+        ERR,
+        _IDM,
+        "The model declares a document type or entities",
+        "A model file has no use for a document type declaration or entity definitions, so a file "
+        "that has one is refused before it is parsed.",
+        "Such declarations can make a small file expand into a very large one.",
+        "Use a model saved by IDM-CIC; do not edit the XML by hand.",
+    ),
+    _e(
+        "IDM_STRUCTURE_INVALID",
+        ERR,
+        _IDM,
+        "The model does not have the expected structure",
+        "The XML must have the nodes IDM, IdmData and MainSystem.",
+        "Without them the file is not an IDM-CIC model.",
+        "Check that the file is the right one.",
+    ),
+    _e(
+        "IDM_VALUE_INVALID",
+        ERR,
+        _IDM,
+        "A value is not in the format of the model file",
+        "Numbers use a comma as decimal separator and may carry an exponent, with no thousands "
+        "separator; dates are dd/mm/yyyy hh:mm:ss; yes/no values are True or False.",
+        "A value in another format could be read as a different number, so none is guessed.",
+        "Save the model again in IDM-CIC; the object is named in the problem.",
+    ),
+    _e(
+        "IDM_VERSION_NEWER",
+        WARN,
+        _IDM,
+        "The file is from a newer version of IDM-CIC",
+        "The file's format version has a newer minor version than the one the reader was written "
+        "for.",
+        "Newer versions can rename or add objects; those are left out, not guessed.",
+        "Check the summary for left-out objects; ask for a tool version that knows the format.",
+    ),
+    _e(
+        "IDM_REF_UNRESOLVED",
+        WARN,
+        _IDM,
+        "A reference points at an object that is not in the model",
+        "Every reference in the model names an object that is defined in the same file.",
+        "The object that holds the reference is left out because it cannot be completed.",
+        "Save the model again in IDM-CIC; the object is named in the problem.",
+    ),
+    _e(
+        "IDM_UNIT_KIND_UNKNOWN",
+        WARN,
+        _IDM,
+        "A unit of an unknown kind is left out",
+        "Only equipment and assemblies are read as units.",
+        "A unit of another kind would be skipped silently otherwise.",
+        "Check the summary; the unit is named in the problem.",
     ),
     # ---- other ----
     _e(

@@ -22,3 +22,7 @@ dist/
 /projects/
 /local/
 results/
+# Models of IDM-CIC are third-party files (CNES licence): never commit one, except a small synthetic
+# test fixture written by hand under tests/fixtures/idm/ (decision D-237)
+*.idm
+!tests/fixtures/idm/*.idm
