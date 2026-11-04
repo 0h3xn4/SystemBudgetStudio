@@ -1278,8 +1278,9 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         _IDM,
         "The centre of gravity or the inertia of an equipment is not worked out",
         "They are worked out from entered values, or from the shapes of mass type Total of a "
-        "box, a whole cylinder, a triangular prism and a quadrangular prism; a shape of mass "
-        "0 is ignored. Other shapes, masses per area or volume and unphysical results are not.",
+        "box, a whole cylinder, a whole cone, a hollow cylinder, a hollow cone with equal radii, "
+        "a tank, a triangular prism and a quadrangular prism; a shape of mass 0 is ignored. "
+        "Other shapes, masses per area or volume and unphysical results are not.",
         "A shape whose geometry is not known cannot give a centre of gravity.",
         "Enter the centre of gravity and the inertia of the equipment in IDM-CIC, or give the "
         "unit its mass properties by hand.",

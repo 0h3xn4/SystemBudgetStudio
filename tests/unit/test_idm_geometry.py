@@ -158,11 +158,97 @@ def test_a_rectangular_quadrangle_prism_is_a_box() -> None:
     np.testing.assert_allclose(quad.inertia, box.inertia, atol=1e-12)
 
 
-@pytest.mark.parametrize("kind", ["Sphere", "HollowCone", "Topology", "Line"])
+@pytest.mark.parametrize("kind", ["Sphere", "HollowSphere", "Topology", "Line"])
 def test_other_kinds_are_not_covered(kind: str) -> None:
     with pytest.raises(GeometryError) as info:
         shape_body(shape(kind, 1.0, d1=1.0))
     assert info.value.code == SHAPE
+
+
+WHOLE = dict(angle1=0.0, angle2=360.0, s=1.0)
+
+
+def test_a_cone_with_equal_radii_is_a_cylinder() -> None:
+    cone = shape_body(shape("FilledCone", 4.0, d1=0.5, d2=0.5, d3=2.0, **WHOLE))
+    cylinder = shape_body(shape("FilledCylinder", 4.0, d1=0.5, d3=2.0, **WHOLE))
+    np.testing.assert_allclose(cone.com, cylinder.com, atol=1e-12)
+    np.testing.assert_allclose(cone.inertia, cylinder.inertia, atol=1e-12)
+
+
+def test_a_filled_cone_against_the_closed_forms() -> None:
+    # a cone on its base of radius r and height h: centre at h / 4, Izz = 3 m r^2 / 10,
+    # transverse moment about the centre 3 m (r^2 / 20 + h^2 / 80)
+    r, h, m = 0.4, 1.2, 5.0
+    body = shape_body(shape("FilledCone", m, d1=r, d2=0.0, d3=h, **WHOLE))
+    np.testing.assert_allclose(body.com, [0.0, 0.0, h / 4.0], atol=1e-12)
+    np.testing.assert_allclose(body.inertia[2, 2], 0.3 * m * r * r, rtol=1e-12)
+    np.testing.assert_allclose(body.inertia[0, 0], 3 * m * (r * r / 20 + h * h / 80), rtol=1e-12)
+
+
+def test_a_frustum_is_the_big_cone_minus_the_small_one() -> None:
+    # radii 2 and 1 over height 1: the big cone has height 2, the cut-off one height 1
+    frustum = shape_body(shape("FilledCone", 7.0, d1=2.0, d2=1.0, d3=1.0, **WHOLE))
+    big = shape_body(shape("FilledCone", 8.0, d1=2.0, d2=0.0, d3=2.0, **WHOLE))
+    small = shape_body(shape("FilledCone", 1.0, d1=1.0, d2=0.0, d3=1.0, **WHOLE))
+    # the removed cone stands on the cut (z = 1) with its tip up: its centre is a quarter of its
+    # height above the cut
+    small_com = np.array([0.0, 0.0, 1.0 + 1.0 / 4.0])
+    com = (8.0 * big.com - 1.0 * small_com) / 7.0
+    np.testing.assert_allclose(frustum.com, com, atol=1e-12)
+    np.testing.assert_allclose(frustum.inertia[2, 2], big.inertia[2, 2] - small.inertia[2, 2])
+
+
+def test_a_hollow_cylinder_is_a_tube() -> None:
+    r, t, h, m = 0.5, 0.1, 2.0, 3.0
+    for kind, extra in (("HollowCylinder", {}), ("HollowCone", {"d2": r})):
+        body = shape_body(shape(kind, m, d1=r, d3=h, d4=t, **WHOLE, **extra))
+        ri = r - t
+        np.testing.assert_allclose(body.com, [0.0, 0.0, h / 2.0], atol=1e-12)
+        np.testing.assert_allclose(body.inertia[2, 2], m * (r * r + ri * ri) / 2.0, rtol=1e-12)
+        np.testing.assert_allclose(
+            body.inertia[0, 0], m * (3.0 * (r * r + ri * ri) + h * h) / 12.0, rtol=1e-12
+        )
+
+
+@pytest.mark.parametrize(
+    "kind, params",
+    [
+        ("HollowCone", dict(d1=0.5, d2=0.4, d3=1.0, d4=0.05)),  # radii differ
+        ("HollowCylinder", dict(d1=0.5, d3=1.0, d4=0.5)),  # the wall fills the radius
+        ("HollowCylinder", dict(d1=0.5, d3=1.0, d4=0.0)),  # no wall
+        ("HollowCylinder", dict(d1=0.5, d3=1.0, d4=0.1, angle2=90.0)),  # a part of a turn
+        ("FilledCone", dict(d1=0.5, d2=0.2, d3=1.0, s=2.0)),  # stretched
+    ],
+)
+def test_cones_and_tubes_that_are_not_covered(kind: str, params: dict[str, float]) -> None:
+    with pytest.raises(GeometryError):
+        shape_body(shape(kind, 1.0, **(WHOLE | params)))
+
+
+def test_a_tank_with_no_straight_part_is_a_spherical_shell() -> None:
+    r, t, m = 0.145, 0.002, 2.0
+    body = shape_body(shape("Tank", m, d1=r, d3=0.0, d4=t, capacity=8.0, maximalFilling=0.95))
+    ri = r - t
+    np.testing.assert_allclose(body.com, [0.0, 0.0, 0.0], atol=1e-12)
+    # a shell of two spheres: I = 2 m (R^5 - r^5) / (5 (R^3 - r^3))
+    expected = 2.0 * m * (r**5 - ri**5) / (5.0 * (r**3 - ri**3))
+    np.testing.assert_allclose(np.diag(body.inertia), [expected] * 3, rtol=1e-9)
+
+
+def test_a_tank_is_a_tube_with_two_spherical_ends() -> None:
+    r, t, h, m = 0.3, 0.01, 1.0, 10.0
+    body = shape_body(shape("Tank", m, d1=r, d3=h, d4=t, capacity=1.0, maximalFilling=0.9))
+    ri = r - t
+    v_tube = math.pi * (r * r - ri * ri) * h
+    v_ends = 4.0 / 3.0 * math.pi * (r**3 - ri**3)
+    np.testing.assert_allclose(
+        body.com, [0.0, 0.0, h / 2.0], atol=1e-12
+    )  # symmetric about the middle
+    tube_izz = (m * v_tube / (v_tube + v_ends)) * (r * r + ri * ri) / 2.0
+    ends_izz = (m * v_ends / (v_tube + v_ends)) * 2.0 * (r**5 - ri**5) / (5.0 * (r**3 - ri**3))
+    np.testing.assert_allclose(body.inertia[2, 2], tube_izz + ends_izz, rtol=1e-9)
+    assert body.inertia[0, 0] == pytest.approx(body.inertia[1, 1])
+    assert body.inertia[0, 0] > body.inertia[2, 2]  # longer than wide
 
 
 def test_a_mass_per_area_or_volume_is_not_covered() -> None:

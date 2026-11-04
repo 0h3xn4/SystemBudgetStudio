@@ -4,6 +4,14 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-11-04
+
+More shapes for the centre of gravity of an imported IDM-CIC model (decision D-247; reads models from IDM-CIC (c) CNES).
+
+- **Whole cones, hollow cylinders, hollow cones and tanks** now give a centre of gravity and inertia, in addition to boxes, whole cylinders and prisms. They stand like the cylinder (base on the origin, axis along +z) and are marked as estimates, like all of it (DV-IDM5). A hollow cone is taken only when its two radii are equal, a wall as thick as the radius is refused, and a tank is a hollow cylinder with hemispherical ends (its origin along the axis is the least certain convention: it moves the centre of gravity by half the straight part, 2 cm at most on the tanks seen). The closed forms are tested against textbook values.
+- On one of the sample models (CIC-SAT V6, 123 units) 118 units are now placed (104 of 124 with 2.4.0). Spheres, tori, paraboloids, pipes, cuts and unions are still not covered, and none was checked against IDM-CIC itself.
+- No existing result changed; no file format changed.
+
 ## [2.4.0] - 2026-11-04
 
 Importing models of IDM-CIC (reads models from IDM-CIC (c) CNES; decisions D-237 to D-246): the reader, the mapping, the command, re-import, the window entry, and the centre of gravity and inertia as estimates.
