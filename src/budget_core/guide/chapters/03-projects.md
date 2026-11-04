@@ -17,6 +17,10 @@ In the window the **Edit** menu adds these files from a form (each is one undo s
 
 The complete field list is in the file format reference (`docs/FILE_FORMAT.md` in the source repository), and the JSON Schema of every kind is written by `budget export-schemas <folder>`.
 
+## Starting from an IDM-CIC model
+
+`budget import idm model.idm --bus-voltage-v 28` builds a project from a model file of IDM-CIC (reads models from IDM-CIC (c) CNES; the tool is independent of CNES and needs no CNES software). Without `--apply` it only shows the plan. Each physical equipment becomes a unit with its mass, power modes, temperature limits and thermal node and, where the placements and shapes allow it, its centre of gravity and inertia (marked as estimates; `--mass-properties none` leaves them out); each system mode becomes a spacecraft mode (the file `idm/mode_map.yaml` says which, and you can edit it); each tank becomes an expendable; every value has a source naming the model file, its revision and the object. Import a newer version of the model into the same project later: values you changed are kept, values the model changed are updated, objects the model no longer has are flagged, nothing you added is touched. `--margins raw` (default) leaves the values raw and lets the project apply its margin classes; `--margins applied` applies the model's margins and the classes carry none, so they are never applied twice. See the manual page *Start a project from an IDM-CIC model*.
+
 ## Sourced numbers
 
 Everything in `config/` and every RF or thermal parameter is written as:

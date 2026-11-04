@@ -2,7 +2,7 @@
 
 Reads models from IDM-CIC (© CNES). IDM-CIC is software of the French space agency CNES for the early design of satellites. System Budget Studio is an independent tool: it uses no CNES software, library or data, it needs none installed, and CNES does not endorse or support it. This page describes in our own words what the tool reads from a model file and how.
 
-**Status (decision D-237).** The reader is the first of five steps. It turns a model file into a typed model in memory and reports what it finds. It does not yet write anything into a project: the command `budget import idm`, the mapping onto units, modes and the mass budget, re-import, geometry and the window entry follow in later steps.
+**Status (decisions D-237, D-240 to D-243).** The tool reads the model file into a typed model (this page), maps it onto a project and merges a later version of the model into the project; the command is `budget import idm` ([how to use it](../user-manual/idm-import.md)). The centre of gravity and the inertia come from the placements and shapes (below).
 
 **Supported format.** The reader was written for version **3.4.0.19** of the published model description. Files saved by versions 3.4.x are read without a message; a file of a newer minor version (for example 3.5) is read with the warning `IDM_VERSION_NEWER`, and objects it does not know are left out and counted, never guessed.
 
@@ -43,8 +43,32 @@ An equipment is a definition; what is in the satellite is its **occurrences**. A
 
 The codes of this step are `IDM_FILE_UNREADABLE`, `IDM_ARCHIVE_LIMIT`, `IDM_MODEL_MISSING`, `IDM_XML_INVALID`, `IDM_XML_UNSAFE`, `IDM_STRUCTURE_INVALID`, `IDM_VALUE_INVALID`, `IDM_VERSION_NEWER`, `IDM_REF_UNRESOLVED` and `IDM_UNIT_KIND_UNKNOWN`; see [the problem list](../PROBLEMS.md#idm-cic-models-import).
 
+## How the model becomes a project
+
+The rules, in the order the importer applies them (decision D-240):
+
+1. **Units.** One unit per physical occurrence. Id: the occurrence's `fullId` with `.` turned into `-` (`el-1_ss-PWR_eqi-1-1`). Name: `Element / assembly / equipment [occurrence]`. Subsystem: the subsystem's name. Bus: the one given with `--bus`.
+2. **Presence.** The reference configuration is the defaults stored on the objects: an optional unit that is disabled by default is absent from it. Every saved configuration becomes a mission phase; a unit is present in a phase when its element is enabled in the configuration and, if the unit is optional, its link to the configuration says so. A unit present in every phase has no `phases`; a unit present nowhere is left out (`IDM_NEVER_ENABLED`).
+3. **Mass.** `ManualInput`: the entered mass. `FromGeometry`: the sum of the shape masses when every shape has the mass type Total; otherwise the mass needs the geometry and is not estimated. The entered mass of a geometry-based equipment is a cached value that can be out of date and is never used for it.
+4. **Margins.** The equipment's mass margin is its maturity level's (stored with the equipment) and its power margin. `raw`: they become the class `idm_m<mass %>_p<power %>`; `applied`: the values are multiplied by `1 + margin` and the class `idm_applied` has margin 0.
+5. **Power modes.** A mode has power and dissipation. Both map to average and peak power (DV-IDM1). The heat share is dissipation / power, 1.0 when both are 0, and absent (so thermal results are n/a) when the dissipation exceeds the power or there is no power. An equipment without power modes gets *Passive*, 0 W (DV-IDM2).
+6. **Spacecraft modes.** For a system mode and a unit: the element mode that the system mode names for the unit's element selects the unit's mapping to a power mode (or a custom power); otherwise the direct mapping of the system mode is used. Names come from `idm/mode_map.yaml`.
+7. **Thermal.** A thermal module is a node (`<element>_thm-<id>`); units on no module are on the node `idm_unplaced`. Nodes have no capacity, conductance or surface: the model has none, and none is invented.
+8. **Temperature limits.** Celsius to kelvin. A band is used only when its minimum is below its maximum; the model uses 0 and 0 for a band that is not set. A survival band that does not enclose the operating band is dropped (`IDM_TEMPERATURE_IGNORED`).
+9. **Tanks.** An expendable per tank content. Its mass in a phase is the capacity of the tank times the filling of the configuration (the reference phase uses the default filling), and 0 where the equipment is not present (DV-IDM3). Its margin is the propellant margin of the system, or of the element when the element sets one. The tank's centre of gravity needs the geometry and is left out.
+
+## Centre of gravity and inertia
+
+Added in 2.4.0 (decisions D-245, D-246, deviation DV-IDM5). They are worked out from where each equipment is and what its shapes are, and **every number is marked `estimate`**: the published description of the format fixes the names of the placement data but not, in words, how they combine, and no value of IDM-CIC was available to check against. The conventions below were inferred from the models and tested on them: with them the panels, angles and cleats of a platform close into a box with no gap and no overlap, and with the alternatives tried (eight combinations of rotation order, handedness and translation, and a box origin at the centre) they do not.
+
+- **Placement.** A position is a translation `t` and three rotations, composed as the product of the three axis rotations in the order the rotation order names (`Rx_Ry_Rz` is `Rx(r1) Ry(r2) Rz(r3)`), right-handed, in degrees; a point of the object is at `R p + t` in the frame it is placed on. The frame of an equipment is the frame of the coordinate system it is placed on times its position; a coordinate system is placed on its parent, or, when it is the first of an occurrence, on that occurrence; an occurrence copied from a template takes the template's position. Only the transformation order `Translation_Rotation` is covered (all the models seen use it).
+- **Articulations** (a rotation or translation of a coordinate system) count when their reference value is 0, which changes nothing; any other value leaves the equipment unplaced (`IDM_GEOMETRY_PLACEMENT`).
+- **Shapes** (mass type Total, uniform density; a shape of mass 0 is ignored): a **box** has its origin at a corner and extends along +x, +y, +z by d1, d2, d3; a **whole cylinder** stands on its base, axis along z, radius d1, height d3; a **triangular** or **quadrangular prism** has its section in the x-y plane, starting at the origin along x, and extends along +z by its thickness. Cones, spheres, pipes, cuts and unions, imported 3D files, boxes with rounded edges, parts of cylinders and masses per area or volume are not covered (`IDM_GEOMETRY_SHAPE`) and the unit has no mass properties.
+- **Entered values.** An equipment whose centre of gravity and inertia matrix were entered uses them in its own frame. The inertia is read as tensor entries about the centre of gravity, axes parallel to the equipment frame; the description does not say about which point it is given.
+- **Result.** The position of the unit is its centre of gravity in the frame of the model (the body frame of a new project), and its inertia the tensor about that point with axes parallel to the model frame. `--mass-properties none` leaves both out.
+
 ## What is not done
 
-Nothing is estimated. A value the file does not give stays absent. Geometry is not evaluated in this step (the shape parameters are read for the later step). The tool never writes to the model file or to IDM-CIC.
+Nothing is estimated. A value the file does not give stays absent. The tool never writes to the model file or to IDM-CIC.
 
 Next: [Models](README.md) · [Docs index](../README.md).

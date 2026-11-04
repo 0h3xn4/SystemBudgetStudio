@@ -6,6 +6,17 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-04: importing IDM-CIC models (2.4.0)
+
+**What changed.** The command `budget import idm` and *File > Import IDM-CIC model...* build or update a project from a model file ([D-237 to D-244](DECISIONS.md)). No file format of the project changed (no schema version moved), no budget changed and no existing result moved: the golden files differ only by the tool version.
+
+| Case | Before | After |
+|---|---|---|
+| Any existing project | the numbers of 2.3.0 | the same numbers, the same files, the same inputs digest |
+| A project started from an IDM-CIC model | not possible | units, spacecraft modes, margin classes, thermal nodes, phases and expendables with their sources |
+
+**Effect.** None on existing projects. A project made by the import has a folder `idm/` with two small files that the project loader ignores ([file format](FILE_FORMAT.md#files-of-the-idm-cic-import-240)).
+
 ## 2026-11-04: pointing and burns on the power timeline (scenario 5, orbit 4, pointing 2, propulsion 2)
 
 **What changed.** A scenario may now place pointing modes and manoeuvres ([D-235](DECISIONS.md)), the elements of an orbit may give the local time of the node instead of the RAAN ([D-236](DECISIONS.md)). The scenario, orbit, pointing and propulsion files went up one schema version each (older files read unchanged), and the schema versions are part of the model digest, so the inputs digest of every project is a new value.

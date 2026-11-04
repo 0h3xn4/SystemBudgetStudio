@@ -42,6 +42,7 @@ budget power-timeline project --out out || echo "power violations" # exit code 1
 ```
 
 - `budget run project --budget propulsion` and `--budget pointing` run the two optional budgets alone; `budget tables-import` is a dry run until you add `--apply`.
+- `budget import idm model.idm --project p` shows the plan and writes nothing; `--apply` writes. Keep the project in version control: a later import is then an ordinary diff.
 - Exit code 0/1/2 is documented in the [command-line reference](user-manual/command-line.md#exit-codes).
 - Pass `--user` and `--date` (or `BUDGET_USER` and `SOURCE_DATE_EPOCH`) so generated reports are reproducible and diff-able.
 - The tool writes only into the folder given by `--out`, and needs no network, so it runs in a locked-down build agent.

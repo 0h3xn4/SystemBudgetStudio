@@ -798,6 +798,26 @@ CATALOGUE: tuple[SettingSpec, ...] = (
         "The largest model seen has about 100,000 elements.",
         "Reading the XML model (D-237).",
     ),
+    _s(
+        "idm.state_max_bytes",
+        "limit",
+        "Largest import state or mode map file",
+        "bytes",
+        20_000_000,
+        "idm.importer:MAX_STATE_BYTES",
+        "The state file holds a copy of every imported unit; it is read whole.",
+        "Reading idm/import_state.yaml and idm/mode_map.yaml (D-241).",
+    ),
+    _s(
+        "idm.summary_objects_per_code",
+        "setting",
+        "Objects named per finding in the import summary",
+        "objects",
+        5,
+        "idm.summary:SHOWN_PER_CODE",
+        "The summary names this many objects for each kind of finding and counts the rest.",
+        "The text of the IDM-CIC import plan; the JSON output lists every finding.",
+    ),
     # ---- creation defaults and limits of the forms -------------------------------------------
     _s(
         "creation.wizard_eccentricity_ratio",
@@ -916,6 +936,8 @@ CATALOGUE: tuple[SettingSpec, ...] = (
 NOT_SETTINGS: dict[str, str] = {
     "result_format:RESULT_FORMAT_VERSION": "The version of the JSON result layout.",
     "examples:MINISAT_PEAK_POWER_W": "Invented example data.",
+    "idm.importer:STATE_VERSION": "The schema version of idm/import_state.yaml (a file format).",
+    "idm.importer:MODE_MAP_VERSION": "The schema version of idm/mode_map.yaml (a file format).",
 }
 
 BY_ID: dict[str, SettingSpec] = {spec.id: spec for spec in CATALOGUE}

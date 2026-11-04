@@ -32,6 +32,31 @@ class PowerMode:
 
 
 @dataclass(frozen=True)
+class Position:
+    """Where an object is in its parent frame: a translation and three rotations (degrees)."""
+
+    x_m: float
+    y_m: float
+    z_m: float
+    rotation_order: str  # for example "Rx_Ry_Rz"
+    rotations_deg: tuple[float, float, float]
+    transformation_order: str  # for example "Translation_Rotation"
+
+
+@dataclass(frozen=True)
+class Frame:
+    """A coordinate system or an occurrence: the nodes of the chain that places an equipment."""
+
+    full_id: str
+    kind: str  # "coordinate_system" or "occurrence"
+    position: Position | None  # None: take it from `origin`
+    parent: str | None  # full id of the coordinate system it is placed on
+    origin: str | None  # the object it was copied from (definition or template instance)
+    owner: str | None  # for a coordinate system of an occurrence: that occurrence
+    articulation: float | None  # reference value of its articulation; None: it has none
+
+
+@dataclass(frozen=True)
 class Shape:
     """A shape of an equipment. Only what the mass needs is kept; the geometry is read later."""
 
@@ -45,6 +70,7 @@ class Shape:
     kind: str  # tag of the 3D object, for example "FilledCylinder"
     parameters: Pairs  # numeric children of the 3D object, for example ("capacity", 10.0)
     object_full_id: str  # full id of the 3D object (a tank content refers to it)
+    position: Position | None = None  # in the frame of the equipment
 
 
 @dataclass(frozen=True)
@@ -219,3 +245,4 @@ class IdmModel:
     custom_properties: tuple[CustomProperty, ...] = field(default=())
     stale_formula_targets: tuple[str, ...] = field(default=())  # formulas flagged not valid
     ignored_counts: tuple[tuple[str, int], ...] = field(default=())  # kind of object, how many
+    frames: tuple[Frame, ...] = field(default=())  # the chain of placements (D-245)

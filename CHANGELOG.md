@@ -4,7 +4,18 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
-Step 1 of importing models of IDM-CIC (decisions D-237 to D-239): the **reader**. No command and no window entry yet, and nothing is written into a project.
+## [2.4.0] - 2026-11-04
+
+Importing models of IDM-CIC (reads models from IDM-CIC (c) CNES; decisions D-237 to D-246): the reader, the mapping, the command, re-import, the window entry, and the centre of gravity and inertia as estimates.
+
+- **`budget import idm FILE [--project DIR] [--margins raw|applied] [--bus NAME] [--bus-voltage-v V] [--apply]`** builds or updates a project from a model: one unit per physical equipment (mass, power modes with the heat share, temperature limits in kelvin, thermal node), a spacecraft mode per system mode through an editable `idm/mode_map.yaml`, maturity classes `idm_*`, thermal nodes, mission phases from the configurations and an expendable per tank. A plan unless `--apply`; every value has a source (model file, revision, object). Nothing is estimated: a mass that needs geometry leaves the unit out and says so ([manual](docs/user-manual/idm-import.md)).
+- **Re-import by three-way merge.** `idm/import_state.yaml` records what the import wrote. A later import takes the model's changes where the file still holds what was written, keeps what you changed (and says so when the model changed it too), never touches what you added, flags what the model no longer has instead of deleting it, and writes nothing when nothing changed.
+- `--margins raw` (default) or `applied`: margins are never applied twice. New files, folder `idm/`, are described in [FILE_FORMAT.md](docs/FILE_FORMAT.md); simplifications DV-IDM1 to DV-IDM4 in [DEVIATIONS.md](docs/DEVIATIONS.md).
+- **File > Import IDM-CIC model...** in the window: choose the file, update the open project or create one, see the plan, then say yes. The reading and planning run in the background.
+- **Centre of gravity and inertia** of each unit, worked out from the placements and shapes of the model (boxes, whole cylinders, triangular and quadrangular prisms) or taken from the values entered in it, **marked as estimates**: the way positions and rotations combine and where a shape has its origin are not written out in words in the published description, so the conventions were inferred from the models and tested on them (the platforms close into a box under one combination of eight and under no other). Placements through an articulation that is not at 0, and other kinds of shape, leave the unit without them (`IDM_GEOMETRY_PLACEMENT`, `IDM_GEOMETRY_SHAPE`). `--mass-properties geometry|none`; DV-IDM5. Nothing was checked against IDM-CIC itself.
+- Twenty-two new `IDM_*` problem codes (thirty-two in all).
+
+The reader (step 1):
 
 - `budget_core/idm/` reads a model file (a ZIP archive holding `model.xml`; reads models from IDM-CIC (c) CNES) into a typed model: system, elements, subsystems, equipment, physical occurrences (the equipment in the satellite, not the templates inside assembly definitions), power modes and their mappings, thermal modules, configurations, tank contents. Values are parsed by explicit rules (comma decimals, exponents, `dd/mm/yyyy hh:mm:ss`); formulas are never evaluated.
 - Safe by construction: only `model.xml` is read and nothing is extracted; the sizes of the file, the unpacked model, the entries and the XML nesting are bounded (five registered settings); a document type or entity declaration is refused.

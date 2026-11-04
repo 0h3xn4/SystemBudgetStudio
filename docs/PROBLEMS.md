@@ -878,6 +878,182 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** A unit of another kind would be skipped silently otherwise.
 - **What to do.** Check the summary; the unit is named in the problem.
 
+### IDM_MASS_UNRESOLVED
+
+**An equipment occurrence is not imported because its mass is not known** (warning)
+
+- **Rule.** The mass of an occurrence comes from the mass entered for the equipment or from the masses of its shapes (mass type Total); a mass that needs the geometry, or that the model does not give, is not estimated. With margins applied, the margin must be known.
+- **Why it matters.** A unit without a mass would make the mass budget wrong without saying so.
+- **What to do.** Enter the mass in IDM-CIC, or add the unit by hand in the project.
+
+### IDM_POWER_UNRESOLVED
+
+**A power mode or a mode mapping could not be taken over** (warning)
+
+- **Rule.** Each system mode needs, for every powered occurrence, a power mode (or a custom power) through its element mode or directly; a power mode needs a power value.
+- **Why it matters.** A unit that is not assigned a power mode in a spacecraft mode is reported as an error by the project check, so the missing mapping is not hidden.
+- **What to do.** Complete the mapping in IDM-CIC, or assign the unit a power mode in the project.
+
+### IDM_DISSIPATION_UNRESOLVED
+
+**The heat share of a power mode cannot be formed** (warning)
+
+- **Rule.** The heat share is dissipation divided by power; it must lie between 0 and 1.
+- **Why it matters.** A dissipation above the power, or a dissipation with no power, is not a share.
+- **What to do.** Check the dissipation of the power mode in IDM-CIC; thermal results stay n/a.
+
+### IDM_NEVER_ENABLED
+
+**An equipment occurrence is not enabled in any configuration** (info)
+
+- **Rule.** An optional unit that is disabled by default and in every configuration, or whose element is never enabled, is left out of the project.
+- **Why it matters.** It is not part of the satellite in any configuration of the model.
+- **What to do.** Nothing, unless it should be part of a configuration.
+
+### IDM_TANK_UNRESOLVED
+
+**A tank is not imported** (warning)
+
+- **Rule.** A tank needs its capacity and a filling for the reference configuration.
+- **Why it matters.** The propellant mass is capacity times filling; it is not estimated.
+- **What to do.** Complete the tank in IDM-CIC, or add the propellant as an expendable by hand.
+
+### IDM_FORCED_MASS_IGNORED
+
+**A forced mass is not applied** (warning)
+
+- **Rule.** A forced mass of a subsystem or of the propellant of an element replaces a calculated mass in IDM-CIC; the project has no such override.
+- **Why it matters.** The imported masses differ from the totals of IDM-CIC by the forced amount.
+- **What to do.** Compare the totals with IDM-CIC and add the difference by hand if it matters.
+
+### IDM_FORMULA_STALE
+
+**A formula of the model is marked not valid** (warning)
+
+- **Rule.** A formula that IDM-CIC marks as not valid does not give the stored value of its target.
+- **Why it matters.** The stored value, which is what is imported, may be out of date.
+- **What to do.** Open the model in IDM-CIC, fix the formula and save again.
+
+### IDM_MARGIN_NOT_APPLIED
+
+**A margin or target of an element is not applied** (info)
+
+- **Rule.** Mass and power margins of an element, and its mass target, have no counterpart in the project (margins are per maturity class); they are not applied and not a limit.
+- **Why it matters.** The totals of the project can differ from those of IDM-CIC by these margins.
+- **What to do.** Compare with IDM-CIC; set the system margins or a mass limit by hand if wanted.
+
+### IDM_TEMPERATURE_IGNORED
+
+**A temperature band is not imported** (info)
+
+- **Rule.** A band is imported only when its minimum is below its maximum, and a survival band must enclose the operating band; the model also uses 0 and 0 for a band not set.
+- **Why it matters.** A band that is not a band cannot be checked against a temperature.
+- **What to do.** Enter the limits in IDM-CIC, or in the unit file of the project.
+
+### IDM_CUSTOM_DATA_UNMAPPED
+
+**Data of the model with no counterpart in the project** (info)
+
+- **Rule.** System mode duty cycles and additional properties are reported, not mapped.
+- **Why it matters.** The project takes the time share of a mode from a scenario.
+- **What to do.** Nothing, unless you want to use them by hand.
+
+### IDM_MODE_MAP_INVALID
+
+**The mode map is not valid** (error)
+
+- **Rule.** idm/mode_map.yaml has kind idm_mode_map, schema_version 1 and a system_modes mapping; each entry has a name and a mode (a file name in modes/, or null to skip the system mode).
+- **Why it matters.** The map says what each system mode of the model becomes; a wrong map would put the modes in the wrong place.
+- **What to do.** Fix the file, or delete it to have a draft written again at the next import.
+
+### IDM_STATE_INVALID
+
+**The import state file is not valid** (error)
+
+- **Rule.** idm/import_state.yaml is written by the import and has kind idm_import_state and schema_version 1.
+- **Why it matters.** It records what the import wrote, which is how a later import tells the user's edits from the model's changes.
+- **What to do.** Restore it from version control, or delete it to import again as a first import (existing files with the same names are then left alone and reported).
+
+### IDM_OPTION_INVALID
+
+**An option of the import is not valid** (error)
+
+- **Rule.** The margins option is raw or applied.
+- **Why it matters.** Another value could apply margins twice or not at all.
+- **What to do.** Use --margins raw or --margins applied.
+
+### IDM_PROJECT_UNUSABLE
+
+**The project cannot be loaded, so nothing is imported into it** (error)
+
+- **Rule.** A model is merged only into a project that loads without errors.
+- **Why it matters.** A merge into a project with errors could hide or add to them.
+- **What to do.** Fix the errors listed with this one (budget validate), then import again.
+
+### IDM_BUS_UNKNOWN
+
+**The bus is not a bus of the project** (error)
+
+- **Rule.** Every imported unit is on the bus given with --bus, which must be a bus of spacecraft.yaml.
+- **Why it matters.** A unit needs a bus to have a supply voltage and a converter efficiency.
+- **What to do.** Give the name of a bus of the project, or add the bus first.
+
+### IDM_NEW_PROJECT_INCOMPLETE
+
+**A new project needs the voltage of its bus** (error)
+
+- **Rule.** A project made by the import needs --bus-voltage-v; the model does not give one.
+- **Why it matters.** The nominal bus voltage is a number a spacecraft cannot do without and is not invented.
+- **What to do.** Give --bus-voltage-v with the nominal voltage in volts.
+
+### IDM_FILE_EXISTS_NOT_IMPORTED
+
+**A file with the name of an imported object already exists and is left alone** (warning)
+
+- **Rule.** The import overwrites or merges only files that it wrote itself (listed in idm/import_state.yaml).
+- **Why it matters.** Replacing a file the user made could lose their work.
+- **What to do.** Rename or remove your file, or delete the state entry, then import again.
+
+### IDM_DELETED_BY_USER
+
+**A file the import wrote earlier was deleted and is not recreated** (info)
+
+- **Rule.** A file that the import wrote and the user deleted stays deleted.
+- **Why it matters.** Recreating it would undo the user's decision.
+- **What to do.** Delete its entry in idm/import_state.yaml to have it written again.
+
+### IDM_KEPT_USER_VALUE
+
+**A value you changed was kept although the model changed it too** (info)
+
+- **Rule.** When both the file and the model changed a value since the last import, the file wins.
+- **Why it matters.** The import never overwrites a value the user entered.
+- **What to do.** Compare with the model; edit the file if the model's value is the right one.
+
+### IDM_REMOVED_IN_MODEL
+
+**An object the import wrote is no longer produced by the model** (warning)
+
+- **Rule.** The object is no longer in the model, or can no longer be taken over; its file is kept and flagged in idm/import_state.yaml, not deleted.
+- **Why it matters.** Deleting would silently remove part of the satellite from the budgets.
+- **What to do.** Delete the file if the object is really gone.
+
+### IDM_GEOMETRY_PLACEMENT
+
+**The centre of gravity of an equipment cannot be placed** (info)
+
+- **Rule.** The placement of an equipment is a chain of positions and coordinate systems; it is followed only with a transformation order of Translation_Rotation, a known rotation order and every articulation of the chain at 0.
+- **Why it matters.** Another reading could put the equipment in the wrong place, so none is guessed.
+- **What to do.** Put the articulation at 0 in IDM-CIC, or enter the position of the unit by hand.
+
+### IDM_GEOMETRY_SHAPE
+
+**The centre of gravity or the inertia of an equipment is not worked out** (info)
+
+- **Rule.** They are worked out from entered values, or from the shapes of mass type Total of a box, a whole cylinder, a triangular prism and a quadrangular prism; a shape of mass 0 is ignored. Other shapes, masses per area or volume and unphysical results are not.
+- **Why it matters.** A shape whose geometry is not known cannot give a centre of gravity.
+- **What to do.** Enter the centre of gravity and the inertia of the equipment in IDM-CIC, or give the unit its mass properties by hand.
+
 ## Other
 
 ### INTERNAL_ERROR

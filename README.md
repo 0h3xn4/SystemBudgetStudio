@@ -43,7 +43,7 @@ git clone https://github.com/0h3xn4/SystemBudgetStudio.git
 cd SystemBudgetStudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e .
-budget --version                                       # System Budget Studio 2.3.0
+budget --version                                       # System Budget Studio 2.4.0
 budget export-examples demo                            # four example projects with invented data
 budget validate demo/microsat_250kg_eps                    # check the project: 0 errors, a few warnings
 budget run demo/microsat_250kg_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
@@ -76,6 +76,7 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 - **Link budget**: EIRP, path loss, G/T, C/N0, Eb/N0 and margin at chosen elevations, and over every ground-station pass with the data rate that closes and the data volume per pass and per day; uplink and downlink; several links per project.
 - **Scenarios**: eclipses and passes from a two-line element set (TLE) or orbital elements, a mode timeline built from rules (for example "downlink during every pass") and segments; the start, duration and step are fields in the window; a Statistics tab gives the shortest, mean and longest eclipse and pass, the contact time and the largest gap per ground station; a beta-angle plot and statistics; a ground-track map; `budget orbit` designs the orbit from a local time of the node, a sun-synchronous request or a repeat ground track, an orbit can be given by its local time (`ltan_h`) or as a state vector, and the Orbit helper (Ctrl+Shift+H) writes the elements; orbits can also be imported from [SpaceMissionStudio](docs/ENVIRONMENT_FORMAT.md).
 - **Propulsion and pointing**: a delta-v and propellant budget (chemical and electric systems, rocket equation, burn time, electric power) and a slew budget (pointing modes kept apart from the spacecraft modes, slew time, momentum, energy) from `config/propulsion.yaml` and `config/pointing.yaml`; a scenario can place pointing modes and burns, and the power timeline then carries their load as its own line; thruster heat reaches the thermal cases.
+- **Start from an IDM-CIC model**: `budget import idm` builds a project from a model file of IDM-CIC (reads models from IDM-CIC (© CNES); independent of CNES, no CNES software needed): a unit for every physical equipment with its mass, power modes, temperature limits, thermal node and (as estimates) centre of gravity and inertia, spacecraft modes from the system modes, the propellant of the tanks, every value with its source; a later version of the model is merged in without losing your edits ([manual](docs/user-manual/idm-import.md)).
 - **Reports**: XLSX, PDF and DOCX in classic review layouts, CSV for every table and series, JSON for other tools. Every output carries provenance (tool and library versions, project revision, scenario, time, user) and is reproducible byte for byte.
 - **Traceable**: select any number in a budget table and **Explain** it (Ctrl+Shift+I, or `budget explain`): the equation, the inputs with the file each came from and the steps. An input can record its **source** and a **status** (sourced, estimate, illustrative, tbd) in the window or with `budget source`. The **Assumptions** page (Ctrl+Shift+A, or `budget assumptions`) lists everything the tool applies next to your own numbers, and every report says which models it used. `budget verify` checks that a project is the one a result came from.
 - **Choosable models**: a scenario chooses its shadow geometry (cylindrical or conical), its Earth constants (WGS-84 or WGS-72) and its array irradiance (constant or seasonal) from drop-downs in the scenario editor; the models that are fixed are listed with the reason (`budget choices`, [model choices](docs/models/choices.md)).
@@ -99,7 +100,7 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 
 Released under the [MIT licence](LICENSE) (decision D-140). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
 
-Status: version 2.3.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
+Status: version 2.4.0, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 
 Known limits, stated plainly:
 

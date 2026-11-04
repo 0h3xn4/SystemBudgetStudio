@@ -145,6 +145,10 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="largest-gap"></a>
 **Largest gap**: for a ground station or imaging target, the longest stretch of the scenario with no pass, the start and the end of the scenario included. It is one of the figures of the Statistics tab ([scenarios](user-manual/scenarios.md#statistics-of-the-eclipses-and-the-passes)).
 
+**IDM-CIC**: concurrent-engineering software of the French space agency CNES for the early design of satellites; its model file (`.idm`) can be imported with `budget import idm` ([manual](user-manual/idm-import.md)). Reads models from IDM-CIC (© CNES); this tool is independent of CNES and is not endorsed by it.
+
+**Mode map**: the small file `idm/mode_map.yaml` that says which spacecraft mode each system mode of an imported IDM-CIC model becomes.
+
 **LTAN and LTDN**: the local time of the ascending (or descending) node of an orbit, in hours (for example 10:30): the time of day, by the mean Sun, at which the satellite crosses the equator going north (south). In a sun-synchronous orbit it stays the same all year. `budget orbit ltan` converts it to and from the right ascension (RAAN); see [orbit design](models/orbit-design.md).
 
 **Link margin**: the [Eb/N0](#ebn0) you have minus the Eb/N0 required, in dB. A link **closes** at a data rate when its margin is at least the **required margin** you set in the link file (a safety allowance). See [link budget](user-manual/link-budget.md).

@@ -128,6 +128,8 @@ Today every setting is at its default: the project file that changes the setting
 | `idm.archive_max_entries` | Input limit | 20 000 | entries | Pictures and files of other programs are entries; none of them is read. | Reading a model archive (D-237). |
 | `idm.xml_max_depth` | Input limit | 200 | levels | Real models nest about 25 levels; the bound stops a hostile file early. | Reading the XML model (D-237). |
 | `idm.xml_max_nodes` | Input limit | 5 000 000 | elements | The largest model seen has about 100,000 elements. | Reading the XML model (D-237). |
+| `idm.state_max_bytes` | Input limit | 20 000 000 | bytes | The state file holds a copy of every imported unit; it is read whole. | Reading idm/import_state.yaml and idm/mode_map.yaml (D-241). |
+| `idm.summary_objects_per_code` | Setting (per project) | 5 | objects | The summary names this many objects for each kind of finding and counts the rest. | The text of the IDM-CIC import plan; the JSON output lists every finding. |
 
 ## Creation: guided mode and forms
 
