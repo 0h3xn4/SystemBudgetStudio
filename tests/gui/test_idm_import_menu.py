@@ -11,7 +11,7 @@ from budget_core.io.project_loader import load_project
 from budget_core.problems import Severity
 from budget_gui import idm_import
 from budget_gui.main_window import MainWindow
-from tests.idm.fixtures import write_idm
+from tests.idm.fixtures import model_xml, write_idm
 
 pytestmark = pytest.mark.gui
 
@@ -179,3 +179,29 @@ def test_an_open_project_can_be_updated(
         ),
         timeout=20000,
     )
+
+
+def test_the_plan_shows_the_components_it_proposes_and_writes_their_skeletons(
+    qtbot,
+    window: MainWindow,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,  # type: ignore[no-untyped-def]
+) -> None:
+    xml = (
+        model_xml()
+        .replace("Subsystem SS1", "AOCS")
+        .replace("<name>Widget</name>", "<name>Inertia Wheel A</name>", 1)
+    )
+    model = write_idm(tmp_path / "wheel.idm", xml)
+    answers = Answers(monkeypatch, model, tmp_path)
+    answers.box(monkeypatch, QMessageBox.StandardButton.Yes)
+    action(window, "Import IDM-CIC model…").trigger()
+    root = tmp_path / "wheel"
+    qtbot.waitUntil(lambda: (root / "project.yaml").is_file(), timeout=20000)
+    shown = answers.shown[0]
+    assert "Components:" in shown and "reaction_wheel" in shown
+    assert "Inertia" not in shown  # the equipment is named by its id, not by its name
+    assert (root / "config" / "pointing.yaml").is_file()
+    assert (root / "idm" / "components.yaml").is_file()
+    loaded = load_project(root)
+    assert [p for p in loaded.problems if p.severity is Severity.ERROR] == []

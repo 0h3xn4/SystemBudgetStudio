@@ -902,6 +902,22 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 - **Why it matters.** Each such unit gets the power mode `Not mapped` at 0 W in that spacecraft mode, so the project check does not report one error for each unit; if the model means these units to draw power in that mode, the power budget is too low by that power (DV-IDM6).
 - **What to do.** Complete the mapping in IDM-CIC, or choose the power mode of the unit in the Spacecraft modes grid of the project.
 
+### IDM_COMPONENT_LIBRARY_INVALID
+
+**An entry of the component library cannot be used** (warning)
+
+- **Rule.** `idm/components.yaml` is a list of entries with a `match` pattern, an optional `kind` (reaction_wheel, magnetorquer, thruster, battery or solar_array) and `values` that are fields of the model entry; a number is a value with its source.
+- **Why it matters.** The entry is skipped, so the component it describes gets placeholders (n/a results) instead of your data-sheet values.
+- **What to do.** Correct the entry named in the finding; `budget import idm` writes a commented template of the file the first time.
+
+### IDM_COMPONENT_NEEDS_TYPE
+
+**A thruster is neither chemical nor electric by its name** (info)
+
+- **Rule.** A propulsion system is chemical or electric; the name of the equipment says which only when it has a word such as hydrazine or ion.
+- **Why it matters.** No propulsion system is written for this thruster, so its propellant is not budgeted.
+- **What to do.** Add an entry to `idm/components.yaml` with `type: chemical` or `type: electric` for it.
+
 ### IDM_DISSIPATION_UNRESOLVED
 
 **The heat share of a power mode cannot be formed** (warning)

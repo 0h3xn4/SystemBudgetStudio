@@ -102,7 +102,7 @@ def test_importing_again_changes_nothing(tmp_path: Path) -> None:
     run(tmp_path)
     again = plan(tmp_path)
     assert again.ok and again.files == []
-    assert {r.action for r in again.results} == {"unchanged"}
+    assert {r.action for r in again.results if r.action != "detected"} == {"unchanged"}
 
 
 def test_the_model_changed_a_value_the_file_still_holds(tmp_path: Path) -> None:

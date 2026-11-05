@@ -23,6 +23,16 @@ from pydantic import ValidationError
 
 from budget_core.blank import BlankAnswers, build_blank
 from budget_core.idm import SPEC_VERSION
+from budget_core.idm.classify import HIGH, Detection, classify
+from budget_core.idm.components import (
+    LIBRARY_PATH,
+    POINTING_PATH,
+    POWER_PATH,
+    PROPULSION_PATH,
+    TEMPLATE,
+    build_skeletons,
+    read_library,
+)
 from budget_core.idm.mapping import (
     CLASS_PREFIX,
     MASS_PROPERTIES,
@@ -41,6 +51,9 @@ from budget_core.io.yamlio import YamlSyntaxError, dump_yaml, load_yaml_text, re
 from budget_core.model import (
     Expendable,
     MarginPolicy,
+    PointingConfig,
+    PowerSystem,
+    PropulsionConfig,
     SpacecraftMode,
     ThermalModel,
     Unit,
@@ -381,6 +394,7 @@ def plan_import(
         files,
         plan,
     )
+    state_out["components"] = _plan_components(model, mapped, state, files, plan, source)
     state_out["margin_classes"] = {
         name: data for name, data in sorted(mapped.margin_classes.items())
     }
@@ -572,3 +586,222 @@ def digest_of(plan: ImportPlan) -> str:
 
 def sorted_results(plan: ImportPlan) -> list[EntityResult]:
     return sorted(plan.results, key=lambda r: (r.kind, r.action, r.id))
+
+
+# ---- components (D-254) -------------------------------------------------------------------------
+
+
+def _merge_entry(
+    previous: Any, data: Any, current: Any, label: str, plan: ImportPlan
+) -> tuple[Any, bool]:
+    """The entry the import wrote before (`previous["imported"]`) updated to `data` where the user
+    did not change it (the same three-way merge as a unit); returns it and whether it changed."""
+    old = previous.get("imported", ABSENT) if isinstance(previous, dict) else ABSENT
+    log = MergeLog()
+    final = merge3(old, data, current, log, "")
+    if final is ABSENT:
+        return current, False
+    for path in log.kept:
+        plan.problems.append(finding(Severity.INFO, "IDM_KEPT_USER_VALUE", f"{label}: {path}"))
+    return final, bool(changed_paths(current, final))
+
+
+def _extend_entries(
+    rel: str,
+    cls: type[BudgetModel],
+    section: str,
+    entries: dict[str, dict[str, Any]],
+    sources: dict[str, str],
+    old_state: dict[str, Any],
+    files: _Files,
+    plan: ImportPlan,
+) -> dict[str, Any]:
+    """Put `entries` in the `section` of the file `rel`. The file is created when it does not
+    exist. In a file that exists: an entry this import wrote before is updated where the user did
+    not change it; an entry the user wrote is never touched; an entry the import wrote and the user
+    deleted is not put back; any other entry is added. Returns the new state of the entries."""
+    new_state: dict[str, Any] = {}
+    prefix = f"{rel}:"
+    for state_key, entry in old_state.items():  # what is recorded stays recorded
+        if state_key.startswith(prefix) and isinstance(entry, dict):
+            new_state[state_key] = entry
+    if not entries:
+        return new_state
+    current = files.current(rel)
+    if current is None:
+        if (files.root / rel).exists():  # unreadable file: leave it alone
+            plan.problems.append(finding(Severity.WARNING, "IDM_FILE_EXISTS_NOT_IMPORTED", rel))
+            return new_state
+        files.create_text(rel, dump_model(cls.model_validate({section: entries})))
+        for key, data in entries.items():
+            state_key = f"{prefix}{key}"
+            new_state[state_key] = {
+                "equipment": sources.get(state_key, ""),
+                "status": "current",
+                "imported": data,
+            }
+            plan.results.append(EntityResult("component", state_key, "added"))
+        return new_state
+    text, cur, flags = current
+    existing = cur.get(section) if isinstance(cur, dict) else None
+    existing = existing if isinstance(existing, dict) else {}
+    merged = dict(existing)
+    for key, data in entries.items():
+        state_key = f"{prefix}{key}"
+        previous = old_state.get(state_key)
+        recorded = isinstance(previous, dict) and previous.get("status") == "current"
+        if key in existing:
+            if not recorded:
+                continue  # the user's own entry: never changed
+            final, changed = _merge_entry(previous, data, existing[key], state_key, plan)
+            if changed:
+                merged[key] = final
+                plan.results.append(EntityResult("component", state_key, "changed"))
+        else:
+            if isinstance(previous, dict) and previous.get("status") in ("current", "deleted"):
+                plan.problems.append(finding(Severity.INFO, "IDM_DELETED_BY_USER", state_key))
+                new_state[state_key] = {**previous, "status": "deleted"}
+                continue
+            merged[key] = data
+            plan.results.append(EntityResult("component", state_key, "added"))
+        new_state[state_key] = {
+            "equipment": sources.get(state_key, ""),
+            "status": "current",
+            "imported": data,
+        }
+    if merged != existing:
+        final_file = {**cur, section: merged}
+        if _validate(cls, final_file):
+            files.update(rel, text, cur, final_file, flags)
+        else:
+            plan.problems.append(finding(Severity.WARNING, "IDM_VALUE_INVALID", rel))
+    return new_state
+
+
+def _extend_power_system(
+    skeleton: dict[str, Any],
+    sources: dict[str, str],
+    old_state: dict[str, Any],
+    files: _Files,
+    plan: ImportPlan,
+) -> dict[str, Any]:
+    """The power system file: created when it does not exist; when this import wrote it before it
+    is updated where the user did not change it (the library's values arrive); a file the user
+    wrote is never touched."""
+    previous = old_state.get(POWER_PATH)
+    state = {
+        POWER_PATH: {
+            "equipment": ", ".join(
+                sorted({v for k, v in sources.items() if k.startswith(POWER_PATH)})
+            ),
+            "status": "current",
+            "imported": skeleton,
+        }
+    }
+    current = files.current(POWER_PATH)
+    if current is None:
+        if (files.root / POWER_PATH).exists():
+            plan.problems.append(
+                finding(Severity.WARNING, "IDM_FILE_EXISTS_NOT_IMPORTED", POWER_PATH)
+            )
+            return {POWER_PATH: previous} if isinstance(previous, dict) else {}
+        if isinstance(previous, dict) and previous.get("status") in ("current", "deleted"):
+            plan.problems.append(finding(Severity.INFO, "IDM_DELETED_BY_USER", POWER_PATH))
+            return {POWER_PATH: {**previous, "status": "deleted"}}
+        files.create_text(POWER_PATH, dump_model(PowerSystem.model_validate(skeleton)))
+        plan.results.append(EntityResult("component", POWER_PATH, "added"))
+        return state
+    text, cur, flags = current
+    if not (isinstance(previous, dict) and previous.get("status") == "current"):
+        return {POWER_PATH: previous} if isinstance(previous, dict) else {}  # the user's file
+    final, changed = _merge_entry(previous, skeleton, cur, POWER_PATH, plan)
+    if changed:
+        if _validate(PowerSystem, final):
+            files.update(POWER_PATH, text, cur, final, flags)
+            plan.results.append(EntityResult("component", POWER_PATH, "changed"))
+        else:
+            plan.problems.append(finding(Severity.WARNING, "IDM_VALUE_INVALID", POWER_PATH))
+            return {POWER_PATH: previous}
+    return state
+
+
+def _plan_components(
+    model: IdmModel,
+    mapped: Mapped,
+    state: dict[str, Any] | None,
+    files: _Files,
+    plan: ImportPlan,
+    source: str,
+) -> dict[str, Any]:
+    """Propose the kind of each imported equipment and write the skeletons of the ones that have a
+    place in the simulation models; the return value is the new state section."""
+    library = read_library(files.root)
+    plan.problems += library.problems
+    subsystem_names = {s.id: s.name for s in model.subsystems}
+    in_project: dict[str, int] = {}
+    for equipment_id in mapped.unit_equipment.values():
+        in_project[equipment_id] = in_project.get(equipment_id, 0) + 1
+    chosen: list[tuple[str, str, str, Detection | None]] = []
+    for equipment in sorted(model.equipment, key=lambda e: e.full_id):
+        count = in_project.get(equipment.full_id)
+        if not count:
+            continue
+        found = classify(
+            equipment.name, subsystem_names.get(equipment.subsystem_id, ""), equipment.subsystem_id
+        )
+        entry = library.find(equipment.name)
+        kind = entry.kind if entry is not None and entry.kind else (found.kind if found else None)
+        if kind is None:
+            continue
+        if found is None or found.kind != kind:
+            found = Detection(kind, HIGH, "named in your component library")
+        plan.results.append(
+            EntityResult(
+                "component",
+                equipment.full_id,
+                "detected",
+                (kind, found.confidence, found.reason, f"{count} unit(s)"),
+            )
+        )
+        chosen.append((equipment.full_id, equipment.name, kind, found))
+    skeletons = build_skeletons(
+        chosen, library, list(mapped.phases), sorted(mapped.expendables), source
+    )
+    plan.problems += skeletons.problems
+    old_state = _section(state, "components")
+    new_state: dict[str, Any] = {}
+    new_state.update(
+        _extend_entries(
+            POINTING_PATH,
+            PointingConfig,
+            "actuators",
+            skeletons.actuators,
+            skeletons.sources,
+            old_state,
+            files,
+            plan,
+        )
+    )
+    new_state.update(
+        _extend_entries(
+            PROPULSION_PATH,
+            PropulsionConfig,
+            "systems",
+            skeletons.systems,
+            skeletons.sources,
+            old_state,
+            files,
+            plan,
+        )
+    )
+    if skeletons.power_system is not None:
+        new_state.update(
+            _extend_power_system(skeletons.power_system, skeletons.sources, old_state, files, plan)
+        )
+    else:
+        for key, entry in old_state.items():
+            if key.startswith(f"{POWER_PATH}") and isinstance(entry, dict):
+                new_state[key] = entry
+    if chosen and not (files.root / LIBRARY_PATH).exists():
+        files.create_text(LIBRARY_PATH, TEMPLATE)
+    return new_state

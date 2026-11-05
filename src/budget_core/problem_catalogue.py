@@ -1100,6 +1100,29 @@ _ENTRIES: tuple[ProblemInfo, ...] = (
         "modes grid of the project.",
     ),
     _e(
+        "IDM_COMPONENT_LIBRARY_INVALID",
+        WARN,
+        _IDM,
+        "An entry of the component library cannot be used",
+        "`idm/components.yaml` is a list of entries with a `match` pattern, an optional `kind` "
+        "(reaction_wheel, magnetorquer, thruster, battery or solar_array) and `values` that are "
+        "fields of the model entry; a number is a value with its source.",
+        "The entry is skipped, so the component it describes gets placeholders (n/a results) "
+        "instead of your data-sheet values.",
+        "Correct the entry named in the finding; `budget import idm` writes a commented template "
+        "of the file the first time.",
+    ),
+    _e(
+        "IDM_COMPONENT_NEEDS_TYPE",
+        INFO,
+        _IDM,
+        "A thruster is neither chemical nor electric by its name",
+        "A propulsion system is chemical or electric; the name of the equipment says which only "
+        "when it has a word such as hydrazine or ion.",
+        "No propulsion system is written for this thruster, so its propellant is not budgeted.",
+        "Add an entry to `idm/components.yaml` with `type: chemical` or `type: electric` for it.",
+    ),
+    _e(
         "IDM_DISSIPATION_UNRESOLVED",
         WARN,
         _IDM,
