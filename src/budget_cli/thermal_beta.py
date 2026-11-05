@@ -14,13 +14,13 @@ from typing import Any
 
 from budget_core.environment.constants import DEFAULT_EARTH_MODEL, EARTH_MODELS
 from budget_core.provenance import make_provenance
-from budget_core.reports.csvutil import provenance_csv
 from budget_core.reports.files import write_files
 from budget_core.thermal.beta_sweep import (
     BetaSweep,
     BetaSweepError,
     Mode,
     beta_range,
+    orbit_of_run,
     thermal_beta_sweep,
 )
 
@@ -96,9 +96,7 @@ def _summary(sweep: BetaSweep) -> list[str]:
 
 def run(args: argparse.Namespace) -> int:
     from budget_cli.main import _choose_scenario, _fail, _finish, _load_or_fail
-    from budget_core.plots.render import render_png
-    from budget_core.plots.thermal_beta import thermal_beta_plot
-    from budget_core.reports.thermal_beta_export import beta_csv, beta_json
+    from budget_core.reports.thermal_beta_export import beta_files
     from budget_core.scenario.run import ScenarioRunError, run_scenario
 
     loaded, code = _load_or_fail(args.project)
@@ -135,17 +133,11 @@ def run(args: argparse.Namespace) -> int:
         except ScenarioRunError as exc:
             _fail(exc.problem.format())
             return 1
-        import numpy as np
-
-        positions = np.asarray(run.env.position_m)
-        if len(positions) == 0:
-            _fail("The scenario has no orbit positions; give --altitude-km.")
+        try:
+            earth_radius, orbit_radius = orbit_of_run(run)
+        except BetaSweepError as exc:
+            _fail(f"{exc} Give --altitude-km.")
             return 1
-        orbit_radius = float(np.mean(np.linalg.norm(positions, axis=1)))
-        model_id = (
-            run.env.earth_model if run.env.earth_model in EARTH_MODELS else DEFAULT_EARTH_MODEL
-        )
-        earth_radius = EARTH_MODELS[model_id].radius_m
         scenario_label = run.scenario_id
 
     provenance = make_provenance(
@@ -155,7 +147,6 @@ def run(args: argparse.Namespace) -> int:
     problems = list(loaded.problems)
     files: list[tuple[str, bytes | str]] = []
     modes = MODES if args.mode == "both" else (args.mode,)
-    incomplete = False
     for mode in modes:
         try:
             sweep = thermal_beta_sweep(
@@ -170,13 +161,7 @@ def run(args: argparse.Namespace) -> int:
             _fail(str(exc))
             return 1
         problems.extend(sweep.problems)
-        incomplete = incomplete or any(not p.case.complete for p in sweep.points)
-        stem = f"thermal_beta_{case}_{mode}"
-        files.append((f"{stem}.csv", "﻿" + beta_csv(sweep)))
-        files.append((f"{stem}.json", beta_json(sweep, provenance, loaded.problems)))
-        files.append((f"{stem}_provenance.csv", provenance_csv(provenance, incomplete=incomplete)))
-        if not args.no_plots:
-            files.append((f"{stem}.png", render_png(thermal_beta_plot(sweep))))
+        files.extend(beta_files(sweep, provenance, loaded.problems, plots=not args.no_plots))
         for line in _summary(sweep):
             print(line)
     for path in write_files(folder, files):

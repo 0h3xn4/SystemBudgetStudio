@@ -59,6 +59,8 @@ The columns are the fields of the entry: for the Eb/N0 table `modulation`, `codi
 - A value may carry a unit (`26.5 GHz` in `freq_hz`); a spreadsheet formula is never evaluated; a cell that is wrong is named by its row and column, never by its value.
 - Without `--apply` nothing is written; with it the file is edited in place and keeps its comments, or is created if the project has no table yet. The project must be valid before an import starts.
 
+**In the window** (2.8.0): **File → Export tables** and **File → Import tables** each have the three tables (*Eb/N0 table*, *Attenuation table*, *Margin policy*). Export asks for a file name (`.csv` or `.xlsx`). Import reads the filled-in file, checks it, and shows every change (old and new value) before anything is written; it stops, with the rows and columns that are wrong named, if a value has no source or is not valid, and while files of the project have unsaved edits. **Yes** writes the table file, keeping its comments, and reloads the project; the entries are also in the Ctrl+K palette.
+
 The **margin policy** works the same way (`budget tables-export my_satellite margins`, 2.6.0): one row for each margin, with the columns `item`, `quantity`, `margin_ratio`, `source`, `status`, `note`. The `item` is a maturity class or `system`; the `quantity` is `power_margin_ratio` or `mass_margin_ratio`; a ratio is between 0 and 10. A row with a new class adds the class with its other margin as a placeholder; an import never deletes a class. The margins are a project decision, so the tool never supplies a value: every new or changed ratio needs its source in the same row.
 
 ## How do I get the margin at a chosen range?

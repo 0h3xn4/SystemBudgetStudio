@@ -331,11 +331,15 @@ class PlotWidget(QWidget):
         spec = self._spec
         if spec is None:
             return []
-        lines = [f"t = {_hms_full(t)}"]
+        describe = getattr(self._axis, "describe", None)  # an axis that is not time says its own
+        lines = [describe(t) if describe else f"t = {_hms_full(t)}"]
         if self._pinned is not None:
-            lines.append(
-                f"pinned {_hms_full(self._pinned)}, difference {_hms_full(t - self._pinned)}"
-            )
+            if describe:
+                lines.append(self._axis.describe_difference(self._pinned, t))  # type: ignore[attr-defined]
+            else:
+                lines.append(
+                    f"pinned {_hms_full(self._pinned)}, difference {_hms_full(t - self._pinned)}"
+                )
         if self._info is not None:
             lines.extend(self._info(t).splitlines())
         for panel in spec.panels:

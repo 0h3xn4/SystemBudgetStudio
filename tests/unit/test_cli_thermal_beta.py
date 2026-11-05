@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -96,7 +97,9 @@ def test_what_cannot_run_is_refused_with_a_message_and_writes_nothing(
     assert not out.exists()
 
 
-def test_a_project_without_normals_says_so(root: Path, tmp_path: Path) -> None:
+def test_a_project_without_normals_says_so(
+    root: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     path = root / "config" / "thermal_model.yaml"
     lines = path.read_text(encoding="utf-8").splitlines()
     kept: list[str] = []
@@ -105,9 +108,10 @@ def test_a_project_without_normals_says_so(root: Path, tmp_path: Path) -> None:
         if line.strip().startswith("normal_lvlh:"):
             skip = True
             continue
-        if skip and line.strip().startswith("- "):
+        if skip and re.fullmatch(r"- -?\d+(\.\d+)?", line.strip()):
             continue
         skip = False
         kept.append(line)
     path.write_text("\n".join(kept) + "\n", encoding="utf-8")
     assert main(["thermal-beta", str(root), "--out", str(tmp_path / "out")]) == 1
+    assert "normal_lvlh" in capsys.readouterr().err  # not a load error: the project is valid
