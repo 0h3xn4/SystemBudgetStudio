@@ -29,6 +29,7 @@ from budget_core.thermal.beta import face_exposure, peak_instant, sunlit_fractio
 from budget_core.thermal.static_thermal import (
     CaseThermal,
     NodeTemperature,
+    StaticThermalResult,
     static_thermal_budget,
 )
 
@@ -118,22 +119,12 @@ def thermal_beta_sweep(
     names = tuple(s.name for s in with_normal)
     typed = tuple(s.name for s in model.surfaces if s.normal_lvlh is None)
 
-    one_case = env.model_copy(update={"cases": {case: env.cases[case]}})
     points: list[BetaPoint] = []
     problems: list[Problem] = []
     for beta in betas:
         checkpoint(control)
-        views, u_deg = _solar_views(
-            with_normal, beta, mode, earth_radius_m, orbit_radius_m, problems
-        )
-        surfaces = [_with_view(s, case, views.get(id(s))) for s in model.surfaces]
-        trial = replace(
-            project,
-            config=replace(
-                project.config,
-                thermal_model=model.model_copy(update={"surfaces": surfaces}),
-                thermal_environment=one_case,
-            ),
+        trial, views, u_deg = _trial_project(
+            project, case, beta, mode, earth_radius_m, orbit_radius_m, problems
         )
         result = static_thermal_budget(trial)
         if not points:
@@ -157,6 +148,65 @@ def thermal_beta_sweep(
         tuple(points),
         tuple(_unique(problems)),
     )
+
+
+def _trial_project(
+    project: Project,
+    case: str,
+    beta: float,
+    mode: Mode,
+    earth_radius_m: float,
+    orbit_radius_m: float,
+    problems: list[Problem],
+) -> tuple[Project, dict[int, float], float | None]:
+    """The project as the sweep solves it at one beta angle: the solar view of `case` taken from
+    the beta angle for every surface with a normal, the one case kept. Also the solar views, keyed
+    by `id(surface)` of the project's own surfaces, and the orbit angle of the peak (peak mode)."""
+    model = project.config.thermal_model
+    env = project.config.thermal_environment
+    assert model is not None and env is not None
+    with_normal = [s for s in model.surfaces if s.normal_lvlh is not None]
+    one_case = env.model_copy(update={"cases": {case: env.cases[case]}})
+    views, u_deg = _solar_views(with_normal, beta, mode, earth_radius_m, orbit_radius_m, problems)
+    surfaces = [_with_view(s, case, views.get(id(s))) for s in model.surfaces]
+    trial = replace(
+        project,
+        config=replace(
+            project.config,
+            thermal_model=model.model_copy(update={"surfaces": surfaces}),
+            thermal_environment=one_case,
+        ),
+    )
+    return trial, views, u_deg
+
+
+@dataclass(frozen=True)
+class BetaDetail:
+    """One beta angle of a sweep, solved again with what an explanation needs."""
+
+    trial: Project  # the project with the solar views of this angle (what the solver was given)
+    result: StaticThermalResult  # its static thermal budget
+    surfaces: tuple[tuple[int, float], ...]  # (index in the model, solar view) of each from beta
+    u_deg: float | None
+
+
+def beta_point_detail(project: Project, sweep: BetaSweep, beta_deg: float) -> BetaDetail:
+    """Solve the angle `beta_deg` of `sweep` again, with the same code as the sweep itself (the
+    same inputs give the same numbers), and keep the trial project and the surfaces' views."""
+    model = project.config.thermal_model
+    if model is None:
+        raise BetaSweepError("The project has no thermal model.")
+    trial, views, u_deg = _trial_project(
+        project,
+        sweep.case,
+        beta_deg,
+        sweep.mode,
+        sweep.earth_radius_m,
+        sweep.orbit_radius_m,
+        [],
+    )
+    by_index = tuple((i, views[id(s)]) for i, s in enumerate(model.surfaces) if id(s) in views)
+    return BetaDetail(trial, static_thermal_budget(trial), by_index, u_deg)
 
 
 def _solar_views(
@@ -242,10 +292,12 @@ def node_temperatures(point: BetaPoint) -> dict[str, float]:
 
 
 __all__ = [
+    "BetaDetail",
     "BetaPoint",
     "BetaSweep",
     "BetaSweepError",
     "NodeTemperature",
+    "beta_point_detail",
     "beta_range",
     "node_temperatures",
     "orbit_of_run",

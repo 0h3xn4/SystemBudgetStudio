@@ -73,7 +73,7 @@ system_modes:
     name: Acquisition
 ```
 
-`mode` is the file name in `modes/`; change it to rename the spacecraft mode, or write `null` to skip that system mode. Later imports only add entries for system modes that are new. A unit follows the element mode that the system mode names for its element; a custom power on a unit becomes a power mode `custom <mode>` of that unit. A unit with no mapping in a system mode is left unassigned, and the project check reports it (`UNIT_NOT_MAPPED`); nothing is guessed. The *duty cycle* of a system mode has no counterpart (a scenario gives the time shares) and is listed.
+`mode` is the file name in `modes/`; change it to rename the spacecraft mode, or write `null` to skip that system mode. Later imports only add entries for system modes that are new. A unit follows the element mode that the system mode names for its element; a custom power on a unit becomes a power mode `custom <mode>` of that unit. A unit that the model gives no usable power mode in a system mode (no mapping, or a mapping to a power mode that does not exist) gets the power mode **`Not mapped`**, 0 W, in that spacecraft mode, and **one** warning for the system mode (`IDM_POWER_UNMAPPED`) says how many units that is; before 2.9.0 such units were left out of the spacecraft mode and the project check reported one error for each unit and each mode (`UNIT_NOT_MAPPED`). If the model means those units to draw power in that mode, the power budget is too low by that power: choose their power mode in the *Spacecraft modes* grid, or complete the mapping in IDM-CIC and import again. The *duty cycle* of a system mode has no counterpart (a scenario gives the time shares) and is listed.
 
 ## What happens when I import the model again?
 
@@ -103,7 +103,7 @@ Not imported: masses that the model computes from the area or volume of a shape;
 
 ## What do the messages mean?
 
-Every code has an entry in [the problem list](../PROBLEMS.md#idm-cic-models-import). The usual ones: `IDM_MASS_UNRESOLVED` (the equipment's mass needs geometry or is not in the model, so the unit is not written), `IDM_POWER_UNRESOLVED` (a power mode or mapping could not be taken over), `IDM_TEMPERATURE_IGNORED` (a band was not given, or the survival band does not enclose the operating band), `IDM_NEVER_ENABLED` (an optional unit is off in every configuration), `IDM_GEOMETRY_PLACEMENT` and `IDM_GEOMETRY_SHAPE` (no centre of gravity for that unit, see above).
+Every code has an entry in [the problem list](../PROBLEMS.md#idm-cic-models-import). The usual ones: `IDM_MASS_UNRESOLVED` (the equipment's mass needs geometry or is not in the model, so the unit is not written), `IDM_POWER_UNRESOLVED` (a power mode has no power value, so its unit is not written), `IDM_POWER_UNMAPPED` (units with no power mode in a system mode, taken as 0 W), `IDM_TEMPERATURE_IGNORED` (a band was not given, or the survival band does not enclose the operating band), `IDM_NEVER_ENABLED` (an optional unit is off in every configuration), `IDM_GEOMETRY_PLACEMENT` and `IDM_GEOMETRY_SHAPE` (no centre of gravity for that unit, see above).
 
 The format that is read, and what it means, is described in [models/idm-import.md](../models/idm-import.md).
 

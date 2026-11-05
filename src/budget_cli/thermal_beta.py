@@ -9,10 +9,13 @@ both). The orbit is a circle at the altitude of the scenario's orbit, or the one
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 from typing import Any
 
 from budget_core.environment.constants import DEFAULT_EARTH_MODEL, EARTH_MODELS
+from budget_core.explain import ExplainError, beta_columns, explain_beta
+from budget_core.model import Project
 from budget_core.provenance import make_provenance
 from budget_core.reports.files import write_files
 from budget_core.thermal.beta_sweep import (
@@ -57,6 +60,22 @@ def add_parser(sub: Any, *, folder: Any, iso_datetime: Any, float_type: Any = fl
     )
     p.add_argument("--out", type=folder, help="Output folder (default: <project>/results).")
     p.add_argument("--no-plots", action="store_true", help="Do not write the plots.")
+    p.add_argument(
+        "--explain",
+        metavar="COLUMN",
+        help="Instead of writing files, show how one cell of the table was obtained: the column "
+        'as the window shows it (for example "Sunlit (%%)", "EPS (K)", "Units beyond a limit"). '
+        "Needs --at and one --mode (average or peak).",
+    )
+    p.add_argument(
+        "--at",
+        type=float_type,
+        metavar="BETA",
+        help="With --explain: the beta angle of the row, deg (between -90 and 90).",
+    )
+    p.add_argument(
+        "--format", choices=("text", "json"), default="text", help="With --explain: the output."
+    )
     p.add_argument("--user", help="User name for the provenance block.")
     p.add_argument("--date", type=iso_datetime, help="Generation time, ISO 8601.")
     p.add_argument("--strict", action="store_true", help="Treat warnings as failures.")
@@ -94,6 +113,37 @@ def _summary(sweep: BetaSweep) -> list[str]:
     return lines
 
 
+def _explain(
+    project: Project, args: argparse.Namespace, case: str, earth_radius: float, orbit_radius: float
+) -> int:
+    """Show how one cell of the table was obtained (D-252). Exit 0 when it is explained (also
+    when its value is n/a, which the explanation says why), 1 when the cell does not exist."""
+    from budget_cli.main import _fail
+
+    try:
+        sweep = thermal_beta_sweep(
+            project,
+            case,
+            [args.at],
+            mode=args.mode,
+            earth_radius_m=earth_radius,
+            orbit_radius_m=orbit_radius,
+        )
+        try:
+            explanation = explain_beta(project, sweep, [str(args.at)], args.explain)
+        except ExplainError as exc:
+            _fail(f"{exc} The columns are: " + " | ".join(beta_columns(sweep)))
+            return 1
+    except (BetaSweepError, ExplainError) as exc:
+        _fail(str(exc))
+        return 1
+    if args.format == "json":
+        print(json.dumps(explanation.to_dict(), indent=2, ensure_ascii=False))
+    else:
+        print(explanation.format_text(), end="")
+    return 0
+
+
 def run(args: argparse.Namespace) -> int:
     from budget_cli.main import _choose_scenario, _fail, _finish, _load_or_fail
     from budget_core.reports.thermal_beta_export import beta_files
@@ -117,6 +167,17 @@ def run(args: argparse.Namespace) -> int:
         _fail(str(exc))
         return 2
 
+    if args.explain is not None or args.at is not None:
+        if args.explain is None or args.at is None:
+            _fail("Give both --explain (the column) and --at (the beta angle), or neither.")
+            return 2
+        if args.mode == "both":
+            _fail("Choose --mode average or --mode peak to explain a value: the two differ.")
+            return 2
+        if not -90.0 <= args.at <= 90.0:
+            _fail("The beta angle is between -90 and 90 degrees.")
+            return 2
+
     scenario_label = "static (no scenario)"
     if args.altitude_km is not None:
         if args.altitude_km <= 0.0:
@@ -139,6 +200,9 @@ def run(args: argparse.Namespace) -> int:
             _fail(f"{exc} Give --altitude-km.")
             return 1
         scenario_label = run.scenario_id
+
+    if args.explain is not None:
+        return _explain(project, args, case, earth_radius, orbit_radius)
 
     provenance = make_provenance(
         project, scenario=scenario_label, user=args.user, generated_at=args.date
