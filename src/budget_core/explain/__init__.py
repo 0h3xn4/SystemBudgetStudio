@@ -14,7 +14,9 @@ from budget_core.explain.beta import (
 from budget_core.explain.link import explain_link, link_table_ids
 from budget_core.explain.linkpass import explain_linkpass, linkpass_table_ids
 from budget_core.explain.mass import explain_mass, mass_table_ids
+from budget_core.explain.pointing import explain_pointing, pointing_table_ids
 from budget_core.explain.power import ExplainError, explain_power, power_table_ids
+from budget_core.explain.propulsion import explain_propulsion, propulsion_table_ids
 from budget_core.explain.sources import add_sources
 from budget_core.explain.thermal import explain_thermal, thermal_table_ids
 from budget_core.explain.timeline import explain_timeline, timeline_table_ids
@@ -27,13 +29,17 @@ from budget_core.link.evaluate import (
 )
 from budget_core.mass.static_mass import StaticMassResult, static_mass_budget
 from budget_core.model import Project
+from budget_core.pointing.budget import PointingResult, pointing_budget
 from budget_core.power.static_budget import StaticPowerResult, static_power_budget
 from budget_core.power.time_domain import LoadBasis, TimeDomainResult, time_domain_budget
+from budget_core.propulsion.budget import PropulsionResult, propulsion_budget
 from budget_core.provenance import Provenance
 from budget_core.reports.document import Table
 from budget_core.reports.link_report import build_link_report
 from budget_core.reports.mass_report import build_mass_report
+from budget_core.reports.pointing_report import build_pointing_report
 from budget_core.reports.power_report import build_power_report
+from budget_core.reports.propulsion_report import build_propulsion_report
 from budget_core.reports.thermal_report import build_thermal_report
 from budget_core.reports.timeline_report import build_timeline_report
 from budget_core.scenario.run import ScenarioRunError, run_scenario
@@ -60,6 +66,8 @@ def explainable_tables(project: Project) -> list[tuple[str, str]]:
         *power_table_ids(project),
         *mass_table_ids(project),
         *thermal_table_ids(project),
+        *propulsion_table_ids(project),
+        *pointing_table_ids(project),
         *link_table_ids(project),
         *(linkpass_table_ids(project) if project.scenarios else []),
         *(timeline_table_ids() if project.scenarios else []),
@@ -95,13 +103,24 @@ class Explainer:
         self._link = link
         self._timeline = timeline
         self._link_series = link_series
+        self._propulsion: PropulsionResult | None = None
+        self._pointing: PointingResult | None = None
         self._scenario = scenario
         self._load_basis: LoadBasis = load_basis
         self._mission_phase = mission_phase
 
     def _family(self, table_id: str) -> str:
         family = table_id.split(":", 1)[0]
-        if family not in ("power", "mass", "thermal", "link", "timeline", "linkpass"):
+        if family not in (
+            "power",
+            "mass",
+            "thermal",
+            "link",
+            "timeline",
+            "linkpass",
+            "propulsion",
+            "pointing",
+        ):
             raise ExplainError("This table cannot be explained.")
         return family
 
@@ -119,6 +138,22 @@ class Explainer:
         if self._thermal is None:
             self._thermal = static_thermal_budget(self.project)
         return self._thermal
+
+    def propulsion_result(self) -> PropulsionResult:
+        if self._propulsion is None:
+            result = propulsion_budget(self.project)
+            if result is None:
+                raise ExplainError("The project has no propulsion file.")
+            self._propulsion = result
+        return self._propulsion
+
+    def pointing_result(self) -> PointingResult:
+        if self._pointing is None:
+            result = pointing_budget(self.project)
+            if result is None:
+                raise ExplainError("The project has no pointing file.")
+            self._pointing = result
+        return self._pointing
 
     def link_result(self) -> StaticLinkResult:
         if self._link is None:
@@ -202,6 +237,10 @@ class Explainer:
             document = build_mass_report(self.project, self.mass_result(), bare)
         elif family == "thermal":
             document = build_thermal_report(self.project, self.thermal_result(), bare)
+        elif family == "propulsion":
+            document = build_propulsion_report(self.project, self.propulsion_result(), bare)
+        elif family == "pointing":
+            document = build_pointing_report(self.project, self.pointing_result(), bare)
         elif family == "link":
             document = build_link_report(self.project, self.link_result(), bare, plots=False)
         elif family == "linkpass":
@@ -236,6 +275,10 @@ class Explainer:
             return explain_mass(self.project, table_id, key, column, self.mass_result())
         if family == "thermal":
             return explain_thermal(self.project, table_id, key, column, self.thermal_result())
+        if family == "propulsion":
+            return explain_propulsion(self.project, table_id, key, column, self.propulsion_result())
+        if family == "pointing":
+            return explain_pointing(self.project, table_id, key, column, self.pointing_result())
         if family == "link":
             return explain_link(self.project, table_id, key, column, self.link_result())
         if family == "linkpass":

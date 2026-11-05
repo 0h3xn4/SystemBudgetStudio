@@ -37,6 +37,7 @@ TABLE_TITLES: dict[str, str] = {
     "ebn0": "Eb/N0 table",
     "attenuation": "Attenuation table",
     "margins": "Margin policy",
+    "links": "Links",
 }
 assert set(TABLE_TITLES) == set(TABLES)
 

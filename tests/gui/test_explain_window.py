@@ -289,3 +289,34 @@ def test_a_link_pass_value_is_explained(window: MainWindow, qtbot) -> None:  # t
 def test_explaining_a_pass_before_the_passes_are_worked_out_says_so(window: MainWindow) -> None:
     window.explain_link_pass_value("linkpass:volume", ["x"], "Passes")
     assert "Work out the link passes first" in window.explain_panel.empty.message.text()
+
+
+def _explainable(view, prefix: str):  # type: ignore[no-untyped-def]
+    window_view = view
+    window_view.build_pages()
+    for page in window_view._pages.values():
+        for table_view, model in zip(page.findChildren(QTableView), page.models, strict=False):
+            if model.table.explain_id.startswith(prefix):
+                window_view.tabs.setCurrentWidget(page)
+                return table_view, model.table
+    raise AssertionError(prefix)
+
+
+def test_a_propulsion_value_is_explained_too(window: MainWindow) -> None:
+    window.workspace.show_view(window.propulsion_view)
+    QApplication.processEvents()
+    view, table = _explainable(window.propulsion_view, "propulsion:maneuvers")
+    column = next(i for i, c in enumerate(table.columns) if c.header == "Mass before (kg)")
+    view.setCurrentIndex(view.model().index(0, column))
+    window.explain_action.trigger()
+    assert "PROP-ROCKET" in window.explain_panel.text.toPlainText()
+
+
+def test_a_pointing_value_is_explained_too(window: MainWindow) -> None:
+    window.workspace.show_view(window.pointing_view)
+    QApplication.processEvents()
+    view, table = _explainable(window.pointing_view, "pointing:slews")
+    column = next(i for i, c in enumerate(table.columns) if c.header == "Slew time (s)")
+    view.setCurrentIndex(view.model().index(0, column))
+    window.explain_action.trigger()
+    assert "POINT-SLEW" in window.explain_panel.text.toPlainText()

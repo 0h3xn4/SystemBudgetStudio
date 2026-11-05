@@ -2,7 +2,12 @@
 
 All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Every version below is released ([how to cut a release](docs/developer/README.md#cut-a-release)).
 
-## [Unreleased]
+## [2.11.0] - 2026-11-05
+
+Explain for the propulsion and pointing budgets, and the links in the spreadsheet import and export. No number of an existing project changes.
+
+- **The links in the spreadsheet import and export (D-256).** `budget tables-export PROJECT links` writes one row for each sourced number of each link (transmitter power, line loss, antenna gain, G/T, margins, losses), and `budget tables-import PROJECT links FILE` shows and, with `--apply`, writes the changes into the link files, keeping their comments; the window's *File → Export tables / Import tables* list *Links*. Only numbers that exist are edited, and a new or changed value needs its source in the same row.
+- **Explain for the propulsion and pointing budgets (D-255).** Any cell of the propulsion tables (summary, systems, manoeuvres) and of the pointing tables (modes, slews) can be explained, in the window (right-click or Ctrl+Shift+I) and with `budget explain PROJECT propulsion:maneuvers --row NAME --column "Mass before (kg)"`: the rocket equation, the burn time and energy, the slew time and peak rate, the momentum and energy of a slew, each step with its equation, the inputs with their sources and the inertia's origin. A test compares every cell of three examples with its explanation.
 
 ## [2.10.0] - 2026-11-05
 

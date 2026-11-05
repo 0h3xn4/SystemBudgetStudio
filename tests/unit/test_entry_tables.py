@@ -64,7 +64,7 @@ EBN0_HEADER = [
 
 
 def test_the_tables_are_named() -> None:
-    assert set(TABLES) == {"ebn0", "attenuation", "margins"}
+    assert set(TABLES) == {"ebn0", "attenuation", "margins", "links"}
 
 
 def test_the_ebn0_export_has_the_columns_and_the_entries(root: Path) -> None:
@@ -300,7 +300,7 @@ def test_the_attenuation_export_round_trips(root: Path, tmp_path: Path) -> None:
 
 def test_a_table_that_is_not_one_of_ours_is_refused(root: Path, tmp_path: Path) -> None:
     with pytest.raises(KeyError):
-        table_csv(_project(root), "links")
+        table_csv(_project(root), "units")
 
 
 # ---- the margin policy (2.6.0, D-249) --------------------------------------------------------
@@ -428,3 +428,148 @@ def test_a_missing_margin_policy_is_created_with_placeholder_system_margins(
     assert policy.classes["class_a"].power_margin_ratio.value == 0.05
     assert policy.system_power_margin_ratio.value is None
     assert policy.system_power_margin_ratio.source == "TBD"
+
+
+# ---- links (D-256) --------------------------------------------------------------------------
+
+LINK_HEADER = ["link", "field", "value", "source", "status", "note"]
+
+
+def _link_rows(root: Path) -> list[list[str]]:
+    return list(csv.reader(io.StringIO(table_csv(_project(root), "links"))))
+
+
+def test_the_link_export_lists_every_sourced_number_of_every_link(root: Path) -> None:
+    rows = _link_rows(root)
+    assert rows[0] == LINK_HEADER
+    fields = {(r[0], r[1]) for r in rows[1:]}
+    project = _project(root)
+    assert {link for link, _ in fields} == set(project.links)
+    for link in project.links:
+        for expected in (
+            "transmitter.power_w",
+            "transmitter.line_loss_db",
+            "required_margin_db",
+            "pointing_loss_db",
+        ):
+            assert (link, expected) in fields
+
+
+def test_the_link_export_reads_back_as_no_change(root: Path, tmp_path: Path) -> None:
+    csv_path = tmp_path / "links.csv"
+    csv_path.write_text(table_csv(_project(root), "links"), encoding="utf-8")
+    plan = plan_entry_import(_project(root), "links", read_entry_table(csv_path, "links"), "l")
+    assert plan.ok and not plan.changes and plan.unchanged > 0
+    xlsx_path = tmp_path / "links.xlsx"
+    xlsx_path.write_bytes(table_xlsx(_project(root), "links"))
+    plan = plan_entry_import(
+        _project(root), "links", read_entry_table(xlsx_path, "links"), "l.xlsx"
+    )
+    assert plan.ok and not plan.changes
+
+
+def test_a_changed_link_value_is_written_with_its_source_and_the_file_keeps_its_comments(
+    root: Path, tmp_path: Path
+) -> None:
+    link = sorted(_project(root).links)[0]
+    path = root / "links" / f"{link}.yaml"
+    before = path.read_text(encoding="utf-8")
+    path.write_text("# kept comment\n" + before, encoding="utf-8")
+    plan = _plan(
+        root,
+        "links",
+        [
+            LINK_HEADER,
+            [link, "transmitter.power_w", "7.5", "Data sheet TX-1, table 2", "sourced", ""],
+        ],
+        tmp_path,
+    )
+    assert plan.ok, [p.format() for p in plan.problems]
+    assert {(c.key, c.field) for c in plan.changes} >= {
+        (f"{link} / transmitter.power_w", "value"),
+        (f"{link} / transmitter.power_w", "source"),
+    }
+    written = apply_entry_plan(root, "links", plan)
+    assert [w.name for w in written] == [f"{link}.yaml"]
+    assert path.read_text(encoding="utf-8").startswith("# kept comment")
+    power = _project(root).links[link].transmitter.power_w
+    assert (power.value, power.source) == (7.5, "Data sheet TX-1, table 2")
+
+
+def test_two_links_are_written_together_and_nothing_else_changes(
+    root: Path, tmp_path: Path
+) -> None:
+    ids = sorted(_project(root).links)
+    assert len(ids) >= 2
+    before = {i: (root / "links" / f"{i}.yaml").read_text(encoding="utf-8") for i in ids}
+    plan = _plan(
+        root,
+        "links",
+        [
+            LINK_HEADER,
+            [ids[0], "pointing_loss_db", "1.5", "Pointing study rev A", "", ""],
+            [ids[1], "required_margin_db", "4", "Link policy rev C", "", ""],
+        ],
+        tmp_path,
+    )
+    assert plan.ok
+    assert len(apply_entry_plan(root, "links", plan)) == 2
+    project = _project(root)
+    assert project.links[ids[0]].pointing_loss_db.value == 1.5
+    assert project.links[ids[1]].required_margin_db.value == 4.0
+    for other in ids[2:]:
+        assert (root / "links" / f"{other}.yaml").read_text(encoding="utf-8") == before[other]
+
+
+def test_a_link_number_needs_its_source(root: Path, tmp_path: Path) -> None:
+    link = sorted(_project(root).links)[0]
+    plan = _plan(
+        root, "links", [LINK_HEADER, [link, "transmitter.power_w", "9", "", "", ""]], tmp_path
+    )
+    assert not plan.ok
+    assert [p.code for p in plan.problems] == ["IMPORT_SOURCE_MISSING"]
+    assert apply_entry_plan(root, "links", plan) == []
+
+
+def test_a_row_for_a_link_or_field_that_does_not_exist_is_refused_without_naming_it(
+    root: Path, tmp_path: Path
+) -> None:
+    link = sorted(_project(root).links)[0]
+    for row in (
+        ["no_such_link_zz", "transmitter.power_w", "1", "Data sheet", "", ""],
+        [link, "no.such.field_zz", "1", "Data sheet", "", ""],
+    ):
+        plan = _plan(root, "links", [LINK_HEADER, row], tmp_path)
+        assert not plan.ok
+        assert [p.code for p in plan.problems] == ["IMPORT_VALUE_INVALID"]
+        assert all("zz" not in p.format() for p in plan.problems)
+        assert apply_entry_plan(root, "links", plan) == []
+
+
+def test_a_placeholder_of_a_link_stays_a_placeholder_until_a_value_comes(
+    root: Path, tmp_path: Path
+) -> None:
+    link = sorted(_project(root).links)[0]
+    path = root / "links" / f"{link}.yaml"
+    text = path.read_text(encoding="utf-8")
+    start = text.index("pointing_loss_db:")
+    end = text.index("\n", text.index("source:", start))
+    path.write_text(
+        text[:start]
+        + "pointing_loss_db:\n  value: null\n  source: TBD\n  note: To be supplied"
+        + text[end:],
+        encoding="utf-8",
+    )
+    sourced = _project(root).links[link].pointing_loss_db
+    assert sourced.value is None
+    rows = [r for r in _link_rows(root) if r[:2] == [link, "pointing_loss_db"]]
+    assert rows and rows[0][2] == "" and rows[0][3] == "TBD"
+    plan = _plan(
+        root,
+        "links",
+        [LINK_HEADER, [link, "pointing_loss_db", "2", "Pointing study rev A", "", ""]],
+        tmp_path,
+    )
+    assert plan.ok
+    apply_entry_plan(root, "links", plan)
+    assert _project(root).links[link].pointing_loss_db.value == 2.0
