@@ -6,6 +6,15 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-05: the IDM-CIC import writes component skeletons (2.10.0)
+
+**What changed.** An import now also writes `config/pointing.yaml`, `config/propulsion.yaml` and `config/power_system.yaml` when the model has wheels, thrusters, a battery or a solar array, with placeholders for every number the model does not give, and `idm/components.yaml` (your library, written once) ([D-254](DECISIONS.md), [DV-IDM7](DEVIATIONS.md)). A project imported before gets them on the next import only if it has no such file of its own; a file that exists is never changed, except an entry the import wrote earlier where you did not change it.
+
+| Case | Before | After |
+|---|---|---|
+| Import of a model with wheels, thrusters, a battery or a solar array | no pointing, propulsion or power system file | a skeleton with placeholders: the budgets say *n/a* until the numbers are entered |
+| Any project not imported from IDM-CIC, any result of any project | as in 2.9.0 | the same |
+
 ## 2026-11-05: an IDM-CIC import no longer leaves units out of a spacecraft mode (2.9.0)
 
 **What changed.** A unit that the model gives no usable power mode in a system mode (no mapping, or a mapping to a power mode that does not exist) used to be left out of that spacecraft mode, and the project check then reported `UNIT_NOT_MAPPED` as an error for each unit and each mode ([D-253](DECISIONS.md), [DV-IDM6](DEVIATIONS.md)). It now gets the power mode `Not mapped` (0 W, marked `estimate`) in that spacecraft mode, and one warning for the system mode, `IDM_POWER_UNMAPPED`, gives how many units that is. A project that was imported before is not changed: import again to get it.
