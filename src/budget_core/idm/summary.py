@@ -13,7 +13,12 @@ from budget_core.idm.importer import ImportPlan, sorted_results
 from budget_core.problems import Problem
 
 SHOWN_PER_CODE = 5
-KINDS = (("unit", "Units"), ("mode", "Spacecraft modes"), ("expendable", "Expendables"))
+KINDS = (
+    ("unit", "Units"),
+    ("mode", "Spacecraft modes"),
+    ("expendable", "Expendables"),
+    ("component", "Components"),
+)
 
 
 def counts(plan: ImportPlan) -> dict[str, dict[str, int]]:
@@ -35,7 +40,10 @@ def plan_summary(plan: ImportPlan, notes: list[Problem], source: str, sha256: st
             text = ", ".join(f"{n} {action}" for action, n in sorted(by_kind[kind].items()))
             lines.append(f"{label}: {text}.")
     for result in sorted_results(plan):
-        if result.action in ("changed", "removed") and result.detail:
+        if result.kind == "component" and result.action == "detected":
+            # proposals are named by the equipment's id in the model, never by its name
+            lines.append(f"  component {result.id}: proposed: {', '.join(result.detail)}")
+        elif result.action in ("changed", "removed") and result.detail:
             shown = ", ".join(result.detail[:SHOWN_PER_CODE])
             more = len(result.detail) - SHOWN_PER_CODE
             suffix = f" (+{more})" if more > 0 else ""
