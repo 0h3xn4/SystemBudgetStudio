@@ -1,0 +1,5 @@
+schema_version: 2
+kind: project
+name: Example 250 kg minisatellite, no findings
+revision: '1'
+description: 'Synthetic example data; not a real spacecraft. Every input has an invented value and every limit is met: validating and running it report no warning and no error.'

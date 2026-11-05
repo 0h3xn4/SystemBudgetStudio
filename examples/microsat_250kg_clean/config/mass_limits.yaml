@@ -1,0 +1,9 @@
+schema_version: 2
+kind: mass_limits
+limits:
+  - name: Launch mass
+    phase: launch
+    limit_kg:
+      value: 320.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative

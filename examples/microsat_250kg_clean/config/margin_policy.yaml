@@ -1,0 +1,38 @@
+schema_version: 3
+kind: margin_policy
+classes:
+  class_a:
+    power_margin_ratio:
+      value: 0.05
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    mass_margin_ratio:
+      value: 0.05
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+  class_b:
+    power_margin_ratio:
+      value: 0.1
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    mass_margin_ratio:
+      value: 0.1
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+  class_c:
+    power_margin_ratio:
+      value: 0.2
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    mass_margin_ratio:
+      value: 0.2
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+system_power_margin_ratio:
+  value: 0.1
+  source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
+system_mass_margin_ratio:
+  value: 0.1
+  source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative

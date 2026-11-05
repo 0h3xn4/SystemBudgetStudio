@@ -53,7 +53,7 @@ cd SystemBudgetStudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install -e .
 budget --version                                       # System Budget Studio 2.8.0
-budget export-examples demo                            # four example projects with invented data
+budget export-examples demo                            # five example projects with invented data
 budget validate demo/microsat_250kg_eps                    # check the project: 0 errors, a few warnings
 budget run demo/microsat_250kg_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
 system-budget-studio demo/microsat_250kg_eps               # open the window

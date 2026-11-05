@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **A fifth example without findings.** `microsat_250kg_clean` is the 250 kg satellite with every input filled in (invented values) and every limit met: `budget validate` prints *No problems found*, and `budget run`, `power-timeline` and `link-passes` end with `0 errors, 0 warnings` (also with `--strict`). A test keeps it that way. The other examples are unchanged.
+
 - **README.** The opening now says in plain words what the tool is (four budgets, offline, plain text files, a design tool and not flight software), why it exists, how it treats sources and placeholders, and how a new user starts. Documentation only.
 
 ## [2.8.0] - 2026-11-05

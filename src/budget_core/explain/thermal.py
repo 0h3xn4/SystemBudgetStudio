@@ -695,20 +695,20 @@ _HEAT_KINDS = {
 }
 
 
-def explain_thermal(
+def thermal_cell_steps(
     project: Project,
     table_id: str,
     key: Sequence[str],
     column: str,
-    result: StaticThermalResult | None = None,
-) -> Explanation:
-    result = static_thermal_budget(project) if result is None else result
+    result: StaticThermalResult,
+) -> tuple[list[Step], Quantity, str]:
+    """The steps, the final value and the title of one cell, before the steps are numbered and
+    linked (the beta sweep adds its own steps in front and links them all together)."""
     parts = table_id.split(":", 2)
     kind = parts[1] if len(parts) > 1 else ""
     if not key:
         raise ExplainError("Name the row.")
     name = parts[2] if len(parts) > 2 else ""
-    address = (table_id, tuple(key), column)
     if kind == "summary" or kind in _HEAT_KINDS:
         if kind == "summary":
             mode = next((m for m in result.modes if m.mode_name == key[0]), None)
@@ -753,7 +753,23 @@ def explain_thermal(
             title = f"Unit temperature limits, case {name} / {key[0]} / {column}"
     else:
         raise ExplainError("This table cannot be explained.")
+    return steps, final, title
+
+
+def explain_thermal(
+    project: Project,
+    table_id: str,
+    key: Sequence[str],
+    column: str,
+    result: StaticThermalResult | None = None,
+) -> Explanation:
+    result = static_thermal_budget(project) if result is None else result
+    steps, final, title = thermal_cell_steps(project, table_id, key, column, result)
     linked = link_steps(tuple(steps))
     return Explanation(
-        address, title, replace(final, origin=""), linked, equations=equations_used(linked)
+        (table_id, tuple(key), column),
+        title,
+        replace(final, origin=""),
+        linked,
+        equations=equations_used(linked),
     )

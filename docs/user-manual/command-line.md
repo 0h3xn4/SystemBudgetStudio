@@ -36,7 +36,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget verify EXPORT PROJECT` | Say whether a project is the one an export was made from (input digest; exit 0 match, 1 different or not checkable, 2 export unreadable) |
 | `budget self-test` | Check that this installation can compute and render a budget |
 | `budget export-schemas DIR` | Write the JSON Schema of every file kind |
-| `budget export-examples DIR [--force]` | Write the four example projects; an example folder that exists is never touched unless you add `--force` |
+| `budget export-examples DIR [--force]` | Write the five example projects; an example folder that exists is never touched unless you add `--force` |
 | `budget --version` | Print the version |
 
 `--report` can be repeated and takes `xlsx`, `pdf`, `docx`, `json`, `csv` or `all`. `--scenario` is optional when the project has only one; with none or several the command says so and lists the ids. `--series-every N` takes 1 or more and `--max-rows N` 0 or more. Options cannot be abbreviated (`--str` is an error, not `--strict`). `budget` with no command prints the command list and exits with code 2.

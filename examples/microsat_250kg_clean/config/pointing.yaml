@@ -1,0 +1,65 @@
+schema_version: 2
+kind: pointing
+actuators:
+  wheels:
+    name: Reaction wheels
+    max_torque_nm:
+      value: 0.05
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    max_rate_deg_s:
+      value: 1.5
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    momentum_capacity_nms:
+      value: 12.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    slew_power_w:
+      value: 45.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+modes:
+  nadir:
+    name: Nadir pointing
+    reference: nadir
+    accuracy_deg:
+      value: 0.5
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    actuator: wheels
+    hold_power_w:
+      value: 15.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+  target:
+    name: Target tracking
+    reference: target
+    accuracy_deg:
+      value: 0.1
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    actuator: wheels
+    hold_power_w:
+      value: 30.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+slews:
+  - name: Nadir to target
+    from_mode: nadir
+    to_mode: target
+    angle_deg:
+      value: 60.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    axis: y
+    actuator: wheels
+    inertia_kgm2:
+      value: 95.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    settle_s:
+      value: 20.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    per_day: 6

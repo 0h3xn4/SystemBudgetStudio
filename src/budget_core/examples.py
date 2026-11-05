@@ -98,10 +98,15 @@ def _face(name: str, normal: tuple[float, float, float], strings: int, cells: in
 
 
 MINISAT_PEAK_POWER_W = 180.0  # invented source limit; the downlink peak exceeds it on purpose
+MINISAT_CLEAN_PEAK_POWER_W = 400.0  # the clean example's limit: no peak exceeds it
+MINISAT_LAUNCH_LIMIT_KG = 320.0  # invented launch mass limit of the 250 kg satellite
 
 
 def _minisat_power_system(
-    filled: bool, phases: list[str], by_mode: dict[str, Pointing] | None = None
+    filled: bool,
+    phases: list[str],
+    by_mode: dict[str, Pointing] | None = None,
+    peak_power_w: float = MINISAT_PEAK_POWER_W,
 ) -> PowerSystem:
     """Array and battery of the 250 kg examples: two deployed wings (plus and minus X) and body
     panels on the Y sides and the nadir face; a pack of 8 cells in series and 4 in parallel (about
@@ -147,7 +152,7 @@ def _minisat_power_system(
             by_mode=by_mode or {},
             sun_direction_body=[1.0, 0.0, 0.0],
         ),
-        limits=PowerLimits(peak_power_w=n(MINISAT_PEAK_POWER_W)),
+        limits=PowerLimits(peak_power_w=n(peak_power_w)),
     )
 
 
@@ -159,12 +164,19 @@ def _config(
     link_tables: tuple[Ebn0Table, AttenuationTable] | None = None,
     propulsion: PropulsionConfig | None = None,
     pointing: PointingConfig | None = None,
+    filled_mass: bool = False,
 ) -> ProjectConfig:
     """Margin policy and power configuration: placeholders, or (for the complete power example)
-    invented round values. Mass numbers and tables stay placeholders in every example."""
+    invented round values. Mass numbers and tables stay placeholders in every example but the clean
+    one (`filled_mass`)."""
 
     def p(value: float) -> Sourced:
         return _val(value) if filled_power else _tbd()
+
+    def m(value: float) -> Sourced:
+        return _val(value) if filled_mass else _tbd()
+
+    mass_margins = {"class_a": 0.05, "class_b": 0.10, "class_c": 0.20}
 
     margins = {"class_a": 0.05, "class_b": 0.10, "class_c": 0.20}
     return ProjectConfig(
@@ -175,11 +187,13 @@ def _config(
         thermal_environment=thermal[1] if thermal else None,
         margin_policy=MarginPolicy(
             classes={
-                c: MaturityClass(power_margin_ratio=p(margins[c]), mass_margin_ratio=_tbd())
+                c: MaturityClass(
+                    power_margin_ratio=p(margins[c]), mass_margin_ratio=m(mass_margins[c])
+                )
                 for c in CLASSES
             },
             system_power_margin_ratio=p(0.10),
-            system_mass_margin_ratio=_tbd(),
+            system_mass_margin_ratio=m(0.10),
         ),
         power_config=PowerConfig(
             distribution_loss_ratio=p(0.03),
@@ -188,7 +202,9 @@ def _config(
         ebn0_table=link_tables[0] if link_tables else Ebn0Table(),
         attenuation_table=link_tables[1] if link_tables else AttenuationTable(),
         mass_limits=MassLimits(
-            limits=[MassLimit(name="Launch mass", phase="launch", limit_kg=_tbd())]
+            limits=[
+                MassLimit(name="Launch mass", phase="launch", limit_kg=m(MINISAT_LAUNCH_LIMIT_KG))
+            ]
         ),
     )
 
@@ -741,6 +757,16 @@ MINISAT_GEOMETRY: dict[str, Geometry] = {
     "adapter": ((0.00, 0.00, -0.04), (0.94, 0.94, 0.08)),
 }
 
+# The clean example gives the items that the others treat as point masses a size, so that its mass
+# result carries no note about an inertia that is missing (invented round dimensions, metres). The
+# propellant stays a point mass: its inertia would not scale with the mass in the three phases.
+CLEAN_GEOMETRY: dict[str, Geometry] = {
+    "gnss": ((-0.30, -0.25, 1.10), (0.10, 0.10, 0.04)),
+    "sun_sensors": ((0.25, -0.25, 1.12), (0.06, 0.06, 0.03)),
+    "heaters": ((0.00, 0.00, 0.55), (0.20, 0.20, 0.02)),
+    "harness": ((0.00, 0.00, 0.55), (0.60, 0.60, 0.40)),
+}
+
 PHASES = ["launch", "bol", "eol"]
 
 # Invented orbit and sites (round numbers; no real stations or customer targets).
@@ -1116,16 +1142,20 @@ def _minisat_pointing(complete: bool) -> PointingConfig:
     )
 
 
-def _minisat(*, complete: bool) -> Project:
+def _minisat(*, complete: bool, clean: bool = False) -> Project:
     """The 250 kg satellite. Without `complete` every configuration number is a placeholder (what a
     project with `n/a` looks like); with it the power, thermal and link inputs have invented round
-    values, so the time-domain and thermal budgets show results. Mass inputs stay placeholders."""
+    values, so the time-domain and thermal budgets show results. Mass inputs stay placeholders.
+    With `clean` (which needs `complete`) every input has an invented value and every limit is met,
+    so that validating and running the project report no warning and no error."""
     units = dict(
         _unit(
             r,
-            MINISAT_GEOMETRY.get(r[0]),
+            (CLEAN_GEOMETRY if clean else MINISAT_GEOMETRY).get(r[0], MINISAT_GEOMETRY.get(r[0])),
             ["launch"] if r[0] == "adapter" else None,
-            (MINISAT_RADIO_LIMITS if r[0] == "radio" else EXAMPLE_LIMITS) if complete else None,
+            (MINISAT_RADIO_LIMITS if r[0] == "radio" and not clean else EXAMPLE_LIMITS)
+            if complete
+            else None,
         )
         for r in MINISAT_UNITS
     )
@@ -1140,11 +1170,20 @@ def _minisat(*, complete: bool) -> Project:
         root=Path("."),
         meta=ProjectMeta(
             name="Example 250 kg minisatellite"
-            + (", complete power and thermal inputs" if complete else ""),
+            + (
+                ", no findings"
+                if clean
+                else ", complete power and thermal inputs"
+                if complete
+                else ""
+            ),
             revision="1",
             description=SYNTHETIC
             + (
-                " Array, battery, power, thermal and link configuration have invented values."
+                " Every input has an invented value and every limit is met: validating and running"
+                " it report no warning and no error."
+                if clean
+                else " Array, battery, power, thermal and link configuration have invented values."
                 if complete
                 else ""
             ),
@@ -1162,12 +1201,18 @@ def _minisat(*, complete: bool) -> Project:
         modes=_mode_map(units, SAT_MODES),
         config=_config(
             ["main", "payload"],
-            _minisat_power_system(complete, PHASES, MINISAT_POINTING),
+            _minisat_power_system(
+                complete,
+                PHASES,
+                MINISAT_POINTING,
+                MINISAT_CLEAN_PEAK_POWER_W if clean else MINISAT_PEAK_POWER_W,
+            ),
             filled_power=complete,
             thermal=_thermal(units, "imaging", "safe", 0.5, complete),
             link_tables=_microsat_link_tables(complete),
             propulsion=_minisat_propulsion(complete),
             pointing=_minisat_pointing(complete),
+            filled_mass=clean,
         ),
         links=_microsat_links(complete),
         expendables={"propellant": propellant},
@@ -1327,6 +1372,7 @@ def _marked(build: Callable[[], Project]) -> Callable[[], Project]:
 EXAMPLES: dict[str, Callable[[], Project]] = {
     "microsat_250kg": _marked(lambda: _minisat(complete=False)),
     "microsat_250kg_eps": _marked(lambda: _minisat(complete=True)),
+    "microsat_250kg_clean": _marked(lambda: _minisat(complete=True, clean=True)),
     "microsat_150kg": _marked(_microsat),
     "stress_200_units": _marked(_stress),
 }

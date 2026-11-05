@@ -26,6 +26,9 @@ from budget_core.timeutil import MAX_YEAR, MIN_YEAR, end_in_range
 
 SAMPLES = {
     "microsat_250kg_eps": "250 kg minisatellite with complete inputs (all results computed)",
+    "microsat_250kg_clean": (
+        "250 kg minisatellite with every input filled in (no warnings, no errors)"
+    ),
     "microsat_150kg": "150 kg microsatellite with two links",
     "microsat_250kg": (
         "250 kg minisatellite with placeholder inputs (results stay n/a until you fill them in)"
