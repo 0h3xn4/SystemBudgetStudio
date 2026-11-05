@@ -4,7 +4,7 @@
 
 # System Budget Studio
 
-An offline desktop and command-line tool that computes **power, mass, thermal and radio-link budgets** for a small satellite from one spacecraft model kept in plain text files.
+A free, offline program for the **early design of a small satellite**: it works out the power, mass, thermal and radio-link budgets from one description of the spacecraft kept in plain text files.
 
 [![CI](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/0h3xn4/SystemBudgetStudio)](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest)
@@ -15,11 +15,20 @@ An offline desktop and command-line tool that computes **power, mass, thermal an
 
 ## What is this?
 
-Satellite teams keep power modes, eclipse cycles, battery depth of discharge, masses, temperatures and link margins in spreadsheets that drift apart. System Budget Studio replaces them with one model: you describe the spacecraft (units and their power modes, solar array, battery, radios, antennas), an orbit and some ground stations, and the tool computes the budgets, shows where a limit is broken, and writes reports.
+**System Budget Studio is a free program for the early design of a satellite.** You describe the satellite once (its equipment, how much each part weighs and consumes, its orbit, its ground stations) and the program works out four budgets that every satellite has to close:
 
-It runs entirely on your own computer. There is no cloud service, no telemetry and no update check. Every number you enter carries its **source**, every number you have not yet sourced is marked as a **placeholder** (and the results that depend on it say *n/a* instead of guessing), and the same input always gives the same output files.
+- **Power**: does the solar array and battery cover what the satellite uses, in sunlight and in eclipse, over the mission?
+- **Mass**: how heavy is the satellite with margins, where is its centre of gravity, and does it stay under the launcher limit?
+- **Thermal**: do the parts stay inside their temperature limits?
+- **Radio link**: can the satellite talk to its ground stations, and how much data does each pass carry?
 
-If you know a little Python and nothing about this tool, start with the [getting-started guide](docs/getting-started.md).
+It runs on your own computer (Windows or Linux), **offline**: no account, no cloud service, no telemetry, no update check. It works from plain text files you can keep under version control, every result says which input and which equation it came from, and the same input always gives the same report. It is a design tool for studies and trade-offs, not flight software.
+
+**Why it exists.** Satellite teams usually keep power modes, eclipse cycles, battery depth of discharge, masses, temperatures and link margins in spreadsheets that drift apart. Here they are one model: the tool computes the budgets, shows where a limit is broken, and writes reports (XLSX, PDF, DOCX, CSV, JSON).
+
+**Honest about its numbers.** Every number you enter carries its **source**. A number you have not sourced yet is marked as a **placeholder**, and the results that depend on it say *n/a* instead of guessing. The tool ships no standards values (you enter yours, with a source), and the example projects contain invented data only.
+
+**New here?** Install it (next section), then follow the [getting-started guide](docs/getting-started.md): it opens a ready-made 250 kg example satellite, computes its power timeline and exports a report, and needs no Python knowledge. To start your own satellite, use *File → New project (guided)* (Ctrl+N), from a sample or as a blank project; a *Start here* card then tells you what to fill in next.
 
 ## Install
 
