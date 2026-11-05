@@ -120,13 +120,37 @@ def test_a_custom_power_becomes_a_mode_of_that_unit(tmp_path: Path) -> None:
     assert result.modes["m1"]["assignments"][WIDGET_1] == "custom ON"
 
 
-def test_a_missing_mapping_leaves_the_unit_unassigned_and_says_so(tmp_path: Path) -> None:
+def test_a_missing_mapping_gives_the_unit_a_zero_watt_mode_and_one_finding_per_mode(
+    tmp_path: Path,
+) -> None:
     xml = model_xml().replace(
         '<ElementMode ref="el.1_elm.ON" />', '<ElementMode ref="el.2_elm.NONE" />'
     )
     result = mapped(tmp_path, xml)
-    assert WIDGET_1 not in result.modes["m1"]["assignments"]
-    assert "IDM_POWER_UNRESOLVED" in codes(result)
+    assert result.modes["m1"]["assignments"][WIDGET_1] == "Not mapped"
+    assert set(result.modes["m1"]["assignments"]) == set(result.units)  # no unit is left out
+    modes = {m["name"]: m for m in result.units[WIDGET_1]["modes"]}
+    assert (modes["Not mapped"]["avg_power_w"], modes["Not mapped"]["peak_power_w"]) == (0.0, 0.0)
+    assert result.units[WIDGET_1]["provenance"]["modes[Not mapped].avg_power_w"]["status"] == (
+        "estimate"
+    )
+    found = [p for p in result.findings if p.code == "IDM_POWER_UNMAPPED"]
+    count = sum(1 for v in result.modes["m1"]["assignments"].values() if v == "Not mapped")
+    assert count >= 1
+    assert [(p.path, p.actual, p.unit) for p in found] == [("M1", float(count), "units")]
+    assert "IDM_POWER_UNRESOLVED" not in codes(result)
+
+
+def test_the_project_check_finds_no_unit_without_a_power_mode_after_such_an_import(
+    tmp_path: Path,
+) -> None:
+    xml = model_xml().replace(
+        '<ElementMode ref="el.1_elm.ON" />', '<ElementMode ref="el.2_elm.NONE" />'
+    )
+    result = mapped(tmp_path, xml)
+    for unit_id in result.units:
+        names = {m["name"] for m in result.units[unit_id]["modes"]}
+        assert result.modes["m1"]["assignments"][unit_id] in names
 
 
 def test_dissipation_above_power_is_not_a_share(tmp_path: Path) -> None:

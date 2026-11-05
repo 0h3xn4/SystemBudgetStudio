@@ -63,7 +63,7 @@ budget self-test
 You should see (the first line carries the version you installed):
 
 ```text
-System Budget Studio 2.8.0
+System Budget Studio 2.9.0
 Self-test passed.
 ```
 
@@ -73,7 +73,7 @@ Self-test passed.
 
 *Starting your own spacecraft instead?* `budget new my_satellite --bus-voltage-v 28` creates a blank project ([how](user-manual/create-a-project.md#how-do-i-start-a-blank-project)). To see a complete budget first, use the examples below.
 
-The tool ships four example projects with **invented data**. Copy them somewhere you can write:
+The tool ships five example projects with **invented data**. Copy them somewhere you can write:
 
 ```bash
 budget export-examples demo
@@ -82,6 +82,7 @@ budget export-examples demo
 ```text
 microsat_150kg
 microsat_250kg
+microsat_250kg_clean
 microsat_250kg_eps
 stress_200_units
 ```

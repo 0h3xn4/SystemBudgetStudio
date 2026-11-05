@@ -957,6 +957,12 @@ CATALOGUE: tuple[SettingSpec, ...] = (
 NOT_SETTINGS: dict[str, str] = {
     "result_format:RESULT_FORMAT_VERSION": "The version of the JSON result layout.",
     "examples:MINISAT_PEAK_POWER_W": "Invented example data.",
+    "examples:MINISAT_CLEAN_PEAK_POWER_W": "Invented example data.",
+    "examples:MINISAT_LAUNCH_LIMIT_KG": "Invented example data.",
+    "explain.beta:ANGLE_TOLERANCE_DEG": (
+        "How far a typed beta angle may be from a row of the sweep's table to name that row "
+        "(the table shows one decimal); a way of addressing a row, not a model setting."
+    ),
     "idm.importer:STATE_VERSION": "The schema version of idm/import_state.yaml (a file format).",
     "idm.importer:MODE_MAP_VERSION": "The schema version of idm/mode_map.yaml (a file format).",
 }

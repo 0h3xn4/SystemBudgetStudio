@@ -888,11 +888,19 @@ Severity is the usual one: **error** (the project cannot be used as it is, or a 
 
 ### IDM_POWER_UNRESOLVED
 
-**A power mode or a mode mapping could not be taken over** (warning)
+**A power mode could not be taken over** (warning)
 
-- **Rule.** Each system mode needs, for every powered occurrence, a power mode (or a custom power) through its element mode or directly; a power mode needs a power value.
-- **Why it matters.** A unit that is not assigned a power mode in a spacecraft mode is reported as an error by the project check, so the missing mapping is not hidden.
-- **What to do.** Complete the mapping in IDM-CIC, or assign the unit a power mode in the project.
+- **Rule.** A power mode of an equipment needs a power value; one without it cannot be written, so the unit is left out of the project.
+- **Why it matters.** The unit is not part of the budgets until the power is entered.
+- **What to do.** Enter the power of the power mode in IDM-CIC, or add the unit by hand in the project.
+
+### IDM_POWER_UNMAPPED
+
+**Units have no power mode in a system mode** (warning)
+
+- **Rule.** The model gives some equipment occurrences no usable power mode in this system mode (no mapping, or a mapping to a power mode that does not exist). The number of units is in the finding.
+- **Why it matters.** Each such unit gets the power mode `Not mapped` at 0 W in that spacecraft mode, so the project check does not report one error for each unit; if the model means these units to draw power in that mode, the power budget is too low by that power (DV-IDM6).
+- **What to do.** Complete the mapping in IDM-CIC, or choose the power mode of the unit in the Spacecraft modes grid of the project.
 
 ### IDM_DISSIPATION_UNRESOLVED
 

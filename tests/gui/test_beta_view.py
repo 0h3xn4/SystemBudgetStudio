@@ -212,3 +212,46 @@ def test_a_running_sweep_can_be_cancelled(window: MainWindow, qtbot) -> None:  #
         view.cancel()
     assert view.compute_button.text() == "Compute" and view.result is None
     assert "Cancelled" in view.status.text()
+
+
+def _select(view: BetaView, row: int, header: str) -> None:
+    columns = [view.table.horizontalHeaderItem(c).text() for c in range(view.table.columnCount())]
+    view.table.setCurrentCell(row, columns.index(header))
+
+
+def test_a_cell_of_the_table_is_explained_in_the_explain_panel(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    view = window.beta_view
+    view.beta_step.setValue(30.0)
+    compute(view, qtbot)
+    window.show()
+    assert window.workspace.show_view(view)
+    assert view.isVisible()
+    _select(view, 2, "EPS (K)")  # beta -30
+    window.explain_selected_value()
+    text = window.explain_panel.text.toPlainText()
+    assert "Beta sweep, case hot" in text and "-30.0" in text and "EPS (K)" in text
+    assert "TH-BETA-SUN" in text and "TH-BAL" in text
+    row = view.table.item(2, view.table.columnCount() - 1)
+    assert row is not None  # the table is unchanged by explaining
+    _select(view, 3, "Sunlit (%)")
+    window.explain_selected_value()
+    assert "TH-BETA-LIT" in window.explain_panel.text.toPlainText()
+
+
+def test_the_beta_table_offers_explain_only_for_a_current_result(
+    window: MainWindow,
+    qtbot,  # type: ignore[no-untyped-def]
+) -> None:
+    view = window.beta_view
+    assert view.explain_target(0, 0) is None  # nothing computed
+    view.beta_step.setValue(45.0)
+    compute(view, qtbot)
+    target = view.explain_target(1, 1)
+    assert target is not None and target[1] == ["-45.0"] and target[2] == "Sunlit (%)"
+    assert view.explain_target(99, 0) is None
+    view.altitude.setValue(view.altitude.value() + 10.0)
+    view.orbit_combo.setCurrentText(FROM_ALTITUDE)  # an input changed: the result is out of date
+    assert view.explain_target(1, 1) is None

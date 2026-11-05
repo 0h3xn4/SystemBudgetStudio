@@ -1,0 +1,45 @@
+schema_version: 2
+kind: propulsion
+systems:
+  thruster:
+    name: Monopropellant thrusters
+    type: chemical
+    isp_s:
+      value: 220.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    thrust_n:
+      value: 4.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    propellant: propellant
+maneuvers:
+  - name: Orbit trim
+    system: thruster
+    delta_v_m_s:
+      value: 12.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    count: 1
+  - name: Station-keeping
+    system: thruster
+    delta_v_m_s:
+      value: 1.5
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    count: 6
+  - name: Deorbit
+    system: thruster
+    delta_v_m_s:
+      value: 8.0
+      source: Synthetic example value; not from a data sheet or a standard.
+      status: illustrative
+    count: 1
+dry_mass_kg:
+  value: 236.0
+  source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative
+delta_v_margin_ratio:
+  value: 0.1
+  source: Synthetic example value; not from a data sheet or a standard.
+  status: illustrative

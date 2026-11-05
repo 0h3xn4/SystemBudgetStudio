@@ -5,7 +5,7 @@
 Choose **File > New project (guided)** (Ctrl+N). Five short pages ask for:
 
 1. **Project**: a name and the parent folder. The project is stored in a new folder named after the project; an existing folder is never touched.
-2. **Spacecraft**: a sample spacecraft to start from (a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a **blank project** with no units and no invented number, which asks for the bus voltage and skips the orbit and the scenario).
+2. **Spacecraft**: a sample spacecraft to start from (a 250 kg minisatellite with complete example inputs, the same one with every input filled in and no warning or error, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a **blank project** with no units and no invented number, which asks for the bus voltage and skips the orbit and the scenario).
 3. **Orbit**: altitude, inclination and RAAN of a near-circular orbit.
 4. **Scenario**: how long to simulate and when it starts (UTC).
 5. **Review**: Finish creates the project, opens it, and computes the first power timeline.

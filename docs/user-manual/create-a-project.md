@@ -9,7 +9,7 @@ A project is a folder of plain-text YAML files that describe one spacecraft; thi
 1. Start the window: `system-budget-studio`.
 2. Choose **File → New project (guided)** (Ctrl+N). Five short pages follow:
    1. **Project**: a name and the parent folder. The project goes into a new folder named after the project; an existing folder is never touched.
-   2. **Spacecraft**: a sample to start from: a 250 kg minisatellite with complete example inputs, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a [blank project](#how-do-i-start-a-blank-project).
+   2. **Spacecraft**: a sample to start from: a 250 kg minisatellite with complete example inputs, the same one with every input filled in and no warning or error, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a [blank project](#how-do-i-start-a-blank-project).
    3. **Orbit**: altitude (160 to 2000 km), inclination and RAAN of a near-circular orbit.
    4. **Scenario**: how long to simulate (up to 180 days) and when it starts (UTC). The guided wizard builds near-circular orbits; an elliptical orbit comes from [Add scenario](scenarios.md#how-do-i-add-an-orbit-and-a-scenario-in-the-window).
    5. **Review**: **Finish** creates the project, opens it and computes the first power timeline.

@@ -5,6 +5,12 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from budget_core.explain.beta import (
+    beta_columns,
+    beta_row_key,
+    beta_table_id,
+    explain_beta,
+)
 from budget_core.explain.link import explain_link, link_table_ids
 from budget_core.explain.linkpass import explain_linkpass, linkpass_table_ids
 from budget_core.explain.mass import explain_mass, mass_table_ids
@@ -39,6 +45,10 @@ __all__ = [
     "Explanation",
     "Quantity",
     "Step",
+    "beta_columns",
+    "beta_row_key",
+    "beta_table_id",
+    "explain_beta",
     "explain_cell",
     "explainable_tables",
 ]

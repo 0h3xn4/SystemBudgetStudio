@@ -10,7 +10,7 @@ import pytest
 from budget_cli.main import main
 from budget_core.io.project_loader import load_project
 from budget_core.problems import Severity
-from tests.idm.fixtures import write_idm
+from tests.idm.fixtures import model_xml, write_idm
 
 
 @pytest.fixture
@@ -122,3 +122,23 @@ def test_mass_properties_reach_the_mass_budget_and_can_be_left_out(
 
     cog = json.loads((out / "mass_static.json").read_text(encoding="utf-8"))["phases"][0]["cog"]
     assert cog["mass_kg"] > 0 and cog["coverage_ratio"] > 0.5
+
+
+def test_units_without_a_mapping_do_not_make_the_project_check_fail(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The model names an element mode that the equipment has no mapping for: the project is
+    written with the `Not mapped` mode (0 W), one finding per system mode says so, and the
+    project check reports no error (it used to report one for each unit and each mode)."""
+    xml = model_xml().replace(
+        '<ElementMode ref="el.1_elm.ON" />', '<ElementMode ref="el.2_elm.NONE" />'
+    )
+    model = write_idm(tmp_path / "unmapped.idm", xml)
+    root = tmp_path / "p"
+    args = ["import", "idm", str(model), "--project", str(root), "--bus-voltage-v", "28"]
+    assert main([*args, "--apply"]) == 0
+    assert "IDM_POWER_UNMAPPED" in capsys.readouterr().out
+    assert main(["validate", str(root)]) == 0
+    out = capsys.readouterr().out
+    assert "UNIT_NOT_MAPPED" not in out
+    assert "0 errors" in out

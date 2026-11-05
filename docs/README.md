@@ -57,7 +57,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 
 | Page | What it is for |
 |---|---|
-| [../examples/README.md](../examples/README.md) | The four example projects: what each shows, how to run it, expected output |
+| [../examples/README.md](../examples/README.md) | The five example projects: what each shows, how to run it, expected output |
 
 ## Developer docs
 

@@ -13,13 +13,14 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtCore import QPoint, Qt, QThread, Signal
 from PySide6.QtWidgets import (
     QComboBox,
     QDoubleSpinBox,
     QFileDialog,
     QHBoxLayout,
     QLabel,
+    QMenu,
     QSplitter,
     QTableWidget,
     QVBoxLayout,
@@ -28,6 +29,14 @@ from PySide6.QtWidgets import (
 
 from budget_core.control import Cancelled, RunControl
 from budget_core.environment.constants import DEFAULT_EARTH_MODEL, EARTH_MODELS
+from budget_core.explain.beta import (
+    BETA_COLUMN,
+    EXCEEDED_COLUMN,
+    HEADROOM_COLUMN,
+    ORBIT_ANGLE_COLUMN,
+    SUNLIT_COLUMN,
+    node_column,
+)
 from budget_core.model import Project
 from budget_core.plots.thermal_beta import thermal_beta_plot
 from budget_core.problems import Problem
@@ -84,7 +93,7 @@ FROM_SCENARIO = "Orbit of the scenario"
 FROM_ALTITUDE = "Circular orbit at an altitude"
 DEFAULT_ALTITUDE_KM = 500.0
 ALTITUDE_RANGE_KM = (100.0, 40000.0)
-TABLE_HEADROOM = "Smallest margin to a limit (K)"
+TABLE_HEADROOM = HEADROOM_COLUMN  # named by the explanation, which is addressed by it
 
 
 @dataclass(frozen=True)
@@ -184,6 +193,7 @@ class BetaView(QWidget):
     cancelled = Signal()
     export_finished = Signal(list)
     export_failed = Signal(str)
+    explain_requested = Signal(object, object, str)  # the sweep, the key of the row, the column
 
     def __init__(self) -> None:
         super().__init__()
@@ -254,6 +264,7 @@ class BetaView(QWidget):
         self.table = QTableWidget()
         self.table.setAccessibleName("Beta sweep table")
         self.table.setTabKeyNavigation(False)  # Tab leaves a read-only table
+        self._make_explainable()
         self.body = QSplitter(Qt.Orientation.Vertical)
         self.body.addWidget(self.plot)
         self.body.addWidget(self.table)
@@ -536,12 +547,12 @@ class BetaView(QWidget):
             self.plot.set_spec(thermal_beta_plot(sweep))
         nodes = sorted({n.node for p in sweep.points for n in p.case.nodes})
         headers = [
-            "Beta (deg)",
-            "Sunlit (%)",
-            "Orbit angle (deg)",
-            *(f"{n} (K)" for n in nodes),
-            "Units beyond a limit",
-            TABLE_HEADROOM,
+            BETA_COLUMN,
+            SUNLIT_COLUMN,
+            ORBIT_ANGLE_COLUMN,
+            *(node_column(n) for n in nodes),
+            EXCEEDED_COLUMN,
+            HEADROOM_COLUMN,
         ]
         rows: list[list[str]] = []
         states: dict[tuple[int, int], Status] = {}
@@ -569,6 +580,44 @@ class BetaView(QWidget):
             if done and exceeded:
                 states[(r, last)] = Status.FAIL  # a number and a count, never a colour alone
         fill_table(self.table, headers, rows, numeric=range(len(headers)), states=states)
+
+    # ---- Explain (D-252) ---------------------------------------------------------------------
+    def explain_target(self, row: int, col: int) -> tuple[BetaSweep, list[str], str] | None:
+        """(sweep, key of the row, column) of the cell at (row, col), or None when there is
+        nothing to explain there (no result, a result out of date, or an empty cell)."""
+        sweep = self.result
+        table = self.table
+        if sweep is None or not self.is_valid():
+            return None
+        if not (0 <= row < table.rowCount() and 0 <= col < table.columnCount()):
+            return None
+        first, head = table.item(row, 0), table.horizontalHeaderItem(col)
+        if first is None or head is None:
+            return None
+        return sweep, [first.text()], head.text()
+
+    def current_explain_target(self) -> tuple[BetaSweep, list[str], str] | None:
+        return self.explain_target(self.table.currentRow(), self.table.currentColumn())
+
+    def _make_explainable(self) -> None:
+        table = self.table
+        table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        def menu(position: QPoint) -> None:
+            index = table.indexAt(position)
+            if not index.isValid():
+                return
+            table.setCurrentCell(index.row(), index.column())
+            target = self.explain_target(index.row(), index.column())
+            popup = QMenu(table)
+            action = popup.addAction("Explain this value\tCtrl+Shift+I")
+            if target is not None:
+                action.triggered.connect(lambda: self.explain_requested.emit(*target))
+            else:
+                action.setEnabled(False)
+            popup.exec(table.viewport().mapToGlobal(position))
+
+        table.customContextMenuRequested.connect(menu)
 
     # ---- export ------------------------------------------------------------------------------
     def _choose_export(self) -> None:

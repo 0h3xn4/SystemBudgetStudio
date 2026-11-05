@@ -19,7 +19,7 @@ Rules (see docs/models/idm-import.md):
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from pydantic import ValidationError
@@ -46,6 +46,7 @@ MARGINS = ("raw", "applied")
 MASS_PROPERTIES = ("geometry", "none")
 REFERENCE_PHASE = "reference"
 PASSIVE_MODE = "Passive"
+NOT_MAPPED_MODE = "Not mapped"  # a unit the model gives no power mode in a system mode (DV-IDM6)
 UNPLACED_NODE = "idm_unplaced"
 CLASS_PREFIX = "idm_"
 
@@ -311,6 +312,32 @@ def _unit_modes(
     return modes, names, prov, ok
 
 
+def _not_mapped_mode() -> UnitPowerMode:
+    return UnitPowerMode(
+        name=NOT_MAPPED_MODE,
+        avg_power_w=0.0,
+        peak_power_w=0.0,
+        duty_cycle_ratio=1.0,
+        heat_dissipation_ratio=1.0,
+    )
+
+
+def _give_not_mapped_mode(ctx: _Context, unit_id: str) -> None:
+    """The unit gets the `Not mapped` power mode (0 W) when it has none yet, with its provenance."""
+    data = ctx.out.units[unit_id]
+    if any(m["name"] == NOT_MAPPED_MODE for m in data["modes"]):
+        return
+    data["modes"].append(model_to_data(_not_mapped_mode()))
+    data.setdefault("provenance", {})[f"modes[{NOT_MAPPED_MODE}].avg_power_w"] = model_to_data(
+        ProvenanceEntry(
+            source=ctx.source,
+            note="The model gives this equipment no power mode in some system mode, so it is "
+            "taken as drawing no power there (DV-IDM6).",
+            status="estimate",
+        )
+    )
+
+
 def _passive_mode() -> UnitPowerMode:
     return UnitPowerMode(
         name=PASSIVE_MODE,
@@ -517,6 +544,7 @@ def _map_modes(
             continue
         mode_id = _unique(entry.mode, taken)
         assignments: dict[str, str] = {}
+        unmapped = 0
         for unit_id in sorted(units):
             occ, eq, names = units[unit_id]
             unit_modes = {m["name"] for m in out.units[unit_id]["modes"]}
@@ -533,9 +561,18 @@ def _map_modes(
                 elif mapping.custom_power_w is not None:
                     chosen = names.get(f"{occ.full_id}/{mapping.mode_id}")
             if chosen is None or chosen not in unit_modes:
-                ctx.add(Severity.WARNING, "IDM_POWER_UNRESOLVED", f"{occ.full_id}/{sm.id}")
+                # the model gives no usable power mode for this unit in this system mode: it is
+                # taken as drawing nothing there, named, and counted in one finding per system
+                # mode (a unit left out of a spacecraft mode would be an error for each unit and
+                # each mode, DV-IDM6)
+                _give_not_mapped_mode(ctx, unit_id)
+                assignments[unit_id] = NOT_MAPPED_MODE
+                unmapped += 1
                 continue
             assignments[unit_id] = chosen
+        if unmapped:
+            warning = finding(Severity.WARNING, "IDM_POWER_UNMAPPED", sm.id)
+            out.findings.append(replace(warning, actual=float(unmapped), unit="units"))
         if not assignments:
             continue  # nothing could be assigned: the reasons are in the findings
         mode = SpacecraftMode(

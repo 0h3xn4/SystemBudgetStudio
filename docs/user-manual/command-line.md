@@ -12,7 +12,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget validate PROJECT [--format text\|json] [--strict]` | Check a project folder and list problems |
 | `budget run PROJECT [--budget power\|mass\|thermal\|propulsion\|pointing\|link\|all] [--report …] [--out DIR]` | Compute the static budgets and write reports (default: all budgets, all report kinds) |
 | `budget scenario PROJECT [--scenario ID] [--out DIR]` | Compute a scenario's eclipses, passes and mode timeline (the JSON also carries their statistics) |
-| `budget thermal-beta PROJECT [--case NAME] [--mode average\|peak\|both] [--beta-min DEG] [--beta-max DEG] [--beta-step DEG] [--scenario ID] [--altitude-km KM] [--earth-model wgs84\|wgs72] [--no-plots] [--out DIR]` | Node temperatures of a thermal case against the beta angle: the solar view of every surface that gives its `normal_lvlh` comes from the beta angle (orbit average, the instant of the most absorbed sunlight, or both); CSV, JSON and a plot ([thermal budget](thermal-budget.md#how-do-the-temperatures-change-with-the-beta-angle)) |
+| `budget thermal-beta PROJECT [--case NAME] [--mode average\|peak\|both] [--beta-min DEG] [--beta-max DEG] [--beta-step DEG] [--scenario ID] [--altitude-km KM] [--earth-model wgs84\|wgs72] [--no-plots] [--out DIR] [--explain COLUMN --at DEG [--format text\|json]]` | Node temperatures of a thermal case against the beta angle (with `--explain COLUMN --at DEG` and one `--mode`: how one cell of the table was obtained, instead of the files): the solar view of every surface that gives its `normal_lvlh` comes from the beta angle (orbit average, the instant of the most absorbed sunlight, or both); CSV, JSON and a plot ([thermal budget](thermal-budget.md#how-do-the-temperatures-change-with-the-beta-angle)) |
 | `budget power-timeline PROJECT [--scenario ID] [--case bol\|eol\|both] [--load-basis nominal\|margined] [--phase NAME] [--series-every N] [--no-plots] [--report …] [--out DIR]` | Time-domain power budget of a scenario |
 | `budget link-passes PROJECT [--scenario ID] [--no-plots] [--report …] [--out DIR]` | Link margin, selected data rate and data volume over every pass |
 | `budget compare PROJECT [OTHER] [--scenario ID] [--scenario-a ID] [--scenario-b ID] [--budget …] [--report …] [--max-rows N] [--out DIR]` | Compare two revisions or two scenarios |
@@ -36,7 +36,7 @@ This page lists every `budget` command with its options, the exit codes, and the
 | `budget verify EXPORT PROJECT` | Say whether a project is the one an export was made from (input digest; exit 0 match, 1 different or not checkable, 2 export unreadable) |
 | `budget self-test` | Check that this installation can compute and render a budget |
 | `budget export-schemas DIR` | Write the JSON Schema of every file kind |
-| `budget export-examples DIR [--force]` | Write the four example projects; an example folder that exists is never touched unless you add `--force` |
+| `budget export-examples DIR [--force]` | Write the five example projects; an example folder that exists is never touched unless you add `--force` |
 | `budget --version` | Print the version |
 
 `--report` can be repeated and takes `xlsx`, `pdf`, `docx`, `json`, `csv` or `all`. `--scenario` is optional when the project has only one; with none or several the command says so and lists the ids. `--series-every N` takes 1 or more and `--max-rows N` 0 or more. Options cannot be abbreviated (`--str` is an error, not `--strict`). `budget` with no command prints the command list and exits with code 2.
