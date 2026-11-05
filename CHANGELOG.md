@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **README.** The opening now says in plain words what the tool is (four budgets, offline, plain text files, a design tool and not flight software), why it exists, how it treats sources and placeholders, and how a new user starts. Documentation only.
+
 ## [2.8.0] - 2026-11-05
 
 Two window pages for what 2.6.0 and 2.7.0 had on the command line only (decision D-251).
