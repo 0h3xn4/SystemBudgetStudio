@@ -58,7 +58,7 @@ def test_export_refuses_a_file_type_it_does_not_write(
 
 def test_an_unknown_table_name_is_refused(root: Path) -> None:
     with pytest.raises(SystemExit):
-        main(["tables-export", str(root), "links"])
+        main(["tables-export", str(root), "units"])
 
 
 @pytest.mark.parametrize("table", ["ebn0", "attenuation"])
@@ -95,3 +95,30 @@ def test_a_value_without_a_source_is_refused_and_nothing_is_written(
     err = capsys.readouterr().err
     assert "IMPORT_SOURCE_MISSING" in err and "9.25" not in err
     assert (root / "config" / "ebn0_table.yaml").read_bytes() == before
+
+
+def test_links_are_exported_changed_in_a_dry_run_and_written_with_apply(
+    root: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    table = tmp_path / "links.csv"
+    assert main(["tables-export", str(root), "links", "--out", str(table)]) == 0
+    rows = _rows(table)
+    header = rows[0]
+    target = next(r for r in rows[1:] if r[header.index("field")] == "transmitter.power_w")
+    target[header.index("value")] = "9.5"
+    target[header.index("source")] = "Data sheet 7"
+    with table.open("w", newline="", encoding="utf-8") as handle:
+        csv.writer(handle).writerows(rows)
+    link_id = target[header.index("link")]
+    before = (root / "links" / f"{link_id}.yaml").read_text(encoding="utf-8")
+    capsys.readouterr()
+
+    assert main(["tables-import", str(root), "links", str(table)]) == 0
+    assert "Nothing was written" in capsys.readouterr().out
+    assert (root / "links" / f"{link_id}.yaml").read_text(encoding="utf-8") == before
+
+    assert main(["tables-import", str(root), "links", str(table), "--apply"]) == 0
+    assert f"Wrote {link_id}.yaml" in capsys.readouterr().out
+    loaded = load_project(root)
+    assert loaded.project is not None
+    assert loaded.project.links[link_id].transmitter.power_w.value == 9.5

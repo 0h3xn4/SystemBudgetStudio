@@ -26,6 +26,7 @@ def _modes(result: PointingResult) -> Table:
         note="A pointing mode is not a spacecraft mode: it says what the spacecraft points at and "
         "how well. The holding power is reported here; to count it in the power budget, give it "
         "to the units that draw it (for example the wheels) in their power modes.",
+        explain_id="pointing:modes",
     )
 
 
@@ -72,6 +73,7 @@ def _slews(result: PointingResult) -> Table:
         note="Rest-to-rest bang-bang slew about a body axis, limited by the actuators' torque and, "
         "where given, a rate limit; the inertia is the one given or the mass budget's about the "
         "centre of gravity. Impulsive torque changes, no flexible modes (deviation DV-P2).",
+        explain_id="pointing:slews",
     )
 
 

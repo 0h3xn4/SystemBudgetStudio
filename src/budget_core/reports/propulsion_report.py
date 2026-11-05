@@ -25,6 +25,7 @@ def _summary(result: PropulsionResult) -> Table:
         rows,
         note="The manoeuvres are worked backwards from the dry mass with the rocket equation; "
         "n/a: an input is a placeholder or missing.",
+        explain_id="propulsion:summary",
     )
 
 
@@ -59,6 +60,7 @@ def _systems(result: PropulsionResult) -> Table:
         note="Loaded: the largest mass of the expendable the system names, from the mass budget; "
         "margin: loaded less needed (negative: not enough propellant). The burn time is at "
         "constant thrust; the power and energy are for electric systems.",
+        explain_id="propulsion:systems",
     )
 
 
@@ -88,6 +90,7 @@ def _maneuvers(result: PropulsionResult) -> Table:
         ),
         note="Delta-v: the burns of the line together, with the margin. Impulsive burns; no "
         "gravity, steering or pointing loss (deviation DV-P1).",
+        explain_id="propulsion:maneuvers",
     )
 
 

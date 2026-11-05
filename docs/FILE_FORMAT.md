@@ -31,7 +31,7 @@ config/propulsion.yaml         kind: propulsion          systems{id: {name, type
 
 `config/pointing.yaml` (2.2.0, schema version 1) holds the pointing and slew budget: `actuators` (sourced `max_torque_nm`, optional `max_rate_deg_s`, `momentum_capacity_nms`, `slew_power_w`), pointing `modes` (`reference` is `nadir`, `sun`, `inertial`, `target` or `other`; optional sourced `accuracy_deg` and `hold_power_w`), `slews` (sourced `angle_deg`, `axis` is `x`, `y` or `z`, optional `inertia_kgm2` and `settle_s`, `per_day` default 1) and the optional `mass_phase`. See [pointing](user-manual/pointing.md).
 
-The two tables, and the margin policy (one row for each margin: `item` is a class or `system`, `quantity` is `power_margin_ratio` or `mass_margin_ratio`, D-249), can be written and filled as a spreadsheet with `budget tables-export` and `budget tables-import` ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet), decision D-231); the file stays the source of truth.
+The two tables, and the margin policy (one row for each margin: `item` is a class or `system`, `quantity` is `power_margin_ratio` or `mass_margin_ratio`, D-249), and the sourced numbers of the links (one row for each: the id of the link and the path of the field, D-256), can be written and filled as a spreadsheet with `budget tables-export` and `budget tables-import` ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet), decision D-231); the file stays the source of truth.
 
 `catalogue_ref` (a unit, optional text) is **reserved** for a shared equipment catalogue (decision D-009): it is read and written back unchanged and no computation uses it.
 
@@ -256,9 +256,11 @@ The tool writes `provenance`, `status` and `requires` only when they are not at 
 `budget import idm` ([manual](user-manual/idm-import.md), decisions D-240 to D-242) keeps two small files in the folder `idm/` of the project. The project loader ignores the folder; only the importer reads them. Neither is part of the model digest, and they have versions of their own.
 
 ```
+idm/components.yaml     (no kind: your component library, a `components` list of `match`, `kind`, `values`; written once as a template)
 idm/mode_map.yaml       kind: idm_mode_map (version 1)      system_modes{<system mode id>: {mode, name}}
 idm/import_state.yaml   kind: idm_import_state (version 1)  source{file, sha256, supported_format, file_format}, options{margins, bus},
-                                                            units|modes|expendables{<id>: {full_id, status, imported}}, margin_classes{}, phases[]
+                                                            units|modes|expendables{<id>: {full_id, status, imported}}, margin_classes{}, phases[],
+                                                            components{<file>:<id>: {equipment, status, imported}}
 ```
 
 - `mode` in the mode map is the file name (without `.yaml`) in `modes/`, or `null` to skip the system mode; `name` is the name of the spacecraft mode. The file is drafted at the first import, edited by the user, and only extended later.

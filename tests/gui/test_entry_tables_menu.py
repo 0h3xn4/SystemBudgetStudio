@@ -46,13 +46,14 @@ def entry(menu: QMenu, text: str) -> QAction:
     raise AssertionError(f"no entry {text!r}")
 
 
-def test_the_file_menu_has_both_submenus_with_the_three_tables(window: MainWindow) -> None:
+def test_the_file_menu_has_both_submenus_with_the_four_tables(window: MainWindow) -> None:
     for title in ("Export tables", "Import tables"):
         menu = submenu(window, title)
         assert [a.text().replace("&", "") for a in menu.actions()] == [
             "Eb/N0 table…",
             "Attenuation table…",
             "Margin policy…",
+            "Links…",
         ]
 
 

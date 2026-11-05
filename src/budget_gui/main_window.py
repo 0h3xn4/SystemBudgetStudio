@@ -178,6 +178,8 @@ class MainWindow(QMainWindow):
             self.mass_view,
             self.thermal_view,
             self.link_view,
+            self.propulsion_view,
+            self.pointing_view,
         )
         for budget_view in self._explainable_views:
             budget_view.explain_requested.connect(self.explain_value)

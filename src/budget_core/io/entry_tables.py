@@ -44,12 +44,14 @@ from budget_core.io.unit_table import (
     _unreadable,
     _xlsx_rows,
 )
+from budget_core.io.validation import iter_sourced
 from budget_core.io.yamlio import YamlSyntaxError, load_yaml_text
 from budget_core.model import (
     CURRENT_VERSIONS,
     AttenuationTable,
     BudgetModel,
     Ebn0Table,
+    Link,
     MarginPolicy,
     Project,
     Sourced,
@@ -75,6 +77,8 @@ class TableSpec:
     columns: tuple[str, ...]
     title: str
 
+
+LINKS_FILE = "links/*.yaml"  # shown; each link is the file links/<id>.yaml
 
 TABLES: dict[str, TableSpec] = {
     "ebn0": TableSpec(
@@ -130,6 +134,20 @@ TABLES: dict[str, TableSpec] = {
         ("item", "quantity", "margin_ratio", "source", "status", "note"),
         "Margin policy",
     ),
+    # one row for each sourced number of each link (transmitter power, line loss, antenna gain,
+    # G/T, margins, losses...), found by the link's id and the path of the field; only existing
+    # numbers are edited, a link is added with *Add link* (D-256)
+    "links": TableSpec(
+        "links",
+        LINKS_FILE,
+        "link",
+        ("link", "field"),
+        ("link", "field"),
+        (),
+        "value",
+        ("link", "field", "value", "source", "status", "note"),
+        "Links",
+    ),
 }
 _OPTIONAL_KEY = {"elevation_deg"}
 MARGIN_QUANTITIES = ("power_margin_ratio", "mass_margin_ratio")
@@ -170,9 +188,31 @@ def _margin_entries(project: Project) -> list[dict[str, Any]]:
     return out
 
 
+def _link_entries(project: Project) -> list[dict[str, Any]]:
+    """The sourced numbers of the links, one row each, in the order of the files."""
+    out: list[dict[str, Any]] = []
+    for link_id, link in project.links.items():
+        for path, sourced in iter_sourced(link):
+            if not all(isinstance(part, str) for part in path):
+                continue
+            out.append(
+                {
+                    "link": link_id,
+                    "field": ".".join(str(part) for part in path),
+                    "value": sourced.value,
+                    "source": sourced.source,
+                    "status": sourced.status,
+                    "note": sourced.note,
+                }
+            )
+    return out
+
+
 def _entries(project: Project, spec: TableSpec) -> list[dict[str, Any]]:
     if spec.name == "margins":
         return _margin_entries(project)
+    if spec.name == "links":
+        return _link_entries(project)
     table = project.config.ebn0_table if spec.name == "ebn0" else project.config.attenuation_table
     out: list[dict[str, Any]] = []
     for entry in table.entries if table else []:
@@ -490,6 +530,15 @@ def plan_entry_import(project: Project, name: str, table: TableRead, file: str) 
             )
             continue
 
+        if match is None and spec.name == "links":
+            error(
+                "IMPORT_VALUE_INVALID",
+                "There is no such link or field in the project.",
+                line,
+                "Only the numbers that the exported table lists can be changed here; add a link "
+                "with Add link, then export the table again.",
+            )
+            continue
         if match is None:
             built = _build(spec, key_t, updates, sourced)
             if isinstance(built, str):
@@ -561,6 +610,8 @@ def _build(
     }
     if spec.name == "margins":
         return _build_margin(key, data[spec.value])
+    if spec.name == "links":
+        return _build_sourced(spec.value, data[spec.value])
     model = Ebn0Table if spec.name == "ebn0" else AttenuationTable
     try:
         model.model_validate({"entries": [_without_none(data)]})
@@ -583,6 +634,15 @@ def _build_margin(key: tuple[Any, ...], sourced: dict[str, Any]) -> str | None:
         Sourced.model_validate(sourced)
     except ValidationError:
         return "The value of 'margin_ratio' is not valid or is outside its range."
+    return None
+
+
+def _build_sourced(column: str, sourced: dict[str, Any]) -> str | None:
+    """None if `sourced` is a valid number with its source, else a message naming the column."""
+    try:
+        Sourced.model_validate(sourced)
+    except ValidationError:
+        return f"The value of '{column}' is not valid or is outside its range."
     return None
 
 
@@ -683,6 +743,8 @@ def _edited_text(text: str, spec: TableSpec, edits: Iterable[_EntryEdit]) -> str
     yaml.width = 4096
     if spec.name == "margins":
         return _edited_margin_text(text, yaml, edits)
+    if spec.name == "links":
+        return _edited_link_text(text, yaml, edits)
     if text.strip():
         document = yaml.load(text)
     else:
@@ -713,6 +775,56 @@ def _edited_text(text: str, spec: TableSpec, edits: Iterable[_EntryEdit]) -> str
     return buffer.getvalue()
 
 
+def _edited_link_text(text: str, yaml: YAML, edits: Iterable[_EntryEdit]) -> str:
+    """One link file with the planned edits: each field is found by its dotted path and edited in
+    place (the file keeps its comments and order). A field that is not there any more is an
+    error: the plan is out of date."""
+    stale = "The table file no longer matches the plan; plan the import again."
+    if not text.strip():
+        raise OutputError(stale)
+    document = yaml.load(text)
+    for edit in edits:
+        node: Any = document
+        *parents, last = str(edit.key[1]).split(".")
+        for part in parents:
+            node = node.get(part) if isinstance(node, CommentedMap) else None
+        if not isinstance(node, CommentedMap) or not isinstance(node.get(last), CommentedMap):
+            raise OutputError(stale)
+        _set_sourced(node, last, edit.sourced, False)
+    buffer = io.StringIO()
+    yaml.dump(document, buffer)
+    return buffer.getvalue()
+
+
+def _apply_link_edits(root: Path, plan: EntryPlan) -> list[Path]:
+    """Edit each link file the plan touches; all files are made and checked before one is written
+    (a file that is invalid after its edits writes nothing)."""
+    by_link: dict[str, list[_EntryEdit]] = {}
+    for edit in plan.edits:
+        by_link.setdefault(str(edit.key[0]), []).append(edit)
+    made: list[tuple[Path, str]] = []
+    try:
+        for link_id, edits in by_link.items():
+            target = resolve_inside(root, f"links/{link_id}.yaml")
+            if target is None or not target.is_file():
+                raise OutputError("A link file could not be found; plan the import again.")
+            text = target.read_text(encoding="utf-8")
+            load_yaml_text(text)
+            new_text = _edited_text(text, TABLES["links"], edits)
+            Link.model_validate(_plain(load_yaml_text(new_text).data))
+            made.append((target, new_text))
+    except (
+        OSError,
+        UnicodeDecodeError,
+        YamlSyntaxError,
+        KeyError,
+        TypeError,
+        ValidationError,
+    ) as exc:
+        raise OutputError("A link file could not be edited; nothing was changed.") from exc
+    return [write_file(t.parent, t.name, new_text, sanitise=False) for t, new_text in made]
+
+
 def apply_entry_plan(root: Path, name: str, plan: EntryPlan) -> list[Path]:
     """Write the planned changes into the table file, a minimal edit that keeps comments and
     order; a missing file is created. A plan with an error writes nothing."""
@@ -720,6 +832,8 @@ def apply_entry_plan(root: Path, name: str, plan: EntryPlan) -> list[Path]:
         return []
     spec = _spec(name)
     root = Path(root)
+    if name == "links":
+        return _apply_link_edits(root, plan)
     target = resolve_inside(root, spec.file)
     if target is None:
         raise OutputError("The table file could not be found; plan the import again.")
