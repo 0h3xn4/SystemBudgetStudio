@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
-from budget_core.explain import Explainer, ExplainError
+from budget_core.explain import Explainer, ExplainError, explain_beta
 from budget_core.input_sources import entries_for, has_provenance, set_entry
 from budget_core.model import (
     Ebn0Table,
@@ -58,6 +58,7 @@ from budget_core.remove_item import KINDS, LABELS, blocked_message, rel_of, user
 from budget_core.reports.document import Table
 from budget_core.reports.files import OutputError
 from budget_core.reports.run import REPORT_KINDS
+from budget_core.thermal.beta_sweep import BetaSweep, BetaSweepError
 from budget_gui import problem_class as pc
 from budget_gui import theme
 from budget_gui.add_ebn0_dialog import AddEbn0Dialog
@@ -208,6 +209,7 @@ class MainWindow(QMainWindow):
         self.timeline_view.run_provider = self.scenario_view.reusable_run
         self.beta_view = BetaView()  # the thermal model against the beta angle (2.8.0, D-250)
         self.beta_view.run_provider = self.scenario_view.reusable_run
+        self.beta_view.explain_requested.connect(self.explain_beta_value)
         self.link_passes_view = LinkPassesView()
         self.link_passes_view.explain_requested.connect(self.explain_link_pass_value)
         self.link_passes_view.run_provider = self.scenario_view.reusable_run
@@ -1434,6 +1436,11 @@ class MainWindow(QMainWindow):
             if timeline_target is not None:
                 self.explain_timeline_value(*timeline_target)
                 return
+        if self.beta_view.isVisible():
+            beta_target = self.beta_view.current_explain_target()
+            if beta_target is not None:
+                self.explain_beta_value(*beta_target)
+                return
         if self.link_passes_view.isVisible():
             passes_target = self.link_passes_view.current_explain_target()
             if passes_target is not None:
@@ -1450,6 +1457,21 @@ class MainWindow(QMainWindow):
             )
             return
         self.explain_value(*target)
+
+    def explain_beta_value(self, sweep: BetaSweep, key: list[str], column: str) -> None:
+        """Show how a value of the beta sweep was obtained (D-252): the angle is solved again
+        with the sweep's own code, a few milliseconds."""
+        project = self.session.project
+        if project is None:
+            self._show_explain_message("Work out the beta sweep first, then explain a value.")
+            return
+        try:
+            explanation = explain_beta(project, sweep, key, column)
+        except (ExplainError, BetaSweepError) as exc:
+            self._show_explain_message(str(exc))
+            return
+        self.explain_panel.show_explanation(explanation)
+        self._reveal_explain()
 
     def explain_value(self, table: Table, row: int, column: int) -> None:
         """Show how the value at (row, column) of a result table was obtained."""

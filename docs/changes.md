@@ -6,6 +6,17 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-05: an IDM-CIC import no longer leaves units out of a spacecraft mode (2.9.0)
+
+**What changed.** A unit that the model gives no usable power mode in a system mode (no mapping, or a mapping to a power mode that does not exist) used to be left out of that spacecraft mode, and the project check then reported `UNIT_NOT_MAPPED` as an error for each unit and each mode ([D-253](DECISIONS.md), [DV-IDM6](DEVIATIONS.md)). It now gets the power mode `Not mapped` (0 W, marked `estimate`) in that spacecraft mode, and one warning for the system mode, `IDM_POWER_UNMAPPED`, gives how many units that is. A project that was imported before is not changed: import again to get it.
+
+| Case | Before | After |
+|---|---|---|
+| A model whose equipment has no mapping in some system modes | one error for every such unit and system mode | one warning for each system mode; the unit is 0 W there |
+| Any other import, any project written by hand | as in 2.8.0 | the same |
+
+The power budget of a spacecraft mode is too low by the power of those units if the model means them to draw power there; the assumption is that a missing mapping means "not powered in that mode".
+
 ## 2026-11-05: window pages for the beta sweep and the spreadsheet tables (2.8.0)
 
 **What changed.** The window gained the **Beta sweep** page of the Thermal area and the **File > Export tables / Import tables** entries ([D-251](DECISIONS.md)); they call the code the command line calls. No number of any result, no file format and no inputs digest changed.

@@ -2,6 +2,8 @@
 
 **What it is for.** Any number in a budget table can be traced to its equation, its inputs with units and where each input comes from, and every intermediate result. You can say in a design review where a number comes from without saying "the tool computed it".
 
+> **Also explained, outside `budget explain`:** the table of the beta sweep (2.9.0): `budget thermal-beta PROJECT --mode average --at 30 --explain "EPS (K)"`, or *Explain this value* on a cell of the **Beta sweep** page ([thermal budget](../user-manual/thermal-budget.md#how-do-the-temperatures-change-with-the-beta-angle)). Its columns: the sunlit part of the orbit, the orbit angle of the worst instant, every node's temperature, the units beyond a limit, the smallest margin. The steps are those of the sunlit part (TH-BETA-LIT), the solar exposure of each surface that gives its direction (TH-BETA-SUN) and then the steps of the node's heat balance, in which the solar view of such a surface is the result of its exposure step.
+
 > **Not yet explained.** The propulsion and pointing tables and the *Pointing and propulsion load* table of the power timeline have no Explain rows (2.3.0); their equations are in [propulsion](propulsion.md), [pointing](pointing.md) and [the power timeline](power-timeline.md).
 
 ## Using it

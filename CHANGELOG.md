@@ -4,6 +4,12 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-11-05
+
+A fix for the import of IDM-CIC models, a fifth example without findings, and Explain for the beta sweep. Only the import changes what a project contains; nothing computed from an existing project changes.
+
+- **Explain for the beta sweep (D-252).** Any cell of the sweep's table can be explained: the sunlit part of the orbit, the orbit angle of the worst instant, a node's temperature (the exposure of each surface to the Sun from the beta angle, then the heat balance of the node, step by step with the equations and the sources of the inputs), the number of units beyond a limit and the smallest margin. In the window: right-click a cell of the Beta sweep table, or Ctrl+Shift+I; on the command line: `budget thermal-beta PROJECT --mode average --at 30 --explain "EPS (K)"`.
+
 - **IDM-CIC import: no flood of errors for units without a mapping (D-253, DV-IDM6).** A model whose equipment has no power mode in some system modes used to import into a project with one error for each unit and each mode (*is not assigned a power mode*). Such a unit now gets the power mode `Not mapped` (0 W, marked as an estimate) in that spacecraft mode, and one warning for the system mode, `IDM_POWER_UNMAPPED`, gives how many units that is. If the model means them to draw power there, the power budget is too low by that power: choose their power mode in the *Spacecraft modes* grid or complete the mapping in IDM-CIC.
 
 - **A fifth example without findings.** `microsat_250kg_clean` is the 250 kg satellite with every input filled in (invented values) and every limit met: `budget validate` prints *No problems found*, and `budget run`, `power-timeline` and `link-passes` end with `0 errors, 0 warnings` (also with `--strict`). A test keeps it that way. The other examples are unchanged.
