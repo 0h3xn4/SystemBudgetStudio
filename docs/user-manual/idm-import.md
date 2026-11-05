@@ -95,6 +95,33 @@ The import compares, for every value, what it wrote last time, what the model sa
 
 The sources record the revision of the model, so a new revision rewrites the sources of the values; only a value that really differs is reported as changed. The project folder is meant to be under version control: the change between two imports is an ordinary diff, and `budget compare` shows what it did to the results.
 
+## Batteries, solar arrays, wheels, thrusters: components
+
+An IDM-CIC model says what each equipment is *called* and which subsystem it belongs to, but not what kind of component it is, and it has none of the numbers the simulation needs: the torque of a wheel, the specific impulse of a thruster, the capacity of a battery cell, the efficiency of a solar cell. Since 2.10.0 the import does what it can without inventing any of them:
+
+1. **It proposes a kind for each equipment** from its name (English or French; case and accents ignored) and its subsystem: battery, solar array, reaction wheel, magnetorquer, star tracker, sun sensor, gyroscope, magnetometer, GNSS receiver, thruster, propellant tank, antenna, transmitter or receiver. The plan lists each proposal with its reason and a confidence: **high** when the subsystem is the usual one for that kind (a wheel in AOCS), **medium** when only the name says so. Structural parts that happen to have a word in their name (*Wheel Support*, *Bracket*, *Harnais*) are not proposed, and the subsystem alone proposes nothing. The plan names the equipment by its id in the model, not by its name. Nothing is written for a proposal that has no place in a simulation model (sensors, antennas, tanks: the units are there already, with their mass, power and thermal data).
+2. **It writes a skeleton for the kinds that have one**, with placeholders (`source: TBD`) for everything the model does not give, so that each budget says *n/a* and the project check lists exactly what to enter, as for any unfinished project:
+   - wheels and magnetorquers become entries of `config/pointing.yaml` (actuators);
+   - thrusters become entries of `config/propulsion.yaml` (systems), *chemical* or *electric* by a word of their name (hydrazine, ion, hall...); when the name does not say, no system is written and `IDM_COMPONENT_NEEDS_TYPE` says so (the library below can say it). The propellant is the expendable of the project when there is exactly one;
+   - a battery and a solar array become the two parts of `config/power_system.yaml`, written as a whole (the part not found has a placeholder skeleton too). A battery has a count of cells in series and in parallel, which cannot be a placeholder: it is 1 and 1 until you or the library say. The array has no faces until the library gives them.
+3. **Your component library fills in the numbers.** The first time a component is found, the import writes a commented template, `idm/components.yaml`, which the import never changes afterwards. Enter the data-sheet values once, with their source, and every model you import gets them:
+
+   ```yaml
+   components:
+     - match: "Inertia Wheel*"      # a pattern for the equipment name (* and ?), case and accents ignored
+       values:
+         max_torque_nm: {value: 0.02, source: "Data sheet XYZ, table 3"}
+         momentum_capacity_nms: {value: 0.5, source: "Data sheet XYZ, table 3"}
+     - match: "RW-*"
+       kind: reaction_wheel         # names the kind when the words of the name do not
+       values:
+         max_torque_nm: {value: 0.01, source: "Data sheet UVW"}
+   ```
+
+   Import the model again and the values arrive. The template lists the fields each kind takes. An entry that is not valid is skipped and named (`IDM_COMPONENT_LIBRARY_INVALID`).
+
+The files are yours: a file that does not exist is created; in a file that exists, an entry the import wrote earlier gets the library's new values **except where you changed the value yourself** (it is kept and said so), an entry you wrote is never touched, an entry you deleted is not put back, and a `power_system.yaml` you wrote is never changed. Re-importing the same model changes nothing.
+
 ## What is not imported?
 
 Not imported: masses that the model computes from the area or volume of a shape; the system-mode duty cycles; element margins and mass targets; forced masses; additional properties; scenarios, trajectories and attitude files; the position of the propellant in a tank; solar array, battery, radios, antennas, ground stations and orbit (the model has none of them; they stay as they are in the project, or placeholders).

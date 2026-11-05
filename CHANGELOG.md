@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **IDM-CIC import: components (D-254, DV-IDM7).** The import proposes the kind of each equipment (battery, solar array, reaction wheel, magnetorquer, star tracker, sun sensor, gyroscope, magnetometer, GNSS receiver, thruster, tank, antenna, transmitter) from its name and subsystem, with its reason and confidence in the plan, and writes skeletons with placeholders for wheels and magnetorquers (`config/pointing.yaml`), thrusters (`config/propulsion.yaml`), and a battery and a solar array (`config/power_system.yaml`). Your component library `idm/components.yaml` (written once as a commented template) gives the data-sheet values with their sources, which arrive on the next import; your own edits and files are never overwritten. New codes `IDM_COMPONENT_LIBRARY_INVALID` and `IDM_COMPONENT_NEEDS_TYPE`.
+
 ## [2.9.0] - 2026-11-05
 
 A fix for the import of IDM-CIC models, a fifth example without findings, and Explain for the beta sweep. Only the import changes what a project contains; nothing computed from an existing project changes.

@@ -256,9 +256,11 @@ The tool writes `provenance`, `status` and `requires` only when they are not at 
 `budget import idm` ([manual](user-manual/idm-import.md), decisions D-240 to D-242) keeps two small files in the folder `idm/` of the project. The project loader ignores the folder; only the importer reads them. Neither is part of the model digest, and they have versions of their own.
 
 ```
+idm/components.yaml     (no kind: your component library, a `components` list of `match`, `kind`, `values`; written once as a template)
 idm/mode_map.yaml       kind: idm_mode_map (version 1)      system_modes{<system mode id>: {mode, name}}
 idm/import_state.yaml   kind: idm_import_state (version 1)  source{file, sha256, supported_format, file_format}, options{margins, bus},
-                                                            units|modes|expendables{<id>: {full_id, status, imported}}, margin_classes{}, phases[]
+                                                            units|modes|expendables{<id>: {full_id, status, imported}}, margin_classes{}, phases[],
+                                                            components{<file>:<id>: {equipment, status, imported}}
 ```
 
 - `mode` in the mode map is the file name (without `.yaml`) in `modes/`, or `null` to skip the system mode; `name` is the name of the spacecraft mode. The file is drafted at the first import, edited by the user, and only extended later.
