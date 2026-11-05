@@ -9,12 +9,16 @@ from budget_core.io.project_loader import load_project
 
 ROOT = Path(__file__).resolve().parents[2] / "examples"
 ALLOWED_WARNINGS = {"CONFIG_PLACEHOLDER", "CONFIG_EMPTY_TABLE"}
+CLEAN = "microsat_250kg_clean"  # every input has an invented value: no finding at all
 
 
 @pytest.mark.parametrize("name", sorted(EXAMPLES))
 def test_example_has_no_errors_and_only_placeholder_warnings(name: str) -> None:
     result = load_project(ROOT / name)
     assert result.project is not None
+    if name == CLEAN:
+        assert result.problems == []  # the one example with nothing to report
+        return
     assert {p.code for p in result.problems} <= ALLOWED_WARNINGS
     assert "CONFIG_PLACEHOLDER" in {p.code for p in result.problems}  # config is deliberately TBD
 
@@ -56,6 +60,9 @@ def test_examples_contain_no_numbers_from_standards() -> None:
         project = load_project(ROOT / name).project
         assert project is not None
         models = [project.config.mass_limits]
+        if name == CLEAN:
+            # all of it invented: the other tests of this file check what the sources say
+            continue
         if name != COMPLETE_POWER:
             models += [
                 project.config.margin_policy,
@@ -114,3 +121,28 @@ def test_example_links_with_invented_values_say_so() -> None:
                 assert not sourced.is_placeholder
                 assert sourced.source.startswith("Synthetic example value")
         assert count >= 9
+
+
+def test_clean_example_has_synthetic_sources_only() -> None:
+    from budget_core.io.validation import iter_sourced
+
+    project = load_project(ROOT / CLEAN).project
+    assert project is not None
+    models = [
+        project.config.mass_limits,
+        project.config.margin_policy,
+        project.config.power_config,
+        project.config.power_system,
+        project.config.thermal_model,
+        project.config.thermal_environment,
+        project.config.ebn0_table,
+        project.config.attenuation_table,
+        *project.links.values(),
+    ]
+    count = 0
+    for model in models:
+        for _, sourced in iter_sourced(model):
+            count += 1
+            assert not sourced.is_placeholder
+            assert sourced.source.startswith("Synthetic example value")
+    assert count > 100
