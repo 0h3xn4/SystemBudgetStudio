@@ -2,7 +2,7 @@
 
 This page shows how to get the heat each unit dissipates and the temperatures of a simple thermal model in a hot and a cold case, and how to check them against the units' temperature limits.
 
-**Contents:** [Dissipation](#how-do-i-get-the-heat-dissipation) · [Temperatures](#how-do-i-get-node-temperatures-for-a-hot-and-a-cold-case) · [Limits](#how-do-i-check-unit-temperature-limits) · [Scope](#what-the-model-does-not-do)
+**Contents:** [Dissipation](#how-do-i-get-the-heat-dissipation) · [Temperatures](#how-do-i-get-node-temperatures-for-a-hot-and-a-cold-case) · [Limits](#how-do-i-check-unit-temperature-limits) · [Beta angle](#how-do-the-temperatures-change-with-the-beta-angle) · [Scope](#what-the-model-does-not-do)
 
 ## How do I get the heat dissipation?
 

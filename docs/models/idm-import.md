@@ -2,7 +2,7 @@
 
 Reads models from IDM-CIC (© CNES). IDM-CIC is software of the French space agency CNES for the early design of satellites. System Budget Studio is an independent tool: it uses no CNES software, library or data, it needs none installed, and CNES does not endorse or support it. This page describes in our own words what the tool reads from a model file and how.
 
-**Status (decisions D-237, D-240 to D-243).** The tool reads the model file into a typed model (this page), maps it onto a project and merges a later version of the model into the project; the command is `budget import idm` ([how to use it](../user-manual/idm-import.md)). The centre of gravity and the inertia come from the placements and shapes (below).
+**Status (decisions D-237, D-240 to D-247, D-253, D-254).** The tool reads the model file into a typed model (this page), maps it onto a project and merges a later version of the model into the project; the command is `budget import idm` ([how to use it](../user-manual/idm-import.md)). The centre of gravity and the inertia come from the placements and shapes (below). The kind of each equipment is proposed from its name and subsystem, and the pointing, propulsion and power system files are prepared with placeholders (item 10 of *How the model becomes a project*).
 
 **Supported format.** The reader was written for version **3.4.0.19** of the published model description. Files saved by versions 3.4.x are read without a message; a file of a newer minor version (for example 3.5) is read with the warning `IDM_VERSION_NEWER`, and objects it does not know are left out and counted, never guessed.
 

@@ -2,7 +2,7 @@
 
 This page shows how to get the margin of a radio link at a chosen range and elevation, and the data volume you can send over every ground-station pass.
 
-**Contents:** [Describe a link](#how-do-i-describe-a-link) · [Tables from a spreadsheet](#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet) · [Static table](#how-do-i-get-the-margin-at-a-chosen-range) · [Passes](#how-do-i-get-the-data-volume-over-the-passes) · [Antennas](#how-do-i-give-an-antenna-gain) · [Findings](#what-does-link_not_closed-mean)
+**Contents:** [Describe a link](#how-do-i-describe-a-link) · [Tables from a spreadsheet](#how-do-i-fill-the-ebn0-attenuation-margin-and-link-tables-from-a-spreadsheet) · [Static table](#how-do-i-get-the-margin-at-a-chosen-range) · [Passes](#how-do-i-get-the-data-volume-over-the-passes) · [Antennas](#how-do-i-give-an-antenna-gain) · [Findings](#what-does-link_not_closed-mean)
 
 ## How do I describe a link?
 
@@ -40,7 +40,7 @@ static_points:
 
 The required [Eb/N0](../glossary.md#ebn0) comes from `config/ebn0_table.yaml` (an entry with the same modulation and coding). An entry may also say which error rate its Eb/N0 is for: `target_ber` (bit error rate) and `target_fer` (frame error rate), each a number above 0 and below 1, for example `target_ber: 1.0e-5`. You give them from the standard or data sheet the Eb/N0 comes from; the tool never fills them in, and no result depends on them. The Explain panel and the configuration table of the link report show them next to the number. The *Add Eb/N0 entry* form asks for them as optional fields; losses by name from `config/attenuation_table.yaml`. A project can hold several links (telemetry, payload data, inter-satellite), uplink and downlink. Every field is in the [file format](../FILE_FORMAT.md#links-decisions-d-077-to-d-083).
 
-## How do I fill the Eb/N0 and attenuation tables from a spreadsheet?
+## How do I fill the Eb/N0, attenuation, margin and link tables from a spreadsheet?
 
 A standard or a data sheet gives dozens of required Eb/N0 values (a modulation and coding each) or attenuation figures (by frequency and elevation). Typing them one by one in the form is slow; fill a table instead, the way [unit tables](unit-tables.md) work:
 

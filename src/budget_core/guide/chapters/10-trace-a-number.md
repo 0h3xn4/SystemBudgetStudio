@@ -4,7 +4,7 @@ Every result can be followed back to the equation that made it, the inputs it us
 
 ## How a number was worked out
 
-Select a value in a table (a power, a mass, a temperature, a link margin, a value of the power timeline or of the link passes) and press **Ctrl+Shift+I**, or right-click it and choose **Explain this value**. The **Explain** panel opens on the right with the equation, the inputs (value, unit, the file and field it was read from, its source and its status when it is not `sourced`) and the steps in between. The first time for the power timeline or the passes, the panel says it is preparing the explanation; the next values are immediate.
+Select a value in a table (a power, a mass, a temperature, a link margin, a value of the power timeline or of the link passes, a manoeuvre or a slew of the propulsion and pointing budgets, a temperature of the beta sweep) and press **Ctrl+Shift+I**, or right-click it and choose **Explain this value**. The **Explain** panel opens on the right with the equation, the inputs (value, unit, the file and field it was read from, its source and its status when it is not `sourced`) and the steps in between. The first time for the power timeline or the passes, the panel says it is preparing the explanation; the next values are immediate.
 
 On the command line, `budget explain <project>` lists the tables that can be explained, and `budget explain <project> <table> --row <key> --column <header>` explains one number. An equation with no citation yet says `source: none yet (SOURCE_MISSING)`.
 

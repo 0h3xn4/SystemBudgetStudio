@@ -2,6 +2,14 @@
 
 All notable changes to System Budget Studio, newest first. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); each line names the decision (`D-0xx` in [DECISIONS.md](docs/DECISIONS.md)) behind it. Every version below is released ([how to cut a release](docs/developer/README.md#cut-a-release)).
 
+## [Unreleased]
+
+Documentation sweep after 2.11.0; no result of any budget changed.
+
+- Every page that names a menu, a shortcut, a command or a table was checked against the program as built: the menu and shortcut names against the window's real menus, the commands of getting started and of the examples against real runs. Fixed: the menu path of the IDM-CIC import (*File > Import IDM-CIC model*, which two pages wrote as *File > Import > IDM-CIC model*), the number of warnings of `microsat_250kg` (128, all placeholders), the number of example projects (five) in the architecture and developer pages, the schema versions in the file-format page, the length of a full test run.
+- New or completed: Explain of the propulsion, pointing and beta sweep tables in the manual pages, the command-line reference, the Explain model page and the in-app guide; the four spreadsheet tables (Eb/N0, attenuation, margins, links) in the FAQ, the tips, the window page, the exports page and the guide; the components of the IDM-CIC import in the manual, the FAQ, the guide, the glossary and the project folder listing; the modules of 2.2.0 to 2.11.0 in the architecture page; new glossary entries (*Beta sweep*, *Component library*, *Not mapped*).
+- `budget tables-export` and `tables-import` say in their `--help` that they take the margins and the links too.
+
 ## [2.11.0] - 2026-11-05
 
 Explain for the propulsion and pointing budgets, and the links in the spreadsheet import and export. No number of an existing project changes.

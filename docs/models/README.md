@@ -7,7 +7,7 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | Area | Page | Status |
 |---|---|---|
 | Static power budget | [power-static.md](power-static.md) | written |
-| How a number was obtained (`budget explain`) | [explain.md](explain.md) | written for static power, mass, thermal, link, the power timeline and the link passes |
+| How a number was obtained (`budget explain`) | [explain.md](explain.md) | written for static power, mass, thermal, link, the power timeline, the link passes, the beta sweep, propulsion and pointing |
 | Time-domain power (array, battery, modes, edges) | [power-timeline.md](power-timeline.md) | written |
 | Model choices (shadow geometry, environment source, load basis; the models that are fixed and why) | [choices.md](choices.md) | written (generated from the registry); the Earth constants and the array irradiance are selectable per scenario since 2.0.0 |
 | Orbit design helpers (LTAN, sun-synchronous, repeat ground track) | [orbit-design.md](orbit-design.md) | written |
@@ -15,7 +15,7 @@ The plan and the reasons are in the [transparency audit](../transparency_audit.m
 | Mass budget (margins, centre of mass, inertia, expendables) | [mass-static.md](mass-static.md) | written |
 | Propulsion and delta-v (rocket equation, burn time, electric power) | [propulsion.md](propulsion.md) | written |
 | Pointing and slew (bang-bang slew time, momentum, energy) | [pointing.md](pointing.md) | written |
-| Reading IDM-CIC models (archive, value formats, objects, physical occurrences) | [idm-import.md](idm-import.md) | written (reader, mapping, re-import) |
+| Reading IDM-CIC models (archive, value formats, objects, physical occurrences) | [idm-import.md](idm-import.md) | written (reader, mapping, re-import, components) |
 | Thermal (network, steady state, environment) | [thermal-static.md](thermal-static.md) | written |
 | Thermal against the beta angle (Sun on the faces, sweep) | [thermal-beta.md](thermal-beta.md) | written |
 | RF link (EIRP, G/T, losses, rate selection, volume) | [link-static.md](link-static.md), [link-passes.md](link-passes.md) | written |

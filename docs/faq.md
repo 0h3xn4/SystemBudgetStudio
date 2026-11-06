@@ -102,13 +102,17 @@ Yes, from 2.3.0. Fill in `config/pointing.yaml` and `config/propulsion.yaml` (th
 
 Yes: an orbit file gives exactly one of `raan_deg` and `ltan_h`; with `ltan_h` the RAAN is derived at the epoch ([scenarios](user-manual/scenarios.md#how-do-i-give-the-orbit-by-its-local-time)).
 
-### Can I import the Eb/N0 or attenuation table from a spreadsheet?
+### Can I fill the Eb/N0 table, the attenuation table, the margin policy or the links in a spreadsheet?
 
-Yes: `budget tables-export` and `budget tables-import` (a dry run unless `--apply`). Every new or changed value needs its source in the same row; nothing is deleted ([command-line reference](user-manual/command-line.md)).
+Yes: `budget tables-export` and `budget tables-import` take `ebn0`, `attenuation`, `margins` and `links` (a dry run unless `--apply`), and the window has *File → Export tables* and *Import tables* with a preview. Every new or changed value needs its source in the same row; nothing is deleted. The links table has one row for each sourced number of each link (by link id and field), and only existing numbers are edited ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-attenuation-margin-and-link-tables-from-a-spreadsheet), [command-line reference](user-manual/command-line.md)).
 
 ### Can I start from a model made with IDM-CIC?
 
-Yes: `budget import idm model.idm --bus-voltage-v 28` shows what it would build and, with `--apply`, creates a project with a unit for every physical equipment, its masses and power modes, spacecraft modes from the system modes, thermal nodes and the propellant of the tanks, each value with its source. Import a newer version of the model into the same project later: your edits are kept and only the model's changes are taken ([IDM-CIC import](user-manual/idm-import.md)). Reads models from IDM-CIC (© CNES); the tool is independent of CNES. Centre of gravity and inertia are worked out as estimates from the placements and shapes.
+Yes: `budget import idm model.idm --bus-voltage-v 28` shows what it would build and, with `--apply`, creates a project with a unit for every physical equipment, its masses and power modes, spacecraft modes from the system modes, thermal nodes and the propellant of the tanks, each value with its source. Import a newer version of the model into the same project later: your edits are kept and only the model's changes are taken ([IDM-CIC import](user-manual/idm-import.md)). Reads models from IDM-CIC (© CNES); the tool is independent of CNES. Centre of gravity and inertia are worked out as estimates from the placements and shapes. The import also proposes which equipment is a battery, a solar array, a wheel, a thruster or an antenna, from its name, and prepares the pointing, propulsion and power system files with placeholders; the numbers come from your own component library, with their sources.
+
+### How do the temperatures change with the beta angle?
+
+`budget thermal-beta` (and the *Beta sweep* page of the *Thermal* area) solves the thermal model for a range of beta angles, once the surfaces of `config/thermal_model.yaml` say which way they face (`normal_lvlh`). It is steady state, for a circular orbit and a satellite pointing to the ground ([thermal budget](user-manual/thermal-budget.md#how-do-the-temperatures-change-with-the-beta-angle)).
 
 ### Can I import my units from a spreadsheet?
 

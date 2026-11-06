@@ -4,7 +4,7 @@ Every result of the tool can be followed back to the equation that made it, to t
 
 ## How do I see how a number was worked out?
 
-In the window, select a value in a table (a power, a mass, a temperature, a link margin, a value of the power timeline or of the passes) and press **Ctrl+Shift+I**, or right-click it and choose **Explain this value**. The **Explain** panel opens on the right (**View → Explain**) with the equation, the inputs with the file and field each came from, and the steps in between. A value of the power timeline or the link passes is explained from the solver's own series; the first time, the panel says it is preparing the explanation, and the next values of the same result are immediate.
+In the window, select a value in a table (a power, a mass, a temperature, a link margin, a value of the power timeline or of the passes, a manoeuvre or a slew, a temperature of the beta sweep) and press **Ctrl+Shift+I**, or right-click it and choose **Explain this value**. The **Explain** panel opens on the right (**View → Explain**) with the equation, the inputs with the file and field each came from, and the steps in between. A value of the power timeline or the link passes is explained from the solver's own series; the first time, the panel says it is preparing the explanation, and the next values of the same result are immediate.
 
 ![The Explain panel on the right of the Power budget, after selecting a value of the summary table](../images/ui-overhaul/explain-light.png)
 

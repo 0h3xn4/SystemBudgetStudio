@@ -27,6 +27,8 @@ Commands and what they write (prefix is the file name start):
 | `budget power-timeline` | `power_time_<scenario>` (series per case, orbits, violations) |
 | `budget link-passes` | `link_passes_<scenario>` |
 | `budget scenario` | `<scenario>_environment.json`, `_beta.csv`, `_eclipses.csv`, `_groundtrack.csv`, `_passes.csv`, `_timeline.csv` |
+| `budget thermal-beta` | `thermal_beta_<case>_<mode>` (a CSV, a JSON, a PNG plot and `_provenance.csv`, for `average` and for `peak`) |
+| `budget tables-export` | `<table>_table.csv` (`ebn0`, `attenuation`, `margins` or `links`), or the .csv or .xlsx file you name with `--out` |
 | `budget compare` | `compare` and `compare_differences.csv` |
 
 All of them write to `<project>/results` unless you give `--out`.

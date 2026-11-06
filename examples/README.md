@@ -38,7 +38,7 @@ budget run demo/microsat_250kg --budget mass --out out
 budget scenario demo/microsat_250kg --out out
 ```
 
-Expected: `validate` ends with `0 errors, 111 warnings` (almost all are placeholders: the margin policy, the Eb/N0 table, mass limits, thermal, power and link numbers); `run` writes `out/mass_static.xlsx` and friends and prints
+Expected: `validate` ends with `0 errors, 128 warnings` (all of them placeholders: the margin policy, the Eb/N0 table, mass limits, thermal, power and link numbers); `run` writes `out/mass_static.xlsx` and friends and prints
 
 ```text
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the placeholders are replaced with sourced values.

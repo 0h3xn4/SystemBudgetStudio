@@ -7,14 +7,14 @@ A project is a folder of YAML files (LF line endings). Every file starts with `s
 ```
 project.yaml            kind: project            name, revision, description, requires[]?
 spacecraft.yaml         kind: spacecraft         name, buses[{name, nominal_voltage_v}], mission_phases[], body_frame
-units/<id>.yaml         kind: unit (v2)          name, subsystem, mass_kg, bus, maturity, modes[], mass_properties?, phases[]?, thermal_node?, temperature_limits?, catalogue_ref?
+units/<id>.yaml         kind: unit (v3)          name, subsystem, mass_kg, bus, maturity, modes[], mass_properties?, phases[]?, thermal_node?, temperature_limits?, catalogue_ref?
 orbits/<id>.yaml         kind: orbit              name, tle[2] or elements{epoch_utc, semi_major_axis_m, eccentricity_ratio, inclination_deg, raan_deg or ltan_h, arg_perigee_deg, mean_anomaly_deg} or state{epoch_utc, frame, position_m[3], velocity_m_s[3]}   (see ENVIRONMENT_FORMAT.md)
 ground_stations/<id>.yaml kind: ground_station   name, latitude_deg, longitude_deg, altitude_m, min_elevation_deg
 targets/<id>.yaml       kind: target             same fields as a ground station (imaging target)
 scenarios/<id>.yaml     kind: scenario (v5)      orbit, start_utc, duration_s, step_s, shadow_model?, earth_model?, irradiance_model?, sites, mission_phase?, default_mode, rules[], segments[], pointing_default?, pointing_rules[]?, maneuvers[]?
 expendables/<id>.yaml   kind: expendable (v3)    name, subsystem, maturity, masses_kg{phase: kg}, mass_properties?, phase_positions_m{phase: [x, y, z]}?
 modes/<id>.yaml         kind: spacecraft_mode    name, description, assignments{unit id: power mode name}
-config/margin_policy.yaml      kind: margin_policy (v2)  classes{name: {power_margin_ratio, mass_margin_ratio}}, system_power_margin_ratio, system_mass_margin_ratio
+config/margin_policy.yaml      kind: margin_policy (v3)  classes{name: {power_margin_ratio, mass_margin_ratio}}, system_power_margin_ratio, system_mass_margin_ratio
 config/mass_limits.yaml        kind: mass_limits         limits[{name, phase?, limit_kg}]
 config/power_config.yaml       kind: power_config        distribution_loss_ratio, converter_efficiency_ratio{bus}
 config/power_system.yaml       kind: power_system        design_life_yr, solar_array{faces[], ...}, battery{...}, attitude{...}, limits{peak_power_w}   (optional)
@@ -27,11 +27,11 @@ config/pointing.yaml           kind: pointing            actuators{id: {name, ma
 config/propulsion.yaml         kind: propulsion          systems{id: {name, type, isp_s, thrust_n?, power_w?, propellant?, thermal_node?, thrust_heat_w?}}, maneuvers[{name, system, delta_v_m_s, count?, mode?}], dry_mass_kg?, delta_v_margin_ratio?   (optional)
 ```
 
-`config/propulsion.yaml` (2.2.0, schema version 1) holds the propulsion and delta-v budget: `systems` (each `type` is `chemical` or `electric`; `isp_s`, `thrust_n` and `power_w` are sourced numbers, `power_w` only for an electric system; `propellant` is the id of an expendable), `maneuvers` in mission order (`delta_v_m_s` sourced, `count` of identical burns, default 1), `dry_mass_kg` and `delta_v_margin_ratio` (both sourced and optional). See [propulsion](user-manual/propulsion.md).
+`config/propulsion.yaml` (2.2.0; schema version 2 since D-213) holds the propulsion and delta-v budget: `systems` (each `type` is `chemical` or `electric`; `isp_s`, `thrust_n` and `power_w` are sourced numbers, `power_w` only for an electric system; `propellant` is the id of an expendable), `maneuvers` in mission order (`delta_v_m_s` sourced, `count` of identical burns, default 1), `dry_mass_kg` and `delta_v_margin_ratio` (both sourced and optional). See [propulsion](user-manual/propulsion.md).
 
-`config/pointing.yaml` (2.2.0, schema version 1) holds the pointing and slew budget: `actuators` (sourced `max_torque_nm`, optional `max_rate_deg_s`, `momentum_capacity_nms`, `slew_power_w`), pointing `modes` (`reference` is `nadir`, `sun`, `inertial`, `target` or `other`; optional sourced `accuracy_deg` and `hold_power_w`), `slews` (sourced `angle_deg`, `axis` is `x`, `y` or `z`, optional `inertia_kgm2` and `settle_s`, `per_day` default 1) and the optional `mass_phase`. See [pointing](user-manual/pointing.md).
+`config/pointing.yaml` (2.2.0; schema version 2 since D-213) holds the pointing and slew budget: `actuators` (sourced `max_torque_nm`, optional `max_rate_deg_s`, `momentum_capacity_nms`, `slew_power_w`), pointing `modes` (`reference` is `nadir`, `sun`, `inertial`, `target` or `other`; optional sourced `accuracy_deg` and `hold_power_w`), `slews` (sourced `angle_deg`, `axis` is `x`, `y` or `z`, optional `inertia_kgm2` and `settle_s`, `per_day` default 1) and the optional `mass_phase`. See [pointing](user-manual/pointing.md).
 
-The two tables, and the margin policy (one row for each margin: `item` is a class or `system`, `quantity` is `power_margin_ratio` or `mass_margin_ratio`, D-249), and the sourced numbers of the links (one row for each: the id of the link and the path of the field, D-256), can be written and filled as a spreadsheet with `budget tables-export` and `budget tables-import` ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-and-attenuation-tables-from-a-spreadsheet), decision D-231); the file stays the source of truth.
+The two tables, and the margin policy (one row for each margin: `item` is a class or `system`, `quantity` is `power_margin_ratio` or `mass_margin_ratio`, D-249), and the sourced numbers of the links (one row for each: the id of the link and the path of the field, D-256), can be written and filled as a spreadsheet with `budget tables-export` and `budget tables-import` ([link budget](user-manual/link-budget.md#how-do-i-fill-the-ebn0-attenuation-margin-and-link-tables-from-a-spreadsheet), decision D-231); the file stays the source of truth.
 
 `catalogue_ref` (a unit, optional text) is **reserved** for a shared equipment catalogue (decision D-009): it is read and written back unchanged and no computation uses it.
 
@@ -280,6 +280,6 @@ Result findings (errors): `MASS_LIMIT_EXCEEDED`; thermal: `THERMAL_LIMIT_EXCEEDE
 
 Range checks on values (the years 1950 to 2100 for a scenario start and an element epoch, the semi-major axis of 6.4e6 to 1e8 m, the counts of strings and cells, the length of direction vectors, D-133) are validation, not format: the schema versions do not change, and the exported JSON Schemas carry the limits.
 
-Older files are migrated in memory (`budget_core/io/migrations.py`, one function per version step; a migration keeps the keys it does not know, so a misspelt key is still reported as `FIELD_UNKNOWN`, and it must raise the version); newer files fail with `SCHEMA_TOO_NEW`, and `schema_version: 0` is `SCHEMA_VERSION_MISSING`. In the JSON schemas (`budget export-schemas`) `schema_version` is a constant: the current version of the kind. `margin_policy`, `scenario` and `unit` are at version 3; all other kinds are at version 2 (the revision of D-213 added one step to every kind).
+Older files are migrated in memory (`budget_core/io/migrations.py`, one function per version step; a migration keeps the keys it does not know, so a misspelt key is still reported as `FIELD_UNKNOWN`, and it must raise the version); newer files fail with `SCHEMA_TOO_NEW`, and `schema_version: 0` is `SCHEMA_VERSION_MISSING`. In the JSON schemas (`budget export-schemas`) `schema_version` is a constant: the current version of the kind. `scenario` is at version 5 and `orbit` at version 4; `unit`, `expendable`, `margin_policy`, `thermal_model` and `ebn0_table` are at version 3; all other kinds are at version 2 (the revision of D-213 added one step to every kind). `budget export-schemas` writes the current version of each kind into its schema.
 
 Next: [Environment inputs](ENVIRONMENT_FORMAT.md) · [User manual: create a project](user-manual/create-a-project.md) · [Docs index](README.md).

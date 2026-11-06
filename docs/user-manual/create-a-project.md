@@ -66,7 +66,8 @@ modes/<id>.yaml           spacecraft modes: which power mode each unit is in
 orbits/  ground_stations/  targets/  scenarios/
 links/<id>.yaml           one file per radio link
 expendables/<id>.yaml     consumables with a mass for every mission phase
-config/                   margin policy, power system, thermal model, Eb/N0 and attenuation tables
+config/                   margin policy, power system, thermal model, Eb/N0 and attenuation tables, and optionally propulsion and pointing
+idm/                      only in a project made by the IDM-CIC import: the mode map, the record of what was written, your component library
 results/                  written by the tool; not part of the project
 ```
 

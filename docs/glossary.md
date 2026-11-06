@@ -27,6 +27,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 <a id="beta-angle"></a>
 **Beta angle**: the angle between the direction to the Sun and the orbit plane, from −90° to +90°. Near 0° the Sun is in the orbit plane and the eclipses are longest; above the *critical beta angle* (64° at 700 km) a circular orbit has no eclipse. Shown on the Scenario page ([orbit design](models/orbit-design.md#beta-angle)).
 
+<a id="beta-sweep"></a>
+**Beta sweep**: the node temperatures of a thermal case worked out for a range of beta angles, with the Sun's share of each flat surface taken from the angle: `budget thermal-beta` and the *Beta sweep* page of the *Thermal* area ([thermal budget](user-manual/thermal-budget.md#how-do-the-temperatures-change-with-the-beta-angle)).
+
 **Blank project**: a project with one bus, every configuration number a [placeholder](#placeholder), empty tables and no units, modes, orbits, scenarios or links: a spacecraft you describe yourself instead of a copy of a sample. Made by `budget new` or by the *Blank project* choice of the guided wizard. See [create a project](user-manual/create-a-project.md#how-do-i-start-a-blank-project).
 
 <a id="body-frame"></a>
@@ -45,6 +48,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 
 <a id="cn0"></a>
 **C/N0**: carrier-to-noise-density ratio, in dB-Hz: how strong the received signal is compared with the noise per hertz. It is the starting point of the [Eb/N0](#ebn0) calculation.
+
+<a id="component-library"></a>
+**Component library**: your file `idm/components.yaml`, written once as a commented template by the IDM-CIC import: for each kind of equipment it found (a wheel, a thruster, a battery…) you give the data-sheet numbers with their sources, and the next import fills them into the project ([manual](user-manual/idm-import.md#batteries-solar-arrays-wheels-thrusters-components)).
 
 <a id="config-file"></a>
 **Config file**: a file in a project's `config/` folder that holds numbers with a [source](#source): the margin policy, the power system, the thermal model, the Eb/N0 table, the attenuation table, the mass limits. The tool carries no such numbers itself.
@@ -172,6 +178,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 
 <a id="na"></a>
 **n/a**: "not available". A result the tool could not compute because an input is missing or a [placeholder](#placeholder). It is never shown as zero.
+
+<a id="not-mapped"></a>
+**Not mapped**: the power mode that the IDM-CIC import gives a unit that has no power mode in a system mode of the model: 0 W, marked as an estimate, with one `IDM_POWER_UNMAPPED` warning for each system mode. Choose the right power mode in *Spacecraft modes*, or complete the mapping in IDM-CIC and import again ([manual](user-manual/idm-import.md)).
 
 **NCR**: non-conformance report. Not used by this tool.
 
