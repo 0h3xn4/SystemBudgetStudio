@@ -11,7 +11,7 @@ A free, offline program for the **early design of a small satellite**: it works 
 ![Python 3.14 and newer](https://img.shields.io/badge/python-3.14%2B-blue)
 [![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
 
-![System Budget Studio showing the power timeline of the 250 kg example satellite: generation, demand and state of charge over one orbit, with eclipse shading and a list of problems](docs/images/ui-overhaul/power-timeline-light.png)
+![System Budget Studio showing the power timeline of the 250 kg example satellite: generation, demand and state of charge over one day, with eclipse shading and the problems as one line of counts](docs/images/ui-overhaul/power-timeline-light.png)
 
 ## What is this?
 

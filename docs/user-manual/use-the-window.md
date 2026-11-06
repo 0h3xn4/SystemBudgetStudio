@@ -11,7 +11,7 @@ system-budget-studio                       # then File → Open project
 system-budget-studio path/to/project       # open a project at start
 ```
 
-![The window with the 250 kg example: the navigation rail and the project panel on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the Power timeline, and the Problems panel along the bottom](../images/ui-overhaul/power-timeline-light.png)
+![The window with the 250 kg example: the navigation rail and the project panel on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the Power timeline, and the problems as one line of counts along the bottom](../images/ui-overhaul/power-timeline-light.png)
 
 The picture shows the **full view**. A new window starts in the **focused view** (one line for the problems, no Inspector or Provenance panel, the main columns of the grids); **View → Focused view** (Ctrl+Shift+F) switches between the two, as [described below](#what-is-where).
 
@@ -131,7 +131,7 @@ In **Model → Scenario**, rules and segments are sentences you edit in place ([
 
 **Model → Units** has one row per unit: name, subsystem, bus, maturity, mass and the four temperature limits (the limits are *optional columns*, hidden in the focused view; the **Optional columns** button above the grid shows them); **Add unit** and **Remove unit** (also in the right-click menu, in the Edit menu and in Ctrl+K) add and remove units ([how](describe-the-spacecraft.md#how-do-i-add-a-unit)). **Power modes** has one row per power mode of every unit: average and peak power, duty cycle, heat ratio and durations, with the effective average (average times duty) beside them. **Inputs** has one row per sourced number of the configuration and the links: value, unit, source and note. The unit is in every column header; numbers show a fixed number of decimals, and the tooltip and the editor have the exact value.
 
-![The Power modes grid filtered to the radio: the line under the toolbar says what a power mode is, and the buttons say Add power mode and Remove power mode](../images/ui-overhaul/model-power-modes-light.png)
+![The Power modes grid: the line under the toolbar says what a power mode is, and the buttons say Add power mode and Remove power mode](../images/ui-overhaul/model-power-modes-light.png)
 
 - **Type or paste.** Double-click a cell, press F2 or start typing. A value with a unit is converted (`2500 mW` is 2.5 W). **Enter** accepts and moves down, **Esc** cancels, **Tab** accepts and moves right. Copy a range from a spreadsheet and press **Ctrl+V**: the block goes in from the current cell (one value goes into every selected cell). More than one cell shows you a preview, old and new, first. Cells that cannot be edited (the unit id, the computed average) are left out and counted.
 - **Fill down and clear.** Select a cell and the cells below it and press **Ctrl+D**. **Delete** empties the cells that may be empty (an optional field); a field the model needs keeps its value.

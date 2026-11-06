@@ -95,7 +95,7 @@ The manual pages (task-oriented) and the in-app guide chapters (topic-oriented, 
 lychee --offline --include-fragments --no-progress README.md CONTRIBUTING.md CHANGELOG.md 'docs/**/*.md' 'examples/**/*.md'
 ```
 
-To regenerate the screenshots run the window offscreen (`QT_QPA_PLATFORM=offscreen`), open `examples/microsat_250kg_eps`, show the area, and save `window.grab()` to `docs/images/ui-overhaul/`. `scripts/ui_screenshots.py DIR` saves every page and dialog in both themes, and `scripts/ui_scale_shots.py DIR` every page at 90 to 125 %. Run every command in [getting started](../getting-started.md) in a fresh virtual environment now and then; the commands there are the documentation's tests.
+To regenerate the ten screenshots of the pages run `QT_QPA_PLATFORM=offscreen python scripts/ui_doc_shots.py docs/images/ui-overhaul` (it opens a copy of `examples/microsat_250kg_eps`, runs it, and writes each image; read every image before you commit it). `scripts/ui_screenshots.py DIR` saves every page and dialog in both themes, and `scripts/ui_scale_shots.py DIR` every page at 90 to 125 %. Run every command in [getting started](../getting-started.md) in a fresh virtual environment now and then; the commands there are the documentation's tests.
 
 ## Build the installers
 
