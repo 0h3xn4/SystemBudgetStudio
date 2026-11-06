@@ -18,7 +18,7 @@ Use a constant `gain_dbi`, a `pattern` table (angle from nadir to gain, linear i
 
 ## Tables from a spreadsheet
 
-The Eb/N0 table and the attenuation table can be written as a CSV or XLSX and read back: `budget tables-export PROJECT ebn0` (or `attenuation`, or `margins` for the margin policy), fill in the values with their sources, `budget tables-import PROJECT ebn0 FILE` (it shows every change and writes nothing; `--apply` writes). A value that is new or changed needs its source in the same row. The tool ships no standards values; this is how you load the ones you may use.
+The Eb/N0 table, the attenuation table, the margin policy and the links can be written as a CSV or XLSX and read back: `budget tables-export PROJECT ebn0` (or `attenuation`, `margins` or `links`; the links table has one row for each sourced number of each link, by link id and field, and only existing numbers are edited), fill in the values with their sources, `budget tables-import PROJECT ebn0 FILE` (it shows every change and writes nothing; `--apply` writes). In the window: *File > Export tables* and *File > Import tables*, with a preview before anything is written. A value that is new or changed needs its source in the same row. The tool ships no standards values; this is how you load the ones you may use.
 
 ## What stays open
 

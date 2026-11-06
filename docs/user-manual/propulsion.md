@@ -47,6 +47,8 @@ budget run my_satellite --budget propulsion --out out
 - **By system:** the propellant, what the mass budget loads in the expendable, the margin between them (negative: not enough propellant), the burn time and, for an electric system, the power and the energy for the thrust-time.
 - **Manoeuvres:** each burn with the mass before and after and the propellant it uses. The last burn is the lightest: it starts from the dry mass, and every earlier one carries the propellant of the later ones.
 
+**How was a number worked out?** Select a cell of a propulsion table and press **Ctrl+Shift+I** (or right-click, *Explain this value*): the rocket equation with the specific impulse and the delta-v, the burn time, the electric energy. The manoeuvres are worked backwards, so the mass before a burn is the mass after it times the rocket equation, and the explanation names the table cell it reads. On the command line: `budget explain my_satellite propulsion:maneuvers --row "Orbit trim" --column "Mass before (kg)"` (the tables are `propulsion:summary`, `propulsion:systems` and `propulsion:maneuvers`). [How Explain works](../models/explain.md).
+
 The assumptions table lists every number used with its source and status; the equations are PROP-ROCKET, PROP-BURN and PROP-ENERGY. The simplifications (impulsive burns, constant Isp and thrust, no residuals) are [DV-P1](../DEVIATIONS.md).
 
 Next: [Mass budget](mass-budget.md) (the propellant expendable) · [Power budget](power-budget.md).

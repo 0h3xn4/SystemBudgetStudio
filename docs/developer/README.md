@@ -7,13 +7,13 @@ This page is for people who change System Budget Studio: how the repository is l
 ## Layout
 
 ```text
-src/budget_core/   the headless core: model, units, environment, power, mass, thermal, link, reports, guide
+src/budget_core/   the headless core: model, units, environment, power, mass, thermal, link, propulsion, pointing, scenario, explain, idm (the IDM-CIC import), io (files, tables), reports, guide
 src/budget_cli/    the `budget` command (depends only on the core)
 src/budget_gui/    the PySide6 window (depends only on the core): theme/ (tokens, fonts, style sheet, the only place for colours and sizes), components/ (buttons, badges, cards ...), one module per view
 tests/             unit, regression, golden, gui, offline
 scripts/           measuring and screenshot tools for the window (ui_screenshots.py, ui_baseline.py, ui_access_audit.py, ui_scale_shots.py, ui_gallery.py)
 docs/              this documentation; docs/demo = milestone notes; docs/ui = the plan and the screenshots of the UI overhaul
-examples/          the four example projects (generated; invented data)
+examples/          the five example projects (generated; invented data)
 packaging/         PyInstaller spec, Linux and Windows installers, licence and bundle checks
 assets/            bundled fonts, licence texts and the application icon (assets/icons)
 ```
@@ -24,7 +24,7 @@ The [architecture overview](../ARCHITECTURE.md) explains the design: pure solver
 
 ```bash
 pip install -e ".[dev]"
-QT_QPA_PLATFORM=offscreen pytest                 # everything (about 17 minutes in one process: the core tests about 8, the window tests about 11)
+QT_QPA_PLATFORM=offscreen pytest                 # everything (about 23 minutes in one process on a development machine; CI takes 20 to 35 minutes per platform)
 QT_QPA_PLATFORM=offscreen pytest tests/unit      # one folder; the quick loop while you work
 QT_QPA_PLATFORM=offscreen pytest -m "not slow"   # everything but the three tests of more than 15 seconds (about 2 minutes less); CI runs them
 pytest tests/offline                             # the no-network test

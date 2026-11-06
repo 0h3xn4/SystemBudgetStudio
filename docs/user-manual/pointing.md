@@ -50,6 +50,8 @@ budget run my_satellite --budget pointing --out out
 - **Slews:** the time of each slew and with settling, the peak rate (and whether the rate limit was reached), the inertia, the peak momentum against the capacity, the energy of one slew and per day.
 - The summary gives the slew time and energy per day.
 
+**How was a number worked out?** Select a cell of the *Modes* or *Slews* table and press **Ctrl+Shift+I** (or right-click, *Explain this value*) to see the steps: the angle and the rate limit in radians, the slew time and peak rate, the momentum and its margin, the energy. Each input shows its file, its source and its inertia's origin (the slew's own value or the mass budget's). On the command line: `budget explain my_satellite pointing:slews --row "Nadir to target" --column "Slew time (s)"` (`budget explain my_satellite` lists the tables, `pointing:modes` and `pointing:slews`). [How Explain works](../models/explain.md).
+
 The pointing budget reports the holding and slewing power by itself. To see their effect on the power timeline, **place** the pointing modes in a scenario (`pointing_default`, `pointing_rules`; in the window: *Model → Scenario → Pointing*): the timeline adds the holding power of the active mode and the slew where it changes, as its own line, *Pointing and propulsion load* ([how](scenarios.md#pointing-and-manoeuvres-in-a-scenario)). A pointing mode is still not a spacecraft mode; the pointing rules are independent of the mode rules.
 
 Next: [Propulsion](propulsion.md) · [Mass budget](mass-budget.md) (the inertia).

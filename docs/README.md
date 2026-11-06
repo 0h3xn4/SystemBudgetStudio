@@ -24,11 +24,11 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [user-manual/trace-a-number.md](user-manual/trace-a-number.md) | Explain a number, record where an input came from, the Assumptions page, the model choices, verify a result |
 | [user-manual/power-budget.md](user-manual/power-budget.md) | Static and time-domain power budgets |
 | [user-manual/mass-budget.md](user-manual/mass-budget.md) | Mass, centre of gravity, inertia, phases, limits |
-| [user-manual/idm-import.md](user-manual/idm-import.md) | Start or update a project from an IDM-CIC model |
+| [user-manual/idm-import.md](user-manual/idm-import.md) | Start or update a project from an IDM-CIC model, with the components it recognises |
 | [user-manual/pointing.md](user-manual/pointing.md) | Pointing modes, slew time, momentum, energy |
 | [user-manual/propulsion.md](user-manual/propulsion.md) | Propellant, delta-v, burn time, electric thruster power |
-| [user-manual/thermal-budget.md](user-manual/thermal-budget.md) | Dissipation, node temperatures, unit limits |
-| [user-manual/link-budget.md](user-manual/link-budget.md) | Link margin, data volume over passes |
+| [user-manual/thermal-budget.md](user-manual/thermal-budget.md) | Dissipation, node temperatures, unit limits, temperatures against the beta angle |
+| [user-manual/link-budget.md](user-manual/link-budget.md) | Link margin, data volume over passes; the Eb/N0, attenuation, margin and link tables as spreadsheets |
 | [user-manual/scenarios.md](user-manual/scenarios.md) | Orbits, stations, mode timeline, SpaceMissionStudio data |
 | [user-manual/reports-and-exports.md](user-manual/reports-and-exports.md) | Files written, reproducible reports, the guide |
 | [user-manual/compare.md](user-manual/compare.md) | Differences between revisions or scenarios |

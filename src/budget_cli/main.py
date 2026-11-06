@@ -484,10 +484,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     te = sub.add_parser(
         "tables-export",
-        help="Write the Eb/N0 or attenuation table as a CSV or XLSX to fill in outside the tool.",
+        help=(
+            "Write the Eb/N0 table, the attenuation table, the margin policy or the links "
+            "as a CSV or XLSX to fill in outside the tool."
+        ),
     )
     te.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
-    te.add_argument("table", choices=sorted(entry_tables.TABLES), help="Which table.")
+    te.add_argument(
+        "table",
+        choices=sorted(entry_tables.TABLES),
+        help="Which table: ebn0, attenuation, margins or links.",
+    )
     te.add_argument(
         "--out",
         type=Path,
@@ -496,10 +503,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     ti = sub.add_parser(
         "tables-import",
-        help="Read a filled-in Eb/N0 or attenuation table; show, or with --apply write, changes.",
+        help=(
+            "Read a filled-in table (Eb/N0, attenuation, margins or links); "
+            "show, or with --apply write, changes."
+        ),
     )
     ti.add_argument("project", type=Path, help="Project folder (contains project.yaml).")
-    ti.add_argument("table", choices=sorted(entry_tables.TABLES), help="Which table.")
+    ti.add_argument(
+        "table",
+        choices=sorted(entry_tables.TABLES),
+        help="Which table: ebn0, attenuation, margins or links.",
+    )
     ti.add_argument("file", type=Path, help="The filled-in table, .csv or .xlsx.")
     ti.add_argument(
         "--apply",
