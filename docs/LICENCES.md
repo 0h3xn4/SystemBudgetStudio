@@ -32,10 +32,21 @@ The project itself is licensed under the Apache License 2.0 (`LICENSE`, `NOTICE`
 
 - **LGPL (PySide6-Essentials, shiboken6; Qt).** Used under the LGPL-3.0 option of their dual
   licence. The Windows and Linux builds are one-folder bundles in which the Qt and PySide6 libraries
-  stay separate shared files, so a user can replace them (the LGPL relinking condition). The bundle
-  ships the licence texts (`licences/<package>/`, with the LGPL and GPL texts from
-  `assets/licences/` for the Qt bindings, whose wheels carry none), `licences.md` and the SBOM
-  next to the program; `packaging/check_bundle.py` fails a build that lacks them. Do not modify Qt.
+  stay separate shared files, so a user can replace them (the LGPL relinking condition;
+  `docs/developer/replace-qt.md`). The bundle ships the licence texts (`licences/<package>/`, with
+  the LGPL and GPL texts from `assets/licences/` for the Qt bindings, whose wheels carry none, and
+  the third-party notices of Qt), `THIRD_PARTY_NOTICES.txt`, `licences.md` and the SBOM next to the
+  program; `packaging/check_bundle.py` fails a build that lacks them. The exact source code of
+  Qt (qtbase, qtwayland) and PySide6 is attached to every release (`packaging/sources.toml`,
+  `packaging/fetch_sources.py`). Only the Qt libraries and plugins the program uses are bundled
+  (`packaging/bundle_policy.toml`); a GPL-only Qt module fails the build. Do not modify Qt.
+- **System libraries of the Linux bundle** (glib, OpenSSL, ICU, dbus, gcrypt and others that
+  PyInstaller copies from the Rocky 9 build machine) and the libraries that the wheels bring
+  (`numpy.libs`, `pillow.libs`): `packaging/bundle_inventory.py` finds the owner of each file
+  (`rpm`),
+  copies its licence files into `licences/` and `THIRD_PARTY_NOTICES.txt`, and the build fails for a
+  file with no owner, no licence text or a licence that `packaging/bundle_policy.toml` does not
+  accept (GPL-only, AGPL, SSPL, non-commercial, no-derivatives, unknown).
 - **Permissive licences** (MIT, BSD, Apache, PSF, HPND/MIT-CMU): keep the copyright notices; the
   bundle ships them with the package metadata.
 - **Fonts** (`assets/fonts`, SIL Open Font License 1.1, the licence texts are bundled next to the
