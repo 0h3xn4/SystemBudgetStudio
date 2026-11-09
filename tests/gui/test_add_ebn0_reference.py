@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of Add Eb/N0 entry asks, optionally, for the error rate the entry's Eb/N0 refers to
 (2.1.0)."""
 

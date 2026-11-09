@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """PNG rendering of a PlotSpec with Pillow and the bundled IBM Plex fonts.
 
 Drawn at twice the size and scaled down for smooth lines. The same spec and Pillow version give

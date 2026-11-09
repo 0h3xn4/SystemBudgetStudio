@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The design tokens: every colour of the window, for the light and the dark theme (D-169).
 
 The values are the token table of `docs/ui/UI_OVERHAUL.md`. Where WCAG 2.2 AA asked for a change,

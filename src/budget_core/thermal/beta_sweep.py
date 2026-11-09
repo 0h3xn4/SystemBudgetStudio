@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Node temperatures against the beta angle (2.7.0, D-250).
 
 The steady-state multi-node model of the project (`static_thermal`) is solved for a range of beta

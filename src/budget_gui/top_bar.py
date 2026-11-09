@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The top bar: project · revision · unsaved marker · scenario · BOL/EOL · Run · run status.
 
 The scenario and the case (beginning or end of life) are chosen here once and apply to every tab

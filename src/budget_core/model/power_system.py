@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Solar array, battery, attitude and limits for the time-domain power budget (D-061 to D-066).
 
 Every electrical number is a `Sourced` value from a data sheet or a requirement. Nothing here has a

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Self-test of an installed or packaged build: no files read from the user, nothing written.
 
 Builds an example project in memory, parses a unit string with pint, propagates one orbit,

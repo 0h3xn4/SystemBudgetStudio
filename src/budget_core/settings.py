@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The catalogue of the numbers the tool applies that no project file shows (D-217).
 
 Every numeric constant of the code that decides, limits or formats a result has one entry here: its

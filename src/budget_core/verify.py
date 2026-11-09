@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Does a project give the result in an export? (D-204)
 
 An export carries the digest of the model it was computed from and the list of project files with

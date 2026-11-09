@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The three-way merge keeps what the user changed and takes what the model changed (D-241)."""
 
 from __future__ import annotations

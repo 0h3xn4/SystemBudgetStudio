@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new expendable from a few answers (D-197): what the window's *Add expendable* turns into an
 expendable file.
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Remove from project* (D-201): which expendable, ground station, imaging target or
 link to remove.
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Plot interaction: legend hide and solo, violation markers, the time axis (UX step 3b, D-162)."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Orbit windows: one window per completed revolution, found from the positions alone.
 
 Works for every environment source (it needs no orbital elements) and for equatorial and polar

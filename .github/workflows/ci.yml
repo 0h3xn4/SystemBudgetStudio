@@ -48,6 +48,21 @@ jobs:
       - name: Offline test
         run: pytest tests/offline
 
+  reuse:
+    name: REUSE (licence and copyright of every file)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+      - name: The reuse tool needs libmagic
+        run: sudo apt-get update && sudo apt-get install -y libmagic1
+      - name: Install from the hashed lock
+        run: python -m pip install --require-hashes -r requirements-dev.lock
+      - name: Every file has an SPDX licence and a copyright line (REUSE specification)
+        run: reuse lint
+
   offline-evidence-linux:
     name: Offline evidence (Linux, strace)
     runs-on: ubuntu-latest

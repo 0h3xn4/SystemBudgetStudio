@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """LTAN as an orbit input (2.3.0, D-236): the elements may give the local time of the ascending node
 (`ltan_h`, mean solar time) instead of the RAAN; the RAAN is then derived at the epoch. Exactly one
 of the two is given. A change of epoch keeps the local time, so the RAAN moves with it."""

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """What every problem code means: the rule, why it matters and how to resolve it (D-207).
 
 A `Problem` says what is wrong and where; this catalogue says what the rule is. One entry per code,

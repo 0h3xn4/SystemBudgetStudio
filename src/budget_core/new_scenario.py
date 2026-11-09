@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new orbit and scenario from a few answers (D-189): what the window's *Add orbit and scenario*
 turns into an orbit file and a scenario file.
 

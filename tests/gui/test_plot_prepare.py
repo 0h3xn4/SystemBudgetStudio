@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A plot is prepared in the worker thread, so its first paint costs the window thread little
 (D-182): the y ranges and the block summaries of the series, the power plot of both cases and the
 plot of every link."""

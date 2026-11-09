@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new ground station or imaging target from a few answers (D-198): what the window's *Add
 ground station* and *Add imaging target* turn into a file.
 

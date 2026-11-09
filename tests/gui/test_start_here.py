@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Start here panel (D-190): four steps to a first result, one button each, hidden when the
 person wants it hidden, back with Help > Start here."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Reading models of IDM-CIC (reads models from IDM-CIC, (c) CNES).
 
 IDM-CIC is software of the French space agency CNES. This package only reads the model file that

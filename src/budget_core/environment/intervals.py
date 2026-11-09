@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Interval helpers: turn sampled booleans into intervals and refine their edges by bisection."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Scenario outputs: environment JSON and CSV tables (deterministic, LF, fixed decimals)."""
 
 from __future__ import annotations

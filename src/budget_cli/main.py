@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """`budget` command: new, validate, run, scenario, power-timeline, link-passes, compare, guide,
 self-test, export-schemas, units-export, units-import, tables-export, tables-import,
 import, export-examples."""

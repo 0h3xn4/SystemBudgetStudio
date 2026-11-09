@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """No project content outside the project and the output folder (a canary test).
 
 A project whose folder, name, unit name and source texts carry a unique marker is run through the

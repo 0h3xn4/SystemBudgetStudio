@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Synthetic IDM-CIC model files, written by hand for the tests.
 
 Every name and number here is invented. Nothing was copied or derived from a model file made by

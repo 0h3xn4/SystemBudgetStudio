@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The ground track of a scenario (2.2.0, D-232): the sub-satellite point (geodetic latitude,
 longitude, height above the WGS-84 ellipsoid) over the grid; the latitude range, the ascending
 equator crossings and the shift between them; the series written as `<id>_groundtrack.csv`."""

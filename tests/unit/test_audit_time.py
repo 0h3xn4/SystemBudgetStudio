@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit MI-8: zero-padded years, supported range 1950-2100, one time notation."""
 
 from __future__ import annotations

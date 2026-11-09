@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Link budgets of a project: the static table at chosen points and the pass time series.
 
 Conventions are in docs/DECISIONS.md D-077 to D-083. A number that is a placeholder or missing

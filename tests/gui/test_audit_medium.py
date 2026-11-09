@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-release audit, medium and low GUI findings (GUI-13 to GUI-35)."""
 
 from __future__ import annotations

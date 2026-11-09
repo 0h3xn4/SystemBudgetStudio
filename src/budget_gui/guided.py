@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Guided mode: a short wizard from project name and orbit to the first budget.
 
 Five pages (project, spacecraft, orbit, scenario, review) with sensible defaults, so a first

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Adding and removing a unit in the window (D-187): the form, the Units page, and a blank
 project built up from the window."""
 

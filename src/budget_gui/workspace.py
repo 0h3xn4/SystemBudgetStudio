@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The seven areas of the main area: Model, Power, Mass, Thermal, Link, Compare, Reports (D-151).
 
 *Model* holds the editors (the scenario, the files and the unit tables, opened from the tree).

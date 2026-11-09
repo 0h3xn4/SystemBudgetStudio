@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Run: the scenario, the power timeline and the link passes of the selected scenario, in order.
 
 The static budgets (power, mass, thermal, link) are worked out when a project loads, so *Run* only

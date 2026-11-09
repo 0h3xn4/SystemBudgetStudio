@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Schema versioning: older files migrate in memory, newer files fail with a clear message.
 
 A migration takes the raw mapping of version N and returns the mapping of version N+1 (including

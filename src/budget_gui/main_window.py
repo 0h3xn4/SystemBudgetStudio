@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Main window: project tree, budget view and file editors, Problems panel, export."""
 
 from __future__ import annotations
@@ -36,6 +40,7 @@ from PySide6.QtWidgets import (
 )
 
 from budget_core import APP_NAME
+from budget_core.about import about_text
 from budget_core.explain import Explainer, ExplainError, explain_beta
 from budget_core.input_sources import entries_for, has_provenance, set_entry
 from budget_core.model import (
@@ -71,7 +76,7 @@ from budget_gui.banner import Banner
 from budget_gui.beta_view import BetaView
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
-from budget_gui.components import PanelTitle, Toast
+from budget_gui.components import MessageDialog, PanelTitle, Toast
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.entry_tables import TABLE_TITLES, export_entry_table, import_entry_table
 from budget_gui.explain_panel import ExplainPanel
@@ -432,6 +437,11 @@ class MainWindow(QMainWindow):
         guide.setShortcut(QKeySequence.StandardKey.HelpContents)
         guide.triggered.connect(lambda: self.open_guide())
         help_menu.addAction(guide)
+        help_menu.addSeparator()
+        about = QAction(f"&About {APP_NAME}…", self)
+        about.setStatusTip("Version, owner, licence and third-party licences")
+        about.triggered.connect(lambda: self.open_about())
+        help_menu.addAction(about)
 
     def _build_edit_menu(self) -> None:
         """Undo and redo of the grids; a text field or the text editor keeps its own undo while
@@ -709,6 +719,12 @@ class MainWindow(QMainWindow):
     def open_guide(self) -> GuideDialog:
         """The user guide; with a project open it also lists that project's numbers and sources."""
         dialog = GuideDialog(self.session.project, self)
+        dialog.open()
+        return dialog
+
+    def open_about(self) -> MessageDialog:
+        """Help > About: version, owner statement, licence (words from `budget_core.about`)."""
+        dialog = MessageDialog(f"About {APP_NAME}", about_text(), parent=self)
         dialog.open()
         return dialog
 

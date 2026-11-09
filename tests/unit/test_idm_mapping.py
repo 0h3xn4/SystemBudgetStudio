@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Mapping a synthetic IDM-CIC model onto project data (decisions D-240 to D-243)."""
 
 from __future__ import annotations

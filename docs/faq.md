@@ -20,7 +20,7 @@ Windows 10/11 and Linux (RHEL/Rocky 9 or newer, Ubuntu LTS from 22.04), Python 3
 
 ### Is it free to use? What is the licence?
 
-Yes. It is released under the [MIT licence](../LICENSE): free to use, copy, modify and distribute, without warranty. The libraries it uses are permissively licensed or LGPL ([licence list](LICENCES.md)).
+Yes. The source code is licensed under the [Apache License 2.0](../LICENSE): free to use, copy, modify and distribute, with the conditions of that licence and without warranty. Releases up to and including 2.11.1 were published under the MIT licence and remain available under it. The libraries it uses are permissively licensed or LGPL ([licence list](LICENCES.md)).
 
 ### Are the examples real?
 

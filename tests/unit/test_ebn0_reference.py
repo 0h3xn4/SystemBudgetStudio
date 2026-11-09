@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The error-rate reference of an Eb/N0 entry (2.1.0): the bit error rate and the frame error rate
 the required Eb/N0 refers to. It is recorded as given and shown with the number; the tool never
 supplies one and no result depends on it."""

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Add orbit and scenario in the window (D-189): the form, the Edit menu entry, and a blank project
 built up from nothing until it computes."""
 

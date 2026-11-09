@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Remove characters that XML-based formats (XLSX, DOCX) cannot hold from every string of a
 report document, so project text such as a name with a control character cannot crash a renderer.
 The same walk applies any other text function (the PDF renderer replaces characters its font

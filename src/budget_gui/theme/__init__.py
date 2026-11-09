@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The theme of the window: tokens, scales, fonts, style sheet, plot colours, manager (D-169).
 
 Everything that decides how the window looks lives in this package; no other module of the window

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Mass properties: positions, inertia tensors, expendables and mass limits (D-048 to D-050).
 
 Frame: one right-handed spacecraft body frame described in `spacecraft.yaml`. Positions are the

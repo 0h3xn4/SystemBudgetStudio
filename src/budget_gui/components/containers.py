@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Cards, section headers, key-value lists and empty states (D-169)."""
 
 from __future__ import annotations

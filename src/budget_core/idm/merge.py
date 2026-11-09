@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Three-way merge of imported data with what the user may have changed (decision D-241).
 
 For every value there are three versions: `old`, what the importer wrote last time; `new`, what

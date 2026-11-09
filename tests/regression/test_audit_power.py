@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-release audit fixes in the time-domain power budget (PWR-1 to PWR-12).
 
 Numbers are invented and worked out by hand (see `tests/power_helpers.py`: 100 W array at cosine 1,

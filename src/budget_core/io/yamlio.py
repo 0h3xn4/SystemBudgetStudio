@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """YAML reading with line tracking, and canonical (deterministic) writing.
 
 Reading uses ruamel.yaml round-trip mode only to learn line numbers; the result is converted to

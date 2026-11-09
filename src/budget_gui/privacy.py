@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Keep Qt from writing settings outside the project (decision D-105).
 
 Qt's own file dialog remembers the folders it was last used in. It stores them in

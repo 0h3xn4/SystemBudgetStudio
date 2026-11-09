@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """File menu: export the Eb/N0 table, the attenuation table and the margin policy as spreadsheets,
 import a filled-in one after a preview (D-231, D-249)."""
 

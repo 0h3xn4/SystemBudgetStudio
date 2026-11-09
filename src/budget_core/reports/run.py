@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Build and write budget outputs; shared by the CLI and the GUI."""
 
 from __future__ import annotations

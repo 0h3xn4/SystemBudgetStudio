@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """MI-4 guard: a message or hint of a Problem may interpolate only names that hold ids, counts,
 codes or constants, never a name read from a project file.
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Assumptions page of the Model area (D-218): everything that is active for the project."""
 
 from __future__ import annotations

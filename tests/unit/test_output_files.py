@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Writing the output set: file modes, names, collisions and all-or-nothing staging (audit RC-6,
 RC-12, RC-18)."""
 

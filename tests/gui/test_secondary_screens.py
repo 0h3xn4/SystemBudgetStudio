@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Compare, Reports, the dialogs and the side panels after the overhaul (D-180)."""
 
 from __future__ import annotations

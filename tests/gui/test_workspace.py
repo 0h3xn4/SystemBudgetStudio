@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The seven tabs of the main area (UX step 1, D-151)."""
 
 from __future__ import annotations

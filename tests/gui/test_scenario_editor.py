@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The scenario editor: rules as sentences, one undo stack, one Save (UX step 2c, D-160)."""
 
 from __future__ import annotations

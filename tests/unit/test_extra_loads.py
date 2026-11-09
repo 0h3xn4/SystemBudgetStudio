@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pointing and manoeuvres on the scenario (2.3.0, D-235): a pointing mode held over the scenario
 with rules, the slew between two modes where the mode changes, the burns the scenario places, the
 spacecraft mode a burn switches to. The load they put on the power budget is a separate series;

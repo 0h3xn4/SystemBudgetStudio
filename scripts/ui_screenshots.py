@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Save a PNG of every window, tab, sub-tab, panel and dialog, in both themes.
 
     QT_QPA_PLATFORM=offscreen python scripts/ui_screenshots.py docs/ui/screenshots/before

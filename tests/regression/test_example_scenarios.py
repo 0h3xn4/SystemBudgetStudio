@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The example scenarios run, and their results obey simple physical and logical invariants."""
 
 from __future__ import annotations

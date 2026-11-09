@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """RF link definitions (decisions D-077 to D-083).
 
 A link joins the spacecraft and one ground station in one direction. Every number from a data

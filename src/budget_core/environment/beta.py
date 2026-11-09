@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The beta angle (2.2.0, D-227): the angle between the Sun direction and the orbit plane.
 
 beta = asin(h . s) with h the unit angular momentum of the orbit and s the unit vector to the Sun,

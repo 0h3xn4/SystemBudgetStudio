@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The editable model behind the grids: edits, undo, validation, Save (UX step 2, D-159)."""
 
 from __future__ import annotations

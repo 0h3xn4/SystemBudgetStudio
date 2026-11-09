@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pointing modes, actuators and slews for the pointing and slew budget (2.2.0, D-234).
 
 A pointing mode says what the spacecraft points at and how well; it is kept apart from the

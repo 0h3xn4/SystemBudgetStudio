@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Load and write a project folder.
 
 Layout: project.yaml, spacecraft.yaml, units/*.yaml, modes/*.yaml, config/<kind>.yaml.

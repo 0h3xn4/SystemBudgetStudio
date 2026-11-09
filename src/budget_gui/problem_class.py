@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The four classes a problem is shown in: error, warning, not checked and information (D-151).
 
 The core knows three severities. The window adds one class on top: a *not checked* finding says

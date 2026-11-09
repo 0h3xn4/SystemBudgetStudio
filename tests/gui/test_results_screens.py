@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Results screens after the overhaul: the plot metrics at the UI scale, the labelled toolbar,
 the table pane that folds, the one inline banner, wrapped paragraphs (D-178)."""
 

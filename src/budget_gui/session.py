@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Project session: loads a project folder and computes the budgets. No widgets here."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Sun on the faces of a nadir-pointing spacecraft, by beta angle (2.7.0, D-250).
 
 A circular orbit, a spacecraft pointing to nadir and flat faces: the position of the Sun in the

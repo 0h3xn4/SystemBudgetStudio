@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Timeline widget: rows, zoom and pan, hover text, range selection and painting."""
 
 from __future__ import annotations

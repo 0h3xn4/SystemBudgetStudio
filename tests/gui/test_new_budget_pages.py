@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The propulsion and pointing budgets in the window (2.3.0): a page each, in the Mass and Power
 areas, with the tables of their reports and an honest empty sentence for a project without the
 file."""

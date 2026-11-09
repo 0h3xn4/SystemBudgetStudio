@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Problem codes that no other test reached: each has a message that names no project value."""
 
 from __future__ import annotations

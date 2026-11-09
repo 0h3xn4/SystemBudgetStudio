@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Current schema version of every file kind. Bump with a migration (see io/migrations.py)."""
 
 CURRENT_VERSIONS: dict[str, int] = {

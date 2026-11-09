@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """An uncaught exception in the GUI becomes a plain message, never a traceback."""
 
 from __future__ import annotations

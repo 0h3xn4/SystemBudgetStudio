@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Licence review of the runtime dependency closure (standard library only).
 
 Reads `[project.dependencies]` from pyproject.toml, follows the installed distributions'
@@ -140,6 +145,8 @@ def markdown(entries: list[Entry]) -> str:
         "`[project.dependencies]` and the installed package metadata; versions are pinned in "
         "`requirements.lock`. Allowed: permissive and LGPL (spec constraint 7). The release "
         "also carries the CycloneDX SBOM and `licences.md` from `packaging/build.sh`.\n\n"
+        "The project itself is licensed under the Apache License 2.0 (`LICENSE`, `NOTICE`); "
+        "releases up to and including 2.11.1 were published under the MIT licence.\n\n"
         "| Package | Licence (option used) | Category |\n|---|---|---|\n"
         f"{rows}\n{NOTES}"
     )

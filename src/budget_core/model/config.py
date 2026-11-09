@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Configuration files: margin policy, power constants, Eb/N0 and attenuation tables.
 
 Every number is a `Sourced` value. Nothing here ships with plausible-looking defaults.

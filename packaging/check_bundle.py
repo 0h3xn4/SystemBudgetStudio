@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Check a built bundle folder before it is released (standard library only).
 
     python packaging/check_bundle.py dist/system-budget-studio
@@ -29,6 +34,7 @@ FORBIDDEN = (
 )
 REQUIRED_FILES = (
     "LICENSE",
+    "NOTICE",
     "licences.md",
     "sbom.cdx.json",
     "licences/INDEX.md",

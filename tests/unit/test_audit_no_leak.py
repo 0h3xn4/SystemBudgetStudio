@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit MI-4 / TL-15: Problem messages and hints never contain text read from project files.
 
 A secret is planted, one at a time, in every free-text value and every user-chosen key of the

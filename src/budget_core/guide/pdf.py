@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """PDF of the user guide (ReportLab, bundled IBM Plex); identical guides give identical bytes."""
 
 from __future__ import annotations

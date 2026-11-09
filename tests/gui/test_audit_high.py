@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-release audit, high GUI findings (GUI-3 to GUI-7, GUI-9 to GUI-12): editors that follow the
 file, no silent loss of edits, a window that closes cleanly, and results that are tied to the
 inputs they were computed from."""

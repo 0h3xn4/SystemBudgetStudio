@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the static power budget (tables of `reports/power_report.py`, D-206).
 
 Each table has an id (`Table.explain_id`): `power:summary`, and per spacecraft mode

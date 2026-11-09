@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The icon files in assets/icons are what packaging/make_icons.py draws (D-148)."""
 
 from __future__ import annotations

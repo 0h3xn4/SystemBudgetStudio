@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The propulsion and delta-v budget (2.2.0, D-233): systems (chemical or electric) with a
 specific impulse, manoeuvres in mission order with a delta-v, the propellant each needs by the
 rocket equation (worked backwards from the dry mass), the burn time, the electric power and

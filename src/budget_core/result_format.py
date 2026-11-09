@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The envelope every JSON result file carries: what it is and which layout it has (D-205).
 
 `result_format.version` changes only when a key is renamed, removed or changes meaning; adding a

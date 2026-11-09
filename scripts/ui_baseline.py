@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Measure what the user waits for: start to first window, tab switches, the heaviest actions.
 
     QT_QPA_PLATFORM=offscreen python scripts/ui_baseline.py

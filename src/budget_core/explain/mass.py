@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the static mass budget (tables of `reports/mass_report.py`, D-206).
 
 Table ids (`Table.explain_id`): `mass:summary`, `mass:limits`, and per mission phase

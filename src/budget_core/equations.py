@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Registry of every equation the tool uses, with its source (spec constraint 16).
 
 An equation with `source=None` is flagged SOURCE_MISSING: the formula slot exists, but the text

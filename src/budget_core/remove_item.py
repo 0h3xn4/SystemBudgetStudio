@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Remove from project (D-201): which files the window can remove, and what blocks a removal.
 
 An expendable, a ground station, an imaging target and a link are one file each. A scenario names

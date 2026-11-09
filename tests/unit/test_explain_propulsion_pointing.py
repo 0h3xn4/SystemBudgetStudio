@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explain for the propulsion and pointing budgets (D-255): every cell of every table has an
 explanation whose result is the value the table shows, and a number that is n/a says why."""
 

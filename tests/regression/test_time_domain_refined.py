@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The power budget must not depend on the solver step (audit round N1).
 
 The battery is integrated on the scenario grid plus every eclipse edge and mode-segment edge, so a

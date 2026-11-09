@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The beta angle of a scenario (2.2.0, D-227): the angle between the Sun direction and the orbit
 plane, over the grid; its minimum, mean and maximum; the critical angle above which the orbit has
 no eclipse; the series written as `<id>_beta.csv`."""

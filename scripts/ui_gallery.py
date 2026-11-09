@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Show every component and every token of the window, in both themes.
 
     QT_QPA_PLATFORM=offscreen python scripts/ui_gallery.py docs/ui/screenshots/m1

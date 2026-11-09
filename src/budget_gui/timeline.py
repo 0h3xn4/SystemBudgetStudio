@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Timeline widget: sunlight and eclipse, passes per site and the mode timeline over time.
 
 Wheel zooms around the pointer, drag pans, double-click shows the whole scenario, and

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the static thermal budget (tables of `reports/thermal_report.py`, D-206).
 
 Table ids (`Table.explain_id`): `thermal:summary`, and per spacecraft mode

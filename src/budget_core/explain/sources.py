@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Fill in where each input of an explanation came from (D-213).
 
 The explanations name an input by its file and path. The project may record a source for it:

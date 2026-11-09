@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """File menu actions for the unit power table: export a template, import a filled-in one.
 
 An import is shown before it is applied (every changed value, old and new), and nothing is

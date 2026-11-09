@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """No networking: sockets blocked at runtime, networking modules must not be imported.
 
 Each scenario runs in a fresh interpreter so import state is clean.

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Open a model archive and read its XML model, and nothing else.
 
 The archive is never extracted: only the entry named `model.xml` at its root is read, with its

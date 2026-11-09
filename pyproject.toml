@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.25"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
@@ -7,9 +7,9 @@ name = "system-budget-studio"
 version = "2.11.2"
 description = "Offline desktop tool for satellite power, mass, thermal and RF-link budgets."
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE", "LICENSES/Apache-2.0.txt"]
 classifiers = [
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3.14",
 ]
@@ -41,6 +41,7 @@ dev = [
     "pip-licenses>=5",
     "pip-audit>=2.7",
     "pip-tools>=7.4",
+    "reuse>=6.3",
 ]
 
 [project.scripts]

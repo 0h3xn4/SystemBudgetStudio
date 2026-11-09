@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A project with one downlink and one uplink, and a synthetic pass (source: test fixture).
 
 Round numbers so that every expected value can be worked out by hand:

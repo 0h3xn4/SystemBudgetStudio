@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit MI-13: migrations keep unknown keys, schema version 0, progress guard."""
 
 from __future__ import annotations

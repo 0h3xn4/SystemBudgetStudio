@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new entry of the Eb/N0 table from a few answers (D-200): what the window's *Add Eb/N0 entry*
 turns into a row of `config/ebn0_table.yaml`.
 

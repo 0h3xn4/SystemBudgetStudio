@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The ground track in the scenario window (2.2.0): a map tab and a line in the Statistics tab."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The pointing and manoeuvres section of the scenario editor (2.3.0): the default pointing mode,
 pointing rules and placed burns, each change one undo step, written to the scenario file."""
 

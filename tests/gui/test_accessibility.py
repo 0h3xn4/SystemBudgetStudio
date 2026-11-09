@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The accessibility pass (M6, D-181): names for what a screen reader reads, a focus ring on
 everything the keyboard reaches, and no control the keyboard cannot reach."""
 

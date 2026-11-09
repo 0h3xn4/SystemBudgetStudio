@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """How a table cell looks: numbers, placeholders, `n/a`, limits and margins (D-150).
 
 One delegate paints every cell of every table, so the same state always looks the same:

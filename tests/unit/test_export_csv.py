@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Series CSV files: quoting and defusing of ids (RC-2), no negative zero, the weight column that
 makes row sums match the summary (RC-24)."""
 

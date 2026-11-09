@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The pointing and slew budget (2.2.0, D-234): pointing modes (an attitude reference, an accuracy
 and the power to hold it) kept apart from the spacecraft modes, and slews between them with a
 bang-bang time from the inertia and the torque, the peak rate and momentum, the energy and the

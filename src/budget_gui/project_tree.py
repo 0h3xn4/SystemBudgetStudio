@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The project tree: the spacecraft model, not the folder listing, with problem badges (D-158).
 
     Project

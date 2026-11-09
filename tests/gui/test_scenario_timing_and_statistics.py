@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The scenario editor edits the start, the duration and the step; the Scenario page shows
 statistics of the eclipses and passes and a filter on the passes (2.1.0)."""
 

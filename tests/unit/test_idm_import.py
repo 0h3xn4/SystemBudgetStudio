@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Creating and updating a project from a model, and the rules of a re-import (D-240 to D-243)."""
 
 from __future__ import annotations

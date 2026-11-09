@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Provenance carried by every report, plot and export (spec constraint 19).
 
 For byte-identical regeneration (constraint 14) the generation time comes from, in order: the

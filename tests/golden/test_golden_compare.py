@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Golden tests of the comparison outputs: the 250 kg example against a copy with one unit's power
 and the project revision changed (invented values)."""
 

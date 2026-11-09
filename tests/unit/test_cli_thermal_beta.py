@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """`budget thermal-beta` (D-250): a sweep over beta angles written as CSV, JSON and a plot."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The in-place YAML patch the GUI editors save with (GUI-17, GUI-21): comments, key order,
 untouched values, BOM, CRLF, links and permissions stay; a save without an edit writes nothing."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The first screen and the command palette (UX step 6, D-166)."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Static (orbit-less) power budget per spacecraft mode with margins and losses.
 
 Conventions are listed in docs/DECISIONS.md D-040 and in `budget_core.equations`. A number that

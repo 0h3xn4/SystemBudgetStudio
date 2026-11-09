@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Explain dock: how the value that was asked about was obtained (D-206).
 
 It shows the title of the cell, its value, then each step with the equation, the inputs with units

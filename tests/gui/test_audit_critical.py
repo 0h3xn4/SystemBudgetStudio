@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-release audit, critical GUI findings: a scenario edit must land in the open project (GUI-1),
 and saving a unit must not lose what the table does not show (GUI-2)."""
 

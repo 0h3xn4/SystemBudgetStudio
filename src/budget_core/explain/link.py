@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the static link budget (tables of `reports/link_report.py`, D-206).
 
 Table ids (`Table.explain_id`): `link:static` (rows named by the link and the point) and

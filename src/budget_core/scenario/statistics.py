@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Statistics of the eclipses and passes of a scenario (2.1.0).
 
 For every scenario: how many eclipses, the shortest, mean and longest, the share of the time in

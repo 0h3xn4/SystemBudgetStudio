@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Neutral report model: every renderer (XLSX, PDF, later DOCX) draws the same document."""
 
 from __future__ import annotations

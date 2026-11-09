@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new spacecraft mode from a few answers (D-188): where the assignments start, the checks, the
 data of the file and the scenarios that name a mode."""
 

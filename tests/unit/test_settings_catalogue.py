@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The catalogue of settings, tolerances and constants (D-217): the table and the code agree, no
 constant is missing, the generated page is current, and the assumptions list is built."""
 

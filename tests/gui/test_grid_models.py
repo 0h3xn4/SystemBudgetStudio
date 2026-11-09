@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The table models of the Model grids (UX step 2, D-159)."""
 
 from __future__ import annotations

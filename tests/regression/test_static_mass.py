@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Hand-calculated reference cases for the static mass budget, CG, inertia and phases.
 
 Conventions (decisions D-048 to D-050): masses in kg, positions in m in one body frame, inertia

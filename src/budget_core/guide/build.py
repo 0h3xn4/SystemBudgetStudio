@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Assemble the user guide: the shipped chapters plus the generated "Equations and sources"."""
 
 from __future__ import annotations

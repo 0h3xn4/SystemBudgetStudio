@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Link budget report document: the static table and, with a scenario, the pass series."""
 
 from __future__ import annotations

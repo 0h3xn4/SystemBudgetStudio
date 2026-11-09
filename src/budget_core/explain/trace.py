@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The shape of an explanation: the steps from the inputs to one displayed number (D-206).
 
 An explanation is built by computing the number again, step by step, with the same functions the

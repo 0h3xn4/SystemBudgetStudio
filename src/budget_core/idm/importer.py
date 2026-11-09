@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Plan and apply the import of an IDM-CIC model into a project folder (decisions D-240 to D-243).
 
 `plan_import` works out every file to write and writes nothing; `apply_plan` then writes them

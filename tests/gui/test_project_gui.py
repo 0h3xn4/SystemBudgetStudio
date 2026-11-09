@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Main GUI flows for M2a: open, Problems, jump to the offending line, edit, save, export."""
 
 from __future__ import annotations

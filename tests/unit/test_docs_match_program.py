@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The documentation says what the program does (a check that runs with the unit tests).
 
 Four things are read from the pages and held against the program, so a page cannot drift without a

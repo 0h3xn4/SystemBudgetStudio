@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Battery model: capacity and an energy-based state-of-charge integration (TDP-SOC).
 
 The battery is an energy store with constant charge and discharge efficiencies. Within a step the

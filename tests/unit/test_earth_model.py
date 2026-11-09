@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Earth model of a scenario (D-219, P5b): WGS-84 (the default) or WGS-72 for the gravity
 constants of an orbit given as elements and for the Earth sphere of the shadow geometry.
 

@@ -17,6 +17,8 @@ AppId={{6C3E1A52-6C58-4B79-9E5B-5D0F3A4B7D11}
 AppName=System Budget Studio
 AppVersion={#AppVersion}
 AppPublisher=System Budget Studio
+; the licence page: the Apache License 2.0 (the text is in the bundle; the silent install skips the page)
+LicenseFile={#BundleDir}\LICENSE
 ; "lowest": installs for the current user only ({autopf} becomes %LOCALAPPDATA%\Programs).
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=commandline

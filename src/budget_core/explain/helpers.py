@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Small builders shared by the explanations of the propulsion and pointing budgets (D-255).
 
 Each builds a `Quantity` or a `Step` without computing anything physical itself: the physics is the

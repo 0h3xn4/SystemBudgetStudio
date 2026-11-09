@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Build the Debian package of System Budget Studio from the bundle folder (standard library only).
 
     python packaging/linux/make_deb.py dist/system-budget-studio --out dist
@@ -127,7 +132,10 @@ def system_entries(bundle: Path) -> list[Entry]:
     )
     copyright_text = (
         f"System Budget Studio\n{HOMEPAGE}\n\n"
-        "Released under the MIT licence (below). The package also carries third-party libraries,\n"
+        "Copyright 2026 0h3xn4\n"
+        "Released under the Apache License, Version 2.0 (below). Releases up to and including\n"
+        "2.11.1 were released under the MIT licence. The package also carries third-party\n"
+        "libraries,\n"
         f"whose licences are in /{PREFIX}/licences/ and listed in /{PREFIX}/licences.md.\n\n"
         f"{licence}"
     ).encode()

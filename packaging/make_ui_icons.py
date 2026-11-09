@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Render the user-interface icons (Lucide SVG files) to black PNG masks.
 
     python packaging/make_ui_icons.py

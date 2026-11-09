@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Open and edit with a single click (D-195): a setting for people who do not want to double-click.
 Off by default (a double-click or Enter opens a node of the project tree; a double-click, F2 or a
 key edits a cell); on, a click on a node opens it and a click on a selected cell edits it."""

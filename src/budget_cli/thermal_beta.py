@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """`budget thermal-beta`: the node temperatures against the beta angle (2.7.0, D-250).
 
 Solves the project's steady-state thermal model for a range of beta angles, taking the solar view of

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Progress and Cancel of the long computations (UX step 3d, D-167)."""
 
 from __future__ import annotations

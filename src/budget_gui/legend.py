@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The legend of the cell styles: placeholder, `n/a`, limit states and margin bars.
 
 It is drawn with the same delegate as the tables, so it can never disagree with them (D-150). A

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The command line never shows a traceback or project text when something unexpected happens."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """D-207: every problem code has an entry, the entries are complete, and the page is current."""
 
 from __future__ import annotations

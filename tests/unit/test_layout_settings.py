@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The layout file keeps only window geometry, dock state, column widths and the theme (D-150)."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Provenance dock: where the numbers on screen come from (tool, versions, project, time).
 
 Every report and export carries the same rows, so the file can be traced to the run that made it.

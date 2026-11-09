@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-release audit fixes in the environment (TL-6/MI-7, MI-5, MI-6, MI-8, MI-9, PWR-8)."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A table whose first column stays in view when the grid scrolls sideways (D-176).
 
 The first column of every grid names the row (a unit, a power mode, an input), so it must not

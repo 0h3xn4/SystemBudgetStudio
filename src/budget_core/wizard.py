@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Guided mode, headless part: turns a few answers into a complete project folder.
 
 The project is a copy of one of the synthetic sample spacecraft with the user's name, orbit and

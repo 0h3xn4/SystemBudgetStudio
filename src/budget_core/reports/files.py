@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Writing output files safely.
 
 File names are often built from project text (mission phases, thermal case names, link ids), so

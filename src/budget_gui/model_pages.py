@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The grid pages of the Model tab: units, power modes, spacecraft modes and sourced inputs
 (D-159, D-187, D-188)."""
 

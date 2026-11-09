@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Hostile or sloppy project input must give a located, plain Problem, never a hang, a crash or
 an echo of the project's own text (spec constraints 11 and 20)."""
 

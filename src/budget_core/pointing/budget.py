@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The pointing and slew budget (2.2.0, D-234).
 
 A slew is a rest-to-rest rotation about one body axis of angle theta with the actuators' torque T

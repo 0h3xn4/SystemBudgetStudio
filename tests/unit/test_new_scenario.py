@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new orbit and scenario from a few answers (D-189): the checks and the data of the two files."""
 
 from __future__ import annotations

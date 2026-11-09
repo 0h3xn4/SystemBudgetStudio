@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Offline HTML for the user guide: one self-contained page, no scripts, no external resources.
 
 With `embed_fonts` the bundled IBM Plex files are inlined as data URLs so the page looks the same

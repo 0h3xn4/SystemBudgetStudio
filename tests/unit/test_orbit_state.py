@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A state vector as an orbit (2.2.0, D-229): the frame from J2000 to TEME, and the mean elements
 whose SGP4 state at the epoch is the given state."""
 

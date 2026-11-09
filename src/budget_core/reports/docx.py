@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """DOCX renderer (python-docx). Identical documents give identical bytes: the core properties
 carry the provenance time, and the ZIP is rewritten with fixed timestamps and order."""
 

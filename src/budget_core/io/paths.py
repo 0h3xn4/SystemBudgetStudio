@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Confine every path named inside a project file to the project folder.
 
 A project file such as a link (`pattern_file`) or a scenario (`import_dir`) names other files. A

@@ -8,7 +8,7 @@ Name:           system-budget-studio
 Version:        %{sbs_version}
 Release:        1
 Summary:        Power, mass, thermal and link budgets for small satellites
-License:        MIT
+License:        Apache-2.0
 URL:            https://github.com/0h3xn4/SystemBudgetStudio
 ExclusiveArch:  x86_64
 

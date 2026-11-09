@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Statistics of the eclipses and passes of a scenario (2.1.0): count, shortest, mean and longest
 duration, the time in contact, the largest gap without a pass and the elevation of the passes."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Support aids for a program that fails on a machine nobody else can see (D-257).
 
 Two things, both opt-in and both free of project content:

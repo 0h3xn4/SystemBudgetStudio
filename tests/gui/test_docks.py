@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The right-hand docks, the Inspector, the Provenance panel and the saved layout (UX step 1)."""
 
 from __future__ import annotations

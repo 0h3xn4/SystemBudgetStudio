@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """YAML text editor with line numbers and jump-to-line (the target of Problems links)."""
 
 from __future__ import annotations

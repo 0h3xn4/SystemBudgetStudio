@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new unit from answers (D-187): nothing is invented and every missing number is refused."""
 
 from __future__ import annotations

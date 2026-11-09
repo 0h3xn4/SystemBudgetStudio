@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Where a plain input came from: the `provenance:` mapping of an entity file (D-213).
 
 A number in `config/` carries its own `source`. A plain input (a mass, a power, an orbit element)

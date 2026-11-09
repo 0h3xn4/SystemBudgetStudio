@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pass geometry against the analytic equatorial-orbit pass duration (hand calculation).
 
 For a circular orbit of radius a over an equatorial site (equatorial orbit, overhead pass) the

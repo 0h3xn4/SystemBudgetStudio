@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Which code computes which registered equation (D-206).
 
 `@computes("PWR-EFF")` on a function states that it is the one place that applies that equation.

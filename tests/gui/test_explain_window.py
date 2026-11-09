@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explain in the window (D-206): the dock, the View menu action with its shortcut, the Ctrl+K
 palette entry and the context menu of a result table."""
 

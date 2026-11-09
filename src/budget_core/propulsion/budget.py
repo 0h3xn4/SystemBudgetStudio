@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The propulsion and delta-v budget (2.2.0, D-233).
 
 The manoeuvres of `config/propulsion.yaml` are listed in mission order. The mass after the last

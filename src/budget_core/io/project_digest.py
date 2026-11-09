@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The model digest of a loaded project (D-204): its content, not the way it is written."""
 
 from __future__ import annotations

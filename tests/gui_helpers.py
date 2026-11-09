@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Helpers for the window tests that edit the grids of the Model tab."""
 
 from __future__ import annotations

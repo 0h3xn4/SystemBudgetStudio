@@ -1,0 +1,58 @@
+version = 1
+SPDX-PackageName = "System Budget Studio"
+SPDX-PackageSupplier = "0h3xn4"
+SPDX-PackageDownloadLocation = "https://github.com/0h3xn4/SystemBudgetStudio"
+
+# Everything in the repository is under the project licence, unless a later entry below says
+# otherwise (the last matching entry wins). Python source files carry their own SPDX header
+# (written with `reuse annotate`); every other file is covered here, because its format has no
+# comments (JSON, PNG, TTF), or because a test compares it with generated output (the examples,
+# the schemas and the golden files).
+[[annotations]]
+path = "**"
+SPDX-FileCopyrightText = "2026 0h3xn4"
+SPDX-License-Identifier = "Apache-2.0"
+
+# Fonts: unmodified files of the upstream releases (assets/fonts/README.md says which).
+[[annotations]]
+path = ["assets/fonts/Inter-*.ttf", "assets/fonts/OFL-Inter.txt"]
+precedence = "override"
+SPDX-FileCopyrightText = "2016 The Inter Project Authors (https://github.com/rsms/inter)"
+SPDX-License-Identifier = "OFL-1.1"
+
+[[annotations]]
+path = ["assets/fonts/JetBrainsMono-*.ttf", "assets/fonts/OFL-JetBrains-Mono.txt"]
+precedence = "override"
+SPDX-FileCopyrightText = "2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)"
+SPDX-License-Identifier = "OFL-1.1"
+
+# IBM Plex carries the Reserved Font Name "Plex": the files must stay unmodified.
+[[annotations]]
+path = ["assets/fonts/IBMPlex*.ttf", "assets/fonts/OFL-IBM-Plex.txt"]
+precedence = "override"
+SPDX-FileCopyrightText = "2017 IBM Corp. with Reserved Font Name \"Plex\""
+SPDX-License-Identifier = "OFL-1.1"
+
+# Lucide icons, version 0.468.0 (ISC; some portions from Feather are MIT): the SVG files copied
+# unchanged, the PNG masks rendered from them, and the licence text of Lucide.
+[[annotations]]
+path = ["assets/icons/ui/src/**", "assets/icons/ui/*.png", "assets/icons/ui/LICENSE-Lucide.txt"]
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "2013-2022 Cole Bemis (portions from Feather)",
+  "2022 Lucide Contributors",
+]
+SPDX-License-Identifier = "ISC AND MIT"
+
+# Texts of the GPL and LGPL that travel with the Qt bindings (verbatim copies).
+[[annotations]]
+path = "assets/licences/GPL-3.0.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "2007 Free Software Foundation, Inc."
+SPDX-License-Identifier = "GPL-3.0-only"
+
+[[annotations]]
+path = "assets/licences/LGPL-3.0.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "2007 Free Software Foundation, Inc."
+SPDX-License-Identifier = "LGPL-3.0-only"

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit fixes MI-1, MI-2, MI-3: bounded YAML parse time, odd YAML never raises, special files."""
 
 from __future__ import annotations

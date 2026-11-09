@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """V9: a run reads the saved files, so a result is not "up to date" while edits are not saved, and
 the window says so instead of claiming the result is from the inputs on screen."""
 

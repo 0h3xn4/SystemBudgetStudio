@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Link budget tabs: static tables of the report, and the pass series computed in a worker."""
 
 from __future__ import annotations

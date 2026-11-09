@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Add ground station and Add imaging target in the window (D-198): the form, the two Edit menu
 entries and the files that are written."""
 

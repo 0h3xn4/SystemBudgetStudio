@@ -11,7 +11,7 @@ A free, offline program for the **early design of a small satellite**: it works 
 [![CI](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/0h3xn4/SystemBudgetStudio)](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest)
 ![Python 3.14 and newer](https://img.shields.io/badge/python-3.14%2B-blue)
-[![Licence: MIT](https://img.shields.io/badge/licence-MIT-green)](LICENSE)
+[![Licence: Apache-2.0](https://img.shields.io/badge/licence-Apache--2.0-green)](LICENSE)
 
 ![System Budget Studio showing the power timeline of the 250 kg example satellite: generation, demand and state of charge over one day, with eclipse shading and the problems as one line of counts](docs/images/ui-overhaul/power-timeline-light.png)
 
@@ -110,7 +110,7 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 
 ## Licence and status
 
-Released under the [MIT licence](LICENSE) (decision D-140). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
+The source code is licensed under the [Apache License 2.0](LICENSE) (see also [NOTICE](NOTICE) and decision D-260). Releases up to and including 2.11.1 were published under the MIT licence and remain available under it ([text](docs/legal/MIT-licence-releases-up-to-2.11.1.txt)). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
 
 Status: version 2.11.2, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 

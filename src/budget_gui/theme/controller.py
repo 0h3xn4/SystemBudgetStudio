@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The theme in use: light, dark or whatever the operating system uses, the UI scale, and motion.
 
 `ThemeManager` makes the palette and the style sheet from the tokens, applies them, follows the

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The support aids of D-257: the diagnostics report and the opt-in fault log."""
 
 from __future__ import annotations

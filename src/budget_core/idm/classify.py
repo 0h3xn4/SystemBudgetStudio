@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Which equipment of an IDM-CIC model is a battery, a solar array, a wheel, a thruster... (D-254).
 
 The model has no field for the kind of an equipment; it has the name (free text, English or French

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Add link* (D-199): the structure of a link, none of the numbers invented.
 
 It asks for the name, the id (suggested from the name until it is typed by hand), the direction,

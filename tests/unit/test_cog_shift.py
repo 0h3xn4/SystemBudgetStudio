@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The centre of gravity moves over the mission as a tank empties (2.2.0, D-230): an expendable may
 give the position of its centre of mass for each phase, and the mass report shows the shift of the
 centre of gravity between the phases."""

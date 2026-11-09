@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the pointing and slew budget (tables of `reports/pointing_report.py`, D-255).
 
 Table ids (`Table.explain_id`): `pointing:modes` and `pointing:slews`. A cell is named by the id,

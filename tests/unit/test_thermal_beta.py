@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """D-250: the Sun on the faces of a nadir-pointing spacecraft, by beta angle.
 
 Three kinds of check: closed forms (beta 90 degrees, beta 0 and the textbook eclipse), the same

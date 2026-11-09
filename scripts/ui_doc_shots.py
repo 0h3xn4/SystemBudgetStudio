@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Write the ten screenshots of `docs/images/ui-overhaul/` (light theme) from the current window.
 
     QT_QPA_PLATFORM=offscreen python scripts/ui_doc_shots.py docs/images/ui-overhaul

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit TL-10 / MI-17 / MI-15: range checks, duplicates, blank names, temperature bands, ignored
 scenario options, booleans and numeric strings."""
 

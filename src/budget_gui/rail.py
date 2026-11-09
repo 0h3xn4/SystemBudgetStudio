@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The navigation rail: the seven areas of the window as icons with labels, down the left side.
 
 It replaces the row of tabs (D-173). The rail shows one area at a time, offers the command

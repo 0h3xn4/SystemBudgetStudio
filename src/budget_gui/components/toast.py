@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Toasts: short, non-modal confirmations that go away by themselves (D-169).
 
 A toast says that something worked ("Saved", "Exported 3 files"). It never carries a problem: a

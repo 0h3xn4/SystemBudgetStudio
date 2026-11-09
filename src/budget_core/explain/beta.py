@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the node temperatures against the beta angle (2.9.0, D-252).
 
 The table of a sweep (`thermal_beta_sweep`) has a row for each beta angle and, in it, the sunlit

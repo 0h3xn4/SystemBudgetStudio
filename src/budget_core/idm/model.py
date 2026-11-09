@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The typed, unit-normalised model that `read_idm` produces.
 
 Plain frozen dataclasses. Lengths are metres, angles degrees, masses kilograms, power and

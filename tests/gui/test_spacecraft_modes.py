@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Spacecraft modes in the window (D-188): the grid of assignments, Add and Remove spacecraft mode,
 the Edit menu entries, and a blank project built up until it loads."""
 

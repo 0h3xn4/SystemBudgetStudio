@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """List what a screen reader or a keyboard user would miss in the window (M6 accessibility pass).
 
     QT_QPA_PLATFORM=offscreen python scripts/ui_access_audit.py

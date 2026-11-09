@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Remove from project in the window (D-201): the dialog, the Edit menu entry, the files that
 are removed and the ones that cannot be."""
 

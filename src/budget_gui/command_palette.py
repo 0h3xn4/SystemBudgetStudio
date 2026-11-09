@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The command palette, Ctrl+K: type a few words, press Enter (D-166).
 
 One list of everything the window can do or go to: the menu commands, the units, the files, the

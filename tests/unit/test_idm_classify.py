@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Which equipment looks like a battery, a wheel, a thruster... (D-254): the names of the models
 seen, in English and French, with the subsystem that goes with them."""
 

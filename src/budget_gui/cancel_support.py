@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """What the views say while a computation runs, is stopped, or has been stopped (D-167)."""
 
 from __future__ import annotations

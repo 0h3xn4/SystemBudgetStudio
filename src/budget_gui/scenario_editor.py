@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The scenario editor: rules and segments as sentences, edited through the shared document (D-160).
 
 A rule is one sentence you can change in place: "[Downlink] [during every pass over] [gs_north],

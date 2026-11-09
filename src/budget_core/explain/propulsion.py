@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the propulsion and delta-v budget (tables of `reports/propulsion_report.py`,
 D-255).
 

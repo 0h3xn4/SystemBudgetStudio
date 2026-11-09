@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The fast envelope of the plot window (D-161): the peaks of the exact reduction, far less work."""
 
 from __future__ import annotations

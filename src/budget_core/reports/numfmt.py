@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Number text for reports: one rule for every format.
 
 A number is rounded half up (ties away from zero) on its shortest decimal representation, which

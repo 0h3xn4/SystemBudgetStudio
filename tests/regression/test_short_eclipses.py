@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Eclipses and umbras shorter than the 20 s detection grid are found (audit DV-E4, D-146).
 
 A sun-synchronous orbit at 500 km (inclination 97.4 degrees, eccentricity 0.001) whose ascending

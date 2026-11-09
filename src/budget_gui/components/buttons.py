@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Buttons in the four kinds of the design language: primary, secondary, ghost, danger (D-169).
 
 One accent for one primary action per view. The look comes from the style sheet (`kind` and `size`

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """GUI-8 (decision D-105): using a Qt file dialog must not write settings outside the project."""
 
 from __future__ import annotations

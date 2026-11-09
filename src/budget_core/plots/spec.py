@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Renderer-independent plot description shared by the GUI widget and the report renderer.
 
 A plot has stacked panels with a common time axis, step or line series, horizontal limit lines

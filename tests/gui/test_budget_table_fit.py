@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Budget tables: two-line headers, a totals row, text that fits its column (D-163)."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Centre of gravity and inertia of a set of rigid items (pure functions, plain floats).
 
 Conventions (decision D-048): positions in metres in one body frame; inertia entries are tensor

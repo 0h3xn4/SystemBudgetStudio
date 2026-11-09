@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The row of buttons every editing page has: Undo, Redo, Save (and the cell-styles legend)."""
 
 from __future__ import annotations

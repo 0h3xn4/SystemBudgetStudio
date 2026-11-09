@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Add expendable* (D-197): the answers a new expendable needs, none of them invented.
 
 An expendable (propellant, an oxidizer, a pressurant, a consumable, jettisoned equipment) has a
