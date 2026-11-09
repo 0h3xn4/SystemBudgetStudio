@@ -112,26 +112,61 @@ class RpmBackend:
         self.available = shutil.which("rpm") is not None
         self._cache: dict[str, Package | None] = {}
 
+    def siblings(self, name: str) -> list[str]:
+        """The package and every installed package built from the same source package: the
+        licence text of a source package is in one of them (libX11-common for libX11-xcb)."""
+        own = subprocess.run(
+            ["rpm", "-q", "--qf", "%{SOURCERPM}", name], capture_output=True, text=True, check=False
+        ).stdout.strip()
+        names = [name]
+        if own and own != "(none)":
+            listing = subprocess.run(
+                ["rpm", "-qa", "--qf", "%{NAME}\\t%{SOURCERPM}\\n"],
+                capture_output=True,
+                text=True,
+                check=False,
+            ).stdout
+            for line in listing.splitlines():
+                other, _, source = line.partition("\t")
+                if source == own and other not in names:
+                    names.append(other)
+        return names
+
     def licence_files(self, name: str) -> list[Path]:
-        """The licence texts of a package: `rpm -qL`, else the documents of the package (and of
-        its `-common` package) that are named COPYING, LICENSE and so on."""
+        """The licence texts of a package: `rpm -qL`, else the documents named COPYING, LICENSE
+        and so on, of the package or of a package built from the same source package."""
         out: list[Path] = []
-        for query in (["-qL", name], ["-qd", name], ["-ql", name], ["-ql", f"{name}-common"]):
-            result = subprocess.run(["rpm", *query], capture_output=True, text=True, check=False)
-            for line in result.stdout.split():
-                path = Path(line)
-                if not path.is_file():
-                    continue
-                in_docs = "/usr/share/licenses/" in line or "/usr/share/doc/" in line
-                if query[0] == "-qL" or (in_docs and LICENCE_LIKE.search(path.name)):
-                    out.append(path)
+        for candidate in self.siblings(name):
+            for query in (["-qL", candidate], ["-qd", candidate], ["-ql", candidate]):
+                result = subprocess.run(
+                    ["rpm", *query], capture_output=True, text=True, check=False
+                )
+                for line in result.stdout.split():
+                    path = Path(line)
+                    if not path.is_file():
+                        continue
+                    in_docs = "/usr/share/licenses/" in line or "/usr/share/doc/" in line
+                    if query[0] == "-qL" or (in_docs and LICENCE_LIKE.search(path.name)):
+                        out.append(path)
+                if out:
+                    break
             if out:
                 break
         return sorted(set(out))
 
-    def listing(self, name: str) -> str:
-        result = subprocess.run(["rpm", "-ql", name], capture_output=True, text=True, check=False)
-        return ", ".join(result.stdout.split()[:12])
+    def documents(self, name: str) -> str:
+        """For the diagnosis of a package without a licence file: its documents and licences as
+        rpm lists them, and whether they are installed."""
+        out = []
+        for flag in ("-qL", "-qd"):
+            result = subprocess.run(
+                ["rpm", flag, name], capture_output=True, text=True, check=False
+            )
+            out += [
+                f"{p}{'' if Path(p).exists() else ' (not installed)'}"
+                for p in result.stdout.split()
+            ]
+        return ", ".join(out[:12]) or "none listed"
 
     def owner(self, path: Path) -> Package | None:
         if not self.available:
@@ -157,15 +192,22 @@ class RpmBackend:
             found = self.licence_files(name)
             if not found and os.environ.get("SBS_REINSTALL_DOCS") == "1":
                 # a container image installs without documents (tsflags=nodocs): fetch them again
-                subprocess.run(
-                    ["dnf", "-y", "--setopt=tsflags=", "reinstall", name],
+                result = subprocess.run(
+                    ["dnf", "-y", "--setopt=tsflags=", "reinstall", *self.siblings(name)],
                     capture_output=True,
+                    text=True,
                     check=False,
+                )
+                print(
+                    f"dnf reinstall for {name}: exit {result.returncode} {result.stdout[-300:]}"
+                    f" {result.stderr[-300:]}",
+                    file=sys.stderr,
                 )
                 found = self.licence_files(name)
             if not found:
                 print(
-                    f"no licence file for {name}: rpm -ql lists {self.listing(name)}",
+                    f"no licence file for {name}: siblings {self.siblings(name)}; "
+                    f"documents listed: {self.documents(name)}",
                     file=sys.stderr,
                 )
             self._cache[name] = Package(name, version, lic, found)
@@ -266,7 +308,7 @@ def classify(bundle: Path, backend: RpmBackend, repo: Path = ROOT) -> list[Compo
             continue
         if re.match(r"^(lib)?(pyside6|shiboken6)", name, re.IGNORECASE) or (
             relpath.startswith(("_internal/PySide6/", "_internal/shiboken6/"))
-            and name.lower().startswith(("qt", "pyside6", "shiboken6"))
+            and name.lower().startswith(("qt", "pyside", "shiboken"))
         ):
             owner_pkg = packages.get(
                 "pyside6-essentials" if "pyside" in name.lower() else "shiboken6"

@@ -352,3 +352,57 @@ def test_the_icu_libraries_of_the_wheel_get_their_own_component_and_text(tmp_pat
 def test_a_rhel_licence_field_with_zlib_acknowledgement_is_accepted() -> None:
     field = "(FTL or GPLv2+) and BSD and MIT and Public Domain and zlib with acknowledgement"
     assert policy.licence_verdict(policy.normalise_licence(field)).ok
+
+
+FAKE_RPM = """#!/usr/bin/env python3
+import json, os, sys
+db = json.load(open(os.environ["FAKE_RPM_DB"]))
+args = sys.argv[1:]
+if args[0] == "-qa":
+    for name, info in db.items():
+        print(f"{name}\\t{info['srpm']}")
+elif args[0] == "-q" and "--qf" in args:
+    fmt, name = args[args.index("--qf") + 1], args[-1]
+    info = db.get(name)
+    if info is None:
+        sys.exit(1)
+    print(fmt.replace("%{SOURCERPM}", info["srpm"]).replace("%{NAME}", name), end="")
+elif args[0] in ("-qL", "-qd", "-ql"):
+    info = db.get(args[1])
+    if info is None:
+        sys.exit(1)
+    for path in info["files"][args[0]]:
+        print(path)
+else:
+    sys.exit(1)
+"""
+
+
+def test_the_licence_text_of_a_source_package_is_found_in_a_sibling(tmp_path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    """libX11-xcb has no licence file; libX11-common, built from the same source, has."""
+    import os
+    import stat
+
+    text = tmp_path / "COPYING"
+    text.write_text("X11 licence\n", encoding="utf-8")
+    db = {
+        "libX11-xcb": {"srpm": "libX11-1.8.src.rpm", "files": {"-qL": [], "-qd": [], "-ql": []}},
+        "libX11-common": {
+            "srpm": "libX11-1.8.src.rpm",
+            "files": {"-qL": [str(text)], "-qd": [], "-ql": []},
+        },
+        "lonely": {"srpm": "lonely-1.src.rpm", "files": {"-qL": [], "-qd": [], "-ql": []}},
+    }
+    (tmp_path / "db.json").write_text(json.dumps(db), encoding="utf-8")
+    fake = tmp_path / "bin" / "rpm"
+    fake.parent.mkdir()
+    fake.write_text(FAKE_RPM, encoding="utf-8")
+    fake.chmod(fake.stat().st_mode | stat.S_IEXEC)
+    monkeypatch.setenv("PATH", f"{fake.parent}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("FAKE_RPM_DB", str(tmp_path / "db.json"))
+    backend = inventory.RpmBackend()
+    assert backend.available
+    assert backend.siblings("libX11-xcb") == ["libX11-xcb", "libX11-common"]
+    assert backend.licence_files("libX11-xcb") == [text]
+    assert backend.licence_files("lonely") == []
+    assert "none listed" in backend.documents("lonely")
