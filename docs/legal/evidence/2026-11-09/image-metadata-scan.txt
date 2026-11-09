@@ -1,0 +1,6 @@
+716 image files
+Counter({'dpi': 707, 'sizes': 1, 'exif': 1, 'jfif': 1, 'jfif_version': 1, 'jfif_unit': 1, 'jfif_density': 1})
+('assets/icons/logo.ico', 'sizes', '{(16, 16), (32, 32), (64, 64), (128, 128), (48, 48), (256, 256), (24, 24)}')
+('docs/images/ux-redesign/tree-before.jpg', 'exif', "b'Exif\\x00\\x00MM\\x00*\\x00\\x00\\x00\\x08\\x00\\x06\\x01\\x00\\x00\\x03\\x00\\x00\\x00\\x01\\x048\\x00\\x00\\x01\\x01\\x00\\x03\\x00\\x00\\x00\\x")
+('docs/images/ux-redesign/tree-before.jpg', 'EXIF', {256: 1080, 257: 2340, 34665: 144, 305: 'Android BP4A.251205.006.S936BXXSCCZH1', 274: 1, 306: '2026:10:18 20:42:52'})
+3 metadata hits

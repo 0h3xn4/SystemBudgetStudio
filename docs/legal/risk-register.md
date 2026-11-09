@@ -1,0 +1,32 @@
+# Risk register
+
+Date: 2026-11-09. Likelihood and impact: L (low), M (medium), H (high). "Residual" is the expected level after the measure, before any lawyer review. Findings are in [legal-audit.md](legal-audit.md) (F-nn); questions in [lawyer-questions.md](lawyer-questions.md) (LQ-nn). "Who acts": O = owner, C = Claude (needs the owner's merge), L = lawyer.
+
+| ID | Risk | Likelihood | Impact | Measure | Status | Residual | Who acts |
+|---|---|---|---|---|---|---|---|
+| R-01 | A user or reader takes a public claim as a promise ("every equation sourced", "byte-identical reports", "you can defend") and relies on a result for a mission, flight or safety decision. | M | H | One tested disclaimer; claims fixed to match evidence; promise words replaced; report disclaimer (Q4). F-50, F-51, F-52, F-57 | Open | M | C, O |
+| R-02 | Qt and PySide6 (LGPL-3.0) shipped without source or a written offer; a rights holder or user complains. | L | H | Source archives and notices on every release; replaceable libraries documented. F-30, F-41 | Open | L (new releases) / M (old releases unless Q18 = yes) | C, O, L (LQ-03) |
+| R-03 | A GPL-only Qt module reaches a bundle. | L | H | Module list, removal of unused modules, CI check. F-34 | Open | L | C |
+| R-04 | The licence change to Apache-2.0 is invalid or unclear, or the old MIT releases stay confusing. | L | M | Authorship check done (only owner and Claude); `LICENSE`, `NOTICE`, REUSE, MIT text kept for old releases. F-01, F-20 to F-24 | Open | L | C, L (LQ-01, LQ-02) |
+| R-05 | Copyright in AI-written code is uncertain or absent; the copyright notice in the owner's name misdescribes it. | M | M | Honest wording; no statement about protection; question for a lawyer. F-59 | Open | M (cannot be removed by wording) | L (LQ-02) |
+| R-06 | The owner's private address `ohexna@mailbox.org` (128 commits) and the link between "ohexna" and `0h3xn4` are public. | H (already public) | L to M | Leave history; no-reply for new commits; GitHub setting to block private addresses. F-10 | Proposed | M (cannot be undone for forks and caches) | O |
+| R-07 | Employer, customer or non-public data is in the repository or its history (for example behind "the owner's real model" and "CIC-SAT V6"). | L | H | Owner confirms the origin; private term list scan; stop on doubt. F-15, F-16, Q13, Q15 | Open | L after the answers | O |
+| R-08 | The project is read as affiliated with an employer or an agency. | L | M | Ownership statement in README, window, website. F-17 | Open | L | C |
+| R-09 | Exported files reveal the user's account name to people who receive reports. | H | L to M | Default `unknown`, setting to include a name; document what exports contain. F-53 (Q5) | Proposed | L | C, O |
+| R-10 | A hostile shared project, XLSX or IDM file attacks the user (XML bomb, zip bomb, path traversal, formula injection). | L | M to H | Existing limits and safe loaders; `defusedxml`; hostile-file tests; ratio check. F-70 to F-74 | Open | L | C |
+| R-11 | Supply-chain compromise (dependency, Action, release asset). | L | H | Hashed installs everywhere, `pip-audit`, Dependabot, CodeQL, `gitleaks`, Scorecard, attestations, a gated `release` environment, SHA-pinned Actions (already). F-75, F-77 (partly done by #129: `pip-audit`, attestation step) | Open | M (the Windows installer stays unsigned unless Q7) | C, O |
+| R-12 | Owner account takeover. | L | H | Passkey or hardware key, recovery codes offline, release publishing only by the owner, rulesets. Checklist. | Open | L | O |
+| R-13 | A third-party image, font or icon is used outside its licence (OFL Reserved Font Name "Plex"; Lucide ISC and MIT notice; fonts embedded in PDFs). | L | M | Verbatim notices, upstream WOFF2 for the website, never modify Plex. F-32, F-36 | Open | L | C |
+| R-14 | Real orbital data (ISS TLEs in tests) or constants taken from a source with terms. | L | L | Replace with invented elements or record source and terms. F-37 | Open | L | C |
+| R-15 | The IDM-CIC reader or the use of "IDM-CIC" and "CNES" draws a claim (format use, trademark, "(c) CNES" notice). | L | M | Keep "independent"; plain text only; no CNES files; question for a lawyer. F-40 | Open | L to M | O, L (LQ-05) |
+| R-16 | The name "System Budget Studio" conflicts with a registered mark. | L | M | First register search (EUIPO, WIPO, USPTO, classes 9 and 42); lawyer question. F-60 | Open | unknown until searched | C, L (LQ-08) |
+| R-17 | Visitors' data is mishandled by the website (cookies, third-party requests, logs). | L | M | No external requests, no cookies, CSP, test; privacy page; GitHub Pages logs IP addresses (stated). Phase 8 and 9 | Open | L | C |
+| R-18 | No imprint or privacy page where the owner's country requires one. | M | M | Needs Q2 and Q3; imprint only from details the owner gives; options that avoid a home address. F-82 | Blocked | unknown | O, L (LQ-04) |
+| R-19 | Posters put confidential, personal or export-controlled data in issues or pull requests. | M | M | Templates with a required checkbox; README note; right to edit and delete. F-80 | Open | L | C |
+| R-20 | The project becomes commercial (donations, sponsorship, paid support, ads) without advice. | L | M | Non-commercial rule in README and CONTRIBUTING; any change needs legal advice first (this row). F-58 | Open | L | O |
+| R-21 | Export control: publishing engineering software needs a licence in the owner's country. | L | M | Invented data only; question for a lawyer. F-81 | Open | unknown | L (LQ-09) |
+| R-22 | Personal liability for a published free tool is not covered by the owner's insurance. | L | M | Ask the insurer (checklist). | Open | unknown | O |
+| R-23 | Open PR #129 and this work collide (same files, same decision number). | H | L | Merged on 2026-11-09; this branch merged with it; decision numbers D-258 (it) and D-259 (this). F-03 | Closed | L | none |
+| R-24 | A scanner finding is missed because the real tools were not run. | M | M | Run `gitleaks`, `reuse`, ScanCode in CI (Phase 3, 4, 6) or here if Q14 = yes. F-04 | Open | L | C, O |
+| R-25 | The website publishes before the protection phases are complete. | L | M | Pages are off until the owner sets the source; deploy workflow is a Phase 9 change; the owner merges. | Open | L | O |
+| R-26 | The published releases bundle Pillow with known vulnerabilities (39 advisories for 12.3.0 and older); a hostile file or plot input reaches it. | L | M | Release with Pillow 13; release note; reachability check. F-78 | Open | L after a new release | C, O |

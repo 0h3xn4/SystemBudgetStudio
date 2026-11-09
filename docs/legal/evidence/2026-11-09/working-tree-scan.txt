@@ -1,0 +1,26 @@
+# Working-tree scan, 2026-11-09
+## emails
+      1 31:291340596+0h3xn4@users.noreply.github.com
+## handle / name
+AUDIT.md:3:Status: **Fixed.** The findings below are the report as approved on 2026-10-12. Every critical and high finding and nearly every medium and low findi
+CONTRIBUTING.md:8:git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+LICENSE:3:Copyright (c) 2026 0h3xn4
+README.md:9:[![CI](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/SystemBudgetStudio/actions/workfl
+README.md:10:[![Release](https://img.shields.io/github/v/release/0h3xn4/SystemBudgetStudio)](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest)
+README.md:35:Download the installer for your system from the [Releases page](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest). No Python is needed.
+README.md:51:git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+docs/getting-started.md:30:git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+docs/getting-started.md:40:git clone https://github.com/0h3xn4/SystemBudgetStudio.git
+docs/getting-started.md:222:The [Releases page](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest) has a Windows installer (per user, no administrato
+packaging/linux/make_deb.py:31:MAINTAINER = "0h3xn4 <291340596+0h3xn4@users.noreply.github.com>"
+packaging/linux/make_deb.py:32:HOMEPAGE = "https://github.com/0h3xn4/SystemBudgetStudio"
+packaging/linux/system-budget-studio.spec:12:URL:            https://github.com/0h3xn4/SystemBudgetStudio
+tests/unit/test_packages.py:94:        "Homepage: https://github.com/0h3xn4/SystemBudgetStudio",
+## home-directory paths
+docs/transparency_audit.md:261:All paths are under `/home/user/systembudgetstudio/` and all line numbers were read in this session. "SRC" = `src/budget_core/`. 
+docs/transparency_audit.md:496:Scope: `src/budget_core/{mass,thermal,units}/`, `equations.py`, `assumptions.py`, `model/{mass,thermal,equipment,config,base,proj
+docs/transparency_audit.md:710:Paths are under `/home/user/systembudgetstudio/src/budget_core/` unless stated. Line numbers verified by reading/grep.
+docs/transparency_audit.md:1638:Scope read in full: main_window.py, session.py, model_document.py, layout_settings.py, privacy.py, app.py, command_palette.py, p
+packaging/linux/build_in_container.sh:38:cp "dist/${name}.tar.gz" /home/tester/
+tests/unit/test_layout_settings.py:55:        settings.set_word("theme/mode", "/home/me/secret project", ("light", "dark"))
+## secret patterns (HEAD)

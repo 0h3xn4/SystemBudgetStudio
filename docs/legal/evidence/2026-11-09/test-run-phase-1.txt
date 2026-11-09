@@ -1,0 +1,12 @@
+# Test run for Checkpoint 1, 2026-11-09
+# branch protect/phase-1-orientation, Python Python 3.14.6, dependencies from requirements-dev.lock (hashes), QT_QPA_PLATFORM=offscreen, Linux (Ubuntu 24.04 container)
+# Phase 1 adds only documents; the run shows the repository is green with them.
+SKIPPED [1] tests/unit/test_explain_link.py:78: every link of this example is complete
+SKIPPED [1] tests/unit/test_packages.py:218: rpmbuild not installed
+3815 passed, 2 skipped in 942.22s (0:15:42)
+exit 0
+
+ruff check: All checks passed!
+ruff format --check: 638 files already formatted
+mypy: Success: no issues found in 254 source files
+Not run: Windows, the offline test is part of the 3815 (tests/offline), installers (not built in this session).
