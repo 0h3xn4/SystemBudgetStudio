@@ -24,7 +24,7 @@ A free, offline program for the **early design of a small satellite**: it works 
 - **Thermal**: do the parts stay inside their temperature limits?
 - **Radio link**: can the satellite talk to its ground stations, and how much data does each pass carry?
 
-It runs on your own computer (Windows or Linux), **offline**: no account, no cloud service, no telemetry, no update check. It works from plain text files you can keep under version control, every result says which input and which equation it came from, and the same input always gives the same report. It is a design tool for studies and trade-offs, not flight software.
+It runs on your own computer (Windows or Linux), **offline**: no account, no cloud service, no telemetry, no update check ([how to check that yourself](docs/security-and-privacy.md)). It works from plain text files you can keep under version control, every result says which input and which equation it came from, and the same input always gives the same report. It is a design tool for studies and trade-offs, not flight software.
 
 **Why it exists.** Satellite teams usually keep power modes, eclipse cycles, battery depth of discharge, masses, temperatures and link margins in spreadsheets that drift apart. Here they are one model: the tool computes the budgets, shows where a limit is broken, and writes reports (XLSX, PDF, DOCX, CSV, JSON).
 
@@ -73,6 +73,7 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 | See how a number was worked out, where an input came from, and which models are used | [Trace a number](docs/user-manual/trace-a-number.md) |
 | Look at the example projects and what they show | [Examples](examples/README.md) |
 | Fix an error message | [Troubleshooting](docs/troubleshooting.md) and the [FAQ](docs/faq.md) |
+| Check that it is offline and sends nothing, verify a download | [Security and privacy](docs/security-and-privacy.md) |
 | Look up a word (BOL, EIRP, Eb/N0, placeholder…) | [Glossary](docs/glossary.md) |
 | Work faster | [Tips and shortcuts](docs/tips.md) |
 | See the file format of a project | [Project file format](docs/FILE_FORMAT.md) |
