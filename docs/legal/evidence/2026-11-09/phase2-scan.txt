@@ -1,0 +1,26 @@
+# Phase 2 working-tree and metadata checks, 2026-11-09 (pattern scans; gitleaks, exiftool NOT run, see legal-audit F-04)
+
+## internal hosts, intranet, VPN, corporate words (tracked files, excluding CHANGELOG and locks)
+(end)
+
+## host-name and account-name access in code (what the program reads)
+src/budget_core/provenance.py:135:        return getpass.getuser()
+src/budget_gui/compare_view.py:265:            Path(text).expanduser() if text else None,
+src/budget_gui/guided.py:263:        return Path(self.folder_edit.text().strip() or ".").expanduser()
+src/budget_gui/main_window.py:2380:        self._queue_formats, self._queue_folder = set(formats), Path(folder).expanduser()
+
+## tokens or keys at HEAD
+(end)
+
+## svg files with metadata, comments, editor data (excluding Lucide sources)
+(end)
+## committed pdf, docx, xlsx, idm files
+(end)
+## golden files: user row values
+     13     "user": "Golden User"
+     12 User | Golden User
+
+## screenshots checked by eye: docs/images/ui-overhaul/power-budget-light.png (status bar shows /tmp/sbs-docshots-*), docs/ui/screenshots/m4/17-shell-wide-provenance-light.png (Provenance panel: User = root, Python 3.13.16). No personal name, no home path. The other 700+ screenshots were not opened one by one.
+
+## EXIF in tree-before.jpg: before = Android build string and date (1 APP1 segment, 425 bytes); after = none; decoded pixels identical (checked with Pillow)
+exif entries now: 0
