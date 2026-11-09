@@ -6,6 +6,8 @@
 
 A free, offline program for the **early design of a small satellite**: it works out the power, mass, thermal and radio-link budgets from one description of the spacecraft kept in plain text files.
 
+**System Budget Studio is a personal project. It is not affiliated with, sponsored by or endorsed by any employer or organisation.**
+
 [![CI](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/0h3xn4/SystemBudgetStudio)](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest)
 ![Python 3.14 and newer](https://img.shields.io/badge/python-3.14%2B-blue)
