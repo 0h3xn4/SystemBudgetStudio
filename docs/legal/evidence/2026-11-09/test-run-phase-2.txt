@@ -1,0 +1,7 @@
+# Test run for Checkpoint 2, 2026-11-09
+# branch protect/phase-2-personal-data (merged with main 9bf971d), Python 3.14.6, requirements-dev.lock (hashes, Pillow 13.0.0), QT_QPA_PLATFORM=offscreen, Linux container
+SKIPPED [1] tests/unit/test_explain_link.py:78: every link of this example is complete
+SKIPPED [1] tests/unit/test_packages.py:218: rpmbuild not installed
+3816 passed, 2 skipped in 960.85s (0:16:00)
+exit 0
+ruff check: All checks passed!
