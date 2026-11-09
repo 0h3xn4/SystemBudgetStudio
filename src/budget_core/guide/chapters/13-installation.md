@@ -54,6 +54,8 @@ budget self-test
 
 The self-test computes and renders a small budget in every report format and builds this guide, using only the installed files. `system-budget-studio --smoke` also creates the main window and exits, which checks that the graphics libraries are present (set `QT_QPA_PLATFORM=offscreen` on a machine without a display).
 
+If the window closes by itself or shows no icons (Windows), start it from PowerShell with `.\system-budget-studio.exe --diagnose diag.txt`, which writes what the program and Qt know about the machine (no project), and with `--fault-log crash.txt`, which records the Python stack if the process dies of a native fault; the manual page *Troubleshooting* lists the other things to look at (Event Viewer, the remembered layout, the security product).
+
 ## Air-gapped machines
 
 The installers contain every dependency. To install from source on a machine without internet access, use a mirrored wheel set: `pip install --no-index --find-links wheelhouse --require-hashes -r requirements.lock`.
