@@ -110,7 +110,7 @@ The first three are statements about this tool, not about its libraries; the evi
 Every file attached to a release has three independent checks:
 
 1. **Checksum.** `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` list the SHA-256 of each file. On Windows: `Get-FileHash <file> -Algorithm SHA256`; on Linux: `sha256sum -c SHA256SUMS-linux.txt`. This detects a damaged or replaced download, if the list itself came from the release page.
-2. **Build attestation (from the release after 2.11.1).** The release workflow records, with a signature from GitHub (Sigstore, no key to manage), which workflow run, on which commit, built each file. With the GitHub CLI:
+2. **Build attestation (from 2.11.2 on).** The release workflow records, with a signature from GitHub (Sigstore, no key to manage), which workflow run, on which commit, built each file. With the GitHub CLI:
 
    ```
    gh attestation verify system-budget-studio-<version>-linux-x86_64.tar.gz --repo 0h3xn4/SystemBudgetStudio
