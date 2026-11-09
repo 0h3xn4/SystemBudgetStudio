@@ -1,0 +1,13 @@
+System Budget Studio
+Copyright 2026 0h3xn4
+
+System Budget Studio is a personal project. It is not affiliated with,
+sponsored by or endorsed by any employer or organisation.
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+Releases up to and including 2.11.1 were published under the MIT licence; the
+text is kept in docs/legal/MIT-licence-releases-up-to-2.11.1.txt.
+
+Third-party components that are included in the source repository or in the
+installers keep their own licences. They are listed in docs/LICENCES.md, and
+the installers carry their licence texts in the licences folder.

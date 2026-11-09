@@ -1,0 +1,27 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: DCO
+
+# The Developer Certificate of Origin (CONTRIBUTING.md): every commit of a pull request carries a
+# "Signed-off-by" line (git commit -s). Commits made before this check existed are not asked for it.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  signed-off:
+    name: Signed-off-by on every commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Every commit of the pull request has a Signed-off-by line
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: python3 packaging/dco_check.py "$BASE" "$HEAD"
