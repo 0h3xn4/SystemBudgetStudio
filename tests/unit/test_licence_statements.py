@@ -40,7 +40,7 @@ def test_notice_names_the_project_the_holder_and_the_old_releases() -> None:
     assert about.COPYRIGHT_LINE in notice
     assert about.OWNERSHIP_STATEMENT.replace("\n", " ") in " ".join(notice.split())
     assert f"up to and including {about.LAST_MIT_RELEASE}" in notice
-    assert (ROOT / "docs/legal/MIT-licence-releases-up-to-2.11.2.txt").is_file()
+    assert (ROOT / "docs/legal/MIT-licence-releases-up-to-2.11.1.txt").is_file()
 
 
 def test_readme_badge_text_and_ownership_statement() -> None:
@@ -58,7 +58,7 @@ def test_packages_name_the_licence() -> None:
 
 
 def test_no_file_still_says_the_project_is_mit_licensed() -> None:
-    # only the history may call the project MIT: "up to and including 2.11.2"
+    # only the history may call the project MIT: "up to and including 2.11.1"
     for name in ("README.md", "docs/faq.md", "pyproject.toml", "packaging/linux/make_deb.py"):
         text = read(name)
         assert "[MIT licence](LICENSE)" not in text and "[MIT licence](../LICENSE)" not in text
