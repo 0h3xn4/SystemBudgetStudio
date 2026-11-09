@@ -110,7 +110,7 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 
 ## Licence and status
 
-The source code is licensed under the [Apache License 2.0](LICENSE) (see also [NOTICE](NOTICE) and decision D-260). Releases up to and including 2.11.1 were published under the MIT licence and remain available under it ([text](docs/legal/MIT-licence-releases-up-to-2.11.1.txt)). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
+The source code is licensed under the [Apache License 2.0](LICENSE) (see also [NOTICE](NOTICE) and decision D-260). Releases up to and including 2.11.2 were published under the MIT licence and remain available under it ([text](docs/legal/MIT-licence-releases-up-to-2.11.2.txt)). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
 
 Status: version 2.11.2, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 

@@ -17,7 +17,7 @@ from budget_core import APP_NAME, __version__
 COPYRIGHT_LINE = "Copyright 2026 0h3xn4"
 PROJECT_LICENCE_SPDX = "Apache-2.0"
 PROJECT_LICENCE_NAME = "Apache License, Version 2.0"
-LAST_MIT_RELEASE = "2.11.1"
+LAST_MIT_RELEASE = "2.11.2"
 
 OWNERSHIP_STATEMENT = (
     "System Budget Studio is a personal project. It is not affiliated with, sponsored by or "

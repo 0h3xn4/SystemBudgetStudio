@@ -146,7 +146,7 @@ def markdown(entries: list[Entry]) -> str:
         "`requirements.lock`. Allowed: permissive and LGPL (spec constraint 7). The release "
         "also carries the CycloneDX SBOM and `licences.md` from `packaging/build.sh`.\n\n"
         "The project itself is licensed under the Apache License 2.0 (`LICENSE`, `NOTICE`); "
-        "releases up to and including 2.11.1 were published under the MIT licence.\n\n"
+        "releases up to and including 2.11.2 were published under the MIT licence.\n\n"
         "| Package | Licence (option used) | Category |\n|---|---|---|\n"
         f"{rows}\n{NOTES}"
     )
