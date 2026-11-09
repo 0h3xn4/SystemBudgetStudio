@@ -4,9 +4,13 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.11.1] - 2026-11-09
+
+Support aids for a window that fails on another computer, a documentation sweep and new documentation screenshots. No result of any budget changed, and no file format.
+
 - **Support aids for a window that fails on another computer (D-257).** `system-budget-studio --diagnose [FILE]` prints and writes what the program and Qt know about the machine (versions, graphics plugin, screens, whether the bundled fonts and icons loaded, the layout file; no project), and `--fault-log FILE` writes the Python stack of every thread if the process dies of a native fault, which the windowed program otherwise does in silence. Troubleshooting has a section for a window that closes by itself or shows no icons on Windows.
 
-Documentation sweep after 2.11.0; no result of any budget changed.
+The documentation sweep after 2.11.0:
 
 - Every page that names a menu, a shortcut, a command or a table was checked against the program as built: the menu and shortcut names against the window's real menus, the commands of getting started and of the examples against real runs. Fixed: the menu path of the IDM-CIC import (*File > Import IDM-CIC model*, which two pages wrote as *File > Import > IDM-CIC model*), the number of warnings of `microsat_250kg` (128, all placeholders), the number of example projects (five) in the architecture and developer pages, the schema versions in the file-format page, the length of a full test run.
 - New or completed: Explain of the propulsion, pointing and beta sweep tables in the manual pages, the command-line reference, the Explain model page and the in-app guide; the four spreadsheet tables (Eb/N0, attenuation, margins, links) in the FAQ, the tips, the window page, the exports page and the guide; the components of the IDM-CIC import in the manual, the FAQ, the guide, the glossary and the project folder listing; the modules of 2.2.0 to 2.11.0 in the architecture page; new glossary entries (*Beta sweep*, *Component library*, *Not mapped*).

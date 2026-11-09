@@ -1,7 +1,7 @@
 pages=14
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Mass budget (static): Example 150 kg microsatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
@@ -170,7 +170,7 @@ class_b
 yes
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Item
 Name
@@ -381,7 +381,7 @@ Mass in the CG calculation (kg)
  152.6000
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Inertia tensor
 Entry
@@ -630,7 +630,7 @@ no
 By subsystem
 ## page 4
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Subsystem
 Mass (kg)
@@ -706,7 +706,7 @@ Phase: eol
 Items
 ## page 5
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Item
 Name
@@ -967,7 +967,7 @@ Total, with unit margins
  n/a
 ## page 6
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Quantity
 Value
@@ -1061,7 +1061,7 @@ SOURCE_MISSING: the formula is a project convention or textbook definition whose
 Problems
 ## page 7
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Problems and open items
 Severity
@@ -1225,7 +1225,7 @@ policy, standard or data sheet and cite the
 source.
 ## page 8
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 Severity
 Code
@@ -1389,7 +1389,7 @@ policy, standard or data sheet and cite the
 source.
 ## page 9
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
 Severity
 Code
@@ -1559,7 +1559,7 @@ policy, standard or data sheet and cite the
 source.
 ## page 10
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 10
 Severity
 Code
@@ -1728,7 +1728,7 @@ policy, standard or data sheet and cite the
 source.
 ## page 11
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 11
 Severity
 Code
@@ -1914,7 +1914,7 @@ policy, standard or data sheet and cite the
 source.
 ## page 12
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 12
 Severity
 Code
@@ -2101,7 +2101,7 @@ policy, standard or data sheet and cite the
 source.
 ## page 13
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 13
 Severity
 Code
@@ -2289,7 +2289,7 @@ policy, standard or data sheet and cite the
 source.
 ## page 14
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.0 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.11.1 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 14
 Severity
 Code
@@ -2343,7 +2343,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 2.11.0
+System Budget Studio 2.11.1
 Python
 3.x
 Libraries
