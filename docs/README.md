@@ -90,5 +90,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [DESIGN.md](DESIGN.md) | The design system of the window: colour tokens, status styles, cell styles, type and spacing, components, icons, the shell, the layout file, shortcuts, accessibility, UI sizes, responsiveness (generated tables, kept true by a test) |
 | [ux-audit.md](ux-audit.md) | The UX audit of the 1.0.0 window: findings, screenshots, measurements, decisions needed (historical; the window has been redesigned since) |
 | [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md) | The UI overhaul (1.2.0): audit, baseline, information architecture, the milestones M1 to M6 as built and the final measurements against the baseline (brief: [ui/UI_OVERHAUL.md](ui/UI_OVERHAUL.md); screenshots and baselines per milestone in `ui/screenshots/`) |
+| [legal/README.md](legal/README.md) | The legal record: inventory, claims register, audit, risk register, owner checklist and questions for a lawyer, with dated evidence (not legal advice) |
+| [site/plan.md](site/plan.md) | The plan for the project website: assets, page structure, tests, open points (nothing built or published) |
 
 Next: [Getting started](getting-started.md).
