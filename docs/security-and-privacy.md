@@ -110,7 +110,7 @@ The first three are statements about this tool, not about its libraries; the evi
 Every file attached to a release has three independent checks:
 
 1. **Checksum.** `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` list the SHA-256 of each file. On Windows: `Get-FileHash <file> -Algorithm SHA256`; on Linux: `sha256sum -c SHA256SUMS-linux.txt`. This detects a damaged or replaced download, if the list itself came from the release page.
-2. **Build attestation (from the release after 2.11.1).** The release workflow records, with a signature from GitHub (Sigstore, no key to manage), which workflow run, on which commit, built each file. With the GitHub CLI:
+2. **Build attestation (from 2.11.2 on).** The release workflow records, with a signature from GitHub (Sigstore, no key to manage), which workflow run, on which commit, built each file. With the GitHub CLI:
 
    ```
    gh attestation verify system-budget-studio-<version>-linux-x86_64.tar.gz --repo 0h3xn4/SystemBudgetStudio
@@ -119,7 +119,7 @@ Every file attached to a release has three independent checks:
    A file that was not built by that repository's release workflow, or that was changed afterwards, fails. This is stronger than a checksum, because a checksum and a file can be replaced together.
 3. **The source.** The tag `v<version>` names the commit; the workflows that built the files are in `.github/workflows/` at that commit, and `packaging/` holds the build scripts.
 
-**The Windows installer is not code-signed.** Windows SmartScreen and some virus scanners therefore warn about it ("unknown publisher"). Signing needs a code-signing certificate from a certificate authority, which the project does not have yet; until it does, use the checksum and the attestation above, and let your security team scan the file. If your organisation requires a signed installer, it can sign the downloaded file with its own certificate, or build from source (`pyinstaller packaging/system_budget_studio.spec`).
+**The Windows installer is not code-signed.** Windows SmartScreen and some virus scanners therefore warn about it ("unknown publisher"). Signing needs a code-signing certificate from a certificate authority, and the project does not use one. Use the checksum and the attestation above instead, and let your security team scan the file. If your organisation requires a signed installer, it can sign the downloaded file with its own certificate, or build from source (`pyinstaller packaging/system_budget_studio.spec`).
 
 ## What is not covered
 
@@ -133,6 +133,6 @@ Be clear about the limits when you answer the question.
 
 ## Report a problem
 
-If you find a connection, a file with project content outside the folders above, or a vulnerable library, report it to the project owner privately first (do not post a project, a log or a trace in a public issue). Say what you ran, on which version (`budget --version`), and attach the trace or the file listing, not the project.
+If you find a connection, a file with project content outside the folders above, or a vulnerable library, open an issue in the repository. The project has no private reporting channel, so the issue is public: describe what you ran and on which version (`budget --version`), and quote only the lines of the trace or the file names that show the problem, after checking that they contain no project name, path or value. Never attach a project, a report or a whole log.
 
 Next: [FAQ](faq.md) · [Troubleshooting](troubleshooting.md) · [Docs index](README.md).
