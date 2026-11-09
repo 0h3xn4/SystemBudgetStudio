@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Verification of the offline and no-telemetry statements (D-258).** New page [Security and privacy](docs/security-and-privacy.md): the guarantees, what is written and where, six levels of checking on your own machine (bill of materials, network cut, `strace`, firewall block, a search for project words outside the project, a packet capture), how to check a download, and the limits. New `scripts/verify_offline.py` runs the whole workflow (and, with `--gui`, the window) under `strace` and fails on any connection to an internet address, after a deliberate connection proves the detector sees one. New canary test `tests/offline/test_privacy_canary.py`: a project whose name, unit name, source text and folder carry a unique marker is run through the command line and the window in an empty sandbox, and no file outside the project and output folders may contain the marker. CI gets a Linux `strace` job, a Windows job with the outbound traffic of Python blocked in the firewall (a control connection must fail first), and a weekly `pip-audit` of both lock files (`audit.yml`). The release workflow attaches signed build attestations to the installers, archives and the bill of materials (`gh attestation verify`). The Windows installer is still not code-signed (no certificate). No result of any budget changed.
+
 ## [2.11.1] - 2026-11-09
 
 Support aids for a window that fails on another computer, a documentation sweep and new documentation screenshots. No result of any budget changed, and no file format.
