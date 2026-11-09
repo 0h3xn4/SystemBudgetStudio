@@ -42,8 +42,13 @@ def internet_calls(trace: str) -> list[str]:
     ]
 
 
+def strace_program() -> str | None:
+    """Linux strace only: Git for Windows puts an unrelated `strace.exe` on the Windows PATH."""
+    return shutil.which("strace") if sys.platform.startswith("linux") else None
+
+
 def traced(command: list[str], log: Path) -> list[str]:
-    strace = shutil.which("strace")
+    strace = strace_program()
     if strace is None:
         return command
     return [strace, "-f", "-qq", "-e", "trace=network", "-o", str(log), *command]
@@ -51,7 +56,7 @@ def traced(command: list[str], log: Path) -> list[str]:
 
 def detector_works(work: Path) -> bool:
     """A command that really connects (to the local machine, nothing leaves it) must be seen."""
-    if shutil.which("strace") is None:
+    if strace_program() is None:
         return True
     log = work / "control.trace"
     code = (
@@ -59,6 +64,8 @@ def detector_works(work: Path) -> bool:
         "try: s.connect(('127.0.0.1', 9))\nexcept OSError: pass"
     )
     subprocess.run(traced([sys.executable, "-c", code], log), check=False, timeout=60)
+    if not log.is_file():
+        return False
     return bool(internet_calls(log.read_text(encoding="utf-8", errors="replace")))
 
 
@@ -95,7 +102,7 @@ def main() -> int:
     work.mkdir(parents=True, exist_ok=True)
     (work / "tables").mkdir(exist_ok=True)
     env = {**os.environ, "QT_QPA_PLATFORM": os.environ.get("QT_QPA_PLATFORM", "offscreen")}
-    have_strace = shutil.which("strace") is not None
+    have_strace = strace_program() is not None
     note = "yes" if have_strace else "no (the workflow runs, the connections are not traced)"
     print(f"strace: {note}")
     if not detector_works(work):
