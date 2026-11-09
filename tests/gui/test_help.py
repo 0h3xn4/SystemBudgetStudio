@@ -62,3 +62,31 @@ def test_about_dialog_names_the_owner_statement_and_the_licence(window: MainWind
 
     titles = [a.text().replace("&", "") for a in window.findChildren(QAction)]
     assert any(t.startswith("About ") for t in titles)
+
+
+def test_third_party_licences_dialog_shows_the_notices_or_says_where_they_are(
+    window: MainWindow,
+    qtbot,
+    tmp_path,
+    monkeypatch,  # type: ignore[no-untyped-def]
+) -> None:
+    from budget_core import about
+
+    # a copy that is not installed: the text says where the licences are
+    dialog = window.open_notices()
+    qtbot.addWidget(dialog)
+    assert about.NOT_INSTALLED_TEXT in dialog.view.toPlainText()
+    assert dialog.view.isReadOnly()
+    # an installed copy: the file next to the program
+    notices = tmp_path / about.NOTICES_FILE
+    notices.write_text("THIRD-PARTY NOTICES\nzlib licence text\n", encoding="utf-8")
+    monkeypatch.setattr("sys.frozen", True, raising=False)
+    monkeypatch.setattr("sys.executable", str(tmp_path / "system-budget-studio"))
+    assert about.third_party_text().startswith("THIRD-PARTY NOTICES")
+    shown = window.open_notices()
+    qtbot.addWidget(shown)
+    assert "zlib licence text" in shown.view.toPlainText()
+    from PySide6.QtGui import QAction
+
+    titles = [a.text().replace("&", "") for a in window.findChildren(QAction)]
+    assert "Third-party licences…" in titles
