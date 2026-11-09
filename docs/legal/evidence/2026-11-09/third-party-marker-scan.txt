@@ -1,0 +1,122 @@
+# Scan of src, scripts, packaging, tests and docs for copyright notices, licence words and signs of copied code (standard library only; 772 text files). ScanCode Toolkit 33 was installed from PyPI into a scratch environment but its run was refused by the permission check (legal-audit F-04); this scan is the substitute. Result: no third-party copyright notice and no copied-code marker; every hit is our own text, a licence text, the (c) CNES statement or the words "taken from" in a different sense.
+files scanned: 772
+
+## copyright: 37 lines in 20 files
+docs/DECISIONS.md:130: | D-140 | **Licence and visibility (owner decision, 2026-10-12).** The project is released under the MIT licence (`LICENSE`, copyright holde
+docs/DECISIONS.md:249: | D-259 | **Legal and privacy protection programme: the owner's answers of 2026-11-09 (Q1 to Q19 of [legal/legal-audit.md](legal/legal-audit
+docs/DECISIONS.md:250: | D-260 | **Licence change to the Apache License 2.0, REUSE compliance and contribution rules (protection programme, phase 3; supersedes the
+docs/LICENCES.md:49: - **Permissive licences** (MIT, BSD, Apache, PSF, HPND/MIT-CMU): keep the copyright notices; the
+docs/faq.md:111: Yes: `budget import idm model.idm --bus-voltage-v 28` shows what it would build and, with `--apply`, creates a project with a unit for every
+docs/glossary.md:154: **IDM-CIC**: concurrent-engineering software of the French space agency CNES for the early design of satellites; its model file (`.idm`) can
+docs/legal/MIT-licence-releases-up-to-2.11.1.txt:3: Copyright (c) 2026 0h3xn4
+docs/legal/MIT-licence-releases-up-to-2.11.1.txt:12: The above copyright notice and this permission notice shall be included in all
+docs/legal/MIT-licence-releases-up-to-2.11.1.txt:18: AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+docs/legal/claims-register.md:21: | C-13 | "Reads models from IDM-CIC (© CNES); independent of CNES, no CNES software needed" | README, `src/budget_gui/idm_import.py` | `test
+docs/legal/evidence/2026-11-09/reuse-lint.txt:12: * Files with copyright information: 1958 / 1958
+docs/legal/evidence/2026-11-09/working-tree-scan.txt:7: LICENSE:3:Copyright (c) 2026 0h3xn4
+docs/legal/inventory.md:41: | Inter 4.0 (Regular, Medium, SemiBold) | `assets/fonts/Inter-*.ttf` | rsms/inter release v4.0, unmodified; SHA-256 of the archive recorded 
+docs/legal/inventory.md:42: | JetBrains Mono 2.304 (Regular, Medium) | `assets/fonts/JetBrainsMono-*.ttf` | JetBrains release v2.304, unmodified; SHA-256 recorded | OFL
+docs/legal/inventory.md:136: | `LICENSE` | MIT, "Copyright (c) 2026 0h3xn4" |
+docs/legal/lawyer-questions.md:11: | LQ-01 | May the owner, as sole copyright holder, change the licence for new releases from MIT to Apache-2.0 while releases up to the last 
+docs/legal/lawyer-questions.md:12: | LQ-02 | Under German copyright law, is code and text written by an AI system under the owner's requirements and review protected by copyri
+docs/legal/lawyer-questions.md:15: | LQ-05 | May the tool read IDM-CIC model files and name "IDM-CIC" and "CNES" in the program and the docs as it does ("reads models from IDM
+docs/legal/legal-audit.md:24: | F-11 | Low | `LICENSE` names the copyright holder as the handle "0h3xn4". The `.deb` maintainer uses `0h3xn4 <291340596+0h3xn4@users.norep
+docs/legal/legal-audit.md:40: | F-22 | Medium | No source file has an SPDX identifier or a copyright line. 1937 tracked files. REUSE compliance needs `REUSE.toml` plus he
+docs/legal/legal-audit.md:78: | F-59 | Medium | AI authorship is not stated anywhere in README, docs or the window; the commit trailers do state it. 312 commits have Clau
+docs/legal/owner-checklist.md:27: - [ ] **Required checks** (Phase 3): in the ruleset for `main` add `REUSE (licence and copyright of every file)` and `Signed-off-by on every
+docs/legal/risk-register.md:11: | R-05 | Copyright in AI-written code is uncertain or absent; the copyright notice in the owner's name misdescribes it. | M | M | Honest wor
+docs/models/idm-import.md:3: Reads models from IDM-CIC (© CNES). IDM-CIC is software of the French space agency CNES for the early design of satellites. System Budget St
+docs/user-manual/idm-import.md:3: Reads models from IDM-CIC (© CNES). IDM-CIC is software of the French space agency CNES for the early design of satellites. System Budget St
+packaging/licence_check.py:137: - **Permissive licences** (MIT, BSD, Apache, PSF, HPND/MIT-CMU): keep the copyright notices; the
+packaging/linux/make_deb.py:135: "Copyright 2026 0h3xn4\n"
+packaging/linux/make_deb.py:151: Entry(f"usr/share/doc/{NAME}/copyright", 0o644, copyright_text),
+src/budget_core/about.py:20: COPYRIGHT_LINE = "Copyright 2026 0h3xn4"
+tests/unit/test_idm_hygiene.py:65: assert "© CNES" in page
+tests/unit/test_packages.py:121: "./usr/share/doc/system-budget-studio/copyright",
+tests/unit/test_packages.py:135: copyright_text = data.extractfile("./usr/share/doc/system-budget-studio/copyright").read()  # type: ignore[union-attr]
+
+## licence-words: 28 lines in 19 files
+docs/DECISIONS.md:250: | D-260 | **Licence change to the Apache License 2.0, REUSE compliance and contribution rules (protection programme, phase 3; supersedes the
+docs/LICENCES.md:5: The project itself is licensed under the Apache License 2.0 (`LICENSE`, `NOTICE`); releases up to and including 2.11.1 were published under 
+docs/developer/README.md:113: `packaging/check_bundle.py` fails the build if development code is bundled, licence material is missing (the licence gate: [replace-qt.md](r
+docs/faq.md:23: Yes. The source code is licensed under the [Apache License 2.0](../LICENSE): free to use, copy, modify and distribute, with the conditions o
+docs/legal/MIT-licence-releases-up-to-2.11.1.txt:5: Permission is hereby granted, free of charge, to any person obtaining a copy
+docs/legal/claims-register.md:22: | C-14 | "Released under the MIT licence" | README, FAQ, package metadata | `LICENSE` | Changed in branch protect/phase-3-licence: now "Apac
+docs/legal/evidence/2026-11-09/working-tree-scan.txt:7: LICENSE:3:Copyright (c) 2026 0h3xn4
+docs/legal/inventory.md:99: | `.deb`, `.rpm` wrappers | `packaging/linux/make_deb.py`, `make_rpm.sh` | `License: MIT` in both |
+docs/legal/inventory.md:141: | `packaging/linux/system-budget-studio.spec` | `License: MIT` |
+docs/legal/lawyer-questions.md:25: | LQ-15 | Does a `Signed-off-by` line in the name of an AI tool have any meaning for the Developer Certificate of Origin, and should the own
+packaging/licence_check.py:36: ("review", re.compile(r"\bMPL|Mozilla Public|EPL|Eclipse Public|CDDL", re.I)),
+packaging/licence_check.py:52: licence: str
+packaging/licence_check.py:158: "The project itself is licensed under the Apache License 2.0 (`LICENSE`, `NOTICE`); "
+packaging/linux/make_deb.py:136: "Released under the Apache License, Version 2.0 (below). Releases up to and including\n"
+packaging/linux/system-budget-studio.spec:11: License:        Apache-2.0
+packaging/windows/system_budget_studio.iss:20: ; the licence page: the Apache License 2.0 (the text is in the bundle; the silent install skips the page)
+src/budget_core/about.py:22: PROJECT_LICENCE_NAME = "Apache License, Version 2.0"
+src/budget_core/about.py:30: f"Licensed under the {PROJECT_LICENCE_NAME} (SPDX: {PROJECT_LICENCE_SPDX}). Releases up to and "
+src/budget_core/guide/chapters/13-installation.md:46: The program folder contains `LICENSE` (the Apache License 2.0 of the program) and `NOTICE`, `licences/` (the licence text of every bundled p
+tests/unit/test_bundle_checks.py:47: assert "GNU LESSER GENERAL PUBLIC LICENSE" in text
+tests/unit/test_bundle_checks.py:53: assert "Version 3, 29 June 2007" in text and "GNU LESSER GENERAL PUBLIC LICENSE" in text
+tests/unit/test_licence_statements.py:24: assert "Apache License" in text and "Version 2.0, January 2004" in text
+tests/unit/test_licence_statements.py:50: assert "Apache License 2.0" in readme and about.LAST_MIT_RELEASE in readme
+tests/unit/test_licence_statements.py:55: assert re.search(r"^License:\s+Apache-2\.0\s*$", spec, flags=re.M)
+tests/unit/test_licences.py:44: ("GNU Lesser General Public License v3 (LGPLv3)", "lgpl"),
+tests/unit/test_licences.py:48: ("GNU General Public License v3 (GPLv3)", "disallowed"),
+tests/unit/test_packages.py:137: assert b"Apache License, Version 2.0" in copyright_text
+
+## url-source: 57 lines in 40 files
+docs/DECISIONS.md:217: | D-227 | **The beta angle of a scenario (2.2.0).** `budget_core/environment/beta.py` computes beta = asin(h . s) from the propagator's TEME
+docs/DECISIONS.md:224: | D-234 | **The pointing and slew budget (2.2.0, from the systems engineer's feedback: pointing modes separate from spacecraft modes, slew b
+docs/DECISIONS.md:240: | D-250 | **The thermal model against the beta angle (2.7.0).** The design in [thermal_beta_design.md](thermal_beta_design.md), built as rec
+docs/DESIGN.md:154: - **Reports page and Compare** (D-165). The Reports page reads what can be exported from the views (`ReportItem`: key, state, ready) and han
+docs/DEVIATIONS.md:17: - **DV-E4 (audit, short shadows found after the release, D-146):** passes and eclipses are detected on a fixed 20 s grid, whatever `step_s`.
+docs/DEVIATIONS.md:22: - **DV-E7 (2.2.0, D-229):** an orbit given as a state vector is made into mean elements before it is propagated. (1) The frame: J2000 to TEM
+docs/DEVIATIONS.md:26: - **DV-P6 (M4, audit):** the Sun direction and pointing mode are sampled at the start of each step; the demand and the sunlit share use the 
+docs/DOCS_AUDIT.md:119: | Screenshots | taken from the real window (Qt offscreen, Linux), viewed and checked for readability |
+docs/ENVIRONMENT_FORMAT.md:51: Rules of the importer (D-124): the files may start with a UTF-8 byte order mark (Excel's *CSV UTF-8*); the separator is the comma and the de
+docs/PROBLEMS.md:698: - **Why it matters.** Nothing can be imported from a file that cannot be read.
+docs/PROBLEMS.md:806: - **Why it matters.** Nothing can be imported from a file that cannot be opened.
+docs/changes.md:16: | Any project not imported from IDM-CIC, any result of any project | as in 2.9.0 | the same |
+docs/changes.md:143: **What changed.** The model digest of [provenance.md](models/provenance.md) is taken from what the tool loaded, and that includes the `schem
+docs/glossary.md:31: **Beta sweep**: the node temperatures of a thermal case worked out for a range of beta angles, with the Sun's share of each flat surface tak
+docs/legal/inventory.md:122: Text and tables copied from standards, books or papers: **none found** in `docs/` (standards are named, not quoted). `docs/ui/UI_OVERHAUL.md
+docs/legal/lawyer-questions.md:15: | LQ-05 | May the tool read IDM-CIC model files and name "IDM-CIC" and "CNES" in the program and the docs as it does ("reads models from IDM
+docs/legal/legal-audit.md:28: | F-15 | Medium | **"CIC-SAT V6 (sample of the owner)" and "an owner's real model"** are named in `docs/DECISIONS.md` (D-246, D-253), `CHANG
+docs/legal/risk-register.md:20: | R-14 | Real orbital data (ISS TLEs in tests) or constants taken from a source with terms. | L | L | Replace with invented elements or reco
+docs/models/idm-import.md:65: - **Placement.** A position is a translation `t` and three rotations, composed as the product of the three axis rotations in the order the r
+docs/models/orbit-design.md:38: The beta angle of a scenario is `asin((r × v)/|r × v| · s)` (ORB-BETA): the angle between the Sun direction `s` and the orbit plane, positiv
+docs/models/propulsion.md:29: Either given (`dry_mass_kg`, with its source) or taken from the mass budget: the nominal total of the first mission phase less the mass the 
+docs/models/provenance.md:26: Comments, key order, spacing, file names other than the ids, and the folder the project lives in do not enter, and neither do the sources an
+docs/models/thermal-beta.md:3: Added in 2.7.0 (decision D-250, deviations DV-T4 and DV-T5). It builds on the [static thermal budget](thermal-static.md): the same nodes, co
+docs/transparency_audit.md:717: 1. LNK-001/LNK-020: the report and UI show only sums and results. The static table gives EIRP, G/T and "Other losses" as one sum, never thei
+docs/transparency_audit.md:729: | LNK-003 | link/constants.py:14-15 | R_earth = 6 378 137.0 m, hard-coded second copy | Spacecraft range from Earth centre and nadir angle (
+docs/transparency_audit.md:1870: | GV-B03 | power.py:274 | the "Minimum allowed" SoC line is taken from the violations, so it is absent from the plot while no DoD violation 
+docs/troubleshooting.md:138: The export was made by an earlier version. The digest is taken from the project as loaded and includes the schema version of each file, whic
+docs/troubleshooting.md:170: The project has an error since you last saved. The budget tables are kept from before it so you can see what your change did, and nothing ca
+docs/user-manual/scenarios.md:42: The scenario converts it to the mean elements whose SGP4 state at the epoch is this state, so the orbit starts exactly where you put it; aft
+docs/user-manual/scenarios.md:182: Under the eclipse line, the **beta angle** (the angle between the Sun and the orbit plane) is given as its minimum, mean and maximum over th
+docs/user-manual/thermal-budget.md:89: **In the window** (2.8.0): the **Thermal** area has a second page, **Beta sweep**. Choose the case, the heat loads (*Orbit average* or *Wors
+docs/user-manual/thermal-budget.md:108: For every surface that gives its normal, the solar view ratio of the chosen case is taken from the beta angle instead of the typed one; ever
+src/budget_core/environment/beta.py:36: imported environment) it is taken from the positions, v = dr/dt on `times_s`."""
+src/budget_core/environment/constants.py:27: # Taken from the sgp4 library's WGS-84 set so geometry and propagation use the same Earth.
+src/budget_core/environment/ground_track.py:37: leave under a tenth of a millimetre); the height is taken from the form that is stable at
+src/budget_core/explain/beta.py:13: explanation, which are taken from `explain/thermal.py` unchanged: the solar view of such a surface
+src/budget_core/explain/pointing.py:204: else "Taken from the mass budget (diagonal entry about the centre of gravity for the "
+src/budget_core/explain/propulsion.py:316: "The file gives no dry mass, so it is taken from the mass budget (D-233).",
+src/budget_core/explain/thermal.py:162: "Taken from the power budget.",
+src/budget_core/explain/thermal.py:631: return _read(temperature, "Taken from the node temperature table.")
+src/budget_core/guide/chapters/06-thermal-budget.md:15: The model is steady state only. For a range of beta angles, `budget thermal-beta` solves it with the solar view of every flat surface that g
+src/budget_core/idm/geometry.py:23: occurrence it was copied from;
+src/budget_core/idm/importer.py:453: update={"description": f"Imported from {source}. Margins: {options.margins}."}
+src/budget_core/idm/mapping.py:584: description=f"Imported from system mode {sm.id} of {ctx.source}.",
+src/budget_core/idm/model.py:58: origin: str | None  # the object it was copied from (definition or template instance)
+src/budget_core/pointing/budget.py:230: "The inertia cannot be taken from the mass budget (no centre of gravity).",
+src/budget_core/power/attitude.py:23: at every sample, with the velocity taken from the positions by central differences."""
+src/budget_core/problem_catalogue.py:861: "Nothing can be imported from a file that cannot be read.",
+src/budget_core/problem_catalogue.py:983: "Nothing can be imported from a file that cannot be opened.",
+src/budget_core/propulsion/budget.py:293: incomplete("The dry mass cannot be taken from the mass budget (no total).", FILE, "")
+src/budget_core/thermal/beta_sweep.py:9: taken from the beta angle instead of being typed: the orbit-average solar exposure of the face
+src/budget_core/thermal/beta_sweep.py:166: """The project as the sweep solves it at one beta angle: the solar view of `case` taken from
+src/budget_core/thermal/beta_sweep.py:258: """The surface with the solar view of `case` taken from the beta angle (when it has a
+src/budget_gui/time_axis.py:135: """Whole orbits counted from 1, the period taken from the spacing of the eclipses."""
+tests/regression/test_time_domain.py:7: The reference values are worked out in the comments; no value is copied from the code under test.

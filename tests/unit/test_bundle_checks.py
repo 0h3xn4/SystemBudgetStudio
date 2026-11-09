@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -66,11 +67,20 @@ def fake_bundle(tmp_path: Path, extra: tuple[str, ...] = (), skip: tuple[str, ..
         "licences/pyside6-essentials/LGPL-3.0.txt",
         "licences.md",
         "sbom.cdx.json",
+        "THIRD_PARTY_NOTICES.txt",
+        "licences/python/LICENSE.txt",
     ):
         if rel not in skip:
             target = bundle / rel
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text("x", encoding="utf-8")
+    if "licences/COMPONENTS.json" not in skip:
+        python = {
+            "name": "Python", "version": "3.14", "group": "runtime", "spdx": "PSF-2.0",
+            "files": ["_internal/libpython3.14.so.1.0"], "texts": ["licences/python/LICENSE.txt"],
+            "source": "", "problems": [], "known_gap": "",
+        }  # fmt: skip
+        (bundle / "licences" / "COMPONENTS.json").write_text(json.dumps([python]), encoding="utf-8")
     if "icon" not in skip:
         for rel in check_bundle.ICONS:
             icon = internal / rel
@@ -120,6 +130,10 @@ def test_the_private_python_of_the_bundle_may_have_any_platform_name(
 ) -> None:
     bundle = fake_bundle(tmp_path, skip=("python",))
     (bundle / "_internal" / name).write_bytes(b"x")
+    record = bundle / "licences" / "COMPONENTS.json"
+    components = json.loads(record.read_text(encoding="utf-8"))
+    components[0]["files"] = [f"_internal/{name}"]
+    record.write_text(json.dumps(components), encoding="utf-8")
     assert check_bundle.check(bundle) == []
 
 

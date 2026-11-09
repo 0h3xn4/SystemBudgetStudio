@@ -44,6 +44,20 @@ SPDX-FileCopyrightText = [
 ]
 SPDX-License-Identifier = "ISC AND MIT"
 
+# Licence text of libffi, copied verbatim for the Windows bundle (packaging/notices/README.md).
+[[annotations]]
+path = "packaging/notices/libffi-LICENSE.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "1996-2024 Anthony Green, Red Hat, Inc and others"
+SPDX-License-Identifier = "MIT"
+
+# Licence text of ICU 73.2, copied verbatim for the bundled ICU libraries of the PySide6 wheel.
+[[annotations]]
+path = "packaging/notices/icu-73-LICENSE.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "1991-2023 Unicode, Inc. and others"
+SPDX-License-Identifier = "Unicode-DFS-2016"
+
 # Texts of the GPL and LGPL that travel with the Qt bindings (verbatim copies).
 [[annotations]]
 path = "assets/licences/GPL-3.0.txt"

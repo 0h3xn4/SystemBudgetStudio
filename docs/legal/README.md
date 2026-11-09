@@ -11,6 +11,7 @@ Never put secrets or personal data in this folder.
 | [legal-audit.md](legal-audit.md) | Every finding with severity, proposed measure and status; the numbered questions for the owner | 2026-11-09 |
 | [risk-register.md](risk-register.md) | One row per risk | 2026-11-09 |
 | [owner-checklist.md](owner-checklist.md) | Steps only the owner can do | 2026-11-09 |
+| [past-releases.md](past-releases.md) | What the published releases lack (notices, sources, SBOM) and the options | 2026-11-09 |
 | [lawyer-questions.md](lawyer-questions.md) | Questions for a lawyer | 2026-11-09 |
 | `evidence/YYYY-MM-DD/` | Raw output of scans and checks | 2026-11-09 |
 | `residual-risk-report.md` | Final report of Phase 9 | not yet written |

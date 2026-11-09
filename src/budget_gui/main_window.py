@@ -97,6 +97,7 @@ from budget_gui.legend import LegendDialog
 from budget_gui.link_view import LinkPassesView
 from budget_gui.model_document import ModelDocument
 from budget_gui.model_pages import InputsPage, PowerModesPage, SpacecraftModesPage, UnitsPage
+from budget_gui.notices_view import NoticesDialog
 from budget_gui.orbit_helper_dialog import OrbitHelperDialog, OrbitHelperValues
 from budget_gui.privacy import disable_settings_files
 from budget_gui.problem_class import ProblemClass
@@ -442,6 +443,10 @@ class MainWindow(QMainWindow):
         about.setStatusTip("Version, owner, licence and third-party licences")
         about.triggered.connect(lambda: self.open_about())
         help_menu.addAction(about)
+        notices = QAction("&Third-party licences…", self)
+        notices.setStatusTip("The licences of the libraries, fonts and icons in the installers")
+        notices.triggered.connect(lambda: self.open_notices())
+        help_menu.addAction(notices)
 
     def _build_edit_menu(self) -> None:
         """Undo and redo of the grids; a text field or the text editor keeps its own undo while
@@ -725,6 +730,12 @@ class MainWindow(QMainWindow):
     def open_about(self) -> MessageDialog:
         """Help > About: version, owner statement, licence (words from `budget_core.about`)."""
         dialog = MessageDialog(f"About {APP_NAME}", about_text(), parent=self)
+        dialog.open()
+        return dialog
+
+    def open_notices(self) -> NoticesDialog:
+        """Help > Third-party licences: the file THIRD_PARTY_NOTICES.txt of the installation."""
+        dialog = NoticesDialog(self)
         dialog.open()
         return dialog
 

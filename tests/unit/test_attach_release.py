@@ -29,7 +29,7 @@ case "$1 $2" in
       [ -d "$FAKE_FILES/$os_name" ] || continue
       target="$dest/system-budget-studio-$(echo "${os_name:0:1}" | tr a-z A-Z)${os_name:1}"
       mkdir -p "$target"
-      cp "$FAKE_FILES/$os_name"/* "$target/"
+      cp -r "$FAKE_FILES/$os_name"/* "$target/"
     done
     ;;
   "release view") [ "${FAKE_RELEASE_EXISTS:-0}" = 1 ] ;;
@@ -63,10 +63,16 @@ def files(tmp_path: Path) -> Path:
             f"{sha(p)}  {p.name}" for p in sorted(folder.iterdir()) if p.name != "SHA256SUMS.txt"
         ]
         (folder / "SHA256SUMS.txt").write_text("\n".join(lines) + "\n")
-    (lin / "sbom.cdx.json").write_text("{}")
-    (lin / "licences.md").write_text("# licences\n")
-    (win / "sbom.cdx.json").write_text("{}")
-    (win / "licences.md").write_text("# licences\n")
+    for folder in (win, lin):
+        (folder / "sbom.cdx.json").write_text("{}")
+        (folder / "licences.md").write_text("# licences\n")
+        (folder / "THIRD_PARTY_NOTICES.txt").write_text("notices\n")
+    sources = (
+        lin / "sources"
+    )  # the exact source code of Qt and PySide6 (LGPL), made by the Linux job
+    sources.mkdir()
+    (sources / "qtbase-everywhere-src-6.10.3.tar.xz").write_bytes(b"qt")
+    (sources / "SOURCES.txt").write_text("sources\n")
     return root
 
 
@@ -105,8 +111,14 @@ def test_files_are_checked_renamed_and_uploaded_to_a_new_draft_release(
     assert names == [
         "SHA256SUMS-linux.txt",
         "SHA256SUMS-windows.txt",
-        "licences.md",
-        "sbom.cdx.json",
+        "SOURCES.txt",
+        "THIRD_PARTY_NOTICES-linux.txt",
+        "THIRD_PARTY_NOTICES-windows.txt",
+        "licences-linux.md",
+        "licences-windows.md",
+        "qtbase-everywhere-src-6.10.3.tar.xz",
+        "sbom-linux.cdx.json",
+        "sbom-windows.cdx.json",
         "system-budget-studio-1.0.0-1.x86_64.rpm",
         "system-budget-studio-1.0.0-linux-x86_64.tar.gz",
         "system-budget-studio-1.0.0-windows-x64-portable.zip",
@@ -128,6 +140,15 @@ def test_a_file_that_does_not_match_its_checksum_is_never_uploaded(
     (files / "linux" / "system-budget-studio-1.0.0-linux-x86_64.tar.gz").write_bytes(b"changed")
     done, calls = run(tmp_path, files, "123", "v1.0.0")
     assert done.returncode != 0
+    assert not any(c.startswith("release") for c in calls)
+
+
+def test_a_run_without_the_source_archives_is_refused(tmp_path: Path, files: Path) -> None:
+    for item in (files / "linux" / "sources").iterdir():
+        item.unlink()
+    (files / "linux" / "sources").rmdir()
+    done, calls = run(tmp_path, files, "123", "v1.0.0")
+    assert done.returncode == 1 and "sources" in done.stderr
     assert not any(c.startswith("release") for c in calls)
 
 

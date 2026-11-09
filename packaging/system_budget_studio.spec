@@ -8,6 +8,7 @@ from PyInstaller.utils.hooks import collect_data_files, copy_metadata
 
 root = Path(SPECPATH).parent
 sys.path.insert(0, str(root / "src"))
+sys.path.insert(0, str(root / "packaging"))
 # Provenance (spec constraint 19) reports the version of each of these libraries; a frozen build
 # can only read a version when the distribution metadata is bundled.
 from budget_core.provenance import LIBRARIES  # noqa: E402
@@ -45,6 +46,13 @@ a = Analysis(
         "chardet",
     ],
 )
+
+# Leave out the Qt libraries, plugins, translations and PySide6 modules the program does not use
+# (packaging/bundle_policy.toml; each one would need its licence text, its source and its review).
+from bundle_policy import keep_entry  # noqa: E402
+
+a.binaries = [entry for entry in a.binaries if keep_entry(entry[0])]
+a.datas = [entry for entry in a.datas if keep_entry(entry[0])]
 pyz = PYZ(a.pure)
 
 

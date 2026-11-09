@@ -1,0 +1,130 @@
+# The licence and Qt policy of the installers (one file; protection programme, phase 4).
+#
+# Read by packaging/bundle_policy.py. It is used by the PyInstaller spec (to leave out Qt parts the
+# program does not use), by packaging/bundle_inventory.py and packaging/check_bundle.py (the
+# licence gate: a release build fails when a bundled component has no licence text, a licence on
+# the deny list, or an unknown licence) and by the tests. Change it here and nowhere else.
+
+[licences]
+# SPDX identifiers that may be bundled. An expression is accepted when it can be satisfied:
+# "A OR B" needs one allowed side (the option used), "A AND B" needs both.
+allow = [
+  "MIT", "MIT-CMU", "MIT-0", "X11", "BSD-2-Clause", "BSD-3-Clause", "BSD-4-Clause", "0BSD", "ISC",
+  "Apache-2.0", "PSF-2.0", "Python-2.0", "Zlib", "CC0-1.0", "Unlicense", "BSL-1.0", "HPND",
+  "Unicode-3.0", "Unicode-DFS-2016", "ICU", "OFL-1.1", "FTL", "libpng-2.0", "IJG", "NCSA",
+  "curl", "AFL-2.1", "MPL-2.0", "blessing", "MIT-open-group", "Libpng", "bzip2-1.0.6",
+  "LGPL-2.1-only", "LGPL-2.1-or-later", "LGPL-3.0-only", "LGPL-3.0-or-later",
+  "zlib-acknowledgement", "BSD-2-Clause-Views",
+  "LicenseRef-PublicDomain", "LicenseRef-Microsoft-VC-Redistributable",
+]
+# GPL-family identifiers are denied unless the expression carries one of these exceptions.
+gpl_exceptions_allowed = [
+  "GCC-exception-3.1", "GCC-exception-3.0", "GCC-exception-2.0", "Classpath-exception-2.0",
+  "Bootloader-exception", "Linux-syscall-note",
+]
+# Denied whatever else is written: patterns on the identifier (case-sensitive, re.search).
+deny_patterns = [
+  "^AGPL", "^SSPL", "^GPL-", "^GPL$", "^EUPL", "^OSL", "^CPAL", "^RPL", "-NC", "-ND",
+  "^CC-BY-NC", "^CC-BY-ND", "^Commons-Clause", "^BUSL", "^Elastic", "^LicenseRef-proprietary",
+  "^NOASSERTION$", "^UNKNOWN$",
+]
+
+# Names that the package managers write instead of SPDX identifiers (RHEL 9 uses these).
+[licences.aliases]
+"GPLv2" = "GPL-2.0-only"
+"GPLv2+" = "GPL-2.0-or-later"
+"GPLv3" = "GPL-3.0-only"
+"GPLv3+" = "GPL-3.0-or-later"
+"LGPLv2" = "LGPL-2.1-only"
+"LGPLv2+" = "LGPL-2.1-or-later"
+"LGPLv2.1" = "LGPL-2.1-only"
+"LGPLv2.1+" = "LGPL-2.1-or-later"
+"LGPLv3" = "LGPL-3.0-only"
+"LGPLv3+" = "LGPL-3.0-or-later"
+"GPLv2+ with exceptions" = "GPL-2.0-or-later WITH Classpath-exception-2.0"
+"GPLv3+ with exceptions" = "GPL-3.0-or-later WITH GCC-exception-3.1"
+"LGPLv2+ with exceptions" = "LGPL-2.1-or-later"
+"ASL 2.0" = "Apache-2.0"
+"BSD" = "BSD-3-Clause"
+"BSD License" = "BSD-3-Clause"
+"BSD with advertising" = "BSD-4-Clause"
+"MIT" = "MIT"
+"MIT-CMU" = "MIT-CMU"
+"ISC" = "ISC"
+"zlib" = "Zlib"
+"zlib with acknowledgement" = "zlib-acknowledgement"
+"Boost" = "BSL-1.0"
+"MPLv2.0" = "MPL-2.0"
+"MPLv1.1" = "MPL-1.1"
+"Public Domain" = "LicenseRef-PublicDomain"
+"OFL" = "OFL-1.1"
+"UCD" = "Unicode-DFS-2016"
+"Unicode" = "Unicode-3.0"
+"FTL" = "FTL"
+"IJG" = "IJG"
+"libtiff" = "libtiff"
+"curl" = "curl"
+"AFL" = "AFL-2.1"
+"HPND" = "HPND"
+"BSD-3-Clause" = "BSD-3-Clause"
+
+# A package whose licence field is unclear or wrong may be fixed here, with the reason. Every
+# entry is a decision of the owner and is read in the legal record (docs/legal/legal-audit.md).
+[package_overrides]
+# The licence field of a package is that of its whole source package (library, tools, tests). The
+# library that the bundle contains may be under a narrower licence than the field says. Each entry
+# says which and why; the file that the library came from carries the evidence (licences/<package>/).
+"dbus-libs" = { spdx = "AFL-2.1 OR GPL-2.0-or-later", reason = "libdbus is licensed under the AFL-2.1 or the GPL-2.0-or-later (the option used: AFL-2.1); the rpm field also lists the GPL parts of the tools of the same source package" }
+"libgcc" = { spdx = "GPL-3.0-or-later WITH GCC-exception-3.1", reason = "libgcc_s is a GCC runtime library: GPL-3.0-or-later with the GCC Runtime Library Exception; the rpm field also lists the compiler parts of the source package" }
+"libstdc++" = { spdx = "GPL-3.0-or-later WITH GCC-exception-3.1", reason = "libstdc++ is a GCC runtime library: GPL-3.0-or-later with the GCC Runtime Library Exception; the rpm field also lists other parts of the source package" }
+"keyutils-libs" = { spdx = "LGPL-2.1-or-later", reason = "libkeyutils is LGPL-2.1-or-later; the GPL-2.0-or-later part of the rpm field is for the keyctl tools of the same source package" }
+"lz4-libs" = { spdx = "BSD-2-Clause", reason = "liblz4 (the library) is BSD-2-Clause; the GPL-2.0-or-later part of the rpm field is for the lz4 programs of the same source package" }
+"libzstd" = { spdx = "BSD-3-Clause OR GPL-2.0-only", reason = "zstd is dual-licensed BSD-3-Clause or GPL-2.0-only (the option used: BSD-3-Clause)" }
+
+# Libraries that no package manager owns because the PySide6 wheel brings them (the bundle holds
+# them under their own names): each pattern gives the component, its licence and the text (a
+# verbatim file of the repository) that the build copies.
+[[extra_components]]
+pattern = "libicu*"
+name = "ICU (International Components for Unicode), bundled by the PySide6 wheel"
+spdx = "Unicode-DFS-2016 AND ICU AND BSD-3-Clause AND MIT AND LicenseRef-PublicDomain"
+text = "packaging/notices/icu-73-LICENSE.txt"
+note = "The licence file of ICU 73.2 lists the licences of ICU and of the parts it contains; the expression here names them and the file governs."
+
+# Gaps that the owner knows about: the component is bundled, the licence is accepted, but its text
+# cannot be copied by the build. Each one is a finding of the legal record and is written in
+# THIRD_PARTY_NOTICES.txt. A new gap is a failed build until someone adds it here, with the reason.
+[known_gaps]
+"Microsoft Visual C++ runtime" = "Redistributed under the Microsoft redistribution terms of the Visual C++ runtime; the terms are not reproduced in this file (legal-audit F-45, lawyer question LQ-17)."
+"libxcb" = "The Rocky Linux 9 package ships no licence file (checked on the build: rpm lists none, also after a reinstall with documents); the licence (MIT) is the one of the package metadata; the upstream text is in the source package (legal-audit F-45)."
+"xcb-util-keysyms" = "The Rocky Linux 9 package ships no licence file, only a README (checked on the build); the licence (MIT) is the one of the package metadata; the upstream text is in the source package (legal-audit F-45)."
+"Mesa*" = "opengl32sw.dll is the Mesa software OpenGL that the Qt for Python wheel ships; Mesa is MIT-licensed; its licence text is not reproduced in this file (legal-audit F-45)."
+
+[qt]
+# The Qt libraries the program uses (windows: Qt6Core.dll and so on, the same names).
+# Qt6Network, Qt6Svg and the EGLFS libraries are not used (D-148, D-150: icons are PNG).
+keep_libraries = [
+  "Qt6Core", "Qt6Gui", "Qt6Widgets", "Qt6DBus", "Qt6XcbQpa", "Qt6OpenGL", "Qt6WaylandClient",
+]
+# The Python modules of PySide6 the program imports (anything else in PySide6/ is left out).
+keep_python_modules = ["QtCore", "QtGui", "QtWidgets"]
+# Qt modules under the GPL only (no LGPL option) in Qt 6.10, or commercial only: never bundled.
+gpl_only_modules = [
+  "Qt6Charts", "Qt6DataVisualization", "Qt6VirtualKeyboard", "Qt6WaylandCompositor",
+  "Qt6Quick3D", "Qt6Quick3DPhysics", "Qt6Lottie", "Qt6HttpServer", "Qt6Graphs",
+  "Qt6QuickEffectMaker", "Qt6Scxml", "Qt6ApplicationManager", "Qt6Coap", "Qt6Mqtt", "Qt6Opcua",
+]
+# Plugins and data left out of the bundle (relative to the Qt plugin folder; fnmatch patterns).
+# The window needs: a platform plugin (xcb, wayland, windows, offscreen for tests and the smoke
+# test), the GL integrations of those, the input contexts and the platform themes (the colour
+# scheme of the system), and the Windows style. It reads no image file of the user (icons are PNG,
+# which Qt reads without a plugin), draws no SVG, prints nothing and uses no network.
+deny_plugins = [
+  "egldeviceintegrations/*", "generic/*", "iconengines/*", "imageformats/*",
+  "networkinformation/*", "tls/*", "platforms/*eglfs*", "platforms/*linuxfb*",
+  "platforms/*minimal*", "platforms/*vkkhrdisplay*", "platforms/*vnc*",
+  "platforms/*direct2d*", "wayland-decoration-client/*adwaita*",
+  "wayland-shell-integration/*fullscreen-shell*", "wayland-shell-integration/*ivi-shell*",
+  "wayland-shell-integration/*wl-shell*",
+]
+deny_data = ["translations"]
