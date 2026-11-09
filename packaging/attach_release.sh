@@ -33,7 +33,16 @@ mkdir "$stage"
 cp "$win"/*-setup.exe "$win"/*-portable.zip "$lin"/*.tar.gz "$lin"/*.deb "$lin"/*.rpm "$stage"/
 cp "$win/SHA256SUMS.txt" "$stage/SHA256SUMS-windows.txt"
 cp "$lin/SHA256SUMS.txt" "$stage/SHA256SUMS-linux.txt"
-cp "$lin/sbom.cdx.json" "$lin/licences.md" "$stage"/
+# one SBOM, licence list and notices file for each system (they describe different bundles)
+cp "$lin/sbom.cdx.json" "$stage/sbom-linux.cdx.json"
+cp "$win/sbom.cdx.json" "$stage/sbom-windows.cdx.json"
+cp "$lin/licences.md" "$stage/licences-linux.md"
+cp "$win/licences.md" "$stage/licences-windows.md"
+cp "$lin/THIRD_PARTY_NOTICES.txt" "$stage/THIRD_PARTY_NOTICES-linux.txt"
+cp "$win/THIRD_PARTY_NOTICES.txt" "$stage/THIRD_PARTY_NOTICES-windows.txt"
+# the exact source code of Qt, PySide6 and shiboken6 (LGPL-3.0) and the list of what it is
+[ -d "$lin/sources" ] || { echo "The Linux artefact has no sources folder (LGPL source code)." >&2; exit 1; }
+cp "$lin"/sources/* "$stage"/
 
 # Every file must match its checksum before it is published.
 (cd "$stage" && sha256sum -c SHA256SUMS-windows.txt && sha256sum -c SHA256SUMS-linux.txt)

@@ -9,14 +9,21 @@
     python packaging/check_bundle.py dist/system-budget-studio
 
 Fails (exit 1) when development code such as hypothesis, mypy or pytest was bundled, or when the
-licence material the licences require is missing: the licence texts, `licences.md` and the SBOM,
-or when the application icon or the user-interface icons (assets/icons) were not bundled.
+licence material the licences require is missing: the licence texts, `licences.md`, the SBOM and
+THIRD_PARTY_NOTICES.txt, or when the application icon or the user-interface icons (assets/icons)
+were not bundled. It also runs the licence gate of `bundle_inventory.py check` (a component without
+a licence text, a licence on the deny list, an unknown licence, a Qt module the policy does not
+allow). A development build on a machine without `rpm` sets SBS_ALLOW_UNRESOLVED=1.
 """
 
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import bundle_inventory  # noqa: E402
 
 FORBIDDEN = (
     "hypothesis",
@@ -38,7 +45,9 @@ REQUIRED_FILES = (
     "licences.md",
     "sbom.cdx.json",
     "licences/INDEX.md",
+    "licences/COMPONENTS.json",
     "licences/pyside6-essentials/LGPL-3.0.txt",
+    "THIRD_PARTY_NOTICES.txt",
 )
 
 
@@ -81,7 +90,10 @@ def check(bundle: Path) -> list[str]:
             problems.append(f"missing executable: {exe}")
     if not any(list(root.glob(pattern)) for root in roots for pattern in INTERPRETER_PATTERNS):
         problems.append("the bundle holds no Python of its own")
-    return problems
+    # the licence gate: every bundled component has an accepted licence and its text, and Qt
+    # holds nothing outside the policy (packaging/bundle_policy.toml)
+    problems += bundle_inventory.check(bundle, os.environ.get("SBS_ALLOW_UNRESOLVED") == "1")
+    return sorted(set(problems), key=problems.index)
 
 
 def main(argv: list[str] | None = None) -> int:

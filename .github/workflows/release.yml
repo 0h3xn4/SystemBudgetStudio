@@ -75,6 +75,8 @@ jobs:
             dist/SHA256SUMS.txt
             dist/sbom.cdx.json
             dist/licences.md
+            dist/THIRD_PARTY_NOTICES.txt
+            dist/sources/*
 
   windows:
     name: Windows (per-user installer)
@@ -151,6 +153,7 @@ jobs:
             dist/SHA256SUMS.txt
             dist/sbom.cdx.json
             dist/licences.md
+            dist/THIRD_PARTY_NOTICES.txt
 
   publish:
     name: Attach the files to the release
