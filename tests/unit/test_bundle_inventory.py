@@ -328,3 +328,27 @@ def test_the_original_of_a_copied_library_is_found_by_name_and_size(tmp_path: Pa
     assert found == system / "libz.so.1"
     assert inventory.system_original(bundle / "libother.so.1", (str(system),)) is None
     assert inventory.system_original(bundle / "libwheel-1a2b3c4d.so.1", (str(system),)) is None
+
+
+def test_every_package_override_of_the_policy_is_accepted_and_explained() -> None:
+    overrides = policy.POLICY["package_overrides"]
+    assert overrides, "the Rocky 9 libraries need them"
+    for name, entry in overrides.items():
+        assert entry["reason"].strip(), name
+        assert policy.licence_verdict(entry["spdx"]).ok, name
+
+
+def test_the_icu_libraries_of_the_wheel_get_their_own_component_and_text(tmp_path: Path) -> None:
+    bundle = make_bundle(tmp_path)
+    (bundle / "_internal" / "libicudata.so.73").write_bytes(b"x")
+    components = inventory.collect(bundle, backend=FakeRpm({}, {}))  # type: ignore[arg-type]
+    icu = next(c for c in components if c.name.startswith("ICU"))
+    assert icu.files == ["_internal/libicudata.so.73"]
+    assert icu.texts and (bundle / icu.texts[0]).read_text(encoding="utf-8").startswith("UNICODE")
+    assert policy.licence_verdict(icu.spdx).ok
+    assert not any("libicudata" in p for p in inventory.check(bundle))
+
+
+def test_a_rhel_licence_field_with_zlib_acknowledgement_is_accepted() -> None:
+    field = "(FTL or GPLv2+) and BSD and MIT and Public Domain and zlib with acknowledgement"
+    assert policy.licence_verdict(policy.normalise_licence(field)).ok

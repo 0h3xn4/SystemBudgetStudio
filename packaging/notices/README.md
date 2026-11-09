@@ -7,3 +7,4 @@ for it). `packaging/bundle_inventory.py` copies them into the bundle. Never edit
 | File | Component | Source |
 |---|---|---|
 | `libffi-LICENSE.txt` | libffi (MIT) | `LICENSE` of libffi v3.4.6, <https://github.com/libffi/libffi/blob/v3.4.6/LICENSE> |
+| `icu-73-LICENSE.txt` | ICU 73 (`libicudata`, `libicuuc`, `libicui18n` inside the PySide6 wheel) | `icu4c/LICENSE` of ICU release-73-2, <https://github.com/unicode-org/icu/blob/release-73-2/icu4c/LICENSE> |

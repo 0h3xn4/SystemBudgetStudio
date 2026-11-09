@@ -14,6 +14,7 @@ allow = [
   "Unicode-3.0", "Unicode-DFS-2016", "ICU", "OFL-1.1", "FTL", "libpng-2.0", "IJG", "NCSA",
   "curl", "AFL-2.1", "MPL-2.0", "blessing", "MIT-open-group", "Libpng", "bzip2-1.0.6",
   "LGPL-2.1-only", "LGPL-2.1-or-later", "LGPL-3.0-only", "LGPL-3.0-or-later",
+  "zlib-acknowledgement", "BSD-2-Clause-Views",
   "LicenseRef-PublicDomain", "LicenseRef-Microsoft-VC-Redistributable",
 ]
 # GPL-family identifiers are denied unless the expression carries one of these exceptions.
@@ -51,6 +52,7 @@ deny_patterns = [
 "MIT-CMU" = "MIT-CMU"
 "ISC" = "ISC"
 "zlib" = "Zlib"
+"zlib with acknowledgement" = "zlib-acknowledgement"
 "Boost" = "BSL-1.0"
 "MPLv2.0" = "MPL-2.0"
 "MPLv1.1" = "MPL-1.1"
@@ -69,7 +71,25 @@ deny_patterns = [
 # A package whose licence field is unclear or wrong may be fixed here, with the reason. Every
 # entry is a decision of the owner and is read in the legal record (docs/legal/legal-audit.md).
 [package_overrides]
-# "name" = { spdx = "...", reason = "..." }
+# The licence field of a package is that of its whole source package (library, tools, tests). The
+# library that the bundle contains may be under a narrower licence than the field says. Each entry
+# says which and why; the file that the library came from carries the evidence (licences/<package>/).
+"dbus-libs" = { spdx = "AFL-2.1 OR GPL-2.0-or-later", reason = "libdbus is licensed under the AFL-2.1 or the GPL-2.0-or-later (the option used: AFL-2.1); the rpm field also lists the GPL parts of the tools of the same source package" }
+"libgcc" = { spdx = "GPL-3.0-or-later WITH GCC-exception-3.1", reason = "libgcc_s is a GCC runtime library: GPL-3.0-or-later with the GCC Runtime Library Exception; the rpm field also lists the compiler parts of the source package" }
+"libstdc++" = { spdx = "GPL-3.0-or-later WITH GCC-exception-3.1", reason = "libstdc++ is a GCC runtime library: GPL-3.0-or-later with the GCC Runtime Library Exception; the rpm field also lists other parts of the source package" }
+"keyutils-libs" = { spdx = "LGPL-2.1-or-later", reason = "libkeyutils is LGPL-2.1-or-later; the GPL-2.0-or-later part of the rpm field is for the keyctl tools of the same source package" }
+"lz4-libs" = { spdx = "BSD-2-Clause", reason = "liblz4 (the library) is BSD-2-Clause; the GPL-2.0-or-later part of the rpm field is for the lz4 programs of the same source package" }
+"libzstd" = { spdx = "BSD-3-Clause OR GPL-2.0-only", reason = "zstd is dual-licensed BSD-3-Clause or GPL-2.0-only (the option used: BSD-3-Clause)" }
+
+# Libraries that no package manager owns because the PySide6 wheel brings them (the bundle holds
+# them under their own names): each pattern gives the component, its licence and the text (a
+# verbatim file of the repository) that the build copies.
+[[extra_components]]
+pattern = "libicu*"
+name = "ICU (International Components for Unicode), bundled by the PySide6 wheel"
+spdx = "Unicode-DFS-2016 AND ICU AND BSD-3-Clause AND MIT AND LicenseRef-PublicDomain"
+text = "packaging/notices/icu-73-LICENSE.txt"
+note = "The licence file of ICU 73.2 lists the licences of ICU and of the parts it contains; the expression here names them and the file governs."
 
 # Gaps that the owner knows about: the component is bundled, the licence is accepted, but its text
 # cannot be copied by the build. Each one is a finding of the legal record and is written in

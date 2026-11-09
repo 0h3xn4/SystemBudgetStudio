@@ -21,6 +21,8 @@ uv venv --python 3.14 /opt/venv
 uv pip install --python /opt/venv/bin/python --require-hashes -r requirements-dev.lock
 uv pip install --python /opt/venv/bin/python --no-deps -e .
 export PATH="/opt/venv/bin:$PATH"
+# a container image installs without documents; the licence files of the libraries are needed
+export SBS_REINSTALL_DOCS=1
 packaging/build.sh
 
 version="$(python -c 'from budget_core import __version__; print(__version__)')"

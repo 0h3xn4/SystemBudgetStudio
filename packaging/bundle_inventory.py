@@ -112,6 +112,27 @@ class RpmBackend:
         self.available = shutil.which("rpm") is not None
         self._cache: dict[str, Package | None] = {}
 
+    def licence_files(self, name: str) -> list[Path]:
+        """The licence texts of a package: `rpm -qL`, else the documents of the package (and of
+        its `-common` package) that are named COPYING, LICENSE and so on."""
+        out: list[Path] = []
+        for query in (["-qL", name], ["-qd", name], ["-ql", name], ["-ql", f"{name}-common"]):
+            result = subprocess.run(["rpm", *query], capture_output=True, text=True, check=False)
+            for line in result.stdout.split():
+                path = Path(line)
+                if not path.is_file():
+                    continue
+                in_docs = "/usr/share/licenses/" in line or "/usr/share/doc/" in line
+                if query[0] == "-qL" or (in_docs and LICENCE_LIKE.search(path.name)):
+                    out.append(path)
+            if out:
+                break
+        return sorted(set(out))
+
+    def listing(self, name: str) -> str:
+        result = subprocess.run(["rpm", "-ql", name], capture_output=True, text=True, check=False)
+        return ", ".join(result.stdout.split()[:12])
+
     def owner(self, path: Path) -> Package | None:
         if not self.available:
             return None
@@ -133,13 +154,25 @@ class RpmBackend:
                 check=True,
             ).stdout.splitlines()[0]
             version, _, lic = info.partition("|")
-            files = subprocess.run(
-                ["rpm", "-qL", name], capture_output=True, text=True, check=True
-            ).stdout.split()
-            self._cache[name] = Package(
-                name, version, lic, [Path(f) for f in files if Path(f).is_file()]
-            )
+            found = self.licence_files(name)
+            if not found and os.environ.get("SBS_REINSTALL_DOCS") == "1":
+                # a container image installs without documents (tsflags=nodocs): fetch them again
+                subprocess.run(
+                    ["dnf", "-y", "--setopt=tsflags=", "reinstall", name],
+                    capture_output=True,
+                    check=False,
+                )
+                found = self.licence_files(name)
+            if not found:
+                print(
+                    f"no licence file for {name}: rpm -ql lists {self.listing(name)}",
+                    file=sys.stderr,
+                )
+            self._cache[name] = Package(name, version, lic, found)
         return self._cache[name]
+
+
+LICENCE_LIKE = re.compile(r"(licen[cs]e|copying|copyright|notice)", re.IGNORECASE)
 
 
 # ---- helpers ------------------------------------------------------------------------------------
@@ -284,6 +317,26 @@ def classify(bundle: Path, backend: RpmBackend, repo: Path = ROOT) -> list[Compo
             add(
                 "unknown-dll", Component("unidentified Windows libraries", "", "extra", "")
             ).files.append(relpath)
+            continue
+        extra = next(
+            (
+                e
+                for e in policy.POLICY.get("extra_components", [])
+                if fnmatch.fnmatch(name, e["pattern"])
+            ),
+            None,
+        )
+        if extra is not None and backend.owner(path) is None:
+            comp = add(
+                f"extra:{extra['pattern']}", Component(extra["name"], "", "extra", extra["spdx"])
+            )
+            comp.files.append(relpath)
+            comp.source = extra.get("note", "")
+            if not comp.texts and (repo / extra["text"]).is_file():
+                target = bundle / "licences" / "extra" / Path(extra["text"]).name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(repo / extra["text"], target)
+                comp.texts.append(rel(bundle, target))
             continue
         package = backend.owner(path)
         if package is None:
@@ -482,8 +535,8 @@ def check(bundle: Path, allow_unresolved: bool = False) -> list[str]:
             if allow_unresolved:
                 continue
             problems.append(
-                f"{label}: no owner or licence known for {len(comp.files)} file(s), "
-                f"for example {comp.files[:2]}"
+                f"{label}: no owner or licence known for {len(comp.files)} file(s): "
+                f"{', '.join(Path(f).name for f in comp.files[:40])}"
             )
             continue
         verdict = policy.licence_verdict(comp.spdx)
