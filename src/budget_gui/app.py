@@ -57,8 +57,53 @@ def create_app(argv: Sequence[str]) -> QApplication:
     return app
 
 
+def split_options(args: Sequence[str]) -> tuple[list[str], Path | None, bool, Path | None]:
+    """The arguments without the two support options of D-257, and those options: the file of
+    `--fault-log FILE`, and whether `--diagnose [FILE]` was given with its file."""
+    rest: list[str] = []
+    fault_log: Path | None = None
+    diagnose = False
+    diagnose_file: Path | None = None
+    i = 0
+    while i < len(args):
+        arg = args[i]
+        has_value = i + 1 < len(args) and not args[i + 1].startswith("-")
+        if arg == "--fault-log" and has_value:
+            fault_log = Path(args[i + 1])
+            i += 2
+        elif arg == "--diagnose":
+            diagnose = True
+            if has_value:
+                diagnose_file = Path(args[i + 1])
+                i += 1
+            i += 1
+        else:
+            rest.append(arg)
+            i += 1
+    return rest, fault_log, diagnose, diagnose_file
+
+
+def run_diagnose(file: Path | None) -> int:
+    """Print what Qt and the program know about this machine; also write it to `file`, because
+    the windowed program has no console on Windows."""
+    from budget_gui.diagnostics import report
+
+    text = report(create_app(sys.argv[:1]))
+    if file is not None:
+        file.write_text(text, encoding="utf-8")
+    if sys.stdout is not None:
+        print(text, end="")
+    return 0
+
+
 def main() -> int:
-    args = sys.argv[1:]
+    args, fault_log, diagnose, diagnose_file = split_options(sys.argv[1:])
+    if fault_log is not None:  # first of all: a crash while the program starts is caught too
+        from budget_core.diagnostics import enable_fault_log
+
+        enable_fault_log(fault_log)
+    if diagnose:
+        return run_diagnose(diagnose_file)
     if args == ["--self-test"]:  # Qt-free check of a packaged build
         from budget_core.selftest import run_selftest
 

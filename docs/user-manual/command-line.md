@@ -78,6 +78,10 @@ Note that finding a *result* problem (a limit exceeded) is exit code 1 even thou
 | `SOURCE_DATE_EPOCH` | The generation time (a whole number of seconds since 1970). A value that is set but not usable (empty, text, negative, out of range) is an error, not ignored |
 | `QT_QPA_PLATFORM=offscreen` | Run the window without a screen (tests, `system-budget-studio --smoke`) |
 
+## What does the window's own program accept?
+
+`system-budget-studio [PROJECT]` opens the window (with a project folder, that project). Four options exist for installations: `--self-test` (the Qt-free check, as `budget self-test`), `--smoke` (create the window and exit), `--diagnose [FILE]` (print, and write to `FILE`, what the program and Qt know about the machine, with no project) and `--fault-log FILE` (write the Python stack of every thread to `FILE` if the process dies of a native fault). They are for finding out why a window does not start or closes by itself ([troubleshooting](../troubleshooting.md#the-window-closes-by-itself-or-no-icons-show-windows)).
+
 ## How do I use it in a script or in CI?
 
 ```bash
