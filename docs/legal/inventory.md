@@ -11,7 +11,7 @@ Date: 2026-11-09. Repository state: branch `main` at `49417f6` (release 2.11.1).
 | An About dialog exists | There is none. The Help menu has two entries, "Start here" and "User guide" (`src/budget_gui/main_window.py:426-436`). |
 | Provenance holds user name and host name | It holds the user name only (`src/budget_core/provenance.py`). No host name is read. |
 | Windows installer has a licence page | `packaging/windows/system_budget_studio.iss` sets only `AppPublisher`; it shows no licence page. |
-| No other work in flight | Open pull request #129 (owner, branch `claude/blissful-maxwell-46xhwj`, decision D-258): offline and privacy statements, security page, `pip-audit`, build attestations, `scripts/verify_offline.py`, canary test. |
+| No other work in flight | Pull request #129 (decision D-258) was open when Phase 1 started and was **merged into `main` on 2026-11-09 (`9bf971d`)** while this work was under way. It added: `docs/security-and-privacy.md`, `scripts/verify_offline.py`, `tests/offline/test_privacy_canary.py`, the workflow `audit.yml` (`pip-audit`, weekly), the CI jobs "Offline evidence" (Linux `strace`, Windows firewall block), build-provenance attestations in `release.yml` (first used by the release after 2.11.1), and Pillow 12.3.0 to 13.0.0. This record was merged with it and updated. |
 
 ## 2. Directories
 
@@ -65,7 +65,7 @@ Runtime (from `requirements.lock`, hashed, 21 packages; licence column from `doc
 | lxml | 6.1.3 | BSD-3-Clause |
 | numpy | 2.5.3 | BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0 |
 | openpyxl | 3.1.5 | MIT |
-| pillow | 12.3.0 | MIT-CMU |
+| pillow | 13.0.0 (was 12.3.0 up to release 2.11.1) | MIT-CMU |
 | pint | 0.26.1 | BSD |
 | platformdirs | 4.12.4 | MIT |
 | pydantic | 2.14.0 | MIT |

@@ -1,3 +1,5 @@
 # GitHub state read through the GitHub tool, 2026-11-09 (read-only)
 24 releases v1.0.0 .. v2.11.1; latest v2.11.1 (2026-11-09); first v1.0.0 (2026-10-12)
 1 open PR: #129 by 0h3xn4, branch claude/blissful-maxwell-46xhwj: files: audit.yml ci.yml release.yml CHANGELOG README DECISIONS(D-258) docs/security-and-privacy.md pyproject locks scripts/verify_offline.py tests/offline/test_privacy_canary.py
+
+UPDATE 2026-11-09 (later): PR #129 was merged into main as 9bf971d (Verifiable offline and privacy statements; Pillow 13 (#129)). Branch protect/phase-1-orientation merged with it. New in main: audit.yml (pip-audit weekly), CI jobs Offline evidence (Linux strace, Windows firewall), attest-build-provenance step in release.yml, docs/security-and-privacy.md, scripts/verify_offline.py, tests/offline/test_privacy_canary.py, pillow 12.3.0 -> 13.0.0 (CHANGELOG: 39 advisories for 12.3.0).

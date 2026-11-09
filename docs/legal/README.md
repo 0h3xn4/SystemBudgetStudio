@@ -26,3 +26,4 @@ Never put secrets or personal data in this folder.
 | Date | Phase | Entry |
 |---|---|---|
 | 2026-11-09 | 1 | Orientation, inventory, claims register, audit, risk register, first owner checklist and lawyer questions, website plan (`docs/site/plan.md`). Read-only: no code, document, release or setting changed. |
+| 2026-11-09 | 1 | Pull request #129 (D-258) merged into `main` during the work; the record was merged with it and updated (F-03, F-33, F-55, F-75, F-77, new F-78 Pillow advisories, claims C-31 to C-38, risk R-26). |
