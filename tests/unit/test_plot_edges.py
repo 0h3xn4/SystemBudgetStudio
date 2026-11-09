@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Plot edge cases: missing samples break the line, a single sample is visible, tick labels differ,
 the legend stays inside the picture (audit RC-20)."""
 

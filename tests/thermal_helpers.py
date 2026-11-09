@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A two-node thermal project with round numbers (source: test fixture).
 
 Nodes A and B joined by 2 W/K; only A radiates (surface of 1 m2, emissivity 0.8, absorptivity 0.3).

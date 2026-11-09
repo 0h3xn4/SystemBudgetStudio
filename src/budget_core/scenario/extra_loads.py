@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pointing and manoeuvres on a scenario (2.3.0, D-235).
 
 A scenario may hold a **pointing mode** over its whole length (`pointing_default`) and change it

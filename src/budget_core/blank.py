@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A blank project: the folder a new spacecraft starts from (D-185).
 
 It holds what every project needs and nothing the user has not said: the name, one bus with the

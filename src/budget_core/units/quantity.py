@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Unit-suffix convention and quantity parsing.
 
 Field names end in a unit suffix (``avg_power_w``, ``freq_hz``, ``gain_dbi``). Values are stored

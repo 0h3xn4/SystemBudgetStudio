@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Eclipse duration against the closed-form circular-orbit formula (hand calculation).
 
 For a circular orbit of radius a with the Sun at beta (the angle between the Sun direction and the

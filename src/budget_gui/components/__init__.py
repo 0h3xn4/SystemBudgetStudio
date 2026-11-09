@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The component library of the window (D-169): the parts every view is made of.
 
 Views use these instead of styling their own widgets: a button has a kind, a status has a badge, a

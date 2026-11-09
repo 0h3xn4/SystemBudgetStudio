@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Performance target: one week at 1 s, 200 units, two links with their pass series, under 10 s."""
 
 from __future__ import annotations

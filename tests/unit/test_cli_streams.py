@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Which text goes to which stream (D-145): what a command produced goes to standard output;
 why it could not do its work goes to standard error. `validate` is the exception: its listing
 of problems is its output."""

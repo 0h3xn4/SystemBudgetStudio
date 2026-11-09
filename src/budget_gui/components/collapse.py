@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A button that folds the lower pane of a vertical splitter away and brings it back (D-178).
 
 The plot of a view is what the user came for and the tables under it are what they check next:

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Location of the bundled assets (the fonts of the window and of exported files, licences,
 application icons).
 

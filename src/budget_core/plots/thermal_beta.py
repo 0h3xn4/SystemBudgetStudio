@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The plot of node temperatures against the beta angle (2.7.0, D-250)."""
 
 from __future__ import annotations

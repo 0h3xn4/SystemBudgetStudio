@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """`budget tables-export` and `budget tables-import`: a template, a dry run, then --apply."""
 
 from __future__ import annotations

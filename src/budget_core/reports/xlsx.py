@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """XLSX renderer (openpyxl). Output is byte-identical for identical documents."""
 
 from __future__ import annotations

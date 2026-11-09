@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Clear words for the two kinds of mode, the rules of a scenario and two column headers (2.1.0).
 
 A *power mode* is an operating state of one unit; a *spacecraft mode* sets the power mode of every

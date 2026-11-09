@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explain for the beta sweep (D-252): every cell of the table has an explanation whose result is
 the number the table shows, and the solar view of a surface that takes it from the beta angle is
 the result of an exposure step, not a typed ratio."""

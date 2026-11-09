@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Solar array model: pure functions over NumPy arrays (equations TDP-ARRAY and friends).
 
     P = E * sum_faces( N_cells * A_cell ) * eta_ref * k_T * (1 - l_pack) * (1 - l_harness)

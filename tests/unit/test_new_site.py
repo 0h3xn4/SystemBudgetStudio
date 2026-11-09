@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new ground station or imaging target from a few answers (D-198): the checks and the data of
 the file. Both are a point on the ground with a minimum elevation, and a scenario names either one
 in its `sites`, so an id may not be used by both."""

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Comparison of two budgets (two project revisions, or two scenarios of one project).
 
 The comparison works on the neutral report documents the budgets already produce, so one

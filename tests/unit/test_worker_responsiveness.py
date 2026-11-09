@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """While a worker thread computes, the window thread must get the interpreter lock soon (D-183).
 
 A week at 1 s is 604,800 samples; one SGP4 call or one conversion of a list of that many floats

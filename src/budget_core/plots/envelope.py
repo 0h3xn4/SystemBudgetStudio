@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A fast min/max envelope for the plot window of the GUI (D-161).
 
 `spec.decimate` reduces a series to what a screen can show, bucket by bucket, in a Python loop: for

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pointing and manoeuvres in the scenario editor (2.3.0, D-235).
 
 The default pointing mode, the pointing rules (the same kinds as the mode rules, but their mode is

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The model choices of a scenario in the scenario editor (D-219, P5d): one drop-down each from
 the registry, a tooltip with the source, one undo step, and the feature declared in project.yaml
 when a non-default model is chosen."""

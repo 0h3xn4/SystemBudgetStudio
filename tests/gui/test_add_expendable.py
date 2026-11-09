@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Add expendable in the window (D-197): the form, the Edit menu entry, and a bipropellant built
 from two expendables, one file each."""
 

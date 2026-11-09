@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """What the reports contain: load-time problems in JSON, Path and Hint columns, the INCOMPLETE
 banner on every sheet and page, equation lists, link banners, sheet names and renderer limits
 (audit RC-4, RC-11, RC-13, RC-14, RC-19, RC-25, TL-3)."""

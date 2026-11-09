@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The table models of the Model grids: units, power modes and sourced inputs (D-159).
 
 Each model shows a slice of the `ModelDocument` and writes edits back into it (never to a file).

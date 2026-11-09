@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Sun direction in the body frame for the supported pointing modes (decision D-064).
 
 `sun`: the Sun is at a fixed direction in the body frame (perfect pointing).

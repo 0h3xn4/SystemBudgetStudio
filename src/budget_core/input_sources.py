@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Where the inputs of a project came from: reading and setting the sources (D-213).
 
 An input is a number in an entity file (a mass, a power, an orbit element) or a sourced number of

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Reports tab: what to write, in which formats, where, with the provenance first (D-165).
 
 One page in place of three File-menu commands with a folder dialog each. The page lists what can

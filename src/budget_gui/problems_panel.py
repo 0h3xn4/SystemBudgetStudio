@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Problems panel: every finding of the open project, by class, with a filter and grouping.
 
 Columns: class (icon and word) · message · file · field · code. Double-click or Enter jumps to the

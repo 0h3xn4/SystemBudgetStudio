@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Beta sweep page of the Thermal area (D-250): a worker solves the thermal model for a range
 of beta angles; the page shows the plot and the table and exports the files of the command."""
 

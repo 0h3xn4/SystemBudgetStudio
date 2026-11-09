@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """`budget import idm`: start or update a project from an IDM-CIC model (decisions D-240 to D-243).
 
 Reads models from IDM-CIC (c) CNES. The command reads the model file with this tool's own code,

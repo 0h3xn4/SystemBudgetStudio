@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A state vector to the mean elements the tool propagates (2.2.0, D-229).
 
 An orbit may be given as a position and velocity at an epoch, in J2000 (the frame most tools

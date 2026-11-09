@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The .deb and .rpm packages: built from a small stand-in bundle and read back (D-149)."""
 
 from __future__ import annotations
@@ -48,7 +52,7 @@ def bundle(tmp_path: Path) -> Path:
         (folder / name).chmod(0o755)
     for name in ("install.sh", "uninstall.sh"):
         (folder / name).write_text("#!/bin/sh\n")
-    (folder / "LICENSE").write_text("MIT licence text\n")
+    (folder / "LICENSE").write_text("Apache licence text\n")
     (folder / "licences.md").write_text("# licences\n")
     return folder
 
@@ -129,7 +133,8 @@ def test_the_data_holds_the_bundle_the_links_the_entry_and_the_icons(deb: Path) 
     assert data.getmember("./opt").isdir()
     assert all(m.uid == 0 and m.gid == 0 for m in data.getmembers())
     copyright_text = data.extractfile("./usr/share/doc/system-budget-studio/copyright").read()  # type: ignore[union-attr]
-    assert b"MIT licence text" in copyright_text
+    assert b"Apache licence text" in copyright_text
+    assert b"Apache License, Version 2.0" in copyright_text
 
 
 def test_the_md5sums_match_the_files(deb: Path) -> None:
@@ -240,4 +245,4 @@ def test_the_rpm_lists_the_same_files_and_requirements(bundle: Path, tmp_path: P
     needs = subprocess.run(["rpm", "-qp", "--requires", str(rpm)], capture_output=True, text=True)
     assert "mesa-libEGL" in needs.stdout and "xcb-util-cursor" in needs.stdout
     info = subprocess.run(["rpm", "-qpi", str(rpm)], capture_output=True, text=True).stdout
-    assert "License     : MIT" in info and "Architecture: x86_64" in info
+    assert "License     : Apache-2.0" in info and "Architecture: x86_64" in info

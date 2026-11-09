@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The ground track on a latitude-longitude map (2.2.0, D-232).
 
 The sub-satellite point over the scenario, drawn on an equirectangular grid with the stations and

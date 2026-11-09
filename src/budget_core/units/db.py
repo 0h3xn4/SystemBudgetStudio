@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Decibel conversions on plain floats. Linear values must be positive.
 
 Conventions: dB = 10 log10(power ratio); dBW is referenced to 1 W; dBm to 1 mW.

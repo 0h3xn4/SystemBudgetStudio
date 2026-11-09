@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """GUI data-loss and stale-result fixes: a second export while one runs, unsaved edits, results of
 an older project revision, and jump lines for list paths."""
 

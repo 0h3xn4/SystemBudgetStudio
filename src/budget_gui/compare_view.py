@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Compare tab: the open project against another project folder (a revision), or two scenarios.
 
 Differences are listed budget by budget with the status coloured (changed, added, removed,

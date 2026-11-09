@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The blank project in the guided wizard (D-185): no orbit and no scenario are asked for, the bus
 voltage is, and the window opens on the empty Units page instead of computing a timeline."""
 

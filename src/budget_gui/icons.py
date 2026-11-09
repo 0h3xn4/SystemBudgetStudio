@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """User-interface icons: black PNG masks of Lucide icons, tinted with the colour of the theme.
 
 One file per size serves every theme and every status colour, because the colour is applied when

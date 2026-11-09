@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The reader turns a synthetic model into the typed model (D-237 to D-239)."""
 
 from __future__ import annotations

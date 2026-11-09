@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """CSV and JSON exports of the time-domain power budget (deterministic text, LF line endings).
 
 The series CSV has one row per step: the powers are averages over the step, the battery state is

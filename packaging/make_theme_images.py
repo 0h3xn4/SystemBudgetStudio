@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Render the arrows that the style sheet needs (combo boxes and spin boxes) in the theme colours.
 
     python packaging/make_theme_images.py

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """SpaceMissionStudio import (interim format, decision D-055): round trip against the propagator."""
 
 from __future__ import annotations

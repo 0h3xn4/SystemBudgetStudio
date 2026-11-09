@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Provenance names every library that shapes an output, the packaged build can read their
 versions, and every format dates itself with the provenance time (audit RC-5, RC-21)."""
 

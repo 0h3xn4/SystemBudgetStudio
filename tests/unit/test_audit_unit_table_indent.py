@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit (small item): applying a unit-table import must not re-indent a file that is not 2/4/2."""
 
 from __future__ import annotations

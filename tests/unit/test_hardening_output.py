@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Output safety: file names built from project text stay inside the output folder, writes do not
 follow symlinks, and text that a spreadsheet would run as a formula or that XML cannot hold is
 neutralised."""

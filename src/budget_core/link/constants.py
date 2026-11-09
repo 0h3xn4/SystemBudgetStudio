@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Definitional constants of the link budget with their sources (decisions D-054, D-078).
 
 Both are exact in the 2019 SI, defined values rather than measurements."""

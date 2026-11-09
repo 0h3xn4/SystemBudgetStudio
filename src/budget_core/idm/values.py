@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explicit parsing of the three value formats of the model file (no locale, no guessing).
 
 Numbers use a comma as the decimal separator and may carry an exponent (`15,54`, `0,1554E3`,

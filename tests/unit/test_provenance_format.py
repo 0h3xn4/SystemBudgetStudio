@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The file-format revision for provenance (D-213): the `provenance:` mapping, `status`,
 `requires`, the version step of every kind and the rules for the digest."""
 

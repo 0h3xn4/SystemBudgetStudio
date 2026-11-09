@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The orbit design calculator (2.2.0, D-226): LTAN and RAAN, the sun-synchronous orbit, the repeat
 ground track. The formulas are the first-order J2 relations; each is held against something that
 is not the code under test: the SGP4 propagation of the tool, the mean Sun of the Sun model, and

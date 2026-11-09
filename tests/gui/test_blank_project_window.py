@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A blank project (no units, no scenario, placeholders everywhere) in the window (D-185): every
 page opens, says what is missing instead of failing, and nothing raises."""
 

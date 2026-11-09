@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-release audit fixes in the thermal budget (TL-1, TL-13, TL-14, TL-15, TL-17).
 
 Numbers are invented and worked out by hand (see `tests/thermal_helpers.py`).

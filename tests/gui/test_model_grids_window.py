@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The grids of the Model tab in the window: edit, validate, save, undo (UX step 2, D-159)."""
 
 from __future__ import annotations

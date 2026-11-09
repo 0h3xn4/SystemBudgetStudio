@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """JSON Schemas for every file kind, generated from the pydantic models.
 
 The committed copies in `budget_core/schemas/` are checked by a test and give editors

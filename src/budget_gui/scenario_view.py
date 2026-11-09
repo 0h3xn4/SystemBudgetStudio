@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Scenario view: timeline, rule and segment editors, results tables, background computation.
 
 The environment (orbit, eclipses, passes) is computed in a worker thread. Editing rules, segments

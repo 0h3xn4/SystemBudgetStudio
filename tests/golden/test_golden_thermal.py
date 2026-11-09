@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Golden tests of the static thermal budget reports: the two-node test project and the complete
 250 kg example. Numbers are compared to 9 significant digits: a different BLAS build changes the
 last ones."""

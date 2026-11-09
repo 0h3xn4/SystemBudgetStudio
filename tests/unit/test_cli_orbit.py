@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """`budget orbit`: the orbit design calculator on the command line (2.2.0, D-226)."""
 
 from __future__ import annotations

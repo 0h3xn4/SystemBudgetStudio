@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Draw the application icon (four budget bars under a dashed limit line) as PNG files.
 
 The drawing is the same as docs/images/logo.svg (256 x 256 units); keep the two in step. It is

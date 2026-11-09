@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Performance target (spec): a one-week, 1 s, 200-unit scenario, environment plus power budget,
 in under 10 s.
 

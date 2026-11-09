@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit MI-14: unit labels round-trip, no pint exceptions escape, clean degC, no delta units for
 absolute temperatures, ASCII digits only, one rule for capitals."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Long NumPy and SGP4 calls in slices (D-183).
 
 A call such as `ndarray.tolist()` or `np.array(list)` on the 600,000 samples of a week at 1 s

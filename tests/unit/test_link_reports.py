@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Link outputs: report document, plots, XLSX/PDF/DOCX, CSV, JSON and the command line."""
 
 from __future__ import annotations

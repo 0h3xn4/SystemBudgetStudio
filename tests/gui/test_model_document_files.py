@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Files added and removed in the document (a unit added or removed in the window, D-187):
 undo steps, nothing on disk before Save, and Save creates or deletes the file."""
 

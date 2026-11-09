@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """CSV and JSON exports of the link budget (deterministic text, LF line endings).
 
 Unavailable values (placeholders) are empty cells in CSV and null in JSON."""

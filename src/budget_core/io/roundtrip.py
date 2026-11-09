@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Edit a YAML project file in place: change only what differs, keep comments and key order.
 
 A GUI editor shows part of a file. Saving the whole model would drop comments (the place where

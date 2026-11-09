@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Link budget equations: pure functions over floats or NumPy arrays (decibel units).
 
     EIRP = P_tx - L_line + G_tx                              (LNK-EIRP)

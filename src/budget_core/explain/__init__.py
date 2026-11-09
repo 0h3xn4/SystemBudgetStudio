@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explain: how one displayed number was obtained (D-206). Used by `budget explain` and the
 window's Explain view; see docs/models/explain.md."""
 

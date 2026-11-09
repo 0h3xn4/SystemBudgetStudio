@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Components of an IDM-CIC model (D-254): the kind of an equipment is proposed from its name, the
 skeletons of the simulation models are written with placeholders, and the user's component library
 brings the data-sheet values in. Existing files and edits are the user's."""

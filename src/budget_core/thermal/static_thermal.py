@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Static thermal budget: dissipation by unit, subsystem, node and spacecraft mode, and the
 steady-state node temperatures of the hot, cold (and any other) cases with unit limit checks.
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Monotonic and conservation properties of the time-domain power budget (Hypothesis)."""
 
 from __future__ import annotations

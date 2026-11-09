@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The message dialog: for confirmations of something that cannot be undone and for refusals that
 need an answer (D-169). Everything else is inline, a toast or the Problems panel.
 

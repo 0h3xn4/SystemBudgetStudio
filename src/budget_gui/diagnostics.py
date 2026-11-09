@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """What Qt knows about the machine, for `system-budget-studio --diagnose` (D-257).
 
 No project is opened and nothing is read from a project: the report names the Qt and PySide6

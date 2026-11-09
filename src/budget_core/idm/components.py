@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Components found in an IDM-CIC model, and the skeletons written for them (D-254).
 
 What the model says is the kind of an equipment (`classify.py`), its mass, its power modes and its

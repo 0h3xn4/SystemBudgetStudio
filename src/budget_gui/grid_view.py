@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The grid widgets of the Model tab: a table with spreadsheet habits and the page around it.
 
 The table edits through its model into the `ModelDocument`, so every change is an undo step and

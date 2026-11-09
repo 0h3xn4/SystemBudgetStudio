@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new unit from a few answers (D-187): what the window's *Add unit* turns into a unit file.
 
 A unit needs a mass, a bus, a maturity class and at least one power mode with its powers. None of

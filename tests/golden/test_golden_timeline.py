@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Golden tests of the time-domain power outputs on a synthetic environment (pure arithmetic, so
 the numbers are the same on every platform): report content in every format, CSV and JSON."""
 

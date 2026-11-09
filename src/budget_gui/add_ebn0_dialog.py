@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Add Eb/N0 entry* (D-200): the modulation and the coding of a new row of the
 project's `config/ebn0_table.yaml`, nothing invented.
 

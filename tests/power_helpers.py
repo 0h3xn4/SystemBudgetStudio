@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Builders for time-domain power tests: a synthetic environment and a project with round numbers.
 
 Everything is invented (source: test fixture). With these inputs every expected value in the

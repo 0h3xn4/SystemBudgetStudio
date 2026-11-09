@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Unit power data as a table: export a template, fill it in a spreadsheet, import it back.
 
 The table has one row per power mode of a unit. An import is planned first (`plan_import` lists

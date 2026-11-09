@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """`microsat_250kg_clean`: the example whose validation and runs report no warning and no error.
 
 The other examples leave numbers as placeholders and break a limit on purpose, to show the

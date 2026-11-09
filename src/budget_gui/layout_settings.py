@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The small file that remembers the window layout between sessions (D-150, refines D-105).
 
 The window keeps no Qt settings file on purpose (`privacy.py`): Qt's file dialogs would write the

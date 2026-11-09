@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Add ground station* and *Add imaging target* (D-198): the answers a new site needs,
 none of them invented.
 

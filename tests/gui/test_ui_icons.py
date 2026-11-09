@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The user-interface icons: Lucide SVG sources, black PNG masks made from them (D-150)."""
 
 from __future__ import annotations

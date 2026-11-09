@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """User-facing problems (errors, warnings, info) shared by loaders, validation and solvers.
 
 A Problem says what is wrong, where (file, YAML path, line) and what to do (hint). It never

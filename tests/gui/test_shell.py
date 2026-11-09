@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The shell: the navigation rail, the panels, the first screen, narrow windows, the settings card
 and the palette overlay (D-173)."""
 

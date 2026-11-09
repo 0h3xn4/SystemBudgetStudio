@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Builders for small valid projects used across tests (invented values, source: test fixture)."""
 
 from __future__ import annotations

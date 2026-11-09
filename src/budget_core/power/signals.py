@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Step-function helpers: exact averages of piecewise-constant signals over solver steps.
 
 The time-domain solver works on steps [edges[i], edges[i+1]). Eclipses and mode segments change

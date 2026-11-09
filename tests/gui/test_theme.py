@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The theme: contrast, colour-vision safety, no style literals outside it, light, dark, system and
 the UI scale (D-150, D-169)."""
 

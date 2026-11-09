@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The reference projects. All data is invented; nothing here is a real spacecraft.
 
 Three examples keep every configuration number a placeholder (`source: TBD`) so they exercise the

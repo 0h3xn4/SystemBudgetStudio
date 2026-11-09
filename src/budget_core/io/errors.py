@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Translate pydantic validation errors into located, plain-language Problems.
 
 Messages say what is wrong, where and what to do. They never include values from the file

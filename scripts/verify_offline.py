@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Run a full workflow of the installed program and show what it did on the network.
 
     python scripts/verify_offline.py [--budget PATH] [--gui PATH] [--keep DIR]

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The *Start here* panel: what to do next in a project that is not finished yet (D-190).
 
 A blank project opens to empty pages and a person who has not read the manual does not know where

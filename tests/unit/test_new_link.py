@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new link from a few answers (D-199): the checks and the data of the file. Only the structure
 is asked for (direction, peer, frequency, modulation, coding, data rates); every sourced number
 is written as a placeholder (`source: TBD`) to be filled in the inputs grid, never invented."""

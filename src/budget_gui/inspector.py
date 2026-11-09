@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Inspector: what is known about the selected node of the project tree.
 
 This first version shows where the node lives (file and field), the problems that belong to it by

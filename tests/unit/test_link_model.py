@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Link files: loading, references, ranges, placeholders, antenna and receiver rules, suffixes."""
 
 from __future__ import annotations

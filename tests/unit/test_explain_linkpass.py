@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """D-209: the explanation of a link pass cell agrees with the table, cell by cell."""
 
 from __future__ import annotations

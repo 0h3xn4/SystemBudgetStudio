@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """File menu actions for the spreadsheet tables of the project: the Eb/N0 table, the attenuation
 table and the margin policy (decisions D-231, D-249).
 

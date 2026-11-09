@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Everything that is active for a project, in one list (D-217).
 
 Five kinds of rows, each with its source and where it is edited: the sourced numbers of the

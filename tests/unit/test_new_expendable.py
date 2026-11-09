@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new expendable from a few answers (D-197): the checks and the data of the file. An
 expendable is propellant, an oxidizer, a pressurant or jettisoned equipment: its mass differs per
 mission phase, and every phase of the spacecraft needs a mass (zero if it is not on board)."""

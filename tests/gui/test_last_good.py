@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """An error does not blank the window: the last good results stay, marked as old (UX-10, D-151)."""
 
 from __future__ import annotations

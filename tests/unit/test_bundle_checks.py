@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Release checks: licence texts are collected, the bundle holds no development code."""
 
 from __future__ import annotations
@@ -57,6 +61,7 @@ def fake_bundle(tmp_path: Path, extra: tuple[str, ...] = (), skip: tuple[str, ..
         (internal / name).mkdir(parents=True)
     for rel in (
         "LICENSE",
+        "NOTICE",
         "licences/INDEX.md",
         "licences/pyside6-essentials/LGPL-3.0.txt",
         "licences.md",
@@ -96,7 +101,13 @@ def test_development_code_in_the_bundle_is_reported(tmp_path: Path, module: str)
 
 @pytest.mark.parametrize(
     "missing",
-    ["LICENSE", "licences.md", "sbom.cdx.json", "licences/pyside6-essentials/LGPL-3.0.txt"],
+    [
+        "LICENSE",
+        "NOTICE",
+        "licences.md",
+        "sbom.cdx.json",
+        "licences/pyside6-essentials/LGPL-3.0.txt",
+    ],
 )
 def test_missing_licence_material_is_reported(tmp_path: Path, missing: str) -> None:
     problems = check_bundle.check(fake_bundle(tmp_path, skip=(missing,)))

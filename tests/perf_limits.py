@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Wall-clock limits for the tests that time something.
 
 The spec target (10 s for the week-at-1-s stress case) holds on the reference machine; shared CI

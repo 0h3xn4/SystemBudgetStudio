@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """How a cell looks: numbers, placeholders, n/a, limit states, margin bars, the legend (D-150)."""
 
 from __future__ import annotations

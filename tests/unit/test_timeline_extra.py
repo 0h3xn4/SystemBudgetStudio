@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The power timeline with placed pointing and burns (2.3.0, D-235): the load is added to the
 demand as its own series, step-independent, seen by the peak-power check, unknown where an input is
 a placeholder, and absent (byte-identical results) where nothing is placed."""

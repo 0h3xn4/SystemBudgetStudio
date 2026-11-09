@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Orbit design helpers (2.2.0, D-226): from what a mission analyst asks for (the local time of the
 ascending node, a sun-synchronous orbit, a repeat ground track) to the elements the tool takes.
 

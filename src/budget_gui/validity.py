@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """What a computed result belongs to, so a tab never shows or exports numbers for other inputs.
 
 Every result tab remembers the `ResultKey` it computed for (project revision, scenario, options

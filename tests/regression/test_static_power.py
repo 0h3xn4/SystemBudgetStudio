@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Hand-calculated reference cases for the static power budget (decision D-040).
 
 Conventions: effective = avg * duty; unit margin by maturity; system margin on the sum of margined

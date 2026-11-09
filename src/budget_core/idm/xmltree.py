@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Parse the XML model into a tree, safely.
 
 The model file has no use for a document type declaration or entities, so a file that has one is

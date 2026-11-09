@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Add link in the window (D-199): the form, the Edit menu entry and the file that is written. Only
 the structure of the link is asked for; the sourced numbers are placeholders for the inputs grid."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Audit RC-1, RC-3, RC-15, RC-16, RC-22, RC-23, LD-1, LD-2: command line behaviour."""
 
 from __future__ import annotations

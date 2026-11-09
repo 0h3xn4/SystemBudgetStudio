@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """UTC time strings: ISO 8601 without a UTC offset other than Z (project files use UTC only).
 
 Times are accepted between the years 1950 and 2100 (decision D-120): the Sun and Earth models and

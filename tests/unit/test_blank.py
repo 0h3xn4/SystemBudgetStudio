@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A blank project (D-185): a folder that opens, validates and computes (to n/a) with no units and
 no invented number."""
 

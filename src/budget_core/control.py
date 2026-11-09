@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Progress and cancellation of a long computation (D-167).
 
 A computation takes an optional `RunControl`. It reports a *stage* (a short plain phrase such as

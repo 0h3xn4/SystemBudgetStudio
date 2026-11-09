@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Add Eb/N0 entry in the window (D-200): the form, the Edit menu entry, the row that is added to
 `config/ebn0_table.yaml` and the link form that offers the new pair."""
 

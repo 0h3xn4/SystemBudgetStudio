@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The grid table and its page: copy, paste, fill-down, clear, keys, filter (UX step 2, D-159)."""
 
 from __future__ import annotations

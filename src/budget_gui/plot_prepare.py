@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Everything a plot needs before its first paint, worked out in the worker thread (D-182).
 
 The first paint of a week at 1 s scans 600,000 samples per series for the y range and summarises

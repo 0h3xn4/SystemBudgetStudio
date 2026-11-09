@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Centre of gravity and inertia from the placements and shapes of a model (D-245, D-246).
 
 The conventions are those of DV-IDM5 (inferred from the models, not from IDM-CIC itself); these

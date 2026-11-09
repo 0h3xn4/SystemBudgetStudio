@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Showing and setting where the inputs came from (D-213, step P3b): Explain, the provenance
 row of the reports, and `budget source`."""
 

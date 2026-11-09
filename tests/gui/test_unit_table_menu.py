@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """File menu: export the unit power modes as a table, import a filled-in one after a preview."""
 
 from __future__ import annotations

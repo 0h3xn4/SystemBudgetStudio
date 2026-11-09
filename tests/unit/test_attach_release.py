@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """packaging/attach_release.sh against a stub `gh`: what it checks, renames and uploads."""
 
 from __future__ import annotations

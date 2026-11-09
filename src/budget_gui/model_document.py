@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The editable model: the files behind the grids, with one undo stack and an explicit Save (D-159).
 
 The grids of the Model tab do not write files. They edit this document, which holds the data of

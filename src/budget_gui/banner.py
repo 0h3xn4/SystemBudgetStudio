@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A banner under the top bar: a state of the results that must not go unnoticed.
 
 Three are used: *stale* (the tables show the last results that worked, from before an error),

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Golden tests of the link budget outputs: the static table of the microsatellite example (two
 links, invented values) and the pass series of the synthetic test pass (pure arithmetic)."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Report content, provenance and byte-identical regeneration (spec constraints 14 and 19)."""
 
 from __future__ import annotations

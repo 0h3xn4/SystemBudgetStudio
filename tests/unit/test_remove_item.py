@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Remove from project (D-201): which files can be removed, and what blocks a removal. A ground
 station or an imaging target that a scenario lists, and a ground station that a link names as its
 peer, cannot be removed without leaving a reference to a file that is gone."""

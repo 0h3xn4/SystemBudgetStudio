@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The registry of model choices (D-219): every entry is bound to the field or option it names,
 every alternative names real equations, the generated page is current, and the assumptions list
 and the command are built from it."""

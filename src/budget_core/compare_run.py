@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Compare two projects (revisions) or two scenarios: runs the budgets and diffs the reports."""
 
 from __future__ import annotations

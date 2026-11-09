@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Static mass budget per mission phase: roll-up with margins, limits, centre of gravity, inertia.
 
 Conventions are in docs/DECISIONS.md (D-048 to D-050) and `budget_core.equations`. A placeholder

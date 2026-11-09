@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Help > User guide: the guide rendered inside the window (no browser, no network)."""
 
 from __future__ import annotations

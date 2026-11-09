@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Hovering over a plot draws the cursor on a kept picture of the plot (audit GUI-28, D-147)."""
 
 from __future__ import annotations

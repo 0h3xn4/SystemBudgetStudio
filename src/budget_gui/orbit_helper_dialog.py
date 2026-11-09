@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The orbit helper (2.2.0, D-228): from a local time of the ascending node, a sun-synchronous
 request or a repeat ground track to the elements an orbit file takes.
 

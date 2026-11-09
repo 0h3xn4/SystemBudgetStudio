@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Qt palette and the style sheet, both made from the tokens (D-169).
 
 No other module of the window sets a style sheet. A widget asks for a look with a dynamic property:

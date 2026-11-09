@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The registry of the modelling choices of the tool (D-219).
 
 A model choice is a place where the result depends on a modelling decision a reviewer could

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The focused view (D-191): the window opens with the counts of the problems as one line, no
 Inspector and no Provenance panel and only the main columns of the grids; the full view is one
 toggle away and the choice is kept."""

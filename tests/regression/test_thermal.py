@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Static thermal budget against hand calculations (invented numbers, see thermal_helpers)."""
 
 from __future__ import annotations

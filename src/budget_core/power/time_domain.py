@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Time-domain power budget over a scenario: generation, demand, battery state, violations.
 
 Pipeline (decisions D-061 to D-066): the mode timeline gives the demand of each step (exact

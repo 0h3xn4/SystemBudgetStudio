@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Beta sweep page of the Thermal area: node temperatures against the beta angle (D-250).
 
 The steady-state thermal model of the project is solved for a range of beta angles in a worker

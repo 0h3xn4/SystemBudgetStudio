@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Monotonic properties of the link budget (Hypothesis): more range never increases the margin."""
 
 from __future__ import annotations

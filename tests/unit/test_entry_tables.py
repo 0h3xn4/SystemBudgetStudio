@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Eb/N0 and attenuation tables as spreadsheets (2.2.0, D-231): export, fill in with the values
 and sources of a standard or data sheet, import with a preview. An empty cell means unchanged; a
 number needs its source; nothing is invented, and no message carries a value from a file."""

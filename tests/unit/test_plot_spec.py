@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Plot helpers shared by the GUI widget and the report renderer."""
 
 from __future__ import annotations

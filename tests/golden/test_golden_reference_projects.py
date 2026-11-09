@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Acceptance (M6): every reference project produces golden reports for every budget it has.
 
 Static power and mass goldens of the three reference projects are in test_golden_reports.py; this

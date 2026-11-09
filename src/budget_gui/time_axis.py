@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """What the time axis of a plot shows: elapsed time, UTC or the orbit number (D-162).
 
 Each axis says where the ticks are (in seconds since the scenario start), what they are called,

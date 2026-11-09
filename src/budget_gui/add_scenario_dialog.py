@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Add orbit and scenario* (D-189, D-196): a name, an id, a near-circular or an
 elliptical orbit, a start, a length (up to 180 days) and the spacecraft mode that is active.
 

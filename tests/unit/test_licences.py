@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Licence review (spec constraint 7): only permissive or LGPL runtime dependencies."""
 
 from __future__ import annotations

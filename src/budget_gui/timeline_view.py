@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Power timeline tab: time-domain power budget with plots, cursors, violations and export.
 
 The computation (environment, array, battery) runs in a worker thread. The environment of the

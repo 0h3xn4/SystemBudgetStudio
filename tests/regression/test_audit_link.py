@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Pre-release audit fixes in the link budget (TL-4 to TL-9, TL-11, TL-12, TL-15, MI-3)."""
 
 from __future__ import annotations

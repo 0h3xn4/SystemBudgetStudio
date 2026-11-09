@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Propulsion systems and manoeuvres for the delta-v and propellant budget (2.2.0, D-233).
 
 A system is a chemical or an electric thruster set with its specific impulse; a manoeuvre is a

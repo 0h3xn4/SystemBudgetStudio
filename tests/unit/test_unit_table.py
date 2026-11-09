@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Unit power data in a table: export a template, fill it in a spreadsheet, import it back.
 
 An import first shows what it would change; nothing is written unless it is applied, and then

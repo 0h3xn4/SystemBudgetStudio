@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Screenshots of the main pages at every UI size (90, 100, 110, 125 %) in both themes, and the
 smallest window each size allows (M6).
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Explanations of the power timeline (tables of `reports/timeline_report.py`, D-208).
 
 Table ids: `timeline:cases` (results by case), `timeline:modes` (the modes of the scenario),

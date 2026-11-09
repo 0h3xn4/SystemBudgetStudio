@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """SpaceMissionStudio environment adapter (INTERIM file format, decision D-055).
 
 No sample export was available, so this reads the documented interim CSV format in

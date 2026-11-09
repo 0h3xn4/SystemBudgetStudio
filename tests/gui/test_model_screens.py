@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Model screens after the overhaul: the toolbar above the grid, the frozen identifier
 column, the problem marker in the row, row height 26 and the cost of scrolling (D-176, D-177)."""
 

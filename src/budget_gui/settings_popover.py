@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The settings popover of the rail: theme, UI size, motion and single click, in one small card
 (D-173, D-195).
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The time axis of the plots: elapsed time, UTC, orbit number (UX step 3b, D-162)."""
 
 from __future__ import annotations

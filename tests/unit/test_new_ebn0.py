@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new Eb/N0 table entry from a few answers (D-200): the checks and the data. Only the pair
 (modulation, coding) is asked for; the required Eb/N0 is a number from a standard or a data sheet,
 so it is written as a placeholder (`source: TBD`) for the inputs grid, never invented."""

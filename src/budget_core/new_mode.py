@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new spacecraft mode from a few answers (D-188): what the window's *Add spacecraft mode* turns
 into a mode file.
 

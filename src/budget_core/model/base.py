@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Base model: strict, frozen, unit-aware. All project and config models derive from it."""
 
 from __future__ import annotations

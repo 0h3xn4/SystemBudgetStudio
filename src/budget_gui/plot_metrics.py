@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The sizes of the painted plots at the UI scale in use (D-178).
 
 The plot and the strips are painted by hand, so their margins cannot come from a style sheet. The

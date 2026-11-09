@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Link passes tab: margin, selected data rate and data volume over every pass of a scenario.
 
 The computation (environment and link budget) runs in a worker thread; the environment of the

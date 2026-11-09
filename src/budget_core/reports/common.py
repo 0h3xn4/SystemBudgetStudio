@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Report parts shared by every budget: sheet names, assumptions, problems, provenance."""
 
 from __future__ import annotations

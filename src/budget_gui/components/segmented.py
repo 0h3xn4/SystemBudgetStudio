@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A segmented control: a few choices side by side, one chosen (D-169)."""
 
 from __future__ import annotations

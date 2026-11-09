@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Eb/N0 table, the attenuation table and the margin policy as spreadsheets (2.2.0, D-231;
 the margin policy 2.6.0, D-249).
 

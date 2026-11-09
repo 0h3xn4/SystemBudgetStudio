@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """How report numbers are shown: round half up on the decimal value, no negative zero, no loss in
 the configuration-numbers table, the same text in every format (audit RC-8, RC-9, TL-16, RC-25)."""
 

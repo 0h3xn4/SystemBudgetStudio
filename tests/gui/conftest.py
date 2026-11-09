@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """GUI test support: a window with a running job refuses to close (it closes when the job is done),
 so every test lets the jobs of the windows it made finish before the windows are torn down."""
 

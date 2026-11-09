@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Scenario timeline: default mode, rules in order, manual segments last (decision D-056)."""
 
 from __future__ import annotations

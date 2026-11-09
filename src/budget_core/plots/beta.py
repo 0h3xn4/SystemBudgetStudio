@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The plot of the beta angle of a scenario (2.2.0, D-227)."""
 
 from __future__ import annotations

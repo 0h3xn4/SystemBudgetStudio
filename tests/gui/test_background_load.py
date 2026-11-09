@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Opening and reloading a project must not freeze the window (audit GUI-14): the load runs in a
 thread, the window thread only shows the result, and requests that overlap are answered once."""
 

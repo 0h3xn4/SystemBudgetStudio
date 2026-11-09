@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """How the plots of the window take their colours from the theme.
 
 The core draws its plots (and the exported PNG, PDF and DOCX files) in its own colours, made for a

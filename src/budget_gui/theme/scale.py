@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The scales of the window: spacing, type, shape, control sizes, motion and the UI scale (D-169).
 
 Every pixel size of the window comes from here (a test checks that no other module of the window

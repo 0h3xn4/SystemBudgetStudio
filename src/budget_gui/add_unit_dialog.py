@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Add unit* (D-187): the answers a new unit needs, none of them invented.
 
 The id is suggested from the name until it is typed by hand. The numbers (mass, the powers of the

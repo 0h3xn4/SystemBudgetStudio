@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A new RF link from a few answers (D-199): what the window's *Add link* turns into a link file.
 
 Only the structure of a link is asked for: the direction, the ground station at the other end, the

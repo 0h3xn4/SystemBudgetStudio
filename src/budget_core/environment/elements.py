@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """ElementsPropagator: TLE or mean elements propagated with sgp4 (no own propagator, spec).
 
 Elements are used as SGP4 mean elements; the semi-major axis becomes mean motion by Kepler's third

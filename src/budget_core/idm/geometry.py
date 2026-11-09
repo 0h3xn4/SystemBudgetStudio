@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Centre of gravity and inertia of the equipment of an IDM-CIC model (decisions D-245, D-246).
 
 The published description of the format fixes the *names* of the placement data (a translation,

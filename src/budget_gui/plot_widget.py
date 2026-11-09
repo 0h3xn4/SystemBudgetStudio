@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Stacked time plots with eclipse and pass shading, zoom, pan and cursors.
 
 Draws a `PlotSpec` (the same description the report renderer uses). The wheel zooms around the

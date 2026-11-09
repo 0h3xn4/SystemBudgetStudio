@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Thermal model and environment cases for the steady-state budget (decisions D-071 to D-075).
 
 Every number that comes from a source (optical properties, fluxes, conductances, margins) is a

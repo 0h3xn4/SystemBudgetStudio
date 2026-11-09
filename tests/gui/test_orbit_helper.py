@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The orbit helper (2.2.0, D-228): a dialog that turns a local time of the node, a sun-synchronous
 request or a repeat cycle into elements, and writes them to an orbit in one undo step, or hands
 them to the Add scenario form."""

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Status cells and limit bars in the Mass, Thermal and Link tables (UX step 4, D-164)."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The status bar: what is open, when it last ran, which version, what could not be checked.
 
 Messages about an action (`showMessage`) take the left side and go away. Four segments stay on

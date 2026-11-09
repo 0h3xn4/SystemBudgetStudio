@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The text of an import plan, for the command line and the window (decision D-243).
 
 Names objects by their ids in the model and counts them; never prints a name or a value read from

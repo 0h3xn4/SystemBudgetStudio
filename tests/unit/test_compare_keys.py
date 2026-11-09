@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Comparison pairs rows by declared key columns, computes changes from raw values and reports
 what it cannot pair (audit TL-2, TL-16, RC-17)."""
 

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Definitional physical constants with their sources (decision D-054).
 
 These define the Earth ellipsoid, the Sun and the astronomical unit. They are not project policy

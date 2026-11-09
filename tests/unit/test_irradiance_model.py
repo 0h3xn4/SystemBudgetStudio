@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The irradiance model of a scenario (D-219, P5c): `constant` (the default, the configured
 irradiance as it is) or `seasonal` (the configured irradiance is the value at 1 AU, scaled by the
 inverse square of the Earth-Sun distance the Sun model computes)."""

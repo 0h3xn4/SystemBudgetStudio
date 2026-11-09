@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Every screen and dialog opens with the example project in both themes and at other UI scales,
 without an exception and without a message from Qt about the style sheet (D-169)."""
 

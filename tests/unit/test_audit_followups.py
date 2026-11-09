@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Places that show results of the solver audit fixes: the per-day figure, the stale-orbit warning
 of a scenario run, the not-evaluated checks in the JSON, and the violation count of the window."""
 

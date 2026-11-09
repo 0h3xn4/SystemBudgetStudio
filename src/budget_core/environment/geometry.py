@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Sun, sidereal time, shadow and ground geometry on NumPy arrays (SI units, no I/O).
 
 Equations (named in budget_core.equations): ENV-SUN (Astronomical Almanac low-precision Sun),

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The fonts of the window: Inter for text, JetBrains Mono for numbers, identifiers and code.
 
 Both are bundled (`assets/fonts`, SIL OFL) and registered at start-up; the window never depends on a

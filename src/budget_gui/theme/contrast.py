@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Contrast of two colours (WCAG 2.2) and the text colour that reads on a given background."""
 
 from __future__ import annotations

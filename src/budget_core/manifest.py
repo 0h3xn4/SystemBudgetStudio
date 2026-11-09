@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """What a result was computed from: the files read and a digest of the model they gave (D-204).
 
 Two fingerprints answer two different questions. The **file manifest** lists every project file the

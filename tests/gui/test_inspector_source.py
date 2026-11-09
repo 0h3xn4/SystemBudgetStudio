@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The Source field of the Inspector (D-213, P3b-2): see where a number came from, record it in
 one undo step."""
 

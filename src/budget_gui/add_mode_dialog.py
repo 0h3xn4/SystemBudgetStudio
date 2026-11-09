@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The form of *Add spacecraft mode* (D-188): a name, an id, a description and where the
 assignments start from.
 

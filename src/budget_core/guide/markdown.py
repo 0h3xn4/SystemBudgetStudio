@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A small Markdown subset for the user guide (no dependency, deterministic output).
 
 Supported: `#`..`###` headings, paragraphs, `-`/`*` and `1.` lists, fenced code, pipe tables,

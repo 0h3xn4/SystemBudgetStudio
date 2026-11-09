@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Steady-state nodal heat balance (equation TH-BAL), a pure function over NumPy arrays.
 
 For every node i:  sum_j G_ij (T_j - T_i) + R_i (T_space^4 - T_i^4) + Q_i = 0

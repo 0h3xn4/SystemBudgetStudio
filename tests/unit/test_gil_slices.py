@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Long NumPy and SGP4 calls run in slices, so the window thread gets the interpreter lock between
 them (D-183). The results must not change by a single bit."""
 

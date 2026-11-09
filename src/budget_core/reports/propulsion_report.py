@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Build the propulsion and delta-v budget report document (renderer independent)."""
 
 from __future__ import annotations

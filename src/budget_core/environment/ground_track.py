@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The ground track (2.2.0, D-232): the sub-satellite point over the scenario.
 
 The inertial (TEME) positions of the environment are turned to Earth-fixed by the same rotation

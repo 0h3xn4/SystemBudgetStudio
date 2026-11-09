@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """D-206: which registered equations are claimed by the code that applies them.
 
 The list of equations nobody claims yet is written down here. It only gets shorter: binding an

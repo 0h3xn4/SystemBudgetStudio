@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """A project file may only make the tool read files inside the project folder."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Time-domain power budget against hand calculations (invented numbers, see power_helpers).
 
 The reference values are worked out in the comments; no value is copied from the code under test.

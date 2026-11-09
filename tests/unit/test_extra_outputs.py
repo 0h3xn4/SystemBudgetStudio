@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """The pointing and propulsion load in the results (2.3.0): an extra series in the plot and the CSV,
 a key in the JSON and a table in the report, only where the scenario places something."""
 

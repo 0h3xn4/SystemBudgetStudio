@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
 """Mode timeline of a scenario (decision D-056).
 
 Layers, later wins: the default mode over the whole scenario, then each rule in the order listed,
