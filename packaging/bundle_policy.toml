@@ -96,6 +96,8 @@ note = "The licence file of ICU 73.2 lists the licences of ICU and of the parts 
 # THIRD_PARTY_NOTICES.txt. A new gap is a failed build until someone adds it here, with the reason.
 [known_gaps]
 "Microsoft Visual C++ runtime" = "Redistributed under the Microsoft redistribution terms of the Visual C++ runtime; the terms are not reproduced in this file (legal-audit F-45, lawyer question LQ-17)."
+"libxcb" = "The Rocky Linux 9 package ships no licence file (checked on the build: rpm lists none, also after a reinstall with documents); the licence (MIT) is the one of the package metadata; the upstream text is in the source package (legal-audit F-45)."
+"xcb-util-keysyms" = "The Rocky Linux 9 package ships no licence file, only a README (checked on the build); the licence (MIT) is the one of the package metadata; the upstream text is in the source package (legal-audit F-45)."
 "Mesa*" = "opengl32sw.dll is the Mesa software OpenGL that the Qt for Python wheel ships; Mesa is MIT-licensed; its licence text is not reproduced in this file (legal-audit F-45)."
 
 [qt]
