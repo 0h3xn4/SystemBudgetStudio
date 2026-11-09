@@ -44,6 +44,13 @@ SPDX-FileCopyrightText = [
 ]
 SPDX-License-Identifier = "ISC AND MIT"
 
+# Licence text of libffi, copied verbatim for the Windows bundle (packaging/notices/README.md).
+[[annotations]]
+path = "packaging/notices/libffi-LICENSE.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "1996-2024 Anthony Green, Red Hat, Inc and others"
+SPDX-License-Identifier = "MIT"
+
 # Texts of the GPL and LGPL that travel with the Qt bindings (verbatim copies).
 [[annotations]]
 path = "assets/licences/GPL-3.0.txt"
