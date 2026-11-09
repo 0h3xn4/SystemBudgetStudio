@@ -12,7 +12,7 @@ It computes power, mass, thermal and link budgets for a satellite from a model k
 
 ### Does it need the internet?
 
-No, never while running. There is no telemetry, no update check and no online help; an automated test fails if the tool imports a networking module or opens a socket. You need the internet only once, to install the libraries (or never, with a [wheelhouse](getting-started.md#offline-install)).
+No, never while running. There is no telemetry, no update check and no online help; an automated test fails if the tool imports a networking module or opens a socket, and the continuous integration traces the whole workflow for connections. [Security and privacy](security-and-privacy.md) lists the guarantees and how to check each one on your own machine. You need the internet only once, to install the libraries (or never, with a [wheelhouse](getting-started.md#offline-install)).
 
 ### Which systems does it run on?
 

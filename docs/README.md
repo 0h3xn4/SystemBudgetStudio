@@ -38,6 +38,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [tips.md](tips.md) | Shortcuts, habits, scripting, links to the other tools |
 | [faq.md](faq.md) | Short answers to common questions |
 | [troubleshooting.md](troubleshooting.md) | Install, start-up and run errors with fixes |
+| [security-and-privacy.md](security-and-privacy.md) | What the tool does with your data, how to verify that it is offline and sends nothing, how to check a download |
 | *In-app user guide* | The same material by topic, inside the tool (*Help → User guide*, or `budget guide --out guide`); sources in [`src/budget_core/guide/chapters/`](../src/budget_core/guide/chapters/) |
 
 ## Reference

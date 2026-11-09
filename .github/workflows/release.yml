@@ -160,6 +160,8 @@ jobs:
     permissions:
       contents: write   # upload to the release
       actions: read     # download the artefacts of this run
+      id-token: write   # sign the attestations of the files (sigstore, keyless)
+      attestations: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Check the files and attach them (a missing release is created as a draft)
@@ -167,3 +169,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: packaging/attach_release.sh "$GITHUB_RUN_ID" "$GITHUB_REF_NAME"
+      - name: Download the files again for the build attestations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download "$GITHUB_RUN_ID" --dir "$RUNNER_TEMP/attest"
+      - name: Attest where the files were built (verify with gh attestation verify)
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
+        with:
+          subject-path: |
+            ${{ runner.temp }}/attest/**/*-setup.exe
+            ${{ runner.temp }}/attest/**/*-portable.zip
+            ${{ runner.temp }}/attest/**/*.tar.gz
+            ${{ runner.temp }}/attest/**/*.deb
+            ${{ runner.temp }}/attest/**/*.rpm
+            ${{ runner.temp }}/attest/**/sbom.cdx.json
