@@ -5,8 +5,15 @@ Date: 2026-11-09 (first version, Phase 1). These steps need you: they are accoun
 ## Now (cheap, and it reduces risk today)
 
 - [ ] **Change the repository description.** The current text says "Every equation sourced, every value with units, byte-identical reports" and "power and RF link budgets". README line 116 says 53 of 57 equations have no citation. *How:* GitHub, repository page, the gear icon next to **About**, edit **Description**. Proposed text (no promises, true today): "Offline desktop and command-line tool for small-satellite power, mass, thermal and link budgets, from one plain-text spacecraft model. Free and open source." Then press **Save changes**. (Findings F-50, F-83.)
-- [ ] **Use the no-reply address for new commits.** *How:* GitHub, **Settings → Emails**: tick **Keep my email addresses private** and **Block command line pushes that expose my email**. Your no-reply address is shown on the same page (it ends in `@users.noreply.github.com`). On your computer: `git config --global user.email "<that address>"`. Past commits do not change. (F-10, F-18.)
-- [ ] **Answer the questions** at the end of [legal-audit.md](legal-audit.md) (Q1 to Q19), in the chat.
+- [ ] **Use the no-reply address for new commits** (Phase 2, decision D-259). Your commits so far show a private address in 128 commit headers; they stay as they are. *How:* GitHub, **Settings → Emails**: tick **Keep my email addresses private** and **Block command line pushes that expose my email**. The no-reply address is shown on that page. It has the form `<id>+0h3xn4@users.noreply.github.com`; the id `291340596` appears in the public Debian package metadata, so the address is most likely:
+
+  ```bash
+  git config --global user.name "0h3xn4"
+  git config --global user.email "291340596+0h3xn4@users.noreply.github.com"
+  ```
+
+  Check the address against the one GitHub shows before you run it. In an existing clone, run the same two lines without `--global` if you want the setting for this repository only. Verify with `git log -1 --format='%an <%ae>'` after your next commit. (F-10, F-18.)
+- [ ] **Answer the open questions** in [legal-audit.md](legal-audit.md): Q2 (country), Q13 (origin of the "CIC-SAT V6" and "real model" samples), Q15 (private list of names to search for), Q19 (repository description). The other questions are answered by the defaults, as you asked on 2026-11-09 (D-259); change any of them in the chat.
 - [ ] **Decide on pull request #129** (Q12) before Phase 5 and 6 start.
 
 ## Account security (before the website goes live)

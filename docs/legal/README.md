@@ -26,3 +26,4 @@ Never put secrets or personal data in this folder.
 | Date | Phase | Entry |
 |---|---|---|
 | 2026-11-09 | 1 | Orientation, inventory, claims register, audit, risk register, first owner checklist and lawyer questions, website plan (`docs/site/plan.md`). Read-only: no code, document, release or setting changed. |
+| 2026-11-09 | 2 | Ownership statement in the README; EXIF removed from `tree-before.jpg`; Phase 2 scans ([phase2-scan.txt](evidence/2026-11-09/phase2-scan.txt)); owner's defaults recorded as D-259; commit-identity steps in the owner checklist. |

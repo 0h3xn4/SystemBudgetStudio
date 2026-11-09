@@ -20,15 +20,15 @@ Phase 1 changed nothing except adding `docs/legal/` and `docs/site/plan.md`.
 
 | ID | Sev | Finding | Proposed measure | Status |
 |---|---|---|---|---|
-| F-10 | Medium | The author address `ohexna@mailbox.org` is in the metadata of **128 of 440 commits** (the other 312 are authored by Claude). The repository is public, so the address and the name "ohexna" are public in the history. The public handle is `0h3xn4`, so the two names also link two identities. Not in the working tree. | Options in Q9: leave it; rewrite history (changes every commit hash, breaks all 24 tags and releases, needs force-push and a new release set; not recommended); or stop the spread now by using the no-reply address for new commits. **Recommendation: leave the history, set the no-reply address for new commits, tell GitHub to block pushes that expose the private address.** | Proposed |
+| F-10 | Medium | The author address `ohexna@mailbox.org` is in the metadata of **128 of 440 commits** (the other 312 are authored by Claude). The repository is public, so the address and the name "ohexna" are public in the history. The public handle is `0h3xn4`, so the two names also link two identities. Not in the working tree. | Options in Q9: leave it; rewrite history (changes every commit hash, breaks all 24 tags and releases, needs force-push and a new release set; not recommended); or stop the spread now by using the no-reply address for new commits. **Recommendation: leave the history, set the no-reply address for new commits, tell GitHub to block pushes that expose the private address.** | Decided (D-259): leave history, no-reply for new commits |
 | F-11 | Low | `LICENSE` names the copyright holder as the handle "0h3xn4". The `.deb` maintainer uses `0h3xn4 <291340596+0h3xn4@users.noreply.github.com>` (a public GitHub no-reply address with the numeric id). | Name per **Q1**. | Proposed |
-| F-12 | Low | `docs/images/ux-redesign/tree-before.jpg` carries EXIF (Android build string, date 2026-10-18). It is not referenced by any document. The picture shows invented example data only. | Delete the file, or strip the EXIF and keep the picture. No history rewrite is proposed. | Proposed |
+| F-12 | Low | `docs/images/ux-redesign/tree-before.jpg` carries EXIF (Android build string, date 2026-10-18). It is not referenced by any document. The picture shows invented example data only. | Delete the file, or strip the EXIF and keep the picture. No history rewrite is proposed. | Done (branch protect/phase-2-personal-data): EXIF segment removed, pixels identical; the old blob stays in history (Q9) |
 | F-13 | Low | The screenshots show the status bar path `/tmp/sbs-docshots-<random>/example`, a temporary folder, not a home directory. The window's user name does not appear in the pictures I opened (one of 438; the rest were not opened). | Regenerate the website screenshots with a fixed neutral path (Phase 8). Review every picture before use. | Open |
 | F-14 | Low | `docs/transparency_audit.md` contains the path `/home/user/systembudgetstudio/` (a build-session path) and `docs/DECISIONS.md` mentions "a senior engineer", "the engineer's feedback" and "an owner's real model". No names. | Keep; confirm in **Q13** that no employer data is behind "the owner's real model" and "CIC-SAT V6 (sample of the owner)". | Proposed |
 | F-15 | Medium | **"CIC-SAT V6 (sample of the owner)" and "an owner's real model"** are named in `docs/DECISIONS.md` (D-246, D-253), `CHANGELOG.md` and `docs/changes.md`, with counts taken from it ("104 of 124 equipment placed"). If a model came from an employer or customer, even the counts could be confidential. The `.idm` files themselves are excluded from the repository by `.gitignore` and by a test. | Owner confirms the origin (**Q13**). If it is a public sample, add the source; if not, remove the counts and review the history (**Q9**). | Proposed |
 | F-16 | Low | Working-tree scan found no e-mail address (apart from the no-reply address), no home path of a person, no IP address of a host, no token or key (`evidence/2026-11-09/working-tree-scan.txt`). The scan cannot find **company or customer names**, because I do not know them. | Owner gives a private list of words to search for (not to be committed). See **Q15**. | Proposed |
-| F-17 | Low | No ownership statement ("personal project, not affiliated with any employer") exists in README, docs or the window. | Phase 2 text, same wording everywhere. | Open |
-| F-18 | Low | The commits made by the owner on GitHub show as `GitHub <noreply@github.com>` as committer. Local `git config` in this session uses `Claude <noreply@anthropic.com>`. There is no `.mailmap`. | Tell the owner how to set the no-reply address (owner checklist). | Open |
+| F-17 | Low | No ownership statement ("personal project, not affiliated with any employer") exists in README, docs or the window. | Phase 2 text, same wording everywhere. | Done (README); About dialog and website when they are built (F-21) |
+| F-18 | Low | The commits made by the owner on GitHub show as `GitHub <noreply@github.com>` as committer. Local `git config` in this session uses `Claude <noreply@anthropic.com>`. There is no `.mailmap`. | Tell the owner how to set the no-reply address (owner checklist). | Done: exact steps in the owner checklist; history unchanged (Q9) |
 | F-19 | Low | `--diagnose` (D-257) writes environment variable values (`QT_*`, `BUDGET_*`), the assets folder path and the layout file path. These can show a home directory when the user posts the output in an issue. | Say so in the privacy statement and the template for bug reports. Phase 5. | Open |
 
 ## C. Phase 3: licence, REUSE, contributions
@@ -98,14 +98,27 @@ Phase 1 changed nothing except adding `docs/legal/` and `docs/site/plan.md`.
 | F-83 | Low | The repository "About" box says "power and RF link budgets"; the tool also does mass, thermal, propulsion and pointing. | Proposed text and topics in Phase 9. | Open |
 | F-84 | Low | Website tooling: the window screenshots need Python 3.14 and PySide6 (installed for the tests in this session); official WOFF2 files must be downloaded from the upstream releases. | Phase 8. | Open |
 
+## Phase 2 results (2026-11-09)
+
+| Check | Result | Evidence |
+|---|---|---|
+| Working tree: company or customer names, internal URLs, hosts, user names, IP addresses, keys, tokens, real mission data | Nothing found by pattern scans. Names of companies or customers cannot be searched without a list from the owner (Q15). The questions about two real-model samples (F-15, Q13) stay open. | [phase2-scan.txt](evidence/2026-11-09/phase2-scan.txt), [working-tree-scan.txt](evidence/2026-11-09/working-tree-scan.txt) |
+| Metadata: committed PDF, DOCX, XLSX, SVG, PNG, JPEG | No committed PDF, DOCX or XLSX. No SVG metadata. No PNG text chunks. One JPEG with EXIF: cleaned. | [image-metadata-scan.txt](evidence/2026-11-09/image-metadata-scan.txt), [phase2-scan.txt](evidence/2026-11-09/phase2-scan.txt) |
+| Provenance in committed outputs and screenshots | Reference files use the user "Golden User". Two screenshots opened show user `root` and a temporary path. No personal name. Website screenshots are regenerated with the user `example` in Phase 8. | [phase2-scan.txt](evidence/2026-11-09/phase2-scan.txt) |
+| History scan, full history, 440 commits | No secret. One test canary string. Author address of the owner in 128 commit headers (F-10). | [history-scan.txt](evidence/2026-11-09/history-scan.txt) (pattern scan; `gitleaks` was not run, F-04) |
+| Ownership statement | In the README. The About dialog does not exist yet (F-21); the website comes in Phase 8. | `README.md` |
+| Commit identity | Future commits: no-reply address, steps in the [owner checklist](owner-checklist.md). Nothing in the repository sets it, because a repository file cannot hold the address without publishing more than needed, and this session's commits are made under Claude's identity. | owner checklist |
+
 ## Questions for the owner
+
+**Answers.** On 2026-11-09 the owner replied "continue as per your recommendations". The defaults in the last column are therefore taken as the answers, except for Q2, Q13, Q15 and Q19, which a default cannot answer. They are recorded as decision D-259. The owner can change any of them; each change is a new line here.
 
 Please answer each in one line. "Default" is what I will do if you say "use your defaults".
 
-| # | Question | Default |
+| # | Question | Default (taken as the answer, except where marked OPEN) |
 |---|---|---|
 | Q1 | Which name goes in the copyright line: your real name or your handle (`0h3xn4`)? | Handle |
-| Q2 | Which country do you live in? (Decides the privacy page and any imprint.) | none; pages blocked |
+| Q2 | Which country do you live in? (Decides the privacy page and any imprint.) | **OPEN.** none; pages blocked |
 | Q3 | Which contact may be published? Do you want a project e-mail address? (A dedicated address is recommended, not your personal one. The Code of Conduct and the privacy page need it.) | GitHub private vulnerability reporting only; no e-mail |
 | Q4 | Should exported reports carry a one-line disclaimer? (Changes XLSX, PDF, DOCX; golden files change.) | Yes in PDF and DOCX footer text and a provenance row in XLSX, CSV and JSON; you approve the text |
 | Q5 | Provenance: should the user name be left out by default, or kept? (There is no host name today. Changes outputs.) | Write the neutral value `unknown` (the value the tool already uses when it finds no name), with a setting to include a name you type |
@@ -116,10 +129,10 @@ Please answer each in one line. "Default" is what I will do if you say "use your
 | Q10 | The brief says 1.3.0; the repository is at 2.11.1 with 24 MIT releases. Is "up to and including the last release before the change" right? Which version number will carry Apache-2.0 (suggest 2.12.0)? | Last release before the change; 2.12.0 |
 | Q11 | `site/reference.html` is not in the repository. Do you have the draft? Should I write the page from scratch? | Write from scratch |
 | Q12 | Pull request #129 (D-258) overlaps Phases 5 and 6. Merge it first, rebase my work on it, or close it? | You merge it first if you want it; I rebase |
-| Q13 | Where did the model "CIC-SAT V6" and "the owner's real model" (DECISIONS D-246, D-253) come from? Is any of it employer, customer or non-public data? | none; stop on any doubt |
+| Q13 | Where did the model "CIC-SAT V6" and "the owner's real model" (DECISIONS D-246, D-253) come from? Is any of it employer, customer or non-public data? | **OPEN.** none; stop on any doubt |
 | Q14 | May this session install `gitleaks`, `reuse`, ScanCode and `exiftool` (downloads of external tools into a scratch folder)? If not, the scans run in CI only. | No download; CI only |
-| Q15 | Please give me, in this chat only, a private list of company, customer, programme or person names to search for. I will not write them into the repository. | none |
+| Q15 | Please give me, in this chat only, a private list of company, customer, programme or person names to search for. I will not write them into the repository. | **OPEN.** none |
 | Q16 | The window has no About dialog and the Windows installer no licence page. May I add both (Phase 3 and 5)? | Yes |
 | Q17 | LGPL source: attach the exact source archives of PySide6, shiboken6 and Qt to every release (recommended), or a link with a written offer? | Attach |
 | Q18 | For the 24 existing releases: add notices and source archives (changes releases), or leave them as they are and record the gap? | Leave; record the gap |
-| Q19 | The repository description says "Every equation sourced…byte-identical reports". May I give you a new text, and will you apply it? | Yes; text in Phase 9, earlier on request |
+| Q19 | The repository description says "Every equation sourced…byte-identical reports". May I give you a new text, and will you apply it? | **OPEN until the text is approved.** Yes; text in Phase 9, earlier on request |
