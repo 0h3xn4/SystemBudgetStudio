@@ -24,6 +24,7 @@ Date: 2026-11-09 (first version, Phase 1). These steps need you: they are accoun
 ## Repository settings (Phase 6 and 7 will say when each is needed)
 
 - [ ] **Branch and tag rulesets** for `main` and for tags `v*`, as in [docs/BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md): require pull requests, require the CI checks (including every new check added in Phase 3, 4 and 6), block force-pushes and deletion. *How:* **Settings → Rules → Rulesets → New ruleset**. The list of check names comes with the Phase 6 pull request.
+- [ ] **Required checks** (Phase 3): in the ruleset for `main` add `REUSE (licence and copyright of every file)` and `Signed-off-by on every commit` to the required checks, next to the existing test jobs.
 - [ ] **Releases only by you.** Keep yourself as the only person with write access; create an environment named `release` with **required reviewers: you**. *How:* **Settings → Environments → New environment**.
 - [ ] **Secret scanning and push protection.** *How:* **Settings → Code security** (or **Advanced Security**) → turn on **Secret scanning** and **Push protection**.
 - [ ] **Private vulnerability reporting.** *How:* **Settings → Code security → Private vulnerability reporting → Enable**.
@@ -34,7 +35,9 @@ Date: 2026-11-09 (first version, Phase 1). These steps need you: they are accoun
 
 - [ ] **Ask your insurer** whether your personal liability insurance covers software you publish for free (R-22).
 - [ ] **Give a lawyer in your country** [lawyer-questions.md](lawyer-questions.md) and [risk-register.md](risk-register.md). Ask first about LQ-01 to LQ-05.
-- [ ] **Decide the contact** for the privacy page and the Code of Conduct (Q3). A dedicated project address is better than your personal one.
+- [ ] **Decide the contact** for the privacy page and the Code of Conduct (Q3). A dedicated project address is better than your personal one. You live in Germany (Q2): ask the lawyer whether an imprint is needed and which contact it must show (LQ-04).
+- [ ] **Read the terms of the CIC-IDM website** (the account you made to download the sample model) and tell me whether they limit publishing facts about the file or naming the tool (Q13, LQ-05).
+- [ ] **Decide how the AI-written commits are signed off** (F-25, LQ-15): leave the sign-off "Claude", or sign off yourself when you merge.
 
 ## Later (added in Phase 9)
 

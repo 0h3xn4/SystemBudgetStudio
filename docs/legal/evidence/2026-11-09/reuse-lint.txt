@@ -1,0 +1,15 @@
+# reuse lint, 2026-11-09, reuse 6.3.0 (PyPI), run in the working tree of branch protect/phase-3-licence
+# SUMMARY
+
+* Bad licenses: 0
+* Deprecated licenses: 0
+* Licenses without file extension: 0
+* Missing licenses: 0
+* Unused licenses: 0
+* Used licenses: Apache-2.0, GPL-3.0-only, ISC, LGPL-3.0-only, MIT, OFL-1.1
+* Read errors: 0
+* Invalid SPDX License Expressions: 0
+* Files with copyright information: 1958 / 1958
+* Files with license information: 1958 / 1958
+
+Congratulations! Your project is compliant with version 3.3 of the REUSE Specification :-)
