@@ -378,6 +378,9 @@ else:
 """
 
 
+@pytest.mark.skipif(
+    sys.platform == "win32", reason="a shell-style stand-in for rpm; rpm is Linux only"
+)
 def test_the_licence_text_of_a_source_package_is_found_in_a_sibling(tmp_path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
     """libX11-xcb has no licence file; libX11-common, built from the same source, has."""
     import os
