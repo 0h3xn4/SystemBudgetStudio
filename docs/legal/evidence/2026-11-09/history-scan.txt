@@ -1,0 +1,65 @@
+# History scan over the FULL history (regex-based; gitleaks NOT run, see legal-audit F-04)
+# date: 2026-11-09; commits: 440; refs: all local and remote branches and tags; first commit 2026-10-09, last 2026-11-09
+## secret patterns (added lines, unique)
++SECRET = "ZQSECRETQZ"
+## personal-data terms (added lines, unique)
++MAINTAINER = "0h3xn4 <291340596+0h3xn4@users.noreply.github.com>"
+## commit author identities
+    312 Claude <noreply@anthropic.com>
+    128 ohexna <ohexna@mailbox.org>
+## committer identities
+    312 Claude <noreply@anthropic.com>
+    128 GitHub <noreply@github.com>
+## co-author trailers
+      1 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+   6110 Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+     91 Co-authored-by: Claude <noreply@anthropic.com>
+## files deleted anywhere in history
+assets/fonts/IBMPlexMono-SemiBold.ttf
+assets/fonts/IBMPlexSans-Light.ttf
+docs/images/power-budget.png
+docs/images/power-timeline.png
+docs/images/ui-overhaul/m2-power-timeline-light.png
+examples/.gitkeep
+examples/cubesat_3u/config/attenuation_table.yaml
+examples/cubesat_3u/config/ebn0_table.yaml
+examples/cubesat_3u/modes/charging.yaml
+examples/cubesat_3u/modes/downlink.yaml
+examples/cubesat_3u/modes/imaging.yaml
+examples/cubesat_3u/modes/nominal.yaml
+examples/cubesat_3u/modes/safe.yaml
+examples/cubesat_3u_eps/config/attenuation_table.yaml
+examples/cubesat_3u_eps/config/ebn0_table.yaml
+examples/cubesat_3u_eps/modes/charging.yaml
+examples/cubesat_3u_eps/modes/downlink.yaml
+examples/cubesat_3u_eps/modes/imaging.yaml
+examples/cubesat_3u_eps/modes/nominal.yaml
+examples/cubesat_3u_eps/modes/safe.yaml
+examples/cubesat_3u_eps/project.yaml
+src/budget_gui/theme.py
+src/budget_gui/unit_editor.py
+tests/golden/compare_cubesat_3u_eps.csv
+tests/golden/compare_cubesat_3u_eps.docx.txt
+tests/golden/compare_cubesat_3u_eps.json.txt
+tests/golden/compare_cubesat_3u_eps.pdf.txt
+tests/golden/compare_cubesat_3u_eps.xlsx.txt
+tests/golden/cubesat_3u_mass.json.txt
+tests/golden/cubesat_3u_mass.xlsx.txt
+tests/golden/cubesat_3u_power.json.txt
+tests/golden/cubesat_3u_power.xlsx.txt
+tests/golden/cubesat_3u_power_nominal.csv
+tests/golden/link_cubesat_3u.xlsx.txt
+tests/golden/ref_link-passes_cubesat_3u.xlsx.txt
+tests/golden/ref_thermal_cubesat_3u.xlsx.txt
+tests/golden/thermal_cubesat_3u.json.txt
+tests/golden/thermal_cubesat_3u.xlsx.txt
+tests/golden/thermal_cubesat_3u_eps.docx.txt
+tests/golden/thermal_cubesat_3u_eps.json.txt
+tests/golden/thermal_cubesat_3u_eps.pdf.txt
+tests/golden/thermal_cubesat_3u_eps.xlsx.txt
+tests/golden/thermal_cubesat_3u_eps_hot.csv
+tests/golden/thermal_cubesat_3u_eps_imaging.csv
+tests/gui/test_unit_editor.py
+## blobs over 2 MB
+## committed image/doc files ever added with metadata-prone types (names)
+docs/images/ux-redesign/tree-before.jpg

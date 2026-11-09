@@ -1,0 +1,3 @@
+# GitHub state read through the GitHub tool, 2026-11-09 (read-only)
+24 releases v1.0.0 .. v2.11.1; latest v2.11.1 (2026-11-09); first v1.0.0 (2026-10-12)
+1 open PR: #129 by 0h3xn4, branch claude/blissful-maxwell-46xhwj: files: audit.yml ci.yml release.yml CHANGELOG README DECISIONS(D-258) docs/security-and-privacy.md pyproject locks scripts/verify_offline.py tests/offline/test_privacy_canary.py
