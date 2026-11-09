@@ -1,0 +1,12 @@
+# Test run for Checkpoint 3, 2026-11-09
+# branch protect/phase-3-licence, Python 3.14.6, requirements-dev.lock (hashes; now with reuse 6.3.0), QT_QPA_PLATFORM=offscreen, Linux container
+SKIPPED [1] tests/unit/test_explain_link.py:82: every link of this example is complete
+SKIPPED [1] tests/unit/test_packages.py:223: rpmbuild not installed
+3828 passed, 2 skipped in 967.70s (0:16:07)
+exit 0
+ruff check: All checks passed!
+ruff format --check: 645 files already formatted
+mypy: Success: no issues found in 255 source files
+reuse lint: Congratulations! Your project is compliant with version 3.3 of the REUSE Specification :-)
+dco_check (phase-2 tip..HEAD): Every commit is signed off.
+Not run here: Inno Setup build (the Windows installer workflow runs on this PR because packaging/ changed), Linux .rpm build (rpmbuild missing).
