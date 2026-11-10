@@ -6,6 +6,8 @@ Page 1
 Power budget (static): Example 150 kg microsatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
 placeholders are replaced with sourced values.
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or
+qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 Power by spacecraft mode
 Mode
@@ -245,17 +247,6 @@ off
  n/a
  n/a
  0.000
-sun_sensors
-Coarse sun sensors
-AOCS
-main_28v
-downlink
- 0.400
- 1.00
- 0.400
- n/a
- n/a
- 0.500
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
@@ -275,6 +266,17 @@ With margin
 (W)
 Peak
 (W)
+sun_sensors
+Coarse sun sensors
+AOCS
+main_28v
+downlink
+ 0.400
+ 1.00
+ 0.400
+ n/a
+ n/a
+ 0.500
 xband_tx
 X-band transmitter
 PL-DATA
@@ -411,17 +413,6 @@ off
  n/a
  n/a
  0.000
-battery
-Battery pack
-EPS
-main_28v
-off
- 0.000
- 1.00
- 0.000
- n/a
- n/a
- 0.000
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
@@ -441,6 +432,17 @@ Margin
 With margin
 (W)
 Peak (W)
+battery
+Battery pack
+EPS
+main_28v
+off
+ 0.000
+ 1.00
+ 0.000
+ n/a
+ n/a
+ 0.000
 camera
 Imager
 PL
@@ -684,11 +686,11 @@ payload_12v
  n/a
  48.000
  n/a
-Totals
 ## page 4
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
+Totals
 Quantity
 Average (W)
 Peak (W)
@@ -932,11 +934,6 @@ EPS
  n/a
  12.000
  n/a
-PL
- 0.000
- n/a
- 0.000
- n/a
 ## page 5
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
@@ -946,6 +943,11 @@ Effective (W)
 With margin (W)
 Peak (W)
 Peak with margin (W)
+PL
+ 0.000
+ n/a
+ 0.000
+ n/a
 PL-DATA
  4.000
  n/a
@@ -1144,17 +1146,6 @@ off
  n/a
  n/a
  0.000
-reaction_wheels
-Reaction wheels
-AOCS
-main_28v
-safe
- 2.000
- 0.50
- 1.000
- n/a
- n/a
- 12.000
 ## page 6
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
@@ -1174,6 +1165,17 @@ Margin
 With margin
 (W)
 Peak (W)
+reaction_wheels
+Reaction wheels
+AOCS
+main_28v
+safe
+ 2.000
+ 0.50
+ 1.000
+ n/a
+ n/a
+ 12.000
 sband_trx
 S-band transceiver
 TTC
@@ -1337,11 +1339,11 @@ Source, nominal
 Source, with margins
  n/a
  n/a
-Mode: Survival
 ## page 7
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
+Mode: Survival
 Units in mode Survival
 Unit
 Name
@@ -1592,6 +1594,10 @@ TTC
  3.000
  n/a
 By supply bus
+## page 8
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 8
 Bus
 Converter
 efficiency
@@ -1615,25 +1621,6 @@ main_28v
  n/a
  32.500
  n/a
-## page 8
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 8
-Bus
-Converter
-efficiency
-Average load
-(W)
-Average load, with margins
-(W)
-Average at source
-(W)
-Average at source, with margins
-(W)
-Peak load
-(W)
-Peak at source, with margins
-(W)
 payload_12v
  n/a
  0.000
@@ -1730,11 +1717,11 @@ P_peak = sum of unit peak_power_w (all units at peak at once, conservative)
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems
-Problems and open items
 ## page 9
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
+Problems and open items
 Severity
 Code
 Location
@@ -2888,3 +2875,7 @@ Generated (UTC)
 2026-01-02T03:04:05Z
 User
 Golden User
+Disclaimer
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the
+Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification
+and review. You are responsible for decisions based on it.

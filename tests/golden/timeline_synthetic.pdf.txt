@@ -3,6 +3,8 @@ pages=7
 System Budget Studio 2.11.2 | Time-domain test rev r1 | synthetic | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Power budget over time: Time-domain test
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or
+qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 Scenario synthetic: Synthetic.
 Environment source: synthetic; shadow model: cylindrical; start 2026-01-01T00:00:00Z; duration 12000 s; step 20 s (600 steps).
@@ -543,3 +545,7 @@ Generated (UTC)
 2026-01-02T03:04:05Z
 User
 Golden User
+Disclaimer
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the
+Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification
+and review. You are responsible for decisions based on it.

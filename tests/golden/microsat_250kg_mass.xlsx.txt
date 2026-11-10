@@ -326,7 +326,7 @@
 140: 'info' | 'MASS_INERTIA_POINT_MASS' | 'units/harness.yaml' | 'mass_properties' | "'harness' has no own inertia; it is treated as a point mass." | 
 141: 'info' | 'MASS_INERTIA_POINT_MASS' | 'units/heaters.yaml' | 'mass_properties' | "'heaters' has no own inertia; it is treated as a point mass." | 
 142: 'info' | 'MASS_INERTIA_POINT_MASS' | 'units/sun_sensors.yaml' | 'mass_properties' | "'sun_sensors' has no own inertia; it is treated as a point mass." | 
-## sheet Provenance rows=15 cols=2
+## sheet Provenance rows=16 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -341,3 +341,4 @@
 13: 'Illustrative inputs' | '480'
 14: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 15: 'User' | 'Golden User'
+16: 'Disclaimer' | 'The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.'

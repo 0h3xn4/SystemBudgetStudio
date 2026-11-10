@@ -156,7 +156,7 @@
 39: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.harness_loss_ratio' | 'The harness loss is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 40: 'warning' | 'RESULT_INCOMPLETE' | 'config/power_system.yaml' | 'solar_array.packing_loss_ratio' | 'The packing loss is a placeholder.' | 'Replace the placeholder with a sourced value; results that need it show n/a.'
 ...
-## sheet Provenance rows=16 cols=2
+## sheet Provenance rows=17 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'
@@ -172,3 +172,4 @@
 14: 'Illustrative inputs' | '6592'
 15: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 16: 'User' | 'Golden User'
+17: 'Disclaimer' | 'The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.'

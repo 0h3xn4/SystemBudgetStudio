@@ -6,6 +6,8 @@ Page 1
 Mass budget (static): Example 250 kg minisatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
 placeholders are replaced with sourced values.
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or
+qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 Body frame: Right-handed body frame. Origin: centre of the launch-vehicle interface plane. +Z: along the launch axis, away from the interface. X and Y: in the interface plane. Positions are item centres of mass in
 metres. Synthetic example.
@@ -156,18 +158,6 @@ class_a
  0.0000
  0.4000
 yes
-gnss
-GNSS receiver
-unit
-ADCS
-class_b
- 0.900
- n/a
- n/a
- -0.3000
- -0.2500
- 1.1000
-no
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
@@ -187,6 +177,18 @@ y (m)
 z (m)
 Own
 inertia
+gnss
+GNSS receiver
+unit
+ADCS
+class_b
+ 0.900
+ n/a
+ n/a
+ -0.3000
+ -0.2500
+ 1.1000
+no
 harness
 Harness
 unit
@@ -386,12 +388,14 @@ Centre of gravity y (m)
  0.0075
 Centre of gravity z (m)
  0.5695
-Mass in the CG calculation (kg)
- 250.0000
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
+Quantity
+Value
+Mass in the CG calculation (kg)
+ 250.0000
 Inertia tensor
 Entry
 About CG (kg m2)
@@ -648,11 +652,11 @@ class_c
  0.0000
  0.4000
 no
-By subsystem
 ## page 4
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
+By subsystem
 Subsystem
 Mass (kg)
 With margin (kg)
@@ -722,6 +726,10 @@ Iyz
 Tensor entries in the body frame; Ixy, Ixz, Iyz are tensor elements (minus the products of inertia), see docs/DECISIONS.md D-048.
 Phase: eol
 Items
+## page 5
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.11.2 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+Page 5
 Item
 Name
 Kind
@@ -749,25 +757,6 @@ class_b
  -0.1500
  0.4500
 yes
-## page 5
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
-Page 5
-Item
-Name
-Kind
-Subsystem
-Maturity
-Mass
-(kg)
-Margin
-With margin
-(kg)
-x (m)
-y (m)
-z (m)
-Own
-inertia
 battery
 Battery pack
 unit
@@ -1007,14 +996,14 @@ Total, nominal
  241.6000
 Total, with unit margins
  n/a
-Total, with system margin
- n/a
 ## page 6
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 250 kg minisatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Quantity
 Value
+Total, with system margin
+ n/a
 Centre of gravity x (m)
  -0.0191
 Centre of gravity y (m)
@@ -2779,3 +2768,7 @@ Generated (UTC)
 2026-01-02T03:04:05Z
 User
 Golden User
+Disclaimer
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the
+Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification
+and review. You are responsible for decisions based on it.

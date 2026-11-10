@@ -1,5 +1,6 @@
 pictures=0
 Thermal budget (static): Thermal test
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 Heat dissipation by spacecraft mode
 ## table
@@ -115,3 +116,4 @@ Inputs digest (model) | sha256:0ba70e3051ccea642cc81a3de6c587ad25eff787b8ae57f4b
 Illustrative inputs | 0
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User
+Disclaimer | The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.

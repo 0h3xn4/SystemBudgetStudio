@@ -1,5 +1,6 @@
 pictures=0
 Thermal budget (static): Example 250 kg minisatellite, complete power and thermal inputs
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 Heat dissipation by spacecraft mode
 ## table
@@ -386,3 +387,4 @@ Input files | 43 files, sha256:939dfad4eb73644bdbd1b313fec6e1c09ce9399dd3d6936a0
 Illustrative inputs | 675
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User
+Disclaimer | The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.

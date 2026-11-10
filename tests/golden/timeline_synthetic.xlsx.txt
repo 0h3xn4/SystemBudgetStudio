@@ -109,7 +109,7 @@
 3: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'battery.max_dod_ratio.eol' | 'The battery depth of discharge exceeds the limit of the mission phase. Case BOL. 2 interval(s), the first at T+00:59:00.' | 'Open the violations table for every interval; change the input named here or the scenario.'
 4: 'error' | 'BATTERY_DOD_EXCEEDED' | 'config/power_system.yaml' | 'battery.max_dod_ratio.eol' | 'The battery depth of discharge exceeds the limit of the mission phase. Case EOL. 2 interval(s), the first at T+00:58:33.' | 'Open the violations table for every interval; change the input named here or the scenario.'
 5: 'error' | 'PEAK_POWER_EXCEEDED' | 'config/power_system.yaml' | 'limits.peak_power_w' | 'The peak power demand at the source exceeds the power limit. 2 interval(s), the first at T+00:50:00.' | 'Open the violations table for every interval; change the input named here or the scenario.'
-## sheet Provenance rows=13 cols=2
+## sheet Provenance rows=14 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 2.11.2'
@@ -123,3 +123,4 @@
 11: 'Illustrative inputs' | '0'
 12: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 13: 'User' | 'Golden User'
+14: 'Disclaimer' | 'The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.'

@@ -7,6 +7,8 @@ Comparison: Example 250 kg minisatellite, complete power and thermal inputs rev 
 kg minisatellite, complete power and thermal inputs rev 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
 placeholders are replaced with sourced values.
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or
+qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 rev 1 compared with rev 2.
 74 value(s) differ out of 3620 compared.
@@ -112,6 +114,17 @@ Effective (W)
 +2.000 W
 +8.1 %
 changed
+## page 2
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 2
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
 ADCS
 With margin (W)
 27.170
@@ -119,10 +132,6 @@ With margin (W)
 +2.200 W
 +8.1 %
 changed
-## page 2
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
-Page 2
 Mode: Imaging — By supply bus
 Row
 Quantity
@@ -277,6 +286,17 @@ Temperature (C)
 +0.05
 +0.1 %
 changed
+## page 3
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 3
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
 DH
 Radiated to space (W)
 299.081
@@ -298,17 +318,6 @@ Temperature (K)
 +0.01
 +0.001824025935 %
 changed
-## page 3
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
-Page 3
-Row
-Quantity
-rev 1
-rev 2
-Change
-Change (%)
-Status
 EPS
 Temperature (C)
 59.00
@@ -513,6 +522,17 @@ Headroom to upper (K)
 -0.05
 -0.6 %
 changed
+## page 4
+INCOMPLETE: some inputs are placeholders (source TBD or missing).
+System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+Page 4
+Row
+Quantity
+rev 1
+rev 2
+Change
+Change (%)
+Status
 reaction_wheels
 Temperature (K)
 334.75
@@ -534,17 +554,6 @@ Headroom to upper (K)
 -0.49
 -5.9 %
 changed
-## page 4
-INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
-Page 4
-Row
-Quantity
-rev 1
-rev 2
-Change
-Change (%)
-Status
 solar_array
 Temperature (K)
 332.15
@@ -670,17 +679,17 @@ Tool
 System Budget Studio 2.11.2
 Python
 3.x
-Libraries
-numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx
-for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
-Project
-Example 250 kg minisatellite, complete power and thermal inputs
 ## page 5
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Item
 Value
+Libraries
+numpy for-golden-tests, openpyxl for-golden-tests, Pillow for-golden-tests, pint for-golden-tests, pydantic for-golden-tests, python-docx
+for-golden-tests, reportlab for-golden-tests, ruamel.yaml for-golden-tests, sgp4 for-golden-tests
+Project
+Example 250 kg minisatellite, complete power and thermal inputs
 Project revision
 1
 Scenario
@@ -700,3 +709,7 @@ Generated (UTC)
 2026-01-02T03:04:05Z
 User
 Golden User
+Disclaimer
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the
+Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification
+and review. You are responsible for decisions based on it.

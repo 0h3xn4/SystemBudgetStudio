@@ -1,5 +1,6 @@
 pictures=0
 Link budget: Example 150 kg microsatellite
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 Link budget at the static points
 ## table
@@ -181,3 +182,4 @@ Input files | 40 files, sha256:6b504ed4a3903862af8e677b0df0b49cf25fd0f69264ddd8b
 Illustrative inputs | 466
 Generated (UTC) | 2026-01-02T03:04:05Z
 User | Golden User
+Disclaimer | The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
