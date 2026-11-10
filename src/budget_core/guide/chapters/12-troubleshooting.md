@@ -60,6 +60,10 @@ The files are written under temporary names first and moved into place together,
 
 At least one number it needs is a placeholder. The **Configuration numbers used** table lists every number with its source and its status. Replace each `PLACEHOLDER` with a sourced value; the banner disappears when none remain.
 
+## The window does not open my last project
+
+That is on purpose: the window always starts on its landing page. A folder given when the program starts (a pinned taskbar icon, a double-clicked project) is offered there (**Open this folder**), not opened. To list your last projects on the landing page, tick **Remember recent projects** in the settings (the gear at the bottom of the navigation rail); it is off by default. **File > Close project** (Ctrl+W) goes back to the landing page.
+
 ## The window does not start
 
 Run `budget self-test`. It computes and renders a small budget with the installed libraries and prints what failed.

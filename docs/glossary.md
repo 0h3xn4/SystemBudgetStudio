@@ -149,6 +149,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 
 <a id="link-margin"></a>
 <a id="largest-gap"></a>
+<a id="landing-page"></a>
+**Landing page**: what the window shows while no project is open, and where it always starts: open a project folder, start a new project, open a copy of an example, import an IDM-CIC model, the user guide, and the [recent projects](#recent-projects) if you switched that list on. *File → Close project* (Ctrl+W) comes back to it.
+
 **Largest gap**: for a ground station or imaging target, the longest stretch of the scenario with no pass, the start and the end of the scenario included. It is one of the figures of the Statistics tab ([scenarios](user-manual/scenarios.md#statistics-of-the-eclipses-and-the-passes)).
 
 **IDM-CIC**: concurrent-engineering software of the French space agency CNES for the early design of satellites; its model file (`.idm`) can be imported with `budget import idm` ([manual](user-manual/idm-import.md)). Reads models from IDM-CIC (© CNES); this tool is independent of CNES and is not endorsed by it.
@@ -223,6 +226,9 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **RAAN**: right ascension of the ascending node, an angle that says where in inertial space the orbit plane crosses the equator going north. With inclination and altitude it fixes the orbit's orientation, and so when the satellite is in sunlight.
 
 <a id="revision"></a>
+<a id="recent-projects"></a>
+**Recent projects**: the list of the last project folders you opened, shown on the [landing page](#landing-page) only if you tick *Settings → Remember recent projects* (off by default). The paths are kept in `recent-projects.txt` beside the layout file; unticking the setting deletes it.
+
 **Revision**: the `revision` field of `project.yaml`: your label for a version of the project, printed on every output and used by [compare](user-manual/compare.md).
 
 ## S

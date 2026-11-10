@@ -2,16 +2,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Write the ten screenshots of `docs/images/ui-overhaul/` (light theme) from the current window.
+"""Write the eleven screenshots of `docs/images/ui-overhaul/` (light theme) from the current window.
 
     QT_QPA_PLATFORM=offscreen python scripts/ui_doc_shots.py docs/images/ui-overhaul
 
 It opens `examples/microsat_250kg_eps` from a temporary copy, runs the budgets once and saves one
 PNG per image the documentation shows (focused view, power budget with the Problems list, Explain,
 power timeline, the Model pages, the scenario statistics) and, from a blank project made with
-`budget new`, the Start here card. Nothing is written outside the output folder and the temporary
-copies. Run it after a change of the window that the pages show, and read each image before you
-commit it.
+`budget new`, the Start here card, and the landing page (a folder offered at start, the list of
+recent projects switched on, kept in the temporary folder). Nothing is written outside the
+output folder and the temporary copies. Run it after a change of the window that the pages
+show, and read each image before you commit it.
 """
 
 from __future__ import annotations
@@ -33,6 +34,7 @@ from PySide6.QtWidgets import QApplication, QTableView, QTabWidget  # noqa: E402
 from budget_cli.main import main as cli_main  # noqa: E402
 from budget_gui import theme  # noqa: E402
 from budget_gui.app import create_app  # noqa: E402
+from budget_gui.layout_settings import LayoutSettings  # noqa: E402
 from budget_gui.main_window import MainWindow  # noqa: E402
 from budget_gui.workspace import SubTabs  # noqa: E402
 
@@ -129,6 +131,28 @@ def model_shots(window: MainWindow, out: Path) -> None:
             window.resize(*SIZE)
 
 
+def landing_page_shot(work: Path, out: Path) -> None:
+    """The landing page with a folder offered at start and two recent projects."""
+    folders = []
+    for name in ("microsat_150kg", "microsat_250kg_eps"):
+        folder = work / "projects" / name
+        shutil.copytree(ROOT / "examples" / name, folder)
+        folders.append(folder)
+    window = MainWindow(LayoutSettings(work / "config" / "layout.ini"))  # the list needs a file
+    window.resize(*SIZE)
+    window.show()
+    window.set_theme(theme.Mode.LIGHT)
+    window.set_remember_recent(True)
+    for folder in folders:
+        window.open_project(folder)
+        wait_for(lambda: window.session.project is not None)
+    window.close_project()
+    window.offer_launch_folder(folders[-1])
+    wait(300)
+    shot(window, out, "landing-page")
+    window.close()
+
+
 def main(out: Path) -> int:
     out.mkdir(parents=True, exist_ok=True)
     create_app([])
@@ -162,6 +186,8 @@ def main(out: Path) -> int:
         shot(fresh, out, "start-here")
         fresh.editors.discard_all_changes()
         fresh.close()
+
+        landing_page_shot(work, out)
     finally:
         shutil.rmtree(work, ignore_errors=True)
     return 0

@@ -26,6 +26,6 @@ The results are engineering estimates. They depend entirely on the inputs and th
 
 ## What the program stores and sends
 
-The program collects nothing and sends nothing; it never uses the network. It keeps one small file on your computer, the window layout (position, size, theme, and the name you may type for report files). The files it exports name a user (never your account name: it is "unknown" unless you set a name), the tool and library versions, the project name and revision, the relative paths and hashes of the project files it read, and the time.
+The program collects nothing and sends nothing; it never uses the network. It keeps one small file on your computer, the window layout (position, size, theme, and the name you may type for report files), and a list of your recent project folders only if you switch that list on in the settings (it is off by default). The files it exports name a user (never your account name: it is "unknown" unless you set a name), the tool and library versions, the project name and revision, the relative paths and hashes of the project files it read, and the time.
 
 > The example projects delivered with the tool contain invented data only. Their numbers are not those of a real spacecraft or a real standard.

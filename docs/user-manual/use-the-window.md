@@ -13,6 +13,8 @@ system-budget-studio path/to/project       # the landing page, with that folder 
 
 The window always starts on the **landing page**, never inside a project, also when it is started with a folder (a pinned taskbar icon or a double-clicked project keeps the folder in its command line). A folder given at start is offered on a card, **Open this folder**: one click opens it.
 
+![The landing page: the folder the program was started with is offered with an Open this folder button; below it Open a project folder, New project (guided), Open an example, Import IDM-CIC model and User guide; the list of recent projects, switched on in the settings, with a Clear button; the disclaimer at the bottom](../images/ui-overhaul/landing-page-light.png)
+
 ![The window with the 250 kg example: the navigation rail and the project panel on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the Power timeline, and the problems as one line of counts along the bottom](../images/ui-overhaul/power-timeline-light.png)
 
 The picture shows the **full view**. A new window starts in the **focused view** (one line for the problems, no Inspector or Provenance panel, the main columns of the grids); **View → Focused view** (Ctrl+Shift+F) switches between the two, as [described below](#what-is-where).
@@ -74,6 +76,7 @@ In the focused view only the summary line is shown, with a **Show problems** but
 | Ctrl+C / Ctrl+V | In a grid: copy the selected cells as text with tabs; paste a block (from this or any spreadsheet) |
 | Ctrl+D / Delete | In a grid: fill the selection down from its top cell / empty the optional cells of the selection |
 | F5 | Reload the project from disk (the window stays usable while it loads; the status bar says so) |
+| Ctrl+W | **File → Close project**: close the project and go back to the landing page (unsaved edits are asked about first) |
 | Ctrl+R | Run: the scenario, the power timeline and the link passes |
 | Ctrl+1 … Ctrl+7 | Go to the area Model, Power, Mass, Thermal, Link, Compare, Reports |
 | Enter | Open the selected row of the project tree or of the Problems panel |
@@ -96,6 +99,7 @@ In the focused view only the summary line is shown, with a **Show problems** but
 | (menu only) | File → Export tables / Import tables: the Eb/N0 table, the attenuation table, the margin policy or the links (one row for each sourced number of each link) as a CSV or XLSX table, imported with a preview that shows every change; a new or changed number needs its source in the same row ([link budget](link-budget.md#how-do-i-fill-the-ebn0-attenuation-margin-and-link-tables-from-a-spreadsheet)) |
 | (menu only) | File → Export unit table / Import unit table: the unit power modes as a CSV or XLSX table, imported with a preview ([unit tables](unit-tables.md)) |
 | (menu only) | File → Export scenario results: writes the eclipses, passes and mode timeline of the computed scenario |
+| (menu only) | File → Open an example: writes a copy of one of the five example projects (invented data) into a folder you choose and opens it; the same as *Open an example…* on the landing page |
 | (menu only) | View → Theme (light, dark, same as the system), UI size (90, 100, 110 or 125 %), Reduce motion, Cell styles (what every cell style means), the panel toggles, Reset layout |
 | (menu only) | Help → Start here: shows the *Start here* card again after you hid it (it is also in Ctrl+K, with every other menu entry) |
 | F1 | Open the user guide |
@@ -108,7 +112,7 @@ While a run is in progress, **Run** becomes **Cancel** (Ctrl+R is the same butto
 
 ## Where does the window keep its layout?
 
-The window remembers its size and position, which panels are where, whether the rail is folded, whether you hid the *Start here* card, whether the focused view is on, how wide the Problems columns are, and the theme, the UI size, *Reduce motion* and *Open with a single click*, in one small file of its own, `layout.ini`, in your configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`). It contains no project name, path or value. **View → Reset layout** deletes what it remembered and restores the first layout; deleting the file does the same. See [the design page](../DESIGN.md#the-layout-file).
+The window remembers its size and position, which panels are where, whether the rail is folded, whether you hid the *Start here* card, whether the focused view is on, how wide the Problems columns are, and the theme, the UI size, *Reduce motion* and *Open with a single click*, in one small file of its own, `layout.ini`, in your configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%LOCALAPPDATA%\System Budget Studio\`). It contains no project name, path or value. **View → Reset layout** deletes what it remembered and restores the first layout; deleting the file does the same. See [the design page](../DESIGN.md#the-layout-file).
 
 ## How do I use a plot?
 

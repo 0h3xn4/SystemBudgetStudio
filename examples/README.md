@@ -22,6 +22,8 @@ You can run the examples straight from this folder (`budget run examples/microsa
 budget export-examples demo      # writes demo/microsat_150kg, demo/microsat_250kg, demo/microsat_250kg_eps, demo/microsat_250kg_clean, demo/stress_200_units
 ```
 
+In the window, *Open an example…* on the landing page (or *File → Open an example*) does the same for one example: it writes a copy into a folder you choose and opens it.
+
 The copy is identical to this folder. (A test fails if the two ever differ, so the examples cannot go out of date silently.) All commands below assume the copy in `demo/` and an output folder `out`; run them from the folder that contains `demo/`. Install first: [getting started](../docs/getting-started.md).
 
 ## Which example for what

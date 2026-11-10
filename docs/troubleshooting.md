@@ -55,7 +55,7 @@ There is no display. Use the command line, or run with a display (X forwarding, 
 The window has no console, so a crash shows no message. To find the cause, in this order:
 
 1. **Start it from PowerShell** in the folder of the program, to see what it prints: `.\system-budget-studio.exe`.
-2. **Start it with no remembered layout.** `$env:BUDGET_NO_LAYOUT = 1; .\system-budget-studio.exe` neither reads nor writes `%APPDATA%\System Budget Studio\layout.ini`. If this works, delete the folder `%APPDATA%\System Budget Studio` (an old layout of a very old version can stay there after an uninstall).
+2. **Start it with no remembered layout.** `$env:BUDGET_NO_LAYOUT = 1; .\system-budget-studio.exe` neither reads nor writes `%LOCALAPPDATA%\System Budget Studio\layout.ini`. If this works, delete the folder `%LOCALAPPDATA%\System Budget Studio` (an old layout of a very old version can stay there after an uninstall).
 3. **Read what Windows recorded.** *Event Viewer → Windows Logs → Application*: an *Application Error* entry for `system-budget-studio.exe` names the *faulting module* and the exception code (a graphics driver, a Qt file, a security product). *Windows Security → Protection history* shows whether the program was blocked or quarantined; the installers are not signed.
 4. **Ask the program** (versions after 2.11.0): `.\system-budget-studio.exe --diagnose diag.txt` writes what the program and Qt know about the machine (versions, the graphics plugin, the screens, whether the bundled fonts and icons were found, which layout file it would read) and prints it too; it contains no project. `.\system-budget-studio.exe --fault-log crash.txt` starts the window normally and, if the process dies of a native fault, writes the Python stack of every thread to `crash.txt` (the file stays empty while nothing goes wrong). Send both files.
 
@@ -151,7 +151,11 @@ A week at 1 s with 200 units takes about ten seconds; the orbit computation domi
 
 ### The window does not close, or says "The window closes when it is done"
 
-A computation or an export is still running in the background; stopping it half way could damage the output, so the window waits and closes by itself when the job has finished (a long timeline can take a minute). Quitting again does nothing harmful.
+A computation, an export or a project load is still running in the background. When a computation runs, closing asks **Stop and close** (the computation stops at its next step, its result is not kept, and the window closes then) or **Wait, then close** (the window closes by itself when the job has finished; a long timeline can take a minute). An export that is writing files and a project that is loading always finish first, so no file is left half written. Quitting again does nothing harmful.
+
+### The window does not open the project I worked on last
+
+That is on purpose (2.12.0): the window always starts on its **landing page**. If the program was started with a folder (a taskbar icon pinned while a project was open, a double-clicked project, `system-budget-studio <folder>`), the landing page offers it: click **Open this folder**. To see your last projects on the landing page, tick **Settings → Remember recent projects** (the gear at the bottom of the navigation rail); it is off by default because the program otherwise keeps no path of your projects. **File → Close project** (Ctrl+W) goes back to the landing page without closing the window.
 
 ### A burn or a pointing change adds nothing to the power timeline
 

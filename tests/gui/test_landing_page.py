@@ -119,6 +119,7 @@ def test_an_existing_example_copy_is_not_overwritten(
 def test_close_project_goes_back_to_the_landing_page(window: MainWindow, project: Path) -> None:
     window.show()
     assert not window.close_project_action.isEnabled()
+    assert window.close_project_action.shortcut().toString() == "Ctrl+W"  # on every system
     window.open_project(project)
     assert window.close_project_action.isEnabled() and not window.welcome.isVisible()
     assert window.close_project()

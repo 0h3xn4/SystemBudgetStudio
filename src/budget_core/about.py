@@ -72,7 +72,9 @@ NON_COMMERCIAL = (
 PRIVACY_STATEMENT = (
     "The program collects nothing and sends nothing; it never uses the network. It keeps one small "
     "file on your computer, the window layout (position, size, theme, and the name you may type "
-    "for report files). The files it exports name a user (never your account name: it is "
+    "for report files), and a list of your recent project folders only if you switch that list "
+    "on in the settings (it is off by default). The files it exports name a user (never your "
+    "account name: it is "
     '"unknown" unless you set a name), the tool and library versions, the project name and '
     "revision, the relative paths and hashes of the project files it read, and the time."
 )
