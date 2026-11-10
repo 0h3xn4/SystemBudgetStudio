@@ -418,7 +418,7 @@ class MainWindow(QMainWindow):
         add("&Open project…", QKeySequence.StandardKey.Open, self._choose_project)
         add("&Save", QKeySequence.StandardKey.Save, self.save_current)
         add("&Reload project", QKeySequence(Qt.Key.Key_F5), self.reload_project)
-        self.close_project_action = QAction("&Close project", self)
+        self.close_project_action = QAction("C&lose project", self)
         self.close_project_action.setShortcut(QKeySequence.StandardKey.Close)
         self.close_project_action.setStatusTip("Close the project and go back to the landing page")
         self.close_project_action.triggered.connect(self.close_project)
