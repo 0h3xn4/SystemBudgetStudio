@@ -2,8 +2,8 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""The settings popover of the rail: theme, UI size, motion and single click, in one small card
-(D-173, D-195).
+"""The settings popover of the rail: theme, UI size, motion, single click, the name in report files
+and the list of recent projects, in one small card (D-173, D-195, D-269).
 
 It changes nothing itself: it says what was chosen and the window applies it and keeps it (the
 same code as the View menu), so the two always agree.
@@ -24,6 +24,7 @@ class SettingsPopover(QFrame):
     motion_reduced = Signal(bool)
     single_click_chosen = Signal(bool)
     report_name_chosen = Signal(str)  # the name for the report files; empty: none
+    recent_chosen = Signal(bool)  # keep a list of recent projects (off by default, D-269)
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent, Qt.WindowType.Popup)
@@ -61,10 +62,17 @@ class SettingsPopover(QFrame):
             "layout file on this computer."
         )
         layout.addWidget(self.report_name_edit)
+        self.recent_box = QCheckBox("Remember recent projects")
+        self.recent_box.setToolTip(
+            "Show the last opened project folders on the landing page. Their paths are then kept "
+            "in a file on this computer; untick it to delete that file. Off by default."
+        )
+        layout.addWidget(self.recent_box)
         self.theme_control.changed.connect(self.theme_chosen)
         self.scale_control.changed.connect(lambda key: self.scale_chosen.emit(int(key)))
         self.motion_box.toggled.connect(self.motion_reduced)
         self.single_click_box.toggled.connect(self.single_click_chosen)
+        self.recent_box.toggled.connect(self.recent_chosen)
         self.report_name_edit.editingFinished.connect(
             lambda: self.report_name_chosen.emit(self.report_name_edit.text())
         )
@@ -82,6 +90,8 @@ class SettingsPopover(QFrame):
         reduced: bool,
         single_click: bool = False,
         report_name: str = "",
+        recent: bool = False,
+        recent_available: bool = True,
     ) -> None:
         """Show what is in force now (the menu may have changed it) without sending a signal."""
         for control, key in ((self.theme_control, mode.value), (self.scale_control, str(percent))):
@@ -97,6 +107,10 @@ class SettingsPopover(QFrame):
         self.report_name_edit.blockSignals(True)
         self.report_name_edit.setText(report_name)
         self.report_name_edit.blockSignals(False)
+        self.recent_box.blockSignals(True)
+        self.recent_box.setChecked(recent)
+        self.recent_box.setEnabled(recent_available)  # the layout is switched off: nothing is kept
+        self.recent_box.blockSignals(False)
 
     def open_beside(self, anchor: QWidget) -> None:
         """Open it to the right of `anchor`, its bottom edge level with the anchor's."""

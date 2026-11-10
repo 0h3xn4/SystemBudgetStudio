@@ -8,7 +8,7 @@ This page says what System Budget Studio does with your data, what it does not d
 
 1. **No network use while running.** The program never opens a connection to any address, local or remote. It has no account, no licence check, no update check, no online help, no crash upload and no usage statistics.
 2. **No project content outside your folders.** Names, values, paths and results of a project are written only to the project folder and to the output folder you choose. They are not in logs, in temporary files, in crash files or in the program's own settings.
-3. **The only file the window keeps for itself is a layout file** (`layout.ini`): window size and position, the theme, which panels are open, and the name you may type under **Settings → Name in report files** (empty by default). It holds no project name and no path. `BUDGET_NO_LAYOUT=1` makes the window keep nothing; `BUDGET_CONFIG_DIR=<folder>` puts that file in a folder you choose.
+3. **The only file the window keeps for itself is a layout file** (`layout.ini`): window size and position, the theme, which panels are open, and the name you may type under **Settings → Name in report files** (empty by default). It holds no project name and no path. The one exception is yours to make: if you tick **Settings → Remember recent projects** (off by default), the window keeps the paths of the last eight project folders you opened in `recent-projects.txt` beside it, to list them on the landing page; unticking it deletes that file. `BUDGET_NO_LAYOUT=1` makes the window keep nothing; `BUDGET_CONFIG_DIR=<folder>` puts that file in a folder you choose.
 4. **The two support aids are off unless you use them and contain no project.** `--diagnose` reports versions, screens and whether fonts and icons were found. `--fault-log` writes the Python stack of each thread if the process dies of a native fault. Both write to a file you name; neither sends anything.
 5. **The installers and the program are built from the source in this repository**, by a workflow that anyone can read (`.github/workflows/`), from locked and hashed dependencies.
 
@@ -21,6 +21,7 @@ These are statements that a test or a command below can show to be false. If you
 | Your project | the project folder you create or open | yes, it is the project |
 | Results, reports, exports, the user guide | the output folder you give (`--out`) or choose in the window | yes, they describe the project |
 | Window layout (and the name for report files, if you typed one) | `layout.ini` in the program's settings folder under your user profile (`system-budget-studio --diagnose` prints the exact path; on Linux it is under `~/.config`), or `BUDGET_CONFIG_DIR`, or nowhere with `BUDGET_NO_LAYOUT=1` | no |
+| Recent projects, only if you tick **Settings → Remember recent projects** (off by default) | `recent-projects.txt` beside `layout.ini`; unticking the setting or **Clear** on the landing page deletes it | the paths of the last project folders you opened, nothing else |
 | Fault log, diagnose report | the file you name, only when you ask for it | no |
 | Installation | the install folder, a Start-menu shortcut and, on Windows, the uninstall entry and one per-user `PATH` entry so that `budget` works in a terminal (all removed on uninstall) | no |
 

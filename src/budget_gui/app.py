@@ -131,7 +131,9 @@ def main() -> int:
     window = MainWindow()
     window.show()
     if args and not args[0].startswith("-"):
-        window.open_project(Path(args[0]), background=True)
+        # offered on the landing page, never opened by itself: a pinned taskbar icon keeps the
+        # folder it was pinned with, and the program must not reopen it at every start (D-269)
+        window.offer_launch_folder(Path(args[0]))
     return app.exec()
 
 

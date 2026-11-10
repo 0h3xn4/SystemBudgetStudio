@@ -138,7 +138,7 @@ They should not: both call the same core. If they do, that is a bug; save the pr
 
 ### Where are my files? Does the tool keep settings or logs?
 
-Your projects and reports are in folders you choose. The only file the tool keeps elsewhere is the window's `layout.ini` in your configuration folder (the window size and position, the panels, the theme, the UI size and *Reduce motion*; it never holds a project name, a path or a value, and the command line does not write it). There are no other settings, caches, logs or crash dumps, and project content never goes to logs or temporary files. Delete `layout.ini` to forget the layout, or set `BUDGET_NO_LAYOUT=1` to keep nothing ([the layout file](user-manual/use-the-window.md#where-does-the-window-keep-its-layout)).
+Your projects and reports are in folders you choose. The only file the tool keeps elsewhere is the window's `layout.ini` in your configuration folder (the window size and position, the panels, the theme, the UI size and *Reduce motion*; it never holds a project name, a path or a value, and the command line does not write it). Only if you tick **Settings → Remember recent projects** (off by default) does the window also keep `recent-projects.txt` next to it, with the paths of the last eight project folders you opened; untick it to delete that file, or press **Clear** on the landing page. There are no other settings, caches, logs or crash dumps, and project content never goes to logs or temporary files. Delete `layout.ini` to forget the layout, or set `BUDGET_NO_LAYOUT=1` to keep nothing ([the layout file](user-manual/use-the-window.md#where-does-the-window-keep-its-layout)).
 
 ### Can several people work on one project?
 

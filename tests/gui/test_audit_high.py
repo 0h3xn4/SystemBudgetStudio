@@ -139,8 +139,11 @@ def test_a_reload_that_finds_no_project_keeps_unsaved_scenario_edits(
 
 # ---- GUI-6: closing while a job runs ----------------------------------------------------------
 def test_closing_the_window_while_a_job_runs_waits_for_it_without_freezing(
-    window: MainWindow, qtbot
+    window: MainWindow, qtbot, monkeypatch: pytest.MonkeyPatch
 ) -> None:  # type: ignore[no-untyped-def]
+    from budget_gui import main_window as main_window_module
+
+    monkeypatch.setattr(main_window_module, "ask", lambda *_a, **_k: False)  # Wait, then close
     window.show()
     window.scenario_view.compute()
     started = time.monotonic()

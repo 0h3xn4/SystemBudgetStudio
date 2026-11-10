@@ -33,6 +33,18 @@ def _full_view_unless_a_test_asks(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
+def _closing_waits_without_asking(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Closing a window while a computation runs asks "Stop and close" or "Wait, then close"
+    (D-269), a modal question. pytest-qt closes the windows of a test before any fixture is torn
+    down, and on a slow machine a computation can still run then: the question would wait for an
+    answer that never comes and hang the run. So every test answers "Wait, then close" (the
+    behaviour before D-269); a test of the question patches `ask` itself."""
+    from budget_gui import main_window
+
+    monkeypatch.setattr(main_window, "ask", lambda *_args, **_kwargs: False)
+
+
+@pytest.fixture(autouse=True)
 def _no_layout_file(monkeypatch: pytest.MonkeyPatch) -> None:
     """A test never reads or writes the user's layout file (D-150)."""
     monkeypatch.setenv("BUDGET_NO_LAYOUT", "1")

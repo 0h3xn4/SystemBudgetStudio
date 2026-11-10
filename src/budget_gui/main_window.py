@@ -41,8 +41,10 @@ from PySide6.QtWidgets import (
 
 from budget_core import APP_NAME
 from budget_core.about import about_text
+from budget_core.examples import EXAMPLES
 from budget_core.explain import Explainer, ExplainError, explain_beta
 from budget_core.input_sources import entries_for, has_provenance, set_entry
+from budget_core.io.project_loader import write_project
 from budget_core.model import (
     Ebn0Table,
     Expendable,
@@ -77,7 +79,7 @@ from budget_gui.banner import Banner
 from budget_gui.beta_view import BetaView
 from budget_gui.command_palette import Command, CommandPalette
 from budget_gui.compare_view import CompareView
-from budget_gui.components import MessageDialog, PanelTitle, Toast
+from budget_gui.components import MessageDialog, PanelTitle, Toast, ask, inform
 from budget_gui.editor import EditorTabs, FileChangedError, YamlEditor
 from budget_gui.entry_tables import TABLE_TITLES, export_entry_table, import_entry_table
 from budget_gui.explain_panel import ExplainPanel
@@ -106,6 +108,7 @@ from budget_gui.problems_panel import ProblemsPanel
 from budget_gui.project_tree import ProjectTree
 from budget_gui.provenance_panel import ProvenancePanel
 from budget_gui.rail import NavRail
+from budget_gui.recent_projects import RECENT_STATES, RecentProjects
 from budget_gui.remove_item_dialog import RemoveItemDialog
 from budget_gui.reports_view import ReportItem, ReportsView
 from budget_gui.run_controller import RunController, RunState
@@ -114,11 +117,11 @@ from budget_gui.session import ProjectSession
 from budget_gui.settings_popover import SettingsPopover
 from budget_gui.start_here import MODE, RUN, SCENARIO, UNIT, Progress, StartHerePanel, progress
 from budget_gui.status_bar import AppStatusBar
-from budget_gui.theme import Status
+from budget_gui.theme import Level, Status
 from budget_gui.timeline_view import PowerTimelineView
 from budget_gui.top_bar import TopBar
 from budget_gui.unit_table import export_unit_table, import_unit_table
-from budget_gui.welcome import WelcomePage
+from budget_gui.welcome import EXAMPLE_TITLES, WelcomePage
 from budget_gui.widgets import PowerView
 from budget_gui.worker import ExplainWorker, ExportWorker
 from budget_gui.workspace import TABS, SubTabs, Workspace
@@ -170,6 +173,10 @@ class MainWindow(QMainWindow):
         self._focused = True  # the focused view (D-191); the full view shows every panel and column
         self._problems_height = 0  # the height of the Problems panel while its list was open
         self.layout_settings = layout if layout is not None else LayoutSettings.default()
+        self.recent = RecentProjects.beside(
+            self.layout_settings.path,
+            enabled=self.layout_settings.word("window/recent", RECENT_STATES, "off") == "on",
+        )
         self.tree = ProjectTree()
         self.problems_panel = ProblemsPanel()
         self.inspector = InspectorPanel()
@@ -270,6 +277,12 @@ class MainWindow(QMainWindow):
         self.welcome = WelcomePage()
         self.welcome.open_requested.connect(self._choose_project)
         self.welcome.new_requested.connect(self.open_guided_wizard)
+        self.welcome.example_requested.connect(self.open_example)
+        self.welcome.import_requested.connect(lambda: import_idm_model(self))
+        self.welcome.guide_requested.connect(lambda: self.open_guide())
+        self.welcome.folder_requested.connect(lambda f: self.open_project(f, background=True))
+        self.welcome.clear_recent_requested.connect(self.clear_recent_projects)
+        self.welcome.set_recent(self.recent.folders())
         stack.addWidget(self.welcome, 1)
         self.setCentralWidget(central)
         self.setAcceptDrops(True)  # a project folder dropped on the window opens
@@ -405,6 +418,19 @@ class MainWindow(QMainWindow):
         add("&Open project…", QKeySequence.StandardKey.Open, self._choose_project)
         add("&Save", QKeySequence.StandardKey.Save, self.save_current)
         add("&Reload project", QKeySequence(Qt.Key.Key_F5), self.reload_project)
+        self.close_project_action = QAction("C&lose project", self)
+        self.close_project_action.setShortcut(QKeySequence.StandardKey.Close)
+        self.close_project_action.setStatusTip("Close the project and go back to the landing page")
+        self.close_project_action.triggered.connect(self.close_project)
+        self.close_project_action.setEnabled(False)
+        file_menu.addAction(self.close_project_action)
+        examples_menu = file_menu.addMenu("Open an e&xample")
+        assert examples_menu is not None
+        for key, title in EXAMPLE_TITLES.items():
+            entry = QAction(f"{title}…", self)
+            entry.setStatusTip("Write a copy of this example project to a folder and open it")
+            entry.triggered.connect(lambda _checked=False, k=key: self.open_example(k))
+            examples_menu.addAction(entry)
         file_menu.addSeparator()
         add("Edit unit &power modes\u2026", QKeySequence("Ctrl+M"), self._edit_selected_unit)
         add("&Export reports…", QKeySequence("Ctrl+E"), self._choose_export)
@@ -666,14 +692,34 @@ class MainWindow(QMainWindow):
             theme.manager().reduce_motion_setting,
             self.single_click,
             default_user(),
+            self.recent.enabled,
+            self.recent.available,
         )
         popover.theme_chosen.connect(lambda value: self.set_theme(theme.Mode(value)))
         popover.scale_chosen.connect(self.set_scale)
         popover.motion_reduced.connect(self.set_reduce_motion)
         popover.single_click_chosen.connect(self.set_single_click)
         popover.report_name_chosen.connect(self.set_report_name)
+        popover.recent_chosen.connect(self.set_remember_recent)
         popover.open_beside(self.rail.settings_button)
         return popover
+
+    def set_remember_recent(self, on: bool) -> None:
+        """Keep a list of recent projects (on) or delete it (off), and keep the choice."""
+        self.recent.set_enabled(bool(on))
+        if self.recent.enabled and self.session.path is not None and self.session.project:
+            self.recent.add(self.session.path)
+        self.layout_settings.set_word(
+            "window/recent", "on" if self.recent.enabled else "off", RECENT_STATES
+        )
+        self.layout_settings.sync()
+        self.welcome.set_recent(self.recent.folders())
+
+    def clear_recent_projects(self) -> None:
+        """Forget the recent projects (the list stays switched on)."""
+        self.recent.clear()
+        self.welcome.set_recent([])
+        self.toast.show_message("The list of recent projects is empty.")
 
     def set_report_name(self, name: str) -> None:
         """The name the report files carry (empty: none) and keep it for the next start."""
@@ -770,6 +816,64 @@ class MainWindow(QMainWindow):
         folder = QFileDialog.getExistingDirectory(self, "Open project folder")
         if folder:
             self.open_project(Path(folder), background=True)
+
+    def offer_launch_folder(self, folder: Path) -> None:
+        """The program was started with a folder (a pinned icon, a double-click, the command
+        line): offer it on the landing page instead of opening it (D-269)."""
+        self.welcome.set_launch_folder(Path(folder))
+
+    def open_example(self, key: str, parent_folder: Path | None = None) -> bool:
+        """Write a copy of an example project into a folder the user chooses and open it."""
+        if key not in EXAMPLES:
+            return False
+        if parent_folder is None:
+            chosen = QFileDialog.getExistingDirectory(
+                self, "Choose a folder for a copy of the example"
+            )
+            if not chosen:
+                return False
+            parent_folder = Path(chosen)
+        target = Path(parent_folder) / key
+        if target.exists():
+            if not ask(
+                self,
+                "The example is already there",
+                f"The folder already holds {key}. Open it as it is?",
+                primary="Open it",
+                detail="Your edits in that copy are kept. Choose another folder for a fresh copy.",
+            ):
+                return False
+        else:
+            try:
+                write_project(EXAMPLES[key](), target)
+            except OSError as exc:
+                inform(
+                    self,
+                    "The example could not be written",
+                    f"The copy could not be written ({type(exc).__name__}). "
+                    "Choose a folder you can write to.",
+                    level=Level.CAUTION,
+                )
+                return False
+        return self.open_project(target, background=True)
+
+    def close_project(self) -> bool:
+        """Close the open project and show the landing page. False when the user keeps unsaved
+        edits or a computation still runs."""
+        if self.session.path is None:
+            return True
+        if self.busy():
+            self.statusBar().showMessage(
+                "A computation or an export is still running. Cancel it or wait, then close."
+            )
+            return False
+        if self.editors.has_unsaved_changes():
+            if not self.editors.confirm_discard("Some files have unsaved changes."):
+                return False
+            self.editors.discard_all_changes()
+        self.editors.close_all_files()
+        self.session.close()
+        return True
 
     def _choose_scenario_export(self) -> None:
         if self.scenario_view.last_run is None:
@@ -2183,11 +2287,16 @@ class MainWindow(QMainWindow):
         for action in self.model_edit_actions():
             action.setEnabled(project is not None)
         self.update_reports_page()
+        self.close_project_action.setEnabled(session.path is not None)
+        if session.path is not None and project is not None:
+            self.recent.add(session.path)  # only when the user switched the list on
+        self.welcome.set_recent(self.recent.folders())
         self._show_welcome()
         self._update_banners()
         self._inspect()
         self._update_dirty()
-        self.statusBar().showMessage(f"{name}: {self.problems_panel.summary.text()}")
+        summary = self.problems_panel.summary.text()
+        self.statusBar().showMessage(f"{name}: {summary}" if name else "")  # no project: nothing
         self._update_start_here()
         self._choose_first_area(project is not None and not project.units)
         if self._run_after_load:
@@ -2513,11 +2622,29 @@ class MainWindow(QMainWindow):
                 return
             self.editors.discard_all_changes()  # chosen once; a close that waits does not ask again
         if self.busy():
-            # a running thread cannot be stopped safely: close when it is done, do not freeze
-            self._closing = True
-            self.statusBar().showMessage(
-                "A computation or an export is still running. The window closes when it is done."
-            )
+            # a running thread cannot be killed safely: stop it at its next step (or let it end),
+            # and close then; the window never freezes and never kills a thread (D-269)
+            if not self._closing:
+                self._closing = True
+                if self._computing() and ask(
+                    self,
+                    "A computation is still running",
+                    "Stop it and close the window now?",
+                    primary="Stop and close",
+                    secondary="Wait, then close",
+                    destructive=True,
+                    detail="The result of the running computation is not kept. "
+                    "An export that is writing files finishes first.",
+                ):
+                    self._cancel_computations()
+                    self.statusBar().showMessage(
+                        "Stopping… the window closes when the current step is done."
+                    )
+                else:
+                    self.statusBar().showMessage(
+                        "A computation, an export or a load is still running. "
+                        "The window closes when it is done."
+                    )
             event.ignore()
             QTimer.singleShot(200, self._close_when_idle)
             return
@@ -2539,6 +2666,24 @@ class MainWindow(QMainWindow):
             or self.session.loading
             or any(v.is_busy() for v in views)
         )
+
+    def _computing(self) -> bool:
+        """A computation the user started is running (not only a project that loads)."""
+        views = (
+            self.scenario_view,
+            self.timeline_view,
+            self.link_passes_view,
+            self.beta_view,
+            self.compare_view,
+        )
+        return self._worker is not None or any(v.is_busy() for v in views)
+
+    def _cancel_computations(self) -> None:
+        """Ask every running computation to stop at its next step (an export is not stopped)."""
+        self.run_controller.cancel()
+        for view in (self.scenario_view, self.timeline_view, self.link_passes_view, self.beta_view):
+            if view.is_busy():
+                view.cancel()
 
     def wait_for_jobs(self, timeout_s: float = 120.0) -> bool:
         """Let the running jobs finish (their results are delivered); False on timeout."""

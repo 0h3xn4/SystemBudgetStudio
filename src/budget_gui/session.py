@@ -198,6 +198,23 @@ class ProjectSession(QObject):
         self._set_path(Path(path))
         self.reload_async()
 
+    def close(self) -> None:
+        """Close the project: no folder and no results; `changed` tells the window (it shows the
+        landing page). A background load still running is dropped when it ends."""
+        self._generation += 1
+        self._pending = False
+        self.path = None
+        self.load_result = None
+        self.power = self.mass = self.thermal = self.link = None
+        self.provenance = None
+        self.document = self.mass_document = self.thermal_document = None
+        self.link_document = self.propulsion_document = self.pointing_document = None
+        self.outputs = []
+        self.problems = []
+        self.last_good = None
+        self.showing_last_good = False
+        self.changed.emit()
+
     def _set_path(self, path: Path) -> None:
         if path != self.path:
             self.last_good = None  # the old results belong to another project
