@@ -33,7 +33,7 @@ Out of scope: results that are wrong because an input value is wrong (use a norm
 
 ## Supported versions
 
-Only the latest release gets security fixes. Older releases stay available for the record, but they are not fixed. See the [releases](https://github.com/0h3xn4/SystemBudgetStudio/releases).
+Only the latest release gets security fixes. Older releases stay available for the record, but they are not fixed. See the [releases](https://github.com/0h3xn4/system-budget-studio/releases).
 
 ## What the project does about security
 

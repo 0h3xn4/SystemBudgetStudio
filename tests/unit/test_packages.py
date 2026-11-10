@@ -95,7 +95,7 @@ def test_the_control_file_names_the_package_and_what_it_needs(deb: Path) -> None
     for line in (
         "Architecture: amd64",
         "Section: science",
-        "Homepage: https://github.com/0h3xn4/SystemBudgetStudio",
+        "Homepage: https://github.com/0h3xn4/system-budget-studio",
     ):
         assert line in fields
     depends = next(x for x in fields.splitlines() if x.startswith("Depends: "))
