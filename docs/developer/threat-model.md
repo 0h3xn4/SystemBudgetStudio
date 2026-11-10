@@ -49,7 +49,7 @@ Last reviewed: 2026-11-10 (protection programme, phase 6; D-263). Change this pa
 
 | Threat | Control |
 |---|---|
-| A library is replaced or has a known vulnerability | Hashed lock files (`--require-hashes`); weekly `pip-audit`; dependency review on pull requests; Dependabot for the version ranges; the list of libraries in the SBOM |
+| A library is replaced or has a known vulnerability | Hashed lock files (`--require-hashes`); weekly `pip-audit` and on every lock change; dependency review (once the owner enables the Dependency graph); Dependabot for the version ranges; the list of libraries in the SBOM |
 | An action is changed after review | Every action is pinned to a full commit id (a test checks it); Dependabot proposes the update |
 | A workflow runs with too many rights | Read-only default token (a test checks it); writes only in jobs that use the `release` environment (a test checks it); no `pull_request_target` (a test checks it); no text from a pull request in a shell script (a test checks it) |
 | A harmful pull request is merged | Review by the maintainer; required checks (owner setting) |
