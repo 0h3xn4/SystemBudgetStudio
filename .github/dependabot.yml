@@ -35,3 +35,12 @@ updates:
     groups:
       python-dependencies:
         patterns: ["*"]
+    # A major version, or a new Qt minor version, can change a report or the window. Such an
+    # upgrade is done by hand in its own pull request: new lock files, the full suite, the golden
+    # reports compared and a decision entry (a range change alone is not tested by CI, which
+    # installs from the locks; see the closed pull request 138 and D-202).
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "PySide6-Essentials"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]

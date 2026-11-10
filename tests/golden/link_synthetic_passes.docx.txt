@@ -66,7 +66,7 @@ Provenance
 Provenance
 ## table
 Item | Value
-Tool | System Budget Studio 2.11.2
+Tool | System Budget Studio 2.12.0
 Python | 3.x
 Libraries | pinned for-golden-tests
 Project | Time-domain test

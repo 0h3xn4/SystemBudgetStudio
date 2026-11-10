@@ -112,7 +112,7 @@ def render(
         "",
         "```bash",
         "sha256sum --check SHA256SUMS-linux.txt --ignore-missing",
-        f"gh attestation verify <file> --repo {repo}",
+        f"gh attestation verify <file> --owner {repo.split('/')[0]}",
         "```",
         "",
         "The attestation says which workflow, on which commit, built the file. It does not say",
