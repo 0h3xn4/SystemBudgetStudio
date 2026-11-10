@@ -90,3 +90,27 @@ def test_third_party_licences_dialog_shows_the_notices_or_says_where_they_are(
 
     titles = [a.text().replace("&", "") for a in window.findChildren(QAction)]
     assert "Third-party licences…" in titles
+
+
+def test_the_report_name_setting_is_kept_and_used(window: MainWindow, qtbot, tmp_path) -> None:  # type: ignore[no-untyped-def]
+    from budget_core import provenance
+    from budget_gui.layout_settings import LayoutSettings
+
+    window.layout_settings = LayoutSettings(tmp_path / "layout.ini")
+    popover = window.show_settings()
+    qtbot.addWidget(popover)
+    assert popover.report_name_edit.text() == provenance.default_user() == ""
+    popover.report_name_edit.setText("A. Engineer")
+    popover.report_name_edit.editingFinished.emit()
+    assert provenance.default_user() == "A. Engineer"
+    assert window.layout_settings.text("reports/name") == "A. Engineer"
+    assert provenance.resolve_user() == "A. Engineer"
+    popover.report_name_edit.setText("")
+    popover.report_name_edit.editingFinished.emit()
+    assert provenance.resolve_user() == "unknown"
+
+
+def test_the_first_screen_shows_the_disclaimer(window: MainWindow) -> None:
+    from budget_core import disclaimer
+
+    assert window.welcome.disclaimer.text() == disclaimer.DISCLAIMER

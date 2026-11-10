@@ -7,8 +7,10 @@
 The window keeps no Qt settings file on purpose (`privacy.py`): Qt's file dialogs would write the
 folders the user opened, which is project content, into `~/.config`. The layout is different: the
 position and size of the window, the state of its docks, the widths of table columns and the
-theme. None of it names a project, a file or a value. It is kept in **one file of our own**, and
-only keys of four fixed groups can be written to it, so project content cannot get in by mistake.
+theme. None of it names a project, a file or a value. The one text in it is the name the user may
+type for the reports (`reports/name`, empty by default, D-262). It is kept in **one file of our
+own**, and only keys of five fixed groups can be written to it, so project content cannot get in
+by mistake.
 
 The file is `layout.ini` in the per-user application configuration folder (override with the
 environment variable `BUDGET_CONFIG_DIR`; `BUDGET_NO_LAYOUT=1` keeps nothing). Delete the file
@@ -24,13 +26,13 @@ from pathlib import Path
 from PySide6.QtCore import QByteArray, QSettings, QStandardPaths
 
 FILE_NAME = "layout.ini"
-GROUPS = ("window", "dock", "columns", "theme")  # the only groups of the file
+GROUPS = ("window", "dock", "columns", "theme", "reports")  # the only groups of the file
 MOTION = ("full", "reduced")  # the two values of the `theme/motion` word
 RAIL_STATES = ("open", "folded")  # the two values of the `window/rail` word
 START_STATES = ("shown", "hidden")  # the two values of the `window/start_here` word
 VIEW_STATES = ("focused", "full")  # the two values of the `window/view` word
 OPEN_STATES = ("double", "single")  # the two values of the `window/open_with` word
-_KEY = re.compile(r"^(window|dock|columns|theme)/[A-Za-z0-9_.-]{1,64}$")
+_KEY = re.compile(r"^(window|dock|columns|theme|reports)/[A-Za-z0-9_.-]{1,64}$")
 
 
 def default_path() -> Path | None:
@@ -44,7 +46,7 @@ def default_path() -> Path | None:
 
 
 class LayoutError(ValueError):
-    """A key outside the four groups, or a value that is not geometry, a number or a name."""
+    """A key outside the five groups, or a value that is not geometry, a number or a name."""
 
 
 class LayoutSettings:
@@ -67,7 +69,9 @@ class LayoutSettings:
     @staticmethod
     def _check(key: str) -> None:
         if not _KEY.match(key):
-            raise LayoutError("Only keys of the groups window, dock, columns and theme are kept.")
+            raise LayoutError(
+                "Only keys of the groups window, dock, columns, theme and reports are kept."
+            )
 
     def bytes_value(self, key: str) -> QByteArray | None:
         self._check(key)
@@ -113,10 +117,24 @@ class LayoutSettings:
         if self._settings is not None:
             self._settings.setValue(key, value)
 
+    def text(self, key: str, limit: int = 64) -> str:
+        """A short text the user typed (the name for the reports): printable characters only."""
+        self._check(key)
+        if self._settings is None:
+            return ""
+        raw = str(self._settings.value(key, "") or "")
+        return "".join(ch for ch in raw if ch.isprintable()).strip()[:limit]
+
+    def set_text(self, key: str, value: str, limit: int = 64) -> None:
+        self._check(key)
+        if self._settings is not None:
+            cleaned = "".join(ch for ch in value if ch.isprintable()).strip()[:limit]
+            self._settings.setValue(key, cleaned)
+
     def clear_group(self, group: str) -> None:
         """Forget every key of one group (for example `dock` and `window` on Reset layout)."""
         if group not in GROUPS:
-            raise LayoutError("Only the groups window, dock, columns and theme are kept.")
+            raise LayoutError("Only the groups window, dock, columns, theme and reports are kept.")
         if self._settings is not None:
             self._settings.remove(group)
 

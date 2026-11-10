@@ -114,6 +114,7 @@ def test_a_provenance_built_by_hand_shows_no_input_rows() -> None:
         "Scenario",
         "Generated (UTC)",
         "User",
+        "Disclaimer",
     ]
 
 
