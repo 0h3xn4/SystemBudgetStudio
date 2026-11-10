@@ -9,7 +9,7 @@ Version:        %{sbs_version}
 Release:        1
 Summary:        Power, mass, thermal and link budgets for small satellites
 License:        Apache-2.0
-URL:            https://github.com/0h3xn4/SystemBudgetStudio
+URL:            https://github.com/0h3xn4/system-budget-studio
 ExclusiveArch:  x86_64
 
 # The bundle brings Python, Qt and every library; what rpm would find in it is not what the

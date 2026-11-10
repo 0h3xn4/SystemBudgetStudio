@@ -8,8 +8,8 @@ A free, offline program for the **early design of a small satellite**: it works 
 
 **System Budget Studio is a personal project. It is not affiliated with, sponsored by or endorsed by any employer or organisation.**
 
-[![CI](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/SystemBudgetStudio/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/0h3xn4/SystemBudgetStudio)](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest)
+[![CI](https://github.com/0h3xn4/system-budget-studio/actions/workflows/ci.yml/badge.svg)](https://github.com/0h3xn4/system-budget-studio/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/0h3xn4/system-budget-studio)](https://github.com/0h3xn4/system-budget-studio/releases/latest)
 ![Python 3.14 and newer](https://img.shields.io/badge/python-3.14%2B-blue)
 [![Licence: Apache-2.0](https://img.shields.io/badge/licence-Apache--2.0-green)](LICENSE)
 
@@ -34,7 +34,7 @@ It runs on your own computer (Windows or Linux), **offline**: no account, no clo
 
 ## Install
 
-Download the installer for your system from the [Releases page](https://github.com/0h3xn4/SystemBudgetStudio/releases/latest). No Python is needed. The Windows installer and the Linux tarball need no administrator rights; the `.deb` and `.rpm` packages install for all users and need `sudo`.
+Download the installer for your system from the [Releases page](https://github.com/0h3xn4/system-budget-studio/releases/latest). No Python is needed. The Windows installer and the Linux tarball need no administrator rights; the `.deb` and `.rpm` packages install for all users and need `sudo`.
 
 | System | File | What to do |
 |---|---|---|
@@ -50,8 +50,8 @@ Check the download against `SHA256SUMS-windows.txt` or `SHA256SUMS-linux.txt` fr
 You need Python 3.14 or newer and git. On Linux also read the [prerequisites](docs/getting-started.md#1-prerequisites) (the window needs one system library).
 
 ```bash
-git clone https://github.com/0h3xn4/SystemBudgetStudio.git
-cd SystemBudgetStudio
+git clone https://github.com/0h3xn4/system-budget-studio.git
+cd system-budget-studio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install --require-hashes -r requirements.lock     # the libraries, exactly as tested (hashes checked)
 pip install --no-deps -e .                             # this program

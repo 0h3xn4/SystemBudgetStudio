@@ -1,7 +1,7 @@
 version = 1
 SPDX-PackageName = "System Budget Studio"
 SPDX-PackageSupplier = "0h3xn4"
-SPDX-PackageDownloadLocation = "https://github.com/0h3xn4/SystemBudgetStudio"
+SPDX-PackageDownloadLocation = "https://github.com/0h3xn4/system-budget-studio"
 
 # Everything in the repository is under the project licence, unless a later entry below says
 # otherwise (the last matching entry wins). Python source files carry their own SPDX header
