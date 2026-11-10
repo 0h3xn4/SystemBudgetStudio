@@ -39,6 +39,10 @@ GainFn = Callable[[NDArray], NDArray]
 # the middle of the part of the pass it stands for.
 LINK_SAMPLE_S = 5.0
 DAY_S = 86400.0
+# An antenna pattern file (angle_deg, gain_dbi) has a few hundred rows; these stop a file that is
+# not one from filling the memory (D-263).
+MAX_PATTERN_BYTES = 5_000_000
+MAX_PATTERN_ROWS = 100_000
 
 # ---- results --------------------------------------------------------------------------------
 
@@ -256,8 +260,14 @@ def _read_pattern(
     try:
         if not path.is_file():  # a pipe or a device would block the read
             raise OSError("not a regular file")
+        if path.stat().st_size > MAX_PATTERN_BYTES:
+            raise OSError("too large")
         with path.open(encoding="utf-8-sig", newline="") as handle:  # Excel writes a BOM
-            rows = list(csv.reader(handle))
+            rows = []
+            for record in csv.reader(handle):
+                rows.append(record)
+                if len(rows) > MAX_PATTERN_ROWS:
+                    raise ValueError("too many rows")
         header = [c.strip().lower() for c in rows[0]]
         a, g = header.index("angle_deg"), header.index("gain_dbi")
         angles = [float(r[a]) for r in rows[1:] if r]

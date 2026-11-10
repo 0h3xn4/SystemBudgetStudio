@@ -53,7 +53,8 @@ You need Python 3.14 or newer and git. On Linux also read the [prerequisites](do
 git clone https://github.com/0h3xn4/SystemBudgetStudio.git
 cd SystemBudgetStudio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
-pip install -e .
+pip install --require-hashes -r requirements.lock     # the libraries, exactly as tested (hashes checked)
+pip install --no-deps -e .                             # this program
 budget --version                                       # System Budget Studio 2.11.2
 budget export-examples demo                            # five example projects with invented data
 budget validate demo/microsat_250kg_eps                    # check the project: 0 errors, a few warnings

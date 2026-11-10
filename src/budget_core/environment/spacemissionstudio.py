@@ -33,6 +33,7 @@ from budget_core.environment.data import (
 )
 from budget_core.environment.intervals import Interval, merge_intervals
 from budget_core.io.paths import resolve_inside
+from budget_core.reports.files import safe_name
 from budget_core.timeutil import format_utc, parse_utc
 
 NDArray = np.ndarray[Any, np.dtype[np.float64]]
@@ -316,7 +317,7 @@ def export_spacemissionstudio(env: EnvironmentData, folder: Path) -> list[Path]:
     )
     for site_id, vis in sorted(env.sites.items()):
         _write(
-            folder / f"passes_{site_id}.csv",
+            folder / f"passes_{safe_name(site_id)}.csv",
             PASS_HEADER,
             [
                 [stamp(p.aos_s), stamp(p.los_s), repr(float(p.max_elevation_deg))]
@@ -334,5 +335,5 @@ def export_spacemissionstudio(env: EnvironmentData, folder: Path) -> list[Path]:
                         repr(float(vis.range_m[i])),
                     ]
                 )
-        _write(folder / f"profile_{site_id}.csv", PROFILE_HEADER, rows)
+        _write(folder / f"profile_{safe_name(site_id)}.csv", PROFILE_HEADER, rows)
     return sorted(folder.iterdir())

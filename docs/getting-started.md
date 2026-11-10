@@ -31,7 +31,8 @@ git clone https://github.com/0h3xn4/SystemBudgetStudio.git
 cd SystemBudgetStudio
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install --require-hashes -r requirements.lock
+pip install --no-deps -e .
 ```
 
 Windows (PowerShell):
@@ -41,12 +42,13 @@ git clone https://github.com/0h3xn4/SystemBudgetStudio.git
 cd SystemBudgetStudio
 py -3 -m venv .venv
 .venv\Scripts\Activate.ps1
-pip install -e .
+pip install --require-hashes -r requirements.lock
+pip install --no-deps -e .
 ```
 
 If PowerShell says *running scripts is disabled*, run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned` once in that window and activate again.
 
-`pip install -e .` installs the runtime libraries only (PySide6, pydantic, numpy, sgp4, ReportLab, openpyxl, python-docx, pint, Pillow, ruamel.yaml). It takes about a minute and needs no compiler. After it, two commands exist inside the environment:
+The first `pip install` takes every runtime library from `requirements.lock`, which pins each one to a version and to the SHA-256 of its file, so pip refuses a file that is not the one that was tested (D-263). The second installs this program without looking for libraries. (`pip install -e .` alone also works, but takes whatever newest versions the version ranges allow, without the hash check; the build tool `hatchling` is fetched without a hash in both cases, and it is not part of the installed program.) Together they install the runtime libraries only (PySide6, pydantic, numpy, sgp4, ReportLab, openpyxl, python-docx, pint, Pillow, ruamel.yaml, defusedxml). It takes about a minute and needs no compiler. After it, two commands exist inside the environment:
 
 - `budget`: the command-line tool;
 - `system-budget-studio`: the window.

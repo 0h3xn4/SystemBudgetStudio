@@ -79,6 +79,9 @@ The window (redesigned in 1.1.0 and 1.2.0) was built and tested on a virtual (of
 - [ ] **The trimmed Qt (D-261) on real desktops:** on Windows 10 and 11, on a Linux desktop with X11 and one with Wayland (Ubuntu, Rocky), start the window; **View > Theme > Same as the system** follows the system's light and dark setting while the window is open; the window has its frame and title bar; typing, the Ctrl+K palette and a file dialog work. If a function is missing, name the Qt plugin and put it back in `packaging/bundle_policy.toml`. (Manual.)
 - [ ] The release has the source archives of Qt and PySide6 (`qtbase-everywhere-src-…`, `qtwayland-everywhere-src-…`, `pyside-setup-everywhere-src-…`, `SOURCES.txt`), one SBOM, one licence list and one notices file per system. (Manual; the release job checks that the sources exist.)
 - [ ] The checksum of each download matches the list in `SHA256SUMS-windows.txt` (Windows files) or `SHA256SUMS-linux.txt` (the tarball, the `.deb` and the `.rpm`) on the Releases page. (Manual.)
+- [ ] The release has `COMPLIANCE-RECORD.md`; both checks in it say **passed** (not *not run*, not *FAILED*), and the hashes in it match the checksum lists. (Manual.)
+- [ ] `gh attestation verify <file> --repo 0h3xn4/SystemBudgetStudio` succeeds for the Windows installer, the Linux tarball, the `.deb` and the `.rpm`. (Manual; the command is in [security-and-privacy.md](security-and-privacy.md#check-a-download).)
+- [ ] The run of the `publish` job waited for the approval of the `release` environment (if the owner has set a required reviewer) and was approved by the owner. (Manual.)
 - [ ] `system-budget-studio --smoke` exits with success on a machine with a display and, with `QT_QPA_PLATFORM=offscreen`, without one. (CI: all three platforms.)
 
 ## Sign-off

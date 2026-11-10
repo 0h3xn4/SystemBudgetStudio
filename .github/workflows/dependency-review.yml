@@ -1,0 +1,29 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Dependency review
+
+# Fails when a change adds a package with a known vulnerability of high or critical severity.
+# It needs the repository's Dependency graph (Settings > Code security). That setting is off, so
+# the run on pull requests failed with "Dependency review is not supported on this repository":
+# until the owner switches the graph on, this workflow runs only when started by hand. Then add
+#     pull_request:
+#       paths: ["pyproject.toml", "requirements*.lock", ".github/workflows/**"]
+# under `on:` (docs/legal/owner-checklist.md). The weekly pip-audit run (audit.yml) checks the
+# locked packages in every case and runs on every change of a lock file.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    name: Dependency review
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4.9.0
+        with:
+          fail-on-severity: high

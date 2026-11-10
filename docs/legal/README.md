@@ -14,6 +14,7 @@ Never put secrets or personal data in this folder.
 | [past-releases.md](past-releases.md) | What the published releases lack (notices, sources, SBOM) and the options | 2026-11-09 |
 | [promise-wording.md](promise-wording.md) | Words that read as a promise and what replaced them | 2026-11-10 |
 | [trademark-search.md](trademark-search.md) | First search for the name (not a clearance) | 2026-11-10 |
+| [signing-options.md](signing-options.md) | Code signing: options, costs, who is named as publisher (nothing implemented) | 2026-11-10 |
 | [lawyer-questions.md](lawyer-questions.md) | Questions for a lawyer | 2026-11-09 |
 | `evidence/YYYY-MM-DD/` | Raw output of scans and checks | 2026-11-09 |
 | `residual-risk-report.md` | Final report of Phase 9 | not yet written |
@@ -32,4 +33,6 @@ Never put secrets or personal data in this folder.
 | 2026-11-09 | 1 | Pull request #129 (D-258) merged into `main` during the work; the record was merged with it and updated (F-03, F-33, F-55, F-75, F-77, new F-78 Pillow advisories, claims C-31 to C-38, risk R-26). |
 | 2026-11-09 | 2 | Ownership statement in the README; EXIF removed from `tree-before.jpg`; Phase 2 scans ([phase2-scan.txt](evidence/2026-11-09/phase2-scan.txt)); owner's defaults recorded as D-259; commit-identity steps in the owner checklist. |
 | 2026-11-09 | 3 | Apache-2.0 (`LICENSE`, `NOTICE`, `LICENSES/`, `REUSE.toml`, SPDX headers), `reuse lint` evidence, DCO check, contribution rules, About dialog; owner's answers on Q2 (Germany), Q13 (login-gated sample model), Q15 (no list); D-260. |
+| 2026-11-09 | 4 | Third-party compliance: inventory of everything the installers bundle, `THIRD_PARTY_NOTICES.txt`, the licence gate (`packaging/bundle_policy.toml`), Qt trimmed to what the program uses, source archives of Qt and PySide6 on every release, past-releases note; proven on the Rocky 9 and Windows builds; D-261. |
 | 2026-11-10 | 5 | One disclaimer in code, README, guide, first screen, About and every report; no login name in reports; wording table; AI-authorship, support, non-commercial and privacy statements; offline test extended; first trademark search; D-262. |
+| 2026-11-10 | 6 | `defusedxml` for IDM XML and `openpyxl`; hostile-file, formula-injection, source-scan and workflow tests; limits for antenna pattern files; Space Mission Studio file names; CodeQL, gitleaks, Scorecard, dependency review, Dependabot; `release` environment; compliance record per release; hashed source install; `SECURITY.md`, threat model, security guide; signing options (nothing implemented); Inno Setup licence checked; D-263. |

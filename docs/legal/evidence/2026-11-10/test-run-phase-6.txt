@@ -1,0 +1,9 @@
+Phase 6 test run, 2026-11-10 (Python 3.14.6, Linux, QT_QPA_PLATFORM=offscreen)
+
+ruff check .              All checks passed
+ruff format --check .     669 files already formatted
+mypy                      Success: no issues found in 257 source files
+reuse lint                1997 / 1997 files with copyright and licence information; compliant (REUSE 3.3)
+pytest tests/unit tests/regression tests/offline    3354 passed, 2 skipped (rpmbuild not installed; one example has no incomplete link) in 604 s
+pytest tests/gui tests/golden                        985 passed in 725 s
+Golden files: unchanged (no result, export or file format changed)

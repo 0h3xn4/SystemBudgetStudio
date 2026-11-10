@@ -20,6 +20,7 @@ permissions:
 jobs:
   attach:
     runs-on: ubuntu-latest
+    environment: release   # a required reviewer is set on it by the owner
     permissions:
       contents: write
       actions: read

@@ -10,7 +10,9 @@
 
 Lists the non-merge commits in `<base>..<head>` and fails (exit 1) when one has no
 `Signed-off-by: Name <address>` line (`git commit -s` adds it). Commits made before the check
-was introduced (`ENFORCED_FROM`) are not asked for it. The rules are in CONTRIBUTING.md.
+was introduced (`ENFORCED_FROM`) are not asked for it, and neither are commits made by the
+Dependabot service itself (`BOTS`: a machine-made version bump that cannot sign off; the person who
+merges it takes it over). The rules are in CONTRIBUTING.md.
 Standard library only.
 """
 
@@ -23,6 +25,8 @@ from datetime import datetime
 
 # the check was introduced on this date; older commits have no sign-off and are not rewritten
 ENFORCED_FROM = datetime.fromisoformat("2026-11-09T16:05:00+00:00")
+# Dependabot's commit address; it cannot add a sign-off. Nothing else is exempt.
+BOTS = frozenset({"49699333+dependabot[bot]@users.noreply.github.com"})
 SIGNED_OFF = re.compile(r"^Signed-off-by: \S.* <[^<>\s]+@[^<>\s]+>\s*$", re.MULTILINE)
 
 
@@ -36,8 +40,9 @@ def unsigned_commits(base: str, head: str) -> list[str]:
     """The short ids and subjects of the commits that need a sign-off and have none."""
     missing: list[str] = []
     for sha in git("rev-list", "--no-merges", f"{base}..{head}").split():
-        when, _, message = git("show", "-s", "--format=%cI%n%B", sha).partition("\n")
-        if datetime.fromisoformat(when.strip()) < ENFORCED_FROM:
+        when, _, rest = git("show", "-s", "--format=%cI%n%ae%n%B", sha).partition("\n")
+        author, _, message = rest.partition("\n")
+        if datetime.fromisoformat(when.strip()) < ENFORCED_FROM or author.strip() in BOTS:
             continue
         if not SIGNED_OFF.search(message):
             missing.append(

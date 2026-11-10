@@ -37,7 +37,7 @@ RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "permissive",
         re.compile(
-            r"\bMIT\b|MIT-CMU|\bBSD|Apache|\bISC\b|HPND|\bZlib\b|\bPSF\b|Python Software"
+            r"\bMIT\b|MIT-CMU|\bBSD|Apache|\bISC\b|HPND|\bZlib\b|\bPSFL?\b|Python Software"
             r"|Unlicense|CC0|Public Domain|PIL Software License",
             re.I,
         ),
