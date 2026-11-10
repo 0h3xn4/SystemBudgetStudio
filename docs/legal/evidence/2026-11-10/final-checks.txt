@@ -1,0 +1,7 @@
+Final record update, 2026-11-10 (documentation only; no program code changed)
+
+ruff check .              All checks passed
+ruff format --check .     674 files already formatted
+reuse lint                compliant (REUSE 3.3)
+pytest tests/unit -k "doc or link_check or decision or licence or readme or workflow or governance or about"    200 passed
+The unit, regression, offline, GUI and golden suites passed on the same program code in phases 6 and 7 (see test-run-phase-6.txt and test-run-phase-7.txt).

@@ -1,6 +1,6 @@
 # Claims register
 
-Date: 2026-11-09. Scope: the README, the GitHub repository description, `docs/getting-started.md`, `docs/faq.md`, the user manual and the guide chapters (read for the claims below). The window has no About dialog, and the website does not exist yet; both get their claims added when they are written. The website draft `site/reference.html` is not in the repository.
+Date: 2026-11-09. Scope: the README, the GitHub repository description, `docs/getting-started.md`, `docs/faq.md`, the user manual and the guide chapters (read for the claims below). The window now has an About dialog (phase 3). The website plan was discarded by the owner (D-265), so every "Website" entry in the *Action* column below is void; the README, the window and the guide carry the claims. The website draft `site/reference.html` is not in the repository.
 
 Status key: **OK** evidence is sufficient; **Partial** evidence exists but does not cover the whole claim; **None** no evidence found in Phase 1; **Wrong** the repository itself contradicts the claim. "Evidence" names a test file or document that exists; Phase 1 checked that it exists and what it is about, but did not re-run it. Tests are re-run before Checkpoint 1 (see the pull request).
 
