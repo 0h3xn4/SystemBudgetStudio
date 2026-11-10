@@ -14,6 +14,7 @@ Never put secrets or personal data in this folder.
 | [past-releases.md](past-releases.md) | What the published releases lack (notices, sources, SBOM) and the options | 2026-11-09 |
 | [promise-wording.md](promise-wording.md) | Words that read as a promise and what replaced them | 2026-11-10 |
 | [trademark-search.md](trademark-search.md) | First search for the name (not a clearance) | 2026-11-10 |
+| [residual-risk-report.md](residual-risk-report.md) | The final report: what changed, what was verified and not, open decisions and steps, residual risks, questions for a lawyer, the proposed repository description | 2026-11-10 |
 | [signing-options.md](signing-options.md) | Code signing: options, costs, who is named as publisher (nothing implemented) | 2026-11-10 |
 | [lawyer-questions.md](lawyer-questions.md) | Questions for a lawyer | 2026-11-09 |
 | `evidence/YYYY-MM-DD/` | Raw output of scans and checks | 2026-11-09 |
@@ -37,3 +38,5 @@ Never put secrets or personal data in this folder.
 | 2026-11-10 | 5 | One disclaimer in code, README, guide, first screen, About and every report; no login name in reports; wording table; AI-authorship, support, non-commercial and privacy statements; offline test extended; first trademark search; D-262. |
 | 2026-11-10 | 6 | `defusedxml` for IDM XML and `openpyxl`; hostile-file, formula-injection, source-scan and workflow tests; limits for antenna pattern files; Space Mission Studio file names; CodeQL, gitleaks, Scorecard, dependency review, Dependabot; `release` environment; compliance record per release; hashed source install; `SECURITY.md`, threat model, security guide; signing options (nothing implemented); Inno Setup licence checked; D-263. |
 | 2026-11-10 | 7 | Issue forms and pull request template with the data box and a CI check; `CODE_OF_CONDUCT.md` (Contributor Covenant 3.0; reporting through GitHub's private form); `.github/CODEOWNERS`; export-control section in `examples/README.md` and a test that the examples are invented; owner checklist (tag ruleset, code owners, moderation, conduct contact); LQ-21; D-264. |
+| 2026-11-10 | 8 | The owner discarded the website plan during phase 8 (D-265). The unfinished work was never committed or pushed and was set aside outside the repository. Nothing was published. |
+| 2026-11-10 | 9 | Without a website: the audit (F-02, F-13, F-82, F-83, F-84), the risk register (R-04, R-10, R-11, R-13, R-17, R-18, R-24, R-25) and the owner checklist updated; the final report [residual-risk-report.md](residual-risk-report.md); the repository description and topics proposed (not applied). |

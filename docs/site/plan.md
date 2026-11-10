@@ -1,5 +1,7 @@
 # Website plan
 
+> **Discarded by the owner on 2026-11-10 (D-265).** Nothing in this plan was built or published. The page is kept as the record of the plan.
+
 Date: 2026-11-09. Phase 1 plan; nothing is built and nothing is published. Rules: brief sections 8 and 9. Text on the site follows the claims register and the single disclaimer (Phase 5). The site is built in Phase 8 and goes live only when the owner approves.
 
 ## What exists, what does not

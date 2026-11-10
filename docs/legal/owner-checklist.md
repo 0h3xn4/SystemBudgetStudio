@@ -16,7 +16,7 @@ Date: 2026-11-09 (first version, Phase 1). These steps need you: they are accoun
 - [ ] **Answer the open questions** in [legal-audit.md](legal-audit.md): Q2 (country), Q13 (origin of the "CIC-SAT V6" and "real model" samples), Q15 (private list of names to search for), Q19 (repository description). The other questions are answered by the defaults, as you asked on 2026-11-09 (D-259); change any of them in the chat.
 - [ ] **Decide on pull request #129** (Q12) before Phase 5 and 6 start.
 
-## Account security (before the website goes live)
+## Account security
 
 - [ ] Two-factor login with a **passkey or a hardware security key**. *How:* **Settings → Password and authentication → Two-factor authentication**. Keep the recovery codes **offline** (printed, in a safe place), not in a cloud note.
 - [ ] Check **Settings → Sessions** and **Settings → Applications → Authorized OAuth Apps and Installed GitHub Apps**; remove what you do not use.
@@ -57,8 +57,9 @@ Date: 2026-11-09 (first version, Phase 1). These steps need you: they are accoun
 - [ ] **Read the terms of the CIC-IDM website** (the account you made to download the sample model) and tell me whether they limit publishing facts about the file or naming the tool (Q13, LQ-05).
 - [ ] **Decide how the AI-written commits are signed off** (F-25, LQ-15): leave the sign-off "Claude", or sign off yourself when you merge.
 
-## Later (added in Phase 9)
+## At the end (phase 9, without a website)
 
-- [ ] **Settings → Pages → Source: GitHub Actions**; **Enforce HTTPS**; protection rules for the `github-pages` environment.
-- [ ] Apply the new repository description and topics (or confirm that Claude may).
-- [ ] The site goes live only when you approve and merge the final pull request.
+The website plan was discarded (D-265), so the Pages settings and the deploy steps are gone. What is left is in [residual-risk-report.md](residual-risk-report.md): every decision still open, every open step of this list in one table, and the proposed repository description and topics.
+
+- [ ] **Apply the repository description and topics** from the report (or tell me different words). Claude cannot change repository settings.
+- [ ] **Read the residual-risk report** and hand it, with [lawyer-questions.md](lawyer-questions.md) and [risk-register.md](risk-register.md), to a lawyer in Germany.
