@@ -58,7 +58,7 @@ All changes went through pull requests that were merged after green CI (#130, #1
 
 | # | Decision | Recommendation | Where |
 |---|---|---|---|
-| 1 | Which version is the first Apache-2.0 release (2.11.2 or 2.12.0), and when. Do not tag the prepared `v2.11.2` on the MIT commit `41a330a`; tag on the merge commit of #133 or later and move the CHANGELOG entries (R-28) | Tag after the owner settings below are done, so the first release uses the `release` reviewer | owner checklist |
+| 1 | The version of the first Apache-2.0 release. **Update 2026-11-10:** v2.11.2 was published from the MIT commit `41a330a`, so 2.11.2 is the last MIT release (D-267) and its number is taken; `main` still says 2.11.2 | 2.12.0 (a licence change and new safeguards); tag it after the owner settings below are done, so the first release uses the `release` reviewer | owner checklist |
 | 2 | Past releases: leave them (option A) or add notices and the 6.10.3 sources to v2.11.1 (option B) (Q18) | A, with the gap recorded | [past-releases.md](past-releases.md) |
 | 3 | Code signing for the Windows installer (Q7) | SignPath Foundation, after the Code of Conduct and two-factor login are in place; nothing is implemented | [signing-options.md](signing-options.md) |
 | 4 | A project contact (Q3): a dedicated address, or GitHub's private report form only | Private report form only (current); a dedicated address if you want one | owner checklist |
@@ -113,7 +113,7 @@ Likelihood (L) and impact (I): L = low, M = medium, H = high. *Now* is the level
 | R-24 | A scanner finding missed | M | M | Partly closed | L–M | Full-history gitleaks and ScanCode runs | C, O |
 | R-26 | The published releases bundle Pillow with known vulnerabilities (F-78) | L | M | Open until a new release | L after release | Release 2.11.2 or later (Pillow 13) with a release note | O |
 | R-27 | The DCO sign-off carries an AI identity | M | L | Open | L | You sign off yourself; LQ-15 | O, L |
-| R-28 | The next tag lands on the MIT commit | M | M | Open (owner action) | L | Follow decision 1 | O |
+| R-28 | The next tag lands on the MIT commit | M | M | **Occurred** (v2.11.2); record corrected (D-267) | L | Give the first Apache-2.0 release a new version number | O |
 | R-29 | The trimmed Qt loses a function on a real desktop | L | M | Open (owner check) | L | The real-machine checks | O |
 | R-30 | A bundled component has no licence text, or a known gap is a real infringement (VC++ runtime, Mesa, Python's C libraries) | M | M | Open | M | LQ-17 to LQ-19; replace the Mesa DLL | C, L |
 | R-31 | Release files are not reproducible bit for bit | M | L | Open | L | Pin the Rocky image by digest and Inno Setup by version; `SOURCE_DATE_EPOCH` for the bundle | C |
