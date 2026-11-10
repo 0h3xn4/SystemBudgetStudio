@@ -66,17 +66,17 @@ Phase 1 changed nothing except adding `docs/legal/` and `docs/site/plan.md`.
 
 | ID | Sev | Finding | Proposed measure | Status |
 |---|---|---|---|---|
-| F-50 | High | **The repository description says "Every equation sourced, every value with units, byte-identical reports"** (claims C-01, C-02, C-04). The README says 53 of 57 equations have no citation. | Change the description now; owner action (checklist). Do not copy these words anywhere. | Proposed |
-| F-51 | High | There is no single disclaimer. The README lists known limits but says nothing about warranty, certification, flight or safety use, independent verification or user responsibility, except through the licence. | Phase 5: one text in code, generated copies, a test. | Open |
-| F-52 | Medium | Exported reports carry no disclaimer line. | Needs the owner's answer to **Q4**. | Proposed |
-| F-53 | Medium | **Every export embeds the operating-system account name** (`getpass.getuser()`): XLSX `creator`, PDF `author`, DOCX `author` and footer, scenario JSON, provenance CSV. The window has no control and always embeds it. No host name is read. `--user` and `BUDGET_USER` override it on the command line. | Brief question 5 premise differs (no host). Needs the owner's answer to **Q5**. Reports differ between users (affects claim C-04). | Proposed |
-| F-54 | Medium | There is no About dialog, no privacy statement of the program and no text in the window about what is stored (`layout.ini` in the Qt config folder or `$BUDGET_CONFIG_DIR`; geometry, column widths and theme, no project names or paths). `privacy.py` redirects QSettings so file dialogs remember nothing. | Phase 5: About dialog with disclaimer, licence, third-party licences, AI authorship, privacy. | Open |
-| F-55 | Medium | The offline evidence is much stronger since #129 (`strace` of the workflow and window start on Linux, firewall block on Windows, a canary test), see C-03, C-31. Not covered: GUI actions after start, the IDM and SpaceMissionStudio imports, the installers. `reportlab` imports `urllib`, `http` and `ssl`; the code blocks remote images and sets `trustedHosts` to an invalid name. | Map every import and GUI action to a check; add the missing ones (Phase 5). | Open |
-| F-56 | Low | No support and maintenance statement in README. | Phase 5. | Open |
-| F-57 | Low | Promise words: accurate 1, correct 3, verified 1, safe 6, trust 1 in the documents counted (claims register). | Table of replacements for the owner's OK. | Open |
-| F-58 | Low | No non-commercial statement in README or CONTRIBUTING. | Phase 5. | Open |
-| F-59 | Medium | AI authorship is not stated anywhere in README, docs or the window; the commit trailers do state it. 312 commits have Claude as author. Whether AI-written code is protected by copyright is not for the record to state (**LQ-02**). | Phase 5 wording; owner approves before commit. | Open |
-| F-60 | Low | Trademarks: third-party names appear as plain text only (Windows, Linux, Ubuntu, Debian, RHEL, Rocky, Excel, Word, GitHub, Qt, PySide6, CNES, IDM-CIC, Inter, JetBrains, IBM Plex, Lucide, ReportLab, Astro UXDS). No third-party logo. The register search for "System Budget Studio" is not done yet. | Phase 5: search EUIPO, WIPO, USPTO classes 9 and 42; record; LQ-08. | Open |
+| F-50 | High | **The repository description says "Every equation sourced, every value with units, byte-identical reports"** (claims C-01, C-02, C-04). The README says 53 of 57 equations have no citation. | Change the description now; owner action (checklist). Do not copy these words anywhere. | Partly done: the README and guide wording is corrected; the repository description is the owner's setting (Q19: text in the owner checklist; still open) |
+| F-51 | High | There is no single disclaimer. The README lists known limits but says nothing about warranty, certification, flight or safety use, independent verification or user responsibility, except through the licence. | Phase 5: one text in code, generated copies, a test. | Done: one source, six copies, a test (D-262) |
+| F-52 | Medium | Exported reports carry no disclaimer line. | Needs the owner's answer to **Q4**. | Done (Q4, recommended answer): disclaimer row in every report and export, a paragraph on page 1 of PDF and DOCX; reference files regenerated; docs/changes.md |
+| F-53 | Medium | **Every export embeds the operating-system account name** (`getpass.getuser()`): XLSX `creator`, PDF `author`, DOCX `author` and footer, scenario JSON, provenance CSV. The window has no control and always embeds it. No host name is read. `--user` and `BUDGET_USER` override it on the command line. | Brief question 5 premise differs (no host). Needs the owner's answer to **Q5**. Reports differ between users (affects claim C-04). | Done (Q5, recommended answer): `unknown` by default, never the account; a setting in the window; documented (D-262, security-and-privacy.md). The brief assumed a host name: there is none |
+| F-54 | Medium | There is no About dialog, no privacy statement of the program and no text in the window about what is stored (`layout.ini` in the Qt config folder or `$BUDGET_CONFIG_DIR`; geometry, column widths and theme, no project names or paths). `privacy.py` redirects QSettings so file dialogs remember nothing. | Phase 5: About dialog with disclaimer, licence, third-party licences, AI authorship, privacy. | Done: Help > About (Phase 3) now holds the disclaimer, AI authorship, support, non-commercial rule and privacy statement; the first screen shows the disclaimer; `security-and-privacy.md` says what is stored and what an export holds |
+| F-55 | Medium | The offline evidence is much stronger since #129 (`strace` of the workflow and window start on Linux, firewall block on Windows, a canary test), see C-03, C-31. Not covered: GUI actions after start, the IDM and SpaceMissionStudio imports, the installers. `reportlab` imports `urllib`, `http` and `ssl`; the code blocks remote images and sets `trustedHosts` to an invalid name. | Map every import and GUI action to a check; add the missing ones (Phase 5). | Done for the code paths named (D-262): every resolver and packet call blocked; unit-table import, IDM import, guide, window actions covered; not covered: the packaged installers beyond the strace job and the smoke test |
+| F-56 | Low | No support and maintenance statement in README. | Phase 5. | Done: README section "Support, maintenance and scope" |
+| F-57 | Low | Promise words: accurate 1, correct 3, verified 1, safe 6, trust 1 in the documents counted (claims register). | Table of replacements for the owner's OK. | Done: the words found were reworded (table in legal/promise-wording.md); a test keeps new ones out of the public pages and the window |
+| F-58 | Low | No non-commercial statement in README or CONTRIBUTING. | Phase 5. | Done: README and CONTRIBUTING; any change needs legal advice first (risk R-20) |
+| F-59 | Medium | AI authorship is not stated anywhere in README, docs or the window; the commit trailers do state it. 312 commits have Claude as author. Whether AI-written code is protected by copyright is not for the record to state (**LQ-02**). | Phase 5 wording; owner approves before commit. | Done: README, Help > About (wording shown to the owner before commit; no statement about copyright). Website text in Phase 8. Question LQ-02 stays |
+| F-60 | Low | Trademarks: third-party names appear as plain text only (Windows, Linux, Ubuntu, Debian, RHEL, Rocky, Excel, Word, GitHub, Qt, PySide6, CNES, IDM-CIC, Inter, JetBrains, IBM Plex, Lucide, ReportLab, Astro UXDS). No third-party logo. The register search for "System Budget Studio" is not done yet. | Phase 5: search EUIPO, WIPO, USPTO classes 9 and 42; record; LQ-08. | Partly done: plain-text use confirmed; first web search recorded in [trademark-search.md](trademark-search.md); the official registers must still be searched (owner checklist, LQ-08) |
 
 ## F. Phase 6: software, supply chain, release
 
@@ -146,6 +146,20 @@ Phase 1 changed nothing except adding `docs/legal/` and `docs/site/plan.md`.
 | Documentation content | No copied standards text found (Phase 1); image origins recorded. |
 | Copied code | Standard library scan: none found; ScanCode not run (F-48). |
 | Past releases | Gap list: F-43; options: [past-releases.md](past-releases.md). |
+
+## Phase 5 results (2026-11-10)
+
+| Step | Result |
+|---|---|
+| 1. One disclaimer | `budget_core/disclaimer.py`; copies in README, guide, first screen, About, every provenance; `scripts/sync_disclaimer.py`; `tests/unit/test_disclaimer.py`. |
+| 2. Reports | Disclaimer in every export (Q4); no number changed; reference files read. |
+| 3. Support | README. |
+| 4. Promise wording | [promise-wording.md](promise-wording.md): table of replacements, applied; a test for new ones. |
+| 5. Claims | [claims-register.md](claims-register.md) updated: every claim has evidence or was reworded; the repository description (C-01) is the open one. |
+| 6. Non-commercial rule | README and CONTRIBUTING. |
+| 7. AI authorship | README and About; owner's wording shown before commit. |
+| 8. Privacy of the program | Offline test extended; stored data and export contents documented (README, guide, security page, About); setting for the report name; privacy statement. |
+| 9. Trademarks | [trademark-search.md](trademark-search.md): no record of the exact name in a web search; official registers still to search. |
 
 ## Questions for the owner
 

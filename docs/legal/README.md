@@ -12,6 +12,8 @@ Never put secrets or personal data in this folder.
 | [risk-register.md](risk-register.md) | One row per risk | 2026-11-09 |
 | [owner-checklist.md](owner-checklist.md) | Steps only the owner can do | 2026-11-09 |
 | [past-releases.md](past-releases.md) | What the published releases lack (notices, sources, SBOM) and the options | 2026-11-09 |
+| [promise-wording.md](promise-wording.md) | Words that read as a promise and what replaced them | 2026-11-10 |
+| [trademark-search.md](trademark-search.md) | First search for the name (not a clearance) | 2026-11-10 |
 | [lawyer-questions.md](lawyer-questions.md) | Questions for a lawyer | 2026-11-09 |
 | `evidence/YYYY-MM-DD/` | Raw output of scans and checks | 2026-11-09 |
 | `residual-risk-report.md` | Final report of Phase 9 | not yet written |
@@ -30,3 +32,4 @@ Never put secrets or personal data in this folder.
 | 2026-11-09 | 1 | Pull request #129 (D-258) merged into `main` during the work; the record was merged with it and updated (F-03, F-33, F-55, F-75, F-77, new F-78 Pillow advisories, claims C-31 to C-38, risk R-26). |
 | 2026-11-09 | 2 | Ownership statement in the README; EXIF removed from `tree-before.jpg`; Phase 2 scans ([phase2-scan.txt](evidence/2026-11-09/phase2-scan.txt)); owner's defaults recorded as D-259; commit-identity steps in the owner checklist. |
 | 2026-11-09 | 3 | Apache-2.0 (`LICENSE`, `NOTICE`, `LICENSES/`, `REUSE.toml`, SPDX headers), `reuse lint` evidence, DCO check, contribution rules, About dialog; owner's answers on Q2 (Germany), Q13 (login-gated sample model), Q15 (no list); D-260. |
+| 2026-11-10 | 5 | One disclaimer in code, README, guide, first screen, About and every report; no login name in reports; wording table; AI-authorship, support, non-commercial and privacy statements; offline test extended; first trademark search; D-262. |

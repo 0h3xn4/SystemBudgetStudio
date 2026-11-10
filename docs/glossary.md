@@ -261,7 +261,7 @@ Every domain term, abbreviation and tool-specific word used in this repository's
 **Static budget**: a budget per mode without an orbit: the classic table for early design. Compare **time-domain budget**: over a scenario.
 
 <a id="status"></a>
-**Status (of an input)**: how far to trust a number: `sourced`, `estimate`, `illustrative` (invented, as in the examples) or `tbd` (not known yet). Recorded in the `provenance:` of a file or in the Inspector, and shown in Explain and the reports.
+**Status (of an input)**: how well a number is backed: `sourced`, `estimate`, `illustrative` (invented, as in the examples) or `tbd` (not known yet). Recorded in the `provenance:` of a file or in the Inspector, and shown in Explain and the reports.
 
 <a id="steady-state"></a>
 **Steady state**: temperatures after everything has settled, with constant heat loads. The thermal model computes only this.

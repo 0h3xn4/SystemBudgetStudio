@@ -6,6 +6,18 @@ The rule for the transparency work ([plan](transparency_audit.md)): no existing 
 
 Newest first.
 
+## 2026-11-10: the disclaimer in every report, and no login name in reports (after 2.11.2)
+
+**What changed.** No budget number changes. Two things in the files do ([D-262](DECISIONS.md)): (1) every report and export now carries the one **disclaimer** of the tool: a *Disclaimer* row in the provenance block (XLSX sheet, PDF and DOCX table, provenance CSV), a `disclaimer` key in `provenance` of every JSON file (a new key: the result format stays at version 1), and a paragraph on the first page of the PDF and the DOCX; (2) the **user** in the provenance block is no longer the login name of the operating system. It is `--user`, else `BUDGET_USER`, else the name typed under *Settings → Name in report files*, else `unknown`.
+
+| Case | Before | After |
+|---|---|---|
+| Report or export made without `--user` and without `BUDGET_USER` | the login name, for example `alice`, in the provenance block, the footer, the XLSX creator, the PDF author, the DOCX author and the JSON `user` | `unknown` (or the name of the window's setting) |
+| Any report or export | no disclaimer | the disclaimer row; the PDF and DOCX also show it on the first page (page breaks of the PDF can move) |
+| Any number of any budget, plot or table | as in 2.11.2 | the same |
+
+The reference files of `tests/golden` were regenerated and read: only the added disclaimer, and the lines that moved with it, differ.
+
 ## 2026-11-05: the IDM-CIC import writes component skeletons (2.10.0)
 
 **What changed.** An import now also writes `config/pointing.yaml`, `config/propulsion.yaml` and `config/power_system.yaml` when the model has wheels, thrusters, a battery or a solar array, with placeholders for every number the model does not give, and `idm/components.yaml` (your library, written once) ([D-254](DECISIONS.md), [DV-IDM7](DEVIATIONS.md)). A project imported before gets them on the next import only if it has no such file of its own; a file that exists is never changed, except an entry the import wrote earlier where you did not change it.

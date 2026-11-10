@@ -2,13 +2,13 @@
 
 This page says what System Budget Studio does with your data, what it does not do, and how you can check each statement yourself, on your own computer, without trusting this page. It is written for the engineer who has to answer *"does this tool send anything out?"* before it is allowed on a work machine.
 
-**Contents:** [What the tool promises](#what-the-tool-promises) · [What it writes and where](#what-it-writes-and-where) · [Check it yourself](#check-it-yourself) · [What the project checks on every change](#what-the-project-checks-on-every-change) · [Check a download](#check-a-download) · [What is not covered](#what-is-not-covered) · [Report a problem](#report-a-problem)
+**Contents:** [What the program is built to do](#what-the-program-is-built-to-do) · [What it writes and where](#what-it-writes-and-where) · [Check it yourself](#check-it-yourself) · [What the project checks on every change](#what-the-project-checks-on-every-change) · [Check a download](#check-a-download) · [What is not covered](#what-is-not-covered) · [Report a problem](#report-a-problem)
 
-## What the tool promises
+## What the program is built to do
 
 1. **No network use while running.** The program never opens a connection to any address, local or remote. It has no account, no licence check, no update check, no online help, no crash upload and no usage statistics.
 2. **No project content outside your folders.** Names, values, paths and results of a project are written only to the project folder and to the output folder you choose. They are not in logs, in temporary files, in crash files or in the program's own settings.
-3. **The only file the window keeps for itself is a layout file** (`layout.ini`): window size and position, the theme, which panels are open. It holds no project name and no path. `BUDGET_NO_LAYOUT=1` makes the window keep nothing; `BUDGET_CONFIG_DIR=<folder>` puts that file in a folder you choose.
+3. **The only file the window keeps for itself is a layout file** (`layout.ini`): window size and position, the theme, which panels are open, and the name you may type under **Settings → Name in report files** (empty by default). It holds no project name and no path. `BUDGET_NO_LAYOUT=1` makes the window keep nothing; `BUDGET_CONFIG_DIR=<folder>` puts that file in a folder you choose.
 4. **The two support aids are off unless you use them and contain no project.** `--diagnose` reports versions, screens and whether fonts and icons were found. `--fault-log` writes the Python stack of each thread if the process dies of a native fault. Both write to a file you name; neither sends anything.
 5. **The installers and the program are built from the source in this repository**, by a workflow that anyone can read (`.github/workflows/`), from locked and hashed dependencies.
 
@@ -20,9 +20,24 @@ These are statements that a test or a command below can show to be false. If you
 |---|---|---|
 | Your project | the project folder you create or open | yes, it is the project |
 | Results, reports, exports, the user guide | the output folder you give (`--out`) or choose in the window | yes, they describe the project |
-| Window layout | `layout.ini` in the program's settings folder under your user profile (`system-budget-studio --diagnose` prints the exact path; on Linux it is under `~/.config`), or `BUDGET_CONFIG_DIR`, or nowhere with `BUDGET_NO_LAYOUT=1` | no |
+| Window layout (and the name for report files, if you typed one) | `layout.ini` in the program's settings folder under your user profile (`system-budget-studio --diagnose` prints the exact path; on Linux it is under `~/.config`), or `BUDGET_CONFIG_DIR`, or nowhere with `BUDGET_NO_LAYOUT=1` | no |
 | Fault log, diagnose report | the file you name, only when you ask for it | no |
 | Installation | the install folder, a Start-menu shortcut and, on Windows, the uninstall entry and one per-user `PATH` entry so that `budget` works in a terminal (all removed on uninstall) | no |
+
+### What an exported file says about you
+
+Every report and export carries a provenance block (a sheet, a table or a JSON object, and the properties of the XLSX, PDF and DOCX file):
+
+| Item | Value |
+|---|---|
+| User | `--user`, else `BUDGET_USER`, else the name you typed under **Settings → Name in report files**, else `unknown`. **The program never reads your login name**, and it reads no host name. |
+| Tool, Python and library versions | those of the program that wrote the file |
+| Project name, revision, scenario | from the project |
+| Input files | the **relative** paths, sizes and SHA-256 hashes of the project files it read (never absolute paths, never their content) |
+| Generated (UTC) | the clock, `--date` or `SOURCE_DATE_EPOCH` |
+| Disclaimer | the one disclaimer text of the program |
+
+A file that you share therefore does not name you unless you chose to. The project name and the numbers in it are yours: check them before you send a file (see [what is not covered](#what-is-not-covered)).
 
 The installer writes to the registry only the uninstall entry and the per-user `PATH` entry (`HKCU\Environment`); it needs no administrator rights. The portable zip writes no registry entry.
 

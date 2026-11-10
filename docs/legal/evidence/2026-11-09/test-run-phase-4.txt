@@ -1,0 +1,10 @@
+# Test run for Checkpoint 4, 2026-11-09
+# branch protect/phase-4-third-party at 0665396 (merged with main e911213), Python 3.14.6, requirements-dev.lock, QT_QPA_PLATFORM=offscreen, Linux (Ubuntu 24.04 container)
+SKIPPED [1] tests/unit/test_packages.py:223: rpmbuild not installed
+3895 passed, 2 skipped in 953.53s (0:15:53)
+exit 0
+ruff check: All checks passed!
+ruff format --check: 653 files already formatted
+mypy: Success: no issues found in 256 source files
+reuse lint: Congratulations! Your project is compliant with version 3.3 of the REUSE Specification :-)
+CI on the pull request (installers workflow, head 0665396): Linux (Rocky 9 build, licence gate, .deb/.rpm on Rocky, Ubuntu, Debian): success; Windows (per-user installer, licence gate): success. The Linux and Windows test jobs: see the pull request.

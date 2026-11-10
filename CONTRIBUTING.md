@@ -52,6 +52,6 @@ System Budget Studio is a personal project of its owner. It is not affiliated wi
 
 ## Reporting a problem
 
-Say what you ran (`budget --version`, the command), what you expected and the message you got. Messages never contain project values, so they are safe to paste; do not attach project files that may be sensitive.
+Say what you ran (`budget --version`, the command), what you expected and the message you got. Messages never contain project values, so you can paste them; do not attach project files that may be sensitive.
 
 Next: [Developer docs](docs/developer/README.md) · [Architecture](docs/ARCHITECTURE.md).

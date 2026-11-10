@@ -12,7 +12,7 @@ It computes power, mass, thermal and link budgets for a satellite from a model k
 
 ### Does it need the internet?
 
-No, never while running. There is no telemetry, no update check and no online help; an automated test fails if the tool imports a networking module or opens a socket, and the continuous integration traces the whole workflow for connections. [Security and privacy](security-and-privacy.md) lists the guarantees and how to check each one on your own machine. You need the internet only once, to install the libraries (or never, with a [wheelhouse](getting-started.md#offline-install)).
+No, never while running. There is no telemetry, no update check and no online help; an automated test fails if the tool imports a networking module or opens a socket, and the continuous integration traces the whole workflow for connections. [Security and privacy](security-and-privacy.md) lists what the program is built to do and not to do, and how to check each statement on your own machine. You need the internet only once, to install the libraries (or never, with a [wheelhouse](getting-started.md#offline-install)).
 
 ### Which systems does it run on?
 
@@ -36,7 +36,7 @@ Because a plausible-looking default would end up in a review as if it were a dec
 
 A warning is something open (a placeholder, an empty table). An error is an invalid input or a violated limit. Errors give exit code 1; add `--strict` to make warnings do so too ([problems](user-manual/read-and-fix-problems.md#what-do-error-warning-and-info-mean)).
 
-### Can I trust the equations?
+### How well are the equations backed?
 
 They are textbook relations, each named in the *Equations and sources* chapter of the user guide. Where the reference text has not been attached the equation is flagged `SOURCE_MISSING` (53 of the 57 at the moment); treat such results as engineering estimates until your team has confirmed them. The simplifications of the physics are listed in [DEVIATIONS.md](DEVIATIONS.md) (perfect pointing, no albedo for the array, one array temperature, steady-state thermal only, and so on).
 
@@ -144,7 +144,7 @@ Your projects and reports are in folders you choose. The only file the tool keep
 
 Yes: put the folder in git. Units, modes, links and scenarios are separate files, and files are plain text with stable formatting, so they diff and merge cleanly.
 
-### Is project data safe to share?
+### Who can see my project data?
 
 The tool itself never sends data anywhere, and its messages never repeat values from your files. The *files* may still contain export-controlled information: handle them as your organisation requires, and check who can see the repository you keep them in.
 
