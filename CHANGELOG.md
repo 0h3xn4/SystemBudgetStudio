@@ -4,6 +4,10 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.12.1] - 2026-11-10
+
+A documentation release with one small fix to the window. No result of any budget changed, and no file format changed; the reports differ from 2.12.0 only in the version line.
+
 - **Documentation brought up to date after 2.12.0.** The architecture page lists the modules and release controls of 2.11.1 to 2.12.0 (support aids, offline evidence, disclaimer, landing page, recent projects, the `release` environment); the README, the FAQ, the glossary (*Landing page*, *Recent projects*), troubleshooting and the guide chapters describe the landing page and how to get the last projects back; the guide no longer says that reports name the login name; the layout file on Windows is in `%LOCALAPPDATA%\System Budget Studio\` (the pages said `%APPDATA%`); the release recipe and the branch-protection page say to create the `release` environment by hand before the first tag and how to tag when `main` has moved on; the shortcut tables list Ctrl+W; the eleven screenshots are taken again from 2.12.0, with a new one of the landing page. **File → Close project** now shows and takes Ctrl+W on every system (it took the system's close key, Ctrl+F4 on some).
 
 ## [2.12.0] - 2026-11-10
