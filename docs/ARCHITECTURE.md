@@ -17,7 +17,7 @@ Status: built (milestones M0 to M6, the window redesign of 1.1.0, the UI overhau
 | Data | **ruamel.yaml**, **jsonschema**, **pydantic v2** | PyYAML + dataclasses | | ruamel preserves order/comments for clean diffs; pydantic gives typed model plus migration hooks. (pydantic-core is a Rust wheel; acceptable, reliable wheels.) |
 | Reports | python-docx, openpyxl | | | As specified. |
 
-Runtime deps (`[project.dependencies]`): PySide6-Essentials, pydantic, ruamel.yaml, pint, openpyxl, reportlab, python-docx, pillow, numpy, sgp4. Everything else (pytest, pytest-qt, hypothesis, pypdf, jsonschema, mypy, ruff, pyinstaller, cyclonedx-bom, pip-licenses, pip-audit, uv) is in the `dev` extra.
+Runtime deps (`[project.dependencies]`): PySide6-Essentials, pydantic, ruamel.yaml, pint, openpyxl, reportlab, python-docx, pillow, numpy, sgp4, defusedxml (safe reading of XML). Everything else (pytest, pytest-qt, hypothesis, pypdf, jsonschema, mypy, ruff, pyinstaller, cyclonedx-bom, pip-licenses, pip-audit, uv) is in the `dev` extra.
 
 ## 2. Package structure
 

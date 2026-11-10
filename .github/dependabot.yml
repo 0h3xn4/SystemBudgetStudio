@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# Version updates (D-263). Dependabot opens a pull request; a person reads it, and merges it only
+# when the tests pass. Nothing is merged by itself.
+#
+# - github-actions: the actions in .github/workflows are pinned to a full commit id with the version
+#   in a comment; Dependabot moves both together.
+# - pip: reads pyproject.toml (the allowed ranges). The hashed lock files are made by
+#   packaging/lock.sh with uv, which Dependabot does not run: after a pyproject.toml change, run
+#   packaging/lock.sh and commit the lock files. pip-audit checks the lock files every week
+#   (.github/workflows/audit.yml), which is the check for known vulnerabilities.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    groups:
+      github-actions:
+        patterns: ["*"]
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps"
+    groups:
+      python-dependencies:
+        patterns: ["*"]

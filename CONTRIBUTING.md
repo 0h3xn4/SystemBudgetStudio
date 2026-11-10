@@ -34,7 +34,7 @@ These are enforced by tests and review (the full list is in [CLAUDE.md](CLAUDE.m
 
 System Budget Studio is a personal project of its owner. It is not affiliated with, sponsored by or endorsed by any employer or organisation. The source code is licensed under the [Apache License 2.0](LICENSE) (see [NOTICE](NOTICE)); a contribution is accepted under the same licence, as section 5 of that licence says.
 
-- **Developer Certificate of Origin.** Every commit of a pull request must carry a `Signed-off-by: Your Name <you@example.org>` line (`git commit -s` adds it). By signing off you confirm the [Developer Certificate of Origin 1.1](https://developercertificate.org/): you wrote the change or have the right to submit it under this licence, and you know it is public and kept for good. A CI check (`DCO`, `packaging/dco_check.py`) fails a pull request with an unsigned commit.
+- **Developer Certificate of Origin.** Every commit of a pull request must carry a `Signed-off-by: Your Name <you@example.org>` line (`git commit -s` adds it). By signing off you confirm the [Developer Certificate of Origin 1.1](https://developercertificate.org/): you wrote the change or have the right to submit it under this licence, and you know it is public and kept for good. A CI check (`DCO`, `packaging/dco_check.py`) fails a pull request with an unsigned commit. The one exception is a commit that the Dependabot service makes itself (a version bump); the maintainer who merges it takes it over.
 - **You must have the right to submit what you submit.** Do not submit work that belongs to your employer, a customer or anyone else unless they allowed it in writing.
 - **No copied code or text.** Do not paste code, text, tables or images from elsewhere unless its licence is compatible with the Apache License 2.0 and you keep its copyright and licence notice and add it to [docs/LICENCES.md](docs/LICENCES.md) or the file's header. Quotes from standards and papers stay short and carry their source.
 - **Say it when an AI tool wrote it.** If an AI tool wrote part of your change, say so in the pull request. You are responsible for the change: read it, run the tests and sign it off yourself.
@@ -55,3 +55,7 @@ System Budget Studio is a personal project of its owner. It is not affiliated wi
 Say what you ran (`budget --version`, the command), what you expected and the message you got. Messages never contain project values, so you can paste them; do not attach project files that may be sensitive.
 
 Next: [Developer docs](docs/developer/README.md) · [Architecture](docs/ARCHITECTURE.md).
+
+## Security
+
+Report a vulnerability in private, as [SECURITY.md](SECURITY.md) describes; do not open a public issue with details. Code that reads files from strangers follows the rules in [docs/developer/security.md](docs/developer/security.md) (bounded reads, no code from file content, `defusedxml`, `safe_name`, defused CSV); tests find the common mistakes.

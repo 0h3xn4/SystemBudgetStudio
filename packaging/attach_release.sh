@@ -8,7 +8,9 @@
 # checks every file against the checksum lists the run made, gives the two checksum lists distinct
 # names, and uploads the result to the release of the tag. A release that does not exist yet is
 # created as a DRAFT, so nothing becomes public by itself. Files already attached are replaced
-# (--clobber), so the script can be run again.
+# (--clobber), so the script can be run again. It also writes COMPLIANCE-RECORD.md
+# (packaging/compliance_record.py: every file with its SHA-256, and the result of the checks in
+# the folder SBS_CHECK_DIR, when that is set; a check that did not run is written as "not run").
 set -euo pipefail
 
 if [ $# -ne 2 ]; then
@@ -46,6 +48,11 @@ cp "$lin"/sources/* "$stage"/
 
 # Every file must match its checksum before it is published.
 (cd "$stage" && sha256sum -c SHA256SUMS-windows.txt && sha256sum -c SHA256SUMS-linux.txt)
+
+commit="$(gh api "repos/${GH_REPO:-OWNER/REPOSITORY}/commits/$tag" --jq .sha 2>/dev/null || echo unknown)"
+python3 "$(dirname "$0")/compliance_record.py" "$stage" --tag "$tag" --commit "$commit" \
+    --run-id "$run_id" --repo "${GH_REPO:-OWNER/REPOSITORY}" \
+    ${SBS_CHECK_DIR:+--checks "$SBS_CHECK_DIR"} --out "$stage/COMPLIANCE-RECORD.md"
 
 if ! gh release view "$tag" >/dev/null 2>&1; then
     gh release create "$tag" --draft --title "System Budget Studio ${tag#v}" \

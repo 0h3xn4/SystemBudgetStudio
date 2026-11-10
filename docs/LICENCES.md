@@ -8,6 +8,7 @@ The project itself is licensed under the Apache License 2.0 (`LICENSE`, `NOTICE`
 |---|---|---|
 | annotated-types | MIT | permissive |
 | charset-normalizer | MIT | permissive |
+| defusedxml | PSFL | permissive |
 | et-xmlfile | MIT | permissive |
 | flexcache | BSD | permissive |
 | flexparser | BSD-3-Clause | permissive |

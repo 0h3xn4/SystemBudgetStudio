@@ -66,6 +66,9 @@ This page is the map of everything written about System Budget Studio. If you ar
 |---|---|
 | [../CONTRIBUTING.md](../CONTRIBUTING.md) | Set up, rules, how to get a change merged |
 | [developer/README.md](developer/README.md) | Layout, tests, generated files, keeping docs true, releases |
+| [developer/security.md](developer/security.md) | Security of the code, the build and the release; settings only the owner can change; reproducible builds |
+| [developer/threat-model.md](developer/threat-model.md) | What is protected, from whom, where untrusted data comes in, what is not covered |
+| [../SECURITY.md](../SECURITY.md) | How to report a vulnerability in private; supported versions |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the tool is built |
 | [INSTALL_CHECKLIST.md](INSTALL_CHECKLIST.md) | Clean-machine install checklist for a release |
 | [BRANCH_PROTECTION.md](BRANCH_PROTECTION.md) | Repository settings for the owner to apply |

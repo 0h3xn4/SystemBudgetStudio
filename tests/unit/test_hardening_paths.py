@@ -118,3 +118,41 @@ def test_an_import_folder_outside_the_project_is_refused(tmp_path: Path) -> None
     problems = load_project(root).problems
     bad = next(p for p in problems if p.code == "IMPORT_DIR_MISSING")
     assert "inside the project folder" in bad.message
+
+
+def test_a_huge_pattern_file_is_refused_not_read(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from budget_core.link import evaluate
+
+    monkeypatch.setattr(evaluate, "MAX_PATTERN_BYTES", 100)
+    root = tmp_path / "project"
+    root.mkdir()
+    (root / "big.csv").write_text(
+        "angle_deg,gain_dbi\n" + "".join(f"{a},0\n" for a in range(0, 150)), encoding="utf-8"
+    )
+    project = link_project(
+        root=root, links={"dl": downlink(transmitter=tx_with_pattern("big.csv"))}
+    )
+    result = link_static_budget(project)
+    bad = [p for p in result.problems if p.code == "LINK_INPUT_INVALID"]
+    assert bad and "cannot be read" in bad[0].message
+    assert result.rows[0].cn0_dbhz is None
+
+
+def test_a_pattern_file_with_too_many_rows_is_refused(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from budget_core.link import evaluate
+
+    monkeypatch.setattr(evaluate, "MAX_PATTERN_ROWS", 5)
+    root = tmp_path / "project"
+    root.mkdir()
+    (root / "rows.csv").write_text(
+        "angle_deg,gain_dbi\n" + "".join(f"{a},0\n" for a in range(0, 20)), encoding="utf-8"
+    )
+    project = link_project(
+        root=root, links={"dl": downlink(transmitter=tx_with_pattern("rows.csv"))}
+    )
+    result = link_static_budget(project)
+    assert [p for p in result.problems if p.code == "LINK_INPUT_INVALID"]

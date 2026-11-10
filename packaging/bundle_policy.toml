@@ -58,6 +58,10 @@ deny_patterns = [
 "MPLv1.1" = "MPL-1.1"
 "Public Domain" = "LicenseRef-PublicDomain"
 "OFL" = "OFL-1.1"
+# defusedxml writes "PSFL" and the classifier "Python Software Foundation License"; its LICENSE file
+# is the Python Software Foundation License version 2
+"PSFL" = "PSF-2.0"
+"Python Software Foundation License" = "PSF-2.0"
 "UCD" = "Unicode-DFS-2016"
 "Unicode" = "Unicode-3.0"
 "FTL" = "FTL"

@@ -47,8 +47,12 @@ def dependency_names() -> set[str]:
 
 def test_libraries_list_every_runtime_dependency_that_shapes_output() -> None:
     listed = {n.lower().replace("_", "-") for n in LIBRARIES}
-    # the window toolkit draws the GUI only; every other runtime dependency shapes some output
-    assert listed == {n for n in dependency_names() if not n.startswith("pyside6")}
+    # the window toolkit draws the GUI only; defusedxml only makes the reading of untrusted XML
+    # safe (D-263) and writes nothing; every other runtime dependency shapes some output
+    reading_only = {"defusedxml"}
+    assert listed == {
+        n for n in dependency_names() if not n.startswith("pyside6") and n not in reading_only
+    }
 
 
 def test_packaged_build_ships_the_metadata_of_every_listed_library() -> None:

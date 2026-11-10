@@ -116,13 +116,15 @@ Each of these runs in the project's continuous integration; a change that fails 
 | A project whose name, unit name, source text and folder carry a unique marker is run through the command line and the window in an empty sandbox; no file outside the project and output folders may contain the marker (UTF-8 or UTF-16), and the only file kept is the layout file | No project content leaks into logs, temporary files, caches or settings | `tests/offline/test_privacy_canary.py` |
 | `pip-audit` checks the locked dependencies against the public vulnerability database every week and when a lock changes | The libraries in the program have no known vulnerability, or the failure is visible | `.github/workflows/audit.yml` |
 | Dependencies are installed from lock files with hashes (`--require-hashes`) | The libraries are the ones that were reviewed | `requirements.lock`, `requirements-dev.lock`, `packaging/lock.sh` |
+| Files from strangers are tested: bombs, external entities, path tricks, spreadsheet formulas; the source is scanned for code that could run file content, start a program or use the network; XML is read with `defusedxml` | A crafted file is refused and cannot run code, read other files or use the network | `tests/unit/test_hostile_inputs.py`, `test_formula_injection.py`, `test_code_safety.py` |
+| The workflows are checked: actions pinned to a commit, a read-only token, no `pull_request_target`, writes only in the `release` environment; CodeQL, a secret scan, a dependency review and the OpenSSF Scorecard run in CI | The build and the release cannot be changed by a stranger without a trace | `tests/unit/test_workflows.py`, `.github/workflows/` |
 | Licences are checked: permissive or LGPL only | No library with a licence that forbids the use | `docs/LICENCES.md` |
 
 The first three are statements about this tool, not about its libraries; the evidence for the libraries is the list of libraries (`sbom.cdx.json`) and the audit.
 
 ## Check a download
 
-Every file attached to a release has three independent checks:
+Every file attached to a release has three independent checks, and the release has a record of them:
 
 1. **Checksum.** `SHA256SUMS-windows.txt` and `SHA256SUMS-linux.txt` list the SHA-256 of each file. On Windows: `Get-FileHash <file> -Algorithm SHA256`; on Linux: `sha256sum -c SHA256SUMS-linux.txt`. This detects a damaged or replaced download, if the list itself came from the release page.
 2. **Build attestation (from 2.11.2 on).** The release workflow records, with a signature from GitHub (Sigstore, no key to manage), which workflow run, on which commit, built each file. With the GitHub CLI:
@@ -134,7 +136,9 @@ Every file attached to a release has three independent checks:
    A file that was not built by that repository's release workflow, or that was changed afterwards, fails. This is stronger than a checksum, because a checksum and a file can be replaced together.
 3. **The source.** The tag `v<version>` names the commit; the workflows that built the files are in `.github/workflows/` at that commit, and `packaging/` holds the build scripts.
 
-**The Windows installer is not code-signed.** Windows SmartScreen and some virus scanners therefore warn about it ("unknown publisher"). Signing needs a code-signing certificate from a certificate authority, and the project does not use one. Use the checksum and the attestation above instead, and let your security team scan the file. If your organisation requires a signed installer, it can sign the downloaded file with its own certificate, or build from source (`pyinstaller packaging/system_budget_studio.spec`).
+The release also carries `COMPLIANCE-RECORD.md`: every file with its size and SHA-256, the software bill of materials, the licence lists and notices, the source code of the LGPL parts, and the result of the REUSE and `pip-audit` checks that ran before the release (a check that did not run says *not run*). The builds are not reproducible bit for bit; the [developer guide](developer/security.md#reproducible-builds) says what is and what is not.
+
+**The Windows installer is not code-signed.** Windows SmartScreen and some virus scanners therefore warn about it ("unknown publisher"). Signing needs a code-signing certificate from a certificate authority, and the project does not use one. Use the checksum and the attestation above instead, and let your security team scan the file. The options for signing are in [docs/legal/signing-options.md](legal/signing-options.md). If your organisation requires a signed installer, it can sign the downloaded file with its own certificate, or build from source (`pyinstaller packaging/system_budget_studio.spec`).
 
 ## What is not covered
 
@@ -148,6 +152,6 @@ Be clear about the limits when you answer the question.
 
 ## Report a problem
 
-If you find a connection, a file with project content outside the folders above, or a vulnerable library, open an issue in the repository. The project has no private reporting channel, so the issue is public: describe what you ran and on which version (`budget --version`), and quote only the lines of the trace or the file names that show the problem, after checking that they contain no project name, path or value. Never attach a project, a report or a whole log.
+For a security problem (a file that makes the program do harm, a vulnerable library, a release file that does not verify) use the private report described in [SECURITY.md](../SECURITY.md): the **Security** tab of the repository, then **Report a vulnerability**. For anything else, for example a connection you did not expect or a file with project content outside the folders above, open an issue. A public issue is visible to everyone: describe what you ran and on which version (`budget --version`), and quote only the lines of the trace or the file names that show the problem, after checking that they contain no project name, path or value. Never attach a project, a report or a whole log.
 
 Next: [FAQ](faq.md) · [Troubleshooting](troubleshooting.md) · [Docs index](README.md).

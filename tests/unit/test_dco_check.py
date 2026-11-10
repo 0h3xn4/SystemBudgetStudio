@@ -68,3 +68,33 @@ def test_merge_commits_are_not_asked(tmp_path: Path, monkeypatch) -> None:  # ty
     run(tmp_path, "merge", "-q", "--no-ff", "side", "-m", "Merge side")
     monkeypatch.chdir(tmp_path)
     assert dco.unsigned_commits(base, "HEAD") == []
+
+
+def test_only_the_dependabot_address_is_exempt(tmp_path: Path, monkeypatch) -> None:  # type: ignore[no-untyped-def]
+    run(tmp_path, "init", "-q")
+    base = commit(tmp_path, "a", "base")
+    (tmp_path / "b").write_text("b")
+    run(tmp_path, "add", "b")
+    run(
+        tmp_path,
+        "commit",
+        "-q",
+        "-m",
+        "Bump a from 1 to 2",
+        "--author",
+        "dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+    )
+    monkeypatch.chdir(tmp_path)
+    assert dco.unsigned_commits(base, "HEAD") == []
+    (tmp_path / "c").write_text("c")
+    run(tmp_path, "add", "c")
+    run(
+        tmp_path,
+        "commit",
+        "-q",
+        "-m",
+        "Pretends to be a bot",
+        "--author",
+        "dependabot[bot] <someone@example.org>",
+    )
+    assert len(dco.unsigned_commits(base, "HEAD")) == 1

@@ -109,6 +109,7 @@ def test_files_are_checked_renamed_and_uploaded_to_a_new_draft_release(
     assert "--clobber" in upload
     names = sorted(Path(p).name for p in upload.split() if "/upload/" in p)
     assert names == [
+        "COMPLIANCE-RECORD.md",
         "SHA256SUMS-linux.txt",
         "SHA256SUMS-windows.txt",
         "SOURCES.txt",
