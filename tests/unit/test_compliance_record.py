@@ -40,7 +40,7 @@ def test_every_file_is_listed_with_its_hash(tmp_path: Path) -> None:
     assert hashlib.sha256(b"exe").hexdigest() in text
     for name in tmp_path.iterdir():
         assert f"`{name.name}`" in text
-    assert "gh attestation verify <file> --repo o/r" in text
+    assert "gh attestation verify <file> --owner o" in text
     assert "### Source code of the LGPL parts" in text
 
 

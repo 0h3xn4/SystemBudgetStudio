@@ -134,7 +134,7 @@ def system_entries(bundle: Path) -> list[Entry]:
         f"System Budget Studio\n{HOMEPAGE}\n\n"
         "Copyright 2026 0h3xn4\n"
         "Released under the Apache License, Version 2.0 (below). Releases up to and including\n"
-        "2.11.1 were released under the MIT licence. The package also carries third-party\n"
+        "2.11.2 were released under the MIT licence. The package also carries third-party\n"
         "libraries,\n"
         f"whose licences are in /{PREFIX}/licences/ and listed in /{PREFIX}/licences.md.\n\n"
         f"{licence}"

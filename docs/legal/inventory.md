@@ -6,7 +6,7 @@ Date: 2026-11-09. Repository state: branch `main` at `49417f6` (release 2.11.1).
 
 | Brief says | Repository says |
 |---|---|
-| Version 1.3.0 | **2.11.1** (published; `main` is prepared as **2.11.2** by #131, not tagged: legal-audit F-27) (`pyproject.toml`, `src/budget_core/__init__.py`). 24 releases are published, `v1.0.0` (2026-10-12) to `v2.11.1` (2026-11-09), all under MIT. |
+| Version 1.3.0 | **2.11.2** (published 2026-11-10 from the MIT commit `41a330a`, the last MIT release; `main` is Apache-2.0 and needs a new version number: legal-audit F-27, D-267) (`pyproject.toml`, `src/budget_core/__init__.py`). 24 releases are published, `v1.0.0` (2026-10-12) to `v2.11.1` (2026-11-09), all under MIT. |
 | `site/reference.html` exists | There is no `site/` directory on `main` or on any local or remote branch. |
 | An About dialog exists | There is none. The Help menu has two entries, "Start here" and "User guide" (`src/budget_gui/main_window.py:426-436`). |
 | Provenance holds user name and host name | It holds the user name only (`src/budget_core/provenance.py`). No host name is read. |

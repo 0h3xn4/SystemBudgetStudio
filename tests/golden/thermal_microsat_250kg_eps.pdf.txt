@@ -1,6 +1,6 @@
 pages=12
 ## page 1
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Thermal budget (static): Example 250 kg minisatellite, complete power and thermal inputs
 The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or
@@ -152,7 +152,7 @@ STRUCT
  100.92
 ok
 ## page 2
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Unit
 Node
@@ -377,7 +377,7 @@ STRUCT
  14.28
 ok
 ## page 3
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Unit
 Node
@@ -645,7 +645,7 @@ charging
  0.400
  0.500
 ## page 4
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Unit
 Name
@@ -798,7 +798,7 @@ off
  0.000
  0.000
 ## page 5
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Unit
 Name
@@ -964,7 +964,7 @@ TTC
  28.000
 Mode: Imaging
 ## page 6
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 6
 Units in mode Imaging
 Unit
@@ -1179,7 +1179,7 @@ DH
  21.000
  30.000
 ## page 7
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 7
 Node
 Dissipation (W)
@@ -1391,7 +1391,7 @@ EPS
  12.000
  16.000
 ## page 8
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 8
 Subsystem
 Dissipation (W)
@@ -1585,7 +1585,7 @@ off
  0.000
  0.000
 ## page 9
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 9
 Unit
 Name
@@ -1716,7 +1716,7 @@ W/K
 Synthetic example value; not from a data sheet or a standard.
 illustrative
 ## page 10
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 10
 Name
 Value
@@ -1894,7 +1894,7 @@ W/m2
 Synthetic example value; not from a data sheet or a standard.
 illustrative
 ## page 11
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 11
 Name
 Value
@@ -2027,7 +2027,7 @@ SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems
 ## page 12
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 12
 Problems and open items
 Severity
@@ -2098,7 +2098,7 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 2.11.2
+System Budget Studio 2.12.0
 Python
 3.x
 Libraries
