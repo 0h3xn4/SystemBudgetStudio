@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Feature request
+description: An idea for the tool (the tool is non-commercial; proposals for sales, ads or sponsorship are out of scope)
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a one-person project in someone's free time. A request is not a promise.
+        **Everything you post here is public and stays public.** Use invented data only.
+  - type: checkboxes
+    id: no-confidential-data
+    attributes:
+      label: Data check
+      options:
+        - label: I have not included confidential, proprietary, export-controlled, personal or customer data.
+          required: true
+  - type: textarea
+    id: need
+    attributes:
+      label: What do you need to do that you cannot do now?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What could the tool do about it?
+      description: If a number or an equation is involved, name its source. The tool does not use a value without a source.

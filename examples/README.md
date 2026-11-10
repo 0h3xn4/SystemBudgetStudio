@@ -2,7 +2,17 @@
 
 This folder holds five complete example projects with **invented data**: none of the numbers describes a real spacecraft, and none comes from a standard or a data sheet. Every number in them is marked `illustrative` (a `provenance:` entry `*` in each file, `status: illustrative` on the sourced numbers), so a report made from an example says in its provenance table how many invented inputs it used; placeholders (`source: TBD`) stay placeholders. Use them to learn the tool and as templates for your own project: when you replace a number with a real one, record its source ([how](../docs/user-manual/placeholders-and-sources.md#how-do-i-record-where-a-plain-input-came-from)).
 
-**Contents:** [Getting a copy](#getting-a-copy) · [Which example for what](#which-example-for-what) · [microsat_250kg](#microsat_250kg-placeholders-everywhere) · [microsat_250kg_eps](#microsat_250kg_eps-complete-power-and-thermal-inputs) · [microsat_250kg_clean](#microsat_250kg_clean-no-warnings-and-no-errors) · [microsat_150kg](#microsat_150kg-two-links-and-phases) · [stress_200_units](#stress_200_units-a-week-at-one-second) · [Exit codes](#exit-codes-in-the-examples)
+**Contents:** [Invented data and export control](#invented-data-and-export-control) · [Getting a copy](#getting-a-copy) · [Which example for what](#which-example-for-what) · [microsat_250kg](#microsat_250kg-placeholders-everywhere) · [microsat_250kg_eps](#microsat_250kg_eps-complete-power-and-thermal-inputs) · [microsat_250kg_clean](#microsat_250kg_clean-no-warnings-and-no-errors) · [microsat_150kg](#microsat_150kg-two-links-and-phases) · [stress_200_units](#stress_200_units-a-week-at-one-second) · [Exit codes](#exit-codes-in-the-examples)
+
+## Invented data and export control
+
+Everything in these examples is invented, on purpose: the orbits are generic elements, the ground stations are at round-number coordinates, the unit names and masses describe no real spacecraft, and no value comes from a customer, a mission or a controlled document. A test checks that every orbit, station and target file says so (`status: illustrative`) and that no example holds a TLE. Keep it so:
+
+- **Add only invented data** to an example. Do not copy a number from a real project, a data sheet under a non-disclosure agreement, or an export-controlled document, even rounded.
+- **Say so in the file**: the `provenance:` entry reads `Invented example value`, status `illustrative`.
+- If you find anything here that looks like real mission, spacecraft or customer data, do not open a public issue with it: report it in private as [SECURITY.md](../SECURITY.md) describes.
+
+The tool does engineering estimates; it holds no export-controlled data. Whether publishing it as open source needs an export licence or a notice is a question for a lawyer and is on the list in [docs/legal/lawyer-questions.md](../docs/legal/lawyer-questions.md) (LQ-09). This is not legal advice.
 
 ## Getting a copy
 

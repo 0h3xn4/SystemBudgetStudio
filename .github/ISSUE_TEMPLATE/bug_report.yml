@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Bug report
+description: Something does not work as the documentation says (not a security problem; see SECURITY.md for that)
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a one-person project in someone's free time ([support statement](https://github.com/0h3xn4/SystemBudgetStudio#support-maintenance-and-scope)). Replies can take days.
+        **Everything you post here is public and stays public.** Use invented data only. To reproduce a problem, make a small project with made-up values. Never attach a real project, report, log or screenshot from your work.
+        For a security problem use the private form from SECURITY.md, not this page.
+  - type: checkboxes
+    id: no-confidential-data
+    attributes:
+      label: Data check
+      options:
+        - label: I have not included confidential, proprietary, export-controlled, personal or customer data.
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The output of `budget --version`.
+      placeholder: System Budget Studio 2.11.2
+    validations:
+      required: true
+  - type: dropdown
+    id: system
+    attributes:
+      label: System
+      options:
+        - Windows 10 or 11
+        - Linux (Rocky, RHEL)
+        - Linux (Ubuntu, Debian)
+        - From source
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The commands or clicks, with a made-up project if you need one.
+    validations:
+      required: true

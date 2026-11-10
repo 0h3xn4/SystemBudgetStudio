@@ -1,0 +1,28 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Pull request data box
+
+# A pull request must say that it holds no confidential, proprietary, export-controlled, personal
+# or customer data (the box of .github/PULL_REQUEST_TEMPLATE.md, ticked). The check runs again when
+# the text of the pull request is edited. The text goes in through the environment, not into the
+# script. Dependabot is exempt (packaging/pr_body_check.py).
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  data-box:
+    name: Data box ticked (no confidential data)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: The box is ticked in the pull request text
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        run: python3 packaging/pr_body_check.py

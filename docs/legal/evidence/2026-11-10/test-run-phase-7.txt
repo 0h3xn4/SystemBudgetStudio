@@ -1,0 +1,8 @@
+Phase 7 test run, 2026-11-10 (Python 3.14.6, Linux, QT_QPA_PLATFORM=offscreen)
+
+ruff check .              All checks passed
+ruff format --check .     673 files already formatted
+mypy                      Success: no issues found in 257 source files
+reuse lint                compliant (REUSE 3.3), CC-BY-SA-4.0 added for CODE_OF_CONDUCT.md
+pytest tests/unit tests/regression tests/offline    3378 passed, 2 skipped in 646 s
+No program code changed in this phase; the GUI and golden suites were not run again (they passed in phase 6 at the same program code).
