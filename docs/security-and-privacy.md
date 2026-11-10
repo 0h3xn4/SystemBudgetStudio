@@ -130,7 +130,7 @@ Every file attached to a release has three independent checks, and the release h
 2. **Build attestation (from 2.11.2 on).** The release workflow records, with a signature from GitHub (Sigstore, no key to manage), which workflow run, on which commit, built each file. With the GitHub CLI:
 
    ```
-   gh attestation verify system-budget-studio-<version>-linux-x86_64.tar.gz --repo 0h3xn4/SystemBudgetStudio
+   gh attestation verify system-budget-studio-<version>-linux-x86_64.tar.gz --repo 0h3xn4/system-budget-studio
    ```
 
    A file that was not built by that repository's release workflow, or that was changed afterwards, fails. This is stronger than a checksum, because a checksum and a file can be replaced together.

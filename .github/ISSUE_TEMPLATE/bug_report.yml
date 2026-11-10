@@ -9,7 +9,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        This is a one-person project in someone's free time ([support statement](https://github.com/0h3xn4/SystemBudgetStudio#support-maintenance-and-scope)). Replies can take days.
+        This is a one-person project in someone's free time ([support statement](https://github.com/0h3xn4/system-budget-studio#support-maintenance-and-scope)). Replies can take days.
         **Everything you post here is public and stays public.** Use invented data only. To reproduce a problem, make a small project with made-up values. Never attach a real project, report, log or screenshot from your work.
         For a security problem use the private form from SECURITY.md, not this page.
   - type: checkboxes
