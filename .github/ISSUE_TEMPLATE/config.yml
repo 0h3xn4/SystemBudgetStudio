@@ -5,8 +5,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Report a security problem or a conduct problem (private)
-    url: https://github.com/0h3xn4/SystemBudgetStudio/security/advisories/new
+    url: https://github.com/0h3xn4/system-budget-studio/security/advisories/new
     about: Do not open a public issue. Use this private form (see SECURITY.md and CODE_OF_CONDUCT.md).
   - name: Read the documentation first
-    url: https://github.com/0h3xn4/SystemBudgetStudio/blob/main/docs/README.md
+    url: https://github.com/0h3xn4/system-budget-studio/blob/main/docs/README.md
     about: Getting started, user manual, troubleshooting and the FAQ.

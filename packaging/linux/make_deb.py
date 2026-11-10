@@ -34,7 +34,7 @@ ROOT = HERE.parent.parent
 NAME = "system-budget-studio"
 PREFIX = f"opt/{NAME}"
 MAINTAINER = "0h3xn4 <291340596+0h3xn4@users.noreply.github.com>"
-HOMEPAGE = "https://github.com/0h3xn4/SystemBudgetStudio"
+HOMEPAGE = "https://github.com/0h3xn4/system-budget-studio"
 SUMMARY = "Power, mass, thermal and link budgets for small satellites"
 DESCRIPTION = (
     "Offline desktop and command-line tool that computes power, mass, thermal and radio-link\n"
