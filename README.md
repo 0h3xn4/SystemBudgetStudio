@@ -59,7 +59,7 @@ budget --version                                       # System Budget Studio 2.
 budget export-examples demo                            # five example projects with invented data
 budget validate demo/microsat_250kg_eps                    # check the project: 0 errors, a few warnings
 budget run demo/microsat_250kg_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
-system-budget-studio demo/microsat_250kg_eps               # open the window
+system-budget-studio demo/microsat_250kg_eps               # the window: click Open this folder
 ```
 
 The reports in `out/` are the first result. [Getting started](docs/getting-started.md) shows what you should see at each step and walks through a first worked example.

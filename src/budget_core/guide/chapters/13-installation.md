@@ -39,7 +39,7 @@ The package manager also installs the system libraries the window needs. On RHEL
 
 ## Your files
 
-Projects, reports and exports live in folders you choose. Neither installing, upgrading nor uninstalling touches them. The only thing the tool keeps outside them is the window's layout file, `layout.ini`, in your user configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`): the window size and position, the panels, the theme and the UI size. It never holds a project name, a path or a value, and the command-line tool does not write it. The installers and uninstallers do not touch it; delete it by hand to forget the layout. There are no other settings, caches, logs or crash dumps.
+Projects, reports and exports live in folders you choose. Neither installing, upgrading nor uninstalling touches them. The only thing the tool keeps outside them is the window's layout file, `layout.ini`, in your user configuration folder (on Linux `~/.config/System Budget Studio/`, on Windows `%APPDATA%\System Budget Studio\`): the window size and position, the panels, the theme and the UI size. It never holds a project name, a path or a value, and the command-line tool does not write it. Only if you tick **Settings → Remember recent projects** (off by default) does the window also keep `recent-projects.txt` next to it, with the paths of the last eight project folders you opened; untick it to delete that file, or press **Clear** on the landing page. The installers and uninstallers do not touch it; delete it by hand to forget the layout. There are no other settings, caches, logs or crash dumps.
 
 ## Licences and checksums
 

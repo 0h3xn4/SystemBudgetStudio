@@ -55,9 +55,9 @@ def test_the_welcome_buttons_open_and_start_a_project(qtbot) -> None:  # type: i
         page.new_button.click()
 
 
-def test_there_is_no_list_of_recent_projects(window: MainWindow) -> None:
-    labels = [b.text() for b in window.welcome.findChildren(type(window.welcome.open_button))]
-    assert labels == ["Open a project folder…", "New project (guided)…"]
+def test_there_is_no_list_of_recent_projects_unless_switched_on(window: MainWindow) -> None:
+    assert not window.recent.enabled  # off by default (D-269); test_landing_page.py tests it on
+    assert window.welcome.recent_card.isHidden() and window.welcome.recent_buttons == []
 
 
 def test_a_dropped_folder_is_a_project_and_a_file_is_not(

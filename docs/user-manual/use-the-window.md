@@ -7,9 +7,11 @@ This page is a tour of the graphical window and a list of its shortcuts. Everyth
 ## How do I start the window?
 
 ```bash
-system-budget-studio                       # then File → Open project
-system-budget-studio path/to/project       # open a project at start
+system-budget-studio                       # the landing page
+system-budget-studio path/to/project       # the landing page, with that folder offered
 ```
+
+The window always starts on the **landing page**, never inside a project, also when it is started with a folder (a pinned taskbar icon or a double-clicked project keeps the folder in its command line). A folder given at start is offered on a card, **Open this folder**: one click opens it.
 
 ![The window with the 250 kg example: the navigation rail and the project panel on the left, the top bar (project, revision, scenario, BOL and EOL, Run and the run status), the Power timeline, and the problems as one line of counts along the bottom](../images/ui-overhaul/power-timeline-light.png)
 
@@ -98,7 +100,7 @@ In the focused view only the summary line is shown, with a **Show problems** but
 | (menu only) | Help → Start here: shows the *Start here* card again after you hid it (it is also in Ctrl+K, with every other menu entry) |
 | F1 | Open the user guide |
 
-With no project open the window shows a welcome page: **Open a project folder…**, **New project (guided)…**, or drop a project folder on the window. There is no list of recent projects, because the tool does not keep the paths of your projects. In the **Model** grids the **Inspector** (right panel) shows the cell that has the cursor: its row, column and unit, the file and field, the value, its state, what the column means and, when the value is refused, why.
+With no project open the window shows the **landing page**: **Open a project folder…** (Ctrl+O), **New project (guided)…** (Ctrl+N), **Open an example…** (a copy of one of the five example projects, written to a folder you choose, then opened), **Import IDM-CIC model…**, **User guide** (F1), or drop a project folder on the window. **File → Close project** (Ctrl+W) closes the project and comes back here. The landing page lists your **recent projects** only if you tick **Settings → Remember recent projects**; it is off by default, because the tool keeps no path of your projects unless you ask ([where](#where-does-the-window-keep-its-layout)). Closing the window while a computation runs asks whether to **stop it and close** or **wait, then close**; a project that is still loading, or an export that is writing files, always finishes first. In the **Model** grids the **Inspector** (right panel) shows the cell that has the cursor: its row, column and unit, the file and field, the value, its state, what the column means and, when the value is refused, why.
 
 While a run is in progress, **Run** becomes **Cancel** (Ctrl+R is the same button), a thin bar runs under the top bar and the status chip names the step (*Orbit, eclipses and passes*, *Power timeline: battery*, *Link passes*). **Cancel** keeps the results you had on screen and stops the steps that were still to come; it takes effect when the step in progress ends, which can be a few seconds for a week at 1 s. The *Compute* button of the Scenario, Timeline and Passes views is a Cancel button in the same way while it works.
 
@@ -145,6 +147,6 @@ In **Model → Scenario**, rules and segments are sentences you edit in place ([
 
 A unit in the project tree opens its power modes in this grid (Enter, double-click, or **Ctrl+M**).
 
-The file dialogs do not remember the last folder you used: the only file the window keeps outside your project folders is `layout.ini` ([above](#where-does-the-window-keep-its-layout)).
+The file dialogs do not remember the last folder you used: the only file the window keeps outside your project folders is `layout.ini` ([above](#where-does-the-window-keep-its-layout)), and `recent-projects.txt` if you switched the recent list on.
 
 Next: [Command-line reference](command-line.md) · [Tips](../tips.md).
