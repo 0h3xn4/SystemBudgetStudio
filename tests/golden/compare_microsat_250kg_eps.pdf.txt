@@ -1,7 +1,7 @@
 pages=5
 ## page 1
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 1
 Comparison: Example 250 kg minisatellite, complete power and thermal inputs rev 1 and Example 250
 kg minisatellite, complete power and thermal inputs rev 2
@@ -116,7 +116,7 @@ Effective (W)
 changed
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 2
 Row
 Quantity
@@ -288,7 +288,7 @@ Temperature (C)
 changed
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 3
 Row
 Quantity
@@ -524,7 +524,7 @@ Headroom to upper (K)
 changed
 ## page 4
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 4
 Row
 Quantity
@@ -676,12 +676,12 @@ Provenance
 Item
 Value
 Tool
-System Budget Studio 2.11.2
+System Budget Studio 2.12.0
 Python
 3.x
 ## page 5
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
-System Budget Studio 2.11.2 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
+System Budget Studio 2.12.0 | Example 250 kg minisatellite, complete power and thermal inputs rev 1 | static vs static | 2026-01-02T03:04:05Z | Golden User
 Page 5
 Item
 Value

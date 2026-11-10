@@ -130,10 +130,10 @@ Every file attached to a release has three independent checks, and the release h
 2. **Build attestation (from 2.11.2 on).** The release workflow records, with a signature from GitHub (Sigstore, no key to manage), which workflow run, on which commit, built each file. With the GitHub CLI:
 
    ```
-   gh attestation verify system-budget-studio-<version>-linux-x86_64.tar.gz --repo 0h3xn4/system-budget-studio
+   gh attestation verify system-budget-studio-<version>-linux-x86_64.tar.gz --owner 0h3xn4
    ```
 
-   A file that was not built by that repository's release workflow, or that was changed afterwards, fails. This is stronger than a checksum, because a checksum and a file can be replaced together.
+   `--owner` accepts the repository under its old name too: it was called `SystemBudgetStudio` until 2026-11-10, and the attestations of the files built before then (2.11.2) name it so. A file that was not built by that repository's release workflow, or that was changed afterwards, fails. This is stronger than a checksum, because a checksum and a file can be replaced together.
 3. **The source.** The tag `v<version>` names the commit; the workflows that built the files are in `.github/workflows/` at that commit, and `packaging/` holds the build scripts.
 
 The release also carries `COMPLIANCE-RECORD.md`: every file with its size and SHA-256, the software bill of materials, the licence lists and notices, the source code of the LGPL parts, and the result of the REUSE and `pip-audit` checks that ran before the release (a check that did not run says *not run*). The builds are not reproducible bit for bit; the [developer guide](developer/security.md#reproducible-builds) says what is and what is not.

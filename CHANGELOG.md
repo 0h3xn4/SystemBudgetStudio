@@ -4,6 +4,11 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.12.0] - 2026-11-10
+
+The first release under the Apache License 2.0 (releases up to and including 2.11.2 are MIT). It adds the protection programme: one disclaimer in the program and every report, no account name in reports, safer reading of files from strangers, third-party notices and Qt sources with every release, a compliance record and signed build attestations. No result of any budget changed; the reports change only in the version line, the disclaimer line and the user name (`unknown` unless set).
+
+- **Verify a download by owner (D-268).** `gh attestation verify <file> --owner 0h3xn4` accepts the attestations of 2.11.2 (made under the old repository name) and of later releases. Dependabot no longer proposes major versions or a new Qt minor version; those are upgraded by hand with new lock files and the full suite.
 - **2.11.2 is the last MIT release (D-267).** 2.11.2 was published from the commit before the licence change, so the licence statements (Help > About, NOTICE, README, FAQ, the `.deb`) now say that releases up to and including 2.11.2 are MIT. The first Apache-2.0 release will have a new version number.
 - **New repository name (D-266).** The repository is now `0h3xn4/system-budget-studio`. The documentation, the templates, the attestation commands and the homepage of the `.deb` and `.rpm` use the new address; GitHub redirects the old one.
 - **Licence: Apache-2.0 from the next release (D-260).** From the next version, System Budget Studio is licensed under the Apache License 2.0 (`LICENSE`, the unmodified text from apache.org; `NOTICE` with the copyright line). **Releases up to and including 2.11.2 remain available under the MIT licence**; the text is kept in [docs/legal/MIT-licence-releases-up-to-2.11.2.txt](docs/legal/MIT-licence-releases-up-to-2.11.2.txt). The licence is named in `pyproject.toml` (SPDX expression and `license-files`), the `.deb` and `.rpm` metadata, the Windows setup (a licence page), the README, the FAQ, `docs/LICENCES.md` and the new Help > About dialog; one module (`budget_core/about.py`) holds the words and a test (`tests/unit/test_licence_statements.py`) fails when a copy differs. The README now states that this is a personal project, not affiliated with any employer or organisation.
