@@ -12,12 +12,20 @@ System Budget Studio computes power, mass, thermal and RF link budgets for a spa
 - **Traceability**: select any number and **Explain** it (equation, inputs, the file each came from); record the source and status of an input; see everything the tool assumes on one page; and choose the shadow, Earth and irradiance models of a scenario.
 - **Comparison** of two project revisions, or two scenarios, with the differences highlighted.
 
-## Principles you can rely on
+## Principles of the tool
 
 - **No invented numbers.** The tool ships no standards values. Every number in your configuration is written as a value with a `source`. A value with `source: TBD` (or no value) is a *placeholder*: results that depend on it are shown as **n/a** and the report carries an **INCOMPLETE** banner. A missing input is never turned into a silent zero.
 - **Units are in the names.** A field called `power_w` is in watts, `freq_hz` in hertz, `gain_dbi` in dBi. You may type `2.2 GHz` or `200 g`; the tool converts and stores the canonical unit.
 - **Same input, same output.** Reports and exports are reproducible: the same project, scenario, user name and generation time give the same files.
 - **Provenance on every output.** Each report, plot and CSV records the tool version, library versions, project revision, scenario, generation time and the user's name.
 - **Plain-language problems.** The Problems panel and the command line name the file and field, say what is wrong and what to change. Messages never repeat values read from your project files.
+
+## Limits and responsibility
+
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
+
+## What the program stores and sends
+
+The program collects nothing and sends nothing; it never uses the network. It keeps one small file on your computer, the window layout (position, size, theme, and the name you may type for report files). The files it exports name a user (never your account name: it is "unknown" unless you set a name), the tool and library versions, the project name and revision, the relative paths and hashes of the project files it read, and the time.
 
 > The example projects delivered with the tool contain invented data only. Their numbers are not those of a real spacecraft or a real standard.

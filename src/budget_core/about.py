@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from budget_core import APP_NAME, __version__
+from budget_core.disclaimer import DISCLAIMER
 
 COPYRIGHT_LINE = "Copyright 2026 0h3xn4"
 PROJECT_LICENCE_SPDX = "Apache-2.0"
@@ -44,10 +45,37 @@ def about_text() -> str:
             COPYRIGHT_LINE,
             OWNERSHIP_STATEMENT,
             LICENCE_STATEMENT,
+            DISCLAIMER,
+            AI_AUTHORSHIP,
+            SUPPORT_STATEMENT,
+            NON_COMMERCIAL,
+            PRIVACY_STATEMENT,
             THIRD_PARTY_STATEMENT.replace("`", ""),
         )
     )
 
+
+AI_AUTHORSHIP = (
+    "Most of the code and the documentation of System Budget Studio were written by Claude Code, "
+    "an AI system made by Anthropic, under the direction of the owner. The owner set the "
+    "requirements and the design decisions and reviewed the results. The equations are checked "
+    "against hand calculations, not against a flight project. There has been no independent review."
+)
+SUPPORT_STATEMENT = (
+    "System Budget Studio is maintained by one person in their free time. Maintenance status: "
+    "active, best effort. There is no guaranteed support, maintenance, fixes or response time."
+)
+NON_COMMERCIAL = (
+    "System Budget Studio is non-commercial: it has no sales, paid features, paid support, "
+    "advertising, donations or sponsorship."
+)
+PRIVACY_STATEMENT = (
+    "The program collects nothing and sends nothing; it never uses the network. It keeps one small "
+    "file on your computer, the window layout (position, size, theme, and the name you may type "
+    "for report files). The files it exports name a user (never your account name: it is "
+    '"unknown" unless you set a name), the tool and library versions, the project name and '
+    "revision, the relative paths and hashes of the project files it read, and the time."
+)
 
 NOTICES_FILE = "THIRD_PARTY_NOTICES.txt"
 NOT_INSTALLED_TEXT = (

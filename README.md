@@ -24,7 +24,7 @@ A free, offline program for the **early design of a small satellite**: it works 
 - **Thermal**: do the parts stay inside their temperature limits?
 - **Radio link**: can the satellite talk to its ground stations, and how much data does each pass carry?
 
-It runs on your own computer (Windows or Linux), **offline**: no account, no cloud service, no telemetry, no update check ([how to check that yourself](docs/security-and-privacy.md)). It works from plain text files you can keep under version control, every result says which input and which equation it came from, and the same input always gives the same report. It is a design tool for studies and trade-offs, not flight software.
+It runs on your own computer (Windows or Linux), **offline**: no account, no cloud service, no telemetry, no update check ([how to check that yourself](docs/security-and-privacy.md)). It works from plain text files you can keep under version control, every result can be traced to the inputs and the equation it was worked out from, and the same project, user name and generation time give the same report files. It is a design tool for studies and trade-offs, not flight software.
 
 **Why it exists.** Satellite teams usually keep power modes, eclipse cycles, battery depth of discharge, masses, temperatures and link margins in spreadsheets that drift apart. Here they are one model: the tool computes the budgets, shows where a limit is broken, and writes reports (XLSX, PDF, DOCX, CSV, JSON).
 
@@ -89,12 +89,12 @@ The reports in `out/` are the first result. [Getting started](docs/getting-start
 - **Scenarios**: eclipses and passes from a two-line element set (TLE) or orbital elements, a mode timeline built from rules (for example "downlink during every pass") and segments; the start, duration and step are fields in the window; a Statistics tab gives the shortest, mean and longest eclipse and pass, the contact time and the largest gap per ground station; a beta-angle plot and statistics; a ground-track map; `budget orbit` designs the orbit from a local time of the node, a sun-synchronous request or a repeat ground track, an orbit can be given by its local time (`ltan_h`) or as a state vector, and the Orbit helper (Ctrl+Shift+H) writes the elements; orbits can also be imported from [SpaceMissionStudio](docs/ENVIRONMENT_FORMAT.md).
 - **Propulsion and pointing**: a delta-v and propellant budget (chemical and electric systems, rocket equation, burn time, electric power) and a slew budget (pointing modes kept apart from the spacecraft modes, slew time, momentum, energy) from `config/propulsion.yaml` and `config/pointing.yaml`; a scenario can place pointing modes and burns, and the power timeline then carries their load as its own line; thruster heat reaches the thermal cases.
 - **Start from an IDM-CIC model**: `budget import idm` builds a project from a model file of IDM-CIC (reads models from IDM-CIC (© CNES); independent of CNES, no CNES software needed): a unit for every physical equipment with its mass, power modes, temperature limits, thermal node and (as estimates) centre of gravity and inertia, spacecraft modes from the system modes, the propellant of the tanks, every value with its source; it also proposes the kind of each equipment (battery, solar array, wheel, thruster, antenna…) and prepares the pointing, propulsion and power system files with placeholders, filled from your own component library; a later version of the model is merged in without losing your edits ([manual](docs/user-manual/idm-import.md)).
-- **Reports**: XLSX, PDF and DOCX in classic review layouts, CSV for every table and series, JSON for other tools. Every output carries provenance (tool and library versions, project revision, scenario, time, user) and is reproducible byte for byte.
+- **Reports**: XLSX, PDF and DOCX in classic review layouts, CSV for every table and series, JSON for other tools. Every output carries provenance (tool and library versions, project revision, scenario, time, user) and is reproducible byte for byte for the same project, user name and generation time.
 - **Traceable**: select any number in a budget table and **Explain** it (Ctrl+Shift+I, or `budget explain`): the equation, the inputs with the file each came from and the steps. An input can record its **source** and a **status** (sourced, estimate, illustrative, tbd) in the window or with `budget source`. The **Assumptions** page (Ctrl+Shift+A, or `budget assumptions`) lists everything the tool applies next to your own numbers, and every report says which models it used. `budget verify` checks that a project is the one a result came from.
 - **Choosable models**: a scenario chooses its shadow geometry (cylindrical or conical), its Earth constants (WGS-84 or WGS-72) and its array irradiance (constant or seasonal) from drop-downs in the scenario editor; the models that are fixed are listed with the reason (`budget choices`, [model choices](docs/models/choices.md)).
 - **Comparison**: two project revisions, or two scenarios, side by side with the differences listed.
 - **Guided mode**: a wizard from an orbit to a first budget with a sample spacecraft, or a blank project (also `budget new`) to describe your own, which the window then takes to a first result with a *Start here* card (add a unit, a spacecraft mode, an orbit and a scenario, save and run); an offline user guide (HTML and PDF) with a generated *Equations and sources* chapter.
-- **Plain-language problems**: every message names the file and field, says what is wrong and what to change; a double-click jumps to it.
+- **Plain-language problems**: every problem has a message that names the file and field where it can and a hint on what to change; a double-click jumps to it.
 - **A calm window**: it opens in a *focused view* (the problems as one line of counts, no Inspector or Provenance panel, the main columns of the grids; one toggle, Ctrl+Shift+F, shows everything). A navigation rail with seven areas (Model, Power, Mass, Thermal, Link, Compare, Reports), grids with undo and an explicit Save, a command palette (Ctrl+K), light and dark themes, a UI size of 90 to 125 %, and the whole window usable with the keyboard, with names for screen readers on every control. Long computations run in the background; the window keeps answering while a week at 1 s is worked out ([use the window](docs/user-manual/use-the-window.md)).
 
 Units, spacecraft modes, scenarios (with their orbit, up to 180 days, circular or elliptical), expendables, ground stations, imaging targets, links and Eb/N0 table entries are added in the window from forms that never invent a number (the numbers of a link that come from a data sheet are placeholders for **Model → Inputs**), and units, spacecraft modes, expendables, sites and links removed (**Edit** menu, **Model → Units**, **Model → Spacecraft modes**, **Model → Scenario**; every entry has a shortcut and is in Ctrl+K); a click opens an item if you prefer that to a double-click (**View → Open with a single click**); unit power modes can be exported to a CSV or XLSX table, filled in a spreadsheet and imported back with a preview ([unit tables](docs/user-manual/unit-tables.md)); so can the Eb/N0 table, the attenuation table, the margin policy and the sourced numbers of the links (**File → Export tables / Import tables**, or `budget tables-export` and `tables-import`; a number needs its source in the same row, [link budget](docs/user-manual/link-budget.md)).
@@ -112,7 +112,7 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 
 The source code is licensed under the [Apache License 2.0](LICENSE) (see also [NOTICE](NOTICE) and decision D-260). Releases up to and including 2.11.1 were published under the MIT licence and remain available under it ([text](docs/legal/MIT-licence-releases-up-to-2.11.1.txt)). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
 
-Status: version 2.11.2, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a full pre-release audit ([AUDIT.md](AUDIT.md)). The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
+Status: version 2.11.2, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a pre-release audit ([AUDIT.md](AUDIT.md)) that was made with the same AI tooling that wrote the code and is not an independent review. The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 
 Known limits, stated plainly:
 
@@ -121,6 +121,26 @@ Known limits, stated plainly:
 - The installers are built and tested by CI (install, self-test, uninstall) but have not yet been run by hand on clean Windows and Rocky 9 machines ([checklist](docs/INSTALL_CHECKLIST.md)).
 - The window's responsiveness (zooming a plot of a week at 1 s takes about 25 ms; the window thread is held for at most about 0.1 s while a week is computed) was measured on one development machine without a screen of its own; the real-machine steps of the [checklist](docs/INSTALL_CHECKLIST.md) check it on Windows and Rocky 9.
 - The XLSX files were not opened in Excel.
+
+## Disclaimer
+
+<!-- disclaimer:start -->
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
+<!-- disclaimer:end -->
+
+## How this software is made
+
+Most of the code and the documentation of System Budget Studio were written by Claude Code, an AI system made by Anthropic, under the direction of the owner. The owner set the requirements and the design decisions and reviewed the results. The equations are checked against hand calculations, not against a flight project. There has been no independent review.
+
+## Support, maintenance and scope
+
+System Budget Studio is maintained by one person in their free time. Maintenance status: active, best effort. There is no guaranteed support, maintenance, fixes or response time. System Budget Studio is non-commercial: it has no sales, paid features, paid support, advertising, donations or sponsorship. Proposals to change that are out of scope.
+
+Please never post confidential, proprietary, export-controlled, personal or customer data in an issue or a pull request. The owner may edit or delete content that breaks this rule.
+
+## What the program stores and sends
+
+The program collects nothing and sends nothing; it never uses the network. It keeps one small file on your computer, the window layout (position, size, theme, and the name you may type for report files). The files it exports name a user (never your account name: it is "unknown" unless you set a name), the tool and library versions, the project name and revision, the relative paths and hashes of the project files it read, and the time. Details and how to check them: [Security and privacy](docs/security-and-privacy.md).
 
 ## Related tools
 
