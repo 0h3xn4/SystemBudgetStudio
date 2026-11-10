@@ -12,6 +12,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import textwrap
+from pathlib import Path
 
 FORBIDDEN = (
     "http.client",
@@ -34,6 +35,11 @@ def _blocked(*a, **k):
 socket.socket.connect = _blocked
 socket.create_connection = _blocked
 socket.getaddrinfo = _blocked
+# every other way to resolve a host name or to send a packet (phase 5: the test must fail for any)
+for _name in ("gethostbyname", "gethostbyname_ex", "gethostbyaddr", "getnameinfo"):
+    setattr(socket, _name, _blocked)
+for _name in ("connect_ex", "sendto", "sendmsg"):
+    setattr(socket.socket, _name, _blocked)
 """
 
 CHECK = f"""
@@ -224,5 +230,65 @@ def test_link_budget_paths_are_strictly_offline(tmp_path) -> None:  # type: igno
                      "--report", "json", "--report", "csv", "--out", out]) == 0
         assert main(["link-passes", project, "--report", "xlsx", "--report", "docx",
                      "--report", "json", "--report", "csv", "--out", out]) == 0
+    """)
+    assert r.returncode == 0, r.stderr
+
+
+def test_guard_detects_every_name_resolution_and_packet(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    """Negative tests: each way of resolving a name or sending a packet must fail the harness."""
+    for call in (
+        "socket.gethostbyname('example.org')",
+        "socket.gethostbyname_ex('example.org')",
+        "socket.gethostbyaddr('127.0.0.1')",
+        "socket.getnameinfo(('127.0.0.1', 80), 0)",
+        "socket.getaddrinfo('example.org', 80)",
+        "socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendto(b'x', ('127.0.0.1', 9))",
+        "socket.socket().connect_ex(('127.0.0.1', 9))",
+    ):
+        assert _run(f"import socket; {call}").returncode != 0, call
+
+
+def test_spreadsheet_import_idm_import_and_the_guide_are_strictly_offline(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    """The imports (a unit table as XLSX, an IDM-CIC model) and the user guide: no connection."""
+    root = Path(__file__).resolve().parents[2]
+    r = _run(
+        f"""
+        import pathlib, sys
+        sys.path.insert(0, {str(root)!r})
+        from budget_cli.main import main
+        from budget_core.examples import export_examples
+        from tests.idm.fixtures import model_xml, write_idm
+        tmp = pathlib.Path({str(tmp_path)!r})
+        export_examples(tmp)
+        project = str(tmp / "microsat_250kg")
+        table = str(tmp / "units.xlsx")
+        assert main(["units-export", project, "--out", table]) == 0
+        assert main(["units-import", project, table]) == 0   # a preview, nothing is applied
+        model = write_idm(tmp / "model.idm", model_xml())
+        main(["import", "idm", str(model), "--bus-voltage-v", "28"])  # a plan, nothing is written
+        assert main(["guide", "--out", str(tmp / "guide")]) == 0
+    """,
+        allowed=REPORTLAB_IMPORTS,  # the guide has a PDF: ReportLab imports these (D-043)
+    )
+    assert r.returncode == 0, r.stderr
+
+
+def test_window_actions_are_strictly_offline(tmp_path) -> None:  # type: ignore[no-untyped-def]
+    """The window after the start: a project, the guide, About, the licences and the settings."""
+    root = Path(__file__).resolve().parents[2]
+    r = _run(f"""
+        import pathlib, sys
+        sys.path.insert(0, {str(root)!r})
+        from budget_core.examples import export_examples
+        from budget_gui.app import create_app
+        from budget_gui.main_window import MainWindow
+        tmp = pathlib.Path({str(tmp_path)!r})
+        export_examples(tmp)
+        app = create_app(["x"]); w = MainWindow(); w.show(); app.processEvents()
+        assert w.open_project(tmp / "microsat_250kg_eps")
+        for dialog in (w.open_guide(), w.open_about(), w.open_notices()):
+            app.processEvents(); dialog.close()
+        popover = w.show_settings(); app.processEvents(); popover.close()
+        w.discard_all_changes() if hasattr(w, "discard_all_changes") else None
     """)
     assert r.returncode == 0, r.stderr

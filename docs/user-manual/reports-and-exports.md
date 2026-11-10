@@ -45,7 +45,7 @@ The same project, scenario, user name and generation time give the same file con
 budget run my_satellite --user "A. Engineer" --date 2026-01-02T00:00:00Z --out out
 ```
 
-Without them the user is the `BUDGET_USER` environment variable or your login name, and the date is `SOURCE_DATE_EPOCH` or the clock. Every report records the tool version, the library versions, the project revision, the scenario, the time and the user; because of that, remember to raise `revision` in `project.yaml` when you change numbers ([revisions](create-a-project.md#how-do-i-keep-revisions)).
+Without them the user is the `BUDGET_USER` environment variable, then the name you typed under **Settings → Name in report files**, then `unknown` (the program never reads your login name, so a report does not carry it unless you say so), and the date is `SOURCE_DATE_EPOCH` or the clock. Every report records the tool version, the library versions, the project revision, the scenario, the time, the user and the **disclaimer** of the tool (a *Disclaimer* row of the provenance; the first page of the PDF and the DOCX show it too: the results are engineering estimates, with no warranty, not certified for any mission, flight or safety use); because of that, remember to raise `revision` in `project.yaml` when you change numbers ([revisions](create-a-project.md#how-do-i-keep-revisions)).
 
 ## How do I know which inputs a result came from?
 

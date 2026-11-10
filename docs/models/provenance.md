@@ -13,7 +13,8 @@
 | Inputs digest (model) | SHA-256 of the project as loaded: every unit, mode, orbit, station, scenario, link and configuration number | a **number or a name** in any input file changes |
 | Input files | The count and one SHA-256 over every file's name, size and byte hash | **any** change to a file, including a comment or spacing |
 | Illustrative inputs | How many inputs of the project are marked `illustrative` ([D-213](../DECISIONS.md)); 0 when none | an input is marked or unmarked |
-| Generated (UTC), User | When and by whom | every run (set `SOURCE_DATE_EPOCH` and `BUDGET_USER` to reproduce) |
+| Generated (UTC), User | When and by whom: the user is `--user`, `BUDGET_USER`, the name of the window's settings or `unknown`, never your login name | every run (set `SOURCE_DATE_EPOCH` and `BUDGET_USER` to reproduce) |
+| Disclaimer | The one disclaimer of the tool (`budget_core/disclaimer.py`): engineering estimates, no warranty, not certified for any mission, flight or safety use, no replacement for independent verification, the user is responsible | every run; also on the first page of the PDF and the DOCX report |
 
 The JSON files also list every input file with its size and hash (`provenance.input_files`) and the run parameters as name and value pairs.
 

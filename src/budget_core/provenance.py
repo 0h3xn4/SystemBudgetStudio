@@ -6,12 +6,13 @@
 
 For byte-identical regeneration (constraint 14) the generation time comes from, in order: the
 `generated_at` argument, the SOURCE_DATE_EPOCH environment variable, the clock. The user comes from
-the `user` argument, then BUDGET_USER, then the operating-system account.
+the `user` argument, then BUDGET_USER, then the name the user typed in the window's settings
+(`set_default_user`), then "unknown". The program does not read the operating-system account:
+a report must not carry the name of the person who ran it unless that person says so (D-262).
 """
 
 from __future__ import annotations
 
-import getpass
 import os
 import platform
 from dataclasses import dataclass
@@ -19,6 +20,7 @@ from datetime import UTC, datetime
 from importlib.metadata import PackageNotFoundError, version
 
 from budget_core import APP_NAME, __version__
+from budget_core.disclaimer import DISCLAIMER
 from budget_core.input_sources import illustrative_inputs
 from budget_core.io.project_digest import project_digest
 from budget_core.manifest import ManifestEntry, files_digest
@@ -60,6 +62,8 @@ class Provenance:
     # How many inputs the project marks as invented sample values (D-213); None on a provenance
     # built by hand, which has no project to count in.
     illustrative_inputs: int | None = None
+    # The one disclaimer (budget_core/disclaimer.py), written into every report and export (D-262).
+    disclaimer: str = DISCLAIMER
 
     def rows(self) -> list[tuple[str, str]]:
         libs = ", ".join(f"{n} {v}" for n, v in self.libraries)
@@ -86,6 +90,8 @@ class Provenance:
         if self.illustrative_inputs is not None:
             rows.append(("Illustrative inputs", str(self.illustrative_inputs)))
         rows += [("Generated (UTC)", self.generated), ("User", self.user)]
+        if self.disclaimer:
+            rows.append(("Disclaimer", self.disclaimer))
         return rows
 
 
@@ -129,16 +135,31 @@ def resolve_time(generated_at: datetime | None = None) -> datetime:
     return datetime.now(UTC).replace(microsecond=0)
 
 
+UNKNOWN_USER = "unknown"
+_default_user = ""
+
+
+def set_default_user(name: str) -> None:
+    """The name the window's settings keep for the reports (empty: none). Cleaned like any name:
+    control characters go, the length is limited."""
+    global _default_user
+    cleaned = "".join(ch for ch in name if ch.isprintable()).strip()
+    _default_user = cleaned[:64]
+
+
+def default_user() -> str:
+    return _default_user
+
+
 def resolve_user(user: str | None = None) -> str:
+    """The user named in a report: the argument, BUDGET_USER, the window's setting, else
+    "unknown". The operating-system account is never read."""
     if user:
         return user
     env = os.environ.get("BUDGET_USER")
     if env:
         return env
-    try:
-        return getpass.getuser()
-    except Exception:  # no account name available (containers, restricted accounts)
-        return "unknown"
+    return _default_user or UNKNOWN_USER
 
 
 def make_provenance(

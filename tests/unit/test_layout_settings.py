@@ -45,7 +45,7 @@ def test_geometry_widths_and_a_theme_name_round_trip(
         "theme/a b",
     ],
 )
-def test_a_key_outside_the_four_groups_is_refused(settings: LayoutSettings, key: str) -> None:
+def test_a_key_outside_the_known_groups_is_refused(settings: LayoutSettings, key: str) -> None:
     with pytest.raises(LayoutError):
         settings.set_word(key, "dark", ("dark",))
     with pytest.raises(LayoutError):
@@ -60,7 +60,7 @@ def test_a_name_that_is_not_allowed_is_refused_and_a_stored_one_falls_back(
     assert settings.word("theme/mode", ("light", "dark"), "light") == "light"
 
 
-def test_the_file_holds_only_the_four_groups(settings: LayoutSettings, tmp_path: Path) -> None:
+def test_the_file_holds_only_the_known_groups(settings: LayoutSettings, tmp_path: Path) -> None:
     settings.set_bytes("window/geometry", QByteArray(b"x"))
     settings.set_bytes("dock/state", QByteArray(b"y"))
     settings.set_int_list("columns/power", [1, 2])
@@ -94,3 +94,15 @@ def test_the_place_follows_the_environment(monkeypatch: pytest.MonkeyPatch, tmp_
     assert layout_settings.default_path() == tmp_path / "layout.ini"
     monkeypatch.setenv("BUDGET_NO_LAYOUT", "1")
     assert layout_settings.default_path() is None
+
+
+def test_the_name_for_the_reports_is_kept_cleaned_and_limited(
+    settings: LayoutSettings, tmp_path: Path
+) -> None:
+    settings.set_text("reports/name", "  A. Engineer\x00\n")
+    settings.sync()
+    assert LayoutSettings(tmp_path / "layout.ini").text("reports/name") == "A. Engineer"
+    settings.set_text("reports/name", "x" * 200)
+    assert len(settings.text("reports/name")) == 64
+    with pytest.raises(LayoutError):
+        settings.set_text("dialog/name", "x")

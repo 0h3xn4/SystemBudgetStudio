@@ -1,0 +1,9 @@
+# Test run for Checkpoint 5, 2026-11-10
+# branch protect/phase-5-liability on main 27f37b6, Python 3.14.6, requirements-dev.lock, QT_QPA_PLATFORM=offscreen, Linux (Ubuntu 24.04 container)
+tests/unit + tests/regression + tests/offline: 2910 passed, 2 failed (test_audit_sms provenance stand-in, test_inputs_digest row list: both updated for the new Disclaimer row and re-run green), 2 skipped
+tests/gui + tests/golden: 985 passed
+ruff check: All checks passed!
+ruff format --check: 659 files already formatted
+mypy: Success: no issues found in 257 source files
+reuse lint: Congratulations! Your project is compliant with version 3.3 of the REUSE Specification :-)
+scripts/sync_disclaimer.py --check: in step

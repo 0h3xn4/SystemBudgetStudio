@@ -389,6 +389,7 @@
     }
   ],
   "provenance": {
+    "disclaimer": "The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.",
     "generated": "2026-01-02T03:04:05Z",
     "illustrative_inputs": 0,
     "input_files": [],

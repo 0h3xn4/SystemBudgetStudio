@@ -268,6 +268,7 @@ def _render(doc: ReportDocument, notes: list[str]) -> bytes:
     story: list[object] = [Paragraph(escape(doc.title), styles["title"])]
     if doc.banner:
         story += [Spacer(1, 2 * mm), Paragraph(escape(doc.banner), styles["banner"])]
+    story += [Paragraph(escape(prov.disclaimer), styles["note"])] if prov.disclaimer else []
     story += [Paragraph(escape(n), styles["note"]) for n in notes]
     for section in doc.sections:
         lead: list[object] = [Paragraph(escape(section.title), styles["h1"])]

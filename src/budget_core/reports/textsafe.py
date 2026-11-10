@@ -59,6 +59,7 @@ def _provenance(prov: Provenance, fn: TextFunction) -> Provenance:
         project_revision=fn(prov.project_revision),
         scenario=fn(prov.scenario),
         user=fn(prov.user),
+        disclaimer=fn(prov.disclaimer),
         parameters=tuple((fn(n), fn(v)) for n, v in prov.parameters),
     )
 

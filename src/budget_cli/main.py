@@ -188,7 +188,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run.add_argument("--out", type=_folder, help="Output folder (default: <project>/results).")
     run.add_argument(
-        "--user", help="User name for the provenance block (default: BUDGET_USER or login)."
+        "--user",
+        help="User name for the provenance block (default: BUDGET_USER, then unknown).",
     )
     run.add_argument(
         "--date",

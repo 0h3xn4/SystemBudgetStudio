@@ -6,6 +6,8 @@ Page 1
 Thermal budget (static): Example 150 kg microsatellite
 INCOMPLETE: some inputs are placeholders (source TBD or missing). Entries marked n/a depend on them and are not computed. Do not use this report as evidence until the
 placeholders are replaced with sourced values.
+The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or
+qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.
 Summary
 Heat dissipation by spacecraft mode
 Mode
@@ -139,14 +141,6 @@ TTC
  n/a
  n/a
 no limits
-solar_array
-EPS
- n/a
- n/a
- n/a
- n/a
- n/a
-no limits
 ## page 2
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
@@ -159,6 +153,14 @@ Upper limit (K)
 Headroom to lower (K)
 Headroom to upper (K)
 Status
+solar_array
+EPS
+ n/a
+ n/a
+ n/a
+ n/a
+ n/a
+no limits
 star_tracker
 AOCS
  n/a
@@ -345,11 +347,11 @@ PL-DATA
  n/a
 no limits
 Status: ok; margin = within the limits but closer than the required temperature margin; exceeded; no limits = the unit has no limits for this set (not checked).
-Mode: Downlink
 ## page 3
 INCOMPLETE: some inputs are placeholders (source TBD or missing).
 System Budget Studio 2.11.2 | Example 150 kg microsatellite rev 1 | static (no scenario) | 2026-01-02T03:04:05Z | Golden User
 Page 3
+Mode: Downlink
 Units in mode Downlink
 Unit
 Name
@@ -546,13 +548,4 @@ TTC
  6.720
  14.000
 By thermal node
-Node
-Dissipation (W)
-Peak dissipation (W)
-AOCS
- 12.300
- 37.300
-DH
- 7.000
- 10.000
 ...

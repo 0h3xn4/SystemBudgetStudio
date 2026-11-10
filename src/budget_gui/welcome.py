@@ -15,6 +15,7 @@ from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
 from budget_core import APP_NAME
+from budget_core.disclaimer import DISCLAIMER
 from budget_gui import theme
 
 
@@ -43,6 +44,11 @@ class WelcomePage(QWidget):
         hint = QLabel("or drop a project folder on this window")
         hint.setProperty("role", "muted")
         hint.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.disclaimer = QLabel(DISCLAIMER)
+        self.disclaimer.setProperty("role", "muted")
+        self.disclaimer.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.disclaimer.setWordWrap(True)
+        self.disclaimer.setAccessibleName("Disclaimer")
         keys = QLabel("Ctrl+O open · Ctrl+N new · Ctrl+K find a command · F1 user guide")
         keys.setProperty("role", "muted")
         keys.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -61,4 +67,5 @@ class WelcomePage(QWidget):
         layout.addLayout(buttons)
         layout.addWidget(hint)
         layout.addStretch(3)
+        layout.addWidget(self.disclaimer)
         layout.addWidget(keys)

@@ -53,7 +53,7 @@
 1: 'Problems and open items' |  |  |  |  | 
 2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
 3: 'info' | 'LINK_PER_DAY_NOT_GIVEN' | 'scenarios/synthetic.yaml' | 'duration_s' | 'The scenario is shorter than one day, so the data volume per day is not given (scaling a short scenario to a day would repeat its passes).' | 'Use a scenario of at least one day for a per-day figure.'
-## sheet Provenance rows=13 cols=2
+## sheet Provenance rows=14 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 2.11.2'
@@ -67,3 +67,4 @@
 11: 'Illustrative inputs' | '0'
 12: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 13: 'User' | 'Golden User'
+14: 'Disclaimer' | 'The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.'

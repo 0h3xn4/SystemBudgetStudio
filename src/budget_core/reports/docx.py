@@ -198,6 +198,8 @@ def render_docx(doc: ReportDocument) -> bytes:
         _run(banner, doc.banner, bold=True, size=9.0)
         for run in banner.runs:
             run.font.color.rgb = RED
+    if doc.provenance.disclaimer:
+        _run(document.add_paragraph(), doc.provenance.disclaimer, size=7.0)
     for section in doc.sections:
         _section(document, section)
 

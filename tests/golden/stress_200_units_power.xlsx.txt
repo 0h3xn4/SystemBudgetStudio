@@ -113,7 +113,7 @@
 13: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:15' | 'classes.class_b.power_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 14: 'warning' | 'CONFIG_PLACEHOLDER' | 'config/margin_policy.yaml:19' | 'classes.class_b.mass_margin_ratio' | "This number is a placeholder (no value or source 'TBD'); results that use it are not trustworthy." | 'Replace it with a value from your margin policy, standard or data sheet and cite the source.'
 ...
-## sheet Provenance rows=15 cols=2
+## sheet Provenance rows=16 cols=2
 1: 'INCOMPLETE: some inputs are placeholders (source TBD or missing).' | 
 3: 'Provenance' | 
 4: 'Item' | 'Value'

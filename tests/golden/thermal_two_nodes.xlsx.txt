@@ -86,7 +86,7 @@
 2: 'Severity' | 'Code' | 'Location' | 'Path' | 'Message' | 'Hint'
 3: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u1.yaml' | 'temperature_limits' | "Unit 'u1' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
 4: 'warning' | 'THERMAL_NO_LIMITS' | 'units/u2.yaml' | 'temperature_limits' | "Unit 'u2' has no operating temperature limits; it is not checked." | "Add temperature_limits from the unit's data sheet."
-## sheet Provenance rows=12 cols=2
+## sheet Provenance rows=13 cols=2
 1: 'Provenance' | 
 2: 'Item' | 'Value'
 3: 'Tool' | 'System Budget Studio 2.11.2'
@@ -99,3 +99,4 @@
 10: 'Illustrative inputs' | '0'
 11: 'Generated (UTC)' | '2026-01-02T03:04:05Z'
 12: 'User' | 'Golden User'
+13: 'Disclaimer' | 'The results are engineering estimates. They depend entirely on the inputs and the sources you enter. The software comes with no warranty (see the Apache License 2.0, sections 7 and 8). It is not certified or qualified for any mission, flight or safety use. It does not replace independent verification and review. You are responsible for decisions based on it.'

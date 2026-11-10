@@ -59,6 +59,7 @@ from budget_core.new_link import LinkAnswers, link_data
 from budget_core.new_scenario import ScenarioAnswers, scenario_data
 from budget_core.new_site import GROUND_STATION, TARGET, SiteAnswers, site_data
 from budget_core.problems import sort_problems
+from budget_core.provenance import default_user, set_default_user
 from budget_core.remove_item import KINDS, LABELS, blocked_message, rel_of, users_of
 from budget_core.reports.document import Table
 from budget_core.reports.files import OutputError
@@ -664,13 +665,21 @@ class MainWindow(QMainWindow):
             theme.scale_percent(),
             theme.manager().reduce_motion_setting,
             self.single_click,
+            default_user(),
         )
         popover.theme_chosen.connect(lambda value: self.set_theme(theme.Mode(value)))
         popover.scale_chosen.connect(self.set_scale)
         popover.motion_reduced.connect(self.set_reduce_motion)
         popover.single_click_chosen.connect(self.set_single_click)
+        popover.report_name_chosen.connect(self.set_report_name)
         popover.open_beside(self.rail.settings_button)
         return popover
+
+    def set_report_name(self, name: str) -> None:
+        """The name the report files carry (empty: none) and keep it for the next start."""
+        set_default_user(name)
+        self.layout_settings.set_text("reports/name", default_user())
+        self.layout_settings.sync()
 
     def set_scale(self, percent: int) -> None:
         """Make the window larger or smaller now (90 to 125 %) and keep the choice."""
@@ -1378,6 +1387,7 @@ class MainWindow(QMainWindow):
 
     def _restore_layout(self) -> None:
         settings = self.layout_settings
+        set_default_user(settings.text("reports/name"))
         geometry = settings.bytes_value("window/geometry")
         if geometry is not None:
             self.restoreGeometry(geometry)
