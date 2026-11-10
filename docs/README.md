@@ -69,6 +69,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [developer/security.md](developer/security.md) | Security of the code, the build and the release; settings only the owner can change; reproducible builds |
 | [developer/threat-model.md](developer/threat-model.md) | What is protected, from whom, where untrusted data comes in, what is not covered |
 | [../SECURITY.md](../SECURITY.md) | How to report a vulnerability in private; supported versions |
+| [../CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Contributor Covenant 3.0 and how to report a conduct problem in private |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the tool is built |
 | [INSTALL_CHECKLIST.md](INSTALL_CHECKLIST.md) | Clean-machine install checklist for a release |
 | [BRANCH_PROTECTION.md](BRANCH_PROTECTION.md) | Repository settings for the owner to apply |

@@ -137,7 +137,7 @@ Most of the code and the documentation of System Budget Studio were written by C
 
 System Budget Studio is maintained by one person in their free time. Maintenance status: active, best effort. There is no guaranteed support, maintenance, fixes or response time. System Budget Studio is non-commercial: it has no sales, paid features, paid support, advertising, donations or sponsorship. Proposals to change that are out of scope.
 
-Please never post confidential, proprietary, export-controlled, personal or customer data in an issue or a pull request. The owner may edit or delete content that breaks this rule.
+Please never post confidential, proprietary, export-controlled, personal or customer data in an issue or a pull request. The issue forms and the pull request template ask you to tick a box that says you have not, and a CI check fails a pull request without it. The owner may edit or delete content that breaks this rule. Everyone who takes part follows the [Code of Conduct](CODE_OF_CONDUCT.md). To report a security problem in private, read [SECURITY.md](SECURITY.md).
 
 ## What the program stores and sends
 

@@ -42,6 +42,7 @@ When you update an action, take the commit that the tag points to. An annotated 
 |---|---|
 | `ci.yml` | Lint, types and the tests on Linux and Windows; REUSE; offline evidence |
 | `dco.yml` | `Signed-off-by` on every commit |
+| `pr-checklist.yml` | The pull request text has the data box ticked (no confidential, export-controlled, personal or customer data); Dependabot exempt |
 | `audit.yml` | `pip-audit` of the locks |
 | `dependency-review.yml` | Known vulnerabilities in a dependency change (by hand until the Dependency graph is on) |
 | `codeql.yml` | CodeQL for Python and for the workflows; results in the Security tab |

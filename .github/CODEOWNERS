@@ -1,0 +1,8 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+# The owner reviews every change. This file only has an effect when the ruleset for `main`
+# switches on "Require review from Code Owners" (docs/BRANCH_PROTECTION.md says when that is
+# useful: GitHub does not let the author of a pull request approve it).
+* @0h3xn4

@@ -41,6 +41,8 @@ System Budget Studio is a personal project of its owner. It is not affiliated wi
 - **Never post confidential, proprietary, export-controlled, personal or customer data**: not in code, examples, test files, screenshots, issues or pull requests. Example data is invented. Files of IDM-CIC or other third-party tools are never committed (a test enforces it for `.idm` files).
 - **The project is non-commercial.** It has no sales, paid features, paid support, advertising, donations or sponsorship, and proposals to change that are out of scope.
 - **Every file carries its licence.** A new Python file starts with the two SPDX lines (`reuse annotate --copyright "<holder>" --year <year> --license Apache-2.0 <file>`); other files are covered by `REUSE.toml`. `reuse lint` must pass (CI job `REUSE`).
+- **Tick the data box.** Every issue form and the pull request template have the box "I have not included confidential, proprietary, export-controlled, personal or customer data." The issue forms need it; the CI job `Pull request data box` fails a pull request whose text does not have it ticked (edit the text and the job runs again).
+- **Be decent.** The [Code of Conduct](CODE_OF_CONDUCT.md) (Contributor Covenant 3.0) applies to every issue, comment and pull request.
 - **The owner may refuse any contribution of unclear origin**, and may edit or delete issues, comments and pull requests that break these rules.
 
 ## Make a change

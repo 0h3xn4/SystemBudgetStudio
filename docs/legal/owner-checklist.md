@@ -25,7 +25,7 @@ Date: 2026-11-09 (first version, Phase 1). These steps need you: they are accoun
 
 - [ ] **Branch and tag rulesets** for `main` and for tags `v*`, as in [docs/BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md): require pull requests, require the CI checks (including every new check added in Phase 3, 4 and 6), block force-pushes and deletion. *How:* **Settings → Rules → Rulesets → New ruleset**. The list of check names comes with the Phase 6 pull request.
 - [ ] **Dependency graph** (Phase 6): switch it on (**Settings → Code security → Dependency graph**). The dependency-review workflow failed on PR #136 because it is off, so it now runs only by hand. After you switch it on, tell me and I add the `pull_request` trigger back (the text is in the workflow file).
-- [ ] **More required checks** (Phase 6): after each new workflow has run once on a pull request, add `CodeQL (python)`, `CodeQL (actions)` and `gitleaks` to the required checks (list in [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md)). Leave "code scanning default setup" **off** (CodeQL runs from `codeql.yml`).
+- [ ] **More required checks** (Phase 6 and 7): after each new workflow has run once on a pull request, add `CodeQL (python)`, `CodeQL (actions)`, `gitleaks` and `Data box ticked (no confidential data)` to the required checks (list in [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md)). Leave "code scanning default setup" **off** (CodeQL runs from `codeql.yml`).
 - [ ] **Environment `release`** (Phase 6): the workflows `publish` and `attach-release` name it; GitHub creates it empty on first use. Add yourself as **required reviewer** and limit it to tags `v*` **before** you push the next tag.
 - [ ] **Actions settings** (Phase 6): default token read-only; switch off "Allow GitHub Actions to create and approve pull requests"; require approval for workflows of first-time contributors. *How:* **Settings → Actions → General**.
 - [ ] **Decide about code signing** (Phase 6, Q7): read [signing-options.md](signing-options.md). Recommendation: apply to SignPath Foundation after Phase 7 is merged. Nothing is implemented until you decide.
@@ -43,6 +43,11 @@ Date: 2026-11-09 (first version, Phase 1). These steps need you: they are accoun
 - [ ] **Private vulnerability reporting.** *How:* **Settings → Code security → Private vulnerability reporting → Enable**.
 - [ ] **Dependabot alerts and security updates** (Phase 6 adds the version-update file). *How:* **Settings → Code security**.
 - [ ] **Signed commits** (only if you want them). *How:* GitHub, **Settings → SSH and GPG keys**, add a signing key, then `git config --global commit.gpgsign true`. Then add "Require signed commits" to the ruleset.
+
+- [ ] **Tag ruleset and who can publish** (Phase 7): a ruleset for tags `v*` that only you can create and nobody can delete or move; check **Settings → Collaborators** shows only you with write access. *How:* **Settings → Rules → Rulesets → New tag ruleset**.
+- [ ] **Code owners** (Phase 7): `.github/CODEOWNERS` names you. Do **not** switch on "Require review from Code Owners" while you are the only account (GitHub does not let you approve your own pull request, and the assistant's pull requests appear under your name). Switch it on only when a second person can approve.
+- [ ] **Discussions off, moderation known** (Phase 7): **Settings → General → Features**, untick Discussions. Know where **Reported content** is. The Code of Conduct and the issue forms say you may edit or delete content that breaks the rules.
+- [ ] **Code of Conduct contact** (Phase 7, Q3): the Code of Conduct names GitHub's private report form (Security tab, *Report a vulnerability*, title starting `Conduct:`) as the way to report, so it works only after you switch on private vulnerability reporting (above). If you later choose a project address, change the reporting sentence in `CODE_OF_CONDUCT.md` (section *Reporting an Issue*) and in `SECURITY.md`. Tell me which address and I do it.
 
 ## Personal
 
