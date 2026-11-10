@@ -68,6 +68,7 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [developer/README.md](developer/README.md) | Layout, tests, generated files, keeping docs true, releases |
 | [developer/security.md](developer/security.md) | Security of the code, the build and the release; settings only the owner can change; reproducible builds |
 | [developer/threat-model.md](developer/threat-model.md) | What is protected, from whom, where untrusted data comes in, what is not covered |
+| [developer/replace-qt.md](developer/replace-qt.md) | How to replace the Qt libraries of an installed copy (the LGPL right, D-261) |
 | [../SECURITY.md](../SECURITY.md) | How to report a vulnerability in private; supported versions |
 | [../CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md) | Contributor Covenant 3.0 and how to report a conduct problem in private |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the tool is built |
@@ -96,6 +97,6 @@ This page is the map of everything written about System Budget Studio. If you ar
 | [ux-audit.md](ux-audit.md) | The UX audit of the 1.0.0 window: findings, screenshots, measurements, decisions needed (historical; the window has been redesigned since) |
 | [ui/UI_OVERHAUL_PLAN.md](ui/UI_OVERHAUL_PLAN.md) | The UI overhaul (1.2.0): audit, baseline, information architecture, the milestones M1 to M6 as built and the final measurements against the baseline (brief: [ui/UI_OVERHAUL.md](ui/UI_OVERHAUL.md); screenshots and baselines per milestone in `ui/screenshots/`) |
 | [legal/README.md](legal/README.md) | The legal record: inventory, claims register, audit, risk register, owner checklist and questions for a lawyer, with dated evidence (not legal advice) |
-| [site/plan.md](site/plan.md) | The plan for the project website: assets, page structure, tests, open points (nothing built or published) |
+| [site/plan.md](site/plan.md) | The plan for a project website, discarded by the owner on 2026-11-10 (D-265); kept as the record, nothing was built or published |
 
 Next: [Getting started](getting-started.md).

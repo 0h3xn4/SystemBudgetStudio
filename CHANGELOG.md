@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Documentation brought up to date after 2.12.0.** The architecture page lists the modules and release controls of 2.11.1 to 2.12.0 (support aids, offline evidence, disclaimer, landing page, recent projects, the `release` environment); the README, the FAQ, the glossary (*Landing page*, *Recent projects*), troubleshooting and the guide chapters describe the landing page and how to get the last projects back; the guide no longer says that reports name the login name; the layout file on Windows is in `%LOCALAPPDATA%\System Budget Studio\` (the pages said `%APPDATA%`); the release recipe and the branch-protection page say to create the `release` environment by hand before the first tag and how to tag when `main` has moved on; the shortcut tables list Ctrl+W; the eleven screenshots are taken again from 2.12.0, with a new one of the landing page. **File → Close project** now shows and takes Ctrl+W on every system (it took the system's close key, Ctrl+F4 on some).
+
 ## [2.12.0] - 2026-11-10
 
 The first release under the Apache License 2.0 (releases up to and including 2.11.2 are MIT). It adds the protection programme: one disclaimer in the program and every report, no account name in reports, safer reading of files from strangers, third-party notices and Qt sources with every release, a compliance record and signed build attestations. No result of any budget changed; the reports change only in the version line, the disclaimer line and the user name (`unknown` unless set).

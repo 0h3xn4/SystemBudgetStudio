@@ -6,8 +6,8 @@ A project is a folder of plain-text YAML files that describe one spacecraft; thi
 
 ## How do I start a project with the wizard?
 
-1. Start the window: `system-budget-studio`.
-2. Choose **File → New project (guided)** (Ctrl+N). Five short pages follow:
+1. Start the window: `system-budget-studio`. It opens on the landing page.
+2. Choose **New project (guided)…** on the landing page, or **File → New project (guided)** (Ctrl+N). Five short pages follow:
    1. **Project**: a name and the parent folder. The project goes into a new folder named after the project; an existing folder is never touched.
    2. **Spacecraft**: a sample to start from: a 250 kg minisatellite with complete example inputs, the same one with every input filled in and no warning or error, a 150 kg microsatellite with two links, a 250 kg minisatellite with placeholder inputs, or a [blank project](#how-do-i-start-a-blank-project).
    3. **Orbit**: altitude (160 to 2000 km), inclination and RAAN of a near-circular orbit.

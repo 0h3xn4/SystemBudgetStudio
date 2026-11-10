@@ -419,7 +419,11 @@ class MainWindow(QMainWindow):
         add("&Save", QKeySequence.StandardKey.Save, self.save_current)
         add("&Reload project", QKeySequence(Qt.Key.Key_F5), self.reload_project)
         self.close_project_action = QAction("C&lose project", self)
-        self.close_project_action.setShortcut(QKeySequence.StandardKey.Close)
+        # Ctrl+W everywhere (the menu shows it), and the system's own close key as well
+        close_keys = [QKeySequence("Ctrl+W")]
+        system_keys = QKeySequence.keyBindings(QKeySequence.StandardKey.Close)
+        close_keys += [k for k in system_keys if k not in close_keys]
+        self.close_project_action.setShortcuts(close_keys)
         self.close_project_action.setStatusTip("Close the project and go back to the landing page")
         self.close_project_action.triggered.connect(self.close_project)
         self.close_project_action.setEnabled(False)

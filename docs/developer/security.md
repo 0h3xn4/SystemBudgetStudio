@@ -55,7 +55,7 @@ When you update an action, take the commit that the tag points to. An annotated 
 
 These are repository settings; the workflows cannot set them. Until they are set, the controls above are weaker than this page says.
 
-1. **Environment `release`** (Settings, Environments). Add the owner as **required reviewer** and limit it to tags `v*`. The workflows name the environment; GitHub creates it on first use without a reviewer.
+1. **Environment `release`** (Settings, Environments, **New environment**). Add the owner as **required reviewer** (leave *Prevent self-review* off: the owner pushes the tag and approves the run) and limit it to tags `v*` (*Deployment branches and tags*, a tag rule). The workflows name the environment, but it is not listed until it exists: create it **by hand before the first tag**, otherwise the first run creates it without a reviewer and does not wait. A run then waits on its page in Actions until the owner presses *Review deployments* and approves.
 2. **Private vulnerability reporting** (Settings, Code security).
 3. **Secret scanning and push protection**, **Dependabot alerts**, **Dependency graph** and **code scanning default setup off** (CodeQL runs from `codeql.yml`).
 4. **Branch protection or a ruleset for `main`**: pull request required, required checks (`CI`, `REUSE (licence and copyright of every file)`, `Signed-off-by on every commit`, `CodeQL`), no force push, no deletion. See [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md).

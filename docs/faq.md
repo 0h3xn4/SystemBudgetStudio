@@ -56,7 +56,11 @@ The tool never converts between them for you: a `dBW` value in a watt field is a
 
 ### How do I start a new project?
 
-With the wizard (File → New project; pick *Blank project* to start from nothing, and the **Start here** card then takes you through a unit, a spacecraft mode, an orbit and a scenario), with `budget new FOLDER --bus-voltage-v 28`, or by copying an example: [create a project](user-manual/create-a-project.md).
+From the landing page or with the wizard (**New project (guided)…**, or File → New project, Ctrl+N; pick *Blank project* to start from nothing, and the **Start here** card then takes you through a unit, a spacecraft mode, an orbit and a scenario), with `budget new FOLDER --bus-voltage-v 28`, or by copying an example: [create a project](user-manual/create-a-project.md).
+
+### Why does the window not open my last project?
+
+It always starts on its landing page, so that every start looks the same and the program keeps no path of your projects unless you ask. From there, open a folder (Ctrl+O), start a new project, open an example, or tick **Settings → Remember recent projects** to see your last projects listed. A folder given when the program starts (a pinned taskbar icon, a double-clicked project) is offered, not opened ([the landing page](user-manual/use-the-window.md#shortcuts)).
 
 ### Can I add a ground station, an expendable or a link in the window?
 
