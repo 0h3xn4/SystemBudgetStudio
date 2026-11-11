@@ -24,7 +24,7 @@ The script copies the program to `~/.local/opt/system-budget-studio`, links `sys
 
 The window needs the usual desktop libraries (EGL, OpenGL, xkbcommon, fontconfig). On a minimal RHEL or Rocky 9 install them with `sudo dnf install mesa-libEGL mesa-libGL libxkbcommon libxkbcommon-x11 fontconfig xcb-util-wm xcb-util-image xcb-util-keysyms xcb-util-renderutil`, and `xcb-util-cursor` from EPEL (`sudo dnf install epel-release` first; RHEL itself gets `epel-release` from the Fedora project's EPEL page). Without `xcb-util-cursor` the window does not open. The command-line tool and the self-test work without a display.
 
-To uninstall run `~/.local/opt/system-budget-studio/uninstall.sh`. It removes the program, the links, the menu entry and its icons that the installer created and nothing else.
+To uninstall run `~/.local/opt/system-budget-studio/uninstall.sh`. It removes the program, the links, the menu entry and its icons that the installer created, and the folders the installer created for them once they are empty, and nothing else. It keeps the window's settings and says where they are (see *Your files* below).
 
 ## Linux packages (.deb and .rpm)
 

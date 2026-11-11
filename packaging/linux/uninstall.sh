@@ -1,7 +1,9 @@
 #!/bin/sh
-# Removes what install.sh created: the program folder, the command links and the menu entry.
-# Your projects, reports and settings are not touched (the tool stores none outside them), and
-# a command of yours that install.sh did not create is left alone.
+# Removes what install.sh created: the program folder, the command links, the menu entry, its
+# icons, and the folders the installer created for them once they are empty. Your projects and
+# reports are not touched, nor is a command of yours that install.sh did not create. The window's
+# settings (layout.ini, and recent-projects.txt if you switched that list on) stay in your
+# configuration folder; the script says where, and you delete that folder to remove them.
 # Usage: uninstall.sh [--quiet]
 set -eu
 
@@ -19,6 +21,9 @@ if [ ! -f "$manifest" ]; then
     exit 1
 fi
 
+# The folders the installer created, deepest first (read now: the manifest goes with the program).
+created_dirs="$(sed -n 's/^dir //p' "$manifest" | LC_ALL=C sort -ru)"
+
 while IFS=' ' read -r kind path; do
     if [ "$kind" = "link" ]; then
         # only remove a link that still points into this installation
@@ -33,5 +38,17 @@ done < "$manifest"
 # The script is running from inside the folder it removes; that works because the shell has read it.
 cd /
 rm -rf "$prefix"
-[ "$quiet" = 1 ] || echo "Removed $prefix"
+if [ -n "$created_dirs" ]; then
+    printf '%s\n' "$created_dirs" | while IFS= read -r folder; do
+        # rmdir removes a folder only when it is empty: one that holds other files stays.
+        [ -n "$folder" ] && rmdir "$folder" 2>/dev/null || true
+    done
+fi
+if [ "$quiet" = 0 ]; then
+    echo "Removed $prefix"
+    settings="${XDG_CONFIG_HOME:-$HOME/.config}/System Budget Studio"
+    if [ -d "$settings" ]; then
+        echo "Kept the window settings in $settings; delete that folder to remove them too."
+    fi
+fi
 exit 0
