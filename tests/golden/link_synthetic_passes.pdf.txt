@@ -196,11 +196,11 @@ SOURCE_MISSING
 LNK-EIRP
 Effective isotropic radiated power
 EIRP = P_tx - L_line + G_tx (dBW)
-SOURCE_MISSING
+ITU RR No. 1.161
 LNK-FSPL
 Free-space path loss
 L_fs = 20 log10(4 pi d f / c) (dB)
-SOURCE_MISSING
+ITU-R P.525-5, eq. (5)
 LNK-GT
 Receiver figure of merit
 G/T = G_rx - L_feed - 10 log10(T_sys) (dB/K), or given directly

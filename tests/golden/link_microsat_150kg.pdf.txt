@@ -345,11 +345,11 @@ Source
 LNK-EIRP
 Effective isotropic radiated power
 EIRP = P_tx - L_line + G_tx (dBW)
-SOURCE_MISSING
+ITU RR No. 1.161
 LNK-FSPL
 Free-space path loss
 L_fs = 20 log10(4 pi d f / c) (dB)
-SOURCE_MISSING
+ITU-R P.525-5, eq. (5)
 LNK-GT
 Receiver figure of merit
 G/T = G_rx - L_feed - 10 log10(T_sys) (dB/K), or given directly
@@ -383,8 +383,8 @@ sin(eta) = R cos(el) / r, r^2 = R^2 + d^2 + 2 R d sin(el)
 SOURCE_MISSING
 LNK-VOLUME
 Data volume
-V = sum over samples of R_selected * (time of the sample inside the pass); R_selected is the
-highest listed rate with margin >= required margin while the link is active
+V = sum over samples of R_selected * (time of the sample inside the pass); R_selected
+is the highest listed rate with margin >= required margin while the link is active
 SOURCE_MISSING
 SOURCE_MISSING: the formula is a project convention or textbook definition whose reference text is not available to the tool yet (see docs/DECISIONS.md).
 Problems

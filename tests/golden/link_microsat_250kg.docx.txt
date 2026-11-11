@@ -43,8 +43,8 @@ Attenuation gas_x | n/a | dB | TBD | PLACEHOLDER
 Equations
 ## table
 ID | Name | Formula | Source
-LNK-EIRP | Effective isotropic radiated power | EIRP = P_tx - L_line + G_tx  (dBW) | SOURCE_MISSING
-LNK-FSPL | Free-space path loss | L_fs = 20 log10(4 pi d f / c)  (dB) | SOURCE_MISSING
+LNK-EIRP | Effective isotropic radiated power | EIRP = P_tx - L_line + G_tx  (dBW) | ITU RR No. 1.161
+LNK-FSPL | Free-space path loss | L_fs = 20 log10(4 pi d f / c)  (dB) | ITU-R P.525-5, eq. (5)
 LNK-GT | Receiver figure of merit | G/T = G_rx - L_feed - 10 log10(T_sys)  (dB/K), or given directly | SOURCE_MISSING
 LNK-CN0 | Carrier to noise density | C/N0 = EIRP - L_fs - L_atm - L_point - L_pol - L_impl + G/T - 10 log10(k)  (dBHz) | SOURCE_MISSING
 LNK-EBN0 | Energy per bit to noise density | Eb/N0 = C/N0 - 10 log10(R_b)  (dB) | SOURCE_MISSING
