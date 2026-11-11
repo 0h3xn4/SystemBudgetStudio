@@ -5,14 +5,12 @@
 name: Dependency review
 
 # Fails when a change adds a package with a known vulnerability of high or critical severity.
-# It needs the repository's Dependency graph (Settings > Code security). That setting is off, so
-# the run on pull requests failed with "Dependency review is not supported on this repository":
-# until the owner switches the graph on, this workflow runs only when started by hand. Then add
-#     pull_request:
-#       paths: ["pyproject.toml", "requirements*.lock", ".github/workflows/**"]
-# under `on:` (docs/legal/owner-checklist.md). The weekly pip-audit run (audit.yml) checks the
-# locked packages in every case and runs on every change of a lock file.
+# It needs the repository's Dependency graph (Settings > Code security), switched on by the owner
+# on 2026-11-11. It runs on the pull requests that change a dependency or a workflow; the weekly
+# pip-audit run (audit.yml) checks the locked packages in every case and on every lock change.
 on:
+  pull_request:
+    paths: ["pyproject.toml", "requirements*.lock", ".github/workflows/**"]
   workflow_dispatch:
 
 permissions:

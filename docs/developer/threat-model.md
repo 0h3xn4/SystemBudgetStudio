@@ -49,10 +49,10 @@ Last reviewed: 2026-11-10 (protection programme, phase 6; D-263). Change this pa
 
 | Threat | Control |
 |---|---|
-| A library is replaced or has a known vulnerability | Hashed lock files (`--require-hashes`); weekly `pip-audit` and on every lock change; dependency review (once the owner enables the Dependency graph); Dependabot for the version ranges; the list of libraries in the SBOM |
+| A library is replaced or has a known vulnerability | Hashed lock files (`--require-hashes`); weekly `pip-audit` and on every lock change; dependency review on every pull request that changes a dependency; Dependabot for the version ranges; the list of libraries in the SBOM |
 | An action is changed after review | Every action is pinned to a full commit id (a test checks it); Dependabot proposes the update |
 | A workflow runs with too many rights | Read-only default token (a test checks it); writes only in jobs that use the `release` environment (a test checks it); no `pull_request_target` (a test checks it); no text from a pull request in a shell script (a test checks it) |
-| A harmful pull request is merged | Review by the maintainer; required checks (owner setting) |
+| A harmful pull request is merged | Review by the maintainer; a merge only when the checks pass (not enforced by GitHub, D-271) |
 | A release is published without review | The `publish` job needs the approval of a required reviewer in the `release` environment (owner setting); a new release is a draft until the owner publishes it |
 | A download is replaced | `SHA256SUMS`; signed build attestations (`gh attestation verify`); the compliance record lists the hashes. There is no code-signing certificate (see [signing options](../legal/signing-options.md)) |
 | A secret is committed | gitleaks on every pull request and push; GitHub secret scanning and push protection (owner setting) |

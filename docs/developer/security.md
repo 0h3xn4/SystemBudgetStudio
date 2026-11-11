@@ -22,7 +22,7 @@ What the project does, where it is checked, and what the owner must set on GitHu
 
 - Runtime and development libraries are installed from `requirements.lock` and `requirements-dev.lock` with `--require-hashes`. Make them with `packaging/lock.sh` (uv, universal, hashes). Install from source the same way: `pip install --require-hashes -r requirements.lock` and then `pip install --no-deps -e .` (see [getting started](../getting-started.md)). The build tool `hatchling` is the one thing that is fetched without a hash; it is not part of what is installed.
 - `.github/workflows/audit.yml` runs `pip-audit` on both locks every Monday, on a change of a lock or of `pyproject.toml`, and on request. A finding fails the run.
-- `.github/workflows/dependency-review.yml` fails a change that adds a package with a known vulnerability of high or critical severity. It needs the repository's Dependency graph, which is off; until the owner switches it on the workflow runs only by hand, and `pip-audit` (above) is the check that runs on every lock change.
+- `.github/workflows/dependency-review.yml` fails a change that adds a package with a known vulnerability of high or critical severity. It needs the repository's Dependency graph (on since 2026-11-11) and runs on every pull request that changes `pyproject.toml`, a lock file or a workflow; `pip-audit` (above) also runs on every lock change.
 - `.github/dependabot.yml` proposes updates of the actions (and of the ranges in `pyproject.toml`). Nothing merges by itself. After a change of `pyproject.toml` run `packaging/lock.sh` and commit the locks, because Dependabot does not make hashed locks. Dependabot commits cannot carry a `Signed-off-by` line; the DCO check lets exactly that bot address through (`packaging/dco_check.py`), and the person who merges the pull request takes the change over.
 - A new runtime dependency needs: an entry in `[project.dependencies]`, new locks, a licence on the allow list (`packaging/bundle_policy.toml`, `docs/LICENCES.md`), a hidden import in the PyInstaller spec when it is loaded by name, and a reason in `docs/DECISIONS.md`.
 
@@ -44,7 +44,7 @@ When you update an action, take the commit that the tag points to. An annotated 
 | `dco.yml` | `Signed-off-by` on every commit |
 | `pr-checklist.yml` | The pull request text has the data box ticked (no confidential, export-controlled, personal or customer data); Dependabot exempt |
 | `audit.yml` | `pip-audit` of the locks |
-| `dependency-review.yml` | Known vulnerabilities in a dependency change (by hand until the Dependency graph is on) |
+| `dependency-review.yml` | Known vulnerabilities in a dependency change (pull requests that change a dependency or a workflow) |
 | `codeql.yml` | CodeQL for Python and for the workflows; results in the Security tab |
 | `secrets.yml` | gitleaks on commits |
 | `scorecard.yml` | OpenSSF Scorecard (the result stays in this repository; `publish_results` is false) |
@@ -58,7 +58,7 @@ These are repository settings; the workflows cannot set them. Until they are set
 1. **Environment `release`** (Settings, Environments, **New environment**). Add the owner as **required reviewer** (leave *Prevent self-review* off: the owner pushes the tag and approves the run) and limit it to tags `v*` (*Deployment branches and tags*, a tag rule). The workflows name the environment, but it is not listed until it exists: create it **by hand before the first tag**, otherwise the first run creates it without a reviewer and does not wait. A run then waits on its page in Actions until the owner presses *Review deployments* and approves.
 2. **Private vulnerability reporting** (Settings, Code security).
 3. **Secret scanning and push protection**, **Dependabot alerts**, **Dependency graph** and **code scanning default setup off** (CodeQL runs from `codeql.yml`).
-4. **Branch protection or a ruleset for `main`**: pull request required, required checks (`CI`, `REUSE (licence and copyright of every file)`, `Signed-off-by on every commit`, `CodeQL`), no force push, no deletion. See [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md).
+4. **Branch protection or a ruleset for `main`**: pull request required, no force push, no deletion (done). Required checks were declined (D-271): the checks run on every pull request and the maintainer merges only on green. See [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md).
 5. **Actions permissions**: the default token read-only, and "Allow GitHub Actions to create and approve pull requests" off. Approval needed for workflows from first-time contributors.
 6. **Two-factor authentication** with a passkey on the owner account.
 
