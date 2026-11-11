@@ -35,7 +35,39 @@ if [ ! -x "$src/system-budget-studio" ] || [ ! -x "$src/budget" ]; then
     exit 1
 fi
 
+# The folders that do not exist yet on the way to $1, outermost first, one per line.
+missing_dirs() {
+    d="$1"
+    out=""
+    while [ ! -e "$d" ] && [ ! -L "$d" ]; do
+        out="$d
+$out"
+        parent="$(dirname "$d")"
+        [ "$parent" = "$d" ] && break
+        d="$parent"
+    done
+    printf '%s' "$out"
+}
+
+# mkdir -p that records every folder it creates in the manifest ("dir <path>"), so that
+# uninstall.sh can remove them again once they are empty (and only those).
+make_dir() {
+    created="$(missing_dirs "$1")"
+    mkdir -p "$1"
+    if [ -n "$created" ]; then
+        printf '%s\n' "$created" | while IFS= read -r folder; do
+            [ -n "$folder" ] && echo "dir $folder" >> "$manifest"
+        done
+    fi
+    return 0
+}
+
 # One canonical absolute prefix, so links and the manifest never depend on how it was typed.
+case "$prefix" in
+    /*) prefix_parent="$(dirname "$prefix")" ;;
+    *) prefix_parent="$(dirname "$PWD/$prefix")" ;;
+esac
+prefix_parents="$(missing_dirs "$prefix_parent")"
 mkdir -p "$prefix"
 prefix="$(cd "$prefix" && pwd -P)"
 case "$prefix" in
@@ -53,7 +85,10 @@ if [ ! -f "$marker" ] && [ -n "$(ls -A "$prefix" 2>/dev/null)" ]; then
     exit 1
 fi
 
+old_dirs=""
 if [ -f "$marker" ]; then
+    # The folders the earlier installation created stay recorded, so uninstall removes them.
+    old_dirs="$(sed -n 's/^dir //p' "$marker")"
     # Upgrade: take the old installation away completely (nothing of the old version is mixed
     # in). This does not depend on the old uninstall.sh still being there.
     echo "Replacing the existing installation in $prefix"
@@ -72,9 +107,16 @@ fi
 cp -a "$src/." "$prefix/"
 manifest="$prefix/install-manifest.txt"
 : > "$manifest"
+for folder_list in "$old_dirs" "$prefix_parents"; do
+    if [ -n "$folder_list" ]; then
+        printf '%s\n' "$folder_list" | while IFS= read -r folder; do
+            [ -n "$folder" ] && echo "dir $folder" >> "$manifest"
+        done
+    fi
+done
 
 if [ "$links" = 1 ]; then
-    mkdir -p "$bindir"
+    make_dir "$bindir"
     for name in system-budget-studio budget; do
         link="$bindir/$name"
         if { [ -e "$link" ] || [ -L "$link" ]; } && [ "$force" = 0 ]; then
@@ -88,7 +130,7 @@ fi
 
 if [ "$desktop" = 1 ]; then
     appdir="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
-    mkdir -p "$appdir"
+    make_dir "$appdir"
     entry="$appdir/system-budget-studio.desktop"
     # Desktop Entry rules: a quoted Exec argument escapes " ` $ and \ with a backslash, the
     # string value then doubles every backslash, and a literal % is written %%.
@@ -102,7 +144,7 @@ if [ "$desktop" = 1 ]; then
         size="${size%.png}"
         case "$size" in ''|*[!0-9]*) continue ;; esac
         icon_target="$datadir/icons/hicolor/${size}x${size}/apps/system-budget-studio.png"
-        mkdir -p "$(dirname "$icon_target")"
+        make_dir "$(dirname "$icon_target")"
         cp "$png" "$icon_target"
         echo "file $icon_target" >> "$manifest"
         has_icon=1

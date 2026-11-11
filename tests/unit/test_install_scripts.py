@@ -304,3 +304,61 @@ def test_help_shows_only_the_usage(bundle: Path, tmp_path: Path) -> None:
     result = run(bundle / "install.sh", tmp_path, "--help")
     assert result.returncode == 0
     assert "Usage" in result.stdout and "set -eu" not in result.stdout
+
+
+def test_uninstall_removes_the_folders_the_installer_created(bundle: Path, tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    assert run(bundle / "install.sh", home).returncode == 0
+    assert run(home / ".local/opt/system-budget-studio/uninstall.sh", home).returncode == 0
+    left = sorted(p.relative_to(home).as_posix() for p in home.rglob("*"))
+    assert left == []  # nothing existed before, so nothing is left: no empty icon or menu folders
+
+
+def test_uninstall_keeps_folders_that_existed_or_hold_other_files(
+    bundle: Path, tmp_path: Path
+) -> None:
+    home = tmp_path / "home"
+    apps = home / ".local/share/applications"
+    apps.mkdir(parents=True)  # existed before the install, empty
+    theirs = home / ICON_DIR / "16x16/apps/other-program.png"
+    assert run(bundle / "install.sh", home).returncode == 0
+    theirs.parent.mkdir(parents=True, exist_ok=True)
+    theirs.write_bytes(b"another program's icon, added after the install")
+    assert run(home / ".local/opt/system-budget-studio/uninstall.sh", home).returncode == 0
+    assert apps.is_dir()  # not created by the installer: kept although empty
+    assert theirs.read_bytes().startswith(b"another")  # a folder with other files is kept
+    assert not (home / ICON_DIR / "256x256").exists()  # created by the installer, now empty
+    assert not (home / ".local/bin").exists() and not (home / ".local/opt").exists()
+
+
+def test_an_upgrade_then_uninstall_leaves_no_empty_folders(bundle: Path, tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    assert run(bundle / "install.sh", home).returncode == 0
+    assert run(bundle / "install.sh", home).returncode == 0  # the upgrade path
+    assert run(home / ".local/opt/system-budget-studio/uninstall.sh", home).returncode == 0
+    assert list(home.rglob("*")) == []
+
+
+def test_uninstall_says_where_the_settings_folder_is_and_keeps_it(
+    bundle: Path, tmp_path: Path
+) -> None:
+    home = tmp_path / "home"
+    settings = home / ".config/System Budget Studio/layout.ini"
+    settings.parent.mkdir(parents=True)
+    settings.write_text("[window]\n", encoding="utf-8")
+    assert run(bundle / "install.sh", home).returncode == 0
+    result = run(home / ".local/opt/system-budget-studio/uninstall.sh", home)
+    assert result.returncode == 0, result.stderr
+    assert settings.is_file()  # the user's settings are kept
+    assert str(settings.parent) in result.stdout  # and the user is told where they are
+    quiet = run(bundle / "install.sh", home)
+    assert quiet.returncode == 0
+    silent = run(home / ".local/opt/system-budget-studio/uninstall.sh", home, "--quiet")
+    assert silent.stdout == ""
+
+
+def test_the_uninstaller_does_not_claim_that_no_settings_are_kept() -> None:
+    text = (SCRIPTS / "uninstall.sh").read_text(encoding="utf-8")
+    assert "stores none outside them" not in text

@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **The Linux uninstaller leaves no empty folders and says where the settings are.** `install.sh` records in its manifest every folder it creates (`~/.local/bin`, the menu and icon folders, `~/.local/opt`); `uninstall.sh` removes those folders again once they are empty, and only those, also after an upgrade. It keeps the window's settings folder (`~/.config/System Budget Studio/`) and prints where it is; its comment no longer says that the tool stores no settings outside the projects. Found by the end-to-end test of the 2.12.1 Linux release.
+
 - **The dependency review runs on pull requests again.** The owner switched on the repository's Dependency graph, so `dependency-review.yml` checks every pull request that changes `pyproject.toml`, a lock file or a workflow (it ran only by hand before). Private vulnerability reporting, secret scanning with push protection and Dependabot security updates are on as well (the owner checklist is ticked). The CI checks stay unrequired in the ruleset of `main` by the owner's decision (D-271); the security pages now say that a change is merged only when they pass, without claiming that GitHub enforces it.
 
 - **Two link equations cite their published source (D-270).** The free-space path loss (LNK-FSPL) cites Rec. ITU-R P.525-5, Annex, 2.3, equation (5), and the e.i.r.p. (LNK-EIRP) the ITU Radio Regulations, No. 1.161; both were compared with the text, and each has an independent test. A source is now set only after such a check; the other 51 equations stay `SOURCE_MISSING` (was 53). The link reports show the two sources in their assumptions list; no number changed.
