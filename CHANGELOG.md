@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Releases can be tagged from GitHub's Actions page (D-272).** The new workflow *Tag a release* (`tag-release.yml`, started by hand on `main`) checks the version against `pyproject.toml`, the CHANGELOG and the existing tags, creates the tag `vX.Y.Z` and starts the installer build on it; publishing still waits for the owner's approval. The assistant can start it, since its session may not push tags.
+
 - **The Linux uninstaller leaves no empty folders and says where the settings are.** `install.sh` records in its manifest every folder it creates (`~/.local/bin`, the menu and icon folders, `~/.local/opt`); `uninstall.sh` removes those folders again once they are empty, and only those, also after an upgrade. It keeps the window's settings folder (`~/.config/System Budget Studio/`) and prints where it is; its comment no longer says that the tool stores no settings outside the projects. Found by the end-to-end test of the 2.12.1 Linux release.
 
 - **The dependency review runs on pull requests again.** The owner switched on the repository's Dependency graph, so `dependency-review.yml` checks every pull request that changes `pyproject.toml`, a lock file or a workflow (it ran only by hand before). Private vulnerability reporting, secret scanning with push protection and Dependabot security updates are on as well (the owner checklist is ticked). The CI checks stay unrequired in the ruleset of `main` by the owner's decision (D-271); the security pages now say that a change is merged only when they pass, without claiming that GitHub enforces it.

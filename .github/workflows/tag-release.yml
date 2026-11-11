@@ -1,0 +1,72 @@
+# SPDX-FileCopyrightText: 2026 0h3xn4
+#
+# SPDX-License-Identifier: Apache-2.0
+
+name: Tag a release
+
+# Creates the tag vX.Y.Z on the newest commit of main and starts the Installers workflow for it
+# (D-272). Started by hand (Actions > Tag a release > Run workflow), by someone with write access.
+# It refuses a version that differs from pyproject.toml, a version without its CHANGELOG section,
+# a tag that exists already, and any branch other than main. A tag created with the workflow's own
+# token does not start other workflows, so the job starts the Installers run itself, on the tag:
+# that run is the same as for a tag pushed by hand, and its publish job still waits for the owner's
+# approval in the `release` environment. Nothing is published by this workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to tag, as in pyproject.toml (for example 2.12.2), without the v"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tag-release
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    name: Tag the release and start the installer build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Creating a tag is what anyone with write access may do with git push; the environment keeps
+    # this job apart from the others. Publishing stays in `release`, behind the owner's approval.
+    environment: tagging
+    permissions:
+      contents: write # create the tag
+      actions: write # start the Installers workflow on it
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check the version against pyproject.toml, the CHANGELOG and the existing tags
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -eu
+          printf '%s\n' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' \
+            || { echo "::error::'$VERSION' is not a version like 2.12.2"; exit 1; }
+          declared="$(sed -n 's/^version = "\(.*\)"/\1/p' pyproject.toml | head -1)"
+          test "$declared" = "$VERSION" \
+            || { echo "::error::pyproject.toml on main says $declared, not $VERSION"; exit 1; }
+          grep -Fq "## [$VERSION] - " CHANGELOG.md \
+            || { echo "::error::CHANGELOG.md has no section [$VERSION]"; exit 1; }
+          if git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null; then
+            echo "::error::the tag v$VERSION exists already"; exit 1
+          fi
+      - name: Create the tag on this commit and start the Installers workflow on it
+        env:
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          sha="$(git rev-parse HEAD)"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+            -f ref="refs/tags/v$VERSION" -f sha="$sha" >/dev/null
+          gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "v$VERSION"
+          {
+            echo "Tagged v$VERSION on $sha and started the Installers workflow on it."
+            echo "Approve its publish job (Review deployments), then publish the draft release."
+          } >> "$GITHUB_STEP_SUMMARY"
