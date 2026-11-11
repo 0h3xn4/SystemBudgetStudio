@@ -47,9 +47,9 @@ All changes went through pull requests that were merged after green CI (#130, #1
 ## What could not be verified
 
 - **Real machines.** The installers were built and tested by CI, not by hand on a clean Windows 10/11 or Rocky 9 machine; the trimmed Qt was not checked on real desktops (X11, Wayland); the XLSX files were never opened in Excel ([../INSTALL_CHECKLIST.md](../INSTALL_CHECKLIST.md)).
-- **The release path.** The compliance record, the attestations and the `release` environment have not run on a real tag yet (claim C-44). The first release made by the new `publish` job is the test.
+- **The release path.** ~~The compliance record, the attestations and the `release` environment have not run on a real tag yet (claim C-44).~~ **Update 2026-11-11:** proven by 2.12.0 and 2.12.1: both releases carry `COMPLIANCE-RECORD.md` (REUSE and `pip-audit` passed) and attestations, and the 2.12.1 `publish` job waited for the owner's approval in the `release` environment. `gh attestation verify` has not been run by hand yet.
 - **Scanners.** gitleaks ran on the commit ranges of pull requests, not on the whole history; ScanCode was never run (the session may not run it); `exiftool` was not available. The company and customer name scan could not be done because the owner gave no list (Q15).
-- **GitHub settings.** The session cannot read or change settings. Whether two-factor login, rulesets, required checks, secret scanning, push protection, private vulnerability reporting, the Dependency graph and the `release` reviewer are on is **not known**.
+- **GitHub settings.** The session cannot read or change settings. Whether two-factor login, rulesets, required checks, secret scanning, push protection, private vulnerability reporting, the Dependency graph and the `release` reviewer are on is **not known**. **Update 2026-11-11:** the `release` reviewer is on (seen in the 2.12.1 run); the rest is still not known.
 - **Law.** Whether the licence change is valid, whether AI-written code is protected, whether the LGPL conditions are met for old releases, whether the disclaimer works, whether the name is free, whether publishing needs an export licence, and whether the repository page needs an imprint are questions for a lawyer. Nothing here answers them.
 - **The official trademark registers** (EUIPO, WIPO, USPTO, DPMA) were not searched; only a first web search was made ([trademark-search.md](trademark-search.md)).
 - **Old releases.** The 24 releases up to 2.11.1 are unchanged, by decision (Q8, Q18). Their notices and source availability are a known gap ([past-releases.md](past-releases.md)).
@@ -58,10 +58,10 @@ All changes went through pull requests that were merged after green CI (#130, #1
 
 | # | Decision | Recommendation | Where |
 |---|---|---|---|
-| 1 | The version of the first Apache-2.0 release. **Update 2026-11-10:** v2.11.2 was published from the MIT commit `41a330a`, so 2.11.2 is the last MIT release (D-267) and its number is taken; `main` still says 2.11.2 | 2.12.0 (a licence change and new safeguards); tag it after the owner settings below are done, so the first release uses the `release` reviewer | owner checklist |
+| 1 | The version of the first Apache-2.0 release. **Update 2026-11-10:** v2.11.2 was published from the MIT commit `41a330a`, so 2.11.2 is the last MIT release (D-267) and its number is taken. **Decided:** 2.12.0, published on 2026-11-10; 2.12.1 followed on 2026-11-11 | – | owner checklist |
 | 2 | Past releases: leave them (option A) or add notices and the 6.10.3 sources to v2.11.1 (option B) (Q18) | A, with the gap recorded | [past-releases.md](past-releases.md) |
-| 3 | Code signing for the Windows installer (Q7) | SignPath Foundation, after the Code of Conduct and two-factor login are in place; nothing is implemented | [signing-options.md](signing-options.md) |
-| 4 | A project contact (Q3): a dedicated address, or GitHub's private report form only | Private report form only (current); a dedicated address if you want one | owner checklist |
+| 3 | Code signing for the Windows installer (Q7). **Declined for now on 2026-11-10** | SignPath Foundation, if the owner changes their mind; nothing is implemented | [signing-options.md](signing-options.md) |
+| 4 | A project contact (Q3): a dedicated address, or GitHub's private report form only. **Decided for now on 2026-11-10:** the private report form only | A dedicated address if you want one later | owner checklist |
 | 5 | Apply the repository description and topics (Q19) | See below | this report |
 | 6 | Sign off AI-written commits yourself, or leave the sign-off "Claude" (F-25, LQ-15) | Ask the lawyer; until then leave it | audit F-25 |
 | 7 | Reword "CIC-SAT V6 (sample of the owner)" in the history records (F-15) after reading the CIC-IDM site terms | Reword; do not add new statements about that model | audit F-15 |
@@ -76,9 +76,9 @@ The full list is [owner-checklist.md](owner-checklist.md). It is repeated here i
 1. **Account:** passkey or hardware key, recovery codes offline, check sessions and authorised apps.
 2. **Settings → Code security:** private vulnerability reporting (the Code of Conduct and `SECURITY.md` rely on it), secret scanning with push protection, Dependabot alerts, **Dependency graph** (then tell Claude to restore the dependency-review trigger).
 3. **Rulesets:** `main` (pull request, required checks: tests, `REUSE (licence and copyright of every file)`, `Signed-off-by on every commit`, `CodeQL (python)`, `CodeQL (actions)`, `gitleaks`, `Data box ticked (no confidential data)`) and tags `v*` (only you may create, nobody may delete or move). Do not require code-owner review while you are the only account.
-4. **Environment `release`:** you as required reviewer, limited to tags `v*`, before the next tag. **Settings → Actions:** read-only default token, no pull requests created by Actions, approval for first-time contributors.
+4. **Environment `release`:** you as required reviewer (done), limited to tags `v*`. **Settings → Actions:** read-only default token, no pull requests created by Actions, approval for first-time contributors.
 5. **Repository:** Discussions off; know where reported content is; apply the description and topics below.
-6. **Release:** decide the version and tag it as in decision 1; do the manual steps of [../INSTALL_CHECKLIST.md](../INSTALL_CHECKLIST.md) on a clean Windows and Rocky 9 machine, including the trimmed Qt on X11 and Wayland; run `gh attestation verify` on one file per system and read `COMPLIANCE-RECORD.md`.
+6. **Release:** 2.12.0 and 2.12.1 are published (decision 1); do the manual steps of [../INSTALL_CHECKLIST.md](../INSTALL_CHECKLIST.md) on a clean Windows and Rocky 9 machine, including the trimmed Qt on X11 and Wayland; run `gh attestation verify` on one file per system and read `COMPLIANCE-RECORD.md`.
 7. **Commits:** the no-reply address (`Keep my email addresses private`, `Block command line pushes that expose my email`).
 8. **Personal:** ask your insurer (R-22); give a lawyer in Germany this report, [lawyer-questions.md](lawyer-questions.md) and [risk-register.md](risk-register.md); search the official trademark registers; read the CIC-IDM site terms.
 
@@ -111,15 +111,15 @@ Likelihood (L) and impact (I): L = low, M = medium, H = high. *Now* is the level
 | R-21 | Export control for publishing engineering software | L | M | Open | unknown | LQ-09 | L |
 | R-22 | Personal liability not covered by insurance | L | M | Open | unknown | Ask the insurer; LQ-14, LQ-16 | O, L |
 | R-24 | A scanner finding missed | M | M | Partly closed | L–M | Full-history gitleaks and ScanCode runs | C, O |
-| R-26 | The published releases bundle Pillow with known vulnerabilities (F-78) | L | M | Open until a new release | L after release | Release 2.11.2 or later (Pillow 13) with a release note | O |
+| R-26 | The published releases bundle Pillow with known vulnerabilities (F-78) | L | M | **Done:** 2.11.2 and later ship Pillow 13 (update 2026-11-11) | L | – | O |
 | R-27 | The DCO sign-off carries an AI identity | M | L | Open | L | You sign off yourself; LQ-15 | O, L |
-| R-28 | The next tag lands on the MIT commit | M | M | **Occurred** (v2.11.2); record corrected (D-267) | L | Give the first Apache-2.0 release a new version number | O |
+| R-28 | The next tag lands on the MIT commit | M | M | **Occurred** (v2.11.2); record corrected (D-267); closed: the first Apache-2.0 release is 2.12.0 | L | – | O |
 | R-29 | The trimmed Qt loses a function on a real desktop | L | M | Open (owner check) | L | The real-machine checks | O |
 | R-30 | A bundled component has no licence text, or a known gap is a real infringement (VC++ runtime, Mesa, Python's C libraries) | M | M | Open | M | LQ-17 to LQ-19; replace the Mesa DLL | C, L |
 | R-31 | Release files are not reproducible bit for bit | M | L | Open | L | Pin the Rocky image by digest and Inno Setup by version; `SOURCE_DATE_EPOCH` for the bundle | C |
 | R-32 | A huge project folder makes the program slow | L | L | Open | L | A cap with a message | C |
 
-R-23 and R-25 are closed and not repeated. **The risks that matter most now** are R-01 and R-02 for the old releases (the gaps that cannot be closed by code), R-05 and R-12 (owner), R-30 and R-28.
+R-23 and R-25 are closed and not repeated. **The risks that matter most now** are R-01 and R-02 for the old releases (the gaps that cannot be closed by code), R-05 and R-12 (owner) and R-30 (R-28 is closed since 2.12.0, update 2026-11-11).
 
 ## Questions for a lawyer
 
@@ -154,7 +154,7 @@ Claude cannot change repository settings and did not. Where: GitHub, repository 
 | No personal or company data in the working tree, metadata, screenshots, example outputs; every history finding decided | Working tree scanned (phase 2); history decided (D-259, R-06); **Q15 gave no name list, so the company-name scan was not done; F-15 wording is yours** |
 | The target licence is named everywhere; `NOTICE` exists; old releases marked MIT; `reuse lint` in CI | Done |
 | DCO check, licence gate, Qt module check, `pip-audit`, CodeQL, gitleaks, the no-network test and Scorecard run in CI | Done (Scorecard runs on `main` and weekly; its first result is yours to read) |
-| Every release build produces an SBOM, notices, Qt and PySide6 sources, attestations, SHA256 sums and a compliance record | Done in the workflow; **not yet proven on a real tag** (C-44) |
+| Every release build produces an SBOM, notices, Qt and PySide6 sources, attestations, SHA256 sums and a compliance record | Done; proven by the releases 2.12.0 and 2.12.1 (C-44) |
 | The disclaimer is one text, the same everywhere, and tested | Done |
 | No promise wording remains; every public claim has evidence | Done, except the repository description (yours to apply) |
 | The AI-authorship section is in the README, the About dialog and on the website | README and About dialog done; **no website** |
