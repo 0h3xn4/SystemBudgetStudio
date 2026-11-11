@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **The dependency review runs on pull requests again.** The owner switched on the repository's Dependency graph, so `dependency-review.yml` checks every pull request that changes `pyproject.toml`, a lock file or a workflow (it ran only by hand before). Private vulnerability reporting, secret scanning with push protection and Dependabot security updates are on as well (the owner checklist is ticked).
+
 - **Two link equations cite their published source (D-270).** The free-space path loss (LNK-FSPL) cites Rec. ITU-R P.525-5, Annex, 2.3, equation (5), and the e.i.r.p. (LNK-EIRP) the ITU Radio Regulations, No. 1.161; both were compared with the text, and each has an independent test. A source is now set only after such a check; the other 51 equations stay `SOURCE_MISSING` (was 53). The link reports show the two sources in their assumptions list; no number changed.
 
 ## [2.12.1] - 2026-11-10

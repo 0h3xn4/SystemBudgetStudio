@@ -6,7 +6,7 @@ Date: 2026-11-09 (first version, Phase 1); updated 2026-11-11 after the releases
 
 ## Now (cheap, and it reduces risk today)
 
-- [ ] **Change the repository description** (Q19; still the old text on 2026-11-11). The current text says "Every equation sourced, every value with units, byte-identical reports" and "power and RF link budgets", which the README contradicts (53 of 57 equations have no citation yet). *How:* GitHub, repository page, the gear icon next to **About**, edit **Description**. Proposed text (no promises, true today): "Offline desktop and command-line tool for small-satellite power, mass, thermal and link budgets from one plain-text spacecraft model. Free and open source. Engineering estimates; no warranty." Then press **Save changes**. (Findings F-50, F-83.)
+- [x] **Change the repository description** (Q19). *Done 2026-11-11 with the proposed text.* The current text says "Every equation sourced, every value with units, byte-identical reports" and "power and RF link budgets", which the README contradicts (53 of 57 equations have no citation yet). *How:* GitHub, repository page, the gear icon next to **About**, edit **Description**. Proposed text (no promises, true today): "Offline desktop and command-line tool for small-satellite power, mass, thermal and link budgets from one plain-text spacecraft model. Free and open source. Engineering estimates; no warranty." Then press **Save changes**. (Findings F-50, F-83.)
 - [ ] **Use the no-reply address for new commits** (Phase 2, decision D-259). Your commits so far show a private address in 128 commit headers; they stay as they are. *How:* GitHub, **Settings → Emails**: tick **Keep my email addresses private** and **Block command line pushes that expose my email**. The no-reply address is shown on that page. It has the form `<id>+0h3xn4@users.noreply.github.com`; the id `291340596` appears in the public Debian package metadata, so the address is most likely:
 
   ```bash
@@ -26,7 +26,7 @@ Date: 2026-11-09 (first version, Phase 1); updated 2026-11-11 after the releases
 ## Repository settings (Phase 6 and 7 will say when each is needed)
 
 - [ ] **Branch and tag rulesets** for `main` and for tags `v*`, as in [docs/BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md): require pull requests, require the CI checks (including every new check added in Phase 3, 4 and 6), block force-pushes and deletion. *How:* **Settings → Rules → Rulesets → New ruleset**. The list of check names comes with the Phase 6 pull request.
-- [ ] **Dependency graph** (Phase 6): switch it on (**Settings → Code security → Dependency graph**). The dependency-review workflow failed on PR #136 because it is off, so it now runs only by hand. After you switch it on, tell me and I add the `pull_request` trigger back (the text is in the workflow file).
+- [x] **Dependency graph** (Phase 6): switch it on (**Settings → Code security → Dependency graph**). *Done 2026-11-11; the dependency-review workflow runs on pull requests again.*
 - [ ] **More required checks** (Phase 6 and 7): after each new workflow has run once on a pull request, add `CodeQL (python)`, `CodeQL (actions)`, `gitleaks` and `Data box ticked (no confidential data)` to the required checks (list in [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md)). Leave "code scanning default setup" **off** (CodeQL runs from `codeql.yml`).
 - [ ] **Environment `release`** (Phase 6): the workflows `publish` and `attach-release` name it. *Required reviewer: done* (the 2.12.1 run waited for your approval). Still to check: under **Deployment branches and tags**, allow only tags `v*`. *How:* **Settings → Environments → release**.
 - [ ] **Actions settings** (Phase 6): default token read-only; switch off "Allow GitHub Actions to create and approve pull requests"; require approval for workflows of first-time contributors. *How:* **Settings → Actions → General**.
@@ -42,9 +42,9 @@ Date: 2026-11-09 (first version, Phase 1); updated 2026-11-11 after the releases
 - [ ] **Search the official trademark registers** (Phase 5, [trademark-search.md](trademark-search.md)): EUIPO eSearch plus, WIPO Global Brand Database, USPTO and DPMA, for "System Budget Studio" and "Budget Studio" in classes 9 and 42; write the date and result into that page.
 - [ ] **Maintenance status:** the README says "Maintenance status: active, best effort". Change `SUPPORT_STATEMENT` in `src/budget_core/about.py` and run `python scripts/sync_disclaimer.py` if that stops being true.
 - [x] **Releases only by you.** Keep yourself as the only person with write access; create an environment named `release` with **required reviewers: you**. *Done (the reviewer is set).* Check **Settings → Collaborators** once that only you have write access.
-- [ ] **Secret scanning and push protection.** *How:* **Settings → Code security** (or **Advanced Security**) → turn on **Secret scanning** and **Push protection**.
-- [ ] **Private vulnerability reporting.** *How:* **Settings → Code security → Private vulnerability reporting → Enable**.
-- [ ] **Dependabot alerts and security updates** (Phase 6 adds the version-update file). *How:* **Settings → Code security**.
+- [x] **Secret scanning and push protection.** *On (checked 2026-11-11).* *How:* **Settings → Code security** (or **Advanced Security**) → turn on **Secret scanning** and **Push protection**.
+- [x] **Private vulnerability reporting.** *On since 2026-11-11.* *How:* **Settings → Code security → Private vulnerability reporting → Enable**.
+- [x] **Dependabot alerts and security updates** *(on since 2026-11-11)* (Phase 6 adds the version-update file). *How:* **Settings → Code security**.
 - [ ] **Signed commits** (only if you want them). *How:* GitHub, **Settings → SSH and GPG keys**, add a signing key, then `git config --global commit.gpgsign true`. Then add "Require signed commits" to the ruleset.
 
 - [ ] **Tag ruleset and who can publish** (Phase 7): a ruleset for tags `v*` that only you can create and nobody can delete or move; check **Settings → Collaborators** shows only you with write access. *How:* **Settings → Rules → Rulesets → New tag ruleset**.
@@ -64,5 +64,5 @@ Date: 2026-11-09 (first version, Phase 1); updated 2026-11-11 after the releases
 
 The website plan was discarded (D-265), so the Pages settings and the deploy steps are gone. What is left is in [residual-risk-report.md](residual-risk-report.md): every decision still open, every open step of this list in one table, and the proposed repository description and topics.
 
-- [ ] **Apply the repository description and topics** from the report (or tell me different words); the description is the first item of this list. Claude cannot change repository settings.
+- [ ] **Apply the repository topics** from the report (or tell me different words); the description is done (2026-11-11). Claude cannot change repository settings.
 - [ ] **Read the residual-risk report** and hand it, with [lawyer-questions.md](lawyer-questions.md) and [risk-register.md](risk-register.md), to a lawyer in Germany.
