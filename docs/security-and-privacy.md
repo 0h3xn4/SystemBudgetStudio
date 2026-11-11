@@ -107,7 +107,7 @@ Run Wireshark (or the network team's tap) on the computer while the program runs
 
 ## What the project checks on every change
 
-Each of these runs in the project's continuous integration; a change that fails any of them is not merged.
+Each of these runs in the project's continuous integration on every pull request, and a change is merged only when they pass. GitHub does not enforce that rule: the owner chose not to make the checks required (D-271).
 
 | Check | What it proves | Where |
 |---|---|---|

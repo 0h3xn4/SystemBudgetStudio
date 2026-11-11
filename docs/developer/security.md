@@ -58,7 +58,7 @@ These are repository settings; the workflows cannot set them. Until they are set
 1. **Environment `release`** (Settings, Environments, **New environment**). Add the owner as **required reviewer** (leave *Prevent self-review* off: the owner pushes the tag and approves the run) and limit it to tags `v*` (*Deployment branches and tags*, a tag rule). The workflows name the environment, but it is not listed until it exists: create it **by hand before the first tag**, otherwise the first run creates it without a reviewer and does not wait. A run then waits on its page in Actions until the owner presses *Review deployments* and approves.
 2. **Private vulnerability reporting** (Settings, Code security).
 3. **Secret scanning and push protection**, **Dependabot alerts**, **Dependency graph** and **code scanning default setup off** (CodeQL runs from `codeql.yml`).
-4. **Branch protection or a ruleset for `main`**: pull request required, required checks (`CI`, `REUSE (licence and copyright of every file)`, `Signed-off-by on every commit`, `CodeQL`), no force push, no deletion. See [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md).
+4. **Branch protection or a ruleset for `main`**: pull request required, no force push, no deletion (done). Required checks were declined (D-271): the checks run on every pull request and the maintainer merges only on green. See [BRANCH_PROTECTION.md](../BRANCH_PROTECTION.md).
 5. **Actions permissions**: the default token read-only, and "Allow GitHub Actions to create and approve pull requests" off. Approval needed for workflows from first-time contributors.
 6. **Two-factor authentication** with a passkey on the owner account.
 
