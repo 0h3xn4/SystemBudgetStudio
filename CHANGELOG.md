@@ -4,6 +4,8 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+- **Two link equations cite their published source (D-270).** The free-space path loss (LNK-FSPL) cites Rec. ITU-R P.525-5, Annex, 2.3, equation (5), and the e.i.r.p. (LNK-EIRP) the ITU Radio Regulations, No. 1.161; both were compared with the text, and each has an independent test. A source is now set only after such a check; the other 51 equations stay `SOURCE_MISSING` (was 53). The link reports show the two sources in their assumptions list; no number changed.
+
 ## [2.12.1] - 2026-11-10
 
 A documentation release with one small fix to the window. No result of any budget changed, and no file format changed; the reports differ from 2.12.0 only in the version line.

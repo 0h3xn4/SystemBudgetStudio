@@ -6,9 +6,9 @@
 
 | Id | Name | Formula | Source |
 |---|---|---|---|
-| LNK-EIRP | Effective isotropic radiated power | `EIRP = P_tx − L_line + G_tx` (dBW) | textbook link budget; citation to be supplied (SOURCE_MISSING) |
-| LNK-FSPL | Free-space path loss | `L_fs = 20 log10(4π d f / c)` (dB), `c = 299 792 458 m/s` | same; `c` is exact in the SI (D-078) |
-| LNK-GT | Receiver figure of merit | `G/T = G_rx − L_feed − 10 log10(T_sys)` (dB/K), or given directly | same |
+| LNK-EIRP | Effective isotropic radiated power | `EIRP = P_tx − L_line + G_tx` (dBW) | ITU Radio Regulations (2024), Volume 1, No. 1.161: the power supplied to the antenna times the isotropic gain (D-270) |
+| LNK-FSPL | Free-space path loss | `L_fs = 20 log10(4π d f / c)` (dB), `c = 299 792 458 m/s` | Rec. ITU-R P.525-5 (11/2024), Annex, 2.3, equation (5) (D-270); `c` is exact in the SI (D-078) |
+| LNK-GT | Receiver figure of merit | `G/T = G_rx − L_feed − 10 log10(T_sys)` (dB/K), or given directly | textbook link budget; citation to be supplied (SOURCE_MISSING) |
 | LNK-CN0 | Carrier to noise density | `C/N0 = EIRP − L_fs − L_atm − L_point − L_pol − L_impl + G/T − 10 log10(k)` (dBHz), `k = 1.380649e-23 J/K` | same; `k` is exact in the SI (D-078) |
 | LNK-EBN0 | Energy per bit to noise density | `Eb/N0 = C/N0 − 10 log10(R_b)` (dB) | same |
 | LNK-MARGIN | Link margin | `margin = Eb/N0 − Eb/N0_required` (dB); the link closes when `margin ≥ required margin` | the required Eb/N0 is in `config/ebn0_table.yaml` with its source |

@@ -209,15 +209,20 @@ def _link_equations() -> tuple[Equation, ...]:
             "LNK-EIRP",
             "Effective isotropic radiated power",
             "EIRP = P_tx - L_line + G_tx  (dBW)",
-            None,
-            _LNK_NOTE,
+            "ITU RR No. 1.161",
+            "ITU Radio Regulations, Edition of 2024, Volume 1, Article 1, No. 1.161 (definition "
+            "of e.i.r.p.): the power supplied to the antenna (P_tx less the line loss) times the "
+            "isotropic gain, in decibels; checked against the text on 2026-11-11 (decision D-270).",
         ),
         Equation(
             "LNK-FSPL",
             "Free-space path loss",
             "L_fs = 20 log10(4 pi d f / c)  (dB)",
-            None,
-            _LNK_NOTE + " c = 299 792 458 m/s (SI, exact; decision D-078).",
+            "ITU-R P.525-5, eq. (5)",
+            "Rec. ITU-R P.525-5 (11/2024), Calculation of free-space attenuation, Annex, 2.3, "
+            "equation (5): the free-space basic transmission loss between isotropic antennas, "
+            "20 log10(4 pi d / lambda) with lambda = c / f; checked against the text on "
+            "2026-11-11 (decision D-270). c = 299 792 458 m/s (SI, exact; decision D-078).",
         ),
         Equation(
             "LNK-GT",
