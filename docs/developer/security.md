@@ -50,6 +50,7 @@ When you update an action, take the commit that the tag points to. An annotated 
 | `scorecard.yml` | OpenSSF Scorecard (the result stays in this repository; `publish_results` is false) |
 | `release.yml` | Builds and tests the installers; on a tag, the `publish` job attaches the files and records the attestations |
 | `attach-release.yml` | Attaches the files of an earlier run to a release, by hand |
+| `tag-release.yml` | Started by hand on `main`: checks the version against `pyproject.toml`, the CHANGELOG and the existing tags, creates the tag `vX.Y.Z` and starts `release.yml` on it; it publishes nothing (environment `tagging`, D-272) |
 
 ## Settings that only the owner can change
 
