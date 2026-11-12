@@ -4,6 +4,10 @@ All notable changes to System Budget Studio, newest first. The format follows [K
 
 ## [Unreleased]
 
+## [2.12.2] - 2026-11-12
+
+A maintenance release: a cleaner Linux uninstaller, two equations with a checked source, and a release path the assistant can start. No result of any budget changed; the link reports show the two sources in their assumptions list, and every report differs from 2.12.1 only there and in the version line.
+
 - **Releases can be tagged from GitHub's Actions page (D-272).** The new workflow *Tag a release* (`tag-release.yml`, started by hand on `main`) checks the version against `pyproject.toml`, the CHANGELOG and the existing tags, creates the tag `vX.Y.Z` and starts the installer build on it; publishing still waits for the owner's approval. The assistant can start it, since its session may not push tags.
 
 - **The Linux uninstaller leaves no empty folders and says where the settings are.** `install.sh` records in its manifest every folder it creates (`~/.local/bin`, the menu and icon folders, `~/.local/opt`); `uninstall.sh` removes those folders again once they are empty, and only those, also after an upgrade. It keeps the window's settings folder (`~/.config/System Budget Studio/`) and prints where it is; its comment no longer says that the tool stores no settings outside the projects. Found by the end-to-end test of the 2.12.1 Linux release.

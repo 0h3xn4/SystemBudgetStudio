@@ -1,6 +1,6 @@
 # RPM package of System Budget Studio, made from the bundle folder (D-149). Build it with
 # packaging/linux/make_rpm.sh, which passes the two macros below:
-#   sbs_version  the version of the tool (2.12.1)
+#   sbs_version  the version of the tool (2.12.2)
 #   sbs_bundle   the bundle folder (dist/system-budget-studio)
 # The package installs the bundle into /opt/system-budget-studio, links the two programs into
 # /usr/bin, and adds the menu entry and the icons. It is not signed.

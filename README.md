@@ -55,7 +55,7 @@ cd system-budget-studio
 python3 -m venv .venv && source .venv/bin/activate     # Windows: py -3 -m venv .venv ; .venv\Scripts\Activate.ps1
 pip install --require-hashes -r requirements.lock     # the libraries, exactly as tested (hashes checked)
 pip install --no-deps -e .                             # this program
-budget --version                                       # System Budget Studio 2.12.1
+budget --version                                       # System Budget Studio 2.12.2
 budget export-examples demo                            # five example projects with invented data
 budget validate demo/microsat_250kg_eps                    # check the project: 0 errors, a few warnings
 budget run demo/microsat_250kg_eps --budget power --out out   # power budget as XLSX, PDF, DOCX, JSON and CSV
@@ -113,7 +113,7 @@ Not included (out of scope so far): data-storage budgets, transient thermal simu
 
 The source code is licensed under the [Apache License 2.0](LICENSE) (see also [NOTICE](NOTICE) and decision D-260). Releases up to and including 2.11.2 were published under the MIT licence and remain available under it ([text](docs/legal/MIT-licence-releases-up-to-2.11.2.txt)). Third-party licences are listed in [docs/LICENCES.md](docs/LICENCES.md) (the program uses PySide6 under the LGPL-3.0, and the Inter, JetBrains Mono and IBM Plex fonts under the SIL Open Font License, see [assets/fonts](assets/fonts/README.md)).
 
-Status: version 2.12.1, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a pre-release audit ([AUDIT.md](AUDIT.md)) that was made with the same AI tooling that wrote the code and is not an independent review. The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
+Status: version 2.12.2, all planned milestones (M0 to M6) are done and tested ([plan and history](docs/PLAN.md)), and the tool went through a pre-release audit ([AUDIT.md](AUDIT.md)) that was made with the same AI tooling that wrote the code and is not an independent review. The example projects contain **invented data only**; the tool ships no standards values, so every real number, with its source, is yours to enter.
 
 Known limits, stated plainly:
 
